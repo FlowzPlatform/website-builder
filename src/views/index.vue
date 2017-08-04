@@ -557,7 +557,7 @@ export default {
                 newContent = this.$store.state.content;
                 break;
         }
-        let newJsonName = '/home/software/AllProjects/ProductServiceApi/projects/product-listing/assets/menu.json'
+        let newJsonName = '/home/software/AllProjects/FlowzServiceApi/projects/product-listing/assets/menu.json'
         return axios.post(this.baseURL + '/flows-dir-listing', {
             filename : newJsonName ,
             text : newContent,
@@ -669,7 +669,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
 
 .clearfix{
   clear:both;

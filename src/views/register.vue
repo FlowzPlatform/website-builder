@@ -144,7 +144,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style >
+<style scoped>
 .box-card{
   width: 450px;
   margin:auto;

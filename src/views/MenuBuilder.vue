@@ -122,7 +122,7 @@ import domenu from 'domenu'
 		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
 		    var MenuJSON;
-	        var jsonUrl = 'http://localhost:3030/flows-dir-listing/0?path=/home/software/AllProjects/ProductServiceApi/projects/product-listing/assets/menu.json';
+	        var jsonUrl = 'http://localhost:3030/flows-dir-listing/0?path=/home/software/AllProjects/FlowzServiceApi/projects/product-listing/assets/menu.json';
 
 	        $.ajax({
 		        type: 'GET',
@@ -258,7 +258,7 @@ import domenu from 'domenu'
 
 
 
-<style>
+<style scoped>
 	/**
 	 * @license Copyright © 2016 Mateusz Zawartka
 	 * @version 0.99.77

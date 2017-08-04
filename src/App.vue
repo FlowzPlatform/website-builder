@@ -66,8 +66,8 @@ export default {
 }
 </script>
 
-<style>
-	@import 'assets/common.css'
+<style scoped>
+	/*@import 'assets/common.css'*/
   
 	 .layout-logo{
 	    width: 140px;
