@@ -100,6 +100,8 @@
 // let domenu = null;
 // import $ from 'jquery'
 
+import axios from 'axios'
+
 import domenu from 'domenu'
 
 	export default {
@@ -119,6 +121,19 @@ import domenu from 'domenu'
 		        $keepChanges       = $outputContainer.find('.keepChanges'),
 		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
+		    var MenuJSON;
+	        var jsonUrl = 'http://localhost:3030/flows-dir-listing/0?path=/home/software/AllProjects/ProductServiceApi/projects/product-listing/assets/menu.json';
+
+	        $.ajax({
+		        type: 'GET',
+		        url: jsonUrl,
+		        async: true,
+		        dataType: 'json',
+		        success: function(data) {
+		            MenuJSON = data;
+		        }
+		    });
+
 		    $domenu.domenu({
 		        slideAnimationDuration: 0,
 		        allowListMerging: ['domenu-2'],
@@ -128,7 +143,7 @@ import domenu from 'domenu'
 		            tags: true
 		          }
 		        },
-		        data:                   window.localStorage.getItem('domenu-1Json') || '[{"title":"Account","customSelect":"select something...","select2ScrollPosition":{"x":0,"y":0}},{"title":"Settings","customSelect":"select something...","select2ScrollPosition":{"x":0,"y":0}},{"title":"Call","customSelect":"select something..."},{"title":"Support","customSelect":"select something..."},{"title":"Email","customSelect":"select something..."},{"title":"Orders","customSelect":"select something..."},{"title":"Manage","customSelect":"select something..."},{"title":"Settings","customSelect":"select something..."}]'
+		        data: window.localStorage.getItem('domenu-1Json') || MenuJSON
 		      })
 		      // Example: initializing functionality of a custom button #21
 		      .onCreateItem(function(blueprint) {
@@ -218,7 +233,7 @@ import domenu from 'domenu'
 
 		    // Init textarea
 		    $jsonOutput.val(domenu.toJson());
-		    montedself.outputJson = JSON.parse(domenu.toJson());
+		    // montedself.outputJson = JSON.parse(domenu.toJson());
 		    //montedself.outputJson = [{"abc":"test"}]
 		    //console.log(this.outputJson);
 		    $keepChanges.on('click', function() {

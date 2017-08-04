@@ -35,7 +35,19 @@
                 </button>
                 <div class="allComponents">
                   <div class="row" v-if="isHomePage === false">
-                    <div class="col-md-12" align="right">
+                    <div class="col-md-4">
+                      
+                    </div>
+                    <div class="col-md-4" style="margin-top: 15px;" align="center" v-if="isLayoutFile">
+                      <el-button-group>
+                        <el-button type="primary" icon="edit" @click="changeEditor('GrapesComponent')">Grapes Editor</el-button>
+                        <el-button type="primary" @click="changeEditor('GridManager')">Grid Manager <i class="el-icon-menu el-icon-right"></i></el-button>
+                      </el-button-group>
+                    </div>
+                    <div class="col-md-4" v-if="!isLayoutFile">
+                      
+                    </div>
+                    <div class="col-md-4" align="right">
                         <div style="margin-right:10px; margin: 15px;">
                             <el-button type="info" @click="previewProductPage()">Preview</el-button>
                             <el-button type="success" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save JSON</el-button>
@@ -44,6 +56,88 @@
                             <!-- <Button type="primary" v-on:click="saveFile()" >Save</Button> -->
                         </div>
                     </div>
+                    <el-dialog title="File name" :visible.sync="dialogFormVisible">
+                        <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
+                            <el-form-item prop="filename">
+                                <el-input v-model="formAddFile.filename" auto-complete="off"></el-input>
+                            </el-form-item>
+                             
+                        </el-form>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                            <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
+                        </span>
+                    </el-dialog>
+                    <el-dialog title="Folder name" :visible.sync="dialogSubFolderVisible">
+                        <el-form :model="formAddFolder">
+                            <el-form-item>
+                                <el-input v-model="formAddFolder.foldername" auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item>    
+                              <el-row>
+                              <el-col :span='4'>
+                                <div style="font-weight: bold;">Template:</div>
+                              </el-col>
+                              <el-col :span='20'>
+                                <el-select name='Select' v-model="value" placeholder="Select">
+                                  <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </el-col>
+                              </el-row>
+                            </el-form-item>
+                        </el-form>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="dialogSubFolderVisible = false">Cancel</el-button>
+                            <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
+                        </span>
+                    </el-dialog>
+                  </div>
+                  <div v-if="isHomePage === true">
+                    <el-dialog title="File name" :visible.sync="dialogFormVisible">
+                        <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
+                            <el-form-item prop="filename">
+                                <el-input v-model="formAddFile.filename" auto-complete="off"></el-input>
+                            </el-form-item>
+                             
+                        </el-form>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                            <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
+                        </span>
+                    </el-dialog>
+                    <el-dialog title="Folder name" :visible.sync="dialogSubFolderVisible">
+                        <el-form :model="formAddFolder">
+                            <el-form-item>
+                                <el-input v-model="formAddFolder.foldername" auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item>    
+                              <el-row>
+                              <el-col :span='4'>
+                                <div style="font-weight: bold;">Template:</div>
+                              </el-col>
+                              <el-col :span='20'>
+                                <el-select name='Select' v-model="value" placeholder="Select">
+                                  <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </el-col>
+                              </el-row>
+                            </el-form-item>
+                        </el-form>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="dialogSubFolderVisible = false">Cancel</el-button>
+                            <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
+                        </span>
+                    </el-dialog>
                   </div>
                   <component :is="componentId" ref="contentComponent"></component>
                 </div>
@@ -96,12 +190,20 @@ import MenuBuilder from './MenuBuilder'
 // GridManager
 import GridManager from './GridManager'
 
+let checkFileName = (rule, value, callback) => {
+    console.log('value',/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))
+    if (!value) {
+        return callback(new Error('Please enter filename.'));
+    }else if(!(/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))){
+        return callback(new Error('Please enter valid filename.'));
+    }else{
+        return callback();
+    }
+}
+
 export default {
   name: 'Index',
   props: {
-    options: {
-      type: Object
-    }
   },
   data () {
     return {
@@ -126,7 +228,26 @@ export default {
       rootpath : '',
       showLeftMenu : true,
       isMenuBuilder: false,
-      isHomePage: true
+      isHomePage: true,
+      isLayoutFile: false,
+      formAddFile : {
+          filename:null
+      },
+      rulesFrmFile: {
+          filename: [
+              { validator: checkFileName, trigger: 'blur' }
+          ]
+      },
+      formAddFolder : {
+          foldername : null
+      },
+      dialogFormVisible : false,
+      dialogSubFolderVisible : false,
+      options: [ 
+                { value: 'Option1', label: 'Elegent Theme' },
+                { value: 'Option2', label: 'Flat Theme' } 
+               ],
+      value: '',
     }
   },
   components: {
@@ -295,14 +416,16 @@ export default {
         this.$store.dispatch('updateContent', { text: response.data })
         if(response.status == 200 || response.status == 204){
             switch(ext.toLowerCase()){
-                case 'grid':
-                    this.isMenuBuilder = false;
-                    this.isHomePage = false;
-                    this.componentId = 'GridManager'
-                    this.btnPreview = true
-                    break;
+                // case 'grid':
+                //     this.isMenuBuilder = false;
+                //     this.isHomePage = false;
+                //     this.componentId = 'GridManager'
+                //     this.btnPreview = true
+                //     break;
                 case 'json':
                     this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    this.isLayoutFile = false;
                     //console.log(response.data)
                     try{
                          this.$store.state.content = JSON.parse(response.data)
@@ -317,16 +440,19 @@ export default {
                     this.componentId = 'json-viewer'
                     break;
                 case 'layout':
+                    this.isLayoutFile = true;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
                     this.componentId = 'GrapesComponent'
                     break;
                 case 'menu':
+                    this.isLayoutFile = false;
                     this.isMenuBuilder = true;
                     this.isHomePage = false;
                     this.componentId = 'MenuBuilder'
                     break;
                 default :
+                    this.isLayoutFile = false;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
                     this.componentId = 'code-mirror'
@@ -342,7 +468,7 @@ export default {
     },
 
     addFolder(){
-        let newFolderName = this.currentFile.path + '/NewFolder'
+        let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
         return axios.post(this.baseURL + '/flows-dir-listing', {
             foldername : newFolderName,
             type : 'folder'
@@ -358,22 +484,30 @@ export default {
         })
     },
 
-    addFile(){
-      let newfilename = this.currentFile.path + '/untitled.file'
-      return axios.post(this.baseURL + '/flows-dir-listing', {
-          filename : newfilename,
-          text : '',
-          type : 'file'
-      })
-      .then((res) => {
-          console.log(res)
-          this.dialogFormVisible = false
-          this.addNewFileLoading = false
-          this.formAddFile.filename = null
-      })
-      .catch((e) => {
-          console.log(e)
-      })     
+    addFile(formName){
+      this.$refs[formName].validate((valid) => {
+          if (valid) {
+              this.addNewFileLoading = true
+              let newfilename = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
+              return axios.post(this.baseURL + '/flows-dir-listing', {
+                  filename : newfilename,
+                  text : ' ',
+                  type : 'file'
+              })
+              .then((res) => {
+                  console.log(res)
+                  this.dialogFormVisible = false
+                  this.addNewFileLoading = false
+                  this.formAddFile.filename = null
+              })
+              .catch((e) => {
+                  console.log(e)
+              })
+          } else {
+              console.log('error submit!!');
+              return false;
+          }
+      });
     },
 
     saveFile: function(){
@@ -467,6 +601,8 @@ export default {
           .catch((e) => {
               console.log(e)
           })
+          this.componentId = 'HomePage';
+          this.isHomePage = true;
       }).catch((dismiss) => {
           console.log('error',dismiss)
       })
@@ -484,7 +620,7 @@ export default {
                           <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.addFolder() }></i>
                       </el-tooltip>
                       <el-tooltip content="Add file" placement="top">
-                          <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.addFile() }></i>
+                          <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.dialogFormVisible = true }></i>
                       </el-tooltip>
                       <el-tooltip content="Remove" placement="top">
                           <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
@@ -511,11 +647,16 @@ export default {
                   </span>
                   <span class="action-button">
                       <el-tooltip content="Add folder" placement="top">
-                          <i class="fa fa-folder-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px;"  on-click={ () => this.addFolder() }></i>
+                          <i class="fa fa-folder-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px;"  on-click={ () => this.dialogSubFolderVisible = true }></i>
                       </el-tooltip>
                   </span>
               </span>)
       }
+    },
+
+    changeEditor (currentEditor) {
+      this.saveFile();
+      this.componentId = currentEditor;
     },
 
     cancelEditing() {
@@ -844,14 +985,17 @@ export default {
   background-color: #fcfcfc;
 }
 .hamburger.is-closed .hamb-top { 
+  box-shadow: 0px 0px 5px #333;
   top: 5px; 
   -webkit-transition: all .35s ease-in-out;
 }
 .hamburger.is-closed .hamb-middle {
+  box-shadow: 0px 0px 5px #333;
   top: 50%;
   margin-top: -2px;
 }
 .hamburger.is-closed .hamb-bottom {
+  box-shadow: 0px 0px 5px #333;
   bottom: 5px;  
   -webkit-transition: all .35s ease-in-out;
 }
@@ -939,4 +1083,6 @@ export default {
 .gjs-am-assets-cont{
   height: 373px;
 }
+
+
 </style>

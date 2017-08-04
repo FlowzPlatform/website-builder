@@ -14,7 +14,7 @@
             if(gm != null){
                 gm.deinitCanvas();
             }
-            gm = jQuery("#mycanvas").gridmanager({
+            gm = $("#mycanvas").gridmanager({
                 debug: 1,
                 customControls: {
                     //global_row: [{ callback: 'test_callback', loc: 'bottom', btnLabel: 'row btn' }],
@@ -22,7 +22,7 @@
                 }
             }).data('gridmanager');
             
-            jQuery("#gm-canvas").empty().append(this.$store.state.content)
+            $("#gm-canvas").empty().append(this.$store.state.content)
             $(".gm-edit-mode").click().click();
         },
         methods: {

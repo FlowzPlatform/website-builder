@@ -1,4 +1,4 @@
-# flowsbuilder
+# Flows Website Builder
 
 > A Vue.js project
 

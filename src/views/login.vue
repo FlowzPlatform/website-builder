@@ -91,7 +91,7 @@ export default {
                   this.$session.set('username', this.form.user)
                   // Vue.http.headers.common['Authorization'] = 'Bearer ' + response.data.token
                   this.$router.push('/');
-                  this.isLoading = false;
+                  this.form.isLoading = false;
               }
             }).catch(error => {
               this.$notify.error({
@@ -99,11 +99,11 @@ export default {
                 message: error.response.data,
                 offset: 100
               });
-              this.isLoading = false;
+              this.form.isLoading = false;
             })
         } else {
           console.log('Enter proper details.');
-          this.isLoading = false;
+          this.form.isLoading = false;
           return false;
         }
       });

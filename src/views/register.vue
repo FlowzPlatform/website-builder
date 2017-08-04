@@ -18,7 +18,7 @@
           <el-input icon="more" type="password" v-model="form.checkPass" auto-complete="off required"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;" :loading="form.isLoading">Register</el-button>
+          <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;">Register</el-button>
         </el-form-item>
         <!-- <el-form-item> -->
           <p class="newUser">Already Registered? <a href="/login" class="registerNow">Login Now</a></p>
