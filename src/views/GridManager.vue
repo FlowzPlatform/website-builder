@@ -3,11 +3,11 @@
         <div id="mycanvas" class="clearfix"></div>
 
         <el-dialog
-          title="Tips"
+          title="Add Component"
           :visible.sync="dialogVisible"
           size="tiny">
           <span>
-              <el-select v-model="value" placeholder="Select Component">
+              <el-select v-model="selectedComponent" placeholder="Select Component">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -18,15 +18,18 @@
           </span>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+            <el-button type="primary" @click="setComponent()">Confirm</el-button>
           </span>
         </el-dialog>
     </div> 
 </template>
 <script>
-    let gm = null
+    let gm = null;
+    let containerObj = null;
 
-    import './GridManager/jquery.gridmanager.min.js'
+    import './GridManager/jquery.gridmanager.min.js';
+
+    import ImageComponent from './ImageComponent';
     
     export default {         
         name:'GridManager',    
@@ -34,21 +37,18 @@
             return {
                 dialogVisible: false,
                 options: [{
-                  value: 'hello',
-                  label: 'Hello Component'
+                  value: 'profileCard',
+                  label: 'Profile Component'
                 }, {
-                  value: 'there',
-                  label: 'There Component'
+                  value: 'image',
+                  label: 'Image Component'
                 }],
-                value: ''
+                selectedComponent: ''
             }
-        },  
-        // created () {
-        //     function test_callback(container, btnElem){
-        //         alert('internal hello');
-        //         this.dialogVisible = true;
-        //     }
-        // },   
+        }, 
+        components: {
+            ImageComponent
+        },
         mounted: function() { 
             
             var self = this;
@@ -59,7 +59,6 @@
             gm = $("#mycanvas").gridmanager({
                 debug: 1,
                 customControls: {
-                    //global_row: [{ callback: 'test_callback', loc: 'bottom', btnLabel: 'row btn' }],
                     global_col: [{ callback: self.test_callback, loc: 'top' }]
                 }
             }).data('gridmanager');
@@ -78,10 +77,25 @@
             },
             test_callback: function(container, btnElem){
                 this.dialogVisible = true;
+                containerObj = container.getElementsByClassName("gm-content")[0];
             },
-            handleCommand(command) {
-                this.$message('click on item ' + command);
+            setComponent() {
+                this.dialogVisible = false;
+                if(this.selectedComponent == 'profileCard'){
+                    let htmlData = '<component :is="header" :id="header1">'
+                    $(containerObj).text(htmlData);    
+                } else {
+                    let htmlData = '<component :is="ImageComponent" :url="http://placehold.it/700x400" :text="Loading...">'
+                    $(containerObj).text(htmlData);    
+                }
+                
             }
         }
     }
 </script>
+
+<style scoped>
+    .el-select{
+        width: 100%;
+    }
+</style>

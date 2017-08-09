@@ -616,13 +616,15 @@ export default {
                         <span>{node.label}</span>
                     </span>
                     <span class="" style="float: right; padding-right: 5px;">
-                      <b-dropdown>
-                        <b-dropdown-item>New Layout File</b-dropdown-item>
-                        <b-dropdown-item>New Menu File</b-dropdown-item>
-                        <b-dropdown-divider></b-dropdown-divider>
-                        <b-dropdown-item>New Folder</b-dropdown-item>
-                        <b-dropdown-item>Delete</b-dropdown-item>
-                      </b-dropdown>
+                      <el-tooltip content="Add folder" placement="top">
+                          <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.addFolder() }></i>
+                      </el-tooltip>
+                      <el-tooltip content="Add file" placement="top">
+                          <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.addFile() }></i>
+                      </el-tooltip>
+                      <el-tooltip content="Remove" placement="top">
+                          <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                      </el-tooltip>
                     </span>
                 </span>)
       } else if(data.type=='file'){
@@ -652,6 +654,14 @@ export default {
       }
     },
 
+    // <b-dropdown> 
+    //   <b-dropdown-item>New Layout File</b-dropdown-item>
+    //   <b-dropdown-item>New Menu File</b-dropdown-item>
+    //   <b-dropdown-divider></b-dropdown-divider>
+    //   <b-dropdown-item>New Folder</b-dropdown-item>
+    //   <b-dropdown-item>Delete</b-dropdown-item>
+    // </b-dropdown>
+
     changeEditor (currentEditor) {
       this.saveFile();
       this.componentId = currentEditor;
@@ -667,7 +677,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style >
 
 .clearfix{
   clear:both;
@@ -1089,6 +1099,12 @@ export default {
     border: none;
     margin: 0;
     padding: 0;
+}
+
+.dropdown-menu{
+  right: 0;
+  left: auto;
+  position: absolute;
 }
 
 
