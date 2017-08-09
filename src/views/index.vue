@@ -56,7 +56,7 @@
                             <!-- <Button type="primary" v-on:click="saveFile()" >Save</Button> -->
                         </div>
                     </div>
-                    <el-dialog title="File name" :visible.sync="dialogFormVisible">
+                    <el-dialog title="File name" :visible.sync="newFileDialog">
                         <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                             <el-form-item prop="filename">
                                 <el-input v-model="formAddFile.filename" auto-complete="off"></el-input>
@@ -64,11 +64,11 @@
                              
                         </el-form>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                            <el-button @click="newFileDialog = false">Cancel</el-button>
                             <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
                         </span>
                     </el-dialog>
-                    <el-dialog title="Folder name" :visible.sync="dialogSubFolderVisible">
+                    <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
                                 <el-input v-model="formAddFolder.foldername" auto-complete="off"></el-input>
@@ -92,13 +92,13 @@
                             </el-form-item>
                         </el-form>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="dialogSubFolderVisible = false">Cancel</el-button>
+                            <el-button @click="newFolderDialog = false">Cancel</el-button>
                             <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
                         </span>
                     </el-dialog>
                   </div>
                   <div v-if="isHomePage === true">
-                    <el-dialog title="File name" :visible.sync="dialogFormVisible">
+                    <el-dialog title="File name" :visible.sync="newFileDialog">
                         <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                             <el-form-item prop="filename">
                                 <el-input v-model="formAddFile.filename" auto-complete="off"></el-input>
@@ -106,11 +106,11 @@
                              
                         </el-form>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                            <el-button @click="newFileDialog = false">Cancel</el-button>
                             <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
                         </span>
                     </el-dialog>
-                    <el-dialog title="Folder name" :visible.sync="dialogSubFolderVisible">
+                    <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
                                 <el-input v-model="formAddFolder.foldername" auto-complete="off"></el-input>
@@ -134,7 +134,7 @@
                             </el-form-item>
                         </el-form>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="dialogSubFolderVisible = false">Cancel</el-button>
+                            <el-button @click="newFolderDialog = false">Cancel</el-button>
                             <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
                         </span>
                     </el-dialog>
@@ -241,8 +241,8 @@ export default {
       formAddFolder : {
           foldername : null
       },
-      dialogFormVisible : false,
-      dialogSubFolderVisible : false,
+      newFileDialog : false,
+      newFolderDialog : false,
       options: [ 
                 { value: 'Option1', label: 'Elegent Theme' },
                 { value: 'Option2', label: 'Flat Theme' } 
@@ -475,7 +475,7 @@ export default {
         })
         .then((res) => {
             console.log(res)
-            this.dialogSubFolderVisible = false
+            this.newFolderDialog = false
             this.addNewFolderLoading = false
             this.formAddFolder.foldername = null
         })
@@ -496,7 +496,7 @@ export default {
               })
               .then((res) => {
                   console.log(res)
-                  this.dialogFormVisible = false
+                  this.newFileDialog = false
                   this.addNewFileLoading = false
                   this.formAddFile.filename = null
               })
@@ -620,7 +620,7 @@ export default {
                           <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.addFolder() }></i>
                       </el-tooltip>
                       <el-tooltip content="Add file" placement="top">
-                          <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.addFile() }></i>
+                          <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
                       </el-tooltip>
                       <el-tooltip content="Remove" placement="top">
                           <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
@@ -647,7 +647,7 @@ export default {
                   </span>
                   <span class="action-button">
                       <el-tooltip content="Add folder" placement="top">
-                          <i class="fa fa-folder-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px;"  on-click={ () => this.dialogSubFolderVisible = true }></i>
+                          <i class="fa fa-folder-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
                       </el-tooltip>
                   </span>
               </span>)
