@@ -803,7 +803,7 @@ export default {
                     </span>
                     <span class="" style="float: right; padding-right: 5px;">
                       <el-tooltip content="Add folder" placement="top">
-                          <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.addFolder() }></i>
+                          <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
                       </el-tooltip>
                       <el-tooltip content="Add file" placement="top">
                           <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
