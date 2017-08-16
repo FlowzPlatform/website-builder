@@ -258,7 +258,7 @@ import domenu from 'domenu'
 
 
 
-<style scoped>
+<style>
 	/**
 	 * @license Copyright © 2016 Mateusz Zawartka
 	 * @version 0.99.77

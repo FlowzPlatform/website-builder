@@ -18,4 +18,9 @@ npm run build
 npm run build --report
 ```
 
+# Data API parameters
+https://9d89b0632a794a289b08f4de77dbf09a.us-east-1.aws.found.io:9243/pdm1/_search
+elastic
+4t4AplzzRsGmarJ6txoSHJIX
+
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

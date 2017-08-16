@@ -18,7 +18,7 @@ export default {
 		var lp = './static/img/';
         var plp = 'http://placehold.it/350x250/';
         var images = [
-            lp+'team1.jpg', lp+'team2.jpg', lp+'team3.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
+            lp+'TransparentBG1.png', lp+'team1.jpg', lp+'team2.jpg', lp+'team3.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
             plp+'c5d647/fff/image4.jpg', plp+'f28c33/fff/image5.jpg', plp+'e868a2/fff/image6.jpg', plp+'cc4360/fff/image7.jpg',
             lp+'work-desk.jpg', lp+'phone-app.png', lp+'bg-gr-v.png'
         ];
@@ -235,7 +235,7 @@ export default {
 	},
 	methods:{
 	    getHtml: function () {
-	    var end = '<script src="./js/client-navbar-plugin.js"><\/script><script src="./js/client-listing-plugin.js"><\/script><script src="./js/client-product-detail-plugin.js"><\/script></body></html>';
+	    var end = '<script src="./js/client-navbar-plugin.js"><\/script><script src="./js/client-listing-plugin.js"><\/script><script src="./js/client-product-detail-plugin.js"><\/script><script src="./assets/main.js"><\/script></body></html>';
 
 	    this.$store.state.content = "<html><head>"+
 	        "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />"+
@@ -243,7 +243,7 @@ export default {
 	        "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>"+
 	        "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>"+
 	        "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>"+
-	        "<style>" + editor.getCss() + "</style></head><body>" + editor.getHtml() + end;  
+	        "<style>" + editor.getCss() + "</style><link rel='stylesheet' href='./assets/main.css'/></head><body>" + editor.getHtml() + end;  
 	    }
 	}
 }

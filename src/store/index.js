@@ -3,7 +3,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
-        content: null
+        content: null,
+        fileUrl: null
     },
     mutations: {
         ADD_TODO(state, text) {

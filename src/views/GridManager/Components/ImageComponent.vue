@@ -1,6 +1,6 @@
 <template>
   <div class="ImageComponent">
-    <img src=url alt=text >
+    <img :src=options[0].url :alt=options[0].alt>
   </div>
 </template>
 
@@ -9,11 +9,8 @@
 export default {
   name: 'ImageComponent',
   props: {
-    url: {
-      type: String
-    },
-    text: {
-    	type: String
+    options: {
+      type: Array
     }
   },
   data () {
@@ -22,6 +19,9 @@ export default {
     }
   },
   component: {
+  },
+  mounted () {
+    console.log('Image component mounted');
   },
   methods: {
   }

@@ -28,8 +28,6 @@
     let containerObj = null;
 
     import './GridManager/jquery.gridmanager.min.js';
-
-    import ImageComponent from './ImageComponent';
     
     export default {         
         name:'GridManager',    
@@ -37,17 +35,19 @@
             return {
                 dialogVisible: false,
                 options: [{
-                  value: 'profileCard',
+                  value: '<component :is="ImageComponent" :options="[{ url: \'http://placehold.it/100x100/008080/FFFFFF\', alt: \'Profile Image\' }]"></component>',
                   label: 'Profile Component'
                 }, {
-                  value: 'image',
+                  value: '<component :is="ImageComponent" :options="[{ url: \'http://placehold.it/700x400\', alt: \'Loading...\' }]"></component>',
                   label: 'Image Component'
+                }, {
+                  value: '<component :is="NavbarComponent" :options="[{ navbarClass: \'navbar-inverse\' }]"></component>',
+                  label: 'Navbar Component'
                 }],
                 selectedComponent: ''
             }
         }, 
         components: {
-            ImageComponent
         },
         mounted: function() { 
             
@@ -72,7 +72,7 @@
                 let canvas = gm.$el.find("#" + gm.options.canvasId);
                 gm.deinitCanvas();
                 this.$store.state.content = canvas.html()
-                console.log(this.$store.state.content)
+                console.log((this.$store.state.content).replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
                 gm.initCanvas();
             },
             test_callback: function(container, btnElem){
@@ -81,21 +81,24 @@
             },
             setComponent() {
                 this.dialogVisible = false;
-                if(this.selectedComponent == 'profileCard'){
-                    let htmlData = '<component :is="header" :id="header1">'
-                    $(containerObj).text(htmlData);    
-                } else {
-                    let htmlData = '<component :is="ImageComponent" :url="http://placehold.it/700x400" :text="Loading...">'
-                    $(containerObj).text(htmlData);    
-                }
+
+                $(containerObj).text(this.selectedComponent);  
                 
             }
         }
     }
 </script>
 
-<style scoped>
+<style >
     .el-select{
         width: 100%;
+    }
+
+    #gm-canvas .row.gm-editing>.gm-tools, #gm-canvas .row-fluid.gm-editing>.gm-tools{
+      width: 100%;
+    }
+
+    #gm-canvas .row.gm-editing>.gm-tools a:hover, #gm-canvas .row-fluid.gm-editing>.gm-tools a:hover{
+      float: right;
     }
 </style>

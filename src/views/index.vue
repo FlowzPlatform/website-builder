@@ -38,7 +38,7 @@
                     <div class="col-md-4">
                       
                     </div>
-                    <div class="col-md-4" style="margin-top: 15px;" align="center" v-if="isLayoutFile">
+                    <!-- <div class="col-md-4" style="margin-top: 15px;" align="center" v-if="isLayoutFile">
                       <el-button-group>
                         <el-button type="primary" icon="edit" @click="changeEditor('GrapesComponent')">Grapes Editor</el-button>
                         <el-button type="primary" @click="changeEditor('GridManager')">Grid Manager <i class="el-icon-menu el-icon-right"></i></el-button>
@@ -46,14 +46,16 @@
                     </div>
                     <div class="col-md-4" v-if="!isLayoutFile">
                       
-                    </div>
+                    </div> -->
+                    <div class="col-md-4"></div>
                     <div class="col-md-4" align="right">
                         <div style="margin-right:10px; margin: 15px;">
-                            <el-button type="info" @click="previewProductPage()">Preview</el-button>
-                            <el-button type="success" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save JSON</el-button>
+                            <el-button type="info" @click="previewProductPage()" v-if="!isGridPreview">Preview</el-button>
+                            <el-button type="info" @click="previewGridPage()" v-if="isGridPreview && !isPreviewComponent">Preview</el-button>
+                            <el-button type="default" @click="backToGrid()" v-if="isPreviewComponent">Back</el-button>
+                            <el-button type="primary" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save</el-button>
                             <el-button type="primary" @click="saveFile()" :loading="saveFileLoading" v-else="isMenuBuilder">Save</el-button>
                             <el-button type="danger" @click="cancelEditing()">Cancel</el-button>
-                            <!-- <Button type="primary" v-on:click="saveFile()" >Save</Button> -->
                         </div>
                     </div>
                     <el-dialog title="File name" :visible.sync="newFileDialog">
@@ -115,7 +117,7 @@
                             <el-form-item>
                                 <el-input v-model="formAddFolder.foldername" auto-complete="off"></el-input>
                             </el-form-item>
-                            <el-form-item>    
+                            <!-- <el-form-item>    
                               <el-row>
                               <el-col :span='4'>
                                 <div style="font-weight: bold;">Template:</div>
@@ -131,6 +133,19 @@
                                 </el-select>
                               </el-col>
                               </el-row>
+                            </el-form-item> -->
+                            <el-form-item>
+                              <el-col :span='12'>
+                                <div style="font-weight: bold;">Create default files and folders:</div>
+                                </el-col>
+                                <el-col :span='4'>
+                                <el-switch
+                                  v-model="autoFolders"
+                                  :width=60
+                                  on-text="YES"
+                                  off-text="NO">
+                                </el-switch>
+                              </el-col>
                             </el-form-item>
                         </el-form>
                         <span slot="footer" class="dialog-footer">
@@ -139,7 +154,12 @@
                         </span>
                     </el-dialog>
                   </div>
-                  <component :is="componentId" ref="contentComponent"></component>
+                  <div v-if="previewGrid" style="width:100%;">
+                      <PreviewGrid></PreviewGrid>
+                  </div>
+                  <div v-if="!previewGrid">
+                    <component :is="componentId" ref="contentComponent"></component>
+                  </div>
                 </div>
             </div>
             <!-- /#page-content-wrapper -->
@@ -190,6 +210,15 @@ import MenuBuilder from './MenuBuilder'
 // GridManager
 import GridManager from './GridManager'
 
+// Grid Preview
+import PreviewGrid from './PreviewGrid'
+
+// Page Settings
+import PageSettings from './PageSettings'
+
+// Project Settings
+import ProjectSettings from './ProjectSettings'
+
 let checkFileName = (rule, value, callback) => {
     console.log('value',/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))
     if (!value) {
@@ -207,6 +236,7 @@ export default {
   },
   data () {
     return {
+      autoFolders: true,
       isLoggedInUser: false,
       baseURL : 'http://localhost:3030',
       directoryTree: [],
@@ -222,14 +252,18 @@ export default {
       loadingTree : true,
       loadingContent : false,
       saveFileLoading : false,
-      previewFile : false,
+      previewGrid : false,
       btnPreview : false,
       breadcrumbArr : [],
       rootpath : '',
       showLeftMenu : true,
       isMenuBuilder: false,
       isHomePage: true,
-      isLayoutFile: false,
+      isGridPreview: false,
+      isPreviewComponent: false,
+      isPageEditing: false,
+      isProjectEditing: false,
+      // isLayoutFile: false,
       formAddFile : {
           filename:null
       },
@@ -256,7 +290,10 @@ export default {
     JsonViewer,
     MenuBuilder,
     HomePage,
-    GridManager
+    GridManager,
+    PreviewGrid,
+    PageSettings,
+    ProjectSettings
   },
   created () {
     if(!this.$session.exists()){
@@ -398,10 +435,24 @@ export default {
     },
 
     handleNodeClick(data) {
+      if(this.isPageEditing){
+        this.isPageEditing = false;
+        this.isProjectEditing = false;
+        this.componentId = 'PageSettings';
+      } else if(this.isProjectEditing) {
+        this.isProjectEditing = false;
+        this.$store.state.fileUrl = data.path;
+        this.componentId = 'ProjectSettings';
+      } else {
+        this.componentId = null;
+        this.isPageEditing = false;
+        this.isProjectEditing = false;
+        this.previewGrid = false;
         this.currentFile = data;
         if(data.type == "file"){
             this.getFileContent(data.path);
         }
+      }
     },
 
     getFileContent: async function (url) {
@@ -411,21 +462,26 @@ export default {
         this.loadingContent = true
         this.componentId = null
         let ext = url.split('.').pop();
-        let response = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + url)
+
+        this.$store.state.fileUrl = url;
+        // console.log("File URL!!!!!!!!!!" + this.$store.state.fileUrl);
+        let response = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + url);
+        // console.log(this.baseURL + '/flows-dir-listing/0?path=' + url);
 
         this.$store.dispatch('updateContent', { text: response.data })
         if(response.status == 200 || response.status == 204){
             switch(ext.toLowerCase()){
-                // case 'grid':
-                //     this.isMenuBuilder = false;
-                //     this.isHomePage = false;
-                //     this.componentId = 'GridManager'
-                //     this.btnPreview = true
-                //     break;
+                case 'grid':
+                    this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    this.componentId = 'GridManager'
+                    this.isGridPreview = true;
+                    break;
                 case 'json':
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
-                    this.isLayoutFile = false;
+                    this.isGridPreview = false;
+                    // this.isLayoutFile = false;
                     //console.log(response.data)
                     try{
                          this.$store.state.content = JSON.parse(response.data)
@@ -440,19 +496,22 @@ export default {
                     this.componentId = 'json-viewer'
                     break;
                 case 'layout':
-                    this.isLayoutFile = true;
+                    // this.isLayoutFile = true;
+                    this.isGridPreview = false;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
                     this.componentId = 'GrapesComponent'
                     break;
                 case 'menu':
-                    this.isLayoutFile = false;
+                    // this.isLayoutFile = false;
+                    this.isGridPreview = false;
                     this.isMenuBuilder = true;
                     this.isHomePage = false;
                     this.componentId = 'MenuBuilder'
                     break;
                 default :
-                    this.isLayoutFile = false;
+                    // this.isLayoutFile = false;
+                    this.isGridPreview = false;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
                     this.componentId = 'code-mirror'
@@ -467,6 +526,25 @@ export default {
         window.open("http://localhost/exported/");
     },
 
+    previewGridPage: function(){
+      switch(this.componentId){
+        case 'GridManager':
+          this.$refs.contentComponent.getHtml();
+          this.previewGrid = true;
+          this.isPreviewComponent = true;
+          break;
+        default :
+          this.previewGrid = false;
+          this.isPreviewComponent = false;
+          break;
+      }
+    },
+
+    backToGrid: function(){
+      this.previewGrid = false;
+      this.isPreviewComponent = false;
+    },
+
     addFolder(){
         let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
         return axios.post(this.baseURL + '/flows-dir-listing', {
@@ -477,11 +555,102 @@ export default {
             console.log(res)
             this.newFolderDialog = false
             this.addNewFolderLoading = false
-            this.formAddFolder.foldername = null
+            this.formAddFolder.foldername = null;
+
+            // Create essential folders
+            if(this.autoFolders == true)
+            {
+              this.autoFolders=false;
+              this.addOtherFolder(newFolderName)
+            }
+            this.autoFolders=false;
         })
         .catch((e) => {
             console.log(e)
         })
+    },
+
+    addOtherFolder(newFolderName){
+
+      return axios.post(this.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/assets',
+        type : 'folder'
+      })
+      .then((res) => {
+          this.createEssentialFiles(newFolderName);
+          return axios.post(this.baseURL+'/flows-dir-listing' , {
+          foldername : newFolderName+'/grids',
+          type : 'folder'
+
+          })
+          .then((res) => {
+              return axios.post(this.baseURL+'/flows-dir-listing' , {
+                foldername : newFolderName+'/layouts',
+                type : 'folder'
+
+              })
+              .then((res) => {
+                  return axios.post(this.baseURL+'/flows-dir-listing' , {
+                    foldername : newFolderName+'/menus',
+                    type : 'folder'
+
+                  })
+                  .then((res) => {
+
+                  })
+                  .catch((e)=>{
+                    console.log("Error from Menu"+res)
+                  })
+              })
+              .catch((e)=>{
+                console.log("Error From Layout"+res)
+              })
+          })
+          .catch((e)=>{
+            console.log("Error From Grid"+res)
+          })
+      })
+      .catch((e)=>{
+        console.log("Error from Assests"+res)
+      })
+          
+    },
+
+    createEssentialFiles(newFolderName) {
+      let newfilename = newFolderName + '/assets/config.json'
+      return axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : newfilename,
+          text : ' ',
+          type : 'file'
+      })
+      .then((res) => {
+        let maincss = newFolderName + '/assets/main.css'
+        return axios.post(this.baseURL + '/flows-dir-listing', {
+            filename : maincss,
+            text : ' ',
+            type : 'file'
+        })
+        .then((res) => {
+          let mainjs = newFolderName + '/assets/main.js'
+          return axios.post(this.baseURL + '/flows-dir-listing', {
+              filename : mainjs,
+              text : ' ',
+              type : 'file'
+          })
+          .then((res) => {
+            
+          })
+          .catch((e) => {
+              console.log(e)
+          })
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+      })
+      .catch((e) => {
+          console.log(e)
+      })
     },
 
     addFile(formName){
@@ -521,6 +690,11 @@ export default {
             case 'json-viewer':
                 newContent = JSON.stringify(this.$store.state.content);
                 break;
+            case 'GridManager':
+                this.$refs.contentComponent.getHtml();
+                newContent = this.$store.state.content;
+                this.saveLayoutFile();
+                break;
         }
         
         return axios.post(this.baseURL + '/flows-dir-listing', {
@@ -557,7 +731,8 @@ export default {
                 newContent = this.$store.state.content;
                 break;
         }
-        let newJsonName = '/home/software/AllProjects/FlowzServiceApi/projects/product-listing/assets/menu.json'
+        // console.log(this.$store.state.fileUrl + '/assets/menu.json');
+        let newJsonName = '/home/software/AllProjects/FlowzServiceApi/projects/DemoSite/assets/menu.json';
         return axios.post(this.baseURL + '/flows-dir-listing', {
             filename : newJsonName ,
             text : newContent,
@@ -580,6 +755,17 @@ export default {
                 type: 'error'
             });
             console.log(e)
+        })
+    },
+
+    saveLayoutFile: function(){
+        let newContent = "Hello";
+        let file_name = this.currentFile.path.replace(/\\/g, "\/").replace("Grid","Layout").replace(".grid",".layout");
+        console.log(file_name)
+        return axios.post(this.baseURL + '/flows-dir-listing', {
+            filename : file_name,
+            text : newContent,
+            type : 'file'
         })
     },
 
@@ -622,6 +808,9 @@ export default {
                       <el-tooltip content="Add file" placement="top">
                           <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
                       </el-tooltip>
+                      <el-tooltip content="Project Settings" placement="top">
+                        <i class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                      </el-tooltip>
                       <el-tooltip content="Remove" placement="top">
                           <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
                       </el-tooltip>
@@ -636,6 +825,9 @@ export default {
                   <span class="action-button">
                       <el-tooltip content="Remove" placement="top">
                           <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                      </el-tooltip>
+                      <el-tooltip content="Page Settings" placement="top">
+                        <i class="fa fa-cog" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #607C8A" on-click={ () => this.isPageEditing = true }></i>
                       </el-tooltip>
                   </span>
               </span>)
@@ -669,6 +861,7 @@ export default {
 
     cancelEditing() {
       this.componentId = 'HomePage';
+      this.previewGrid = false;
       this.isHomePage = true;
     }
 
@@ -677,7 +870,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style >
+<style scoped>
 
 .clearfix{
   clear:both;
@@ -797,6 +990,7 @@ export default {
 }
 
 #sidebar-wrapper {
+    box-shadow: 0px 0px 25px rgba(0,0,0,0.2);
     position: absolute;
     z-index: 1000;
     top: 0;
@@ -825,7 +1019,7 @@ export default {
 }
 
 #wrapper.toggled #page-content-wrapper {
-    position: absolute;
+    /*position: absolute;*/
     margin-right: -320px;
 }
 
@@ -1058,7 +1252,7 @@ export default {
 /*            Overlay            */
 /*-------------------------------*/
 
-.overlay {
+/*.overlay {
     position: fixed;
     display: none;
     width: 100%;
@@ -1069,7 +1263,7 @@ export default {
     bottom: 0;
     background-color: rgba(0,0,0,.6); 
     z-index: 1;
-}
+}*/
 
 /*Sidebar Styles ends*/
 
