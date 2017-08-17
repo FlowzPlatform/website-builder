@@ -75,7 +75,7 @@
                             <el-form-item>
                                 <el-input v-model="formAddFolder.foldername" auto-complete="off"></el-input>
                             </el-form-item>
-                            <el-form-item>    
+                            <!-- <el-form-item>    
                               <el-row>
                               <el-col :span='4'>
                                 <div style="font-weight: bold;">Template:</div>
@@ -91,6 +91,19 @@
                                 </el-select>
                               </el-col>
                               </el-row>
+                            </el-form-item> -->
+                            <el-form-item>
+                              <el-col :span='12'>
+                                <div style="font-weight: bold;">Create default files and folders:</div>
+                                </el-col>
+                                <el-col :span='4'>
+                                <el-switch
+                                  v-model="autoFolders"
+                                  :width=60
+                                  on-text="YES"
+                                  off-text="NO">
+                                </el-switch>
+                              </el-col>
                             </el-form-item>
                         </el-form>
                         <span slot="footer" class="dialog-footer">
@@ -464,9 +477,7 @@ export default {
         let ext = url.split('.').pop();
 
         this.$store.state.fileUrl = url;
-        // console.log("File URL!!!!!!!!!!" + this.$store.state.fileUrl);
         let response = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + url);
-        // console.log(this.baseURL + '/flows-dir-listing/0?path=' + url);
 
         this.$store.dispatch('updateContent', { text: response.data })
         if(response.status == 200 || response.status == 204){
@@ -795,27 +806,49 @@ export default {
     },
 
     renderContent(h, { node, data, store }) {
-        if(data.type=='directory' && node.label != 'projects'){
-          return (<span>
-                    <span class="nodelabel">
-                        <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
-                        <span>{node.label}</span>
-                    </span>
-                    <span class="" style="float: right; padding-right: 5px;">
-                      <el-tooltip content="Add folder" placement="top">
-                          <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
-                      </el-tooltip>
-                      <el-tooltip content="Add file" placement="top">
-                          <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
-                      </el-tooltip>
-                      <el-tooltip content="Project Settings" placement="top">
-                        <i class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
-                      </el-tooltip>
-                      <el-tooltip content="Remove" placement="top">
-                          <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                      </el-tooltip>
-                    </span>
-                </span>)
+
+        if(data.type=='directory' && node.label != 'websites'){
+          if(node.level == 2){
+            return (<span>
+                  <span class="nodelabel">
+                      <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                      <span>{node.label}</span>
+                  </span>
+                  <span class="" style="float: right; padding-right: 5px;">
+                    <el-tooltip content="Add folder" placement="top">
+                        <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
+                    </el-tooltip>
+                    <el-tooltip content="Add file" placement="top">
+                        <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
+                    </el-tooltip>
+                    <el-tooltip content="Project Settings" placement="top">
+                      <i class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                    </el-tooltip>
+                    <el-tooltip content="Remove" placement="top">
+                        <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                    </el-tooltip>
+                  </span>
+              </span>)  
+          } else {
+            return(<span>
+                <span class="nodelabel">
+                    <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+                    <span>{node.label}</span>
+                </span>
+                <span class="" style="float: right; padding-right: 5px;">
+                  <el-tooltip content="Add folder" placement="top">
+                      <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
+                  </el-tooltip>
+                  <el-tooltip content="Add file" placement="top">
+                      <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
+                  </el-tooltip>
+                  <el-tooltip content="Remove" placement="top">
+                      <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                  </el-tooltip>
+                </span>
+            </span>)
+          }
+          
       } else if(data.type=='file'){
         return (<span>
                   <span class="filelabel">
@@ -834,7 +867,7 @@ export default {
       }else{
         return (<span>
                   <span class="nodelabel">
-                      <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+                      <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
                       <span>{node.label}</span>
                   </span>
                   <span class="action-button">
