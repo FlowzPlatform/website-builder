@@ -2,8 +2,11 @@
   <div class="ProjectSettings">
     <div class="container">
       <div class="row">
+        
         <div class="col-md-12" style="margin-top: 4%;">
+          
           <el-form ref="form" :model="form" label-width="120px">
+
             <el-form-item label="Project name">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
@@ -49,10 +52,43 @@
             <el-form-item>
               <el-button type="primary" @click="saveProjectSettings">Save</el-button>
               <el-button>Cancel</el-button>
+              <el-button class="publishBtn" type="success" @click="publishWebsite()">Publish Site</el-button>
             </el-form-item>
           </el-form> 
         </div>
       </div> 
+
+      <div class="row">
+        <div class="col-md-12" style="margin-bottom: 100px; z-index: 0">
+          <h3>List of Commits</h3>
+          <hr>
+           <el-table
+              :data="commitsData"
+              border
+              style="width: 100%">
+              <el-table-column
+                fixed
+                prop="commitDate"
+                label="Commit Date"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="commitsMessage"
+                label="Commit Message"
+                >
+              </el-table-column>
+              
+              <el-table-column
+                fixed="right"
+                label="Revert To Commit"
+                width="180">
+                <template scope="scope">
+                  <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="text" size="small">Revert Commit</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+        </div>
+      </div>
     </div>
     
   </div>
@@ -83,7 +119,8 @@ export default {
         seoKeywords: '',
         seoDesc: '',
         // fileList: [{name: 'favicon.ico', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
-      }
+      },
+      commitsData: []
     }
   },
   component: {
@@ -94,7 +131,7 @@ export default {
 
       console.log(ProjectSettings);
 
-      let newfilename = this.$store.state.fileUrl + '/assets/config.json';
+      let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
       axios.post('http://localhost:3030/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(ProjectSettings),
@@ -122,11 +159,41 @@ export default {
     },
     handlePreview(file) {
       console.log(file);
+    },
+    revertCommit(index) {
+      console.log(this.commitsData[index].commitSHA);
+      axios.post('http://localhost:3030/commit-service?projectId=9&branchName=master&sha=' + this.commitsData[index].commitSHA + '&privateToken=' + this.$session.get('privateToken'), {
+      }).then(response => {
+        console.log(response.data);
+      }).catch(error => {
+        console.log("Some error occured: ", error);
+      })
+    },
+
+
+
+    publishWebsite() {
+      console.log('Publish Website');
     }
+  },
+  async created () {
+    await axios.get('http://localhost:3030/commit-service?projectId=9&privateToken=4KQWGKhJu1ngdvyUoAoz', {
+    }).then(response => {
+      console.log(response.data);
+      for(var i in response.data){
+        this.commitsData.push({
+          commitDate: response.data[i].created_at,
+          commitSHA: response.data[i].id,
+          commitsMessage: response.data[i].title, 
+        });
+      }
+    }).catch(error => {
+      console.log("Some error occured: ", error);
+    })
   },
   async mounted () {
     // console.log(this.$store.state.fileUrl);
-    let url = this.$store.state.fileUrl;
+    let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
     let response = await axios.get('http://localhost:3030/flows-dir-listing/0?path=' + url + '/assets/config.json');
     if(response.status == 200 || response.status == 204){
       let settings = JSON.parse(response.data);
@@ -147,5 +214,11 @@ export default {
 <style>
 input[type=file]{
   display: none;
+}
+
+.publishBtn{
+  float: right;
+  margin: 15px;
+  margin-right: 0;
 }
 </style>

@@ -19,3 +19,9 @@
         })
     }
 </script>
+
+<style >
+    .CodeMirror{
+        min-height: 80vh;
+    }
+</style>

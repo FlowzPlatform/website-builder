@@ -115,17 +115,32 @@ export default {
       validate (formName) {
         this.$refs[formName].validate((valid) => {
             if (valid) {
-              axios.post('http://172.16.120.64:3000/api/setup', {
+              axios.post('http://ec2-54-88-11-110.compute-1.amazonaws.com/api/setup', {
                 username: this.form.Uname,
                 password: this.form.pass,
                 email: this.form.email,
-                fullname: this.form.name
+                fullname: this.form.Name
               }, {
                 headers: {
                   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                 }
               }).then(response => {
                 window.location = '/login'
+                // axios.post('http://localhost:3030/user-service', {
+                //     username : this.form.Uname,
+                //     password : this.form.pass,
+                //     email : this.form.email,
+                //     name : this.form.name                  
+                // }).then(response => {
+                //   console.log(response);
+                //   window.location = '/login'
+                // }).catch(error => {
+                //   this.$notify.error({
+                //     title: 'Error',
+                //     message: error.response.data,
+                //     offset: 100
+                //   })
+                // })
               }).catch(error => {
                 this.$notify.error({
                   title: 'Error',
@@ -149,6 +164,7 @@ export default {
   width: 450px;
   margin:auto;
   margin-top: 9%;
+  margin-bottom: 25px;
   background-color: rgba(80,80,80,0.07);
   box-shadow: 0px 0px 2px #999999;
   transition: 0.2s linear all;

@@ -63,6 +63,11 @@ export default {
   methods: {
     savePageSettings() {
       console.log('submit!');
+      let PageSettings = {"PageName":this.form.name,"PageTheme":this.form.theme,"PageSEOTitle":this.form.seoTitle,"PageSEOKeywords":this.form.seoKeywords,"PageSEODescription":this.form.seoDesc};
+
+      console.log(PageSettings);
+
+      
     }
   },
   mounted () {

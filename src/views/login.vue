@@ -6,7 +6,7 @@
         <el-button style="float: right;" type="primary" @click="registerPage">Register</el-button>
       </div> -->
       <el-form style="padding:17px" ref="form" :model="form" :rules="loginRules" label-width="100px">
-        <el-form-item label="Username" prop="user">
+        <el-form-item label="Email Id" prop="user">
           <el-input icon="edit" type="text" v-model="form.user"placeholder="john23"></el-input>
         </el-form-item>
         <el-form-item label="Password" prop="pass">
@@ -77,7 +77,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.form.isLoading = true;
-            axios.post('http://162.242.223.167:3001/api/login', {
+            // http://162.242.223.167:3001/api/login
+            axios.post('http://ec2-54-88-11-110.compute-1.amazonaws.com/api/login', {
               password: this.form.pass,
               email: this.form.user
             }, {
@@ -86,13 +87,33 @@ export default {
               }
             }).then(response => {
               if (response.data) {
-                  this.$session.start()
-                  this.$session.set('token', response.data.token)
-                  this.$session.set('username', this.form.user)
-                  // Vue.http.headers.common['Authorization'] = 'Bearer ' + response.data.token
-                  this.$router.push('/');
-                  this.form.isLoading = false;
+                this.$session.start()
+                this.$session.set('token', response.data.token)
+                this.$session.set('username', this.form.user)
+                // Vue.http.headers.common['Authorization'] = 'Bearer ' + response.data.token
+                this.form.isLoading = false;
+                this.$router.push('/');
               }
+
+              // axios.get('http://localhost:3030/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
+              // }).then(response => {
+              //   if (response.data) {
+              //       console.log(response.data.private_token);
+              //       console.log(response.data.id);
+              //       this.$session.set('privateToken', response.data.private_token);
+              //       this.$session.set('userId', response.data.id);
+              //       this.$router.push('/');
+              //   }
+              // }).catch(error => {
+              //   console.log(error);
+              //   this.$notify.error({
+              //     title: 'Error',
+              //     message: error.response.data,
+              //     offset: 100
+              //   });
+              //   this.form.isLoading = false;
+              // })
+
             }).catch(error => {
               this.$notify.error({
                 title: 'Error',
@@ -121,6 +142,7 @@ export default {
   width: 450px;
   margin:auto;
   margin-top: 15%;
+  margin-bottom: 25px;
   background-color: rgba(80,80,80,0.07);
   box-shadow: 0px 0px 2px #999999;
   transition: 0.2s linear all;

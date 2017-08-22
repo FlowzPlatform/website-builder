@@ -21,6 +21,10 @@
             <!-- Sidebar Wrapper -->
             <nav id="sidebar-wrapper" role="navigation">
                 <div class="treeViewBlock">
+                  <!-- <el-button type="primary" icon="plus" class="newWebsite" @click="newWebsiteDialog = true">Create New Website</el-button>
+                  <el-button type="success" icon="plus" class="newWebsite" @click="getGitFileContent()">Get File Content</el-button>
+                  <el-button type="info" icon="plus" class="newWebsite" @click="componentId = 'ProjectSettings'">Project Settings</el-button> -->
+
                   <el-tree :data="directoryTree" :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
                 </div>
             </nav>
@@ -61,7 +65,7 @@
                     <el-dialog title="File name" :visible.sync="newFileDialog">
                         <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                             <el-form-item prop="filename">
-                                <el-input v-model="formAddFile.filename" auto-complete="off"></el-input>
+                                <el-input v-model="formAddFile.filename" auto-complete="off" placeholder="FileName.ext"></el-input>
                             </el-form-item>
                              
                         </el-form>
@@ -70,10 +74,24 @@
                             <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
                         </span>
                     </el-dialog>
+
+                    <el-dialog title="Website Name" :visible.sync="newWebsiteDialog">
+                        <el-form :model="formNewWebsite" ref="formNewWebsite">
+                            <el-form-item>
+                                <el-input v-model="formNewWebsite.websiteName" auto-complete="off" placeholder="Website Name"></el-input>
+                            </el-form-item>
+                             
+                        </el-form>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="newWebsiteDialog = false">Cancel</el-button>
+                            <el-button type="primary" @click="createGitWebsite()" :loading="addNewWebsiteLoading">Create</el-button>
+                        </span>
+                    </el-dialog>
+
                     <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
-                                <el-input v-model="formAddFolder.foldername" auto-complete="off"></el-input>
+                                <el-input v-model="formAddFolder.foldername" auto-complete="off" placeholder="Folder Name"></el-input>
                             </el-form-item>
                             <!-- <el-form-item>    
                               <el-row>
@@ -93,7 +111,7 @@
                               </el-row>
                             </el-form-item> -->
                             <el-form-item>
-                              <el-col :span='12'>
+                              <el-col :span='6'>
                                 <div style="font-weight: bold;">Create default files and folders:</div>
                                 </el-col>
                                 <el-col :span='4'>
@@ -125,6 +143,18 @@
                             <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
                         </span>
                     </el-dialog>
+                    <el-dialog title="Website Name" :visible.sync="newWebsiteDialog">
+                        <el-form :model="formNewWebsite" ref="formNewWebsite">
+                            <el-form-item>
+                                <el-input v-model="formNewWebsite.websiteName" auto-complete="off" placeholder="Website Name"></el-input>
+                            </el-form-item>
+                             
+                        </el-form>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="newWebsiteDialog = false">Cancel</el-button>
+                            <el-button type="primary" @click="createGitWebsite()" :loading="addNewWebsiteLoading">Create</el-button>
+                        </span>
+                    </el-dialog>
                     <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
@@ -148,7 +178,7 @@
                               </el-row>
                             </el-form-item> -->
                             <el-form-item>
-                              <el-col :span='12'>
+                              <el-col :span='6'>
                                 <div style="font-weight: bold;">Create default files and folders:</div>
                                 </el-col>
                                 <el-col :span='4'>
@@ -249,6 +279,7 @@ export default {
   },
   data () {
     return {
+      newWebsiteName: '',
       autoFolders: true,
       isLoggedInUser: false,
       baseURL : 'http://localhost:3030',
@@ -262,6 +293,7 @@ export default {
       componentId:HomePage,
       addNewFileLoading : false,
       addNewFolderLoading : false,
+      addNewWebsiteLoading: false,
       loadingTree : true,
       loadingContent : false,
       saveFileLoading : false,
@@ -280,6 +312,9 @@ export default {
       formAddFile : {
           filename:null
       },
+      formNewWebsite : {
+          websiteName:null
+      },
       rulesFrmFile: {
           filename: [
               { validator: checkFileName, trigger: 'blur' }
@@ -290,6 +325,7 @@ export default {
       },
       newFileDialog : false,
       newFolderDialog : false,
+      newWebsiteDialog: false,
       options: [ 
                 { value: 'Option1', label: 'Elegent Theme' },
                 { value: 'Option2', label: 'Flat Theme' } 
@@ -317,6 +353,8 @@ export default {
     }
   },
   mounted () {
+    // console.log(this.$session.get(privateToken));
+    // console.log(this.$session.get(userId));
     // Sidemenu Toggle
     $(document).ready(function() {
       var trigger = $('.hamburger'),
@@ -447,6 +485,27 @@ export default {
         return  _.sortBy(data.children, [function(o) { return o.type; }]);
     },
 
+    createGitWebsite: function(){
+      axios.get('http://localhost:3030/repo-service/1?userId=' + this.$session.get('userId') + '&repoName=' + this.formNewWebsite.websiteName, {
+      }).then(response => {
+        this.formNewWebsite.websiteName = '';
+        this.newWebsiteDialog = false;
+        if (response.data) {
+            console.log(response.data);
+            this.newWebsiteDialog = false;
+        }
+      }).catch(error => {
+        this.formNewWebsite.websiteName = '';
+        console.log(error);
+        this.$notify.error({
+          title: 'Error',
+          message: error.data,
+          offset: 100
+        });
+        this.newWebsiteDialog = false;
+      })
+    },
+
     handleNodeClick(data) {
       if(this.isPageEditing){
         this.isPageEditing = false;
@@ -466,6 +525,120 @@ export default {
             this.getFileContent(data.path);
         }
       }
+    },
+
+    getGitFileContent: async function(){
+      console.log("Getting GIT file content");
+      let response = await axios.get('http://localhost:3030/file-service?projectId=9&fileName=README.md&branchName=master&privateToken=' + this.$session.get('privateToken'));
+
+      // Create Base64 Object
+      var Base64 = {
+          _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+          encode: function(input) {
+              var output = "";
+              var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+              var i = 0;
+              input = Base64._utf8_encode(input);
+              while (i < input.length) {
+                  chr1 = input.charCodeAt(i++);
+                  chr2 = input.charCodeAt(i++);
+                  chr3 = input.charCodeAt(i++);
+                  enc1 = chr1 >> 2;
+                  enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                  enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                  enc4 = chr3 & 63;
+                  if (isNaN(chr2)) {
+                      enc3 = enc4 = 64;
+                  } else if (isNaN(chr3)) {
+                      enc4 = 64;
+                  }
+                  output = output + this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) + this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+              }
+              return output;
+          },
+          decode: function(input) {
+              var output = "";
+              var chr1, chr2, chr3;
+              var enc1, enc2, enc3, enc4;
+              var i = 0;
+              input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+              while (i < input.length) {
+                  enc1 = this._keyStr.indexOf(input.charAt(i++));
+                  enc2 = this._keyStr.indexOf(input.charAt(i++));
+                  enc3 = this._keyStr.indexOf(input.charAt(i++));
+                  enc4 = this._keyStr.indexOf(input.charAt(i++));
+                  chr1 = (enc1 << 2) | (enc2 >> 4);
+                  chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                  chr3 = ((enc3 & 3) << 6) | enc4;
+                  output = output + String.fromCharCode(chr1);
+                  if (enc3 != 64) {
+                      output = output + String.fromCharCode(chr2);
+                  }
+                  if (enc4 != 64) {
+                      output = output + String.fromCharCode(chr3);
+                  }
+              }
+              output = Base64._utf8_decode(output);
+              return output;
+          },
+
+          _utf8_encode: function(string) {
+              string = string.replace(/\r\n/g, "\n");
+              var utftext = "";
+              for (var n = 0; n < string.length; n++) {
+                  var c = string.charCodeAt(n);
+                  if (c < 128) {
+                      utftext += String.fromCharCode(c);
+                  }
+                  else if ((c > 127) && (c < 2048)) {
+                      utftext += String.fromCharCode((c >> 6) | 192);
+                      utftext += String.fromCharCode((c & 63) | 128);
+                  }
+                  else {
+                      utftext += String.fromCharCode((c >> 12) | 224);
+                      utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                      utftext += String.fromCharCode((c & 63) | 128);
+                  }
+              }
+              return utftext;
+          },
+
+          _utf8_decode: function(utftext) {
+              var string = "";
+              var i = 0;
+              var c = 0; 
+              var c1 = 0; 
+              var c2 = 0;
+              while (i < utftext.length) {
+                  c = utftext.charCodeAt(i);
+                  if (c < 128) {
+                      string += String.fromCharCode(c);
+                      i++;
+                  }
+                  else if ((c > 191) && (c < 224)) {
+                      c2 = utftext.charCodeAt(i + 1);
+                      string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                      i += 2;
+                  }
+                  else {
+                      c2 = utftext.charCodeAt(i + 1);
+                      c3 = utftext.charCodeAt(i + 2);
+                      string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                      i += 3;
+                  }
+              }
+              return string;
+          }
+      }
+
+      // Define the string
+      var encryptedData = response.data.content;
+
+      var fileData = Base64.decode(encryptedData);
+
+      console.log("FileData: " + fileData);
+
+      // this.$store.dispatch('updateContent', { text: fileData });
     },
 
     getFileContent: async function (url) {
@@ -850,20 +1023,35 @@ export default {
           }
           
       } else if(data.type=='file'){
-        return (<span>
-                  <span class="filelabel">
-                      <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
-                      <span>{node.label}</span>
-                  </span>
-                  <span class="action-button">
-                      <el-tooltip content="Remove" placement="top">
-                          <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                      </el-tooltip>
-                      <el-tooltip content="Page Settings" placement="top">
-                        <i class="fa fa-cog" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #607C8A" on-click={ () => this.isPageEditing = true }></i>
-                      </el-tooltip>
-                  </span>
-              </span>)
+        if(data.extension == '.layout'){
+          return (<span>
+              <span class="filelabel">
+                  <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
+                  <span>{node.label}</span>
+              </span>
+              <span class="action-button">
+                  <el-tooltip content="Remove" placement="top">
+                      <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                  </el-tooltip>
+                  <el-tooltip content="Page Settings" placement="top">
+                    <i class="fa fa-cog" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #607C8A" on-click={ () => this.isPageEditing = true }></i>
+                  </el-tooltip>
+              </span>
+          </span>)
+        } else {
+          return (<span>
+                <span class="filelabel">
+                    <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
+                    <span>{node.label}</span>
+                </span>
+                <span class="action-button">
+                    <el-tooltip content="Remove" placement="top">
+                        <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                    </el-tooltip>
+                </span>
+            </span>)
+        }
+        
       }else{
         return (<span>
                   <span class="nodelabel">
@@ -1334,5 +1522,9 @@ export default {
   position: absolute;
 }
 
+.newWebsite{
+  width: 90%;
+  margin: 15px;
+}
 
 </style>
