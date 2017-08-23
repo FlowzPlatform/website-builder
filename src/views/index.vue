@@ -112,7 +112,7 @@
                             </el-form-item> -->
                             <el-form-item>
                               <el-col :span='6'>
-                                <div style="font-weight: bold;">Create default files and folders:</div>
+                                <div style="font-weight: bold;">Create default files and folders:(Recommended)</div>
                                 </el-col>
                                 <el-col :span='4'>
                                 <el-switch
