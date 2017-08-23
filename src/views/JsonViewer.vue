@@ -28,3 +28,9 @@
     }
   }
 </script>
+
+<style>
+  div.jsoneditor{
+    min-height: 700px;
+  }
+</style>

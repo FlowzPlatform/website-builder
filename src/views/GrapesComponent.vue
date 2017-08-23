@@ -93,7 +93,7 @@ export default {
                 label: 'Hero section',
                 category: 'Section',
                 content: '<header class="header-banner"> <div class="container-width">' +
-                    '<div class="logo-container"><div class="logo">GrapesJS</div></div>' +
+                    '<div class="logo-container"><div class="logo">Flowz</div></div>' +
                     '<nav class="navbar">' +
                     '<div class="menu-item">BUILDER</div><div class="menu-item">TEMPLATE</div><div class="menu-item">WEB</div>' +
                     '</nav><div class="clearfix"></div>' +
@@ -258,5 +258,9 @@ export default {
 
 .navbar-menu-link{
     color: #000;
+}
+
+.gjs-am-file-uploader>form{
+    min-height: 325px;
 }
 </style>

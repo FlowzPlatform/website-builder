@@ -102,6 +102,7 @@ export default {
                     console.log(response.data.id);
                     this.$session.set('privateToken', response.data.private_token);
                     this.$session.set('userId', response.data.id);
+                    this.$session.set('username', response.data.username);
                     this.$router.push('/');
                 }
               }).catch(error => {

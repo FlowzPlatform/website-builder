@@ -747,7 +747,7 @@ export default {
             
 
             // Create repositoroty on GitLab
-            axios.get(this.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddFolder.foldername + '&privateToken='+ this.$session.get('privateToken'), {
+            axios.get(this.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddFolder.foldername + '&privateToken='+ this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {
             })
             .then((response) => {
                 console.log(response.data);

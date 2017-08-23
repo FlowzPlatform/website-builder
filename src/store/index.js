@@ -4,7 +4,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         content: null,
-        fileUrl: null
+        fileUrl: null,
+        currentIndex: null
     },
     mutations: {
         ADD_TODO(state, text) {

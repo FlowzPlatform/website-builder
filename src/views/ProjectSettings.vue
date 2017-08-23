@@ -11,9 +11,9 @@
           </div>
         </div>
       </div>
-      <div class="row thumbnail">
-        
-        <div class="col-md-12" style="margin-top: 4%;">
+      <div class="thumbnail ">
+        <div class="row">
+          <div class="col-md-12" style="margin-top: 4%;">
           
           <el-form ref="form" :model="form" label-width="120px">
 
@@ -69,13 +69,16 @@
               
             </el-form-item>
           </el-form> 
+        </div>
+        
 
           
 
         </div>
       </div> 
 
-      <div class="row">
+      <div class="thumbnail">
+        <div class="row">
         <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
           <h3>List of Commits</h3>
           <hr>
@@ -105,6 +108,8 @@
             </el-table>
         </div>
       </div>
+      </div>
+      
     </div>
     
   </div>
@@ -188,6 +193,7 @@ export default {
 
 
     revertCommit(index) {
+      this.$store.state.currentIndex = index;
       // console.log($('#tablecommits .el-table__body-wrapper').find('tr').eq(index))
       $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
@@ -209,24 +215,28 @@ export default {
 
     publishWebsite() {
       console.log('Publish Website');
+      this.$store.state.currentIndex = 0;
 
       // Push repository changes
       axios.post(this.baseURL + '/gitlab-add-repo', {
         commitMessage: this.commitMessage,
         repoName: this.repoName
       }).then(response => {
-        console.log(response.data);
-        this.$message({
-          message: 'Successfully published the website.',
-          type: 'success'
-        });
+        console.log(response);
+        if(response.status == 200 || response.status == 201){
+          console.log(response.data);
+          this.$message({
+            message: 'Successfully published the website.',
+            type: 'success'
+          });
+        }
       }).catch(error => {
         console.log("Some error occured: ", error);
       }) 
     },
 
     tableRowClassName(row, index) {
-      if (index === 0) {
+      if (index === this.$store.state.currentIndex) {
         return 'positive-row';
       }
       return '';
