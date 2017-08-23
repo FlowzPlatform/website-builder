@@ -331,6 +331,9 @@ export default {
                 { value: 'Option2', label: 'Flat Theme' } 
                ],
       value: '',
+
+      newRepoId: '',
+      repoName: ''
     }
   },
   components: {
@@ -741,27 +744,33 @@ export default {
             this.addNewFolderLoading = false
             // this.formAddFolder.foldername = null;
 
-            // Create essential folders
-            if(this.autoFolders == true)
-            {
-              this.autoFolders=false;
-              this.addOtherFolder(newFolderName)
-            }
-            this.autoFolders=false;
+            
 
             // Create repositoroty on GitLab
             axios.get(this.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddFolder.foldername + '&privateToken='+ this.$session.get('privateToken'), {
             })
             .then((response) => {
                 console.log(response.data);
-                this.$session.set('newRepoId', response.data.id);
-                this.$session.set('repoName', response.data.name);
+                this.newRepoId = response.data.id;
+                this.repoName = response.data.name;
+                // this.$session.set('newRepoId', response.data.id);
+                // this.$session.set('repoName', response.data.name);
+
+                // Create essential folders
+                if(this.autoFolders == true)
+                {
+                  this.autoFolders=false;
+                  this.addOtherFolder(newFolderName)
+                }
+                this.autoFolders=false;
+
+                this.formAddFolder.foldername = null;
             })
             .catch((e) => {
                 console.log(e)
-            })
+            });
 
-            this.formAddFolder.foldername = null;
+
         })
         .catch((e) => {
             console.log(e)
@@ -775,7 +784,7 @@ export default {
         type : 'folder'
       })
       .then((res) => {
-          this.createEssentialFiles(newFolderName);
+          
           return axios.post(this.baseURL+'/flows-dir-listing' , {
           foldername : newFolderName+'/grids',
           type : 'folder'
@@ -794,7 +803,7 @@ export default {
 
                   })
                   .then((res) => {
-
+                    this.createEssentialFiles(newFolderName);
                   })
                   .catch((e)=>{
                     console.log("Error from Menu"+res)
@@ -816,9 +825,10 @@ export default {
 
     createEssentialFiles(newFolderName) {
       let newfilename = newFolderName + '/assets/config.json'
+      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout": '',"ProjectTheme":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"}]} ];
       return axios.post(this.baseURL + '/flows-dir-listing', {
           filename : newfilename,
-          text : ' ',
+          text : JSON.stringify(repoSettings),
           type : 'file'
       })
       .then((res) => {

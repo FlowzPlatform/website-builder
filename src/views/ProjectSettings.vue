@@ -76,7 +76,7 @@
       </div> 
 
       <div class="row">
-        <div class="col-md-12" style="margin-bottom: 100px; z-index: 0">
+        <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
           <h3>List of Commits</h3>
           <hr>
            <el-table
@@ -85,7 +85,6 @@
               border
               style="width: 100%">
               <el-table-column
-                fixed
                 prop="commitDate"
                 label="Commit Date"
                 width="180">
@@ -97,11 +96,10 @@
               </el-table-column>
               
               <el-table-column
-                fixed="right"
                 label="Revert To Commit"
                 width="180">
                 <template scope="scope">
-                  <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="text" size="small">Revert Commit</el-button>
+                  <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Revert Commit</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -142,7 +140,8 @@ export default {
       commitMessage: '',
       baseURL: 'http://localhost:3030',
       newRepoId: '',
-      repoName: ''
+      repoName: '',
+      configData: []
     }
   },
   component: {
@@ -151,7 +150,7 @@ export default {
     saveProjectSettings() {
       
 
-      let ProjectSettings = [{"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout":this.form.layout,"ProjectTheme":this.form.theme,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"}]}];
+      let ProjectSettings = [ {"repoSettings": [{"RepositoryId" : this.newRepoId, "RepositoryName": this.repoName}]} ,{"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout":this.form.layout,"ProjectTheme":this.form.theme,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"}]}];
 
       console.log(ProjectSettings);
 
@@ -189,6 +188,9 @@ export default {
 
 
     revertCommit(index) {
+      // console.log($('#tablecommits .el-table__body-wrapper').find('tr').eq(index))
+      $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
+      $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       console.log(this.commitsData[index].commitSHA);
       axios.post( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
@@ -233,20 +235,23 @@ export default {
   async created () {
     // console.log(this.$store.state.fileUrl);
     let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    let response = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
-    if(response.status == 200 || response.status == 204){
-      let settings = JSON.parse(response.data);
-      this.newRepoId = settings[0].projectSettings[0].RepositoryId;
-      this.repoName = settings[0].projectSettings[0].ProjectName;
-      this.form.layout = settings[0].projectSettings[0].ProjectLayout;
-      this.form.theme = settings[0].projectSettings[0].ProjectTheme;
-      this.form.seoTitle = settings[0].projectSettings[0].ProjectSEOTitle;
-      this.form.seoKeywords = settings[0].projectSettings[0].ProjectSEOKeywords;
-      this.form.seoDesc = settings[0].projectSettings[0].ProjectSEODescription;
+    this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+    if(this.configData.status == 200 || this.configData.status == 204){
+      console.log(this.configData);
+      let settings = JSON.parse(this.configData.data);
+      console.log(settings);
+      this.newRepoId = settings[0].repoSettings[0].RepositoryId;
+      this.repoName = settings[0].repoSettings[0].RepositoryName;
+      this.form.layout = settings[1].projectSettings[0].ProjectLayout;
+      this.form.theme = settings[1].projectSettings[0].ProjectTheme;
+      this.form.seoTitle = settings[1].projectSettings[0].ProjectSEOTitle;
+      this.form.seoKeywords = settings[1].projectSettings[0].ProjectSEOKeywords;
+      this.form.seoDesc = settings[1].projectSettings[0].ProjectSEODescription;
     } else {
       console.log('Cannot get config file!');
     } 
-    // Demo User token 4KQWGKhJu1ngdvyUoAoz
+
+
     await axios.get( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
     }).then(response => {
       console.log(response.data);
@@ -260,15 +265,18 @@ export default {
     }).catch(error => {
       console.log("Some error occured: ", error);
     });
+    
 
     if(this.commitsData[0]){
       return 'positive-row';
     }  
   },
 
-  mounted () {
-    this.newRepoId = this.$session.get('newRepoId');
-    this.repoName = this.$session.get('repoName');
+  async mounted () {
+    // this.newRepoId = this.$session.get('newRepoId');
+    // this.repoName = this.$session.get('repoName');
+    // Demo User token 4KQWGKhJu1ngdvyUoAoz
+    
   }
 }
 </script>
