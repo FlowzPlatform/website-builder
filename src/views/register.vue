@@ -126,21 +126,21 @@ export default {
                 }
               }).then(response => {
                 window.location = '/login'
-                // axios.post('http://localhost:3030/user-service', {
-                //     username : this.form.Uname,
-                //     password : this.form.pass,
-                //     email : this.form.email,
-                //     name : this.form.name                  
-                // }).then(response => {
-                //   console.log(response);
-                //   window.location = '/login'
-                // }).catch(error => {
-                //   this.$notify.error({
-                //     title: 'Error',
-                //     message: error.response.data,
-                //     offset: 100
-                //   })
-                // })
+                axios.post('http://localhost:3030/user-service', {
+                    username : this.form.Uname,
+                    password : this.form.pass,
+                    email : this.form.email,
+                    name : this.form.name                  
+                }).then(response => {
+                  console.log(response);
+                  window.location = '/login'
+                }).catch(error => {
+                  this.$notify.error({
+                    title: 'Error',
+                    message: error.response.data,
+                    offset: 100
+                  })
+                })
               }).catch(error => {
                 this.$notify.error({
                   title: 'Error',

@@ -1,14 +1,28 @@
 <template>
   <div class="ProjectSettings">
     <div class="container">
-      <div class="row">
+      <div class="thumbnail">
+        <div class="row">
+          <div class="col-md-10">
+            <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
+          </div>
+          <div class="col-md-2">
+            <el-button class="publishBtn" type="success" @click="publishWebsite()">Publish Site</el-button>
+          </div>
+        </div>
+      </div>
+      <div class="row thumbnail">
         
         <div class="col-md-12" style="margin-top: 4%;">
           
           <el-form ref="form" :model="form" label-width="120px">
 
+          <el-form-item label="Repository Id:">
+              <el-input v-model="newRepoId" :disabled="true"></el-input>
+            </el-form-item>
+
             <el-form-item label="Project name">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="repoName" :disabled="true"></el-input>
             </el-form-item>
 
             <el-form-item label="Project Layout">
@@ -50,11 +64,14 @@
             </el-form-item>  -->       
 
             <el-form-item>
-              <el-button type="primary" @click="saveProjectSettings">Save</el-button>
+              <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
               <el-button>Cancel</el-button>
-              <el-button class="publishBtn" type="success" @click="publishWebsite()">Publish Site</el-button>
+              
             </el-form-item>
           </el-form> 
+
+          
+
         </div>
       </div> 
 
@@ -64,6 +81,7 @@
           <hr>
            <el-table
               :data="commitsData"
+              :row-class-name="tableRowClassName"
               border
               style="width: 100%">
               <el-table-column
@@ -120,19 +138,25 @@ export default {
         seoDesc: '',
         // fileList: [{name: 'favicon.ico', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
       },
-      commitsData: []
+      commitsData: [],
+      commitMessage: '',
+      baseURL: 'http://localhost:3030',
+      newRepoId: '',
+      repoName: ''
     }
   },
   component: {
   },
   methods: {
     saveProjectSettings() {
-      let ProjectSettings = [{"projectSettings":[{"ProjectName": this.form.name,"ProjectLayout":this.form.layout,"ProjectTheme":this.form.theme,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"}]}];
+      
+
+      let ProjectSettings = [{"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout":this.form.layout,"ProjectTheme":this.form.theme,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"}]}];
 
       console.log(ProjectSettings);
 
       let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
-      axios.post('http://localhost:3030/flows-dir-listing', {
+      axios.post( this.baseURL + '/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(ProjectSettings),
           type : 'file'
@@ -160,11 +184,20 @@ export default {
     handlePreview(file) {
       console.log(file);
     },
+
+
+
+
     revertCommit(index) {
+
       console.log(this.commitsData[index].commitSHA);
-      axios.post('http://localhost:3030/commit-service?projectId=9&branchName=master&sha=' + this.commitsData[index].commitSHA + '&privateToken=' + this.$session.get('privateToken'), {
+      axios.post( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
       }).then(response => {
         console.log(response.data);
+        this.$message({
+          message: 'Successfully reverted to selected commit.',
+          type: 'success'
+        });
       }).catch(error => {
         console.log("Some error occured: ", error);
       })
@@ -174,10 +207,47 @@ export default {
 
     publishWebsite() {
       console.log('Publish Website');
+
+      // Push repository changes
+      axios.post(this.baseURL + '/gitlab-add-repo', {
+        commitMessage: this.commitMessage,
+        repoName: this.repoName
+      }).then(response => {
+        console.log(response.data);
+        this.$message({
+          message: 'Successfully published the website.',
+          type: 'success'
+        });
+      }).catch(error => {
+        console.log("Some error occured: ", error);
+      }) 
+    },
+
+    tableRowClassName(row, index) {
+      if (index === 0) {
+        return 'positive-row';
+      }
+      return '';
     }
   },
   async created () {
-    await axios.get('http://localhost:3030/commit-service?projectId=9&privateToken=4KQWGKhJu1ngdvyUoAoz', {
+    // console.log(this.$store.state.fileUrl);
+    let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    let response = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+    if(response.status == 200 || response.status == 204){
+      let settings = JSON.parse(response.data);
+      this.newRepoId = settings[0].projectSettings[0].RepositoryId;
+      this.repoName = settings[0].projectSettings[0].ProjectName;
+      this.form.layout = settings[0].projectSettings[0].ProjectLayout;
+      this.form.theme = settings[0].projectSettings[0].ProjectTheme;
+      this.form.seoTitle = settings[0].projectSettings[0].ProjectSEOTitle;
+      this.form.seoKeywords = settings[0].projectSettings[0].ProjectSEOKeywords;
+      this.form.seoDesc = settings[0].projectSettings[0].ProjectSEODescription;
+    } else {
+      console.log('Cannot get config file!');
+    } 
+    // Demo User token 4KQWGKhJu1ngdvyUoAoz
+    await axios.get( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
     }).then(response => {
       console.log(response.data);
       for(var i in response.data){
@@ -189,23 +259,16 @@ export default {
       }
     }).catch(error => {
       console.log("Some error occured: ", error);
-    })
+    });
+
+    if(this.commitsData[0]){
+      return 'positive-row';
+    }  
   },
-  async mounted () {
-    // console.log(this.$store.state.fileUrl);
-    let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    let response = await axios.get('http://localhost:3030/flows-dir-listing/0?path=' + url + '/assets/config.json');
-    if(response.status == 200 || response.status == 204){
-      let settings = JSON.parse(response.data);
-      this.form.name = settings[0].projectSettings[0].ProjectName;
-      this.form.layout = settings[0].projectSettings[0].ProjectLayout;
-      this.form.theme = settings[0].projectSettings[0].ProjectTheme;
-      this.form.seoTitle = settings[0].projectSettings[0].ProjectSEOTitle;
-      this.form.seoKeywords = settings[0].projectSettings[0].ProjectSEOKeywords;
-      this.form.seoDesc = settings[0].projectSettings[0].ProjectSEODescription;
-    } else {
-      console.log('Cannot get config file!');
-    }   
+
+  mounted () {
+    this.newRepoId = this.$session.get('newRepoId');
+    this.repoName = this.$session.get('repoName');
   }
 }
 </script>
@@ -217,8 +280,15 @@ input[type=file]{
 }
 
 .publishBtn{
-  float: right;
-  margin: 15px;
-  margin-right: 0;
+  width: 100%;
+}
+
+.thumbnail{
+  padding: 15px 20px;
+  margin-top: 4%;
+}
+
+.el-table .positive-row {
+  background: #e2f0e4;
 }
 </style>

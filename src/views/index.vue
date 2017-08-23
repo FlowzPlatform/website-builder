@@ -739,7 +739,7 @@ export default {
             console.log(res)
             this.newFolderDialog = false
             this.addNewFolderLoading = false
-            this.formAddFolder.foldername = null;
+            // this.formAddFolder.foldername = null;
 
             // Create essential folders
             if(this.autoFolders == true)
@@ -748,6 +748,20 @@ export default {
               this.addOtherFolder(newFolderName)
             }
             this.autoFolders=false;
+
+            // Create repositoroty on GitLab
+            axios.get(this.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddFolder.foldername + '&privateToken='+ this.$session.get('privateToken'), {
+            })
+            .then((response) => {
+                console.log(response.data);
+                this.$session.set('newRepoId', response.data.id);
+                this.$session.set('repoName', response.data.name);
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+
+            this.formAddFolder.foldername = null;
         })
         .catch((e) => {
             console.log(e)

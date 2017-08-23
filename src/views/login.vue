@@ -95,24 +95,24 @@ export default {
                 this.$router.push('/');
               }
 
-              // axios.get('http://localhost:3030/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
-              // }).then(response => {
-              //   if (response.data) {
-              //       console.log(response.data.private_token);
-              //       console.log(response.data.id);
-              //       this.$session.set('privateToken', response.data.private_token);
-              //       this.$session.set('userId', response.data.id);
-              //       this.$router.push('/');
-              //   }
-              // }).catch(error => {
-              //   console.log(error);
-              //   this.$notify.error({
-              //     title: 'Error',
-              //     message: error.response.data,
-              //     offset: 100
-              //   });
-              //   this.form.isLoading = false;
-              // })
+              axios.get('http://localhost:3030/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
+              }).then(response => {
+                if (response.data) {
+                    console.log(response.data.private_token);
+                    console.log(response.data.id);
+                    this.$session.set('privateToken', response.data.private_token);
+                    this.$session.set('userId', response.data.id);
+                    this.$router.push('/');
+                }
+              }).catch(error => {
+                console.log(error);
+                this.$notify.error({
+                  title: 'Error',
+                  message: error.response.data,
+                  offset: 100
+                });
+                this.form.isLoading = false;
+              })
 
             }).catch(error => {
               this.$notify.error({
