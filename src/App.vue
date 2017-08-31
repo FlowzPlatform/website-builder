@@ -84,9 +84,9 @@ export default {
 	    color: #fff;
 	  }
 
-	  .logo{
+  .logo{
     padding: 8px 70px;
-    cursor: pointer;
+    cursor: pointer; 
   }
   .loginBtn{
     float: right;

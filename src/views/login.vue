@@ -1,10 +1,6 @@
 <template>
   <div class="Login">
     <el-card class="box-card">
-      <!-- <div slot="header" class="clearfix">
-        <span style="line-height: 36px; font-size: 24px; font-weight: bold;">Login</span>
-        <el-button style="float: right;" type="primary" @click="registerPage">Register</el-button>
-      </div> -->
       <el-form style="padding:17px" ref="form" :model="form" :rules="loginRules" label-width="100px">
         <el-form-item label="Email Id" prop="user">
           <el-input icon="edit" type="text" v-model="form.user"placeholder="john23"></el-input>
@@ -17,9 +13,9 @@
         <el-form-item>
           <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;" :loading="form.isLoading">Login</el-button>
         </el-form-item>
-        <!-- <el-form-item> -->
-          <p class="newUser">Still New here? <a href="/register" class="registerNow">Register Now</a></p>
-        <!-- </el-form-item> -->
+
+        <p class="newUser">Still New here? <a href="/register" class="registerNow">Register Now</a></p>
+        
       </el-form>
     </el-card>
   </div>
@@ -45,7 +41,7 @@ export default {
       };
       var validaePass = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('Please input the password'))
+          callback(new Error('Please input the Password'))
         } else {
           callback();
         }

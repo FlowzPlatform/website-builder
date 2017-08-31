@@ -18,11 +18,11 @@
           <el-input icon="more" type="password" v-model="form.checkPass" auto-complete="off required"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;">Register</el-button>
+          <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;" :loading="form.isLoading">Register</el-button>
         </el-form-item>
-        <!-- <el-form-item> -->
-          <p class="newUser">Already Registered? <a href="/login" class="registerNow">Login Now</a></p>
-        <!-- </el-form-item> -->
+
+        <p class="newUser">Already Registered? <a href="/login" class="registerNow">Login Now</a></p>
+        
       </el-form>
     </el-card>
   </div>
@@ -85,7 +85,8 @@ export default {
         checkPass: '',
         Uname: '',
         email: '',
-        pass: ''
+        pass: '',
+        isLoading: false
       },
       registerRules: {
         pass: [
@@ -115,6 +116,7 @@ export default {
       validate (formName) {
         this.$refs[formName].validate((valid) => {
             if (valid) {
+              this.form.isLoading = true;
               axios.post('http://ec2-54-88-11-110.compute-1.amazonaws.com/api/setup', {
                 username: this.form.Uname,
                 password: this.form.pass,
@@ -132,6 +134,7 @@ export default {
                     email : this.form.email,
                     name : this.form.name                  
                 }).then(response => {
+                  this.form.isLoading = false;
                   console.log(response);
                   window.location = '/login'
                 }).catch(error => {
@@ -139,17 +142,20 @@ export default {
                     title: 'Error',
                     message: error.response.data,
                     offset: 100
-                  })
+                  });
+                  this.form.isLoading = false;
                 })
               }).catch(error => {
                 this.$notify.error({
                   title: 'Error',
                   message: error.response.data,
                   offset: 100
-                })
+                });
+                this.form.isLoading = false;
               })
             } else {
               console.log('error submit!!');
+              this.form.isLoading = false;
               return false;
             }
           });

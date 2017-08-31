@@ -1,5 +1,6 @@
 <template>
   <div class="index">
+
     <div class="isNotLoggedIn" v-if="isLoggedInUser === false">
       <header class="header-banner"> 
         <div class="container-width">
@@ -14,8 +15,11 @@
         </div>
       </header>
     </div>
+
     <div class="isLoggedIn" v-else>
           <div id="wrapper">
+
+            <!-- Overlay when sidebar is opened. Currently disabled in CSS -->
             <div class="overlay"></div>
         
             <!-- Sidebar Wrapper -->
@@ -24,7 +28,6 @@
                   <!-- <el-button type="primary" icon="plus" class="newWebsite" @click="newWebsiteDialog = true">Create New Website</el-button>
                   <el-button type="success" icon="plus" class="newWebsite" @click="getGitFileContent()">Get File Content</el-button>
                   <el-button type="info" icon="plus" class="newWebsite" @click="componentId = 'ProjectSettings'">Project Settings</el-button> -->
-
                   <el-tree :data="directoryTree" :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
                 </div>
             </nav>
@@ -38,20 +41,19 @@
                     <span class="hamb-bottom"></span>
                 </button>
                 <div class="allComponents">
-                  <div class="row" v-if="isHomePage === false">
-                    <div class="col-md-4">
-                      
-                    </div>
+                  <div class="row" v-if="isHomePage === false && isSettingsPage === false">
+                    <div class="col-md-4"></div>
+
                     <!-- <div class="col-md-4" style="margin-top: 15px;" align="center" v-if="isLayoutFile">
                       <el-button-group>
                         <el-button type="primary" icon="edit" @click="changeEditor('GrapesComponent')">Grapes Editor</el-button>
                         <el-button type="primary" @click="changeEditor('GridManager')">Grid Manager <i class="el-icon-menu el-icon-right"></i></el-button>
                       </el-button-group>
                     </div>
-                    <div class="col-md-4" v-if="!isLayoutFile">
-                      
-                    </div> -->
+                    <div class="col-md-4" v-if="!isLayoutFile"></div> -->
+
                     <div class="col-md-4"></div>
+
                     <div class="col-md-4" align="right">
                         <div style="margin-right:10px; margin: 15px;">
                             <el-button type="info" @click="previewProductPage()" v-if="!isGridPreview">Preview</el-button>
@@ -62,6 +64,7 @@
                             <el-button type="danger" @click="cancelEditing()">Cancel</el-button>
                         </div>
                     </div>
+
                     <el-dialog title="File name" :visible.sync="newFileDialog">
                         <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                             <el-form-item prop="filename">
@@ -111,7 +114,7 @@
                               </el-row>
                             </el-form-item> -->
                             <el-form-item>
-                              <el-col :span='6'>
+                              <el-col :span='10'>
                                 <div style="font-weight: bold;">Create default files and folders:(Recommended)</div>
                                 </el-col>
                                 <el-col :span='4'>
@@ -130,6 +133,7 @@
                         </span>
                     </el-dialog>
                   </div>
+
                   <div v-if="isHomePage === true">
                     <el-dialog title="File name" :visible.sync="newFileDialog">
                         <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
@@ -197,12 +201,15 @@
                         </span>
                     </el-dialog>
                   </div>
+
                   <div v-if="previewGrid" style="width:100%;">
                       <PreviewGrid></PreviewGrid>
                   </div>
+
                   <div v-if="!previewGrid">
                     <component :is="componentId" ref="contentComponent"></component>
                   </div>
+                  
                 </div>
             </div>
             <!-- /#page-content-wrapper -->
@@ -290,7 +297,7 @@ export default {
         label: 'name'
       },
       rootpath : '',
-      componentId:HomePage,
+      componentId: HomePage,
       addNewFileLoading : false,
       addNewFolderLoading : false,
       addNewWebsiteLoading: false,
@@ -304,6 +311,7 @@ export default {
       showLeftMenu : true,
       isMenuBuilder: false,
       isHomePage: true,
+      isSettingsPage: false,
       isGridPreview: false,
       isPreviewComponent: false,
       isPageEditing: false,
@@ -327,11 +335,10 @@ export default {
       newFolderDialog : false,
       newWebsiteDialog: false,
       options: [ 
-                { value: 'Option1', label: 'Elegent Theme' },
-                { value: 'Option2', label: 'Flat Theme' } 
-               ],
+        { value: 'Option1', label: 'Elegent Theme' },
+        { value: 'Option2', label: 'Flat Theme' } 
+      ],
       value: '',
-
       newRepoId: '',
       repoName: ''
     }
@@ -356,8 +363,6 @@ export default {
     }
   },
   mounted () {
-    // console.log(this.$session.get(privateToken));
-    // console.log(this.$session.get(userId));
     // Sidemenu Toggle
     $(document).ready(function() {
       var trigger = $('.hamburger'),
@@ -387,7 +392,7 @@ export default {
       });
     });
 
-    // Project Directory Lisiting
+    // Project Directory Listing
     let self = this
     const app = feathers().configure(socketio(io(this.baseURL)))
     app.service("flows-dir-listing").on("created", (response) => {
@@ -513,16 +518,19 @@ export default {
       if(this.isPageEditing){
         this.isPageEditing = false;
         this.isProjectEditing = false;
+        this.isSettingsPage = true;
         this.componentId = 'PageSettings';
       } else if(this.isProjectEditing) {
         this.isProjectEditing = false;
         this.$store.state.fileUrl = data.path;
+        this.isSettingsPage = true;
         this.componentId = 'ProjectSettings';
       } else {
         this.componentId = null;
         this.isPageEditing = false;
         this.isProjectEditing = false;
         this.previewGrid = false;
+        this.isSettingsPage = false;
         this.currentFile = data;
         if(data.type == "file"){
             this.getFileContent(data.path);
@@ -669,7 +677,6 @@ export default {
                     this.isHomePage = false;
                     this.isGridPreview = false;
                     // this.isLayoutFile = false;
-                    //console.log(response.data)
                     try{
                          this.$store.state.content = JSON.parse(response.data)
                     }catch(e){
@@ -710,7 +717,7 @@ export default {
     },
 
     previewProductPage: function(){
-        window.open("http://localhost/exported/");
+        window.open("http://localhost/websites/");
     },
 
     previewGridPage: function(){
@@ -742,9 +749,6 @@ export default {
             console.log(res)
             this.newFolderDialog = false
             this.addNewFolderLoading = false
-            // this.formAddFolder.foldername = null;
-
-            
 
             // Create repositoroty on GitLab
             axios.get(this.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddFolder.foldername + '&privateToken='+ this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {
@@ -825,7 +829,7 @@ export default {
 
     createEssentialFiles(newFolderName) {
       let newfilename = newFolderName + '/assets/config.json'
-      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout": '',"ProjectTheme":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":["key1","key2","key3"],"PageSEODescription":"Some description"}]} ];
+      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout": '',"ProjectTheme":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}],"pageSettings":[] } ];
       return axios.post(this.baseURL + '/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(repoSettings),
@@ -835,14 +839,14 @@ export default {
         let maincss = newFolderName + '/assets/main.css'
         return axios.post(this.baseURL + '/flows-dir-listing', {
             filename : maincss,
-            text : ' ',
+            text : '/* Add your custom CSS styles here. It will be automatically included in every page. */',
             type : 'file'
         })
         .then((res) => {
           let mainjs = newFolderName + '/assets/main.js'
           return axios.post(this.baseURL + '/flows-dir-listing', {
               filename : mainjs,
-              text : ' ',
+              text : '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */',
               type : 'file'
           })
           .then((res) => {
@@ -939,8 +943,9 @@ export default {
                 newContent = this.$store.state.content;
                 break;
         }
-        // console.log(this.$store.state.fileUrl + '/assets/menu.json');
-        let newJsonName = '/home/software/AllProjects/FlowzServiceApi/projects/DemoSite/assets/menu.json';
+        
+        let newJsonName = '/var/html/websites/' + this.repoName + '/assets/menu.json';
+        console.log(newJsonName);
         return axios.post(this.baseURL + '/flows-dir-listing', {
             filename : newJsonName ,
             text : newContent,
@@ -1236,7 +1241,7 @@ export default {
 
 #sidebar-wrapper {
     box-shadow: 0px 0px 25px rgba(0,0,0,0.2);
-    position: absolute;
+    position: fixed;
     z-index: 1000;
     top: 0;
     width: 0;
@@ -1531,8 +1536,6 @@ export default {
   height: 373px;
 }
 
-
-
 .dropdown-toggle{
     background-color: transparent;
     border: none;
@@ -1551,4 +1554,12 @@ export default {
   margin: 15px;
 }
 
+.gjs-am-file-uploader>form{
+    min-height: 325px !important;
+}
+
+/*.el-tree-node__expand-icon{
+  border: 8px solid transparent;
+  border-left-width: 10px; 
+}*/
 </style>
