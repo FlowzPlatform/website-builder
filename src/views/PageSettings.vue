@@ -8,11 +8,16 @@
               <el-input v-model="form.name" :disabled="true"></el-input>
             </el-form-item>
 
-            <el-form-item label="Page Theme">
-              <el-select v-model="form.theme" placeholder="Please select page theme">
-                <el-option label="Light Theme" value="light"></el-option>
-                <el-option label="Dark Theme" value="dark"></el-option>
+            <el-form-item label="Project Layout">
+              <el-select v-model="PageLayout" placeholder="Please select Layout">
+                <el-option
+                  v-for="item in this.$store.state.LayoutOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
               </el-select>
+                
             </el-form-item>
 
             <el-form-item label="Page SEO Title">
@@ -64,6 +69,9 @@ export default {
         seoKeywords: '',
         seoDesc: ''
       },
+      PageLayout: '',
+      PageFooter: '',
+      PageHeader: '',
       baseURL: 'http://localhost:3030',
       currentFileIndex: '',
       configData: [],
@@ -74,16 +82,29 @@ export default {
   component: {
   },
   methods: {
-    savePageSettings() {
-      console.log('submit!');
-      let PageSettings = {"PageName":this.form.name,"PageTheme":this.form.theme,"PageSEOTitle":this.form.seoTitle,"PageSEOKeywords":this.form.seoKeywords,"PageSEODescription":this.form.seoDesc};
+    async savePageSettings() {
+      let newContent = this.$store.state.content;
 
-      console.log(PageSettings);
+      let tempValueLayout='---\nlayout: '+this.PageLayout+'.layout\n---\n';
+
+      console.log("tempValueLayout:"+tempValueLayout)
+
+      if (newContent.match('---')) {
+        let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+        console.log("substr:" + substr)
+        newContent=newContent.replace(substr,tempValueLayout)
+      } else{
+        newContent = tempValueLayout+ this.$store.state.content;
+      }
+
+      this.PageLayout = '';
+
+      let PageSettings = {"PageName":this.form.name,"PageTheme":this.PageLayout,"PageSEOTitle":this.form.seoTitle,"PageSEOKeywords":this.form.seoKeywords,"PageSEODescription":this.form.seoDesc};
 
       if(this.currentFileIndex != null){
 
         console.log('Update existing Page Settings')
-        this.settings[1].pageSettings[this.currentFileIndex].PageTheme = this.form.theme;
+        this.settings[1].pageSettings[this.currentFileIndex].PageTheme = this.PageLayout;
         this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle = this.form.seoTitle;
         this.settings[1].pageSettings[this.currentFileIndex].PageSEOKeywords = this.form.seoKeywords;
         this.settings[1].pageSettings[this.currentFileIndex].PageSEODescription = this.form.seoDesc;  
@@ -95,18 +116,42 @@ export default {
             type : 'file'
         })
         .then((res) => {
-            console.log(res);
+          
             this.$message({
                 showClose: true,
                 message: 'Config Saved!',
                 type: 'success'
             });
+
+            axios.post('http://localhost:3030/flows-dir-listing', {
+                filename : this.$store.state.fileUrl,
+                text : newContent,
+                type : 'file'
+            })
+            .then((res) => {
+                alert('Inside Newcontent Save')
+                this.saveFileLoading = false
+                this.$message({
+                    showClose: true,
+                    message: 'File Layout Updated!',
+                    type: 'success'
+                });
+            })
+            .catch((e) => {
+                this.saveFileLoading = false
+                this.$message({
+                    showClose: true,
+                    message: 'File not Updated! Please try again.',
+                    type: 'error'
+                });
+                console.log(e)
+            })
         })
         .catch((e) => {
             console.log(e);
             this.$message({
                 showClose: true,
-                message: 'Cannot save file! Some error occured, try again.',
+                message: 'Cannot save config file! Some error occured, try again.',
                 type: 'danger'
             });
         })
@@ -128,6 +173,30 @@ export default {
                 message: 'Config Saved!',
                 type: 'success'
             });
+
+            axios.post('http://localhost:3030/flows-dir-listing', {
+                filename : this.$store.state.fileUrl,
+                text : newContent,
+                type : 'file'
+            })
+            .then((res) => {
+                alert('Inside Newcontent Save')
+                this.saveFileLoading = false
+                this.$message({
+                    showClose: true,
+                    message: 'File Layout Updated!',
+                    type: 'success'
+                });
+            })
+            .catch((e) => {
+                this.saveFileLoading = false
+                this.$message({
+                    showClose: true,
+                    message: 'File not Updated! Please try again.',
+                    type: 'error'
+                });
+                console.log(e)
+            })
         })
         .catch((e) => {
             console.log(e);
@@ -147,7 +216,7 @@ export default {
     let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
     let urlparts = url.split("/");
     let fileNameOrginal = urlparts[urlparts.length-1];
-    let fileName = '/' + urlparts[urlparts.length-1];
+    let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
     this.folderUrl = url.replace(fileName, '');
 
     this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
@@ -158,7 +227,7 @@ export default {
       this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});
 
       this.form.name = fileNameOrginal;
-      this.form.theme = this.settings[1].pageSettings[this.currentFileIndex].PageTheme;
+      this.PageLayout = this.settings[1].pageSettings[this.currentFileIndex].PageTheme;
       this.form.seoTitle = this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle;
       this.form.seoKeywords = this.settings[1].pageSettings[this.currentFileIndex].PageSEOKeywords;
       this.form.seoDesc = this.settings[1].pageSettings[this.currentFileIndex].PageSEODescription;

@@ -28,7 +28,8 @@
     "vue-router": "^2.6.0",
     "vue-session": "^0.9.4",
     "vue-sweetalert": "^0.1.18",
-    "vuex": "^2.3.1"
+    "vuex": "^2.3.1",
+    "vuex-persistedstate": "^2.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

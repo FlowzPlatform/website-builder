@@ -72,7 +72,7 @@
                 let canvas = gm.$el.find("#" + gm.options.canvasId);
                 gm.deinitCanvas();
                 this.$store.state.content = canvas.html()
-                console.log((this.$store.state.content).replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+                this.$store.state.content = (this.$store.state.content).replace(/&gt;/g, '>');
                 gm.initCanvas();
             },
             test_callback: function(container, btnElem){

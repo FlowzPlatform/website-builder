@@ -25,18 +25,31 @@
               <el-input v-model="repoName" :disabled="true"></el-input>
             </el-form-item>
 
-            <el-form-item label="Project Layout">
-              <el-select v-model="form.layout" placeholder="Please select poject layout">
-                <el-option label="Full-width Layout" value="full"></el-option>
-                <el-option label="Boxed-Width Layout" value="boxed"></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="Project Theme">
-              <el-select v-model="form.theme" placeholder="Please select page theme">
-                <el-option label="Light Theme" value="light"></el-option>
-                <el-option label="Dark Theme" value="dark"></el-option>
-              </el-select>
+            <el-form-item label="Project Header">
+              <el-row>
+                <el-col :span="10">
+                  <el-select v-model="form.Header" placeholder="Please select Header">
+                    <el-option
+                      v-for="item in this.$store.state.HeaderOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="14">
+                  <el-form-item label="Project Footer">
+                    <el-select v-model="form.Footer" placeholder="Please select Footer">
+                      <el-option
+                        v-for="item in this.$store.state.FooterOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </el-form-item>
 
             <el-form-item label="Project SEO Title">
@@ -49,22 +62,11 @@
             
             <el-form-item label="Project SEO Description">
               <el-input type="textarea" :rows="5" v-model="form.seoDesc"></el-input>
-            </el-form-item>
-
-            <!-- <el-form-item label="Favicon">
-              <el-upload
-                class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :file-list="form.fileList">
-                <el-button size="small" type="primary">Click to upload</el-button>
-                <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div>
-              </el-upload>
-            </el-form-item>  -->       
+            </el-form-item>    
 
             <el-form-item>
               <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
+              <el-button @click="publishMetalsmith">Publish Settings</el-button>
               <el-button>Cancel</el-button>
               
             </el-form-item>
@@ -134,12 +136,11 @@ export default {
     return {
       form: {
         name: '',
-        layout: '',
-        theme: '',
         seoTitle: '',
         seoKeywords: '',
         seoDesc: '',
-        // fileList: [{name: 'favicon.ico', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        Header: '',
+        Footer: ''
       },
       commitsData: [],
       commitMessage: '',
@@ -154,8 +155,7 @@ export default {
   methods: {
     saveProjectSettings() {
       
-
-      let ProjectSettings = [ {"repoSettings": [{"RepositoryId" : this.newRepoId, "RepositoryName": this.repoName}]} ,{"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout":this.form.layout,"ProjectTheme":this.form.theme,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"}]}];
+      let ProjectSettings = [ {"repoSettings": [{"RepositoryId" : this.newRepoId, "RepositoryName": this.repoName}]} ,{"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectHeader":this.form.Header,"ProjectFooter":this.form.Footer,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"}]}];
 
       console.log(ProjectSettings);
 
@@ -183,17 +183,6 @@ export default {
       })
     },
 
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    
-    handlePreview(file) {
-      console.log(file);
-    },
-
-
-
-
     revertCommit(index) {
       this.$store.state.currentIndex = index;
       // console.log($('#tablecommits .el-table__body-wrapper').find('tr').eq(index))
@@ -212,8 +201,6 @@ export default {
         console.log("Some error occured: ", error);
       })
     },
-
-
 
     publishWebsite() {
       console.log('Publish Website');
@@ -237,6 +224,57 @@ export default {
       }) 
     },
 
+    publishMetalsmith(){
+      var partials = '';
+      if (this.form.Header != '') {
+          var partialHeader = "Handlebars.registerPartial('Header', fs.readFileSync('" + this.$store.state.fileUrl + "/Headers/" + this.form.Header + ".html').toString());\n";
+          partials = partials + partialHeader;
+      }
+      if (this.form.Footer != '') {
+          var partialFooter = "Handlebars.registerPartial('Footer', fs.readFileSync('" + this.$store.state.fileUrl + "/Footers/" + this.form.Footer + ".html').toString());\n"
+          partials = partials + partialFooter;
+      }
+
+      var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n" + partials + " Metalsmith(__dirname)\n.metadata({title:'" + this.form.seoTitle + "',description:'" + this.form.seoDesc + "'})\n.source('" + this.$store.state.fileUrl + "/Pages')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(permalinks())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){console.log(err)}});"
+
+
+      axios.post('http://localhost:3030/flows-dir-listing', {
+          filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
+          text: (metalsmithJSON),
+          type: 'file'
+      }).then((response) => {
+          console.log('successfully created metalsmith file :' + (response.data))
+          this.$message({
+              showClose: true,
+              message: 'MetalSmith Config Saved!',
+              type: 'success'
+          });
+
+          axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {}).then((response) => {
+              console.log('successfully  :' + (response))
+          })
+          .catch((err) => {
+              console.log('error while creating metalsmithJSON file' + err)
+          })
+      })
+      .catch((e) => {
+          console.log('error while creating metalsmithJSON file' + e)
+          this.$message({
+              showClose: true,
+              message: 'Cannot save file! Some error occured, try again.',
+              type: 'danger'
+          });
+      })
+    },
+
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    
+    handlePreview(file) {
+      console.log(file);
+    },
+
     tableRowClassName(row, index) {
       if (index === this.$store.state.currentIndex) {
         return 'positive-row';
@@ -245,17 +283,13 @@ export default {
     }
   },
   async created () {
-    // console.log(this.$store.state.fileUrl);
     let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
     this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
     if(this.configData.status == 200 || this.configData.status == 204){
-      console.log(this.configData);
+      console.log('Config file found! Updating fields..');
       let settings = JSON.parse(this.configData.data);
-      console.log(settings);
       this.newRepoId = settings[0].repoSettings[0].RepositoryId;
       this.repoName = settings[0].repoSettings[0].RepositoryName;
-      this.form.layout = settings[1].projectSettings[0].ProjectLayout;
-      this.form.theme = settings[1].projectSettings[0].ProjectTheme;
       this.form.seoTitle = settings[1].projectSettings[0].ProjectSEOTitle;
       this.form.seoKeywords = settings[1].projectSettings[0].ProjectSEOKeywords;
       this.form.seoDesc = settings[1].projectSettings[0].ProjectSEODescription;
@@ -266,7 +300,6 @@ export default {
 
     await axios.get( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
     }).then(response => {
-      console.log(response.data);
       for(var i in response.data){
         this.commitsData.push({
           commitDate: response.data[i].created_at,
@@ -284,11 +317,12 @@ export default {
     }  
   },
 
-  async mounted () {
+  mounted () {
     // this.newRepoId = this.$session.get('newRepoId');
     // this.repoName = this.$session.get('repoName');
     // Demo User token 4KQWGKhJu1ngdvyUoAoz
-    
+    // this.form.Header = this.$store.state.HeaderOptions;
+    // this.form.Footer = this.$store.state.FooterOptions;
   }
 }
 </script>

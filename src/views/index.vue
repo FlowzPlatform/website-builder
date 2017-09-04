@@ -694,7 +694,26 @@ export default {
                     this.isGridPreview = false;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
-                    this.componentId = 'GrapesComponent'
+
+                    if(this.isEditOption==true){
+                      this.componentId = 'code-mirror'
+                      this.isEditOption=false
+                    } else{ 
+                      this.componentId = 'GridManager'
+                    }
+
+                    break;
+                case 'html':
+                    // this.isLayoutFile = true;
+                    this.isGridPreview = false;
+                    this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    if(this.isEditOption==true) {
+                      this.componentId = 'code-mirror'
+                      this.isEditOption=false
+                    } else{ 
+                      this.componentId = 'GrapesComponent'
+                    }
                     break;
                 case 'menu':
                     // this.isLayoutFile = false;
@@ -790,13 +809,13 @@ export default {
       .then((res) => {
           
           return axios.post(this.baseURL+'/flows-dir-listing' , {
-          foldername : newFolderName+'/grids',
+          foldername : newFolderName+'/Headers',
           type : 'folder'
 
           })
           .then((res) => {
               return axios.post(this.baseURL+'/flows-dir-listing' , {
-                foldername : newFolderName+'/layouts',
+                foldername : newFolderName+'/Layouts',
                 type : 'folder'
 
               })
@@ -807,7 +826,25 @@ export default {
 
                   })
                   .then((res) => {
-                    this.createEssentialFiles(newFolderName);
+                    return axios.post(this.baseURL+'/flows-dir-listing' , {
+                      foldername : newFolderName+'/Footers',
+                      type : 'folder'
+                    })
+                    .then((res) => {
+                      return axios.post(this.baseURL+'/flows-dir-listing' , {
+                        foldername : newFolderName+'/Pages',
+                        type : 'folder'
+                      })
+                      .then((res) => {
+                        this.createEssentialFiles(newFolderName);
+                      })
+                      .catch((e)=>{
+                        console.log("Error from Menu"+res)
+                      })
+                    })
+                    .catch((e)=>{
+                      console.log("Error from Menu"+res)
+                    })
                   })
                   .catch((e)=>{
                     console.log("Error from Menu"+res)
@@ -921,7 +958,82 @@ export default {
                 message: 'File Saved!',
                 type: 'success'
             });
-            // console.log(res)
+
+
+
+            if (this.currentFile.path.replace(/\\/g, "\/").match('Footers')) {
+                console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+
+                let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Footers/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
+                let temp = {
+                    value: name,
+                    label: name
+                }
+                let checkValue = false;
+                for (var i = 0; i < this.$store.state.FooterOptions.length; i++) {
+                    var obj = this.$store.state.FooterOptions[i];
+                    if ((obj.label) == name) {
+                        checkValue = true;
+                    }
+                }
+                if (checkValue == true) {
+                    console.log("file already exists")
+                } else {
+                    console.log('file doesnt exists');
+                    this.$store.state.FooterOptions.push(temp);
+                }
+
+            } else if (this.currentFile.path.replace(/\\/g, "\/").match('Headers')) {
+                console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+
+                let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Headers/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
+                let temp = {
+                    value: name,
+                    label: name
+                }
+                let checkValue = false;
+                for (var i = 0; i < this.$store.state.HeaderOptions.length; i++) {
+                    var obj = this.$store.state.HeaderOptions[i];
+                    if ((obj.label) == name) {
+                        checkValue = true;
+                    }
+                }
+                if (checkValue == true) {
+                    console.log("file already exists")
+                } else {
+                    console.log('file doesnt exists');
+                    this.$store.state.HeaderOptions.push(temp);
+                }
+
+
+            } else if (this.currentFile.path.replace(/\\/g, "\/").match('Layouts')) {
+                console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+                let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Layouts/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.layout'));
+                let temp = {
+                    value: name,
+                    label: name
+                }
+               
+                let checkValue = false;
+                for (var i = 0; i < this.$store.state.LayoutOptions.length; i++) {
+                    var obj = this.$store.state.LayoutOptions[i];
+                    if ((obj.label) == name) {
+                        checkValue = true;
+                    }
+                }
+                if (checkValue == true) {
+                    console.log("file already exists")
+                } else {
+                    console.log('file doesnt exists');
+                    this.$store.state.LayoutOptions.push(temp);
+                }
+            }
+
+
+
+
+
+
         })
         .catch((e) => {
             this.saveFileLoading = false
@@ -995,7 +1107,40 @@ export default {
           .then((res) => {
               this.currentFile = null
               this.componentId = null
-              console.log(res)
+              console.log(res);
+
+              if (data.path.replace(/\\/g, "/").match('Header')) {
+                  let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Headers/') + 8, data.path.replace(/\\/g, "/").indexOf('.html'));
+                  console.log("name:" + name)
+                  for (var i = 0; i < this.$store.state.HeaderOptions.length; i++) {
+                      var obj = this.$store.state.HeaderOptions[i];
+                      console.log("obj.label:" + obj.label)
+                      if ((obj.label) == name) {
+                          this.$store.state.HeaderOptions.splice(i, 1);
+                      }
+                  }
+              } else if (data.path.replace(/\\/g, "/").match('Footer')) {
+                  let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Footers/') + 8, data.path.replace(/\\/g, "/").indexOf('.html'));
+                  console.log("name:" + name)
+                  for (var i = 0; i < this.$store.state.FooterOptions.length; i++) {
+                      var obj = this.$store.state.FooterOptions[i];
+
+                      if ((obj.label) == name) {
+                          this.$store.state.FooterOptions.splice(i, 1);
+                      }
+                  }
+              } else if (data.path.replace(/\\/g, "/").match('Layouts')) {
+                  let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Layouts/') + 8, data.path.replace(/\\/g, "/").indexOf('.layout'));
+                  console.log("name:" + name)
+                  for (var i = 0; i < this.$store.state.LayoutOptions.length; i++) {
+                      var obj = this.$store.state.LayoutOptions[i];
+
+                      if ((obj.label) == name) {
+                          this.$store.state.LayoutOptions.splice(i, 1);
+                      }
+                  }
+              }
+
           })
           .catch((e) => {
               console.log(e)
@@ -1052,7 +1197,7 @@ export default {
           }
           
       } else if(data.type=='file'){
-        if(data.extension == '.layout'){
+        if(data.extension == '.layout' || data.extension == '.html'){
           return (<span>
               <span class="filelabel">
                   <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
@@ -1064,6 +1209,9 @@ export default {
                   </el-tooltip>
                   <el-tooltip content="Page Settings" placement="top">
                     <i class="fa fa-cog" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #607C8A" on-click={ () => this.isPageEditing = true }></i>
+                  </el-tooltip>
+                  <el-tooltip content="Edit" placement="top">
+                    <i class="fa fa-pencil" style="position:absolute; right: 35px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
                   </el-tooltip>
               </span>
           </span>)
