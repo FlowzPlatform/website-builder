@@ -20,6 +20,33 @@
                 
             </el-form-item>
 
+            <el-form-item label="Project Header">
+              <el-row>
+                <el-col :span="10">
+                  <el-select v-model="form.Header" placeholder="Please select Header">
+                    <el-option
+                      v-for="item in this.$store.state.HeaderOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="14">
+                  <el-form-item label="Project Footer">
+                    <el-select v-model="form.Footer" placeholder="Please select Footer">
+                      <el-option
+                        v-for="item in this.$store.state.FooterOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form-item>
+
             <el-form-item label="Page SEO Title">
               <el-input v-model="form.seoTitle"></el-input>
             </el-form-item>
@@ -67,7 +94,9 @@ export default {
         theme: '',
         seoTitle: '',
         seoKeywords: '',
-        seoDesc: ''
+        seoDesc: '',
+        Header: '',
+        Footer: ''
       },
       PageLayout: '',
       PageFooter: '',
