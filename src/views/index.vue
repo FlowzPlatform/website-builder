@@ -736,7 +736,9 @@ export default {
     },
 
     previewProductPage: function(){
-        window.open("http://localhost/websites/");
+      let path = this.$store.state.fileUrl;
+      let replaced_path = path.replace('/var/html/','')
+      window.open('http://localhost' + replaced_path);  
     },
 
     previewGridPage: function(){
