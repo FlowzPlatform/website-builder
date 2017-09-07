@@ -237,24 +237,31 @@ export default {
 
       var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n" + partials + " Metalsmith(__dirname)\n.metadata({title:'" + this.form.seoTitle + "',description:'" + this.form.seoDesc + "'})\n.source('" + this.$store.state.fileUrl + "/Pages')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(permalinks())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){console.log(err)}});"
 
-
+      console.log(this.$store.state.fileUrl);
       axios.post('http://localhost:3030/flows-dir-listing', {
           filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
           text: (metalsmithJSON),
           type: 'file'
       }).then((response) => {
-          console.log('successfully created metalsmith file :' + (response.data))
+        console.log('Axios call 1');
+          console.log('successfully created metalsmith file :', (response.data))
           this.$message({
               showClose: true,
               message: 'MetalSmith Config Saved!',
               type: 'success'
           });
 
-          axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {}).then((response) => {
+          axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {
+          }).then((response) => {
+              console.log('Axios call 2');
               console.log('successfully  :' + (response))
           })
           .catch((err) => {
-              console.log('error while creating metalsmithJSON file' + err)
+              this.$message({
+                  showClose: true,
+                  message: 'Cannot get Metalsmith file! Some error occured, try again.',
+                  type: 'error'
+              });
           })
       })
       .catch((e) => {
@@ -262,7 +269,7 @@ export default {
           this.$message({
               showClose: true,
               message: 'Cannot save file! Some error occured, try again.',
-              type: 'danger'
+              type: 'error'
           });
       })
     },

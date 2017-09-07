@@ -209,7 +209,6 @@ export default {
                 type : 'file'
             })
             .then((res) => {
-                alert('Inside Newcontent Save')
                 this.saveFileLoading = false
                 this.$message({
                     showClose: true,
