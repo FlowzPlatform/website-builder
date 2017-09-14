@@ -42,25 +42,57 @@
                 </button>
                 <div class="allComponents">
                   <div class="row" v-if="isHomePage === false && isSettingsPage === false">
-                    <div class="col-md-4"></div>
-
-                    <!-- <div class="col-md-4" style="margin-top: 15px;" align="center" v-if="isLayoutFile">
-                      <el-button-group>
-                        <el-button type="primary" icon="edit" @click="changeEditor('GrapesComponent')">Grapes Editor</el-button>
-                        <el-button type="primary" @click="changeEditor('GridManager')">Grid Manager <i class="el-icon-menu el-icon-right"></i></el-button>
-                      </el-button-group>
+                    <div v-if="this.componentId === 'GrapesComponent'"  class="col-md-8">
+                       <el-form style="margin-top: 18px;" ref="form" :model="form" label-width="120px">
+                          <el-row>
+                             <el-col :span="8">
+                                <el-form-item label="Project Layout">
+                                   <el-select v-model="PageLayout" placeholder="Please select Layout">
+                                      <el-option
+                                         v-for="item in this.$store.state.LayoutOptions"
+                                         :key="item.value"
+                                         :label="item.label"
+                                         :value="item.value">
+                                      </el-option>
+                                   </el-select>
+                                </el-form-item>
+                             </el-col>
+                             <el-col :span="8">
+                                <el-form-item label="Project Header">
+                                   <el-select v-model="form.Header" placeholder="Please select Header">
+                                      <el-option
+                                         v-for="item in this.$store.state.HeaderOptions"
+                                         :key="item.value"
+                                         :label="item.label"
+                                         :value="item.value">
+                                      </el-option>
+                                   </el-select>
+                                </el-form-item>
+                             </el-col>
+                             <el-col :span="8">
+                                <el-form-item label="Project Footer">
+                                   <el-select v-model="form.Footer" placeholder="Please select Footer">
+                                      <el-option
+                                         v-for="item in this.$store.state.FooterOptions"
+                                         :key="item.value"
+                                         :label="item.label"
+                                         :value="item.value">
+                                      </el-option>
+                                   </el-select>
+                                </el-form-item>
+                             </el-col>
+                          </el-row>
+                       </el-form>
                     </div>
-                    <div class="col-md-4" v-if="!isLayoutFile"></div> -->
-
-                    <div class="col-md-4"></div>
-
+                    <div v-else class="col-md-8"></div>
                     <div class="col-md-4" align="right">
                         <div style="margin-right:10px; margin: 15px;">
                             <el-button type="info" @click="previewProductPage()" v-if="!isGridPreview">Preview</el-button>
                             <el-button type="info" @click="previewGridPage()" v-if="isGridPreview && !isPreviewComponent">Preview</el-button>
                             <el-button type="default" @click="backToGrid()" v-if="isPreviewComponent">Back</el-button>
                             <el-button type="primary" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save</el-button>
-                            <el-button type="primary" @click="saveFile()" :loading="saveFileLoading" v-else="isMenuBuilder">Save</el-button>
+                            <el-button type="primary" @click="saveFile()" :loading="saveFileLoading" v-else="isMenuBuilder">Save Content</el-button>
+                            <el-button type="default" @click="savePageSettings()" v-if="this.componentId === 'GrapesComponent'">Save Config</el-button>
                             <el-button type="danger" @click="cancelEditing()">Cancel</el-button>
                         </div>
                     </div>
@@ -96,6 +128,18 @@
                             <el-form-item>
                                 <el-input v-model="formAddFolder.foldername" auto-complete="off" placeholder="Folder Name"></el-input>
                             </el-form-item>
+                        </el-form>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="newFolderDialog = false">Cancel</el-button>
+                            <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
+                        </span>
+                    </el-dialog>
+
+                    <el-dialog title="Folder name" :visible.sync="newProjectFolderDialog">
+                        <el-form :model="formAddProjectFolder">
+                            <el-form-item>
+                                <el-input v-model="formAddProjectFolder.projectName" auto-complete="off" placeholder="Project Name"></el-input>
+                            </el-form-item>
                             <!-- <el-form-item>    
                               <el-row>
                               <el-col :span='4'>
@@ -114,6 +158,33 @@
                               </el-row>
                             </el-form-item> -->
                             <el-form-item>
+                              <div class="templateSelection">
+                                <strong>Select Template</strong>
+                                <ul>
+                                  <li>
+                                      <input type="radio" name="layout" value="template1" id="myCheckbox1" />
+                                      <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
+                                      <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
+                                  </li>
+                                  <li>
+                                      <input type="radio" name="layout" value="template2" id="myCheckbox2" />
+                                      <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
+                                      <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
+                                  </li>
+                                  <li>
+                                      <input type="radio" name="layout" value="template3" id="myCheckbox3" />
+                                      <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
+                                      <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
+                                  </li>
+                                  <!-- <li>
+                                      <input type="radio" name="layout" value="M|M" id="myCheckbox3" />
+                                      <label for="myCheckbox3" class="radio-img"></label>
+                                      <img src="http://www.websitescreenshots.com/images/microsoft.com.jpg" class="templateThumbnail">
+                                  </li> -->
+                                </ul>
+                              </div>
+                            </el-form-item>
+                            <el-form-item>
                               <el-col :span='10'>
                                 <div style="font-weight: bold;">Create default files and folders:(Recommended)</div>
                                 </el-col>
@@ -128,8 +199,8 @@
                             </el-form-item>
                         </el-form>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="newFolderDialog = false">Cancel</el-button>
-                            <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
+                            <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
+                            <el-button type="primary" @click="addProjectFolder()" :loading="addNewFolderLoading">Create</el-button>
                         </span>
                     </el-dialog>
                   </div>
@@ -162,7 +233,19 @@
                     <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
-                                <el-input v-model="formAddFolder.foldername" auto-complete="off"></el-input>
+                                <el-input v-model="formAddFolder.foldername" auto-complete="off" placeholder="Folder Name"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="newFolderDialog = false">Cancel</el-button>
+                            <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
+                        </span>
+                    </el-dialog>
+
+                    <el-dialog title="Folder name" :visible.sync="newProjectFolderDialog">
+                        <el-form :model="formAddProjectFolder">
+                            <el-form-item>
+                                <el-input v-model="formAddProjectFolder.projectName" auto-complete="off" placeholder="Project Name"></el-input>
                             </el-form-item>
                             <!-- <el-form-item>    
                               <el-row>
@@ -182,8 +265,35 @@
                               </el-row>
                             </el-form-item> -->
                             <el-form-item>
-                              <el-col :span='6'>
-                                <div style="font-weight: bold;">Create default files and folders:</div>
+                              <div class="templateSelection">
+                                <strong>Select Template</strong>
+                                <ul>
+                                  <li>
+                                      <input type="radio" name="layout" value="template1" id="myCheckbox1" />
+                                      <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
+                                      <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
+                                  </li>
+                                  <li>
+                                      <input type="radio" name="layout" value="template2" id="myCheckbox2" />
+                                      <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
+                                      <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
+                                  </li>
+                                  <li>
+                                      <input type="radio" name="layout" value="template3" id="myCheckbox3" />
+                                      <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
+                                      <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
+                                  </li>
+                                  <!-- <li>
+                                      <input type="radio" name="layout" value="M|M" id="myCheckbox3" />
+                                      <label for="myCheckbox3" class="radio-img"></label>
+                                      <img src="http://www.websitescreenshots.com/images/microsoft.com.jpg" class="templateThumbnail">
+                                  </li> -->
+                                </ul>
+                              </div>
+                            </el-form-item>
+                            <el-form-item>
+                              <el-col :span='10'>
+                                <div style="font-weight: bold;">Create default files and folders:(Recommended)</div>
                                 </el-col>
                                 <el-col :span='4'>
                                 <el-switch
@@ -196,8 +306,8 @@
                             </el-form-item>
                         </el-form>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="newFolderDialog = false">Cancel</el-button>
-                            <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
+                            <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
+                            <el-button type="primary" @click="addProjectFolder()" :loading="addNewFolderLoading">Create</el-button>
                         </span>
                     </el-dialog>
                   </div>
@@ -300,6 +410,7 @@ export default {
       componentId: HomePage,
       addNewFileLoading : false,
       addNewFolderLoading : false,
+      addNewProjectFolderLoading : false,
       addNewWebsiteLoading: false,
       loadingTree : true,
       loadingContent : false,
@@ -331,8 +442,12 @@ export default {
       formAddFolder : {
           foldername : null
       },
+      formAddProjectFolder : {
+          projectName : null
+      },
       newFileDialog : false,
       newFolderDialog : false,
+      newProjectFolderDialog : false,
       newWebsiteDialog: false,
       options: [ 
         { value: 'Option1', label: 'Elegent Theme' },
@@ -340,7 +455,14 @@ export default {
       ],
       value: '',
       newRepoId: '',
-      repoName: ''
+      repoName: '',
+      layoutSettings: {},
+      selectedTemplate: '',
+      PageLayout: '',
+      form: {
+        Header: '',
+        Footer: ''
+      }
     }
   },
   components: {
@@ -457,6 +579,19 @@ export default {
   },
 
   methods: {
+
+    setTemplate(template) {
+      if(template == 'template1'){
+        this.selectedTemplate = 'template1';
+      } else if( template == 'template2' ){
+        this.selectedTemplate = 'template2';
+      } else if( template == 'template3' ) {
+        this.selectedTemplate = 'template3';
+      } else {
+        this.selectedTemplate = '';
+      }
+    },
+
     loginPage() {
       this.$router.push('/login')
     },
@@ -736,22 +871,126 @@ export default {
     },
 
     previewProductPage: function(){
-      let path = this.$store.state.fileUrl;
-      let replaced_path = path.replace('/var/html/','')
-      window.open('http://localhost' + replaced_path);  
+      let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      previewFile = previewFile.replace('/var/www/html','');
+      console.log(previewFile);
+      window.open('http://localhost'+previewFile);
     },
 
-    previewGridPage: function(){
-      switch(this.componentId){
-        case 'GridManager':
-          this.$refs.contentComponent.getHtml();
-          this.previewGrid = true;
-          this.isPreviewComponent = true;
-          break;
-        default :
-          this.previewGrid = false;
-          this.isPreviewComponent = false;
-          break;
+    async previewGridPage() {
+
+      console.log(" calling api Get for metalsmith for this page.");
+
+      //get header, footer from pagesetting from config.json and then set the value in js file to call the api.
+
+      let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
+
+      let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let urlparts = configFileUrl.split("/");
+      let fileNameOrginal = urlparts[urlparts.length - 1];
+      let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      var folderUrl = configFileUrl.replace(fileName, '');
+
+      console.log("page name:" + nameF)
+      let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      console.log("response:", responseConfig.data)
+      let rawSettings = JSON.parse(responseConfig.data);
+      // console.log("response of pageSettings:", rawSettings[0].pageSettings[0].PageName)
+
+      for (let i = 0; i < rawSettings[0].pageSettings.length; i++) {
+          if (rawSettings[0].pageSettings[i].PageName == nameF) {
+              console.log("file found in pageSettings")
+              var Header = rawSettings[0].pageSettings[0].PageHeader
+              var Footer = rawSettings[0].pageSettings[0].PageFooter
+              var Layout = rawSettings[0].pageSettings[0].PageLayout
+          }
+      }
+
+      let responseMetal = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
+      console.log("response of metalsmith", responseMetal.data);
+      var index = responseMetal.data.search('.source(')
+
+      responseMetal.data = responseMetal.data.substr(0, index + 8) + this.$store.state.fileUrl + responseMetal.data.substr(index + 8)
+      console.log("src for metalsmith", src);
+
+      var indexPartial = responseMetal.data.search("('handlebars');");
+
+      // var partials=responseMetal.data.substr(0,indexPartial+15)+this.$store.state.MetalsmithPartials+responseMetal.data.substr(indexPartial+15)
+
+      var partials = "Handlebars.registerPartial('Header', fs.readFileSync(__dirname + " + folderUrl + "'/Header/" + Header + ".html').toString())\n"
+
+      partials = partials + "Handlebars.registerPartial('Footer', fs.readFileSync(__dirname + " + folderUrl + "'/Footer/" + Footer + ".html').toString())\n"
+
+      console.log("src for metalsmith", partials);
+
+      responseMetal.data = responseMetal.data.substr(0, indexPartial + 15) + partials + responseMetal.data.substr(indexPartial + 15);
+
+      console.log("final metalsmith file ready for api call:", responseMetal.data);
+
+
+      axios.post('http://localhost:3030/flows-dir-listing', {
+              filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
+              text: (responseMetal.data),
+              type: 'file'
+          }).then((response) => {
+              console.log('successfully created metalsmith file :' + (response.data))
+              this.$message({
+                  showClose: true,
+                  message: 'MetalSmith Config Saved!',
+                  type: 'success'
+              });
+
+              axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
+                      console.log('successfully  :' + (response))
+                      // revert changes in metalsmith 
+                      let mainMetal = folderUrl + '/assets/metalsmith.js'
+
+                      var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata()\n.source('')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                      return axios.post(this.baseURL + '/flows-dir-listing', {
+                              filename: mainMetal,
+                              text: metalsmithJSON,
+                              type: 'file'
+                          })
+                          .then((res) => {
+
+                          })
+                          .catch((e) => {
+                              console.log(e)
+                          })
+
+
+                  })
+                  .catch((err) => {
+                      console.log('error while creating metalsmithJSON file' + err)
+                  })
+
+
+
+          })
+          .catch((e) => {
+              console.log('error while creating metalsmithJSON file' + e)
+              this.$message({
+                  showClose: true,
+                  message: 'Cannot save file! Some error occured, try again.',
+                  type: 'danger'
+              });
+          })
+
+
+      //revert changes in the metalsmith file 
+
+      //Then, show file in preview 
+      switch (this.componentId) {
+          case 'GridManager':
+              this.$refs.contentComponent.getHtml();
+              this.previewGrid = true;
+              this.isPreviewComponent = true;
+              break;
+          default:
+              this.previewGrid = false;
+              this.isPreviewComponent = false;
+              break;
       }
     },
 
@@ -770,9 +1009,25 @@ export default {
             console.log(res)
             this.newFolderDialog = false
             this.addNewFolderLoading = false
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+    },
+
+    addProjectFolder(){
+        let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+        return axios.post(this.baseURL + '/flows-dir-listing', {
+            projectName : newFolderName,
+            type : 'folder'
+        })
+        .then((res) => {
+            console.log(res)
+            this.newProjectFolderDialog = false
+            this.addNewProjectFolderLoading = false
 
             // Create repositoroty on GitLab
-            axios.get(this.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddFolder.foldername + '&privateToken='+ this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {
+            axios.get(this.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddProjectFolder.projectName + '&privateToken='+ this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {
             })
             .then((response) => {
                 console.log(response.data);
@@ -789,7 +1044,7 @@ export default {
                 }
                 this.autoFolders=false;
 
-                this.formAddFolder.foldername = null;
+                this.formAddProjectFolder.projectName = null;
             })
             .catch((e) => {
                 console.log(e)
@@ -804,104 +1059,177 @@ export default {
 
     addOtherFolder(newFolderName){
 
-      return axios.post(this.baseURL+'/flows-dir-listing' , {
+      console.log('Creating essential folders...')
+
+      // Create Assets folder
+      axios.post(this.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/assets',
         type : 'folder'
       })
       .then((res) => {
-          
-          return axios.post(this.baseURL+'/flows-dir-listing' , {
-          foldername : newFolderName+'/Headers',
-          type : 'folder'
-
-          })
-          .then((res) => {
-              return axios.post(this.baseURL+'/flows-dir-listing' , {
-                foldername : newFolderName+'/Layouts',
-                type : 'folder'
-
-              })
-              .then((res) => {
-                  return axios.post(this.baseURL+'/flows-dir-listing' , {
-                    foldername : newFolderName+'/menus',
-                    type : 'folder'
-
-                  })
-                  .then((res) => {
-                    return axios.post(this.baseURL+'/flows-dir-listing' , {
-                      foldername : newFolderName+'/Footers',
-                      type : 'folder'
-                    })
-                    .then((res) => {
-                      return axios.post(this.baseURL+'/flows-dir-listing' , {
-                        foldername : newFolderName+'/Pages',
-                        type : 'folder'
-                      })
-                      .then((res) => {
-                        this.createEssentialFiles(newFolderName);
-                      })
-                      .catch((e)=>{
-                        console.log("Error from Menu"+res)
-                      })
-                    })
-                    .catch((e)=>{
-                      console.log("Error from Menu"+res)
-                    })
-                  })
-                  .catch((e)=>{
-                    console.log("Error from Menu"+res)
-                  })
-              })
-              .catch((e)=>{
-                console.log("Error From Layout"+res)
-              })
-          })
-          .catch((e)=>{
-            console.log("Error From Grid"+res)
-          })
+         console.log('Assets Folder created!');  
       })
       .catch((e)=>{
         console.log("Error from Assests"+res)
+      });
+
+      // Create Headers Folder
+      axios.post(this.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/Headers',
+        type : 'folder'
       })
+      .then((res) => {
+          console.log('Headers Folder created!');
+      })
+      .catch((e)=>{
+        console.log("Error From Headers"+res)
+      });
+
+      // Create Layouts Folder
+      axios.post(this.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/Layouts',
+        type : 'folder'
+
+      })
+      .then((res) => {
+          console.log('Layouts Folder created!');
+      })
+      .catch((e)=>{
+        console.log("Error From Layout"+res)
+      });
+
+      // Create menus Folder
+      axios.post(this.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/Menus',
+        type : 'folder'
+
+      })
+      .then((res) => {
+        console.log('Menus Folder created!');
+      })
+      .catch((e)=>{
+        console.log("Error from Menu"+res)
+      });
+
+      // Create Footers Folder
+      axios.post(this.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/Footers',
+        type : 'folder'
+      })
+      .then((res) => {
+        console.log('Footers Folder created!');
+      })
+      .catch((e)=>{
+        console.log("Error from Footers"+res)
+      });
+
+      // Create Pages Folder
+      axios.post(this.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/Pages',
+        type : 'folder'
+      })
+      .then((res) => {
+        console.log('Pages Folder created!');
+      })
+      .catch((e)=>{
+        console.log("Error from pages"+res)
+      });
+
+      console.log('Now creating essential files...');
+      this.createEssentialFiles(newFolderName);
           
     },
 
     createEssentialFiles(newFolderName) {
-      let newfilename = newFolderName + '/assets/config.json'
-      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout": '',"ProjectTheme":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}],"pageSettings":[] } ];
-      return axios.post(this.baseURL + '/flows-dir-listing', {
+
+      // Create Config.json file
+
+      let newfilename = newFolderName + '/assets/config.json';
+
+      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout": '',"ProjectHeader":'',"ProjectFooter":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}],"pageSettings":[] }, { "layoutOptions": [ { "headers": [], "footers": [], "layouts": [] } ] } ];
+
+      axios.post(this.baseURL + '/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(repoSettings),
           type : 'file'
       })
       .then((res) => {
-        let maincss = newFolderName + '/assets/main.css'
-        return axios.post(this.baseURL + '/flows-dir-listing', {
-            filename : maincss,
-            text : '/* Add your custom CSS styles here. It will be automatically included in every page. */',
-            type : 'file'
-        })
-        .then((res) => {
-          let mainjs = newFolderName + '/assets/main.js'
-          return axios.post(this.baseURL + '/flows-dir-listing', {
-              filename : mainjs,
-              text : '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */',
-              type : 'file'
-          })
-          .then((res) => {
-            
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        })
+       console.log('Config.json file created!'); 
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+      // Create main.css file
+      let maincss = newFolderName + '/assets/main.css'
+      axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : maincss,
+          text : '/* Add your custom CSS styles here. It will be automatically included in every page. */',
+          type : 'file'
+      })
+      .then((res) => {
+        console.log('Main.css file created!');
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+      // Create main.js file
+      let mainjs = newFolderName + '/assets/main.js'
+      axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : mainjs,
+          text : '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */',
+          type : 'file'
+      })
+      .then((res) => {
+        console.log('Main.js file created!');
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+      // Create index.html file
+      let indexLayoutContent = '';
+      if(this.selectedTemplate == 'template1'){
+        indexLayoutContent = '<!DOCTYPE html><html><title>Coming Soon</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway"><style>body,h1{font-family: "Raleway", sans-serif}body, html{height: 100%}.bgimg{background-image: url(\'https:\/\/wallpapercave.com/wp/Fj4g4zO.jpg\'); min-height: 100%; background-position: center; background-size: cover;}</style><body><div class="bgimg w3-display-container w3-animate-opacity w3-text-white"> <div class="w3-display-topleft w3-padding-large w3-xlarge"> Logo </div><div class="w3-display-middle"> <h1 class="w3-jumbo w3-animate-top">COMING SOON</h1> <hr class="w3-border-grey" style="margin:auto;width:40%"> <p class="w3-large w3-center">35 days left</p></div><div class="w3-display-bottomleft w3-padding-large"> Powered by <a href="#" target="_blank">Flowz</a> </div></div></body></html>'
+      } else if(this.selectedTemplate == 'template2') {
+        indexLayoutContent = '<!DOCTYPE html><html><title>Portfolio</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel=\'stylesheet\' href=\'https://fonts.googleapis.com/css?family=Roboto\'><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>html,body,h1,h2,h3,h4,h5,h6{font-family: "Roboto", sans-serif}</style><body class="w3-light-grey"><div class="w3-content w3-margin-top" style="max-width:1400px;"> <div class="w3-row-padding"> <div class="w3-third"> <div class="w3-white w3-text-grey w3-card-4"> <div class="w3-display-container"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9WeLZdFD62GEKO_wITiHKZ8pC43XS6Nakaoq5PfjIqJ6MNx6zHw" style="width:100%" alt="Avatar"> <div class="w3-display-bottomleft w3-container w3-text-black"> <h2 style="color: #009688!important">Jane Doe</h2> </div></div><div class="w3-container"> <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Designer</p><p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>London, UK</p><p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>ex@mail.com</p><p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>1224435534</p><hr> <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Skills</b></p><p>Adobe Photoshop</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div></div><p>Photography</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:80%"> <div class="w3-center w3-text-white">80%</div></div></div><p>Illustrator</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:75%">75%</div></div><p>Media</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:50%">50%</div></div><br><p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Languages</b></p><p>English</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div></div><p>Spanish</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:55%"></div></div><p>German</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:25%"></div></div><br></div></div><br></div><div class="w3-twothird"> <div class="w3-container w3-card-2 w3-white w3-margin-bottom"> <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Work Experience</h2> <div class="w3-container"> <h5 class="w3-opacity"><b>Front End Developer / w3schools.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2015 - <span class="w3-tag w3-teal w3-round">Current</span></h6> <p>Lorem ipsum dolor sit amet. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>Web Developer / something.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2012 - Dec 2014</h6> <p>Consectetur adipisicing elit. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>Graphic Designer / designsomething.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun 2010 - Mar 2012</h6> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p><br></div></div><div class="w3-container w3-card-2 w3-white"> <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Education</h2> <div class="w3-container"> <h5 class="w3-opacity"><b>W3Schools.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Forever</h6> <p>Web Development! All I need to know in one place</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>London Business School</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2013 - 2015</h6> <p>Master Degree</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>School of Coding</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2010 - 2013</h6> <p>Bachelor Degree</p><br></div></div></div></div></div><footer class="w3-container w3-teal w3-center w3-margin-top"> <p>Find me on social media.</p><i class="fa fa-facebook-official w3-hover-opacity"></i> <i class="fa fa-instagram w3-hover-opacity"></i> <i class="fa fa-snapchat w3-hover-opacity"></i> <i class="fa fa-pinterest-p w3-hover-opacity"></i> <i class="fa fa-twitter w3-hover-opacity"></i> <i class="fa fa-linkedin w3-hover-opacity"></i> <p>Powered by <a href="#" target="_blank">Flowz</a></p></footer></body></html>'
+      } else if(this.selectedTemplate == 'template3') {
+        indexLayoutContent = '<!DOCTYPE html><html><title>W3.CSS Template</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>body,h1,h2,h3,h4,h5,h6{font-family: "Lato", sans-serif}.w3-bar,h1,button{font-family: "Montserrat", sans-serif}.fa-anchor,.fa-coffee{font-size:200px}</style><body><div class="w3-top"> <div class="w3-bar w3-red w3-card-2 w3-left-align w3-large"> <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a> <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 1</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 2</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 3</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 4</a> </div><div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large"> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 1</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 2</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 3</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 4</a> </div></div><header class="w3-container w3-red w3-center" style="padding:128px 16px"> <h1 class="w3-margin w3-jumbo">START PAGE</h1> <p class="w3-xlarge">Template by w3.css</p><button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Get Started</button></header><div class="w3-row-padding w3-padding-64 w3-container"> <div class="w3-content"> <div class="w3-twothird"> <h1>Lorem Ipsum</h1> <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5> <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div><div class="w3-third w3-center"> <i class="fa fa-anchor w3-padding-64 w3-text-red"></i> </div></div></div><div class="w3-row-padding w3-light-grey w3-padding-64 w3-container"> <div class="w3-content"> <div class="w3-third w3-center"> <i class="fa fa-coffee w3-padding-64 w3-text-red w3-margin-right"></i> </div><div class="w3-twothird"> <h1>Lorem Ipsum</h1> <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5> <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div></div></div><div class="w3-container w3-black w3-center w3-opacity w3-padding-64"> <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1></div><footer class="w3-container w3-padding-64 w3-center w3-opacity" style="color: red"> <div class="w3-xlarge w3-padding-32"> <i class="fa fa-facebook-official w3-hover-opacity"></i> <i class="fa fa-instagram w3-hover-opacity"></i> <i class="fa fa-snapchat w3-hover-opacity"></i> <i class="fa fa-pinterest-p w3-hover-opacity"></i> <i class="fa fa-twitter w3-hover-opacity"></i> <i class="fa fa-linkedin w3-hover-opacity"></i> </div><p>Powered by <a href="#" target="_blank">Flowz</a></p></footer></body></html>';
+      } else {
+        indexLayoutContent = '';
+      }
+      let indexLayout = newFolderName + '/index.html';
+
+      axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : indexLayout,
+          text : indexLayoutContent,
+          type : 'file'
+      })
+      .then((res) => {
+        console.log('Index.html file created!');
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+      // Create metalsmith file
+      let mainMetal = newFolderName + '/assets/metalsmith.js'
+
+      var metalsmithJSON="var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata()\n.source('')\n.destination('"+this.$store.state.fileUrl+"/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+this.$store.state.fileUrl+"/Layouts'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+      return axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : mainMetal,
+          text : metalsmithJSON,
+          type : 'file'
+      })
+      .then((res) => {
+        console.log('metalsmith.js file created!');
       })
       .catch((e) => {
           console.log(e)
       })
+
     },
 
     addFile(formName){
@@ -930,7 +1258,7 @@ export default {
       });
     },
 
-    saveFile: function(){
+    saveFile (){
         this.saveFileLoading = true
         let newContent = this.$store.state.content;
         switch(this.componentId){
@@ -948,12 +1276,12 @@ export default {
                 break;
         }
         
-        return axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(this.baseURL + '/flows-dir-listing', {
             filename : this.currentFile.path.replace(/\\/g, "\/"),
             text : newContent,
             type : 'file'
         })
-        .then((res) => {
+        .then(async (res) => {
             this.saveFileLoading = false
             this.$message({
                 showClose: true,
@@ -961,9 +1289,17 @@ export default {
                 type: 'success'
             });
 
-
-
             if (this.currentFile.path.replace(/\\/g, "\/").match('Footers')) {
+                let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                let urlparts = configFileUrl.split("/");
+                let fileNameOrginal = urlparts[urlparts.length-1];
+                let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
+                var folderUrl = configFileUrl.replace(fileName, '');
+
+                let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+                
+                this.layoutSettings = JSON.parse(configData.data);
+
                 console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
 
                 let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Footers/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
@@ -972,20 +1308,36 @@ export default {
                     label: name
                 }
                 let checkValue = false;
-                for (var i = 0; i < this.$store.state.FooterOptions.length; i++) {
-                    var obj = this.$store.state.FooterOptions[i];
+                for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].footers.length; i++) {
+                    var obj = this.layoutSettings[2].layoutOptions[0].footers[i];
                     if ((obj.label) == name) {
                         checkValue = true;
                     }
                 }
+
+
                 if (checkValue == true) {
                     console.log("file already exists")
                 } else {
                     console.log('file doesnt exists');
-                    this.$store.state.FooterOptions.push(temp);
+                    // this.$store.state.FooterOptions.push(temp);
+                    this.layoutSettings[2].layoutOptions[0].footers.push(temp);
+                    
+                    // saveConfigFile
+                    this.saveConfigFile(folderUrl);
                 }
 
             } else if (this.currentFile.path.replace(/\\/g, "\/").match('Headers')) {
+              let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+              let urlparts = configFileUrl.split("/");
+              let fileNameOrginal = urlparts[urlparts.length-1];
+              let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
+              var folderUrl = configFileUrl.replace(fileName, '');
+
+              let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+              
+              this.layoutSettings = JSON.parse(configData.data);
+
                 console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
 
                 let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Headers/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
@@ -994,8 +1346,8 @@ export default {
                     label: name
                 }
                 let checkValue = false;
-                for (var i = 0; i < this.$store.state.HeaderOptions.length; i++) {
-                    var obj = this.$store.state.HeaderOptions[i];
+                for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].headers.length; i++) {
+                    var obj = this.layoutSettings[2].layoutOptions[0].headers[i];
                     if ((obj.label) == name) {
                         checkValue = true;
                     }
@@ -1003,12 +1355,24 @@ export default {
                 if (checkValue == true) {
                     console.log("file already exists")
                 } else {
-                    console.log('file doesnt exists');
-                    this.$store.state.HeaderOptions.push(temp);
+                    this.layoutSettings[2].layoutOptions[0].headers.push(temp);
+                    
+                    // saveConfigFile
+                    this.saveConfigFile(folderUrl);
                 }
 
 
             } else if (this.currentFile.path.replace(/\\/g, "\/").match('Layouts')) {
+              let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+              let urlparts = configFileUrl.split("/");
+              let fileNameOrginal = urlparts[urlparts.length-1];
+              let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
+              var folderUrl = configFileUrl.replace(fileName, '');
+
+              let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+              
+              this.layoutSettings = JSON.parse(configData.data);
+
                 console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
                 let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Layouts/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.layout'));
                 let temp = {
@@ -1017,8 +1381,8 @@ export default {
                 }
                
                 let checkValue = false;
-                for (var i = 0; i < this.$store.state.LayoutOptions.length; i++) {
-                    var obj = this.$store.state.LayoutOptions[i];
+                for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].layouts.length; i++) {
+                    var obj = this.layoutSettings[2].layoutOptions[0].layouts[i];
                     if ((obj.label) == name) {
                         checkValue = true;
                     }
@@ -1027,14 +1391,13 @@ export default {
                     console.log("file already exists")
                 } else {
                     console.log('file doesnt exists');
-                    this.$store.state.LayoutOptions.push(temp);
+                    // this.$store.state.LayoutOptions.push(temp);
+                    this.layoutSettings[2].layoutOptions[0].layouts.push(temp);
+                    
+                    // saveConfigFile
+                    this.saveConfigFile(folderUrl);
                 }
             }
-
-
-
-
-
 
         })
         .catch((e) => {
@@ -1046,6 +1409,119 @@ export default {
             });
             console.log(e)
         })
+    },
+
+    async savePageSettings() {
+
+      // console.log("entered save config of individual page:"+this.$store.state.fileUrl)
+      // console.log("Header:"+this.form.Header)
+      // console.log("Footer:"+this.form.Footer)
+      // console.log("Layouts:"+this.PageLayout)
+      let nameF=this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/')+6, this.$store.state.fileUrl.indexOf('.html'));
+
+      let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let urlparts = configFileUrl.split("/");
+      let fileNameOrginal = urlparts[urlparts.length-1];
+      let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
+      var folderUrl = configFileUrl.replace(fileName, '');
+
+      console.log("page name:"+nameF)
+      let response = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl+'/assets/config.json');
+      console.log("response:",response.data)
+      let rawSettings = JSON.parse(response.data);
+      console.log("response of pageSettings:", rawSettings[0].pageSettings[0].PageName)
+
+      for (let i=0;i<rawSettings[0].pageSettings.length;i++)
+      {
+        if(rawSettings[0].pageSettings[i].PageName == nameF)
+        {
+          console.log("file found in pageSettings")
+          rawSettings[0].pageSettings[0].PageHeader=this.form.Header
+          rawSettings[0].pageSettings[0].PageFooter=this.form.Footer
+          rawSettings[0].pageSettings[0].PageLayout=this.PageLayout
+        }
+      }
+
+
+
+      let newContent = this.$store.state.content;
+      if (this.PageLayout=='Blank') {
+        if (newContent.match('---')) {
+        let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
+          console.log("substr:"+substr)
+          newContent=newContent.replace(substr,'')
+          // console.log("newContent:"+newContent)
+        }
+        else{
+          
+        newContent=this.$store.state.content;
+        }
+
+      }
+      else{
+            let tempValueLayout='---\nlayout: '+this.PageLayout+'.layout\n---\n'
+        console.log("tempValueLayout:"+tempValueLayout)
+        // this.$refs.contentComponent.getHtml();
+        if (newContent.match('---')) {
+        let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
+          console.log("substr:"+substr)
+          newContent=newContent.replace(substr,tempValueLayout)
+          // console.log("newContent:"+newContent)
+        }
+        else{
+        newContent = tempValueLayout+ this.$store.state.content;
+        }
+      }
+    
+      this.PageLayout=''
+       return axios.post('http://localhost:3030/flows-dir-listing', {
+            filename : this.$store.state.fileUrl,
+            text : newContent,
+            type : 'file'
+        })
+        .then((res) => {
+            this.saveFileLoading = false
+            this.$message({
+                showClose: true,
+                message: 'File Saved!',
+                type: 'success'
+            });
+        })
+        .catch((e) => {
+            this.saveFileLoading = false
+            this.$message({
+                showClose: true,
+                message: 'File not saved! Please try again.',
+                type: 'error'
+            });
+            console.log(e)
+        })
+    },
+
+    saveConfigFile(folderUrl){
+
+      let newJsonName = folderUrl + '/assets/config.json';
+
+      axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : newJsonName ,
+          text : JSON.stringify(this.layoutSettings),
+          type : 'file'
+      })
+      .then((res) => {
+        this.$message({
+            showClose: true,
+            message: 'File saved!',
+            type: 'success'
+        });
+      })
+      .catch((e) => {
+          this.$message({
+              showClose: true,
+              message: 'File not saved! Please try again.',
+              type: 'error'
+          });
+          console.log(e)
+      })
     },
 
     saveJsonFile: function(){
@@ -1239,7 +1715,7 @@ export default {
                   </span>
                   <span class="action-button">
                       <el-tooltip content="Add folder" placement="top">
-                          <i class="fa fa-folder-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
+                          <i class="fa fa-folder-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px;"  on-click={ () => this.newProjectFolderDialog = true }></i>
                       </el-tooltip>
                   </span>
               </span>)
@@ -1712,4 +2188,82 @@ export default {
   border: 8px solid transparent;
   border-left-width: 10px; 
 }*/
+
+
+
+
+
+
+
+
+
+
+
+/*Template selection radio images*/
+.radio-img  > input { 
+  display:none;
+}
+.radio-img  > img{
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.radio-img  > input:checked + img{ 
+  border:2px solid red;
+}
+  /**/
+img {
+  margin-top: -220px;
+}
+input[type="radio"] {
+  display: none;
+}
+ul li {
+  float: left;
+  list-style: none;
+}
+label.imgThumbnail {
+  height: 170px;
+  padding: 10px;
+  display: block;
+  position: relative;
+  margin: 10px;
+  cursor: pointer;
+}
+label.imgThumbnail:before {
+  background-color: white;
+  color: white;
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  line-height: 28px;
+  transition-duration: 0.4s;
+  transform: scale(0);
+}
+label.imgThumbnail img {
+  height: 100px;
+  width: 100px;
+  transition-duration: 0.2s;
+  transform-origin: 50% 50%;
+}
+:checked + label.imgThumbnail:before {
+  content: "✓";
+  background-color: green;
+  transform: scale(1);
+}
+:checked + label.imgThumbnail img {
+  transform: scale(0.9);
+  /* box-shadow: 0 0 5px #333; */
+  z-index: -1;
+}
+  /**/
+.templateThumbnail{
+  width: 250px;
+  padding: 20px
+}
 </style>

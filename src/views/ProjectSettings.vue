@@ -28,9 +28,9 @@
             <el-form-item label="Project Header">
               <el-row>
                 <el-col :span="10">
-                  <el-select v-model="form.Header" placeholder="Please select Header">
+                  <el-select v-model="form.selectedHeader" placeholder="Please select Header">
                     <el-option
-                      v-for="item in this.$store.state.HeaderOptions"
+                      v-for="item in form.Header"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -39,9 +39,9 @@
                 </el-col>
                 <el-col :span="14">
                   <el-form-item label="Project Footer">
-                    <el-select v-model="form.Footer" placeholder="Please select Footer">
+                    <el-select v-model="form.selectedFooter" placeholder="Please select Footer">
                       <el-option
-                        v-for="item in this.$store.state.FooterOptions"
+                        v-for="item in form.Footer"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -99,6 +99,12 @@
                 label="Commit Message"
                 >
               </el-table-column>
+
+              <el-table-column
+                prop="commitSHA"
+                label="Commit SHA"
+                >
+              </el-table-column>
               
               <el-table-column
                 label="Revert To Commit"
@@ -139,30 +145,45 @@ export default {
         seoTitle: '',
         seoKeywords: '',
         seoDesc: '',
-        Header: '',
-        Footer: ''
+        Header: [],
+        Footer: [],
+        selectedHeader: '',
+        selectedFooter: ''
       },
       commitsData: [],
       commitMessage: '',
       baseURL: 'http://localhost:3030',
       newRepoId: '',
       repoName: '',
-      configData: []
+      configData: [],
+      currentFileIndex: '',
+      settings: [],
+      folderUrl: ''
     }
   },
   component: {
   },
   methods: {
     saveProjectSettings() {
-      
-      let ProjectSettings = [ {"repoSettings": [{"RepositoryId" : this.newRepoId, "RepositoryName": this.repoName}]} ,{"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectHeader":this.form.Header,"ProjectFooter":this.form.Footer,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}],"pageSettings":[{"PageName":"Project 1","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"},{"PageName":"Page 2","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"},{"PageName":"Page 3","PageTheme":"Dark","PageSEOTitle":"SEO Title","PageSEOKeywords":"Some, Keywords","PageSEODescription":"Some description"}]}];
 
-      console.log(ProjectSettings);
+
+      
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}];
+
+      
+      // this.settings[0].projectSettings[0].RepositoryId = settings[0].repoSettings[0].RepositoryId;
+      // this.settings[0].projectSettings[0].ProjectName = settings[0].repoSettings[0].RepositoryName;
+      // this.settings[0].projectSettings[0].ProjectSEOTitle = settings[1].projectSettings[0].ProjectSEOTitle;
+      // this.settings[0].projectSettings[0].ProjectSEOKeywords = settings[1].projectSettings[0].ProjectSEOKeywords;
+      // this.settings[0].projectSettings[0].ProjectSEODescription = settings[1].projectSettings[0].ProjectSEODescription;
+
+      console.log(this.settings);
+      this.settings[1].projectSettings = ProjectSettings;
 
       let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
       axios.post( this.baseURL + '/flows-dir-listing', {
           filename : newfilename,
-          text : JSON.stringify(ProjectSettings),
+          text : JSON.stringify(this.settings),
           type : 'file'
       })
       .then((res) => {
@@ -294,12 +315,28 @@ export default {
     this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
     if(this.configData.status == 200 || this.configData.status == 204){
       console.log('Config file found! Updating fields..');
-      let settings = JSON.parse(this.configData.data);
-      this.newRepoId = settings[0].repoSettings[0].RepositoryId;
-      this.repoName = settings[0].repoSettings[0].RepositoryName;
-      this.form.seoTitle = settings[1].projectSettings[0].ProjectSEOTitle;
-      this.form.seoKeywords = settings[1].projectSettings[0].ProjectSEOKeywords;
-      this.form.seoDesc = settings[1].projectSettings[0].ProjectSEODescription;
+      this.settings = JSON.parse(this.configData.data);
+      this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
+      this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+      this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
+      this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
+      this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+
+      this.form.Header = this.settings[2].layoutOptions[0].headers;
+      this.form.Footer = this.settings[2].layoutOptions[0].footers;
+
+      // if((this.settings[1].projectSettings[0].ProjectHeader) != undefined){
+      //   this.form.Header = this.settings[1].projectSettings[0].ProjectHeader;
+      // } else {
+      //   this.form.Header = this.settings[2].layoutOptions[0].headers;
+      // }
+
+      // if((this.settings[1].projectSettings[0].ProjectFooter) != ''){
+      //   this.form.Footer = this.settings[1].projectSettings[0].ProjectFooter;
+      // } else {
+      //   this.form.Footer = this.settings[2].layoutOptions[0].footers;
+      // }
+
     } else {
       console.log('Cannot get config file!');
     } 
