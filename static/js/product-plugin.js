@@ -2,6 +2,19 @@
 
 Develop branch
 
+https://b9934e7ce239fa438ae416c8c7181a94.us-east-1.aws.found.io:9243/pdm1/_search
+elastic
+KdZuapCcaHrQajxC15EVos0a
+
+Search API body:
+{
+    "query": {
+        "match_phrase_prefix" : {
+        "product_name" : "Bag"
+    	}
+    }
+}
+
 https://9d89b0632a794a289b08f4de77dbf09a.us-east-1.aws.found.io:9243/pdm1/_search
 elastic
 4t4AplzzRsGmarJ6txoSHJIX

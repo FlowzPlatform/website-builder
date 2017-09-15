@@ -25,9 +25,6 @@
             <!-- Sidebar Wrapper -->
             <nav id="sidebar-wrapper" role="navigation">
                 <div class="treeViewBlock">
-                  <!-- <el-button type="primary" icon="plus" class="newWebsite" @click="newWebsiteDialog = true">Create New Website</el-button>
-                  <el-button type="success" icon="plus" class="newWebsite" @click="getGitFileContent()">Get File Content</el-button>
-                  <el-button type="info" icon="plus" class="newWebsite" @click="componentId = 'ProjectSettings'">Project Settings</el-button> -->
                   <el-tree :data="directoryTree" :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
                 </div>
             </nav>
@@ -49,7 +46,7 @@
                                 <el-form-item label="Project Layout">
                                    <el-select v-model="PageLayout" placeholder="Please select Layout">
                                       <el-option
-                                         v-for="item in this.$store.state.LayoutOptions"
+                                         v-for="item in form.layouts"
                                          :key="item.value"
                                          :label="item.label"
                                          :value="item.value">
@@ -61,7 +58,7 @@
                                 <el-form-item label="Project Header">
                                    <el-select v-model="form.Header" placeholder="Please select Header">
                                       <el-option
-                                         v-for="item in this.$store.state.HeaderOptions"
+                                         v-for="item in form.headers"
                                          :key="item.value"
                                          :label="item.label"
                                          :value="item.value">
@@ -73,7 +70,7 @@
                                 <el-form-item label="Project Footer">
                                    <el-select v-model="form.Footer" placeholder="Please select Footer">
                                       <el-option
-                                         v-for="item in this.$store.state.FooterOptions"
+                                         v-for="item in form.footers"
                                          :key="item.value"
                                          :label="item.label"
                                          :value="item.value">
@@ -110,19 +107,6 @@
                         </span>
                     </el-dialog>
 
-                    <el-dialog title="Website Name" :visible.sync="newWebsiteDialog">
-                        <el-form :model="formNewWebsite" ref="formNewWebsite">
-                            <el-form-item>
-                                <el-input v-model="formNewWebsite.websiteName" auto-complete="off" placeholder="Website Name"></el-input>
-                            </el-form-item>
-                             
-                        </el-form>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="newWebsiteDialog = false">Cancel</el-button>
-                            <el-button type="primary" @click="createGitWebsite()" :loading="addNewWebsiteLoading">Create</el-button>
-                        </span>
-                    </el-dialog>
-
                     <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
@@ -135,73 +119,52 @@
                         </span>
                     </el-dialog>
 
-                    <el-dialog title="Folder name" :visible.sync="newProjectFolderDialog">
-                        <el-form :model="formAddProjectFolder">
-                            <el-form-item>
-                                <el-input v-model="formAddProjectFolder.projectName" auto-complete="off" placeholder="Project Name"></el-input>
-                            </el-form-item>
-                            <!-- <el-form-item>    
-                              <el-row>
-                              <el-col :span='4'>
-                                <div style="font-weight: bold;">Template:</div>
-                              </el-col>
-                              <el-col :span='20'>
-                                <el-select name='Select' v-model="value" placeholder="Select">
-                                  <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                  </el-option>
-                                </el-select>
-                              </el-col>
-                              </el-row>
-                            </el-form-item> -->
-                            <el-form-item>
-                              <div class="templateSelection">
-                                <strong>Select Template</strong>
-                                <ul>
-                                  <li>
-                                      <input type="radio" name="layout" value="template1" id="myCheckbox1" />
-                                      <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                                      <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
-                                  </li>
-                                  <li>
-                                      <input type="radio" name="layout" value="template2" id="myCheckbox2" />
-                                      <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                                      <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
-                                  </li>
-                                  <li>
-                                      <input type="radio" name="layout" value="template3" id="myCheckbox3" />
-                                      <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                                      <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
-                                  </li>
-                                  <!-- <li>
-                                      <input type="radio" name="layout" value="M|M" id="myCheckbox3" />
-                                      <label for="myCheckbox3" class="radio-img"></label>
-                                      <img src="http://www.websitescreenshots.com/images/microsoft.com.jpg" class="templateThumbnail">
-                                  </li> -->
-                                </ul>
-                              </div>
-                            </el-form-item>
-                            <el-form-item>
-                              <el-col :span='10'>
-                                <div style="font-weight: bold;">Create default files and folders:(Recommended)</div>
-                                </el-col>
-                                <el-col :span='4'>
-                                <el-switch
-                                  v-model="autoFolders"
-                                  :width=60
-                                  on-text="YES"
-                                  off-text="NO">
-                                </el-switch>
-                              </el-col>
-                            </el-form-item>
-                        </el-form>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                            <el-button type="primary" @click="addProjectFolder()" :loading="addNewFolderLoading">Create</el-button>
-                        </span>
+                    <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
+                      <el-form :model="formAddProjectFolder">
+                        <el-form-item>
+                            <el-input v-model="formAddProjectFolder.projectName" auto-complete="off" placeholder="Project Name"></el-input>
+                        </el-form-item>
+
+                        <el-form-item>
+                          <div class="templateSelection">
+                            <strong>Select Template</strong>
+                            <ul>
+                              <li>
+                                  <input type="radio" name="layout" value="template1" id="myCheckbox1" />
+                                  <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
+                                  <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
+                              </li>
+                              <li>
+                                  <input type="radio" name="layout" value="template2" id="myCheckbox2" />
+                                  <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
+                                  <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
+                              </li>
+                              <li>
+                                  <input type="radio" name="layout" value="template3" id="myCheckbox3" />
+                                  <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
+                                  <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
+                              </li>
+                            </ul>
+                          </div>
+                        </el-form-item>
+                        <!-- <el-form-item>
+                          <el-col :span='10'>
+                            <div style="font-weight: bold;">Create default files and folders:(Recommended)</div>
+                            </el-col>
+                            <el-col :span='4'>
+                            <el-switch
+                              v-model="autoFolders"
+                              :width=60
+                              on-text="YES"
+                              off-text="NO">
+                            </el-switch>
+                          </el-col>
+                        </el-form-item> -->
+                      </el-form>
+                      <span slot="footer" class="dialog-footer">
+                          <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
+                          <el-button type="primary" @click="addProjectFolder()" :loading="addNewFolderLoading">Create Project</el-button>
+                      </span>
                     </el-dialog>
                   </div>
 
@@ -218,18 +181,6 @@
                             <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
                         </span>
                     </el-dialog>
-                    <el-dialog title="Website Name" :visible.sync="newWebsiteDialog">
-                        <el-form :model="formNewWebsite" ref="formNewWebsite">
-                            <el-form-item>
-                                <el-input v-model="formNewWebsite.websiteName" auto-complete="off" placeholder="Website Name"></el-input>
-                            </el-form-item>
-                             
-                        </el-form>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="newWebsiteDialog = false">Cancel</el-button>
-                            <el-button type="primary" @click="createGitWebsite()" :loading="addNewWebsiteLoading">Create</el-button>
-                        </span>
-                    </el-dialog>
                     <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
@@ -242,73 +193,52 @@
                         </span>
                     </el-dialog>
 
-                    <el-dialog title="Folder name" :visible.sync="newProjectFolderDialog">
-                        <el-form :model="formAddProjectFolder">
-                            <el-form-item>
-                                <el-input v-model="formAddProjectFolder.projectName" auto-complete="off" placeholder="Project Name"></el-input>
-                            </el-form-item>
-                            <!-- <el-form-item>    
-                              <el-row>
-                              <el-col :span='4'>
-                                <div style="font-weight: bold;">Template:</div>
-                              </el-col>
-                              <el-col :span='20'>
-                                <el-select name='Select' v-model="value" placeholder="Select">
-                                  <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                  </el-option>
-                                </el-select>
-                              </el-col>
-                              </el-row>
-                            </el-form-item> -->
-                            <el-form-item>
-                              <div class="templateSelection">
-                                <strong>Select Template</strong>
-                                <ul>
-                                  <li>
-                                      <input type="radio" name="layout" value="template1" id="myCheckbox1" />
-                                      <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                                      <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
-                                  </li>
-                                  <li>
-                                      <input type="radio" name="layout" value="template2" id="myCheckbox2" />
-                                      <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                                      <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
-                                  </li>
-                                  <li>
-                                      <input type="radio" name="layout" value="template3" id="myCheckbox3" />
-                                      <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                                      <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
-                                  </li>
-                                  <!-- <li>
-                                      <input type="radio" name="layout" value="M|M" id="myCheckbox3" />
-                                      <label for="myCheckbox3" class="radio-img"></label>
-                                      <img src="http://www.websitescreenshots.com/images/microsoft.com.jpg" class="templateThumbnail">
-                                  </li> -->
-                                </ul>
-                              </div>
-                            </el-form-item>
-                            <el-form-item>
-                              <el-col :span='10'>
-                                <div style="font-weight: bold;">Create default files and folders:(Recommended)</div>
-                                </el-col>
-                                <el-col :span='4'>
-                                <el-switch
-                                  v-model="autoFolders"
-                                  :width=60
-                                  on-text="YES"
-                                  off-text="NO">
-                                </el-switch>
-                              </el-col>
-                            </el-form-item>
-                        </el-form>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                            <el-button type="primary" @click="addProjectFolder()" :loading="addNewFolderLoading">Create</el-button>
-                        </span>
+                    <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
+                      <el-form :model="formAddProjectFolder">
+                        <el-form-item>
+                            <el-input v-model="formAddProjectFolder.projectName" auto-complete="off" placeholder="Project Name"></el-input>
+                        </el-form-item>
+
+                        <el-form-item>
+                          <div class="templateSelection">
+                            <strong>Select Template</strong>
+                            <ul>
+                              <li>
+                                  <input type="radio" name="layout" value="template1" id="myCheckbox1" />
+                                  <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
+                                  <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
+                              </li>
+                              <li>
+                                  <input type="radio" name="layout" value="template2" id="myCheckbox2" />
+                                  <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
+                                  <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
+                              </li>
+                              <li>
+                                  <input type="radio" name="layout" value="template3" id="myCheckbox3" />
+                                  <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
+                                  <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
+                              </li>
+                            </ul>
+                          </div>
+                        </el-form-item>
+                        <!-- <el-form-item>
+                          <el-col :span='10'>
+                            <div style="font-weight: bold;">Create default files and folders:(Recommended)</div>
+                            </el-col>
+                            <el-col :span='4'>
+                            <el-switch
+                              v-model="autoFolders"
+                              :width=60
+                              on-text="YES"
+                              off-text="NO">
+                            </el-switch>
+                          </el-col>
+                        </el-form-item> -->
+                      </el-form>
+                      <span slot="footer" class="dialog-footer">
+                          <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
+                          <el-button type="primary" @click="addProjectFolder()" :loading="addNewFolderLoading">Create Project</el-button>
+                      </span>
                     </el-dialog>
                   </div>
 
@@ -396,7 +326,6 @@ export default {
   },
   data () {
     return {
-      newWebsiteName: '',
       autoFolders: true,
       isLoggedInUser: false,
       baseURL : 'http://localhost:3030',
@@ -411,7 +340,6 @@ export default {
       addNewFileLoading : false,
       addNewFolderLoading : false,
       addNewProjectFolderLoading : false,
-      addNewWebsiteLoading: false,
       loadingTree : true,
       loadingContent : false,
       saveFileLoading : false,
@@ -431,9 +359,6 @@ export default {
       formAddFile : {
           filename:null
       },
-      formNewWebsite : {
-          websiteName:null
-      },
       rulesFrmFile: {
           filename: [
               { validator: checkFileName, trigger: 'blur' }
@@ -448,11 +373,6 @@ export default {
       newFileDialog : false,
       newFolderDialog : false,
       newProjectFolderDialog : false,
-      newWebsiteDialog: false,
-      options: [ 
-        { value: 'Option1', label: 'Elegent Theme' },
-        { value: 'Option2', label: 'Flat Theme' } 
-      ],
       value: '',
       newRepoId: '',
       repoName: '',
@@ -461,7 +381,9 @@ export default {
       PageLayout: '',
       form: {
         Header: '',
-        Footer: ''
+        Footer: '',
+        headers: [],
+        footers: []
       }
     }
   },
@@ -626,27 +548,6 @@ export default {
     },
     sortTree : function(data){
         return  _.sortBy(data.children, [function(o) { return o.type; }]);
-    },
-
-    createGitWebsite: function(){
-      axios.get('http://localhost:3030/repo-service/1?userId=' + this.$session.get('userId') + '&repoName=' + this.formNewWebsite.websiteName, {
-      }).then(response => {
-        this.formNewWebsite.websiteName = '';
-        this.newWebsiteDialog = false;
-        if (response.data) {
-            console.log(response.data);
-            this.newWebsiteDialog = false;
-        }
-      }).catch(error => {
-        this.formNewWebsite.websiteName = '';
-        console.log(error);
-        this.$notify.error({
-          title: 'Error',
-          message: error.data,
-          offset: 100
-        });
-        this.newWebsiteDialog = false;
-      })
     },
 
     handleNodeClick(data) {
@@ -847,7 +748,8 @@ export default {
                       this.componentId = 'code-mirror'
                       this.isEditOption=false
                     } else{ 
-                      this.componentId = 'GrapesComponent'
+                      this.componentId = 'GrapesComponent';
+                      this.getConfigFileData();
                     }
                     break;
                 case 'menu':
@@ -870,11 +772,28 @@ export default {
         this.loadingContent = false
     },
 
+    async getConfigFileData() {
+
+      let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let urlparts = configFileUrl.split("/");
+      let fileNameOrginal = urlparts[urlparts.length - 1];
+      let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      var folderUrl = configFileUrl.replace(fileName, '');
+
+      let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let rawConfigs = JSON.parse(responseConfig.data);
+
+      this.form.headers = rawConfigs[2].layoutOptions[0].headers;
+      this.form.footers = rawConfigs[2].layoutOptions[0].footers;
+      this.form.layouts = rawConfigs[2].layoutOptions[0].layouts;
+    },
+
     previewProductPage: function(){
-      let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      previewFile = previewFile.replace('/var/www/html','');
-      console.log(previewFile);
-      window.open('http://localhost'+previewFile);
+      // let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      // previewFile = previewFile.replace('/var/www/html','');
+      // console.log(previewFile);
+      // window.open('http://localhost'+previewFile);
+      this.previewGridPage();
     },
 
     async previewGridPage() {
@@ -897,29 +816,29 @@ export default {
       let rawSettings = JSON.parse(responseConfig.data);
       // console.log("response of pageSettings:", rawSettings[0].pageSettings[0].PageName)
 
-      for (let i = 0; i < rawSettings[0].pageSettings.length; i++) {
-          if (rawSettings[0].pageSettings[i].PageName == nameF) {
+      for (let i = 0; i < rawSettings[1].pageSettings.length; i++) {
+          if (rawSettings[1].pageSettings[i].PageName == nameF) {
               console.log("file found in pageSettings")
-              var Header = rawSettings[0].pageSettings[0].PageHeader
-              var Footer = rawSettings[0].pageSettings[0].PageFooter
-              var Layout = rawSettings[0].pageSettings[0].PageLayout
+              var Header = rawSettings[1].pageSettings[0].PageHeader
+              var Footer = rawSettings[1].pageSettings[0].PageFooter
+              var Layout = rawSettings[1].pageSettings[0].PageLayout
           }
       }
 
       let responseMetal = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
       console.log("response of metalsmith", responseMetal.data);
-      var index = responseMetal.data.search('.source(')
+      var index = responseMetal.data.search('.source')
 
-      responseMetal.data = responseMetal.data.substr(0, index + 8) + this.$store.state.fileUrl + responseMetal.data.substr(index + 8)
-      console.log("src for metalsmith", src);
+      responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
+      // console.log("src for metalsmith", src);
 
-      var indexPartial = responseMetal.data.search("('handlebars');");
+      var indexPartial = responseMetal.data.search("('handlebars')");
 
       // var partials=responseMetal.data.substr(0,indexPartial+15)+this.$store.state.MetalsmithPartials+responseMetal.data.substr(indexPartial+15)
 
-      var partials = "Handlebars.registerPartial('Header', fs.readFileSync(__dirname + " + folderUrl + "'/Header/" + Header + ".html').toString())\n"
+      var partials = "Handlebars.registerPartial('Header', fs.readFileSync('" + folderUrl + "/Headers/" + Header + ".html').toString())\n"
 
-      partials = partials + "Handlebars.registerPartial('Footer', fs.readFileSync(__dirname + " + folderUrl + "'/Footer/" + Footer + ".html').toString())\n"
+      partials = partials + "Handlebars.registerPartial('Footer', fs.readFileSync('" + folderUrl + "/Footers/" + Footer + ".html').toString())\n"
 
       console.log("src for metalsmith", partials);
 
@@ -927,10 +846,11 @@ export default {
 
       console.log("final metalsmith file ready for api call:", responseMetal.data);
 
+      let mainMetal = folderUrl + '/assets/metalsmith.js'
 
       axios.post('http://localhost:3030/flows-dir-listing', {
-              filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
-              text: (responseMetal.data),
+              filename: mainMetal,
+              text: responseMetal.data,
               type: 'file'
           }).then((response) => {
               console.log('successfully created metalsmith file :' + (response.data))
@@ -940,30 +860,171 @@ export default {
                   type: 'success'
               });
 
-              axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
-                      console.log('successfully  :' + (response))
-                      // revert changes in metalsmith 
-                      let mainMetal = folderUrl + '/assets/metalsmith.js'
-
-                      var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata()\n.source('')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
-                      return axios.post(this.baseURL + '/flows-dir-listing', {
-                              filename: mainMetal,
-                              text: metalsmithJSON,
-                              type: 'file'
-                          })
-                          .then((res) => {
-
-                          })
-                          .catch((e) => {
-                              console.log(e)
-                          })
+              // Create temporary preview folder
+              let newFolderName = folderUrl + '/Preview';
+              return axios.post(this.baseURL + '/flows-dir-listing', {
+                  foldername : newFolderName,
+                  type : 'folder'
+              })
+              .then((res) => {
+                  console.log(res)
+                  // Create preview file
+                  
 
 
-                  })
-                  .catch((err) => {
-                      console.log('error while creating metalsmithJSON file' + err)
-                  })
+
+
+                  let newContent = this.$store.state.content;
+                  if (this.PageLayout=='Blank') {
+                    if (newContent.match('---')) {
+                    let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
+                      console.log("substr:"+substr)
+                      newContent=newContent.replace(substr,'')
+                      // console.log("newContent:"+newContent)
+                    }
+                    else{
+                      newContent=this.$store.state.content;
+                    }
+
+                  }
+                  else{
+                    let tempValueLayout='---\nlayout: '+this.PageLayout+'.layout\n---\n';
+
+                    console.log("tempValueLayout:"+tempValueLayout)
+
+                    if (newContent.match('---')) {
+                      let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+                      console.log("substr:" + substr)
+                      newContent=newContent.replace(substr,tempValueLayout)
+                    } else{
+                      newContent = tempValueLayout+ this.$store.state.content;
+                    }
+
+                  }
+                
+                  this.PageLayout='';
+                  this.form.Header='';
+                  this.form.Footers='';
+
+                  let previewFileName = folderUrl + '/Preview/preview.html';
+
+                   return axios.post('http://localhost:3030/flows-dir-listing', {
+                        filename : previewFileName,
+                        text : newContent,
+                        type : 'file'
+                    })
+                    .then((res) => {
+                        this.saveFileLoading = false;
+
+                        axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
+                          console.log('successfully  :' + (response))
+                          // revert changes in metalsmith 
+                         
+                          var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+folderUrl+"/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+folderUrl+"/Layouts'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                          return axios.post(this.baseURL + '/flows-dir-listing', {
+                                  filename: mainMetal,
+                                  text: metalsmithJSON,
+                                  type: 'file'
+                              })
+                              .then((res) => {
+                                console.log('Now previewing: ' + this.$store.state.fileUrl.replace(/\\/g, "\/"))
+                                let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                                previewFile = folderUrl.replace('/var/www/html','');
+                                console.log(previewFile.replace('Pages'+nameF, ''));
+                                window.open('http://localhost'+previewFile+'/MetalsmithOutput/preview.html');
+
+
+
+                                // Delete Preview Folder
+
+
+                                axios.delete(this.baseURL + '/flows-dir-listing/0?filename='+folderUrl+'/Preview')
+                                .then((res) => {
+                                    this.currentFile = null
+                                    this.componentId = null
+                                    console.log(res);
+
+                                    if (data.path.replace(/\\/g, "/").match('Header')) {
+                                        let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Headers/') + 8, data.path.replace(/\\/g, "/").indexOf('.html'));
+                                        console.log("name:" + name)
+                                        for (var i = 0; i < this.$store.state.HeaderOptions.length; i++) {
+                                            var obj = this.$store.state.HeaderOptions[i];
+                                            console.log("obj.label:" + obj.label)
+                                            if ((obj.label) == name) {
+                                                this.$store.state.HeaderOptions.splice(i, 1);
+                                            }
+                                        }
+                                    } else if (data.path.replace(/\\/g, "/").match('Footer')) {
+                                        let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Footers/') + 8, data.path.replace(/\\/g, "/").indexOf('.html'));
+                                        console.log("name:" + name)
+                                        for (var i = 0; i < this.$store.state.FooterOptions.length; i++) {
+                                            var obj = this.$store.state.FooterOptions[i];
+
+                                            if ((obj.label) == name) {
+                                                this.$store.state.FooterOptions.splice(i, 1);
+                                            }
+                                        }
+                                    } else if (data.path.replace(/\\/g, "/").match('Layouts')) {
+                                        let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Layouts/') + 8, data.path.replace(/\\/g, "/").indexOf('.layout'));
+                                        console.log("name:" + name)
+                                        for (var i = 0; i < this.$store.state.LayoutOptions.length; i++) {
+                                            var obj = this.$store.state.LayoutOptions[i];
+
+                                            if ((obj.label) == name) {
+                                                this.$store.state.LayoutOptions.splice(i, 1);
+                                            }
+                                        }
+                                    }
+
+                                })
+                                .catch((e) => {
+                                    console.log(e)
+                                })
+
+
+
+
+
+                              })
+                              .catch((e) => {
+                                  console.log(e)
+                              })
+
+
+                      })
+                      .catch((err) => {
+                          console.log('error while creating metalsmithJSON file' + err)
+                      })
+
+
+                        this.$message({
+                            showClose: true,
+                            message: 'File Saved!',
+                            type: 'success'
+                        });
+                    })
+                    .catch((e) => {
+                        this.saveFileLoading = false
+                        this.$message({
+                            showClose: true,
+                            message: 'File not saved! Please try again.',
+                            type: 'error'
+                        });
+                        console.log(e)
+                    })
+
+
+
+
+
+
+              })
+              .catch((e) => {
+                  console.log(e)
+              })
+
+              
 
 
 
@@ -1018,7 +1079,7 @@ export default {
     addProjectFolder(){
         let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
         return axios.post(this.baseURL + '/flows-dir-listing', {
-            projectName : newFolderName,
+            foldername : newFolderName,
             type : 'folder'
         })
         .then((res) => {
@@ -1216,7 +1277,7 @@ export default {
       // Create metalsmith file
       let mainMetal = newFolderName + '/assets/metalsmith.js'
 
-      var metalsmithJSON="var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata()\n.source('')\n.destination('"+this.$store.state.fileUrl+"/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+this.$store.state.fileUrl+"/Layouts'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+      var metalsmithJSON="var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layouts'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
       return axios.post(this.baseURL + '/flows-dir-listing', {
           filename : mainMetal,
@@ -1429,65 +1490,138 @@ export default {
       let response = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl+'/assets/config.json');
       console.log("response:",response.data)
       let rawSettings = JSON.parse(response.data);
-      console.log("response of pageSettings:", rawSettings[0].pageSettings[0].PageName)
+      // console.log("response of pageSettings:", rawSettings[0].pageSettings[0].PageName)
 
-      for (let i=0;i<rawSettings[0].pageSettings.length;i++)
+      // for (let i=0;i<rawSettings[0].pageSettings.length;i++)
+      // {
+      //   if(rawSettings[0].pageSettings[i].PageName == nameF)
+      //   {
+      //     console.log("file found in pageSettings")
+      //     rawSettings[0].pageSettings[0].PageHeader=this.form.Header
+      //     rawSettings[0].pageSettings[0].PageFooter=this.form.Footer
+      //     rawSettings[0].pageSettings[0].PageLayout=this.PageLayout
+      //   }
+      // }
+
+      // let pageSettingsFound = inArray( nameF, rawSettings[0].pageSettings[i].PageName );
+
+      // if (pageSettingsFound < 0){
+      //   rawSettings[0].pageSettings[0].PageHeader=this.form.Header
+      //   rawSettings[0].pageSettings[0].PageFooter=this.form.Footer
+      //   rawSettings[0].pageSettings[0].PageLayout=this.PageLayout
+      // }
+
+      let found=false;
+      for (let i=0;i<rawSettings[1].pageSettings.length;i++)
       {
-        if(rawSettings[0].pageSettings[i].PageName == nameF)
+        if(rawSettings[1].pageSettings[i].PageName == nameF)
         {
           console.log("file found in pageSettings")
-          rawSettings[0].pageSettings[0].PageHeader=this.form.Header
-          rawSettings[0].pageSettings[0].PageFooter=this.form.Footer
-          rawSettings[0].pageSettings[0].PageLayout=this.PageLayout
+          rawSettings[1].pageSettings[i].PageHeader=this.form.Header
+          rawSettings[1].pageSettings[i].PageFooter=this.form.Footer
+          rawSettings[1].pageSettings[i].PageLayout=this.PageLayout
+          found=true;
         }
       }
-
-
-
-      let newContent = this.$store.state.content;
-      if (this.PageLayout=='Blank') {
-        if (newContent.match('---')) {
-        let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
-          console.log("substr:"+substr)
-          newContent=newContent.replace(substr,'')
-          // console.log("newContent:"+newContent)
+      if(found==false)
+      {
+        var obj={
+          PageName: nameF,
+          PageHeader: this.form.Header,
+          PageFooter: this.form.Footer,
+          PageLayout: this.PageLayout
         }
-        else{
-          
-        newContent=this.$store.state.content;
-        }
-
+        rawSettings[1].pageSettings.push(obj);
+        console.log("final pageSettings :",rawSettings[1].pageSettings)
       }
-      else{
-            let tempValueLayout='---\nlayout: '+this.PageLayout+'.layout\n---\n'
-        console.log("tempValueLayout:"+tempValueLayout)
-        // this.$refs.contentComponent.getHtml();
-        if (newContent.match('---')) {
-        let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
-          console.log("substr:"+substr)
-          newContent=newContent.replace(substr,tempValueLayout)
-          // console.log("newContent:"+newContent)
-        }
-        else{
-        newContent = tempValueLayout+ this.$store.state.content;
-        }
-      }
-    
-      this.PageLayout=''
-       return axios.post('http://localhost:3030/flows-dir-listing', {
-            filename : this.$store.state.fileUrl,
-            text : newContent,
+
+      return axios.post('http://localhost:3030/flows-dir-listing', {
+            filename : folderUrl+'/assets/config.json',
+            text : JSON.stringify(rawSettings),
             type : 'file'
         })
-        .then((res) => {
+      .then((res) => {
+
             this.saveFileLoading = false
             this.$message({
                 showClose: true,
                 message: 'File Saved!',
                 type: 'success'
             });
+
+            // let newContent = this.$store.state.content;
+            // if (this.PageLayout=='Blank') {
+            //   if (newContent.match('---')) {
+            //   let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
+            //     console.log("substr:"+substr)
+            //     newContent=newContent.replace(substr,'')
+            //     // console.log("newContent:"+newContent)
+            //   }
+            //   else{
+            //     newContent=this.$store.state.content;
+            //   }
+
+            // }
+            // else{
+            //   let tempValueLayout='---\nlayout: '+this.PageLayout+'.layout\n---\n';
+
+            //   console.log("tempValueLayout:"+tempValueLayout)
+
+            //   if (newContent.match('---')) {
+            //     let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+            //     console.log("substr:" + substr)
+            //     newContent=newContent.replace(substr,tempValueLayout)
+            //   } else{
+            //     newContent = tempValueLayout+ this.$store.state.content;
+            //   }
+
+
+
+
+            //   // let tempValueLayout='---\nlayout: '+this.PageLayout+'.layout\n---\n'
+            //   // console.log("tempValueLayout:"+tempValueLayout)
+            //   // // this.$refs.contentComponent.getHtml();
+            //   // if (newContent.match('---')) {
+            //   // let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
+            //   //   console.log("substr:"+substr)
+            //   //   newContent=newContent.replace(substr,'')
+            //   //    newContent = tempValueLayout+ this.$store.state.content;
+            //   //   // console.log("newContent:"+newContent)
+            //   // }
+            //   // else{
+            //   // newContent = tempValueLayout+ this.$store.state.content;
+            //   // }
+            // }
+          
+            // this.PageLayout='';
+            // this.form.Header='';
+            // this.form.Footers='';
+
+            //  return axios.post('http://localhost:3030/flows-dir-listing', {
+            //       filename : this.$store.state.fileUrl,
+            //       text : newContent,
+            //       type : 'file'
+            //   })
+            //   .then((res) => {
+            //       this.saveFileLoading = false
+            //       this.$message({
+            //           showClose: true,
+            //           message: 'File Saved!',
+            //           type: 'success'
+            //       });
+            //   })
+            //   .catch((e) => {
+            //       this.saveFileLoading = false
+            //       this.$message({
+            //           showClose: true,
+            //           message: 'File not saved! Please try again.',
+            //           type: 'error'
+            //       // });
+            //       console.log(e)
+            //   })
+            
         })
-        .catch((e) => {
+      .catch((e) => {
             this.saveFileLoading = false
             this.$message({
                 showClose: true,
@@ -1496,6 +1630,7 @@ export default {
             });
             console.log(e)
         })
+
     },
 
     saveConfigFile(folderUrl){
