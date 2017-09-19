@@ -99,6 +99,7 @@ export default {
                     this.$session.set('privateToken', response.data.private_token);
                     this.$session.set('userId', response.data.id);
                     this.$session.set('username', response.data.username);
+                    console.log("Username:", this.$session.get('username'));
                     this.$router.push('/');
                 }
               }).catch(error => {

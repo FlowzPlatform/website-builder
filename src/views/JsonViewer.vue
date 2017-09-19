@@ -35,5 +35,6 @@
 <style>
   div.jsoneditor{
     min-height: 700px;
+    margin-bottom: 100px;
   }
 </style>

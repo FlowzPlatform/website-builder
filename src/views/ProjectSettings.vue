@@ -3,11 +3,16 @@
     <div class="container">
       <div class="thumbnail">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-9">
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
           </div>
           <div class="col-md-2">
             <el-button class="publishBtn" type="success" @click="publishWebsite()">Publish Site</el-button>
+          </div>
+          <div class="col-md-1">
+            <el-tooltip content="Download .zip" placement="top">
+              <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+            </el-tooltip>
           </div>
         </div>
       </div>
@@ -308,6 +313,10 @@ export default {
         return 'positive-row';
       }
       return '';
+    },
+
+    exportWebsite(){
+      window.open('http://162.209.122.250/' + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
     }
   },
   async created () {

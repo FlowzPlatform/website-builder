@@ -3,15 +3,15 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12" style="margin-top: 4%;">
-          <el-form ref="form" :model="form" label-width="120px">
+          <el-form ref="form" :model="form" label-width="160px">
             <el-form-item label="Page name">
               <el-input v-model="form.name" :disabled="true"></el-input>
             </el-form-item>
 
-            <el-form-item label="Project Layout">
-              <el-select v-model="PageLayout" placeholder="Please select Layout">
+            <el-form-item label="Page Layout">
+              <el-select v-model="form.Layout" placeholder="Please select Layout">
                 <el-option
-                  v-for="item in this.$store.state.LayoutOptions"
+                  v-for="item in form.layouts"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -20,12 +20,12 @@
                 
             </el-form-item>
 
-            <el-form-item label="Project Header">
+            <el-form-item label="Page Header">
               <el-row>
                 <el-col :span="10">
                   <el-select v-model="form.Header" placeholder="Please select Header">
                     <el-option
-                      v-for="item in this.$store.state.HeaderOptions"
+                      v-for="item in form.headers"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -33,10 +33,10 @@
                   </el-select>
                 </el-col>
                 <el-col :span="14">
-                  <el-form-item label="Project Footer">
+                  <el-form-item label="Page Footer">
                     <el-select v-model="form.Footer" placeholder="Please select Footer">
                       <el-option
-                        v-for="item in this.$store.state.FooterOptions"
+                        v-for="item in form.footers"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -45,6 +45,30 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+            </el-form-item>
+
+            <el-form-item label="Page Sidebar">
+              <el-select v-model="form.Sidebar" placeholder="Please select Sidebar">
+                <el-option
+                  v-for="item in form.sidebar"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+                
+            </el-form-item>
+
+            <el-form-item label="Page Menu">
+              <el-select v-model="form.Menu" placeholder="Please select Menu">
+                <el-option
+                  v-for="item in form.menu"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+                
             </el-form-item>
 
             <el-form-item label="Page SEO Title">
@@ -60,7 +84,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="savePageSettings">Save</el-button>
-              <el-button>Cancel</el-button>
+              <el-button native-type="reset">Cancel</el-button>
             </el-form-item>
           </el-form> 
         </div>
@@ -91,12 +115,17 @@ export default {
     return {
       form: {
         name: '',
-        theme: '',
         seoTitle: '',
         seoKeywords: '',
         seoDesc: '',
         Header: '',
-        Footer: ''
+        Footer: '',
+        Layout: '',
+        Sidebar: '',
+        Menu: '',
+        headers: [],
+        footers: [],
+        layouts: []
       },
       PageLayout: '',
       PageFooter: '',
@@ -112,28 +141,32 @@ export default {
   },
   methods: {
     async savePageSettings() {
-      let newContent = this.$store.state.content;
+      // let newContent = this.$store.state.content;
 
-      let tempValueLayout='---\nlayout: '+this.PageLayout+'.layout\n---\n';
+      // let tempValueLayout='---\nlayout: '+this.PageLayout+'.layout\n---\n';
 
-      console.log("tempValueLayout:"+tempValueLayout)
+      // console.log("tempValueLayout:"+tempValueLayout)
 
-      if (newContent.match('---')) {
-        let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
-        console.log("substr:" + substr)
-        newContent=newContent.replace(substr,tempValueLayout)
-      } else{
-        newContent = tempValueLayout+ this.$store.state.content;
-      }
+      // if (newContent.match('---')) {
+      //   let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+      //   console.log("substr:" + substr)
+      //   newContent=newContent.replace(substr,tempValueLayout)
+      // } else{
+      //   newContent = tempValueLayout+ this.$store.state.content;
+      // }
 
-      this.PageLayout = '';
+      // this.PageLayout = '';
 
-      let PageSettings = {"PageName":this.form.name,"PageTheme":this.PageLayout,"PageSEOTitle":this.form.seoTitle,"PageSEOKeywords":this.form.seoKeywords,"PageSEODescription":this.form.seoDesc};
+      let PageSettings = {"PageName":this.form.name,"PageHeader":this.form.Header,"PageFooter":this.form.Footer,"PageLayout":this.form.Layout, "PageSEOTitle": this.form.seoTitle, "PageSEOKeywords": this.form.seoKeywords, "PageSEODescription": this.form.seoDesc};
 
       if(this.currentFileIndex != null){
 
-        console.log('Update existing Page Settings')
-        this.settings[1].pageSettings[this.currentFileIndex].PageTheme = this.PageLayout;
+        console.log('Update existing Page Settings');
+        this.settings[1].pageSettings[this.currentFileIndex].PageHeader = this.form.Header;
+        this.settings[1].pageSettings[this.currentFileIndex].PageFooter = this.form.Footer;
+        this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
+        this.settings[1].pageSettings[this.currentFileIndex].PageSidebar = this.form.Sidebar;
+        this.settings[1].pageSettings[this.currentFileIndex].PageMenu = this.form.Menu;
         this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle = this.form.seoTitle;
         this.settings[1].pageSettings[this.currentFileIndex].PageSEOKeywords = this.form.seoKeywords;
         this.settings[1].pageSettings[this.currentFileIndex].PageSEODescription = this.form.seoDesc;  
@@ -152,36 +185,36 @@ export default {
                 type: 'success'
             });
 
-            axios.post('http://localhost:3030/flows-dir-listing', {
-                filename : this.$store.state.fileUrl,
-                text : newContent,
-                type : 'file'
-            })
-            .then((res) => {
-                alert('Inside Newcontent Save')
-                this.saveFileLoading = false
-                this.$message({
-                    showClose: true,
-                    message: 'File Layout Updated!',
-                    type: 'success'
-                });
-            })
-            .catch((e) => {
-                this.saveFileLoading = false
-                this.$message({
-                    showClose: true,
-                    message: 'File not Updated! Please try again.',
-                    type: 'error'
-                });
-                console.log(e)
-            })
+            // axios.post('http://localhost:3030/flows-dir-listing', {
+            //     filename : this.$store.state.fileUrl,
+            //     text : newContent,
+            //     type : 'file'
+            // })
+            // .then((res) => {
+            //     alert('Inside Newcontent Save')
+            //     this.saveFileLoading = false
+            //     this.$message({
+            //         showClose: true,
+            //         message: 'File Layout Updated!',
+            //         type: 'success'
+            //     });
+            // })
+            // .catch((e) => {
+            //     this.saveFileLoading = false
+            //     this.$message({
+            //         showClose: true,
+            //         message: 'File not Updated! Please try again.',
+            //         type: 'error'
+            //     });
+            //     console.log(e)
+            // })
         })
         .catch((e) => {
             console.log(e);
             this.$message({
                 showClose: true,
                 message: 'Cannot save config file! Some error occured, try again.',
-                type: 'danger'
+                type: 'error'
             });
         })
       } else {
@@ -203,35 +236,35 @@ export default {
                 type: 'success'
             });
 
-            axios.post('http://localhost:3030/flows-dir-listing', {
-                filename : this.$store.state.fileUrl,
-                text : newContent,
-                type : 'file'
-            })
-            .then((res) => {
-                this.saveFileLoading = false
-                this.$message({
-                    showClose: true,
-                    message: 'File Layout Updated!',
-                    type: 'success'
-                });
-            })
-            .catch((e) => {
-                this.saveFileLoading = false
-                this.$message({
-                    showClose: true,
-                    message: 'File not Updated! Please try again.',
-                    type: 'error'
-                });
-                console.log(e)
-            })
+            // axios.post('http://localhost:3030/flows-dir-listing', {
+            //     filename : this.$store.state.fileUrl,
+            //     text : newContent,
+            //     type : 'file'
+            // })
+            // .then((res) => {
+            //     this.saveFileLoading = false
+            //     this.$message({
+            //         showClose: true,
+            //         message: 'File Layout Updated!',
+            //         type: 'success'
+            //     });
+            // })
+            // .catch((e) => {
+            //     this.saveFileLoading = false
+            //     this.$message({
+            //         showClose: true,
+            //         message: 'File not Updated! Please try again.',
+            //         type: 'error'
+            //     });
+            //     console.log(e)
+            // })
         })
         .catch((e) => {
             console.log(e);
             this.$message({
                 showClose: true,
                 message: 'Cannot save file! Some error occured, try again.',
-                type: 'danger'
+                type: 'error'
             });
         })
       }
@@ -255,10 +288,39 @@ export default {
       this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});
 
       this.form.name = fileNameOrginal;
-      this.PageLayout = this.settings[1].pageSettings[this.currentFileIndex].PageTheme;
-      this.form.seoTitle = this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle;
-      this.form.seoKeywords = this.settings[1].pageSettings[this.currentFileIndex].PageSEOKeywords;
-      this.form.seoDesc = this.settings[1].pageSettings[this.currentFileIndex].PageSEODescription;
+
+      // console.log(fileNameOrginal);
+      // console.log('Page seo title', this.settings[1].pageSettings[this.currentFileIndex]);
+
+      this.form.headers = this.settings[2].layoutOptions[0].headers;
+      this.form.footers = this.settings[2].layoutOptions[0].footers;
+      this.form.layouts = this.settings[2].layoutOptions[0].layouts;
+      this.form.sidebar = this.settings[2].layoutOptions[0].sidebar;
+      this.form.menu = this.settings[2].layoutOptions[0].menu;
+
+      this.form.Header = this.settings[1].pageSettings[this.currentFileIndex].PageHeader;
+      this.form.Footer = this.settings[1].pageSettings[this.currentFileIndex].PageFooter;
+      this.form.Layout = this.settings[1].pageSettings[this.currentFileIndex].PageLayout;
+      this.form.Sidebar = this.settings[1].pageSettings[this.currentFileIndex].PageSidebar;
+      this.form.Menu = this.settings[1].pageSettings[this.currentFileIndex].PageMenu;
+      
+      if('PageSEOTitle' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.form.seoTitle = this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle;
+      } else {
+        this.form.seoTitle = '';
+      }
+
+      if('PageSEOKeywords' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.form.seoKeywords = this.settings[1].pageSettings[this.currentFileIndex].PageSEOKeywords;
+      } else {
+        this.form.seoKeywords = '';
+      }
+
+      if('PageSEODescription' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.form.seoDesc = this.settings[1].pageSettings[this.currentFileIndex].PageSEODescription;
+      } else {
+        this.form.seoDesc = '';
+      }
 
     } else {
       console.log('Cannot get config file!');
