@@ -3,11 +3,16 @@
     <div class="container">
       <div class="thumbnail">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-9">
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
           </div>
           <div class="col-md-2">
             <el-button class="publishBtn" type="success" @click="publishWebsite()">Publish Site</el-button>
+          </div>
+          <div class="col-md-1">
+            <el-tooltip content="Download .zip" placement="top">
+              <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+            </el-tooltip>
           </div>
         </div>
       </div>
@@ -23,6 +28,21 @@
 
             <el-form-item label="Project name">
               <el-input v-model="repoName" :disabled="true"></el-input>
+            </el-form-item>
+
+            <el-form-item label="Brand name">
+              <el-input v-model="form.brandName"></el-input>
+            </el-form-item>
+
+            <el-form-item label="Brand Logo">
+              <el-upload
+                class="avatar-uploader"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
             </el-form-item>
 
             <el-form-item label="Project Header">
@@ -142,6 +162,7 @@ export default {
     return {
       form: {
         name: '',
+        brandName: '',
         seoTitle: '',
         seoKeywords: '',
         seoDesc: '',
@@ -150,6 +171,7 @@ export default {
         selectedHeader: '',
         selectedFooter: ''
       },
+      imageUrl: '',
       commitsData: [],
       commitMessage: '',
       baseURL: 'http://localhost:3030',
@@ -164,11 +186,28 @@ export default {
   component: {
   },
   methods: {
+
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg' || 'image/png' ;
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('Brand Logo must be JPG or PNG format only!');
+      }
+      if (!isLt2M) {
+        this.$message.error('Brand Logo size can not exceed 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
+
     saveProjectSettings() {
 
-
+      console.log('Image URL: ', this.imageUrl);
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}];
 
       
       // this.settings[0].projectSettings[0].RepositoryId = settings[0].repoSettings[0].RepositoryId;
@@ -308,6 +347,10 @@ export default {
         return 'positive-row';
       }
       return '';
+    },
+
+    exportWebsite(){
+      window.open('http://162.209.122.250/' + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
     }
   },
   async created () {
@@ -318,6 +361,7 @@ export default {
       this.settings = JSON.parse(this.configData.data);
       this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
       this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+      this.form.brandName = this.settings[1].projectSettings[0].BrandName;
       this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
       this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
       this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
@@ -388,5 +432,29 @@ input[type=file]{
 
 .el-table .positive-row {
   background: #e2f0e4;
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #20a0ff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>
