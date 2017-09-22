@@ -38,6 +38,7 @@
                     <span class="hamb-bottom"></span>
                 </button>
                 <div class="allComponents">
+                  <!-- && componentId != null -->
                   <div class="row" v-if="isHomePage === false && isSettingsPage === false">
                     <div v-if="this.componentId === 'GrapesComponent'"  class="col-md-8">
                        <el-form style="margin-top: 18px;" ref="form" :model="form" label-width="120px">
@@ -84,9 +85,10 @@
                     <div v-else class="col-md-8"></div>
                     <div class="col-md-4" align="right">
                         <div style="margin-right:10px; margin: 15px;">
-                            <el-button type="info" @click="previewProductPage()" v-if="!isGridPreview">Preview</el-button>
-                            <el-button type="info" @click="previewGridPage()" v-if="isGridPreview && !isPreviewComponent">Preview</el-button>
-                            <el-button type="default" @click="backToGrid()" v-if="isPreviewComponent">Back</el-button>
+                            <el-button type="info" @click="generatePreview()" v-if="componentId === 'GrapesComponent'">Preview</el-button>
+                            <!-- <el-button type="primary" @click="previewThisFile()" v-if="componentId != 'GrapesComponent'">Preview</el-button> -->
+                            <!-- <el-button type="info" @click="previewGridPage()" v-if="isGridPreview && !isPreviewComponent">Preview</el-button> -->
+                            <!-- <el-button type="default" @click="backToGrid()" v-if="isPreviewComponent">Back</el-button> -->
                             <el-button type="primary" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save</el-button>
                             <el-button type="primary" @click="saveFile()" :loading="saveFileLoading" v-else="isMenuBuilder">Save</el-button>
                             <!-- <el-button type="default" @click="savePageSettings()" v-if="this.componentId === 'GrapesComponent'">Save Config</el-button> -->
@@ -504,6 +506,7 @@ export default {
 
   methods: {
 
+    // Set template if selected in creating new project
     setTemplate(template) {
       if(template == 'template1'){
         this.selectedTemplate = 'template1';
@@ -516,9 +519,12 @@ export default {
       }
     },
 
+    // Route to login page on Login Button click
     loginPage() {
       this.$router.push('/login')
     },
+
+    // Get directory listing data
     getData() {
       axios.get(this.baseURL + '/flows-dir-listing')
       .then(response => {
@@ -537,6 +543,8 @@ export default {
           console.log(e);
       });
     },
+
+    // Get directory listing tree
     getTreeData: function(data){
         let self = this
         let newData = []
@@ -548,11 +556,15 @@ export default {
         })
         return _.sortBy(newData, [function(o) { return o.type; }]);
     },
+
+    // Sort directory tree
     sortTree : function(data){
         return  _.sortBy(data.children, [function(o) { return o.type; }]);
     },
 
+    // Selecting any node in Listing tree 
     handleNodeClick(data) {
+      this.$store.state.fileUrl = data.path;
       if(this.isPageEditing){
         this.isPageEditing = false;
         this.isProjectEditing = false;
@@ -576,6 +588,7 @@ export default {
       }
     },
 
+    // Remote GITLab file Fetch (Not Using Currently)
     getGitFileContent: async function(){
       console.log("Getting GIT file content");
       let response = await axios.get('http://localhost:3030/file-service?projectId=9&fileName=README.md&branchName=master&privateToken=' + this.$session.get('privateToken'));
@@ -690,6 +703,7 @@ export default {
       // this.$store.dispatch('updateContent', { text: fileData });
     },
 
+    // Get File content Locally
     getFileContent: async function (url) {
         url = url.replace(/\\/g, "\/")
         this.btnPreview = false
@@ -723,7 +737,6 @@ export default {
                         }else{
                             this.$store.state.content = response.data
                         }
-                        
                     } 
                     this.componentId = 'json-viewer'
                     break;
@@ -774,6 +787,7 @@ export default {
         this.loadingContent = false
     },
 
+    // Get particular project's config.json file
     async getConfigFileData() {
 
       let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -781,6 +795,7 @@ export default {
       let fileNameOrginal = urlparts[urlparts.length - 1];
       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
       var folderUrl = configFileUrl.replace(fileName, '');
+      console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
 
       let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       let rawConfigs = JSON.parse(responseConfig.data);
@@ -790,15 +805,16 @@ export default {
       this.form.layouts = rawConfigs[2].layoutOptions[0].layouts;
     },
 
-    previewProductPage: function(){
-      // let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      // previewFile = previewFile.replace('/var/www/html','');
-      // console.log(previewFile);
-      // window.open('http://localhost'+previewFile);
-      this.previewGridPage();
+    // Preview Every other files (Not in Use)
+    previewThisFile() {
+      let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      previewFile = previewFile.replace('/var/www/html','');
+      console.log(previewFile);
+      window.open('http://localhost'+previewFile);
     },
 
-    async previewGridPage() {
+    // Do Metalsmith Login and generate temporary preview
+    async generatePreview() {
 
       console.log(" calling api Get for metalsmith for this page.");
 
@@ -1095,11 +1111,13 @@ export default {
       }
     },
 
+    // Bac to GridManager editing(Not in Use)
     backToGrid: function(){
       this.previewGrid = false;
       this.isPreviewComponent = false;
     },
 
+    // Create new Folder
     addFolder(){
         let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
         return axios.post(this.baseURL + '/flows-dir-listing', {
@@ -1116,6 +1134,7 @@ export default {
         })
     },
 
+    // Create new Website
     addProjectFolder(){
         let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
         return axios.post(this.baseURL + '/flows-dir-listing', {
@@ -1158,6 +1177,7 @@ export default {
         })
     },
 
+    // Create neccessary folders for project
     addOtherFolder(newFolderName){
 
       console.log('Creating essential folders...')
@@ -1242,7 +1262,19 @@ export default {
         type : 'folder'
       })
       .then((res) => {
-        console.log('Pages Folder created!');
+        console.log('Sidebars Folder created!');
+      })
+      .catch((e)=>{
+        console.log("Error from pages"+res)
+      });
+
+      // Create Default header Folder
+      axios.post(this.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/Headers/default',
+        type : 'folder'
+      })
+      .then((res) => {
+        console.log('Default header Folder created!');
       })
       .catch((e)=>{
         console.log("Error from pages"+res)
@@ -1253,13 +1285,14 @@ export default {
           
     },
 
+    // Create necessary files for project
     createEssentialFiles(newFolderName) {
 
       // Create Config.json file
 
       let newfilename = newFolderName + '/assets/config.json';
 
-      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName,"ProjectLayout": '',"ProjectHeader":'',"ProjectFooter":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}],"pageSettings":[] }, { "layoutOptions": [ { "headers": [{ value: 'NOH', label: 'No Header' }, { value: 'default', label: 'default' }], "footers": [{ value: 'NOF', label: 'No Footer' },{ value: 'default', label: 'default' }],"sidebar": [{ value: 'NOS', label: 'No SideBar' },{ value: 'default', label: 'default' }],"menu": [{ value: 'NOM', label: 'No Menu' },{ value: 'default', label: 'default' }], "layouts": [{ value: 'Blank', label: 'Blank',noH:0,noF:0,noS:0,noM:0 }, { value: 'default', label: 'default',noH:1,noF:1,noS:0,noM:0 }] } ] } ];
+      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": '',"ProjectLayout": '',"ProjectHeader":'',"ProjectFooter":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}],"pageSettings":[] }, { "layoutOptions": [ { "headers": [{ value: 'NOH', label: 'No Header' }, { value: 'default', label: 'default' }], "footers": [{ value: 'NOF', label: 'No Footer' },{ value: 'default', label: 'default' }],"sidebar": [{ value: 'NOS', label: 'No SideBar' },{ value: 'default', label: 'default' }],"menu": [{ value: 'NOM', label: 'No Menu' },{ value: 'default', label: 'default' }], "layouts": [{ value: 'Blank', label: 'Blank',partialsList:[] }, { value: 'default', label: 'default',partialsList:["Header","Footer"] }] } ] } ];
 
       axios.post(this.baseURL + '/flows-dir-listing', {
           filename : newfilename,
@@ -1363,9 +1396,9 @@ export default {
       });
 
       // Create demo header file
-      let headerFileName = newFolderName + '/Headers/default.html'
+      let headerFileName = newFolderName + '/Headers/default/default.html'
 
-      var headerFileData='<style type="text/css">@import url(\'http://fonts.googleapis.com/css?family=Open+Sans:400,700\');html{background-color: #eaf0f2;}body{font:14px/1.5 Arial, Helvetica, sans-serif;padding:0;margin:0;}.menu{text-align: center;padding-top: 25px;margin-bottom:200px;}.menu img{opacity: 0.4;margin: 20px auto;}.menu h1{margin-top:0;font: normal 32px/1.5 \'Open Sans\', sans-serif;color: #3F71AE;padding-bottom: 16px;}.menu h2{color: #F05283;}.menu h2 a{color:inherit;text-decoration: none;display: inline-block;border: 1px solid #F05283;padding: 10px 15px;border-radius: 3px;font: bold 14px/1 \'Open Sans\', sans-serif;text-transform: uppercase;}.menu h2 a:hover{background-color:#F05283;transition:0.2s;color:#fff;}.menu ul{max-width: 600px;margin: 60px auto 0;}.menu ul a{text-decoration: none;color: #FFF;text-align: left;background-color: #B9C1CA;padding: 10px 16px;border-radius: 2px;opacity: 0.8;font-size: 16px;display: inline-block;margin: 4px;line-height: 1;outline: none;transition: 0.2s ease;}.menu ul li a.active{background-color: #66B650;pointer-events: none;}.menu ul li a:hover{opacity: 1;}.menu ul{list-style: none;padding: 0;}.menu ul li{display: inline-block;}@media (max-height:800px){.menu{padding-top:40px;}}/* -- Demo ads -- */@media (max-width: 1200px){#bsaHolder{display:none;}}/* -- Link to Tutorialzine -- */.tz-link{text-decoration: none;color: #fff !important;font: bold 36px Arial,Helvetica,sans-serif !important;}.tz-link span{color: #da431c;}.header-basic-light{padding: 20px 40px;box-sizing:border-box;box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);height: 80px;background-color: #fff;}.header-basic-light .header-limiter{max-width: 1200px;text-align: center;margin: 0 auto;}/* Logo */.header-basic-light .header-limiter h1{float: left;font: normal 28px Cookie, Arial, Helvetica, sans-serif;line-height: 40px;margin: 0;}.header-basic-light .header-limiter h1 span{color: #5383d3;}/* The header links */.header-basic-light .header-limiter a{color: #5c616a;text-decoration: none;}.header-basic-light .header-limiter nav{font:15px Arial, Helvetica, sans-serif;line-height: 40px;float: right;}.header-basic-light .header-limiter nav a{display: inline-block;padding: 0 5px;opacity: 0.9;text-decoration:none;color: #5c616a;line-height:1;}.header-basic-light .header-limiter nav a.selected{background-color: #86a3d5;color: #ffffff;border-radius: 3px;padding:6px 10px;}/* Making the header responsive. */@media all and (max-width: 600px){.header-basic-light{padding: 20px 0;height: 85px;}.header-basic-light .header-limiter h1{float: none;margin: -8px 0 10px;text-align: center;font-size: 24px;line-height: 1;}.header-basic-light .header-limiter nav{line-height: 1;float:none;}.header-basic-light .header-limiter nav a{font-size: 13px;}}/* For the headers to look good, be sure to reset the margin and padding of the body */body{margin:0;padding:0;}</style><link href=\'http://fonts.googleapis.com/css?family=Cookie\' rel=\'stylesheet\' type=\'text/css\'><header class="header-basic-light"><div class="header-limiter"><h1><a href="#">Company<span>logo</span></a></h1><nav><a href="#">Home</a><a href="#" class="selected">Blog</a><a href="#">Pricing</a><a href="#">About</a><a href="#">Faq</a><a href="#">Contact</a></nav></div></header>'
+      var headerFileData='<style type="text/css">@import url(\'http://fonts.googleapis.com/css?family=Open+Sans:400,700\');html{background-color: #eaf0f2;}body{font:14px/1.5 Arial, Helvetica, sans-serif;padding:0;margin:0;}.menu{text-align: center;padding-top: 25px;margin-bottom:200px;}.menu img{opacity: 0.4;margin: 20px auto;}.menu h1{margin-top:0;font: normal 32px/1.5 \'Open Sans\', sans-serif;color: #3F71AE;padding-bottom: 16px;}.menu h2{color: #F05283;}.menu h2 a{color:inherit;text-decoration: none;display: inline-block;border: 1px solid #F05283;padding: 10px 15px;border-radius: 3px;font: bold 14px/1 \'Open Sans\', sans-serif;text-transform: uppercase;}.menu h2 a:hover{background-color:#F05283;transition:0.2s;color:#fff;}.menu ul{max-width: 600px;margin: 60px auto 0;}.menu ul a{text-decoration: none;color: #FFF;text-align: left;background-color: #B9C1CA;padding: 10px 16px;border-radius: 2px;opacity: 0.8;font-size: 16px;display: inline-block;margin: 4px;line-height: 1;outline: none;transition: 0.2s ease;}.menu ul li a.active{background-color: #66B650;pointer-events: none;}.menu ul li a:hover{opacity: 1;}.menu ul{list-style: none;padding: 0;}.menu ul li{display: inline-block;}@media (max-height:800px){.menu{padding-top:40px;}}/* -- Demo ads -- */@media (max-width: 1200px){#bsaHolder{display:none;}}/* -- Link to Tutorialzine -- */.tz-link{text-decoration: none;color: #fff !important;font: bold 36px Arial,Helvetica,sans-serif !important;}.tz-link span{color: #da431c;}.header-basic-light{padding: 20px 40px;box-sizing:border-box;box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);height: 80px;background-color: #fff;}.header-basic-light .header-limiter{max-width: 1200px;text-align: center;margin: 0 auto;}/* Logo */.header-basic-light .header-limiter h1{float: left;font: normal 28px Cookie, Arial, Helvetica, sans-serif;line-height: 40px;margin: 0;}.header-basic-light .header-limiter h1 span{color: #5383d3;}/* The header links */.header-basic-light .header-limiter a{color: #5c616a;text-decoration: none;}.header-basic-light .header-limiter nav{font:15px Arial, Helvetica, sans-serif;line-height: 40px;float: right;}.header-basic-light .header-limiter nav a{display: inline-block;padding: 0 5px;opacity: 0.9;text-decoration:none;color: #5c616a;line-height:1;}.header-basic-light .header-limiter nav a.selected{background-color: #86a3d5;color: #ffffff;border-radius: 3px;padding:6px 10px;}/* Making the header responsive. */@media all and (max-width: 600px){.header-basic-light{padding: 20px 0;height: 85px;}.header-basic-light .header-limiter h1{float: none;margin: -8px 0 10px;text-align: center;font-size: 24px;line-height: 1;}.header-basic-light .header-limiter nav{line-height: 1;float:none;}.header-basic-light .header-limiter nav a{font-size: 13px;}}/* For the headers to look good, be sure to reset the margin and padding of the body */body{margin:0;padding:0;}</style><link href=\'default.css\' rel=\'stylesheet\' type=\'text/css\'><link href=\'http://fonts.googleapis.com/css?family=Cookie\' rel=\'stylesheet\' type=\'text/css\'><header class="header-basic-light"><div class="header-limiter"><h1><a href="#">Company<span>logo</span></a></h1><nav><a href="#">Home</a><a href="#" class="selected">Blog</a><a href="#">Pricing</a><a href="#">About</a><a href="#">Faq</a><a href="#">Contact</a></nav></div></header><script src=\'default.js\'><\/script>'
 
       axios.post(this.baseURL + '/flows-dir-listing', {
           filename : headerFileName,
@@ -1374,6 +1407,36 @@ export default {
       })
       .then((res) => {
         console.log('Header default.html file created!');
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+      // Create demo header CSS file
+      let headerCSSFileName = newFolderName + '/Headers/default/default.css'
+
+      axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : headerCSSFileName,
+          text : '/* Add Default Header CSS styles here. */\n',
+          type : 'file'
+      })
+      .then((res) => {
+        console.log('Header default.css file created!');
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+      // Create demo header JS file
+      let headerJSFileName = newFolderName + '/Headers/default/default.js'
+
+      axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : headerJSFileName,
+          text : '/* Add Default Header JS scripts here. */',
+          type : 'file'
+      })
+      .then((res) => {
+        console.log('Header default.js file created!');
       })
       .catch((e) => {
           console.log(e)
@@ -1575,6 +1638,7 @@ export default {
       })
     },
 
+    // Create new File
     addFile(formName){
       this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -1601,6 +1665,7 @@ export default {
       });
     },
 
+    // Save file
     saveFile (){
         this.saveFileLoading = true
         let newContent = this.$store.state.content;
@@ -1788,35 +1853,62 @@ export default {
               var content=this.$store.state.content;
                 // console.log("content of grid",content);
                 var countHeader,countFooter,countSidebar,countMenu=0;
-                countHeader=content.match(/Header/g).length;
-                console.log("countHeader",countHeader);
-                countFooter=content.match(/Footer/g).length;
-                console.log("countFooter",countFooter);
-                countSidebar=content.match(/Sidebar/g).length;
-                console.log("countSidebar",countSidebar);
-                if(content.match(/Header/g)){
-                  var countHeader=content.match(/Header/g).length
+                var getFromBetween = {
+                results:[],
+                string:"",
+                getFromBetween:function (sub1,sub2) {
+                    if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+                    var SP = this.string.indexOf(sub1)+sub1.length;
+                    var string1 = this.string.substr(0,SP);
+                    var string2 = this.string.substr(SP);
+                    var TP = string1.length + string2.indexOf(sub2);
+                    return this.string.substring(SP,TP);
+                },
+                removeFromBetween:function (sub1,sub2) {
+                    if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+                    var removal = sub1+this.getFromBetween(sub1,sub2)+sub2;
+                    this.string = this.string.replace(removal,"");
+                },
+                getAllResults:function (sub1,sub2) {
+                    // first check to see if we do have both substrings
+                    if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+
+                    // find one result
+                    var result = this.getFromBetween(sub1,sub2);
+                    // push it to the results array
+                    this.results.push(result);
+                    // remove the most recently found one from the string
+                    this.removeFromBetween(sub1,sub2);
+
+                    // if there's more substrings
+                    if(this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+                        this.getAllResults(sub1,sub2);
+                    }
+                    else return;
+                },
+                get:function (string,sub1,sub2) {
+                    this.results = [];
+                    this.string = string;
+                    this.getAllResults(sub1,sub2);
+                    return this.results;
                 }
-                if(content.match(/Footer/g)){
-                  var countFooter=content.match(/Footer/g).length
-                }
-                if(content.match(/Sidebar/g)){
-                  var countSidebar=content.match(/Sidebar/g).length
-                }
-                if(content.match(/Menu/g)){
-                  var countMenu=content.match(/Menu/g).length
-                }
-                console.log("countMenu",countMenu);
+            };
+                var result = getFromBetween.get(content,"{{>","}}");
+                console.log(result);
+                let totalPartial=content.match(/{{>/g).length;
+                console.log("totalPartial",totalPartial);
+
 
                 console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
                 let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Layouts/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.layout'));
                 let temp = {
                     value: name,
                     label: name,
-                    noH: countHeader,
-                    noF: countFooter,
-                    noS: countSidebar,
-                    noM: countMenu
+                    partialsList: result
+                    // noH: countHeader,
+                    // noF: countFooter,
+                    // noS: countSidebar,
+                    // noM: countMenu
                 }
                
                 let checkValue = false;
@@ -1824,10 +1916,18 @@ export default {
                     var obj = this.layoutSettings[2].layoutOptions[0].layouts[i];
                     if ((obj.label) == name) {
                         checkValue = true;
+                        // obj.partialsList=result
                     }
                 }
                 if (checkValue == true) {
+                  console.log("name",name)
+                    let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0].layouts,{'label':name});
+                    console.log("index of change in existing",currentFileIndex)
+                    this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].partialsList=result;
+                    // this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].value=result.value;
+                    console.log("partials",this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].partialsList)
                     console.log("file already exists")
+                    this.saveConfigFile(folderUrl);
                 } else {
                     console.log('file doesnt exists');
                     // this.$store.state.LayoutOptions.push(temp);
@@ -1836,7 +1936,15 @@ export default {
                     // saveConfigFile
                     this.saveConfigFile(folderUrl);
                 }
+
+
+                
+
+
+
+
             }
+
 
         })
         .catch((e) => {
@@ -1850,6 +1958,7 @@ export default {
         })
     },
 
+    // Save Page settings (Not in use)
     async savePageSettings() {
 
       // console.log("entered save config of individual page:"+this.$store.state.fileUrl)
@@ -2146,6 +2255,7 @@ export default {
 
     },
 
+    // Save config File
     saveConfigFile(folderUrl){
 
       let newJsonName = folderUrl + '/assets/config.json';
@@ -2172,6 +2282,7 @@ export default {
       })
     },
 
+    // Save Menu's JSON file
     saveJsonFile: function(){
         this.saveFileLoading = true
         let newContent = this.$store.state.content;
@@ -2209,6 +2320,7 @@ export default {
         })
     },
 
+    // Save Layout File(Not in use)
     saveLayoutFile: function(){
         let newContent = "Hello";
         let file_name = this.currentFile.path.replace(/\\/g, "\/").replace("Grid","Layout").replace(".grid",".layout");
@@ -2220,6 +2332,7 @@ export default {
         })
     },
 
+    // Remove File or Folder
     remove(store, data) {
       this.$swal({
       title: 'Are you sure?',
@@ -2267,20 +2380,6 @@ export default {
                   }
               }
 
-              // Now removing project from Gitlab server
-              console.log('Now removing project from Gitlab server');
-
-              axios.get(this.baseURL + '/gitlab-add-repo/' +this.newRepoId+ '?privateToken='+ this.$session.get('privateToken'), {
-              })
-              .then((response) => {
-                  console.log(response.data);
-                  console.log('repo deleted')
-              })
-              .catch((e) => {
-                  console.log(e)
-              });
-
-
           })
           .catch((e) => {
               console.log(e)
@@ -2292,9 +2391,63 @@ export default {
       })
     },
 
+    async removeProject(store, data) {
+      
+      // Get Config File
+      let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
+      let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let rawConfigs = JSON.parse(responseConfig.data);
+      let repositoryId = rawConfigs[0].repoSettings[0].RepositoryId;
+
+      this.$swal({
+      title: 'Are you sure?',
+      text: 'You want you delete this file!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it'
+      }).then(() => {
+          axios.delete(this.baseURL + '/flows-dir-listing/0?filename='+data.path.replace(/\\/g,"/"))
+          .then(async (res) => {
+
+            // Delete Repository from GitLab Server
+            let response = await axios.get(this.baseURL + '/gitlab-add-repo/' + repositoryId + '?privateToken='+ this.$session.get('privateToken'), {
+            })
+            .then((response) => {
+                console.log(response.data);
+                this.$message({
+                    showClose: true,
+                    message: 'Project successfully deleted..!!',
+                    type: 'success'
+                });
+                setTimeout(function(){
+                  location.reload();
+                }, 500);
+            })
+            .catch((e) => {
+                console.log(e)
+            });
+
+            this.currentFile = null
+            this.componentId = 'HomePage';
+            console.log(res);
+          })
+          .catch((e) => {
+              console.log(e)
+          })
+          this.componentId = 'HomePage';
+          this.isHomePage = true;
+      }).catch((dismiss) => {
+          console.log('error',dismiss)
+      })
+    },
+
+    // Displaying icons in tree nodes  
     renderContent(h, { node, data, store }) {
 
         if(data.type=='directory' && node.label != 'websites'){
+          // If node is a website project directory
           if(node.level == 2){
             return (<span>
                   <span class="nodelabel">
@@ -2312,7 +2465,7 @@ export default {
                       <i class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
                     </el-tooltip>
                     <el-tooltip content="Remove" placement="top">
-                        <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                        <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removeProject(store, data) }></i>
                     </el-tooltip>
                   </span>
               </span>)  
@@ -2392,11 +2545,7 @@ export default {
     //   <b-dropdown-item>Delete</b-dropdown-item>
     // </b-dropdown>
 
-    changeEditor (currentEditor) {
-      this.saveFile();
-      this.componentId = currentEditor;
-    },
-
+    // Cancel and go back to dashboard
     cancelEditing() {
       this.componentId = 'HomePage';
       this.previewGrid = false;

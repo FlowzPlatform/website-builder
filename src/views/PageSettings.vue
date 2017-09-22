@@ -50,7 +50,7 @@
             <el-form-item label="Page Sidebar">
               <el-select v-model="form.Sidebar" placeholder="Please select Sidebar">
                 <el-option
-                  v-for="item in form.sidebar"
+                  v-for="item in form.sidebars"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -62,7 +62,7 @@
             <el-form-item label="Page Menu">
               <el-select v-model="form.Menu" placeholder="Please select Menu">
                 <el-option
-                  v-for="item in form.menu"
+                  v-for="item in form.menus"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -125,11 +125,14 @@ export default {
         Menu: '',
         headers: [],
         footers: [],
-        layouts: []
+        layouts: [],
+        sidebars: [],
+        menus: []
       },
       PageLayout: '',
       PageFooter: '',
       PageHeader: '',
+      PageSidebar: '',
       baseURL: 'http://localhost:3030',
       currentFileIndex: '',
       configData: [],
@@ -157,7 +160,7 @@ export default {
 
       // this.PageLayout = '';
 
-      let PageSettings = {"PageName":this.form.name,"PageHeader":this.form.Header,"PageFooter":this.form.Footer,"PageLayout":this.form.Layout, "PageSEOTitle": this.form.seoTitle, "PageSEOKeywords": this.form.seoKeywords, "PageSEODescription": this.form.seoDesc};
+      let PageSettings = {"PageName":this.form.name,"PageHeader":this.form.Header,"PageFooter":this.form.Footer,"PageLayout":this.form.Layout, "PageMenu":this.form.Menu, "PageSidebar":this.form.Sidebar, "PageSEOTitle": this.form.seoTitle, "PageSEOKeywords": this.form.seoKeywords, "PageSEODescription": this.form.seoDesc};
 
       if(this.currentFileIndex != null){
 
@@ -295,8 +298,8 @@ export default {
       this.form.headers = this.settings[2].layoutOptions[0].headers;
       this.form.footers = this.settings[2].layoutOptions[0].footers;
       this.form.layouts = this.settings[2].layoutOptions[0].layouts;
-      this.form.sidebar = this.settings[2].layoutOptions[0].sidebar;
-      this.form.menu = this.settings[2].layoutOptions[0].menu;
+      this.form.sidebars = this.settings[2].layoutOptions[0].sidebar;
+      this.form.menus = this.settings[2].layoutOptions[0].menu;
 
       this.form.Header = this.settings[1].pageSettings[this.currentFileIndex].PageHeader;
       this.form.Footer = this.settings[1].pageSettings[this.currentFileIndex].PageFooter;
