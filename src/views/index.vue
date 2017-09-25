@@ -1233,16 +1233,16 @@ export default {
       });
 
       // Create Default header Folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
-        foldername : newFolderName+'/Headers/default',
-        type : 'folder'
-      })
-      .then((res) => {
-        console.log('Default header Folder created!');
-      })
-      .catch((e)=>{
-        console.log("Error from pages"+res)
-      });
+      // axios.post(this.baseURL+'/flows-dir-listing' , {
+      //   foldername : newFolderName+'/Headers/default',
+      //   type : 'folder'
+      // })
+      // .then((res) => {
+      //   console.log('Default header Folder created!');
+      // })
+      // .catch((e)=>{
+      //   console.log("Error from pages"+res)
+      // });
 
       console.log('Now creating essential files...');
       this.createEssentialFiles(newFolderName);
@@ -1360,7 +1360,7 @@ export default {
       });
 
       // Create demo header file
-      let headerFileName = newFolderName + '/Headers/default/default.html'
+      let headerFileName = newFolderName + '/Headers/default.html'
 
       var headerFileData='<style type="text/css">@import url(\'http://fonts.googleapis.com/css?family=Open+Sans:400,700\');html{background-color: #eaf0f2;}body{font:14px/1.5 Arial, Helvetica, sans-serif;padding:0;margin:0;}.menu{text-align: center;padding-top: 25px;margin-bottom:200px;}.menu img{opacity: 0.4;margin: 20px auto;}.menu h1{margin-top:0;font: normal 32px/1.5 \'Open Sans\', sans-serif;color: #3F71AE;padding-bottom: 16px;}.menu h2{color: #F05283;}.menu h2 a{color:inherit;text-decoration: none;display: inline-block;border: 1px solid #F05283;padding: 10px 15px;border-radius: 3px;font: bold 14px/1 \'Open Sans\', sans-serif;text-transform: uppercase;}.menu h2 a:hover{background-color:#F05283;transition:0.2s;color:#fff;}.menu ul{max-width: 600px;margin: 60px auto 0;}.menu ul a{text-decoration: none;color: #FFF;text-align: left;background-color: #B9C1CA;padding: 10px 16px;border-radius: 2px;opacity: 0.8;font-size: 16px;display: inline-block;margin: 4px;line-height: 1;outline: none;transition: 0.2s ease;}.menu ul li a.active{background-color: #66B650;pointer-events: none;}.menu ul li a:hover{opacity: 1;}.menu ul{list-style: none;padding: 0;}.menu ul li{display: inline-block;}@media (max-height:800px){.menu{padding-top:40px;}}/* -- Demo ads -- */@media (max-width: 1200px){#bsaHolder{display:none;}}/* -- Link to Tutorialzine -- */.tz-link{text-decoration: none;color: #fff !important;font: bold 36px Arial,Helvetica,sans-serif !important;}.tz-link span{color: #da431c;}.header-basic-light{padding: 20px 40px;box-sizing:border-box;box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);height: 80px;background-color: #fff;}.header-basic-light .header-limiter{max-width: 1200px;text-align: center;margin: 0 auto;}/* Logo */.header-basic-light .header-limiter h1{float: left;font: normal 28px Cookie, Arial, Helvetica, sans-serif;line-height: 40px;margin: 0;}.header-basic-light .header-limiter h1 span{color: #5383d3;}/* The header links */.header-basic-light .header-limiter a{color: #5c616a;text-decoration: none;}.header-basic-light .header-limiter nav{font:15px Arial, Helvetica, sans-serif;line-height: 40px;float: right;}.header-basic-light .header-limiter nav a{display: inline-block;padding: 0 5px;opacity: 0.9;text-decoration:none;color: #5c616a;line-height:1;}.header-basic-light .header-limiter nav a.selected{background-color: #86a3d5;color: #ffffff;border-radius: 3px;padding:6px 10px;}/* Making the header responsive. */@media all and (max-width: 600px){.header-basic-light{padding: 20px 0;height: 85px;}.header-basic-light .header-limiter h1{float: none;margin: -8px 0 10px;text-align: center;font-size: 24px;line-height: 1;}.header-basic-light .header-limiter nav{line-height: 1;float:none;}.header-basic-light .header-limiter nav a{font-size: 13px;}}/* For the headers to look good, be sure to reset the margin and padding of the body */body{margin:0;padding:0;}</style><link href=\'default.css\' rel=\'stylesheet\' type=\'text/css\'><link href=\'http://fonts.googleapis.com/css?family=Cookie\' rel=\'stylesheet\' type=\'text/css\'><header class="header-basic-light"><div class="header-limiter"><h1><a href="#">Company<span>logo</span></a></h1><nav><a href="#">Home</a><a href="#" class="selected">Blog</a><a href="#">Pricing</a><a href="#">About</a><a href="#">Faq</a><a href="#">Contact</a></nav></div></header><script src=\'default.js\'><\/script>'
 
@@ -1377,34 +1377,34 @@ export default {
       });
 
       // Create demo header CSS file
-      let headerCSSFileName = newFolderName + '/Headers/default/default.css'
+      // let headerCSSFileName = newFolderName + '/Headers/default/default.css'
 
-      axios.post(this.baseURL + '/flows-dir-listing', {
-          filename : headerCSSFileName,
-          text : '/* Add Default Header CSS styles here. */\n',
-          type : 'file'
-      })
-      .then((res) => {
-        console.log('Header default.css file created!');
-      })
-      .catch((e) => {
-          console.log(e)
-      });
+      // axios.post(this.baseURL + '/flows-dir-listing', {
+      //     filename : headerCSSFileName,
+      //     text : '/* Add Default Header CSS styles here. */\n',
+      //     type : 'file'
+      // })
+      // .then((res) => {
+      //   console.log('Header default.css file created!');
+      // })
+      // .catch((e) => {
+      //     console.log(e)
+      // });
 
       // Create demo header JS file
-      let headerJSFileName = newFolderName + '/Headers/default/default.js'
+      // let headerJSFileName = newFolderName + '/Headers/default/default.js'
 
-      axios.post(this.baseURL + '/flows-dir-listing', {
-          filename : headerJSFileName,
-          text : '/* Add Default Header JS scripts here. */',
-          type : 'file'
-      })
-      .then((res) => {
-        console.log('Header default.js file created!');
-      })
-      .catch((e) => {
-          console.log(e)
-      });
+      // axios.post(this.baseURL + '/flows-dir-listing', {
+      //     filename : headerJSFileName,
+      //     text : '/* Add Default Header JS scripts here. */',
+      //     type : 'file'
+      // })
+      // .then((res) => {
+      //   console.log('Header default.js file created!');
+      // })
+      // .catch((e) => {
+      //     console.log(e)
+      // });
 
       // Create demo footer file
       let footerFileName = newFolderName + '/Footers/default.html'
