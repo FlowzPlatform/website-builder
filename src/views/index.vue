@@ -816,7 +816,7 @@ export default {
     // Do Metalsmith Login and generate temporary preview
     async generatePreview() {
 
-      console.log(" calling api Get for metalsmith for this page.");
+      console.log("Calling api Get for metalsmith for this page.");
 
       //get header, footer from pagesetting from config.json and then set the value in js file to call the api.
 
@@ -854,45 +854,30 @@ export default {
 
       var indexPartial = responseMetal.data.search("('handlebars')");
 
-      // var partials=responseMetal.data.substr(0,indexPartial+15)+this.$store.state.MetalsmithPartials+responseMetal.data.substr(indexPartial+15)
       console.log('Header:', this.form.Header);
-      if(this.form.Header!='' && this.form.Header!='NOH')
-      {
-
-      var partials = "Handlebars.registerPartial('Header', fs.readFileSync('" + folderUrl + "/Headers/" + this.form.Header + ".html').toString())\n"
+      if(this.form.Header!='' && this.form.Header!='NOH'){
+        var partials = "Handlebars.registerPartial('Header', fs.readFileSync('" + folderUrl + "/Headers/" + this.form.Header + ".html').toString())\n"
       } else {
-
         var partials=''
       }
 
-      if(this.form.Footer!='' && this.form.Footer!='NOF')
-      {
-
-      partials = partials + "Handlebars.registerPartial('Footer', fs.readFileSync('" + folderUrl + "/Footers/" + this.form.Footer + ".html').toString())\n"
-      }
-      else{
+      if(this.form.Footer!='' && this.form.Footer!='NOF'){
+        partials = partials + "Handlebars.registerPartial('Footer', fs.readFileSync('" + folderUrl + "/Footers/" + this.form.Footer + ".html').toString())\n"
+      } else{
         partials=partials + ''
       }
 
-      if(this.form.Sidebar!='' && this.form.Sidebar!='NOS')
-      {
-
-      partials = partials + "Handlebars.registerPartial('Sidebar', fs.readFileSync('" + folderUrl + "/Sidebars/" + this.form.Sidebar + ".html').toString())\n"
-      }
-      else{
+      if(this.form.Sidebar!='' && this.form.Sidebar!='NOS'){
+        partials = partials + "Handlebars.registerPartial('Sidebar', fs.readFileSync('" + folderUrl + "/Sidebars/" + this.form.Sidebar + ".html').toString())\n"
+      } else{
         partials=partials + ''
       }
 
-      if(this.form.Menu!='' && this.form.Menu!='NOM')
-      {
-
-      partials = partials + "Handlebars.registerPartial('Menu', fs.readFileSync('" + folderUrl + "/Menus/" + this.form.Menu + ".html').toString())\n"
-      }
-      else{
+      if(this.form.Menu!='' && this.form.Menu!='NOM'){
+        partials = partials + "Handlebars.registerPartial('Menu', fs.readFileSync('" + folderUrl + "/Menus/" + this.form.Menu + ".html').toString())\n"
+      } else{
         partials=partials + ''
       }
-
-
 
       console.log("src for metalsmith", partials);
 
@@ -903,212 +888,191 @@ export default {
       let mainMetal = folderUrl + '/assets/metalsmith.js'
 
       axios.post('http://localhost:3030/flows-dir-listing', {
-              filename: mainMetal,
-              text: responseMetal.data,
-              type: 'file'
-          }).then((response) => {
-              console.log('successfully created metalsmith file :' + (response.data))
-              this.$message({
-                  showClose: true,
-                  message: 'MetalSmith Config Saved!',
-                  type: 'success'
-              });
+          filename: mainMetal,
+          text: responseMetal.data,
+          type: 'file'
+      }).then((response) => {
+          console.log('successfully created metalsmith file :' + (response.data))
+          this.$message({
+              showClose: true,
+              message: 'MetalSmith Config Saved!',
+              type: 'success'
+          });
 
-              // Create temporary preview folder
-              let newFolderName = folderUrl + '/Preview';
-              return axios.post(this.baseURL + '/flows-dir-listing', {
-                  foldername : newFolderName,
-                  type : 'folder'
-              })
-              .then((res) => {
-                  console.log(res)
-                  // Create preview file
-                  
-
-
-
-
-                  let newContent = this.$store.state.content;
-                  if (this.form.Layout=='Blank') {
-                    if (newContent.match('---')) {
-                    let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
-                      console.log("substr:"+substr)
-                      newContent=newContent.replace(substr,'')
-                      // console.log("newContent:"+newContent)
-                    }
-                    else{
-                      newContent=this.$store.state.content;
-                    }
-
-                  }
-                  else{
-                    let tempValueLayout='---\nlayout: '+this.form.Layout+'.layout\n---\n';
-
-                    console.log("tempValueLayout:"+tempValueLayout)
-
-                    if (newContent.match('---')) {
-                      let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
-                      console.log("substr:" + substr)
-                      newContent=newContent.replace(substr,tempValueLayout)
-                    } else{
-                      newContent = tempValueLayout+ this.$store.state.content;
-                    }
-
-                  }
-                
-                  this.PageLayout='';
-                  this.form.Header='';
-                  this.form.Footers='';
-                  this.form.Sidebar='';
-                  this.form.Menu='';
-
-                  let previewFileName = folderUrl + '/Preview/'+nameF+'.html';
-
-                   return axios.post('http://localhost:3030/flows-dir-listing', {
-                        filename : previewFileName,
-                        text : newContent,
-                        type : 'file'
-                    })
-                    .then((res) => {
-                        this.saveFileLoading = false;
-
-                        axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
-                          console.log('successfully  :' + (response))
-                          // revert changes in metalsmith 
-                         
-                          var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+folderUrl+"/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+folderUrl+"/Layouts'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
-                          return axios.post(this.baseURL + '/flows-dir-listing', {
-                                  filename: mainMetal,
-                                  text: metalsmithJSON,
-                                  type: 'file'
-                              })
-                              .then((res) => {
-                                console.log('Now previewing: ' + this.$store.state.fileUrl.replace(/\\/g, "\/"))
-                                let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                                previewFile = folderUrl.replace('/var/www/html','');
-                                console.log(previewFile.replace('Pages'+nameF, ''));
-                                window.open('http://localhost'+previewFile+'/MetalsmithOutput/'+nameF+'.html');
-
-
-
-                                // Delete Preview Folder
-
-
-                                axios.delete(this.baseURL + '/flows-dir-listing/0?filename='+folderUrl+'/Preview')
-                                .then((res) => {
-                                    // this.currentFile = null
-                                    // this.componentId = null
-                                    console.log(res);
-
-                                    // if (data.path.replace(/\\/g, "/").match('Header')) {
-                                    //     let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Headers/') + 8, data.path.replace(/\\/g, "/").indexOf('.html'));
-                                    //     console.log("name:" + name)
-                                    //     for (var i = 0; i < this.$store.state.HeaderOptions.length; i++) {
-                                    //         var obj = this.$store.state.HeaderOptions[i];
-                                    //         console.log("obj.label:" + obj.label)
-                                    //         if ((obj.label) == name) {
-                                    //             this.$store.state.HeaderOptions.splice(i, 1);
-                                    //         }
-                                    //     }
-                                    // } else if (data.path.replace(/\\/g, "/").match('Footer')) {
-                                    //     let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Footers/') + 8, data.path.replace(/\\/g, "/").indexOf('.html'));
-                                    //     console.log("name:" + name)
-                                    //     for (var i = 0; i < this.$store.state.FooterOptions.length; i++) {
-                                    //         var obj = this.$store.state.FooterOptions[i];
-
-                                    //         if ((obj.label) == name) {
-                                    //             this.$store.state.FooterOptions.splice(i, 1);
-                                    //         }
-                                    //     }
-                                    // } else if (data.path.replace(/\\/g, "/").match('Layouts')) {
-                                    //     let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Layouts/') + 8, data.path.replace(/\\/g, "/").indexOf('.layout'));
-                                    //     console.log("name:" + name)
-                                    //     for (var i = 0; i < this.$store.state.LayoutOptions.length; i++) {
-                                    //         var obj = this.$store.state.LayoutOptions[i];
-
-                                    //         if ((obj.label) == name) {
-                                    //             this.$store.state.LayoutOptions.splice(i, 1);
-                                    //         }
-                                    //     }
-                                    // }
-
-                                })
-                                .catch((e) => {
-                                    console.log(e)
-                                })
-
-
-
-
-
-                              })
-                              .catch((e) => {
-                                  console.log(e)
-                              })
-
-
-                      })
-                      .catch((err) => {
-                          console.log('error while creating metalsmithJSON file' + err)
-                      })
-
-
-                        this.$message({
-                            showClose: true,
-                            message: 'File Saved!',
-                            type: 'success'
-                        });
-                    })
-                    .catch((e) => {
-                        this.saveFileLoading = false
-                        this.$message({
-                            showClose: true,
-                            message: 'File not saved! Please try again.',
-                            type: 'error'
-                        });
-                        console.log(e)
-                    })
-
-
-
-
-
-
-              })
-              .catch((e) => {
-                  console.log(e)
-              })
-
+          // Create temporary preview folder
+          let newFolderName = folderUrl + '/Preview';
+          return axios.post(this.baseURL + '/flows-dir-listing', {
+              foldername : newFolderName,
+              type : 'folder'
+          })
+          .then((res) => {
+              console.log(res)
+              // Create preview file
               
+              let newContent = this.$store.state.content;
+              if (this.form.Layout=='Blank') {
+                if (newContent.match('---')) {
+                  let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
+                  console.log("substr:"+substr)
+                  newContent=newContent.replace(substr,'')
+                  // console.log("newContent:"+newContent)
+                }
+                else{
+                  newContent=this.$store.state.content;
+                }
+              }
+              else{
+                let tempValueLayout='---\nlayout: '+this.form.Layout+'.layout\n---\n';
+
+                console.log("tempValueLayout:"+tempValueLayout)
+
+                if (newContent.match('---')) {
+                  let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+                  console.log("substr:" + substr)
+                  newContent=newContent.replace(substr,tempValueLayout)
+                } else{
+                  newContent = tempValueLayout+ this.$store.state.content;
+                }
+
+              }
+            
+              this.PageLayout='';
+              this.form.Header='';
+              this.form.Footers='';
+              this.form.Sidebar='';
+              this.form.Menu='';
+
+              let previewFileName = folderUrl + '/Preview/'+nameF+'.html';
+
+              return axios.post('http://localhost:3030/flows-dir-listing', {
+                  filename : previewFileName,
+                  text : newContent,
+                  type : 'file'
+              })
+                .then((res) => {
+                    this.saveFileLoading = false;
+
+                    axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
+                      console.log('successfully  :' + (response))
+                      // revert changes in metalsmith 
+                     
+                      var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+folderUrl+"/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+folderUrl+"/Layouts'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                      return axios.post(this.baseURL + '/flows-dir-listing', {
+                              filename: mainMetal,
+                              text: metalsmithJSON,
+                              type: 'file'
+                          })
+                          .then((res) => {
+                            console.log('Now previewing: ' + this.$store.state.fileUrl.replace(/\\/g, "\/"))
+                            let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                            previewFile = folderUrl.replace('/var/www/html','');
+                            console.log(previewFile.replace('Pages'+nameF, ''));
+                            window.open('http://localhost'+previewFile+'/MetalsmithOutput/'+nameF+'.html');
+
+
+
+                            // Delete Preview Folder
+
+
+                            axios.delete(this.baseURL + '/flows-dir-listing/0?filename='+folderUrl+'/Preview')
+                            .then((res) => {
+                                // this.currentFile = null
+                                // this.componentId = null
+                                console.log(res);
+
+                                // if (data.path.replace(/\\/g, "/").match('Header')) {
+                                //     let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Headers/') + 8, data.path.replace(/\\/g, "/").indexOf('.html'));
+                                //     console.log("name:" + name)
+                                //     for (var i = 0; i < this.$store.state.HeaderOptions.length; i++) {
+                                //         var obj = this.$store.state.HeaderOptions[i];
+                                //         console.log("obj.label:" + obj.label)
+                                //         if ((obj.label) == name) {
+                                //             this.$store.state.HeaderOptions.splice(i, 1);
+                                //         }
+                                //     }
+                                // } else if (data.path.replace(/\\/g, "/").match('Footer')) {
+                                //     let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Footers/') + 8, data.path.replace(/\\/g, "/").indexOf('.html'));
+                                //     console.log("name:" + name)
+                                //     for (var i = 0; i < this.$store.state.FooterOptions.length; i++) {
+                                //         var obj = this.$store.state.FooterOptions[i];
+
+                                //         if ((obj.label) == name) {
+                                //             this.$store.state.FooterOptions.splice(i, 1);
+                                //         }
+                                //     }
+                                // } else if (data.path.replace(/\\/g, "/").match('Layouts')) {
+                                //     let name = data.path.replace(/\\/g, "/").substring(data.path.replace(/\\/g, "/").indexOf('Layouts/') + 8, data.path.replace(/\\/g, "/").indexOf('.layout'));
+                                //     console.log("name:" + name)
+                                //     for (var i = 0; i < this.$store.state.LayoutOptions.length; i++) {
+                                //         var obj = this.$store.state.LayoutOptions[i];
+
+                                //         if ((obj.label) == name) {
+                                //             this.$store.state.LayoutOptions.splice(i, 1);
+                                //         }
+                                //     }
+                                // }
+
+                            })
+                            .catch((e) => {
+                                console.log(e)
+                            })
+
+
+
+
+
+                          })
+                          .catch((e) => {
+                              console.log(e)
+                          })
+
+
+                  })
+                  .catch((err) => {
+                      console.log('error while creating metalsmithJSON file' + err)
+                  })
+
+
+                    this.$message({
+                        showClose: true,
+                        message: 'File Saved!',
+                        type: 'success'
+                    });
+                })
+                .catch((e) => {
+                    this.saveFileLoading = false
+                    this.$message({
+                        showClose: true,
+                        message: 'File not saved! Please try again.',
+                        type: 'error'
+                    });
+                    console.log(e)
+                })
+
+
+
 
 
 
           })
           .catch((e) => {
-              console.log('error while creating metalsmithJSON file' + e)
-              this.$message({
-                  showClose: true,
-                  message: 'Cannot save file! Some error occured, try again.',
-                  type: 'danger'
-              });
+              console.log(e)
           })
 
+          
 
-      //revert changes in the metalsmith file 
 
-      //Then, show file in preview 
-      switch (this.componentId) {
-          case 'GridManager':
-              this.$refs.contentComponent.getHtml();
-              this.previewGrid = true;
-              this.isPreviewComponent = true;
-              break;
-          default:
-              this.previewGrid = false;
-              this.isPreviewComponent = false;
-              break;
-      }
+
+      })
+      .catch((e) => {
+          console.log('error while creating metalsmithJSON file' + e)
+          this.$message({
+              showClose: true,
+              message: 'Cannot save file! Some error occured, try again.',
+              type: 'danger'
+          });
+      })
     },
 
     // Bac to GridManager editing(Not in Use)
