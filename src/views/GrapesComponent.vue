@@ -18,7 +18,8 @@ export default {
     data () {
     return {
       baseURL: 'http://localhost:3030',
-      brandName: ''
+      brandName: '',
+      imageBlob: ''
     }
   },
     async mounted () {
@@ -33,6 +34,9 @@ export default {
         let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
         let rawConfigs = JSON.parse(responseConfig.data);
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
+
+        let imageData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
+        this.imageBlob = imageData.data;
 
         var blkStyle = '.blk-row::after{ content: ""; clear: both; display: block;} .blk-row{padding: 10px;}';
 
@@ -255,6 +259,14 @@ export default {
                     class: 'fa fa-facebook-official',
                 },
                 content: '<span id="brandName">'+this.brandName+'</span>',
+            },{
+                id: 'brandLogo',
+                label: 'Brand Logo',
+                category: 'Static Components',
+                attributes: {
+                    class: 'fa fa-flag',
+                },
+                content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
             }
             ],
         },
@@ -264,6 +276,8 @@ export default {
   		});
         
         $('.gjs-frame').contents().find('body [id="brandName"]').html(this.brandName);
+        
+        $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
 
 	},
 	methods:{

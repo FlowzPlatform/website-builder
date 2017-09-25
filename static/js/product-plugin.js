@@ -280,16 +280,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 	
-	// Simple logo component
-	bm.add('logoComponent',{
-		label: 'Logo',
-		content: '<img src="http://placehold.it/250x100/008080/ffffff?text=Logo">',
-		attributes: {
-			class: 'fa fa-google',
-			title: 'Logo'
-		},
-		category: 'Static Components'
-	});
+	// // Simple logo component
+	// bm.add('logoComponent',{
+	// 	label: 'Logo',
+	// 	content: '<img src="http://placehold.it/250x100/008080/ffffff?text=Logo">',
+	// 	attributes: {
+	// 		class: 'fa fa-google',
+	// 		title: 'Logo'
+	// 	},
+	// 	category: 'Static Components'
+	// });
 
 	// Static components for page
 	bm.add('productContents', {

@@ -1,7 +1,7 @@
 <template>
   <div class="ProjectSettings">
     <div class="container">
-      <div class="thumbnail">
+      <div class="well">
         <div class="row">
           <div class="col-md-9">
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
@@ -16,7 +16,7 @@
           </div>
         </div>
       </div>
-      <div class="thumbnail ">
+      <div class="well">
         <div class="row">
           <div class="col-md-12" style="margin-top: 4%;">
           
@@ -34,10 +34,21 @@
               <el-input v-model="form.brandName"></el-input>
             </el-form-item>
 
+            <el-form-item label="Brand Logo">
+              <div class="col6 valid"> 
+                <label for="upload-validation">
+                  <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
+                </label> 
+                <input type="file" name="" id="upload-validation">
+                <span class="dis">(max 3 MB. .png only)</span>
+              </div>
+            </el-form-item>
+
             <!-- <el-form-item label="Brand Logo">
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://localhost:3030/image-upload"
+                :data=fileData
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
@@ -46,7 +57,7 @@
               </el-upload>
             </el-form-item> -->
 
-            <el-form-item label="Project Header">
+            <!-- <el-form-item label="Project Header">
               <el-row>
                 <el-col :span="10">
                   <el-select v-model="form.selectedHeader" placeholder="Please select Header">
@@ -71,7 +82,7 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="Project SEO Title">
               <el-input v-model="form.seoTitle"></el-input>
@@ -100,7 +111,7 @@
         </div>
       </div> 
 
-      <div class="thumbnail">
+      <div class="well">
         <div class="row">
         <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
           <h3>List of Commits</h3>
@@ -172,7 +183,7 @@ export default {
         selectedHeader: '',
         selectedFooter: ''
       },
-      imageUrl: '',
+      // imageUrl: '',
       commitsData: [],
       commitMessage: '',
       baseURL: 'http://localhost:3030',
@@ -181,27 +192,49 @@ export default {
       configData: [],
       currentFileIndex: '',
       settings: [],
-      folderUrl: ''
+      folderUrl: '',
+      // fileData:{
+      //   url: 'urlHere'
+      // }
     }
   },
   component: {
   },
   methods: {
 
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg' || 'image/png' ;
-      const isLt2M = file.size / 1024 / 1024 < 2;
+    // handleAvatarSuccess(res, file) {
+    //   this.imageUrl = URL.createObjectURL(file.raw);
+    // },
+    // beforeAvatarUpload(file) {
 
-      if (!isJPG) {
-        this.$message.error('Brand Logo must be JPG or PNG format only!');
-      }
-      if (!isLt2M) {
-        this.$message.error('Brand Logo size can not exceed 2MB!');
-      }
-      return isJPG && isLt2M;
+    //   const isJPG = file.type === 'image/jpeg' || 'image/png' ;
+    //   const isLt2M = file.size / 1024 / 1024 < 2;
+
+    //   if (!isJPG) {
+    //     this.$message.error('Brand Logo must be JPG or PNG format only!');
+    //   }
+    //   if (!isLt2M) {
+    //     this.$message.error('Brand Logo size can not exceed 2MB!');
+    //   }
+    //   return isJPG && isLt2M;
+    // },
+
+    uploadImage(fileData, fileBlob) {
+      console.log(fileBlob);
+      let ext = fileData.type.split('/');
+      let name = 'brand-logo.' + ext[1]
+
+      axios.post( this.baseURL + '/image-upload', {
+          filename : this.folderUrl + '/assets/' + name,
+          text : fileBlob,
+          type : 'file'
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => { 
+        console.log(e)
+      })
     },
 
     saveProjectSettings() {
@@ -355,6 +388,7 @@ export default {
     }
   },
   async created () {
+    this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
     let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
     this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
     if(this.configData.status == 200 || this.configData.status == 204){
@@ -407,18 +441,79 @@ export default {
   },
 
   mounted () {
+    let scope = this;
     // this.newRepoId = this.$session.get('newRepoId');
     // this.repoName = this.$session.get('repoName');
     // Demo User token 4KQWGKhJu1ngdvyUoAoz
     // this.form.Header = this.$store.state.HeaderOptions;
     // this.form.Footer = this.$store.state.FooterOptions;
+    $('#upload').change(function(e){
+      var fileName = e.target.files[0].name;
+      if (fileName.length > 18) {
+           $('#text1').text(fileName.substr(0, 10)+'...'+fileName.substr(fileName.length-8, fileName.length));
+       }else{
+          $('#text1').text(fileName);
+      }
+    });
+
+    var iFileSize = 0;
+    function imageSize(fileInput){
+         var files = fileInput.files;
+         for (var i = 0; i < files.length; i++) {
+             var file = files[i];
+             iFileSize = file.size;
+             var imageType = /image.*/;
+             if (!file.type.match(imageType)) {
+                 continue;
+             }
+         }
+    }
+    $('#upload-validation').change(function(e){
+          imageSize(this);
+          var file = $(this)[0].files[0];
+
+          var fileData = '';
+
+          // readFile
+          var reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = function(e) {
+              // browser completed reading file - display it
+              fileData = e.target.result;
+          };
+
+          var fileName = e.target.files[0].name;
+          var ext = $(this).val().split('.').pop().toLowerCase();
+          if($.inArray(ext, ['png']) == -1 && ext != ''){
+            $('#text2').text('Invalid image file.');
+            $('.valid').addClass('error').removeClass('correct');
+            $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
+          }else if(iFileSize >= 1024000) {
+            $('#text2').text('Too large file.');
+            $('.valid').addClass('error').removeClass('correct');
+            $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
+          }else{
+            $('.valid').removeClass('error').addClass('correct');
+            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+            
+            setTimeout(function(){
+              scope.uploadImage(file, fileData);
+            },2000);
+            
+            if (fileName.length > 18) {
+                 $('#text2').text(fileName.substr(0, 10)+'...'+fileName.substr(fileName.length-8, fileName.length));
+             }else{
+                $('#text2').text(fileName);
+            }
+          }
+    });
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
-input[type=file]{
+<style scoped>
+/*input[type=file]{
   display: none;
 }
 
@@ -457,5 +552,51 @@ input[type=file]{
   width: 178px;
   height: 178px;
   display: block;
+}*/
+
+
+input[type="file"]{
+  display: none;
+}
+label{
+  display: inline-block;
+  border: 1px dashed #1a1a1a;
+  background: #f1f1f1;
+  padding:10px 15px;
+  min-width:250px;
+  color: #5c5c5c;
+  font-size:20px;
+  text-align: center;
+  cursor: pointer;
+  transition:300ms;
+}
+label i{
+  vertical-align: middle;
+  margin-right:10px;
+}
+label:hover{
+  border-style: solid;
+}
+
+h1{
+  font-size:15px;
+  margin: 0 0 20px;
+}
+.dis{
+  display: block;
+  margin-top:6px;
+  color:#a9a9a9;
+}
+.error label{
+  color:red;
+  border-color:red;
+  background:#fcd0d0;
+}
+.correct label{
+  background:#cff5c5;
+}
+
+.well{
+  background-color: rgba(245,245,245,0.5);
 }
 </style>
