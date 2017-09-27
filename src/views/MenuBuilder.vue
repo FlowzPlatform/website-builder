@@ -107,11 +107,25 @@ import domenu from 'domenu'
 	export default {
 		name: 'menuBuilder',
 		data: () => ({
-	        outputJson: []
+	        outputJson: [],
+	        baseURL: 'http://localhost:3030',
+	        MenuJSON: []
 	    }),
 	    components: {
 	    },
-		mounted () {
+		async mounted () {
+			// let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+			// let urlparts = configFileUrl.split("/");
+			// let fileNameOrginal = urlparts[urlparts.length - 1];
+			// let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+			// let fileNameParts = fileNameOrginal.split('.');
+			// let actualFileNameOnly = fileNameParts[0];
+			// var folderUrl = configFileUrl.replace(fileName, '');
+			// console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
+
+			// let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
+			// this.MenuJSON = responseConfig.data;
+
 			let montedself = this;
 			$(document).ready(function() {
 		    var $domenu            = $('#domenu-1'),
@@ -121,18 +135,26 @@ import domenu from 'domenu'
 		        $keepChanges       = $outputContainer.find('.keepChanges'),
 		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-		    var MenuJSON;
-	        var jsonUrl = 'http://localhost:3030/flows-dir-listing/0?path=/home/software/AllProjects/FlowzServiceApi/projects/product-listing/assets/menu.json';
+	        
 
-	        $.ajax({
-		        type: 'GET',
-		        url: jsonUrl,
-		        async: true,
-		        dataType: 'json',
-		        success: function(data) {
-		            MenuJSON = data;
-		        }
-		    });
+		    // var MenuJSON;
+	     //    var jsonUrl = 'http://localhost:3030/flows-dir-listing/0?path=/home/software/AllProjects/FlowzServiceApi/projects/product-listing/assets/menu.json';
+
+	     //    $.ajax({
+		    //     type: 'GET',
+		    //     url: jsonUrl,
+		    //     async: true,
+		    //     dataType: 'json',
+		    //     success: function(data) {
+		    //         MenuJSON = data;
+		    //     }
+		    // });
+
+		    // console.log(this.MenuJSON);
+
+		    // if(!this.MenuJSON){
+		    // 	MenuJSON = [];
+		    // }
 
 		    $domenu.domenu({
 		        slideAnimationDuration: 0,
@@ -143,7 +165,8 @@ import domenu from 'domenu'
 		            tags: true
 		          }
 		        },
-		        data: window.localStorage.getItem('domenu-1Json') || MenuJSON
+		        data: window.localStorage.getItem('domenu-1Json')
+		        // data: montedself.MenuJSON
 		      })
 		      // Example: initializing functionality of a custom button #21
 		      .onCreateItem(function(blueprint) {

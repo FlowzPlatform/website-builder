@@ -303,14 +303,14 @@ export default {
 
             "</head>\n<body>\n" + grapesHtml + '\n'+
 
-            '<script src="./js/client-navbar-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-product-listing-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-product-detail-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-slider-plugin.js"><\/script>\n'+
-            '<script src="./../assets/popular-product-slider-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-pagination-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-my-cart-plugin.js"><\/script>\n'+
-            '<script src="./../assets/image-gradient-animation.js"><\/script>\n'+
+            '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+            '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+            '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+            '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+            '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+            '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+            '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+            '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
             '<script src="./../assets/main.js"><\/script>\n'+
             '</body>\n</html>';
         }

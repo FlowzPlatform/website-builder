@@ -296,6 +296,8 @@ import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 import io from 'socket.io-client';
 
+var daex = require('json-daex');
+
 // Custom Components
 
 // Home page
@@ -1176,6 +1178,18 @@ export default {
         console.log("Error from Assests"+res)
       });
 
+      // Create Assets folder
+      axios.post(this.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/assets/client-plugins',
+        type : 'folder'
+      })
+      .then((res) => {
+         console.log('Client-Plugins Folder created!');  
+      })
+      .catch((e)=>{
+        console.log("Error from Client-Plugins"+res)
+      });
+
       // Create Headers Folder
       axios.post(this.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/Headers',
@@ -1456,8 +1470,22 @@ export default {
           console.log(e)
       });
 
+      // Create default sidebar file file
+      let sidebar = newFolderName + '/Sidebars/default.html'
+      axios.post(this.baseURL + '/flows-dir-listing', {
+          filename : sidebar,
+          text : '<div id="sidebar" style="display: block; width: 100%; min-height: 20px"> <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> <style type="text/css">#wrapper{padding-left: 250px; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}#wrapper.toggled{padding-left: 250px;}#sidebar-wrapper{z-index: 1000; position: fixed; left: 250px; width: 250px; height: 100%; margin-left: -250px; overflow-y: auto; background: #000; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}#wrapper.toggled #sidebar-wrapper{width: 250px;}#page-content-wrapper{width: 100%; position: absolute; padding: 15px;}#wrapper.toggled #page-content-wrapper{position: absolute; margin-right: -250px;}/* Sidebar Styles */.sidebar-nav{position: absolute; top: 0; width: 250px; margin: 0; padding: 0; list-style: none; width: 100%;}.sidebar-nav li{text-indent: 20px; line-height: 40px;}.sidebar-nav li a{display: block; text-decoration: none; color: #999999; width: 100%;}.sidebar-nav li a:hover{text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);}.sidebar-nav li a:active,.sidebar-nav li a:focus{text-decoration: none;}.sidebar-nav > .sidebar-brand{height: 65px; font-size: 18px; line-height: 60px;}.sidebar-nav > .sidebar-brand a{color: #999999;}.sidebar-nav > .sidebar-brand a:hover{color: #fff; background: none;}</style><div id="wrapper"> <div id="sidebar-wrapper"> <ul class="sidebar-nav"> <li class="sidebar-brand"> <a href="#"> Company Name </a> </li><li> <a href="#">Dashboard</a> </li><li> <a href="#">Shortcuts</a> </li><li> <a href="#">Overview</a> </li><li> <a href="#">Events</a> </li><li> <a href="#">About</a> </li><li> <a href="#">Services</a> </li><li> <a href="#">Contact</a> </li></ul> </div></div></div>',
+          type : 'file'
+      })
+      .then((res) => {
+        console.log('Default Sidebar file created!');
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
       // Product Listing Plugin
-      let listingPlugin = newFolderName + '/assets/client-product-listing-plugin.js';
+      let listingPlugin = newFolderName + '/assets/client-plugins/client-product-listing-plugin.js';
       let pluginJsData = '';
       axios.get(this.baseURL + '/flows-dir-listing/0?path=/opt/lampp/htdocs/exported/js/product-listing-plugin-cleaned.js', {
           
@@ -1485,7 +1513,7 @@ export default {
         
 
       // Product Detail Plugin
-      let productDetailPlugin = newFolderName + '/assets/client-product-detail-plugin.js';
+      let productDetailPlugin = newFolderName + '/assets/client-plugins/client-product-detail-plugin.js';
       axios.get(this.baseURL + '/flows-dir-listing/0?path=/opt/lampp/htdocs/exported/js/product-detail-plugin-cleaned.js', {
           
       })
@@ -1509,7 +1537,7 @@ export default {
 
 
       // Carousel Slider Plugin
-      let sliderPlugin = newFolderName + '/assets/client-slider-plugin.js';
+      let sliderPlugin = newFolderName + '/assets/client-plugins/client-slider-plugin.js';
       axios.get(this.baseURL + '/flows-dir-listing/0?path=/opt/lampp/htdocs/exported/js/client-slider-plugin.js', {
           
       })
@@ -1533,7 +1561,7 @@ export default {
 
 
       // Popular Product Slider 
-      let popularSliderPlugin = newFolderName + '/assets/popular-product-slider-plugin.js';
+      let popularSliderPlugin = newFolderName + '/assets/client-plugins/client-popular-product-slider-plugin.js';
       axios.get(this.baseURL + '/flows-dir-listing/0?path=/opt/lampp/htdocs/exported/js/popular-product-slider-plugin.js', {
           
       })
@@ -1559,7 +1587,7 @@ export default {
 
 
       // Pagination Plugin 
-      let paginationPlugin = newFolderName + '/assets/client-pagination-plugin.js';
+      let paginationPlugin = newFolderName + '/assets/client-plugins/client-pagination-plugin.js';
       axios.get(this.baseURL + '/flows-dir-listing/0?path=/opt/lampp/htdocs/exported/js/client-pagination-plugin.js', {
           
       })
@@ -1583,7 +1611,7 @@ export default {
 
 
       // Pagination Plugin 
-      let gradientAnimationPlugin = newFolderName + '/assets/image-gradient-animation.js';
+      let gradientAnimationPlugin = newFolderName + '/assets/client-plugins/image-gradient-animation.js';
       axios.get(this.baseURL + '/flows-dir-listing/0?path=/opt/lampp/htdocs/exported/js/image-gradient-animation.js', {
           
       })
@@ -1606,8 +1634,32 @@ export default {
       });
 
 
+      // Dynamic menu Navbar Plugin 
+      let navbarPlugin = newFolderName + '/assets/client-plugins/client-navbar-plugin.js';
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=/opt/lampp/htdocs/exported/js/client-navbar-plugin.js', {
+          
+      })
+      .then((res) => {
+        let navbarPluginData = res.data;
+        axios.post(this.baseURL + '/flows-dir-listing', {
+            filename : navbarPlugin,
+            text : navbarPluginData,
+            type : 'file'
+        })
+        .then((res) => {
+          console.log(navbarPlugin + ' file created');    
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+
       // My Cart Plugin
-      let myCartPlugin = newFolderName + '/assets/client-my-cart-plugin.js';
+      let myCartPlugin = newFolderName + '/assets/client-plugins/client-my-cart-plugin.js';
       axios.get(this.baseURL + '/flows-dir-listing/0?path=/opt/lampp/htdocs/exported/js/client-my-cart-plugin.js', {
           
       })
@@ -2289,8 +2341,17 @@ export default {
                 newContent = this.$store.state.content;
                 break;
         }
+
+        let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        let urlparts = configFileUrl.split("/");
+        let fileNameOrginal = urlparts[urlparts.length - 1];
+        let fileNameParts = fileNameOrginal.split('.');
+        let actualFileNameOnly = fileNameParts[0];
+        let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        var folderUrl = configFileUrl.replace(fileName, '');
+        console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
         
-        let newJsonName = '/var/html/websites/' + this.repoName + '/assets/menu.json';
+        let newJsonName = folderUrl + '/assets/'+actualFileNameOnly+'.json';
         console.log(newJsonName);
         return axios.post(this.baseURL + '/flows-dir-listing', {
             filename : newJsonName ,
