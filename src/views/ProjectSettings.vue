@@ -1,6 +1,6 @@
 <template>
   <div class="ProjectSettings">
-    <div class="container">
+    <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
       <div class="well">
         <div class="row">
           <div class="col-md-9">
@@ -554,6 +554,9 @@ export default {
   display: block;
 }*/
 
+.publishBtn{
+  width: 100%;
+}
 
 input[type="file"]{
   display: none;

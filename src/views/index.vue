@@ -1316,6 +1316,21 @@ export default {
           console.log(e)
       });
 
+      // Brand Logo
+      let brandLogo = newFolderName + '/assets/brand-logo.png';
+      
+      axios.post(this.baseURL + '/flows-dir-listing', {
+        filename : brandLogo,
+        text : '',
+        type : 'file'
+      })
+      .then((res) => {
+        console.log(brandLogo + ' file created');    
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+
       // Create index.html file
       let indexLayoutContent = '';
       if(this.selectedTemplate == 'template1'){
