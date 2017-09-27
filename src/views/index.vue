@@ -135,7 +135,7 @@
                             <strong>Select Template</strong>
                             <ul>
                               <li>
-                                  <input type="radio" name="layout" value="template1" id="myCheckbox" />
+                                  <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
                                   <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
                                   <img src="http://placehold.it/250x100?text=NONE" class="templateThumbnail">
                               </li>
@@ -217,7 +217,7 @@
                             <strong>Select Template</strong>
                             <ul>
                               <li>
-                                  <input type="radio" name="layout" value="template1" id="myCheckbox" />
+                                  <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
                                   <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
                                   <img src="http://placehold.it/250x100?text=NONE" class="templateThumbnail">
                               </li>
