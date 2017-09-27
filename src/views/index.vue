@@ -99,7 +99,8 @@
                     <el-dialog title="File name" :visible.sync="newFileDialog">
                         <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                             <el-form-item prop="filename">
-                                <el-input v-model="formAddFile.filename" auto-complete="off" placeholder="FileName.ext"></el-input>
+                              <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
+                              <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="FileName.ext"></el-input>
                             </el-form-item>
                              
                         </el-form>
@@ -112,7 +113,8 @@
                     <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
-                                <el-input v-model="formAddFolder.foldername" auto-complete="off" placeholder="Folder Name"></el-input>
+                              <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
+                              <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder()" auto-complete="off" placeholder="Folder Name"></el-input>
                             </el-form-item>
                         </el-form>
                         <span slot="footer" class="dialog-footer">
@@ -124,13 +126,19 @@
                     <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
                       <el-form :model="formAddProjectFolder">
                         <el-form-item>
-                            <el-input v-model="formAddProjectFolder.projectName" auto-complete="off" placeholder="Project Name"></el-input>
+                          <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
+                          <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder()" auto-complete="off" placeholder="Project Name"></el-input>
                         </el-form-item>
 
                         <el-form-item>
                           <div class="templateSelection">
                             <strong>Select Template</strong>
                             <ul>
+                              <li>
+                                  <input type="radio" name="layout" value="template1" id="myCheckbox" />
+                                  <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
+                                  <img src="http://placehold.it/250x100?text=NONE" class="templateThumbnail">
+                              </li>
                               <li>
                                   <input type="radio" name="layout" value="template1" id="myCheckbox1" />
                                   <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
@@ -174,7 +182,8 @@
                     <el-dialog title="File name" :visible.sync="newFileDialog">
                         <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                             <el-form-item prop="filename">
-                                <el-input v-model="formAddFile.filename" auto-complete="off"></el-input>
+                              <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
+                              <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="FileName.ext"></el-input>
                             </el-form-item>
                              
                         </el-form>
@@ -186,7 +195,8 @@
                     <el-dialog title="Folder name" :visible.sync="newFolderDialog">
                         <el-form :model="formAddFolder">
                             <el-form-item>
-                                <el-input v-model="formAddFolder.foldername" auto-complete="off" placeholder="Folder Name"></el-input>
+                              <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
+                              <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder()" auto-complete="off" placeholder="Folder Name"></el-input>
                             </el-form-item>
                         </el-form>
                         <span slot="footer" class="dialog-footer">
@@ -198,13 +208,19 @@
                     <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
                       <el-form :model="formAddProjectFolder">
                         <el-form-item>
-                            <el-input v-model="formAddProjectFolder.projectName" auto-complete="off" placeholder="Project Name"></el-input>
+                          <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
+                          <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder()" auto-complete="off" placeholder="Project Name"></el-input>
                         </el-form-item>
 
                         <el-form-item>
                           <div class="templateSelection">
                             <strong>Select Template</strong>
                             <ul>
+                              <li>
+                                  <input type="radio" name="layout" value="template1" id="myCheckbox" />
+                                  <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
+                                  <img src="http://placehold.it/250x100?text=NONE" class="templateThumbnail">
+                              </li>
                               <li>
                                   <input type="radio" name="layout" value="template1" id="myCheckbox1" />
                                   <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
@@ -514,6 +530,8 @@ export default {
         this.selectedTemplate = 'template2';
       } else if( template == 'template3' ) {
         this.selectedTemplate = 'template3';
+      } else if( template == 'none' ) {
+        this.selectedTemplate = '';
       } else {
         this.selectedTemplate = '';
       }
@@ -3011,7 +3029,7 @@ label.imgThumbnail:before {
   display: block;
   border-radius: 50%;
   position: absolute;
-  top: -5px;
+  top: 20px;
   left: -5px;
   width: 25px;
   height: 25px;
@@ -3038,7 +3056,8 @@ label.imgThumbnail img {
 }
   /**/
 .templateThumbnail{
-  width: 250px;
+  width: 210px;
+  height: 150px;
   padding: 20px
 }
 
