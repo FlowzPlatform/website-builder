@@ -7,7 +7,7 @@
 <script>
 
 const beautify = require('beautify');
-import axios from 'axios'
+import axios from 'axios';
 
 let editor = null;
 
@@ -256,7 +256,7 @@ export default {
             },{
                 id: 'brandName',
                 label: 'Brand Name',
-                category: 'Static Components',
+                category: 'Global Variables',
                 attributes: {
                     class: 'fa fa-facebook-official',
                 },
@@ -264,21 +264,28 @@ export default {
             },{
                 id: 'brandLogo',
                 label: 'Brand Logo',
-                category: 'Static Components',
+                category: 'Global Variables',
                 attributes: {
                     class: 'fa fa-flag',
                 },
                 content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
             },{
-                id: 'globalVariable',
-                label: 'Global Variale',
-                category: 'Static Components',
+                id: 'globalTextVariable',
+                label: 'Text Variable',
+                category: 'Global Variables',
                 attributes: {
-                    class: 'fa fa-globe',
+                    class: 'fa fa-font',
                 },
                 content: '<span>Global Variable</span>',
-            }
-            ],
+            },{
+                id: 'globalHtmlVariable',
+                label: 'HTML Variable',
+                category: 'Global Variables',
+                attributes: {
+                    class: 'fa fa-code',
+                },
+                content: '<div>HTML Code</div>',
+            }],
         },
 
   		style: css,
@@ -289,11 +296,52 @@ export default {
         
         $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
 
+        // console.log('Global Variables length:', this.globalVariables.length);
+
         for (var i = 0; i < this.globalVariables.length; i++){
-            $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
+
+            // console.log('Found Variable is: ', this.globalVariables[i].variableType);
+
+            switch(this.globalVariables[i].variableType){
+                case 'text':
+                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        var encodeText = String(this.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').text(encodeText);
+                    } 
+                    break;
+                case 'image':
+                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('img').attr('src', this.globalVariables[i].variableValue);
+                    } 
+                    break;
+                case 'hyperlink':
+                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
+                    }
+                    break; 
+                case 'html':
+                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
+                    } 
+                    break;
+                default:
+                    console.log('No Variables Found'); 
+            }
+
+            // $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
         }
 
 	},
+
+    // ,{
+    //             id: 'globalImageVariable',
+    //             label: 'Image Variable',
+    //             category: 'Global Variables',
+    //             attributes: {
+    //                 class: 'fa fa-image',
+    //             },
+    //             content: '<img src="http://placehold.it/250x100" alt="Global Image" />',
+    //         }
 	methods:{
 	    getHtml: function () {
 

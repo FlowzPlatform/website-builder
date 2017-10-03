@@ -14,7 +14,7 @@
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
           </div>
           <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="publishWebsite()">Commit Site</el-button>
+            <el-button class="publishBtn" type="success" @click="publishWebsite()">Commit Project</el-button>
           </div>
           <div class="col-md-1">
             <el-tooltip content="Download .zip" placement="top">
@@ -123,14 +123,24 @@
           <div class="col-md-12">
             <h3>Global Variables</h3>
             <hr>
-            <el-form ref="form" :model="form" label-width="120px">
+            <el-form ref="form" :model="form">
               <div v-for="(n, index) in globalVariables">
-                <el-form-item label="Variable Data">
+                <el-form-item>
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
+                      <el-select v-model="n.variableType" placeholder="Select">
+                        <el-option
+                          v-for="item in selectVariableType"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="col-md-4">
                       <el-input placeholder="Variable Value" v-model="n.variableValue"></el-input>
                     </div>
                     <div class="col-md-1">
@@ -228,6 +238,19 @@ export default {
       currentFileIndex: '',
       settings: [],
       folderUrl: '',
+      selectVariableType: [{
+        value: 'text',
+        label: 'Text'
+      }, {
+        value: 'image',
+        label: 'Image'
+      }, {
+        value: 'hyperlink',
+        label: 'Hyperlink'
+      }, {
+        value: 'html',
+        label: 'HTML'
+      }],
       globalVariables: []
       // fileData:{
       //   url: 'urlHere'
@@ -256,7 +279,7 @@ export default {
     // },
 
     addNewVariable() {
-      let newVariable = { variableId: '', variableValue: '' };
+      let newVariable = { variableId: '', variableType: '', variableValue: '' };
       this.globalVariables.push(newVariable);
     },
 

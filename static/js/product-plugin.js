@@ -695,6 +695,26 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   });
 
 
+  // Global Image Variable 
+  bm.add('globalImageVariable', {
+    label: 'Image Variable',
+    category: 'Global Variables',
+    attributes: {
+        class: 'fa fa-image',
+    },
+    content: '<globalImage style="padding: 5px; display: inline-block;"><img src="http://placehold.it/250x100" alt="Global Image" /></globalImage>'
+  });
+
+  // Global Link Variable 
+  bm.add('globalLinkVariable', {
+    label: 'Link Variable',
+    category: 'Global Variables',
+    attributes: {
+        class: 'fa fa-link',
+    },
+    content: '<globalLink style="padding: 5px; display: inline-block;"><a href="#">Hyperlink</a></globalLink>'
+  });
+
 	
 
 
@@ -1024,5 +1044,88 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       return this;
     },
   });
+
+
+
+
+
+  comps.addType('globalImage', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+          {
+            label: 'Id',
+            name: 'id',
+            type: 'text'
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'GLOBALIMAGE'){
+          return {type: 'globalImage'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+
+
+  comps.addType('globalLink', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+          {
+            label: 'Id',
+            name: 'id',
+            type: 'text'
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'GLOBALLINK'){
+          return {type: 'globalLink'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+
+
 
 })
