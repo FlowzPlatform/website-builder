@@ -1,13 +1,20 @@
 <template>
   <div class="ProjectSettings">
     <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
+      <div class="row">
+        <div class="col-md-12" style="margin-bottom: 2%;">
+          <el-button class="pull-right" style="margin-left: 1%;">Cancel</el-button>
+          <el-button class="pull-right" type="info" style="margin-left: 1%;" @click="publishMetalsmith">Publish Settings</el-button>
+          <el-button class="pull-right" type="primary" @click="saveProjectSettings">Save Settings</el-button>
+        </div>
+      </div>
       <div class="well">
         <div class="row">
           <div class="col-md-9">
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
           </div>
           <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="publishWebsite()">Publish Site</el-button>
+            <el-button class="publishBtn" type="success" @click="publishWebsite()">Commit Site</el-button>
           </div>
           <div class="col-md-1">
             <el-tooltip content="Download .zip" placement="top">
@@ -97,9 +104,9 @@
             </el-form-item>    
 
             <el-form-item>
-              <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
-              <el-button @click="publishMetalsmith">Publish Settings</el-button>
-              <el-button>Cancel</el-button>
+              <!-- <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button> -->
+              <!-- <el-button @click="publishMetalsmith">Publish Settings</el-button> -->
+              <!-- <el-button>Cancel</el-button> -->
               
             </el-form-item>
           </el-form> 
@@ -133,7 +140,7 @@
                 </el-form-item>
               </div>
               
-              <el-button class="pull-right" type="primary" @click="addNewVariable">New Variable</el-button>
+              <el-button type="primary" @click="addNewVariable">New Variable</el-button>
             </el-form>
           </div>
         </div>
@@ -249,7 +256,7 @@ export default {
     // },
 
     addNewVariable() {
-      let newVariable = { variableId: 'NewId', variableValue: 'New Value' };
+      let newVariable = { variableId: '', variableValue: '' };
       this.globalVariables.push(newVariable);
     },
 
@@ -279,7 +286,7 @@ export default {
 
       console.log('Image URL: ', this.imageUrl);
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables}];
 
       
       // this.settings[0].projectSettings[0].RepositoryId = settings[0].repoSettings[0].RepositoryId;
@@ -438,6 +445,7 @@ export default {
       this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
       this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
       this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+      this.globalVariables = this.settings[1].projectSettings[0].GlobalVariables;
 
       this.form.Header = this.settings[2].layoutOptions[0].headers;
       this.form.Footer = this.settings[2].layoutOptions[0].footers;

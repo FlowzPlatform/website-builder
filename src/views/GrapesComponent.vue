@@ -19,7 +19,8 @@ export default {
     return {
       baseURL: 'http://localhost:3030',
       brandName: '',
-      imageBlob: ''
+      imageBlob: '',
+      globalVariables: []
     }
   },
     async mounted () {
@@ -34,6 +35,7 @@ export default {
         let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
         let rawConfigs = JSON.parse(responseConfig.data);
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
+        this.globalVariables = rawConfigs[1].projectSettings[0].GlobalVariables;
 
         let imageData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
         this.imageBlob = imageData.data;
@@ -267,6 +269,14 @@ export default {
                     class: 'fa fa-flag',
                 },
                 content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
+            },{
+                id: 'globalVariable',
+                label: 'Global Variale',
+                category: 'Static Components',
+                attributes: {
+                    class: 'fa fa-globe',
+                },
+                content: '<span>Global Variable</span>',
             }
             ],
         },
@@ -278,6 +288,10 @@ export default {
         $('.gjs-frame').contents().find('body [id="brandName"]').html(this.brandName);
         
         $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
+
+        for (var i = 0; i < this.globalVariables.length; i++){
+            $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
+        }
 
 	},
 	methods:{
@@ -299,7 +313,7 @@ export default {
 
             "<style>\n" + grapesCss + "\n</style>\n"+
 
-            "<link rel='stylesheet' href='./assets/main.css'/>\n"+
+            "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
 
             "</head>\n<body>\n" + grapesHtml + '\n'+
 
