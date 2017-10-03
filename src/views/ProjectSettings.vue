@@ -113,6 +113,34 @@
 
       <div class="well">
         <div class="row">
+          <div class="col-md-12">
+            <h3>Global Variables</h3>
+            <hr>
+            <el-form ref="form" :model="form" label-width="120px">
+              <div v-for="(n, index) in globalVariables">
+                <el-form-item label="Variable Data">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
+                    </div>
+                    <div class="col-md-5">
+                      <el-input placeholder="Variable Value" v-model="n.variableValue"></el-input>
+                    </div>
+                    <div class="col-md-1">
+                      <el-button class="pull-right" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>      
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+              
+              <el-button class="pull-right" type="primary" @click="addNewVariable">New Variable</el-button>
+            </el-form>
+          </div>
+        </div>
+      </div>
+
+      <div class="well">
+        <div class="row">
         <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
           <h3>List of Commits</h3>
           <hr>
@@ -193,6 +221,7 @@ export default {
       currentFileIndex: '',
       settings: [],
       folderUrl: '',
+      globalVariables: []
       // fileData:{
       //   url: 'urlHere'
       // }
@@ -218,6 +247,15 @@ export default {
     //   }
     //   return isJPG && isLt2M;
     // },
+
+    addNewVariable() {
+      let newVariable = { variableId: 'NewId', variableValue: 'New Value' };
+      this.globalVariables.push(newVariable);
+    },
+
+    deleteVariable(deleteIndex) {
+      this.globalVariables.splice(deleteIndex, 1);
+    },
 
     uploadImage(fileData, fileBlob) {
       console.log(fileBlob);
