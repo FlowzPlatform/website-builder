@@ -1,13 +1,20 @@
 <template>
   <div class="ProjectSettings">
-    <div class="container">
-      <div class="thumbnail">
+    <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
+      <div class="row">
+        <div class="col-md-12" style="margin-bottom: 2%;">
+          <el-button class="pull-right" style="margin-left: 1%;">Cancel</el-button>
+          <el-button class="pull-right" type="info" style="margin-left: 1%;" @click="publishMetalsmith">Publish Settings</el-button>
+          <el-button class="pull-right" type="primary" @click="saveProjectSettings">Save Settings</el-button>
+        </div>
+      </div>
+      <div class="well">
         <div class="row">
           <div class="col-md-9">
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
           </div>
           <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="publishWebsite()">Publish Site</el-button>
+            <el-button class="publishBtn" type="success" @click="publishWebsite()">Commit Project</el-button>
           </div>
           <div class="col-md-1">
             <el-tooltip content="Download .zip" placement="top">
@@ -16,7 +23,7 @@
           </div>
         </div>
       </div>
-      <div class="thumbnail ">
+      <div class="well">
         <div class="row">
           <div class="col-md-12" style="margin-top: 4%;">
           
@@ -35,17 +42,29 @@
             </el-form-item>
 
             <el-form-item label="Brand Logo">
+              <div class="col6 valid"> 
+                <label for="upload-validation">
+                  <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
+                </label> 
+                <input type="file" name="" id="upload-validation">
+                <span class="dis">(max 3 MB. .png only)</span>
+              </div>
+            </el-form-item>
+
+            <!-- <el-form-item label="Brand Logo">
               <el-upload
                 class="avatar-uploader"
+                action="http://localhost:3030/image-upload"
+                :data=fileData
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
-            </el-form-item>
+            </el-form-item> -->
 
-            <el-form-item label="Project Header">
+            <!-- <el-form-item label="Project Header">
               <el-row>
                 <el-col :span="10">
                   <el-select v-model="form.selectedHeader" placeholder="Please select Header">
@@ -70,7 +89,7 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="Project SEO Title">
               <el-input v-model="form.seoTitle"></el-input>
@@ -85,9 +104,9 @@
             </el-form-item>    
 
             <el-form-item>
-              <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
-              <el-button @click="publishMetalsmith">Publish Settings</el-button>
-              <el-button>Cancel</el-button>
+              <!-- <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button> -->
+              <!-- <el-button @click="publishMetalsmith">Publish Settings</el-button> -->
+              <!-- <el-button>Cancel</el-button> -->
               
             </el-form-item>
           </el-form> 
@@ -99,7 +118,67 @@
         </div>
       </div> 
 
-      <div class="thumbnail">
+      <div class="well">
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Global Variables</h3>
+            <hr>
+            <el-form ref="form" :model="form">
+              <div v-for="(n, index) in globalVariables">
+                <el-form-item>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
+                    </div>
+                    <div class="col-md-3">
+                      <el-select v-model="n.variableType" placeholder="Select">
+                        <el-option
+                          v-for="item in selectVariableType"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="col-md-4" v-if="n.variableType != 'image'">
+                      <el-input placeholder="Variable Value" v-model="n.variableValue"></el-input>
+                    </div>
+                    <div class="col-md-4" v-if="n.variableType === 'image'" style="margin-left: 0; padding-left: 0">
+                      <div class="col-md-10" style="margin-right: 0; padding-right: 0">
+                        <el-input placeholder="Image URL" v-model="n.variableValue"></el-input>
+                      </div>  
+                      <div class="col-md-1">
+                        <!-- <el-tooltip content="Upload Image" placement="top">
+                          <el-upload class="upload-demo" action="http://localhost:3030/" :on-preview="globalImagePreview" :show-file-list="false">
+                            <el-button type="info" icon="upload2"></el-button> 
+                          </el-upload>
+                        </el-tooltip> -->
+                        <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :show-file-list="false">
+                          <el-button size="small" type="primary" icon="upload"></el-button>
+                        </el-upload> -->
+                        <el-tooltip content="Upload Image" placement="top">
+                          <div class="file-upload">
+                              <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label"><i class="fa fa-upload"></i></label>
+                              <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
+                          </div>
+                        </el-tooltip>
+                      </div>  
+                    </div>
+                    
+                    <div class="col-md-1">
+                      <el-button class="pull-right" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>      
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+              
+              <el-button type="primary" @click="addNewVariable">New Variable</el-button>
+            </el-form>
+          </div>
+        </div>
+      </div>
+
+      <div class="well">
         <div class="row">
         <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
           <h3>List of Commits</h3>
@@ -171,7 +250,7 @@ export default {
         selectedHeader: '',
         selectedFooter: ''
       },
-      imageUrl: '',
+      // imageUrl: '',
       commitsData: [],
       commitMessage: '',
       baseURL: 'http://localhost:3030',
@@ -180,34 +259,111 @@ export default {
       configData: [],
       currentFileIndex: '',
       settings: [],
-      folderUrl: ''
+      folderUrl: '',
+      selectVariableType: [{
+        value: 'text',
+        label: 'Text'
+      }, {
+        value: 'image',
+        label: 'Image'
+      }, {
+        value: 'hyperlink',
+        label: 'Hyperlink'
+      }, {
+        value: 'html',
+        label: 'HTML'
+      }],
+      globalVariables: []
+      // fileData:{
+      //   url: 'urlHere'
+      // }
     }
   },
   component: {
   },
   methods: {
 
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg' || 'image/png' ;
-      const isLt2M = file.size / 1024 / 1024 < 2;
+    // handleAvatarSuccess(res, file) {
+    //   this.imageUrl = URL.createObjectURL(file.raw);
+    // },
+    // beforeAvatarUpload(file) {
 
-      if (!isJPG) {
-        this.$message.error('Brand Logo must be JPG or PNG format only!');
-      }
-      if (!isLt2M) {
-        this.$message.error('Brand Logo size can not exceed 2MB!');
-      }
-      return isJPG && isLt2M;
+    //   const isJPG = file.type === 'image/jpeg' || 'image/png' ;
+    //   const isLt2M = file.size / 1024 / 1024 < 2;
+
+    //   if (!isJPG) {
+    //     this.$message.error('Brand Logo must be JPG or PNG format only!');
+    //   }
+    //   if (!isLt2M) {
+    //     this.$message.error('Brand Logo size can not exceed 2MB!');
+    //   }
+    //   return isJPG && isLt2M;
+    // },
+
+    async globalImageUploading(currentImageVariableIndex, file) {
+      var fileParts = file.target.value.split('\\');
+      var imageName = fileParts[fileParts.length-1];
+
+      var scope = this;
+      
+      var globalFileData = '';
+      // readFile
+      var reader = new FileReader();
+      reader.readAsDataURL(file.target.files[0]);
+      reader.onload = await function(e) {
+          // browser completed reading file - display it
+          globalFileData = e.target.result;
+          
+          axios.post( scope.baseURL + '/image-upload', {
+              filename : scope.folderUrl + '/assets/' + imageName,
+              text : globalFileData,
+              type : 'file'
+          })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((e) => { 
+            console.log(e)
+          })
+      };
+
+      
+      this.globalVariables[currentImageVariableIndex].variableValue = imageName;
+      
+    },
+
+    addNewVariable() {
+      let newVariable = { variableId: '', variableType: '', variableValue: '' };
+      this.globalVariables.push(newVariable);
+    },
+
+    deleteVariable(deleteIndex) {
+      this.globalVariables.splice(deleteIndex, 1);
+    },
+
+    uploadImage(fileData, fileBlob) {
+      console.log(fileBlob);
+      let ext = fileData.type.split('/');
+      let name = 'brand-logo.' + ext[1]
+
+      axios.post( this.baseURL + '/image-upload', {
+          filename : this.folderUrl + '/assets/' + name,
+          text : fileBlob,
+          type : 'file'
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => { 
+        console.log(e)
+      })
     },
 
     saveProjectSettings() {
 
       console.log('Image URL: ', this.imageUrl);
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables}];
 
       
       // this.settings[0].projectSettings[0].RepositoryId = settings[0].repoSettings[0].RepositoryId;
@@ -341,6 +497,10 @@ export default {
     handlePreview(file) {
       console.log(file);
     },
+    
+    globalImagePreview(file) {
+      console.log(file);
+    },
 
     tableRowClassName(row, index) {
       if (index === this.$store.state.currentIndex) {
@@ -354,6 +514,7 @@ export default {
     }
   },
   async created () {
+    this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
     let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
     this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
     if(this.configData.status == 200 || this.configData.status == 204){
@@ -365,6 +526,7 @@ export default {
       this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
       this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
       this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+      this.globalVariables = this.settings[1].projectSettings[0].GlobalVariables;
 
       this.form.Header = this.settings[2].layoutOptions[0].headers;
       this.form.Footer = this.settings[2].layoutOptions[0].footers;
@@ -406,18 +568,123 @@ export default {
   },
 
   mounted () {
+    let scope = this;
     // this.newRepoId = this.$session.get('newRepoId');
     // this.repoName = this.$session.get('repoName');
     // Demo User token 4KQWGKhJu1ngdvyUoAoz
     // this.form.Header = this.$store.state.HeaderOptions;
     // this.form.Footer = this.$store.state.FooterOptions;
+
+
+    // $('#upload').change(function(e){
+    //   var fileName = e.target.files[0].name;
+    //   if (fileName.length > 18) {
+    //        $('#text1').text(fileName.substr(0, 10)+'...'+fileName.substr(fileName.length-8, fileName.length));
+    //    }else{
+    //       $('#text1').text(fileName);
+    //   }
+    // });
+
+    // $('#globalImageVariableFileUploader').change(function(e){
+    //   var globalImageFileName = e.target.files[0].name;
+    //   console.log('Global file Name:', globalImageFileName);
+    // });
+
+    var iFileSize = 0;
+    function imageSize(fileInput){
+         var files = fileInput.files;
+         for (var i = 0; i < files.length; i++) {
+             var file = files[i];
+             iFileSize = file.size;
+             var imageType = /image.*/;
+             if (!file.type.match(imageType)) {
+                 continue;
+             }
+         }
+    }
+    $('#upload-validation').change(function(e){
+          imageSize(this);
+          var file = $(this)[0].files[0];
+
+          var fileData = '';
+
+          // readFile
+          var reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = function(e) {
+              // browser completed reading file - display it
+              fileData = e.target.result;
+          };
+
+          var fileName = e.target.files[0].name;
+          var ext = $(this).val().split('.').pop().toLowerCase();
+          if($.inArray(ext, ['png', 'jpg']) == -1 && ext != ''){
+            $('#text2').text('Invalid image file.');
+            $('.valid').addClass('error').removeClass('correct');
+            $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
+          }else if(iFileSize >= 1024000) {
+            $('#text2').text('Too large file.');
+            $('.valid').addClass('error').removeClass('correct');
+            $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
+          }else{
+            $('.valid').removeClass('error').addClass('correct');
+            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+            
+            setTimeout(function(){
+              scope.uploadImage(file, fileData);
+            },2000);
+            
+            if (fileName.length > 18) {
+                 $('#text2').text(fileName.substr(0, 10)+'...'+fileName.substr(fileName.length-8, fileName.length));
+             }else{
+                $('#text2').text(fileName);
+            }
+          }
+    });
+
+
+
+
+
+
+    // $('#globalImageVariableFileUploader').change(function(e){
+    //   alert('hi');
+    //       imageSize(this);
+    //       var file = $(this)[0].files[0];
+
+    //       var fileData = '';
+
+    //       // readFile
+    //       var reader = new FileReader();
+    //       reader.readAsDataURL(file);
+    //       reader.onload = function(e) {
+    //           // browser completed reading file - display it
+    //           fileData = e.target.result;
+    //       };
+
+    //       var fileName = e.target.files[0].name;
+    //       var ext = $(this).val().split('.').pop().toLowerCase();
+    //       if($.inArray(ext, ['png','jpg']) == -1 && ext != ''){
+    //         alert('Only JPG and PNG are allowed');
+    //       }else if(iFileSize >= 1024000) {
+    //         alert('File size must be less than 1MB');
+    //       }else{
+
+    //         alert('Successfully Uploaded file:', file);
+            
+    //         setTimeout(function(){
+    //           scope.uploadImage(file, fileData);
+    //         },2000);
+
+    //       }
+    // });
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
-input[type=file]{
+<style scoped>
+/*input[type=file]{
   display: none;
 }
 
@@ -456,5 +723,93 @@ input[type=file]{
   width: 178px;
   height: 178px;
   display: block;
+}*/
+
+.publishBtn{
+  width: 100%;
 }
+
+input[type="file"]{
+  display: none;
+}
+label{
+  display: inline-block;
+  border: 1px dashed #1a1a1a;
+  background: #f1f1f1;
+  padding:10px 15px;
+  min-width:250px;
+  color: #5c5c5c;
+  font-size:20px;
+  text-align: center;
+  cursor: pointer;
+  transition:300ms;
+}
+label i{
+  vertical-align: middle;
+  margin-right:10px;
+}
+label:hover{
+  border-style: solid;
+}
+
+h1{
+  font-size:15px;
+  margin: 0 0 20px;
+}
+.dis{
+  display: block;
+  margin-top:6px;
+  color:#a9a9a9;
+}
+.error label{
+  color:red;
+  border-color:red;
+  background:#fcd0d0;
+}
+.correct label{
+  background:#cff5c5;
+}
+
+.well{
+  background-color: rgba(245,245,245,0.5);
+}
+
+
+
+
+
+
+
+
+
+/*Image Upload Buttons*/
+.file-upload {
+  position: relative;
+  display: inline-block;
+}
+
+.file-upload__label {
+  display: inline;
+  padding: 5px;
+  color: #fff;
+  background: #292929;
+  transition: background .3s;
+}
+.file-upload__label:hover {
+  cursor: pointer;
+  background: #000;
+}
+
+.file-upload__input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 1;
+  width: 0;
+  height: 100%;
+  opacity: 0;
+}
+
 </style>

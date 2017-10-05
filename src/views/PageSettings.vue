@@ -84,7 +84,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="savePageSettings">Save</el-button>
-              <el-button native-type="reset">Cancel</el-button>
+              <el-button>Cancel</el-button>
             </el-form-item>
           </el-form> 
         </div>

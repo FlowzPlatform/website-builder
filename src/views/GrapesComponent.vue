@@ -7,7 +7,7 @@
 <script>
 
 const beautify = require('beautify');
-import axios from 'axios'
+import axios from 'axios';
 
 let editor = null;
 
@@ -18,7 +18,9 @@ export default {
     data () {
     return {
       baseURL: 'http://localhost:3030',
-      brandName: ''
+      brandName: '',
+      imageBlob: '',
+      globalVariables: []
     }
   },
     async mounted () {
@@ -33,6 +35,10 @@ export default {
         let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
         let rawConfigs = JSON.parse(responseConfig.data);
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
+        this.globalVariables = rawConfigs[1].projectSettings[0].GlobalVariables;
+
+        let imageData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
+        this.imageBlob = imageData.data;
 
         var blkStyle = '.blk-row::after{ content: ""; clear: both; display: block;} .blk-row{padding: 10px;}';
 
@@ -250,13 +256,36 @@ export default {
             },{
                 id: 'brandName',
                 label: 'Brand Name',
-                category: 'Static Components',
+                category: 'Global Variables',
                 attributes: {
                     class: 'fa fa-facebook-official',
                 },
                 content: '<span id="brandName">'+this.brandName+'</span>',
-            }
-            ],
+            },{
+                id: 'brandLogo',
+                label: 'Brand Logo',
+                category: 'Global Variables',
+                attributes: {
+                    class: 'fa fa-flag',
+                },
+                content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
+            },{
+                id: 'globalTextVariable',
+                label: 'Text Variable',
+                category: 'Global Variables',
+                attributes: {
+                    class: 'fa fa-font',
+                },
+                content: '<span>Global Variable</span>',
+            },{
+                id: 'globalHtmlVariable',
+                label: 'HTML Variable',
+                category: 'Global Variables',
+                attributes: {
+                    class: 'fa fa-code',
+                },
+                content: '<div>HTML Code</div>',
+            }],
         },
 
   		style: css,
@@ -264,41 +293,109 @@ export default {
   		});
         
         $('.gjs-frame').contents().find('body [id="brandName"]').html(this.brandName);
+        
+        $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
+
+        // console.log('Global Variables length:', this.globalVariables.length);
+
+        for (var i = 0; i < this.globalVariables.length; i++){
+
+            // console.log('Found Variable is: ', this.globalVariables[i].variableType);
+
+            switch(this.globalVariables[i].variableType){
+                case 'text':
+                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        var encodeText = String(this.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').text(encodeText);
+                    } 
+                    break;
+                case 'image':
+                    // if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                    //     $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('img').attr('src', this.globalVariables[i].variableValue);
+                    // }
+                    var _varId = this.globalVariables[i].variableId;
+                    var _varValue = this.globalVariables[i].variableValue;
+                    if(($('.gjs-frame').contents().find('body [id="' + _varId + '"]').length > 0)){
+                        console.log('Get all images');
+                      // Get all local images
+                      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue, {
+                      })
+                      .then((res) => {
+                            // If image is present
+                            console.log('Image File Data:', res.data);
+                            $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', res.data);
+                      })
+                      .catch((e) => {
+                            // if image is not present
+                            $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', _varValue);
+                            console.log(e)
+                      })
+                    } 
+                    break;
+                case 'hyperlink':
+                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
+                    }
+                    break; 
+                case 'html':
+                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
+                    } 
+                    break;
+                default:
+                    console.log('No Variables Found'); 
+            }
+
+            // $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
+        }
 
 	},
+
+    // ,{
+    //             id: 'globalImageVariable',
+    //             label: 'Image Variable',
+    //             category: 'Global Variables',
+    //             attributes: {
+    //                 class: 'fa fa-image',
+    //             },
+    //             content: '<img src="http://placehold.it/250x100" alt="Global Image" />',
+    //         }
 	methods:{
 	    getHtml: function () {
 
             let grapesCss = beautify(editor.getCss(), { format: 'css'});
             let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
 
-        this.$store.state.content = "<html>\n<head>\n"+
-            "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
-            "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
-            "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
-            "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
-            "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
-            "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
-            "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
-            '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
-            '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+            this.$store.state.content = "<html>\n<head>\n"+
+                "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+                "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+                "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+                "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+                "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+                "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+                "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+                '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+                '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
 
-            "<style>\n" + grapesCss + "\n</style>\n"+
+                "<style>\n" + grapesCss + "\n</style>\n"+
 
-            "<link rel='stylesheet' href='./assets/main.css'/>\n"+
+                "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
 
-            "</head>\n<body>\n" + grapesHtml + '\n'+
+                "</head>\n<body>\n\n\n\n" + grapesHtml + '\n\n\n\n'+
 
-            '<script src="./js/client-navbar-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-product-listing-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-product-detail-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-slider-plugin.js"><\/script>\n'+
-            '<script src="./../assets/popular-product-slider-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-pagination-plugin.js"><\/script>\n'+
-            '<script src="./../assets/client-my-cart-plugin.js"><\/script>\n'+
-            '<script src="./../assets/image-gradient-animation.js"><\/script>\n'+
-            '<script src="./../assets/main.js"><\/script>\n'+
-            '</body>\n</html>';
+                '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+                '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+                '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+                '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+                '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+                '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+                '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+                '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+                '<script src="./../assets/main.js"><\/script>\n'+
+                '</body>\n</html>';
+
+            // this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
+            //     "\n\n\n\n" + grapesHtml;
         }
 	}
 }
