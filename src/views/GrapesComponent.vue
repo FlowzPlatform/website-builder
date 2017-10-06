@@ -300,67 +300,64 @@ export default {
 
         for (var i = 0; i < this.globalVariables.length; i++){
 
-            // console.log('Found Variable is: ', this.globalVariables[i].variableType);
-
             switch(this.globalVariables[i].variableType){
+
                 case 'text':
                     if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         // var encodeText = String(this.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
                         $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').text(this.globalVariables[i].variableValue);
                     } 
                     break;
+
                 case 'image':
-                    // if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
-                    //     $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('img').attr('src', this.globalVariables[i].variableValue);
-                    // }
+
                     var _varId = this.globalVariables[i].variableId;
                     var _varValue = this.globalVariables[i].variableValue;
+
                     if(($('.gjs-frame').contents().find('body [id="' + _varId + '"]').length > 0)){
-                        console.log('Get all images');
-                      // Get all local images
-                      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue, {
-                      })
-                      .then((res) => {
-                            // If image is present
-                            console.log('Image File Data:', res.data);
-                            $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', res.data);
-                      })
-                      .catch((e) => {
-                            // if image is not present
+                        
+                        // Get all local images
+                        if(this.globalVariables[i].isImageUrl == true){
+                            console.log('Image is URL link.');
                             $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', _varValue);
-                            console.log(e)
-                      })
+                        } else {
+                            let getImage = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue, {
+                            })
+                            .then((res) => {
+                                // If image is present in assets folder
+                                console.log('Image found in /assets folder.');
+                                $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', res.data);
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                            }) 
+                        }
+                      
                     } 
                     break;
+
                 case 'hyperlink':
                     if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('a')[0].text = this.globalVariables[i].variableTitle;
                         $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
                     }
                     break; 
+
                 case 'html':
                     if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
                     } 
                     break;
+
                 default:
                     console.log('No Variables Found'); 
             }
 
-            // $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
         }
 
 	},
 
-    // ,{
-    //             id: 'globalImageVariable',
-    //             label: 'Image Variable',
-    //             category: 'Global Variables',
-    //             attributes: {
-    //                 class: 'fa fa-image',
-    //             },
-    //             content: '<img src="http://placehold.it/250x100" alt="Global Image" />',
-    //         }
+
 	methods:{
 	    getHtml: function () {
 

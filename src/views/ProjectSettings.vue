@@ -1,6 +1,8 @@
 <template>
   <div class="ProjectSettings">
     <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
+
+      <!-- Save/Publish/Cancel Buttons -->
       <div class="row">
         <div class="col-md-12" style="margin-bottom: 2%;">
           <el-button class="pull-right" style="margin-left: 1%;">Cancel</el-button>
@@ -8,13 +10,15 @@
           <el-button class="pull-right" type="primary" @click="saveProjectSettings">Save Settings</el-button>
         </div>
       </div>
+
+      <!-- Commit Section -->
       <div class="well">
         <div class="row">
           <div class="col-md-9">
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
           </div>
           <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="publishWebsite()">Commit Project</el-button>
+            <el-button class="publishBtn" type="success" @click="commitProject()">Commit Project</el-button>
           </div>
           <div class="col-md-1">
             <el-tooltip content="Download .zip" placement="top">
@@ -23,101 +27,58 @@
           </div>
         </div>
       </div>
+      <!-- Commit Section Ends -->
+
+      <!-- Project Settings Section -->
       <div class="well">
         <div class="row">
+
           <div class="col-md-12" style="margin-top: 4%;">
           
-          <el-form ref="form" :model="form" label-width="120px">
+            <el-form ref="form" :model="form" label-width="120px">
 
-          <el-form-item label="Repository Id:">
-              <el-input v-model="newRepoId" :disabled="true"></el-input>
-            </el-form-item>
+            <el-form-item label="Repository Id:">
+                <el-input v-model="newRepoId" :disabled="true"></el-input>
+              </el-form-item>
 
-            <el-form-item label="Project name">
-              <el-input v-model="repoName" :disabled="true"></el-input>
-            </el-form-item>
+              <el-form-item label="Project name">
+                <el-input v-model="repoName" :disabled="true"></el-input>
+              </el-form-item>
 
-            <el-form-item label="Brand name">
-              <el-input v-model="form.brandName"></el-input>
-            </el-form-item>
+              <el-form-item label="Brand name">
+                <el-input v-model="form.brandName"></el-input>
+              </el-form-item>
 
-            <el-form-item label="Brand Logo">
-              <div class="col6 valid"> 
-                <label for="upload-validation">
-                  <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
-                </label> 
-                <input type="file" name="" id="upload-validation">
-                <span class="dis">(max 3 MB. .png only)</span>
-              </div>
-            </el-form-item>
+              <el-form-item label="Brand Logo">
+                <div class="col6 valid"> 
+                  <label for="upload-validation">
+                    <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
+                  </label> 
+                  <input type="file" name="" id="upload-validation">
+                  <span class="dis">(max 3 MB. .png only)</span>
+                </div>
+              </el-form-item>
 
-            <!-- <el-form-item label="Brand Logo">
-              <el-upload
-                class="avatar-uploader"
-                action="http://localhost:3030/image-upload"
-                :data=fileData
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
-            </el-form-item> -->
+              <el-form-item label="Project SEO Title">
+                <el-input v-model="form.seoTitle"></el-input>
+              </el-form-item>
 
-            <!-- <el-form-item label="Project Header">
-              <el-row>
-                <el-col :span="10">
-                  <el-select v-model="form.selectedHeader" placeholder="Please select Header">
-                    <el-option
-                      v-for="item in form.Header"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-col>
-                <el-col :span="14">
-                  <el-form-item label="Project Footer">
-                    <el-select v-model="form.selectedFooter" placeholder="Please select Footer">
-                      <el-option
-                        v-for="item in form.Footer"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form-item> -->
-
-            <el-form-item label="Project SEO Title">
-              <el-input v-model="form.seoTitle"></el-input>
-            </el-form-item>
-
-            <el-form-item label="Project SEO Keywords">
-              <el-input v-model="form.seoKeywords"></el-input>
-            </el-form-item>
-            
-            <el-form-item label="Project SEO Description">
-              <el-input type="textarea" :rows="5" v-model="form.seoDesc"></el-input>
-            </el-form-item>    
-
-            <el-form-item>
-              <!-- <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button> -->
-              <!-- <el-button @click="publishMetalsmith">Publish Settings</el-button> -->
-              <!-- <el-button>Cancel</el-button> -->
+              <el-form-item label="Project SEO Keywords">
+                <el-input v-model="form.seoKeywords"></el-input>
+              </el-form-item>
               
-            </el-form-item>
-          </el-form> 
-        </div>
+              <el-form-item label="Project SEO Description">
+                <el-input type="textarea" :rows="5" v-model="form.seoDesc"></el-input>
+              </el-form-item>    
+
+            </el-form> 
+          </div>
         
-
-          
-
         </div>
       </div> 
+      <!-- Project Settings section ends -->
 
+      <!-- Global Variable section -->
       <div class="well">
         <div class="row">
           <div class="col-md-12">
@@ -127,10 +88,14 @@
               <div v-for="(n, index) in globalVariables">
                 <el-form-item>
                   <div class="row">
+
+                    <!-- Enter Variable ID -->
                     <div class="col-md-2">
                       <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
                     </div>
-                    <div class="col-md-3" style="margin: 0; padding: 0">
+
+                    <!-- Select Type -->
+                    <div class="col-md-2" style="margin: 0; padding: 0">
                       <el-select v-model="n.variableType" placeholder="Select">
                         <el-option
                           v-for="item in selectVariableType"
@@ -140,10 +105,14 @@
                         </el-option>
                       </el-select>
                     </div>
-                    <div class="col-md-6" v-if="n.variableType != 'image' && n.variableType != 'hyperlink'" style="margin: 0; padding: 0">
+
+                    <!-- If type is Text or HTML -->
+                    <div class="col-md-7" v-if="n.variableType != 'image' && n.variableType != 'hyperlink'" style="margin: 0; padding-left: 10px">
                       <el-input type="textarea" :rows="5" placeholder="Variable Value" v-model="n.variableValue"></el-input>
                     </div>
-                    <div class="col-md-6" v-if="n.variableType === 'hyperlink'" style="margin: 0; padding: 0">
+
+                    <!-- If type is Hyperlink -->
+                    <div class="col-md-7" v-if="n.variableType === 'hyperlink'" style="margin: 0; padding-left: 10px">
                       <div class="col-md-6" style="margin: 0; padding: 0">
                         <el-input placeholder="Link Title" v-model="n.variableTitle"></el-input>
                       </div>
@@ -152,19 +121,23 @@
                       </div>
                     </div>
                     
-                    <div class="col-md-6" v-if="n.variableType === 'image'" style="margin: 0; padding: 0">
+                    <!-- If type is Image -->
+                    <div class="col-md-7" v-if="n.variableType === 'image'" style="margin: 0; padding-left: 10px">
                       
                       <div class="row">
 
+                        <!-- Image Value as Name -->
                         <div class="col-md-8" style="margin-right: 0; padding-right: 0">
                           <el-input placeholder="Image URL" v-model="n.variableValue"></el-input>
                         </div>
 
+                        <!-- Image Thumbnail Preview -->
                         <div class="col-md-3" style="margin-right: 0; padding-right: 0">
                           <img :src="n.variableValue" v-bind:name="index" class="img-responsive">
                         </div>
 
-                        <div class="col-md-1">
+                        <!-- Image upload Button -->
+                        <div class="col-md-1" style="padding-left: 5px">
                           <el-tooltip content="Upload Image" placement="top">
                             <div class="file-upload">
                                 <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label">
@@ -179,6 +152,7 @@
 
                     </div>
                     
+                    <!-- Delete Variable -->
                     <div class="col-md-1">
                       <el-button class="pull-right" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>      
                     </div>
@@ -186,12 +160,16 @@
                 </el-form-item>
               </div>
               
+              <!-- Create new variable -->
               <el-button type="primary" @click="addNewVariable">New Variable</el-button>
+
             </el-form>
           </div>
         </div>
       </div>
+      <!-- Global Variable section ends -->
 
+      <!-- List of Commits Section -->
       <div class="well">
         <div class="row">
         <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
@@ -264,7 +242,6 @@ export default {
         selectedHeader: '',
         selectedFooter: ''
       },
-      // imageUrl: '',
       commitsData: [],
       commitMessage: '',
       baseURL: 'http://localhost:3030',
@@ -297,23 +274,6 @@ export default {
   },
   methods: {
 
-    // handleAvatarSuccess(res, file) {
-    //   this.imageUrl = URL.createObjectURL(file.raw);
-    // },
-    // beforeAvatarUpload(file) {
-
-    //   const isJPG = file.type === 'image/jpeg' || 'image/png' ;
-    //   const isLt2M = file.size / 1024 / 1024 < 2;
-
-    //   if (!isJPG) {
-    //     this.$message.error('Brand Logo must be JPG or PNG format only!');
-    //   }
-    //   if (!isLt2M) {
-    //     this.$message.error('Brand Logo size can not exceed 2MB!');
-    //   }
-    //   return isJPG && isLt2M;
-    // },
-
     async globalImageUploading(currentImageVariableIndex, file) {
       var fileParts = file.target.value.split('\\');
       var imageName = fileParts[fileParts.length-1];
@@ -326,7 +286,6 @@ export default {
       reader.readAsDataURL(file.target.files[0]);
       reader.onload = await function(e) {
           console.log('Image Result:', e.target.result);
-          //scope.globalVariables[currentImageVariableIndex].variableValue = e.target.result;
           $('[name = '+currentImageVariableIndex+']').attr('src', e.target.result);
           // browser completed reading file - display it
           globalFileData = e.target.result;
@@ -344,13 +303,13 @@ export default {
           })
       };
 
-      
       this.globalVariables[currentImageVariableIndex].variableValue = imageName;
+      this.globalVariables[currentImageVariableIndex].isImageUrl = false;
       
     },
 
     addNewVariable() {
-      let newVariable = { variableId: '', variableType: '', variableTitle: '', variableValue: '' };
+      let newVariable = { variableId: '', variableType: '', variableTitle: '', variableValue: '' , isImageUrl: true};
       this.globalVariables.push(newVariable);
     },
 
@@ -373,7 +332,7 @@ export default {
       })
       .catch((e) => { 
         console.log(e)
-      })
+      });
     },
 
     saveProjectSettings() {
@@ -382,14 +341,6 @@ export default {
       
       let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables}];
 
-      
-      // this.settings[0].projectSettings[0].RepositoryId = settings[0].repoSettings[0].RepositoryId;
-      // this.settings[0].projectSettings[0].ProjectName = settings[0].repoSettings[0].RepositoryName;
-      // this.settings[0].projectSettings[0].ProjectSEOTitle = settings[1].projectSettings[0].ProjectSEOTitle;
-      // this.settings[0].projectSettings[0].ProjectSEOKeywords = settings[1].projectSettings[0].ProjectSEOKeywords;
-      // this.settings[0].projectSettings[0].ProjectSEODescription = settings[1].projectSettings[0].ProjectSEODescription;
-
-      console.log(this.settings);
       this.settings[1].projectSettings = ProjectSettings;
 
       let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
@@ -418,7 +369,6 @@ export default {
 
     revertCommit(index) {
       this.$store.state.currentIndex = index;
-      // console.log($('#tablecommits .el-table__body-wrapper').find('tr').eq(index))
       $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
@@ -435,7 +385,7 @@ export default {
       })
     },
 
-    publishWebsite() {
+    commitProject() {
       console.log('Publish Website');
       this.$store.state.currentIndex = 0;
 
@@ -568,7 +518,7 @@ export default {
       }
     }
 
-
+    // Get all commits list
     await axios.get( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
     }).then(response => {
       for(var i in response.data){
@@ -590,6 +540,7 @@ export default {
 
   async mounted () {
 
+    // Brand Image uploader
     let scope = this;
 
     var iFileSize = 0;
@@ -650,51 +601,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/*input[type=file]{
-  display: none;
-}
 
 .publishBtn{
   width: 100%;
 }
 
-.thumbnail{
-  padding: 15px 20px;
-  margin-top: 4%;
-}
-
-.el-table .positive-row {
-  background: #e2f0e4;
-}
-
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #20a0ff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}*/
-
-.publishBtn{
-  width: 100%;
-}
-
+/*Brand Image upload button*/
 input[type="file"]{
   display: none;
 }
@@ -748,7 +660,7 @@ h1{
 
 
 
-/*Image Upload Buttons*/
+/*Global Image Upload Buttons*/
 .file-upload {
   position: relative;
   display: inline-block;
@@ -757,8 +669,9 @@ h1{
 .file-upload__label {
   display: inline;
   padding: 5px;
+  padding-left: 7px;
   color: #fff;
-  background: #292929;
+  background: #555;
   transition: background .3s;
 }
 .file-upload__label:hover {
