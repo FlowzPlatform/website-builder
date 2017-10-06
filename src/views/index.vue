@@ -929,7 +929,37 @@ export default {
               console.log(res)
               // Create preview file
               
-              let newContent = this.$store.state.content;
+              let rawContent = this.$store.state.content;
+              // let newContent = "<html>\n<head>\n<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' /><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' /><link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>\n<link rel='stylesheet' href='./../assets/main.css'/>" + rawContent + '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n<script src="./../assets/main.js"><\/script>\n</body>\n</html>';
+
+
+
+              let newContent = "<html>\n<head>\n"+
+              "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+              "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+              "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+              "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+              "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+              "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+              "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+              '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+              '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+              "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+              rawContent +
+              '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+              '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+              '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+              '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+              '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+              '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+              '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+              '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+              '<script src="./../assets/main.js"><\/script>\n'+
+              '</body>\n</html>';
+
+
+
+
               if (this.form.Layout=='Blank') {
                 if (newContent.match('---')) {
                   let substr=newContent.substr(newContent.search('---'), newContent.search('<'))
@@ -938,7 +968,29 @@ export default {
                   // console.log("newContent:"+newContent)
                 }
                 else{
-                  newContent=this.$store.state.content;
+                  // newContent=this.$store.state.content;
+                  newContent = "<html>\n<head>\n"+
+                  "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+                  "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+                  "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+                  "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+                  "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+                  "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+                  "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+                  '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+                  '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+                  "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+                  rawContent +
+                  '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+                  '<script src="./../assets/main.js"><\/script>\n'+
+                  '</body>\n</html>';
                 }
               }
               else{
@@ -951,7 +1003,28 @@ export default {
                   console.log("substr:" + substr)
                   newContent=newContent.replace(substr,tempValueLayout)
                 } else{
-                  newContent = tempValueLayout+ this.$store.state.content;
+                  newContent = tempValueLayout + "<html>\n<head>\n"+
+                  "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+                  "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+                  "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+                  "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+                  "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+                  "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+                  "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+                  '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+                  '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+                  "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+                  rawContent +
+                  '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+                  '<script src="./../assets/main.js"><\/script>\n'+
+                  '</body>\n</html>';
                 }
 
               }

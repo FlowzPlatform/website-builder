@@ -127,10 +127,10 @@
               <div v-for="(n, index) in globalVariables">
                 <el-form-item>
                   <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                       <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" style="margin: 0; padding: 0">
                       <el-select v-model="n.variableType" placeholder="Select">
                         <el-option
                           v-for="item in selectVariableType"
@@ -140,29 +140,43 @@
                         </el-option>
                       </el-select>
                     </div>
-                    <div class="col-md-4" v-if="n.variableType != 'image'">
-                      <el-input placeholder="Variable Value" v-model="n.variableValue"></el-input>
+                    <div class="col-md-6" v-if="n.variableType != 'image' && n.variableType != 'hyperlink'" style="margin: 0; padding: 0">
+                      <el-input type="textarea" :rows="5" placeholder="Variable Value" v-model="n.variableValue"></el-input>
                     </div>
-                    <div class="col-md-4" v-if="n.variableType === 'image'" style="margin-left: 0; padding-left: 0">
-                      <div class="col-md-10" style="margin-right: 0; padding-right: 0">
-                        <el-input placeholder="Image URL" v-model="n.variableValue"></el-input>
-                      </div>  
-                      <div class="col-md-1">
-                        <!-- <el-tooltip content="Upload Image" placement="top">
-                          <el-upload class="upload-demo" action="http://localhost:3030/" :on-preview="globalImagePreview" :show-file-list="false">
-                            <el-button type="info" icon="upload2"></el-button> 
-                          </el-upload>
-                        </el-tooltip> -->
-                        <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :show-file-list="false">
-                          <el-button size="small" type="primary" icon="upload"></el-button>
-                        </el-upload> -->
-                        <el-tooltip content="Upload Image" placement="top">
-                          <div class="file-upload">
-                              <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label"><i class="fa fa-upload"></i></label>
-                              <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
-                          </div>
-                        </el-tooltip>
-                      </div>  
+                    <div class="col-md-6" v-if="n.variableType === 'hyperlink'" style="margin: 0; padding: 0">
+                      <div class="col-md-6" style="margin: 0; padding: 0">
+                        <el-input placeholder="Link Title" v-model="n.variableTitle"></el-input>
+                      </div>
+                      <div class="col-md-6" style="margin-right: 0; padding-right: 0">
+                        <el-input placeholder="Link URL" v-model="n.variableValue"></el-input>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-6" v-if="n.variableType === 'image'" style="margin: 0; padding: 0">
+                      
+                      <div class="row">
+
+                        <div class="col-md-8" style="margin-right: 0; padding-right: 0">
+                          <el-input placeholder="Image URL" v-model="n.variableValue"></el-input>
+                        </div>
+
+                        <div class="col-md-3" style="margin-right: 0; padding-right: 0">
+                          <img :src="n.variableValue" v-bind:name="index" class="img-responsive">
+                        </div>
+
+                        <div class="col-md-1">
+                          <el-tooltip content="Upload Image" placement="top">
+                            <div class="file-upload">
+                                <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label">
+                                  <i class="fa fa-upload"></i>
+                                </label>
+                                <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
+                            </div>
+                          </el-tooltip>
+                        </div> 
+
+                      </div>
+
                     </div>
                     
                     <div class="col-md-1">
@@ -311,6 +325,9 @@ export default {
       var reader = new FileReader();
       reader.readAsDataURL(file.target.files[0]);
       reader.onload = await function(e) {
+          console.log('Image Result:', e.target.result);
+          //scope.globalVariables[currentImageVariableIndex].variableValue = e.target.result;
+          $('[name = '+currentImageVariableIndex+']').attr('src', e.target.result);
           // browser completed reading file - display it
           globalFileData = e.target.result;
           
@@ -333,7 +350,7 @@ export default {
     },
 
     addNewVariable() {
-      let newVariable = { variableId: '', variableType: '', variableValue: '' };
+      let newVariable = { variableId: '', variableType: '', variableTitle: '', variableValue: '' };
       this.globalVariables.push(newVariable);
     },
 
@@ -531,21 +548,25 @@ export default {
       this.form.Header = this.settings[2].layoutOptions[0].headers;
       this.form.Footer = this.settings[2].layoutOptions[0].footers;
 
-      // if((this.settings[1].projectSettings[0].ProjectHeader) != undefined){
-      //   this.form.Header = this.settings[1].projectSettings[0].ProjectHeader;
-      // } else {
-      //   this.form.Header = this.settings[2].layoutOptions[0].headers;
-      // }
-
-      // if((this.settings[1].projectSettings[0].ProjectFooter) != ''){
-      //   this.form.Footer = this.settings[1].projectSettings[0].ProjectFooter;
-      // } else {
-      //   this.form.Footer = this.settings[2].layoutOptions[0].footers;
-      // }
-
     } else {
       console.log('Cannot get config file!');
     } 
+
+
+    // replace all image tag source with index as name attribute to get the image file preview
+    
+    for (var i = 0; i < this.globalVariables.length; i++){
+      if(this.globalVariables[i].variableType == 'image'){
+        let _imageIndex = i;
+        axios.get( this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
+        }).then(response => {
+          $('[name = ' + _imageIndex + ']').attr('src', response.data);
+        }).catch(error => {
+          console.log("Some error occured while fetching image: ", error);
+        });
+
+      }
+    }
 
 
     await axios.get( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
@@ -567,117 +588,62 @@ export default {
     }  
   },
 
-  mounted () {
+  async mounted () {
+
     let scope = this;
-    // this.newRepoId = this.$session.get('newRepoId');
-    // this.repoName = this.$session.get('repoName');
-    // Demo User token 4KQWGKhJu1ngdvyUoAoz
-    // this.form.Header = this.$store.state.HeaderOptions;
-    // this.form.Footer = this.$store.state.FooterOptions;
-
-
-    // $('#upload').change(function(e){
-    //   var fileName = e.target.files[0].name;
-    //   if (fileName.length > 18) {
-    //        $('#text1').text(fileName.substr(0, 10)+'...'+fileName.substr(fileName.length-8, fileName.length));
-    //    }else{
-    //       $('#text1').text(fileName);
-    //   }
-    // });
-
-    // $('#globalImageVariableFileUploader').change(function(e){
-    //   var globalImageFileName = e.target.files[0].name;
-    //   console.log('Global file Name:', globalImageFileName);
-    // });
 
     var iFileSize = 0;
     function imageSize(fileInput){
-         var files = fileInput.files;
-         for (var i = 0; i < files.length; i++) {
-             var file = files[i];
-             iFileSize = file.size;
-             var imageType = /image.*/;
-             if (!file.type.match(imageType)) {
-                 continue;
-             }
+     var files = fileInput.files;
+     for (var i = 0; i < files.length; i++) {
+         var file = files[i];
+         iFileSize = file.size;
+         var imageType = /image.*/;
+         if (!file.type.match(imageType)) {
+             continue;
          }
+     }
     }
     $('#upload-validation').change(function(e){
-          imageSize(this);
-          var file = $(this)[0].files[0];
+      imageSize(this);
+      var file = $(this)[0].files[0];
 
-          var fileData = '';
+      var fileData = '';
 
-          // readFile
-          var reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = function(e) {
-              // browser completed reading file - display it
-              fileData = e.target.result;
-          };
+      // readFile
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(e) {
+          // browser completed reading file - display it
+          fileData = e.target.result;
+      };
 
-          var fileName = e.target.files[0].name;
-          var ext = $(this).val().split('.').pop().toLowerCase();
-          if($.inArray(ext, ['png', 'jpg']) == -1 && ext != ''){
-            $('#text2').text('Invalid image file.');
-            $('.valid').addClass('error').removeClass('correct');
-            $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
-          }else if(iFileSize >= 1024000) {
-            $('#text2').text('Too large file.');
-            $('.valid').addClass('error').removeClass('correct');
-            $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
-          }else{
-            $('.valid').removeClass('error').addClass('correct');
-            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-            
-            setTimeout(function(){
-              scope.uploadImage(file, fileData);
-            },2000);
-            
-            if (fileName.length > 18) {
-                 $('#text2').text(fileName.substr(0, 10)+'...'+fileName.substr(fileName.length-8, fileName.length));
-             }else{
-                $('#text2').text(fileName);
-            }
-          }
+      var fileName = e.target.files[0].name;
+      var ext = $(this).val().split('.').pop().toLowerCase();
+      if($.inArray(ext, ['png', 'jpg']) == -1 && ext != ''){
+        $('#text2').text('Invalid image file.');
+        $('.valid').addClass('error').removeClass('correct');
+        $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
+      }else if(iFileSize >= 1024000) {
+        $('#text2').text('Too large file.');
+        $('.valid').addClass('error').removeClass('correct');
+        $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
+      }else{
+        $('.valid').removeClass('error').addClass('correct');
+        $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+        
+        setTimeout(function(){
+          scope.uploadImage(file, fileData);
+        },2000);
+        
+        if (fileName.length > 18) {
+             $('#text2').text(fileName.substr(0, 10)+'...'+fileName.substr(fileName.length-8, fileName.length));
+         }else{
+            $('#text2').text(fileName);
+        }
+      }
     });
 
-
-
-
-
-
-    // $('#globalImageVariableFileUploader').change(function(e){
-    //   alert('hi');
-    //       imageSize(this);
-    //       var file = $(this)[0].files[0];
-
-    //       var fileData = '';
-
-    //       // readFile
-    //       var reader = new FileReader();
-    //       reader.readAsDataURL(file);
-    //       reader.onload = function(e) {
-    //           // browser completed reading file - display it
-    //           fileData = e.target.result;
-    //       };
-
-    //       var fileName = e.target.files[0].name;
-    //       var ext = $(this).val().split('.').pop().toLowerCase();
-    //       if($.inArray(ext, ['png','jpg']) == -1 && ext != ''){
-    //         alert('Only JPG and PNG are allowed');
-    //       }else if(iFileSize >= 1024000) {
-    //         alert('File size must be less than 1MB');
-    //       }else{
-
-    //         alert('Successfully Uploaded file:', file);
-            
-    //         setTimeout(function(){
-    //           scope.uploadImage(file, fileData);
-    //         },2000);
-
-    //       }
-    // });
   }
 }
 </script>
