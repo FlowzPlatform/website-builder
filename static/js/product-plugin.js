@@ -2,6 +2,11 @@
 
 Develop branch
 
+For Product Search Component
+https://4b4bb149f635b6361398b4e2c68a718c.us-east-1.aws.found.io:9243
+elastic
+rWSjX5Uee3iIVpzRQlD4OSwX
+
 https://b9934e7ce239fa438ae416c8c7181a94.us-east-1.aws.found.io:9243/pdm1/_search
 elastic
 KdZuapCcaHrQajxC15EVos0a
@@ -694,6 +699,41 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     category: 'Filter Components'
   });
 
+  bm.add('productReactiveSearch', {
+    label: 'Product Search',
+    content:  '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"><script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>'+
+            '<style type="text/css">.product-card{max-width:23%;font-size:12px;margin:5px;display:inline-block;box-shadow:2px 2px 15px #999}.product-card>a{background:#f2f2f2;color:#333;transition:all .1s;position:relative;display:block;z-index:0;padding-bottom:5px;text-decoration:none}.product-card>a:hover{text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,.3)}.product-card-title{min-height:70px;font-size:21px}.product-description{min-height:70px;max-height:70px;overflow-y:auto}.product-card-img{display:block;height:250px;width:100%}.product-card figcaption{display:block;padding:0 10px}.product-card .product-card-address{color:#888;line-height:1.2}.product-card .product-card-address i{font-size:14px;margin-right:2px;line-height:1.2}.product-card .product-card-price{display:block;text-align:right}.product-card .product-card-price .original-price,.product-card .product-card-price .price-savings{line-height:22px;display:inline-block;vertical-align:middle}.product-card .product-card-price .price-savings{float:left;color:#82b548}.product-card .product-card-price .original-price{color:#aaa;font-size:14px}.product-card .product-card-price .amount-price{text-align:right;font-size:20px;color:#82b548}.product-card .product-card-price .from{font-size:12px}.product_price span,.product_title h5{font-size:1.1em;line-height:1}*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:"Open Sans",Arial,sans-serif}img{max-width:100%;height:auto}ul.product_list{list-style-type:none;margin:0;padding:0;width:100%;display:inline}.product_grid{text-decoration:none;display:inline}.product_item{display:inline-block;background:#fff;border:1px solid #ccc;padding:10px;position:relative;overflow:hidden}.product_sale{position:absolute;z-index:2;right:-28px;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);transform:rotate(45deg)}.product_image{position:relative;overflow:hidden}.product_image img{display:block;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;-webkit-transition:all .5s ease-in-out;-moz-transition:all .5s ease-in-out;transition:all .5s ease-in-out}.info,.product{position:relative}.product_image img:hover{-o-transform:scale(1.2,1.2);-moz-transform:scale(1.2,1.2);-webkit-transform:scale(1.2,1.2);-ms-transform:scale(1.2,1.2);transform:scale(1.2,1.2)}.product_title{float:left;width:100%;text-transform:uppercase}.product_title h5{margin:auto;font-weight:500;padding-bottom:5px}.product_price a{color:#000}.price_old{color:#ea2e49;text-decoration:line-through}.product_desc p{margin:0;line-height:1.3;padding:10px 0}.product_rating{float:right;width:100px;height:20px;overflow:hidden;background:url(https://bit.ly/1B4PjyM) 0 76% no-repeat}.product_buttons{-webkit-font-smoothing:antialiased;-moz-font-smoothing:antialiased;font-smoothing:antialiased}.product_buttons .product_heart:hover{color:#DF0404;background:rgba(255,255,255,.5)}.product_buttons .product_compare:hover{color:#129612;background:rgba(255,255,255,.5)}.product_buttons .add_to_cart:hover{color:#4DC8D3;background:rgba(255,255,255,.5)}@media only screen and (min-width:320px){.product_sale p{margin:0;color:#fff;background:red;padding:3px 25px;box-shadow:0 2px 8px 0 rgba(0,0,0,.4)}.product_values{float:left;width:calc(100% - 100px);padding:0 10px}.product_rating{margin-right:10px}.product_image{height:150px;float:left;width:100px}.product_image .product_buttons{display:none}.product_desc{overflow:hidden;auto:left;line-height:1}.product_values .product_buttons{position:relative;text-align:left;float:left;margin-top:7px}.product_values .product_buttons button{color:#252525;background:rgba(255,255,255,1);font-size:1em;border-radius:50%;width:40px;height:40px;border:1px solid #000}}@media only screen and (min-width:480px){.product_image{height:250px;width:175px}.product_values{width:calc(100% - 175px)}}@media only screen and (min-width:678px){.product_item{width:49.5%}.product_image{height:150px;width:100px}.product_values{width:calc(100% - 100px)}}@media only screen and (min-width:992px){.product_image{height:250px;width:175px}.product_values{width:calc(100% - 175px)}.product_desc{max-height:200px}}@media only screen and (min-width:1200px){.product_item{width:33%}.product_desc{max-height:131px}}@media only screen and (max-width:992px){.product_desc{max-height:67px}}@media only screen and (max-width:480px){.product_title h5{font-weight:700}}@media only screen and (max-width:320px){.product_buttons,.product_desc,.product_sale{display:none}.product_image img{position:relative}.product_price span{float:left;width:100%}}.listing{list-style:none;margin:20px;padding:0;display:inline-block}.product{width:240px}.img-wrapper,.info{width:100%;text-align:center}.product a{text-decoration:none}.img-wrapper{display:block;height:240px;border:1px solid #afafaf;border-bottom:0;overflow:hidden}.info{background:#000;color:#fff;padding:40px 10px 20px;vertical-align:middle;transform:translateZ(0);box-shadow:0 0 1px transparent;backface-visibility:hidden;transition-property:color,height;transition-duration:.3s,.4s;transition-timing-function:ease-out;height:83px}.info:after,.info:before,.note,.price{position:absolute}.info:before{content:"";z-index:-1;top:0;bottom:0;left:0;right:0;background:#fff;transform:scaleY(0);transform-origin:50%;transition:transform .3s ease-out}.info:after{visibility:hidden;pointer-events:none;z-index:-1;content:"";border-style:solid;transition-duration:.3s;transition-property:transform;left:calc(50% - 11px);bottom:0;border-width:10px 10px 0;border-color:#000 transparent transparent}.product:hover .info{height:40px}.product:hover .info:before{transform:scaleY(.7)}.product:hover .info:after{visibility:visible;transform:translateY(10px)}.slide-title{transition:transform .3s ease-out}.slide-title a{color:inherit}.product:hover .slide-title{transform:translateY(-18px);font-weight:700;color:#000}.price{background:#e32d2c;font-size:1.3em;padding:4px 13px;top:-15px;right:10px}.note.on-sale,.price.sale{background:#00ba2f}.price.old{font-size:.95em;padding:4px 6px;text-decoration:line-through;top:-43px}.actions-wrapper{margin-top:14px;display:flex;justify-content:space-around}.actions-wrapper *{width:50%;padding:2px 0;text-align:center;color:#191919;font-size:.95em;font-weight:700}.actions-wrapper :before{font-family:FontAwesome;margin-right:8px}.wishlist{border-right:1px solid #afafaf}.wishlist:hover{color:#e32d2c}.cart:hover{color:#0a75b9}.product:hover .actions-wrapper *{visibility:visible}.note{top:0;left:0;padding:4px 8px;font-size:.9em}.note.on-sale{color:#fff}.note.no-stock{background:#191919;color:#fff}</style>'+
+            '<productReactiveSearch style="display: block;margin-top: 0px;"><figure class="product-card portrait"> <img class="product-card-img" src="http://placehold.it/400x300"/> <figcaption> <h3 class="product-card-title">Product Title</h3> <div class="product-description">Product Sescription</div><p class="product-card-address"> <i class="fa fa-map-marker"></i> US</p><div class="product-card-price"> <span class="price-savings">Save 25%</span> <s class="original-price">$ 10.99</s> <p class="amount-price"> <span class="from">starting at</span> $ 10.99<!-- <span class="from">/night</span>--> </p></div></figcaption></figure>'+
+            '<div class="product_grid landscape" style="visibility: hidden;"> <ul class="product_list list"> <li class="product_item"> <div class="product_sale"> <p>On Sale</p></div><div class="product_image"> <a href="#"><img src="http://placehold.it/400x300" alt="Product images"></a> <div class="product_buttons"> <button class="product_heart"><i class="fa fa-heart"></i></button> <button class="product_compare"><i class="fa fa-random"></i></button> <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button> <div class="quick_view"> <a href="#"> <h6>Quick View</h6> </a> </div></div></div><div class="product_values"> <div class="product_title"> <h5>Product Title</h5> </div><div class="product_price"> <a href="#"><span class="price_old">$79.99</span> <span class="price_new">$11.11</span></a> <span class="product_rating"></span> </div><div class="product_desc"> <p class="truncate">Product Descriptions</p></div><div class="product_buttons"> <button class="product_heart"><i class="fa fa-heart"></i></button> <button class="product_compare"><i class="fa fa-random"></i></button> <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button> </div></div></li></ul> </div>'+
+            '<div class="listing creative" style="visibility: hidden"> <div class="product"> <a class="img-wrapper" href="#"> <img src="https://hussein-alhammad.com/images/codepen/product-card/running-shoe_pink.jpg" alt="Pink running shoe"/> </a> <div class="note on-sale" style="position: absolute;top: 0;left: 0;padding: 4px 8px;font-size: 0.9em;background: #00ba2f;color: #fff;">On sale</div><div class="info"> <div class="slide-title"><a href="#">Some Product</a></div><div class="price sale">$20.50</div><div class="price old">$34.99</div></div><div class="actions-wrapper"> <a href="#" class="add-btn wishlist"><i class="fa fa-heart-o"> Wishlist</a> <a href="#" class="add-btn cart"><i class="fa fa-shopping-cart"> Cart</a> </div></div></div></productReactiveSearch>',
+    attributes: { 
+        class: 'fa fa-search',
+        title: 'Product Block'
+    },
+    category: 'Ecommerce Components'
+  });
+
+  // Full Home Page Layout
+  bm.add('accordion', {
+      label: 'accordion',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"><style type="text/css">.container{max-width: 960px;}.panel-default>.panel-heading{color: #333; background-color: #fff; border-color: #e4e5e7; padding: 0; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;}.panel-default>.panel-heading a{display: block; padding: 10px 15px;}.panel-default>.panel-heading a:after{content: ""; position: relative; top: 1px; display: inline-block; font-family: \'Glyphicons Halflings\'; font-style: normal; font-weight: 400; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; float: right; transition: transform .25s linear; -webkit-transition: -webkit-transform .25s linear;}.panel-default>.panel-heading a[aria-expanded="true"]{background-color: #eee;}.panel-default>.panel-heading a[aria-expanded="true"]:after{content: "\2212"; -webkit-transform: rotate(180deg); transform: rotate(180deg);}.panel-default>.panel-heading a[aria-expanded="false"]:after{content: "\002b"; -webkit-transform: rotate(90deg); transform: rotate(90deg);}.accordion-option{width: 100%; float: left; clear: both; margin: 15px 0;}.accordion-option .title{font-size: 20px; font-weight: bold; float: left; padding: 0; margin: 0;}.accordion-option .toggle-accordion{float: right; font-size: 16px; color: #6a6c6f;}.accordion-option .toggle-accordion:before{content: "Expand All";}.accordion-option .toggle-accordion.active:before{content: "Collapse All";}</style> <div class="container"> <div class="accordion-option"> <h3 class="title">TITLE</h3> <a href="javascript:void(0)" class="toggle-accordion active" accordion-id="#accordion"></a> </div><div class="clearfix"></div><div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"> <div class="panel panel-default"> <div class="panel-heading" role="tab" id="headingOne"> <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> Collapsible Group Item #1 </a> </h4> </div><div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne"> <div class="panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven\'t heard of them accusamus labore sustainable VHS. </div></div></div><div class="panel panel-default"> <div class="panel-heading" role="tab" id="headingTwo"> <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo"> Collapsible Group Item #2 </a> </h4> </div><div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo"> <div class="panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven\'t heard of them accusamus labore sustainable VHS. </div></div></div><div class="panel panel-default"> <div class="panel-heading" role="tab" id="headingThree"> <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree"> Collapsible Group Item #3 </a> </h4> </div><div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree"> <div class="panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven\'t heard of them accusamus labore sustainable VHS. </div></div></div></div></div>',
+      attributes: {
+          class: 'fa fa-home',
+          title: 'accordion'
+      },
+      category: 'Special Component'
+  });
+  // Full Home Page Layout
+  bm.add('ReUseComponent', {
+      label: 'ReUse Component',
+      content: '<ReUseComponent style="display: block; width: 100%; min-height:20px"><div style="border:solid black 2px"></div></ReUseComponent>',
+      attributes: {
+          class: 'fa fa-home',
+          title: 'ReUse Component'
+      },
+      category: 'Special Component'
+  });
+
 
   // Global Image Variable 
   bm.add('globalImageVariable', {
@@ -713,6 +753,26 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         class: 'fa fa-link',
     },
     content: '<globalLink style="padding: 5px; display: inline-block;"><a href="#">Hyperlink</a></globalLink>'
+  });
+
+  // Global HTML Variable 
+  bm.add('globalHtmlVariable', {
+    label: 'HTML Variable',
+    category: 'Global Variables',
+    attributes: {
+        class: 'fa fa-code',
+    },
+    content: '<globalHtmlVariable style="padding: 2px; display: inline-block;">HTML Code</globalHtmlVariable>',
+  });
+
+  // Global Text Variable 
+  bm.add('globalTextVariable', {
+    label: 'Text Variable',
+    category: 'Global Variables',
+    attributes: {
+        class: 'fa fa-font',
+    },
+    content: '<globalTextVariable style="padding: 2px; display: inline-block;">Global Variable</globalTextVariable>',
   });
 
 	
@@ -1048,6 +1108,91 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
+  comps.addType('productReactiveSearch', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+        
+          {
+            label: 'API URL',
+            name: 'apiurl'
+          },
+          {
+            label: 'Username',
+            name: 'apiusername',
+            type: 'text'
+          },
+          {
+            label: 'Password',
+            name: 'apipassword',
+            type: 'password'
+          },
+          {
+            label: 'category',
+            name: 'selectcategory_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Prices',
+            name: 'selectPrices_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Colours',
+            name: 'selectColours_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Brands',
+            name: 'selectBrands_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+           {
+            label: 'Tags',
+            name: 'selectTags_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          }
+
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'PRODUCTREACTIVESEARCH'){
+          return {type: 'productReactiveSearch'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+
+
 
   comps.addType('globalImage', {
     // Define the Model
@@ -1058,8 +1203,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         droppable: true,
         traits: [
           {
-            label: 'Id',
-            name: 'id',
+            label: 'Data Id',
+            name: 'data-id',
             type: 'text'
           }
         ],
@@ -1097,8 +1242,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         droppable: true,
         traits: [
           {
-            label: 'Id',
-            name: 'id',
+            label: 'Data Id',
+            name: 'data-id',
             type: 'text'
           }
         ],
@@ -1123,6 +1268,228 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       return this;
     },
   });
+
+
+
+
+
+  comps.addType('globalHtmlVariable', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+          {
+            label: 'Data Id',
+            name: 'data-id',
+            type: 'text'
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'GLOBALHTMLVARIABLE'){
+          return {type: 'globalHtmlVariable'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+
+
+  comps.addType('globalTextVariable', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+          {
+            label: 'Data Id',
+            name: 'data-id',
+            type: 'text'
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'GLOBALTEXTVARIABLE'){
+          return {type: 'globalTextVariable'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+
+
+
+
+
+
+  // ReUse Component
+    var comps = editor.DomComponents;
+    var defaultType = comps.getType('default');
+    var defaultModel = defaultType.model;
+    var defaultView = defaultType.view;
+    var traits;
+    var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+    for (var i = 0; i < storedTemplates.length; i++) {
+      console.log("value...", storedTemplates[i])
+      if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets') {
+        storedTemplates.splice(i, 1)
+      }
+    }
+    console.log("++++++++++", storedTemplates)
+    let arr = [{
+      "value": "Select_Partial",
+      "name": "Select Partial"
+    }]
+    let traits_arr = []
+    let partials_arr = [{
+      "value": "SelectID",
+      "name": "selectID"
+    }]
+    for (var i = storedTemplates.length - 1; i >= 0; i--) {
+      arr.push({
+        "value": storedTemplates[i],
+        "name": storedTemplates[i]
+      })
+    }
+    console.log(arr)
+    comps.addType('ReUseComponent', {
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:selectPartial', this.doStuff);
+          this.listenTo(this, 'change:selectID', this.doStuff_second);
+        },
+        doStuff() {
+          console.log("getPartials called")
+          this.get('traits').each(function(trait) {
+            console.log(trait.get('value'));
+            traits_arr.push(trait.get('value'))
+          });
+          traits_arr_val = traits_arr[0]
+          var folderUrl = localStorage.getItem("folderUrl");
+          console.log("&&&&&&&&&&", folderUrl)
+          var request = new XMLHttpRequest();
+          request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + traits_arr_val, false);
+          request.setRequestHeader("Content-type", "application/json");
+          request.send();
+          resp = JSON.parse(request.responseText);
+          console.log("files", resp)
+          arr.splice(0, 1);
+          console.log("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", arr)
+          for (var i = resp.length - 1; i >= 0; i--) {
+            partials_arr.push({
+              "value": resp[i],
+              "name": resp[i]
+            })
+          }
+          console.log("**********", partials_arr)
+          var categsTrait = this.get('traits').where({
+            name: 'selectID'
+          })[0];
+          categsTrait.set('options', partials_arr)
+          editor.trigger('change:ReUseComponent');
+          console.log(this.get('traits').where({
+            name: 'selectID'
+          })[0].get('options'));
+          console.log("folderUrl", folderUrl);
+          console.log("traits_arr[6]", traits_arr[1])
+          var folderUrl = localStorage.getItem("folderUrl");
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send();
+          var response = JSON.parse(xhttp.responseText);
+          var counter = JSON.parse(localStorage.getItem("counter"));
+          console.log("counter", counter)
+          console.log("counter", counter)
+          traits_arr = []
+          partials_arr = []
+        },
+        doStuff_second() {
+          this.get('traits').each(function(trait) {
+            console.log(trait.get('value'));
+            traits_arr.push(trait.get('value'))
+          });
+          console.log("traits_arr[1]", traits_arr[1])
+          console.log("doStuff_second");
+          var folderUrl = localStorage.getItem("folderUrl");
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send();
+          partials_arr.splice(0, 1);
+          var response = JSON.parse(xhttp.responseText);
+          editor.addComponents(response);
+          traits_arr = []
+        },
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+
+            {
+              label: 'PartialName',
+              name: 'selectPartial',
+              type: 'select',
+              changeProp: 1,
+              options: arr
+            }, {
+              label: 'PartialID',
+              name: 'selectID',
+              type: 'select',
+              changeProp: 1,
+              options: ''
+            }
+          ],
+        }),
+      }, {
+        isComponent: function(el) {
+          if (el.tagName == 'REUSECOMPONENT') {
+            return {
+              type: 'ReUseComponent'
+            };
+          }
+        },
+      }),
+      view: defaultType.view,
+      render: function() {
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here';
+        return this;
+      },
+    });
 
 
 

@@ -269,22 +269,6 @@ export default {
                     class: 'fa fa-flag',
                 },
                 content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
-            },{
-                id: 'globalTextVariable',
-                label: 'Text Variable',
-                category: 'Global Variables',
-                attributes: {
-                    class: 'fa fa-font',
-                },
-                content: '<span>Global Variable</span>',
-            },{
-                id: 'globalHtmlVariable',
-                label: 'HTML Variable',
-                category: 'Global Variables',
-                attributes: {
-                    class: 'fa fa-code',
-                },
-                content: '<div>HTML Code</div>',
             }],
         },
 
@@ -303,9 +287,9 @@ export default {
             switch(this.globalVariables[i].variableType){
 
                 case 'text':
-                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                    if(($('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         // var encodeText = String(this.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').text(this.globalVariables[i].variableValue);
+                        $('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').text(this.globalVariables[i].variableValue);
                     } 
                     break;
 
@@ -314,19 +298,19 @@ export default {
                     var _varId = this.globalVariables[i].variableId;
                     var _varValue = this.globalVariables[i].variableValue;
 
-                    if(($('.gjs-frame').contents().find('body [id="' + _varId + '"]').length > 0)){
+                    if(($('.gjs-frame').contents().find('body [data-id="' + _varId + '"]').length > 0)){
                         
                         // Get all local images
                         if(this.globalVariables[i].isImageUrl == true){
                             console.log('Image is URL link.');
-                            $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', _varValue);
+                            $('.gjs-frame').contents().find('body [data-id="' + _varId + '"]').children('img').attr('src', _varValue);
                         } else {
                             let getImage = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue, {
                             })
                             .then((res) => {
                                 // If image is present in assets folder
                                 console.log('Image found in /assets folder.');
-                                $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', res.data);
+                                $('.gjs-frame').contents().find('body [data-id="' + _varId + '"]').children('img').attr('src', res.data);
                             })
                             .catch((e) => {
                                 console.log(e);
@@ -337,15 +321,15 @@ export default {
                     break;
 
                 case 'hyperlink':
-                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
-                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('a')[0].text = this.globalVariables[i].variableTitle;
-                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
+                    if(($('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].text = this.globalVariables[i].variableTitle;
+                        $('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
                     }
                     break; 
 
                 case 'html':
-                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
-                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
+                    if(($('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
                     } 
                     break;
 

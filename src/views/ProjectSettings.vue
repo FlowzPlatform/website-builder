@@ -159,6 +159,7 @@
                   </div>
                 </el-form-item>
               </div>
+              <!-- Ends V-FOR looping -->
               
               <!-- Create new variable -->
               <el-button type="primary" @click="addNewVariable">New Variable</el-button>
@@ -191,11 +192,11 @@
                 >
               </el-table-column>
 
-              <el-table-column
+              <!-- <el-table-column
                 prop="commitSHA"
                 label="Commit SHA"
                 >
-              </el-table-column>
+              </el-table-column> -->
               
               <el-table-column
                 label="Revert To Commit"

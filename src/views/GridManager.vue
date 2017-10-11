@@ -27,6 +27,8 @@
     let gm = null;
     let containerObj = null;
 
+    const beautify = require('beautify');
+
     import './GridManager/jquery.gridmanager.min.js';
     
     export default {         
@@ -71,7 +73,7 @@
             getHtml: function(){
                 let canvas = gm.$el.find("#" + gm.options.canvasId);
                 gm.deinitCanvas();
-                this.$store.state.content = canvas.html()
+                this.$store.state.content = beautify(canvas.html(), { format: 'html'});
                 this.$store.state.content = (this.$store.state.content).replace(/&gt;/g, '>');
                 gm.initCanvas();
             },
