@@ -909,6 +909,7 @@ export default {
               '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
               '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
               '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+              '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
               '<script src="./../assets/main.js"><\/script>\n'+
               '</body>\n</html>';
 
@@ -942,6 +943,7 @@ export default {
                   '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
                   '<script src="./../assets/main.js"><\/script>\n'+
                   '</body>\n</html>';
                 }
@@ -977,6 +979,7 @@ export default {
                   '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
                   '<script src="./../assets/main.js"><\/script>\n'+
                   '</body>\n</html>';
                 }
