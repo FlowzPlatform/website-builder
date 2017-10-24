@@ -5,12 +5,15 @@
 		      <el-row style="margin-bottom: 0">
 		        <el-col :span="4">
 		          <div class="logo">
-		            <img src="http://placehold.it/120x50/666666/EEEEEE/?text=Flowz" @click="homePage">
+		            <img src="./../static/img/Flowz-logo.png" height="40px" style="margin-top: 5px;" @click="homePage">
 		          </div>
 		        </el-col>
-		        <el-menu-item index="1" style="float: right; margin-top: 5px;" @click="loginPage">
-		            <el-button type="info" v-if="isLoggedIn === 'no'">Login</el-button>
-		            <el-button type="danger" v-else @click="doLogout">Logout</el-button>
+		        <el-menu-item index="1" style="float: right; margin-top: 5px;">
+		            <el-button type="info" v-if="isLoggedIn === 'no'" @click="loginPage">Login</el-button>
+                <div v-else>
+                  <!-- <span class="welcomeUser">Welcome <strong>{{username}}</strong>!</span> -->
+                  <el-button class="btn-dark" @click="doLogout">Logout</el-button>
+                </div>
 		        </el-menu-item>
 		        
 		      </el-row>
@@ -102,5 +105,23 @@ export default {
 
   .el-menu--horizontal .el-menu-item:hover, .el-menu--horizontal .el-submenu__title:hover{
     background-color: transparent;
+  }
+
+  .welcomeUser{
+    color: #eee;
+    margin-right: 15px;
+    pointer-events: none;
+  }
+
+  .btn-dark{
+    background-color: #444;
+    color: #eee;
+    border: 1px solid #333;
+    transition: 0.2s all linear;
+  }
+
+  .btn-dark:hover{
+    background-color: #222;
+    transition: 0.2s all linear;
   }
 </style>

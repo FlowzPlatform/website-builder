@@ -24,5 +24,6 @@
 <style >
     .CodeMirror{
         min-height: 80vh;
+        margin-top: 2%;
     }
 </style>

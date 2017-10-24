@@ -9,6 +9,13 @@ $.getJSON( "../assets/config.json", function( data ) {
     globalVariables = configData[1].projectSettings[0].GlobalVariables;
 });
 
+// Bootstrap Tooltips
+$(document).ready(function(){$('[data-toggle="tooltip"]').tooltip();});
+
+$('#wishlist').click(function(){$('.wishlist').fadeToggle('slow');}); 
+
+$('#compare').click(function(){$('.compare').fadeToggle('slow');});
+
 
 var projectName = 'setNameHere';
 

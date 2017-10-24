@@ -1,6 +1,6 @@
 <template id="GrapesComponent">
   <div class="GrapesComponent">
-    <div id="gjs" style="width: 100%; min-height: 90vh;"></div>
+    <div id="gjs" style="width: 100%; height: 89vh !important;"></div>
   </div>
 </template>
 
@@ -50,8 +50,10 @@ export default {
             lp+'work-desk.jpg', lp+'phone-app.png', lp+'bg-gr-v.png'
         ];
 
+        // 'gjs-plugin-ckeditor'
+
 		editor = grapesjs.init({
-			plugins: ['gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin'],
+			plugins: ['gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin' ],
       		container : '#gjs',
       		components: this.$store.state.content,
       		storageManager: {
@@ -147,7 +149,7 @@ export default {
                 content: '<div class="badges">' +
                     '<div class="badge">' +
                     '<div class="badge-header"></div>' +
-                    '<img class="badge-avatar" src="img/team1.jpg">' +
+                    '<img class="badge-avatar" src="https://api.adorable.io/avatars/100/kavi@officebrain.png">' +
                     '<div class="badge-body">' +
                     '<div class="badge-name">Adam Smith</div><div class="badge-role">CEO</div><div class="badge-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ipsum dolor sit</div>' +
                     '</div>' +
@@ -155,7 +157,7 @@ export default {
                     '</div>' +
                     '<div class="badge">' +
                     '<div class="badge-header"></div>' +
-                    '<img class="badge-avatar" src="img/team2.jpg">' +
+                    '<img class="badge-avatar" src="https://api.adorable.io/avatars/100/faizan@officebrain.png">' +
                     '<div class="badge-body">' +
                     '<div class="badge-name">John Black</div><div class="badge-role">Software Engineer</div><div class="badge-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ipsum dolor sit</div>' +
                     '</div>' +
@@ -163,7 +165,7 @@ export default {
                     '</div>' +
                     '<div class="badge">' +
                     '<div class="badge-header"></div>' +
-                    '<img class="badge-avatar" src="img/team3.jpg">' +
+                    '<img class="badge-avatar" src="https://api.adorable.io/avatars/100/john@officebrain.png">' +
                     '<div class="badge-body">' +
                     '<div class="badge-name">Jessica White</div><div class="badge-role">Web Designer</div><div class="badge-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ipsum dolor sit</div>' +
                     '</div>' +
@@ -377,7 +379,25 @@ export default {
             this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
                 "\n\n\n\n" + grapesHtml;
         }
-	}
+	},
+
+    // beforeDestroy() {
+    //     this.$swal({
+    //         title: 'You are Leaving..',
+    //         text: 'You want you save this file?',
+    //         type: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Yes, save it!',
+    //         cancelButtonText: 'No, discard changes'
+    //     }).then(() => {
+    //             this.getHtml();
+    //             // this.$parent.$options.methods.saveFile();
+    //             this.$dispatch('saveFileFromChild');  
+    //             console.log('File Saved');
+    //     }).catch((dismiss) => {
+    //         console.log('error', dismiss);
+    //     })
+    // }
 }
 </script>
 
@@ -394,5 +414,9 @@ export default {
 
 .gjs-am-file-uploader>form{
     min-height: 325px;
+}
+
+.gjs-editor-cont{
+  height: 89vh !important;
 }
 </style>

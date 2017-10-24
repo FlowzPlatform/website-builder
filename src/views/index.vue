@@ -39,59 +39,14 @@
                 </button>
                 <div class="allComponents">
                   <!-- && componentId != null -->
-                  <div class="row" v-if="isHomePage === false && isSettingsPage === false">
-                    <div v-if="this.componentId === 'GrapesComponent'"  class="col-md-8">
-                       <el-form style="margin-top: 18px;" ref="form" :model="form" label-width="120px">
-                          <!-- <el-row>
-                             <el-col :span="8">
-                                <el-form-item label="Project Layout">
-                                   <el-select v-model="PageLayout" placeholder="Please select Layout">
-                                      <el-option
-                                         v-for="item in form.layouts"
-                                         :key="item.value"
-                                         :label="item.label"
-                                         :value="item.value">
-                                      </el-option>
-                                   </el-select>
-                                </el-form-item>
-                             </el-col>
-                             <el-col :span="8">
-                                <el-form-item label="Project Header">
-                                   <el-select v-model="form.Header" placeholder="Please select Header">
-                                      <el-option
-                                         v-for="item in form.headers"
-                                         :key="item.value"
-                                         :label="item.label"
-                                         :value="item.value">
-                                      </el-option>
-                                   </el-select>
-                                </el-form-item>
-                             </el-col>
-                             <el-col :span="8">
-                                <el-form-item label="Project Footer">
-                                   <el-select v-model="form.Footer" placeholder="Please select Footer">
-                                      <el-option
-                                         v-for="item in form.footers"
-                                         :key="item.value"
-                                         :label="item.label"
-                                         :value="item.value">
-                                      </el-option>
-                                   </el-select>
-                                </el-form-item>
-                             </el-col>
-                          </el-row> -->
-                       </el-form>
-                    </div>
-                    <div v-else class="col-md-8"></div>
-                    <div class="col-md-4" align="right">
+                  <div class="row" v-if="isHomePage === false && isSettingsPage === false" style="margin-top: 0px;">
+                    <!-- <div v-else class="col-md-4"></div> -->
+                    <div class="col-md-4 editor-buttons" align="right" v-if="componentId != null">
                         <div style="margin-right:10px; margin: 15px;">
                             <el-button type="info" @click="generatePreview()" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
-                            <!-- <el-button type="primary" @click="previewThisFile()" v-if="componentId != 'GrapesComponent'">Preview</el-button> -->
-                            <!-- <el-button type="info" @click="previewGridPage()" v-if="isGridPreview && !isPreviewComponent">Preview</el-button> -->
-                            <!-- <el-button type="default" @click="backToGrid()" v-if="isPreviewComponent">Back</el-button> -->
-                            <el-button type="primary" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save</el-button>
-                            <el-button type="primary" @click="saveFile()" :loading="saveFileLoading" v-else="isMenuBuilder">Save</el-button>
-                            <!-- <el-button type="default" @click="savePageSettings()" v-if="this.componentId === 'GrapesComponent'">Save Config</el-button> -->
+                            <!-- <el-button type="primary" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save</el-button> -->
+                            <el-button type="primary" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
+                            <el-button type="primary" @click="saveFile()" :loading="saveFileLoading">Save</el-button>
                             <el-button type="danger" @click="cancelEditing()">Cancel</el-button>
                         </div>
                     </div>
@@ -376,6 +331,7 @@ export default {
       isPageEditing: false,
       isProjectEditing: false,
       isPagesFolder: false,
+      isPageCodeEditor: false,
       // isLayoutFile: false,
       formAddFile : {
           filename:null
@@ -740,12 +696,14 @@ export default {
         if(response.status == 200 || response.status == 204){
             switch(ext.toLowerCase()){
                 case 'grid':
+                    this.isPageCodeEditor = false;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
                     this.componentId = 'GridManager'
                     this.isGridPreview = true;
                     break;
                 case 'json':
+                    this.isPageCodeEditor = false;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
                     this.isGridPreview = false;
@@ -766,6 +724,7 @@ export default {
                     this.isGridPreview = false;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
+                    this.isPageCodeEditor = false;
 
                     if(this.isEditOption==true){
                       this.componentId = 'code-mirror'
@@ -781,10 +740,21 @@ export default {
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
                     if(this.isEditOption==true) {
-                      this.componentId = 'code-mirror'
-                      this.isEditOption=false
-                    } else{ 
 
+                      // For preview button only in HTML file of Pages Folder 
+                      var filePath = url;
+                      var pathParts = filePath.split('/');
+                      var parentFolderName = pathParts[pathParts.length-2];
+                      if(parentFolderName == 'Pages'){
+                        this.isPageCodeEditor = true;
+                      } else {
+                        this.isPageCodeEditor = false;
+                      }
+
+                      this.componentId = 'code-mirror'
+                      this.isEditOption=false;
+                    } else{ 
+                      this.isPageCodeEditor = false;
                       // For preview button only in HTML file of Pages Folder 
                       var filePath = url;
                       var pathParts = filePath.split('/');
@@ -805,6 +775,7 @@ export default {
                     this.isGridPreview = false;
                     this.isMenuBuilder = true;
                     this.isHomePage = false;
+                    this.isPageCodeEditor = false;
                     this.componentId = 'MenuBuilder'
                     break;
                 default :
@@ -812,7 +783,9 @@ export default {
                     this.isGridPreview = false;
                     this.isMenuBuilder = false;
                     this.isHomePage = false;
-                    this.componentId = 'code-mirror'
+                    this.isPageCodeEditor = false;
+                    this.componentId = 'code-mirror';
+
                     break;
             }
         }
@@ -935,6 +908,7 @@ export default {
               '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
               '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
               '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+              '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
               '<script src="./../assets/main.js"><\/script>\n'+
               '</body>\n</html>';
 
@@ -967,6 +941,7 @@ export default {
                   '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
                   '<script src="./../assets/main.js"><\/script>\n'+
                   '</body>\n</html>';
                 }
@@ -1001,6 +976,7 @@ export default {
                   '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
                   '<script src="./../assets/main.js"><\/script>\n'+
                   '</body>\n</html>';
                 }
@@ -1184,7 +1160,7 @@ export default {
         })
         .catch((e) => {
             console.log(e)
-        })
+        });
     },
 
     // Create neccessary folders for project
@@ -1326,7 +1302,7 @@ export default {
 
       let newfilename = newFolderName + '/assets/config.json';
 
-      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": '',"ProjectLayout": '',"ProjectHeader":'',"ProjectFooter":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":'', "GlobalVariables": []}],"pageSettings":[] }, { "layoutOptions": [ { "Header": [{ value: 'NOH', label: 'No Header' }, { value: 'default', label: 'default' }], "Footer": [{ value: 'NOF', label: 'No Footer' },{ value: 'default', label: 'default' }],"Sidebar": [{ value: 'NOS', label: 'No SideBar' },{ value: 'default', label: 'default' }],"Menu": [{ value: 'NOM', label: 'No Menu' },{ value: 'default', label: 'default' }], "Layout": [{ value: 'Blank', label: 'Blank',partialsList:[], defaultList:[] }, { value: 'default', label: 'default',partialsList:['Header','Footer'], defaultList:[] }] } ] } ];
+      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": '', "BrandLogoName": '', "ProjectLayout": '',"ProjectHeader":'',"ProjectFooter":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":'', "GlobalVariables": []}],"pageSettings":[] }, { "layoutOptions": [ { "Header": [{ value: 'NOH', label: 'No Header' }, { value: 'default', label: 'default' }], "Footer": [{ value: 'NOF', label: 'No Footer' },{ value: 'default', label: 'default' }],"Sidebar": [{ value: 'NOS', label: 'No SideBar' },{ value: 'default', label: 'default' }],"Menu": [{ value: 'NOM', label: 'No Menu' },{ value: 'default', label: 'default' }], "Layout": [{ value: 'Blank', label: 'Blank',partialsList:[], defaultList:[] }, { value: 'default', label: 'default',partialsList:['Header','Footer'], defaultList:[] }] } ] } ];
 
       axios.post(this.baseURL + '/flows-dir-listing', {
           filename : newfilename,
@@ -1893,6 +1869,29 @@ export default {
         })
         .then((res) => {
           console.log(globalVariablesPlugin + ' file created');    
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+      // Progress bars plugin
+      let progressBarsPlugin = newFolderName + '/assets/client-plugins/progress-bars.js';
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/progress-bars.js', {
+          
+      })
+      .then((res) => {
+        let progressBarsPluginData = res.data;
+        axios.post(this.baseURL + '/flows-dir-listing', {
+            filename : progressBarsPlugin,
+            text : progressBarsPluginData,
+            type : 'file'
+        })
+        .then((res) => {
+          console.log(progressBarsPlugin + ' file created');    
         })
         .catch((e) => {
             console.log(e)
@@ -2752,6 +2751,11 @@ export default {
         })
     },
 
+    goToGrapesEditor: function(){
+      this.componentId = 'GrapesComponent';
+      this.isPageCodeEditor = false;
+    },
+
     // Remove File or Folder
     remove(store, data) {
       this.$swal({
@@ -2923,10 +2927,10 @@ export default {
           }
           
       } else if(data.type=='file'){
-        var filePath = data.path;
-        var pathParts = filePath.split('/');
-        var parentFolderName = pathParts[pathParts.length-2];
-        if(data.extension == '.html' && parentFolderName == 'Pages'){
+        // var filePath = data.path;
+        // var pathParts = filePath.split('/');
+        // var parentFolderName = pathParts[pathParts.length-2];
+        if(data.extension == '.html'){
           return (<span>
               <span class="filelabel">
                   <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
@@ -2941,21 +2945,6 @@ export default {
                   </el-tooltip>
                   <el-tooltip content="Edit" placement="top">
                     <i class="fa fa-pencil" style="position:absolute; right: 35px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
-                  </el-tooltip>
-              </span>
-          </span>)
-        } else if(data.extension == '.html' && parentFolderName != 'Pages'){
-          return (<span>
-              <span class="filelabel">
-                  <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
-                  <span>{node.label}</span>
-              </span>
-              <span class="action-button">
-                  <el-tooltip content="Remove" placement="top">
-                      <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                  </el-tooltip>
-                  <el-tooltip content="Edit" placement="top">
-                    <i class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
                   </el-tooltip>
               </span>
           </span>)
@@ -3019,6 +3008,13 @@ export default {
     }
 
   },
+
+  events: {
+    saveFileFromChild: function (){
+      console.log('File save from child');
+      this.saveFile();
+    },
+  }
 }
 </script>
 
@@ -3553,4 +3549,19 @@ label.imgThumbnail img {
 .el-select-dropdown__item{
   width: 100%;
 }
+
+.editor-buttons{
+  position: absolute;
+  top: 2.5px;
+  right: 75px;
+}
+
+@media(max-width: 580px){
+  .editor-buttons{
+    position: relative;
+    left: 0;
+  }
+}
+
+
 </style>
