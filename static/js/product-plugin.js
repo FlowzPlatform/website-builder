@@ -2,6 +2,11 @@
 
 Develop branch
 
+For Product Search Component
+https://4b4bb149f635b6361398b4e2c68a718c.us-east-1.aws.found.io:9243
+elastic
+rWSjX5Uee3iIVpzRQlD4OSwX
+
 https://b9934e7ce239fa438ae416c8c7181a94.us-east-1.aws.found.io:9243/pdm1/_search
 elastic
 KdZuapCcaHrQajxC15EVos0a
@@ -694,6 +699,41 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     category: 'Filter Components'
   });
 
+  bm.add('productReactiveSearch', {
+    label: 'Product Search',
+    content:  '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"><script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>'+
+            '<style type="text/css">.product-card{max-width:23%;font-size:12px;margin:5px;display:inline-block;box-shadow:2px 2px 15px #999}.product-card>a{background:#f2f2f2;color:#333;transition:all .1s;position:relative;display:block;z-index:0;padding-bottom:5px;text-decoration:none}.product-card>a:hover{text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,.3)}.product-card-title{min-height:70px;font-size:21px}.product-description{min-height:70px;max-height:70px;overflow-y:auto}.product-card-img{display:block;height:250px;width:100%}.product-card figcaption{display:block;padding:0 10px}.product-card .product-card-address{color:#888;line-height:1.2}.product-card .product-card-address i{font-size:14px;margin-right:2px;line-height:1.2}.product-card .product-card-price{display:block;text-align:right}.product-card .product-card-price .original-price,.product-card .product-card-price .price-savings{line-height:22px;display:inline-block;vertical-align:middle}.product-card .product-card-price .price-savings{float:left;color:#82b548}.product-card .product-card-price .original-price{color:#aaa;font-size:14px}.product-card .product-card-price .amount-price{text-align:right;font-size:20px;color:#82b548}.product-card .product-card-price .from{font-size:12px}.product_price span,.product_title h5{font-size:1.1em;line-height:1}*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:"Open Sans",Arial,sans-serif}img{max-width:100%;height:auto}ul.product_list{list-style-type:none;margin:0;padding:0;width:100%;display:inline}.product_grid{text-decoration:none;display:inline}.product_item{display:inline-block;background:#fff;border:1px solid #ccc;padding:10px;position:relative;overflow:hidden}.product_sale{position:absolute;z-index:2;right:-28px;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);transform:rotate(45deg)}.product_image{position:relative;overflow:hidden}.product_image img{display:block;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;-webkit-transition:all .5s ease-in-out;-moz-transition:all .5s ease-in-out;transition:all .5s ease-in-out}.info,.product{position:relative}.product_image img:hover{-o-transform:scale(1.2,1.2);-moz-transform:scale(1.2,1.2);-webkit-transform:scale(1.2,1.2);-ms-transform:scale(1.2,1.2);transform:scale(1.2,1.2)}.product_title{float:left;width:100%;text-transform:uppercase}.product_title h5{margin:auto;font-weight:500;padding-bottom:5px}.product_price a{color:#000}.price_old{color:#ea2e49;text-decoration:line-through}.product_desc p{margin:0;line-height:1.3;padding:10px 0}.product_rating{float:right;width:100px;height:20px;overflow:hidden;background:url(https://bit.ly/1B4PjyM) 0 76% no-repeat}.product_buttons{-webkit-font-smoothing:antialiased;-moz-font-smoothing:antialiased;font-smoothing:antialiased}.product_buttons .product_heart:hover{color:#DF0404;background:rgba(255,255,255,.5)}.product_buttons .product_compare:hover{color:#129612;background:rgba(255,255,255,.5)}.product_buttons .add_to_cart:hover{color:#4DC8D3;background:rgba(255,255,255,.5)}@media only screen and (min-width:320px){.product_sale p{margin:0;color:#fff;background:red;padding:3px 25px;box-shadow:0 2px 8px 0 rgba(0,0,0,.4)}.product_values{float:left;width:calc(100% - 100px);padding:0 10px}.product_rating{margin-right:10px}.product_image{height:150px;float:left;width:100px}.product_image .product_buttons{display:none}.product_desc{overflow:hidden;auto:left;line-height:1}.product_values .product_buttons{position:relative;text-align:left;float:left;margin-top:7px}.product_values .product_buttons button{color:#252525;background:rgba(255,255,255,1);font-size:1em;border-radius:50%;width:40px;height:40px;border:1px solid #000}}@media only screen and (min-width:480px){.product_image{height:250px;width:175px}.product_values{width:calc(100% - 175px)}}@media only screen and (min-width:678px){.product_item{width:49.5%}.product_image{height:150px;width:100px}.product_values{width:calc(100% - 100px)}}@media only screen and (min-width:992px){.product_image{height:250px;width:175px}.product_values{width:calc(100% - 175px)}.product_desc{max-height:200px}}@media only screen and (min-width:1200px){.product_item{width:33%}.product_desc{max-height:131px}}@media only screen and (max-width:992px){.product_desc{max-height:67px}}@media only screen and (max-width:480px){.product_title h5{font-weight:700}}@media only screen and (max-width:320px){.product_buttons,.product_desc,.product_sale{display:none}.product_image img{position:relative}.product_price span{float:left;width:100%}}.listing{list-style:none;margin:20px;padding:0;display:inline-block}.product{width:240px}.img-wrapper,.info{width:100%;text-align:center}.product a{text-decoration:none}.img-wrapper{display:block;height:240px;border:1px solid #afafaf;border-bottom:0;overflow:hidden}.info{background:#000;color:#fff;padding:40px 10px 20px;vertical-align:middle;transform:translateZ(0);box-shadow:0 0 1px transparent;backface-visibility:hidden;transition-property:color,height;transition-duration:.3s,.4s;transition-timing-function:ease-out;height:83px}.info:after,.info:before,.note,.price{position:absolute}.info:before{content:"";z-index:-1;top:0;bottom:0;left:0;right:0;background:#fff;transform:scaleY(0);transform-origin:50%;transition:transform .3s ease-out}.info:after{visibility:hidden;pointer-events:none;z-index:-1;content:"";border-style:solid;transition-duration:.3s;transition-property:transform;left:calc(50% - 11px);bottom:0;border-width:10px 10px 0;border-color:#000 transparent transparent}.product:hover .info{height:40px}.product:hover .info:before{transform:scaleY(.7)}.product:hover .info:after{visibility:visible;transform:translateY(10px)}.slide-title{transition:transform .3s ease-out}.slide-title a{color:inherit}.product:hover .slide-title{transform:translateY(-18px);font-weight:700;color:#000}.price{background:#e32d2c;font-size:1.3em;padding:4px 13px;top:-15px;right:10px}.note.on-sale,.price.sale{background:#00ba2f}.price.old{font-size:.95em;padding:4px 6px;text-decoration:line-through;top:-43px}.actions-wrapper{margin-top:14px;display:flex;justify-content:space-around}.actions-wrapper *{width:50%;padding:2px 0;text-align:center;color:#191919;font-size:.95em;font-weight:700}.actions-wrapper :before{font-family:FontAwesome;margin-right:8px}.wishlist{border-right:1px solid #afafaf}.wishlist:hover{color:#e32d2c}.cart:hover{color:#0a75b9}.product:hover .actions-wrapper *{visibility:visible}.note{top:0;left:0;padding:4px 8px;font-size:.9em}.note.on-sale{color:#fff}.note.no-stock{background:#191919;color:#fff}</style>'+
+            '<productReactiveSearch style="display: block;margin-top: 0px;"><figure class="product-card portrait"> <img class="product-card-img" src="http://placehold.it/400x300"/> <figcaption> <h3 class="product-card-title">Product Title</h3> <div class="product-description">Product Sescription</div><p class="product-card-address"> <i class="fa fa-map-marker"></i> US</p><div class="product-card-price"> <span class="price-savings">Save 25%</span> <s class="original-price">$ 10.99</s> <p class="amount-price"> <span class="from">starting at</span> $ 10.99<!-- <span class="from">/night</span>--> </p></div></figcaption></figure>'+
+            '<div class="product_grid landscape" style="visibility: hidden;"> <ul class="product_list list"> <li class="product_item"> <div class="product_sale"> <p>On Sale</p></div><div class="product_image"> <a href="#"><img src="http://placehold.it/400x300" alt="Product images"></a> <div class="product_buttons"> <button class="product_heart"><i class="fa fa-heart"></i></button> <button class="product_compare"><i class="fa fa-random"></i></button> <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button> <div class="quick_view"> <a href="#"> <h6>Quick View</h6> </a> </div></div></div><div class="product_values"> <div class="product_title"> <h5>Product Title</h5> </div><div class="product_price"> <a href="#"><span class="price_old">$79.99</span> <span class="price_new">$11.11</span></a> <span class="product_rating"></span> </div><div class="product_desc"> <p class="truncate">Product Descriptions</p></div><div class="product_buttons"> <button class="product_heart"><i class="fa fa-heart"></i></button> <button class="product_compare"><i class="fa fa-random"></i></button> <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button> </div></div></li></ul> </div>'+
+            '<div class="listing creative" style="visibility: hidden"> <div class="product"> <a class="img-wrapper" href="#"> <img src="https://hussein-alhammad.com/images/codepen/product-card/running-shoe_pink.jpg" alt="Pink running shoe"/> </a> <div class="note on-sale" style="position: absolute;top: 0;left: 0;padding: 4px 8px;font-size: 0.9em;background: #00ba2f;color: #fff;">On sale</div><div class="info"> <div class="slide-title"><a href="#">Some Product</a></div><div class="price sale">$20.50</div><div class="price old">$34.99</div></div><div class="actions-wrapper"> <a href="#" class="add-btn wishlist"><i class="fa fa-heart-o"> Wishlist</a> <a href="#" class="add-btn cart"><i class="fa fa-shopping-cart"> Cart</a> </div></div></div></productReactiveSearch>',
+    attributes: { 
+        class: 'fa fa-search',
+        title: 'Product Block'
+    },
+    category: 'Ecommerce Components'
+  });
+
+  // Full Home Page Layout
+  bm.add('accordion', {
+      label: 'accordion',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"><style type="text/css">.container{max-width: 960px;}.panel-default>.panel-heading{color: #333; background-color: #fff; border-color: #e4e5e7; padding: 0; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;}.panel-default>.panel-heading a{display: block; padding: 10px 15px;}.panel-default>.panel-heading a:after{content: ""; position: relative; top: 1px; display: inline-block; font-family: \'Glyphicons Halflings\'; font-style: normal; font-weight: 400; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; float: right; transition: transform .25s linear; -webkit-transition: -webkit-transform .25s linear;}.panel-default>.panel-heading a[aria-expanded="true"]{background-color: #eee;}.panel-default>.panel-heading a[aria-expanded="true"]:after{content: "\2212"; -webkit-transform: rotate(180deg); transform: rotate(180deg);}.panel-default>.panel-heading a[aria-expanded="false"]:after{content: "\002b"; -webkit-transform: rotate(90deg); transform: rotate(90deg);}.accordion-option{width: 100%; float: left; clear: both; margin: 15px 0;}.accordion-option .title{font-size: 20px; font-weight: bold; float: left; padding: 0; margin: 0;}.accordion-option .toggle-accordion{float: right; font-size: 16px; color: #6a6c6f;}.accordion-option .toggle-accordion:before{content: "Expand All";}.accordion-option .toggle-accordion.active:before{content: "Collapse All";}</style> <div class="container"> <div class="accordion-option"> <h3 class="title">TITLE</h3> <a href="javascript:void(0)" class="toggle-accordion active" accordion-id="#accordion"></a> </div><div class="clearfix"></div><div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"> <div class="panel panel-default"> <div class="panel-heading" role="tab" id="headingOne"> <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> Collapsible Group Item #1 </a> </h4> </div><div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne"> <div class="panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven\'t heard of them accusamus labore sustainable VHS. </div></div></div><div class="panel panel-default"> <div class="panel-heading" role="tab" id="headingTwo"> <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo"> Collapsible Group Item #2 </a> </h4> </div><div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo"> <div class="panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven\'t heard of them accusamus labore sustainable VHS. </div></div></div><div class="panel panel-default"> <div class="panel-heading" role="tab" id="headingThree"> <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree"> Collapsible Group Item #3 </a> </h4> </div><div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree"> <div class="panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven\'t heard of them accusamus labore sustainable VHS. </div></div></div></div></div>',
+      attributes: {
+          class: 'fa fa-home',
+          title: 'accordion'
+      },
+      category: 'Special Component'
+  });
+  // Full Home Page Layout
+  bm.add('ReUseComponent', {
+      label: 'ReUse Component',
+      content: '<ReUseComponent style="display: block; width: 100%; min-height:20px"><div style="border:solid black 2px"></div></ReUseComponent>',
+      attributes: {
+          class: 'fa fa-home',
+          title: 'ReUse Component'
+      },
+      category: 'Special Component'
+  });
+
 
   // Global Image Variable 
   bm.add('globalImageVariable', {
@@ -715,7 +755,2293 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     content: '<globalLink style="padding: 5px; display: inline-block;"><a href="#">Hyperlink</a></globalLink>'
   });
 
-	
+  // Global HTML Variable 
+  bm.add('globalHtmlVariable', {
+    label: 'HTML Variable',
+    category: 'Global Variables',
+    attributes: {
+        class: 'fa fa-code',
+    },
+    content: '<globalHtmlVariable style="padding: 2px; display: inline-block;">HTML Code</globalHtmlVariable>',
+  });
+
+  // Global Text Variable 
+  bm.add('globalTextVariable', {
+    label: 'Text Variable',
+    category: 'Global Variables',
+    attributes: {
+        class: 'fa fa-font',
+    },
+    content: '<globalTextVariable style="padding: 2px; display: inline-block;">Global Variable</globalTextVariable>',
+  });
+
+  //Component
+
+  bm.add('progressBar', {
+      label: 'Progress Bar',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><progressBar style="display: block; width: 100%; padding: 5px"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%"> 40%</div></div></progressBar>',
+      attributes: {
+          class: 'fa fa-spinner',
+          title: 'Progress Bar',
+      },
+      category: 'Special Component'
+  });
+
+  bm.add('productCompare', {
+      label: 'Compare Products',
+      content: '<div style="display: block; min-height: 20px;"><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><style type="text/css">.buttons{margin-top: 20px;}.productCounts{color: #008080;font-size: 24px;text-align: center;}.productTitle{text-align: center;min-height: 70px;}.table td{text-align: center;}.quantityInput{width: 50px;}.checkPrice{margin-top: 5px;color: #008080;}.colors-list{list-style: none; margin-top: 5px; text-align: left;}.color-link:hover{text-decoration: none !important;}.colors-list li{display: inline;}span.color{min-width: 15px; min-height: 15px; padding: 5px 10px; border: 1px solid #aaa; margin: 1px;}.color.green{background-color: #00FF00;}.color.redd{background-color: #ff0000;}.color.blue{background-color: #0000ff;}.color.teal{background-color: #232F3E;}.color.orange{background-color: orange;}.color.purple{background-color: purple;}</style>'+
+               '<div class="container"><div class="row"><div class="col-md-5"><h3>Compare Products</h3></div><div class="col-md-7 buttons" align="right"><a href="#" class="btn btn-danger"><i class="fa fa-times"></i> Clear</a><a href="#" class="btn btn-default"><i class="fa fa-envelope"></i> Email To Friend</a><a href="#" class="btn btn-info"><i class="fa fa-print"></i> Print</a><a href="#" class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Download PDF</a><a href="#" class="btn btn-link"><strong>Continue Shopping >></strong></a></div></div><hr><div class="row"><div class="col-md-12"><div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th width="20%" style="border: none;"></th><th width="20%" style="border: none;"></th><th width="20%" style="border: none;"></th><th width="20%" style="border: none;"></th><th width="20%" style="border: none;"></th></tr></thead><tbody><tr><td><strong>You can add up to 4 products to compare.<br><br><br>Now you can add <br><br><span class="productCounts">2</span><br><br>more products</strong></td><td><div class="product"><img src="http://placehold.it/400x400" class="img-responsive" alt="product image"><h5 class="productTitle"><strong>Product Title</strong></h5><hr><h3>USD $15.99</h3><span>Qty. <input type="number" class="quantityInput" name="" value="6"/></span></div></td><td><div class="product"><img src="http://placehold.it/400x400" class="img-responsive" alt="product image"><h5 class="productTitle"><strong>Product Title</strong></h5><hr><h3>USD $15.99</h3><span>Qty. <input type="number" class="quantityInput" name="" value="6"/></span></div></td><td><a href="#" class="btn btn-defaut"><i class="fa fa-plus-circle"></i> Add More Product</a></td><td><a href="#" class="btn btn-defaut"><i class="fa fa-plus-circle"></i> Add More Product</a></td></tr><tr><td></td><td><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Quick View"><i class="fa fa-eye"></i></a><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to wishlist"><i class="fa fa-heart"></i></a><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a><p class="checkPrice">Check Pricing</p></td><td><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Quick View"><i class="fa fa-eye"></i></a><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to wishlist"><i class="fa fa-heart"></i></a><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a><p class="checkPrice">Check Pricing</p></td><td></td><td></td></tr><tr><td><strong>SKU</strong></td><td>32154</td><td>78945</td><td></td><td></td></tr><tr><td><strong>Product Colors</strong></td><td><ul class="colors-list"> <li><a href="#" class="color-link"><span class="color green"></span></a></li><li><a href="#" class="color-link"><span class="color redd"></span></a></li><li><a href="#" class="color-link"><span class="color blue"></span></a></li><li><a href="#" class="color-link"><span class="color teal"></span></a></li><li><a href="#" class="color-link"><span class="color orange"></span></a></li><li><a href="#" class="color-link"><span class="color purple"></span></a></li></ul></td><td><ul class="colors-list"> <li><a href="#" class="color-link"><span class="color green"></span></a></li><li><a href="#" class="color-link"><span class="color redd"></span></a></li><li><a href="#" class="color-link"><span class="color blue"></span></a></li><li><a href="#" class="color-link"><span class="color teal"></span></a></li><li><a href="#" class="color-link"><span class="color orange"></span></a></li><li><a href="#" class="color-link"><span class="color purple"></span></a></li></ul></td><td></td><td></td></tr><tr><td><strong>Features</strong></td><td><p align="justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></td><td><p align="justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></td><td></td><td></td></tr><tr><td><strong>Summary</strong></td><td><p align="justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></td><td><p align="justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></td><td></td><td></td></tr></tbody></table></div></div></div></div></div>',
+      attributes: {
+          class: 'fa fa-random',
+          title: 'Compare Products',
+      },
+      category: 'New Components'
+  });
+
+  bm.add('productWishlist', {
+      label: 'My Wishlist',
+      content: '<div style="display: block; min-height: 20px;"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <style type="text/css"> .myCartListings{background-color: #eee; transition: 0.2s all linear; margin: 20px; padding: 20px;}.myCartListings:hover{box-shadow: 0px 0px 10px #999; transition: 0.2s all linear;}#productImage{padding: 0px 0px 0px 5px;}h4{padding-top: 1%}.colorofproduct{border: solid 2px black; margin: 2px;}#comment{margin-top: 5%;}button.remove{float: right; margin-top: 1%}}</style> <div class="container" id="myCartListings"> <div class="row"><div class="col-md-5"><h3>My Wishlist</h3></div></div><hr> <div class="col-md-12 myCartListings"> <div id="productImage" class="col-md-4"><img src="http://placehold.it/500x500" width="100%" height="50%"></div><div id="Productdetails" class="col-md-8"> <button class="btn btn-danger remove"><i class="fa fa-trash-o danger" aria-hidden="true"></i></button> <h2>Product Title</h2> <h4>Item # : CODE</h4> <h4>USD ($) 99.99 (R) Qty. 0-100</h4> <h4>Product Description</h4> <hr> <h6>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h6> <br><div id="colorofproductdiv"><img src="http://www.swedausa.com/product/color/137.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/329.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/573.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/329.jpg" height="27px" width="27px" class="colorofproduct"></div></div></div><div class="col-md-12 myCartListings"> <div id="productImage" class="col-md-4"><img src="http://placehold.it/500x500" width="100%" height="50%"></div><div id="Productdetails" class="col-md-8"> <button class="btn btn-danger remove"><i class="fa fa-trash-o danger" aria-hidden="true"></i></button> <h2>Product Title</h2> <h4>Item # : CODE</h4> <h4>USD ($) 99.99 (R) Qty. 0-100</h4> <h4>Product Description</h4> <hr> <h6>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h6> <br><div id="colorofproductdiv"><img src="http://www.swedausa.com/product/color/137.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/329.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/573.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/329.jpg" height="27px" width="27px" class="colorofproduct"></div></div></div></div></div>',
+      attributes: {
+          class: 'fa fa-heart',
+          title: 'My Wishlist',
+      },
+      category: 'New Components'
+  });
+
+  bm.add('wishlistPopup', {
+      label: 'Wishlist Popup',
+      content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> <style type="text/css">.dropdown{position: relative; display: inline-block; margin-bottom: 0px;}.wishlist{position: absolute; width: 350px; z-index: 1; background-color: #eee; display: none;}.arrow-up{width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 15px solid #ECF0F1; left: 0; position: absolute; top: -10px;}.compareProducts{padding: 10px;}.productItem{margin-top: 25px;}</style><div class="upper-links dropdown"> <div id="wrap"> <div id="regbar"> <div id="navthing"> <h4><a href="#" id="wishlist" class="btn btn-link"><i class="fa fa-heart"></i></a> </h4> <div class="wishlist"> <div class="arrow-up"></div><div class="formholder"> <div class="compareProducts"> <h4>My Wishlist</h4> <div class="row productItem"> <div class="col-md-4"> <img src="http://placehold.it/100x100" class="img-responsive"> </div><div class="col-md-8"> <p><strong>Product Title</strong><a href="#" class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></a><br><span class="text-disabled">SKU: 1234</span><br><h4>$12.99</h4> <i>Qty. 2</i> </p><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a> <a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-heart"></i></a> </div></div><div class="row productItem"> <div class="col-md-4"> <img src="http://placehold.it/100x100" class="img-responsive"> </div><div class="col-md-8"> <p><strong>Product Title</strong><a href="#" class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></a><br><span class="text-disabled">SKU: 1234</span><br><h4>$12.99</h4> <i>Qty. 2</i> </p><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a> <a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-heart"></i></a> </div></div><div class="row" align="center"> <hr> <a href="#" class="btn btn-default">Remove All</a> <a href="#" class="btn btn-default">Go to Compare</a> </div></div></div></div></div></div></div></div></div>',
+      attributes: {
+          class: 'fa fa-heart-o',
+          title: 'Wishlist Popup',
+      },
+      category: 'New Components'
+  });
+
+  bm.add('comparePopup', {
+      label: 'Compare Popup',
+      content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> <style type="text/css">.dropdown{position: relative; display: inline-block; margin-bottom: 0px;}.compare{position: absolute; width: 350px; z-index: 1; background-color: #eee; display: none;}.arrow-up{width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 15px solid #ECF0F1; left: 0; position: absolute; top: -10px;}.compareProducts{padding: 10px;}.productItem{margin-top: 25px;}</style><div class="upper-links dropdown"> <div id="wrap"> <div id="regbar"> <div id="navthing"> <h4><a href="#" id="compare" class="btn btn-link"><i class="fa fa-random"></i></a> </h4> <div class="compare"> <div class="arrow-up"></div><div class="formholder"> <div class="compareProducts"> <h4>Compare Products</h4> <div class="row productItem"> <div class="col-md-4"> <img src="http://placehold.it/100x100" class="img-responsive"> </div><div class="col-md-8"> <p><strong>Product Title</strong><a href="#" class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></a><br><span class="text-disabled">SKU: 1234</span><br><h4>$12.99</h4> <i>Qty. 2</i> </p><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a> <a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-heart"></i></a> </div></div><div class="row productItem"> <div class="col-md-4"> <img src="http://placehold.it/100x100" class="img-responsive"> </div><div class="col-md-8"> <p><strong>Product Title</strong><a href="#" class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></a><br><span class="text-disabled">SKU: 1234</span><br><h4>$12.99</h4> <i>Qty. 2</i> </p><a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a> <a href="#" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-heart"></i></a> </div></div><div class="row" align="center"> <hr> <a href="#" class="btn btn-default">Remove All</a> <a href="#" class="btn btn-default">Go to Compare</a> </div></div></div></div></div></div></div></div></div>',
+      attributes: {
+          class: 'fa fa-random',
+          title: 'Compare Popup',
+      },
+      category: 'New Components'
+  });
+
+  bm.add('divBlock', {
+      label: 'Division Block',
+      content: '<div style="width:100%; display: block; min-height: 20px;" data-gjs-type="text">Divistion Block</div>',
+      attributes: {
+          class: 'fa fa-random',
+          title: 'Compare Popup',
+      },
+      category: 'New Components'
+  });
+
+
+
+
+
+
+
+
+
+
+
+  // Froala Components
+  // <link href="https://raw.githubusercontent.com/froala/design-blocks/master/dist/css/froala_blocks.css" rel="stylesheet" type="text/css">
+
+  // Call-To-Action
+  // Style-1
+  bm.add('froala-callToAction-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 text-center"> <p class="text-h3"> "Separated they live in Bookmarksgrove right at the coast of the Semantics, far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast." </p><p class="mt-5 mt-sm-4"> <a class="btn" href="#">Download</a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 1',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-2
+  bm.add('froala-callToAction-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-6 text-center"> <h1>Call to Action</h1> <p class="text-h3"> Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts </p><p class="mt-5 mt-sm-4"> <a class="btn" href="#">Download</a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 2',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-3
+  bm.add('froala-callToAction-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-sm-8 col-md-6 col-lg-4 text-center"> <h3> <strong>Right at the coast of the Semantics, a large language ocean. A small river named Duden.</strong> </h3> <p class="mt-5 mt-sm-4"> <a class="btn" href="#">Download</a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 3',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-4
+  bm.add('froala-callToAction-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-6 text-center"> <h1>Call to Action</h1> <p class="text-h3"> Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts </p><p class="mt-5 mt-sm-4"> <a class="btn" href="#">Download</a> </p></div></div><div class="row pt-5 pb-3"> <div class="col-12 text-center"> <p><strong>Fortune 100 companies are using our products</strong></p></div></div><div class="row"> <div class="col-12 text-center"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/adobe.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/discovery.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2 " src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/ebay.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/samsung.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/orange.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/salesforce.svg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 4',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-5
+  bm.add('froala-callToAction-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 text-center"> <h1>Far far away, behind the word mountains, far from</h1> <p class="mt-5"> <a class="btn" href="#">Download</a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 5',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-6
+  bm.add('froala-callToAction-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-sm-10 col-md-8 col-lg-4 text-center"> <p class="text-h3"> Follow us and ask more on: </p><p class="text-h2"> <a href="#"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-instagram"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-google"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-pinterest"></i></a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 6',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-7
+  bm.add('froala-callToAction-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center pb-0 pb-lg-4"> <div class="col-12"> <h1>Call to action</h1> </div></div><div class="row text-center pt-4 pt-md-5"> <div class="col-12 col-sm-10 col-md-6 col-lg-4 m-sm-auto"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3>First Action</h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts</p><p class="mt-3"><a class="btn" href="#">Button</a></p></div><div class="col-12 col-sm-10 col-md-6 col-lg-4 ml-sm-auto mr-sm-auto mt-5 mt-md-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3>Second Action</h3> <p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><p class="mt-3"><a class="btn" href="#">Button</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 7',
+      },
+      category: 'Call To action'
+  });
+
+
+  // Style-8
+  bm.add('froala-callToAction-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .style-8{background-image: url(\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_c_1.svg\');}</style>'+
+               '<section class="fdb-block style-8"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-10 col-lg-8 text-center"> <div class="fdb-box"> <h1>Call to Action</h1> <p class="text-h3"> Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts </p><p class="mt-4"> <a class="btn" href="#">Download</a> </p></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 8',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-9
+  bm.add('froala-callToAction-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-sm-9 text-left"> <h2>Use Froala Design Blocks for free in your project</h2> </div><div class="col-12 col-sm-3 text-left text-sm-center mt-4 mt-sm-0"> <a class="btn" href="#">Download</a> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 9',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-10
+  bm.add('froala-callToAction-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .style-10{background-image: url(\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_1.svg\');}</style>'+
+               '<section class="fdb-block pb-0 style-10"> <div class="container"> <div class="row justify-content-end"> <div class="col-12 col-md-8 col-lg-6 text-center"> <div class="fdb-box br-0"> <h1>Call to Action</h1> <p class="text-h3"> When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove </p><p class="mt-4"> <a class="btn" href="#">Download</a> </p></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 10',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-11
+  bm.add('froala-callToAction-style-11', {
+      label: 'Style 11',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-sm-3 text-center"> <a class="btn" href="#">Download</a> </div><div class="col-12 col-sm-9 text-center text-sm-right mt-4 mt-sm-0"> <h2>Use Froala Design Blocks for free in your project</h2> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 11',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-12
+  bm.add('froala-callToAction-style-12', {
+      label: 'Style 12',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .style-12{background-image: url(\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/alt_wide_2.svg\');}</style>'+
+               '<section class="fdb-block style-12" > <div class="container"> <div class="row"> <div class="col-12 col-sm-10 col-md-8 col-lg-6 text-left"> <h1>Call to Action</h1> <p class="text-h3"> A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. </p><p class="mt-4"> <a class="btn" href="#">Download</a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 12',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-13
+  bm.add('froala-callToAction-style-13', {
+      label: 'Style 13',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col-12"> <h1>Froala Design Blocks</h1> <p class="text-h3"> Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. </p></div></div><div class="row justify-content-center align-items-center pt-5"> <div class="col-8 col-sm-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"> </div><div class="col-12 col-sm-6 m-auto pt-4 pt-sm-0"> <h2><strong>Bootstrap</strong></h2> <p class="text-h3">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life.</p></div><div class="col-12 col-sm-3 text-center pt-4 pt-sm-0"> <p><a class="btn btn-empty" href="#">Take a Tour</a></p><p><a class="btn" href="#">Start Now</a></p><p class="text-h5"><em>Some foo text</em></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 13',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-14
+  bm.add('froala-callToAction-style-14', {
+      label: 'Style 14',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col-12 text-center"> <h1>Froala Design Blocks</h1> <p class="text-h2"> Far far away, behind the word mountains, far from. </p></div></div><div class="row align-items-center pt-2 pt-lg-5"> <div class="col-12 col-md-8 col-lg-7"> <h2>Call to action</h2> <p class="text-h3">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p><p class="mt-4"><a class="btn" href="#">Take a Tour</a></p></div><div class="col-8 col-md-4 m-auto m-md-0 ml-md-auto pt-5"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 14',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-15
+  bm.add('froala-callToAction-style-15', {
+      label: 'Style 15',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-10 col-sm-6 col-md-4 col-lg-3 m-auto m-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_4.svg"> </div><div class="col-12 col-md-8 ml-auto pt-5 pt-md-0"> <h2>Call to action</h2> <p class="text-h3">On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.</p><p class="mt-4"><a class="btn" href="#">Take a Tour</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 15',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-16
+  bm.add('froala-callToAction-style-16', {
+      label: 'Style 16',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .style-16{background-image: url(\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_c_1.svg\');}</style>'+
+               '<section class="fdb-block bg-dark fdb-viewport style-16" > <div class="container align-items-center justify-content-center d-flex"> <div class="row justify-content-center text-center"> <div class="col-12 col-md-10 col-lg-8"> <h1>Froala Design Blocks is Open Source and free to use in your apps</h1> <p class="mt-5"><a href="#" class="btn">Call to Action</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 16',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-17
+  bm.add('froala-callToAction-style-17', {
+      label: 'Style 17',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .style-17{background-image: url(\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_0.svg\'); }</style>'+
+               '<section class="fdb-block fdb-viewport bg-dark style-17"> <div class="container justify-content-center align-items-center d-flex"> <div class="row justify-content-center text-center"> <div class="col-12 col-md-8"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p><p class="mt-5"><a href="#" class="btn">Call to Action</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 17',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-18
+  bm.add('froala-callToAction-style-18', {
+      label: 'Style 18',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pb-0"> <div class="container align-items-end justify-content-center d-flex"> <div class="row align-items-top text-left"> <div class="col-12 col-md-6 col-lg-5"> <p class="mb-5 mt-5"><img alt="image" height="40" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png"></p><h1>Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><p class="mt-4"><a href="#" class="btn">Call to Action</a></p></div><div class="col-12 col-sm-4 col-md-6 col-lg-4 m-auto pt-5"> <img alt="image" class="img-fluid br-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_tall.png"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 18',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-19
+  bm.add('froala-callToAction-style-19', {
+      label: 'Style 19',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container align-items-center justify-content-center d-flex"> <div class="row align-items-center text-left"> <div class="col-12 col-sm-6"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col-12 col-lg-5 ml-auto pt-5 pt-lg-0"> <h1>Froala Design Blocks</h1> <p class="text-h3">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p><p class="mt-4"><a href="#" class="btn">Call to Action</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 19',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-20
+  bm.add('froala-callToAction-style-20', {
+      label: 'Style 20',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pb-0"> <div class="container"> <div class="row align-items-center text-left"> <div class="col-12 col-md-8"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.</p></div><div class="col-12 col-md-3 ml-auto text-left text-md-right"> <p><a href="#" class="btn">Call to Action</a></p></div></div><div class="row pt-5"> <div class="col-12"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_wide.svg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 20',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-21
+  bm.add('froala-callToAction-style-21', {
+      label: 'Style 21',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .style-22{ background-image: url(\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/alt_wide_1.svg\'); }</style>'+
+               '<section class="fdb-block fdb-viewport style-22"> <div class="container align-items-center justify-content-center d-flex"> <div class="row align-items-center text-left"> <div class="col-12 col-sm-10 col-md-8 col-lg-6"> <h1>Froala Design Blocks is build on Boostrap Framework</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there.</p><p class="mt-5"><a href="#" class="btn btn-shadow">Call to Action</a> <a href="#" class="btn btn-white btn-shadow">Button</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 21',
+      },
+      category: 'Call To action'
+  });
+
+  // Style-22
+  bm.add('froala-callToAction-style-22', {
+      label: 'Style 22',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-5 text-center pb-md-5"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p><p class="mt-4"><a href="#" class="btn">Call to Action</a></p></div></div><div class="row text-center justify-content-center pt-5"> <div class="col-12 col-sm-6 col-lg-3"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature One</strong></h3> <p>Far far away, behind the word mountains, far from the countries</p></div><div class="col-12 col-sm-6 col-lg-3 pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature Two</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast</p></div><div class="col-12 col-sm-6 col-lg-3 pt-4 pt-lg-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature Three</strong></h3> <p>A small river named Duden flows by their place and supplies it</p></div><div class="col-12 col-sm-6 col-lg-3 pt-4 pt-lg-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature Four</strong></h3> <p>Far far away, behind the word mountains, far from the countries</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bullhorn',
+          title: 'Style 22',
+      },
+      category: 'Call To action'
+  });
+
+
+
+
+
+
+
+
+
+
+  // Contact Forms
+  // Style-1
+  bm.add('froala-contacts-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pt-0"> <div class="container-fluid p-0 pb-md-5"> <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8444388087937!2d26.101253041406952!3d44.43635311654287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b7%3A0x58147f39579fe6fa!2zR3J1cHVsIFN0YXR1YXIgIkPEg3J1yJthIEN1IFBhaWHIm2Ui!5e0!3m2!1sen!2sro!4v1507381157656" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> </div><div class="container"> <div class="row mt-5"> <div class="col-12 col-md-6 col-lg-5"> <h2>Contact Us</h2> <p class="text-h3"> Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove. </p><p class="text-h3"> It is a paradisematic country, in which roasted parts of sentences fly into your mouth. </p><p class="text-h3 mt-5"> <strong>Email:</strong> <a href="#">hello@website.com</a> </p><p class="text-h3"> <strong>Phone:</strong> <a href="#">+44 123 123 1232</a> </p></div><div class="col-12 col-md-6 ml-auto pt-5 pt-md-0"> <form> <div class="row"> <div class="col"> <input type="text" class="form-control" placeholder="First name"> </div><div class="col"> <input type="text" class="form-control" placeholder="Last name"> </div></div><div class="row mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Enter email"> </div></div><div class="row mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Subject"> </div></div><div class="row mt-4"> <div class="col"> <textarea class="form-control" name="message" rows="3" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 1',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-2
+  bm.add('froala-contacts-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-2{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_0.svg);}</style>'+
+               '<section class="fdb-block bg-dark contact-style-2"> <div class="container"> <div class="row text-center justify-content-center"> <div class="col-12 col-md-8 col-lg-7"> <h1>Contact Us</h1> <h2>We love to hear from you!</h2> </div></div><div class="row pt-4"> <div class="col-12"> <form> <div class="row"> <div class="col-12 col-md"> <input type="text" class="form-control" placeholder="Name"> </div><div class="col-12 col-md mt-4 mt-md-0"> <input type="text" class="form-control" placeholder="Email"> </div><div class="col-12 col-md mt-4 mt-md-0"> <input type="text" class="form-control" placeholder="Phone (optional)"> </div></div><div class="row mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Subject"> </div></div><div class="row mt-4"> <div class="col"> <textarea class="form-control" name="message" rows="3" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col text-center"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 2',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-3
+  bm.add('froala-contacts-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center justify-content-center"> <div class="col-12 col-md-8 col-lg-7"> <h1>Contact Us</h1> <p class="text-h3">One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p></div></div><div class="row pt-4"> <div class="col-12 col-md-6"> <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8444388087937!2d26.101253041406952!3d44.43635311654287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b7%3A0x58147f39579fe6fa!2zR3J1cHVsIFN0YXR1YXIgIkPEg3J1yJthIEN1IFBhaWHIm2Ui!5e0!3m2!1sen!2sro!4v1507381157656" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> </div><div class="col-12 col-md-6 pt-5 pt-md-0"> <form> <div class="row"> <div class="col"> <input type="email" class="form-control" placeholder="Enter email"> </div></div><div class="row mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Subject"> </div></div><div class="row mt-4"> <div class="col"> <textarea class="form-control" name="message" rows="3" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 3',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-4
+  bm.add('froala-contacts-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-4{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_0.svg);}</style>'+
+               '<section class="fdb-block contact-style-4"> <div class="container"> <div class="row"> <div class="col"> <div class="fdb-box fdb-touch"> <div class="row text-center justify-content-center"> <div class="col-12 col-md-9 col-lg-7"> <h1>Contact Us</h1> <p class="text-h3">Pityful a rethoric question ran over her cheek, then she continued her way. On her way she met a copy.</p></div></div><div class="row justify-content-center pt-4"> <div class="col-12 col-md-8"> <form> <div class="row"> <div class="col-12 col-md"> <input type="text" class="form-control" placeholder="Name"> </div><div class="col-12 col-md mt-4 mt-md-0"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Subject"> </div></div><div class="row mt-4"> <div class="col"> <textarea class="form-control" name="message" rows="3" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col text-center"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 4',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-5
+  bm.add('froala-contacts-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pt-0"> <div class="container-fluid p-0 pb-3"> <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8444388087937!2d26.101253041406952!3d44.43635311654287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b7%3A0x58147f39579fe6fa!2zR3J1cHVsIFN0YXR1YXIgIkPEg3J1yJthIEN1IFBhaWHIm2Ui!5e0!3m2!1sen!2sro!4v1507381157656" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> </div><div class="container"> <div class="row text-center justify-content-center pt-5"> <div class="col-12 col-md-7"> <h1>Contact Us</h1> </div></div><div class="row justify-content-center pt-4"> <div class="col-12 col-md-7"> <form> <div class="row"> <div class="col"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Subject"> </div></div><div class="row mt-4"> <div class="col"> <textarea class="form-control" name="message" rows="3" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col text-center"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div><div class="row-100"></div></div><div class="bg-dark"> <div class="container"> <div class="row-50"></div><div class="row justify-content-center text-center"> <div class="col-12 col-md mr-auto ml-auto"> <img alt="image" height="40" class="mb-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <p class="text-h3">+44 (112) 123 752</p></div><div class="col-12 col-md pt-4 pt-md-0 mr-auto ml-auto"> <img alt="image" height="40" class="mb-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <p class="text-h3">123 6th St.<br>Melbourne, FL 32904</p></div><div class="col-12 col-md pt-4 pt-md-0 mr-auto ml-auto"> <img alt="image" height="40" class="mb-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <p class="text-h3">support@website.com</p></div></div><div class="row-50"></div></div></div><div class="container"> <div class="row-70"></div><div class="row text-center"> <div class="col"> <p class="text-h2"> <a href="#"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-instagram"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-google"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-pinterest"></i></a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 5',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-6
+  bm.add('froala-contacts-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pt-0"> <div class="container-fluid p-0 pb-5"> <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8444388087937!2d26.101253041406952!3d44.43635311654287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b7%3A0x58147f39579fe6fa!2zR3J1cHVsIFN0YXR1YXIgIkPEg3J1yJthIEN1IFBhaWHIm2Ui!5e0!3m2!1sen!2sro!4v1507381157656" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> </div><div class="container"> <div class="row pt-5"> <div class="col-12"> <form> <div class="row"> <div class="col-12 col-md"> <label>First Name</label> <input type="text" class="form-control"> </div><div class="col-12 col-md mt-4 mt-md-0"> <label>Last Name</label> <input type="text" class="form-control"> </div></div><div class="row mt-4"> <div class="col"> <label>Your Email</label> <input type="email" class="form-control"> </div></div><div class="row mt-4"> <div class="col"> <label>Subject (optional but helpful)</label> <input type="email" class="form-control"> </div></div><div class="row mt-4"> <div class="col"> <label>How can we help?</label> <textarea class="form-control" name="message" rows="3"></textarea> </div></div><div class="row mt-4 text-center"> <div class="col"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 6',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-7
+  bm.add('froala-contacts-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block pb-0 contact-style-7"> <div class="container"> <div class="row text-center justify-content-center"> <div class="col-12 col-md-8 col-lg-7"> <h1>Contact Us</h1> <p class="text-h3">If you’re already an active user, please <a href="#">sign in</a> before contacting us.</p></div></div><div class="row-50"> </div><div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-7"> <form> <div class="row"> <div class="col"> <label>Your Email Address</label> <input type="text" class="form-control"> </div></div><div class="row mt-4"> <div class="col"> <label>Subject (optional but helpful)</label> <input type="email" class="form-control"> </div></div><div class="row mt-4"> <div class="col"> <label>How can we help?</label> <textarea class="form-control" name="message" rows="3"></textarea> </div></div><div class="row mt-4"> <div class="col text-right"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div><div class="row-100"></div></div><div class="container-fluid p-0"> <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8444388087937!2d26.101253041406952!3d44.43635311654287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b7%3A0x58147f39579fe6fa!2zR3J1cHVsIFN0YXR1YXIgIkPEg3J1yJthIEN1IFBhaWHIm2Ui!5e0!3m2!1sen!2sro!4v1507381157656" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> </div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 7',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-8
+  bm.add('froala-contacts-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block pt-0"> <div class="bg-gray"> <div class="container"> <div class="row-100"></div><div class="row text-left"> <div class="col-8"> <h1>Contact Us</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div></div><div class="row-100"></div></div></div><div class="container"> <div class="row-100"></div><div class="row"> <div class="col-12 col-md-6 col-lg-5"> <h2>Call or email</h2> <p class="text-large">Support, Sales, and Account Management services are currently available in English</p><p class="text-h3 mt-4 mt-lg-5"> <strong>Support</strong> </p><p> +800 3005 4300 </p><p> <a href="#">Contact Support</a> </p><p> Our technical support is available by phone or email from 11am to 11pm BST, Monday through Friday. </p><p class="text-h3 mt-4 mt-lg-5"> <strong>Sales</strong> </p><p> +800 3005 4300 </p><p> <a href="#">Contact Sales</a> </p><p> Our technical support is available by phone or email from 11am to 11pm BST, Monday through Friday. </p><p class="text-h3 mt-4 mt-lg-5"> <strong>General inquiries</strong> </p><p> <a href="#">hello@website.com</a> </p></div><div class="col-12 col-md-6 ml-auto"> <h2>Drop us a line</h2> <form> <div class="row"> <div class="col"> <input type="text" class="form-control" placeholder="First name"> </div><div class="col"> <input type="text" class="form-control" placeholder="Last name"> </div></div><div class="row mt-4"> <div class="col"> <input type="text" class="form-control" placeholder="Company Name"> </div></div><div class="row mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="text" class="form-control" placeholder="Phone"> </div><div class="col"> <input type="text" class="form-control" placeholder="Country"> </div></div><div class="row mt-4"> <div class="col"> <select class="form-control" required> <option value="">Select Department</option> <option value="1">Support</option> <option value="2">Sales</option> <option value="3">Accounting</option> </select> </div></div><div class="row mt-4"> <div class="col"> <textarea class="form-control" name="message" rows="5" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 8',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-9
+  bm.add('froala-contacts-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block bg-gray"> <div class="container"> <div class="row text-center justify-content-center"> <div class="col-12 col-md-8 col-lg-7"> <p class="text-h2">support@website.com</p><p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p><p><br></p><p class="text-h2"> <a href="#"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-instagram"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-google"></i></a>&nbsp;&nbsp;&nbsp; <a href="#"><i class="fa fa-pinterest"></i></a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 9',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Style-10
+  bm.add('froala-contacts-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center justify-content-center"> <div class="col-12 col-md-8 col-lg-7"> <h1>Contact Us</h1> <p class="text-h3">Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div></div><div class="row-70"></div><div class="row"> <div class="col-12 col-md-8 col-lg m-auto"> <form> <div class="row"> <div class="col"> <input type="email" class="form-control" placeholder="Enter email"> </div></div><div class="row mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Subject"> </div></div><div class="row mt-4"> <div class="col"> <textarea class="form-control" name="message" rows="3" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col"> <button type="submit" class="btn">Submit</button> </div></div></form> </div><div class="col-12 col-md-8 col-lg pt-5 m-auto pt-lg-0"> <iframe class="mb-4" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8444388087937!2d26.101253041406952!3d44.43635311654287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b7%3A0x58147f39579fe6fa!2zR3J1cHVsIFN0YXR1YXIgIkPEg3J1yJthIEN1IFBhaWHIm2Ui!5e0!3m2!1sen!2sro!4v1507381157656" width="100%" height="200" frameborder="0" style="border:0" allowfullscreen=""></iframe> <p><strong>Showroom</strong></p><p> 71 Pilgrim Avenue<br>Chevy Chase, MD 20815 </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-envelope',
+          title: 'Style 10',
+      },
+      category: 'Contact Forms'
+  });
+
+  // Contents Blocks
+  // Style-1
+  bm.add('froala-contents-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col col-md-8 text-center"> <h1>Froala Design Blocks</h1> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 1',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-2
+  bm.add('froala-contents-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col col-md-8 text-center"> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in <a href="#">Bookmarksgrove</a> right at the coast of the Semantics, a large language ocean.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 2',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-3
+  bm.add('froala-contents-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col col-md-8 text-center"> <h1>Froala Design Blocks</h1> <p class="text-h3">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far <a href="#">World of Grammar</a>.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 3',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-4
+  bm.add('froala-contents-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col col-sm-10 col-md-8 text-left"> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 4',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-5
+  bm.add('froala-contents-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-end"> <div class="col col-sm-10 col-md-8 text-left"> <p class="text-h3">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far <a href="#">World of Grammar</a>.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 5',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-6
+  bm.add('froala-contents-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col text-left"> <h2>Far far away...</h2> <p>Far far away, behind the word mountains, far from the countries <a href="#">Vokalia</a> and <a href="#">Consonantia</a>, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p><p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the <a href="#">Little Blind Text</a> should turn around and return to its own, safe country. But nothing the copy said could convince her and so it didn’t take long until a few insidious Copy Writers ambushed her, made her drunk with Longe and Parole and dragged her into their agency, where they abused her for their.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 6',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-7
+  bm.add('froala-contents-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col text-center"> <h1>Froala Design Blocks</h1> <div class="row text-left pt-4"> <div class="col-12 col-md-6"> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place far far away.</p></div><div class="col-12 col-md-6"> <p class="text-h3">Separated they live in Bookmarksgrove right at the coast of the Semantics, far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast.</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 7',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-8
+  bm.add('froala-contents-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col text-center"> <h1>Froala Design Blocks</h1> <h2>Subtitle comes here.</h2> <p class="text-h3"><a href="#">Learn More &gt;</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Buy &gt;</a></p><img alt="image" class="img-fluid mt-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 8',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-9
+  bm.add('froala-contents-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col text-center"> <h1>Froala Design Blocks</h1> </div></div><div class="row pt-4"> <div class="col"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_2.jpg"> </div></div><div class="row pt-4"> <div class="col"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 9',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-10
+  bm.add('froala-contents-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col text-center"> <h1>Froala Design Blocks</h1> </div></div><div class="row pt-4"> <div class="col"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 10',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-11
+  bm.add('froala-contents-style-11', {
+      label: 'Style 11',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col text-center"> <h1>Froala Design Blocks</h1> </div></div><div class="row pt-4"> <div class="col-6 col-md-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col-6 col-md-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_2.jpg"> </div><div class="col-6 col-md-3 mt-4 mt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col-6 col-md-3 mt-4 mt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_2.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 11',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-12
+  bm.add('froala-contents-style-12', {
+      label: 'Style 12',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-6 col-lg-5"> <h1>Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div><div class="col-12 col-md-6 ml-md-auto mt-4 mt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 12',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-13
+  bm.add('froala-contents-style-13', {
+      label: 'Style 13',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col col-md-8 text-center"> <img alt="image" class="fdb-icon mb-4" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"/> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 13',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-14
+  bm.add('froala-contents-style-14', {
+      label: 'Style 14',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-6 mb-4 mb-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col-12 col-md-6 col-lg-5 ml-md-auto text-left"> <h1>Froala Blocks</h1> <p class="text-h3">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p><p><a class="btn btn-round mt-4" href="#">Download</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 14',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-15
+  bm.add('froala-contents-style-15', {
+      label: 'Style 15',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block pb-0"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-6 col-lg-5"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"/> <h1>Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div><div class="col-10 col-sm-6 m-auto col-md-4 pt-4 pt-md-0"> <img alt="image" class="img-fluid br-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_tall.png"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 15',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-16
+  bm.add('froala-contents-style-16', {
+      label: 'Style 16',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 text-center"> <div class="row justify-content-center pb-4"> <div class="col-4 col-sm-3 col-md-2"><img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"/></div><div class="col-4 col-sm-3 col-md-2"><img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"/></div><div class="col-4 col-sm-3 col-md-2"><img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_3.svg"/></div></div><p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 16',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-17
+  bm.add('froala-contents-style-17', {
+      label: 'Style 17',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block pb-0"> <div class="container"> <div class="row align-items-center"> <div class="col-10 col-sm-6 m-auto col-md-4 pb-4 pb-md-0"> <img alt="image" class="img-fluid br-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_tall.png"> </div><div class="col-12 ml-auto col-md-6 col-lg-5"> <h1>Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p><p><a class="btn btn-round mt-4 mb-5 mb-md-0" href="#">Download</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 17',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-18
+  bm.add('froala-contents-style-18', {
+      label: 'Style 18',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-12 col-lg-6 col-xl-5"> <h1>Design Blocks</h1> <p class="text-h3 mb-5">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p><p><strong>Works in every browser:</strong></p><p> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"/> <img alt="image" class="fdb-icon ml-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"/> <img alt="image" class="fdb-icon ml-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_3.svg"/> <img alt="image" class="fdb-icon ml-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_4.svg"/></p></div><div class="col-12 col-md-8 m-auto ml-lg-auto mr-lg-0 col-lg-6 pt-5 pt-lg-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 18',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-19
+  bm.add('froala-contents-style-19', {
+      label: 'Style 19',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contact-style-7{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-left"> <div class="col-12 col-md-6"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"/> <h3><strong>Awesome Things</strong></h3> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Far from the countries Vokalia and Consonantia.</p></div><div class="col-12 col-md-6 pt-5 pt-md-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"/> <h3><strong>More Awesomeness</strong></h3> <p class="text-h3">Separated they live in Bookmarksgrove right at the coast of the Semantics, far far away, behind the word mountains, far from the countries <a href="#">Vokalia and Consonantia</a>, there live the blind texts. </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 19',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-20
+  bm.add('froala-contents-style-20', {
+      label: 'Style 20',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contents-style-20{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_c_1.svg);}</style>'+
+               '<section class="fdb-block contents-style-20"> <div class="container"> <div class="row text-left"> <div class="col-12 col-sm-10 m-auto m-md-0 col-md-8 col-lg-6"> <div class="fdb-box"> <div class="row justify-content-center"> <div class="col-12 col-xl-8 text-center"> <h1>Froala Design Blocks</h1> <p class="text-h3">When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove</p><p class="text-h3 mt-4"><a href="#">Learn More &gt;</a></p></div></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 20',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-21
+  bm.add('froala-contents-style-21', {
+      label: 'Style 21',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contents-style-21{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/alt_wide_2.svg);}</style>'+
+               '<section class="fdb-block fdb-image-bg contents-style-21"> <div class="container"> <div class="row text-left"> <div class="col-12 col-md-8 col-lg-6 ml-sm-auto"> <div class="fdb-box fdb-touch"> <div class="row justify-content-center"> <div class="col-12 col-xl-8 text-center"> <h1>Froala Design Blocks</h1> <p class="text-h3">When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove</p><p class="text-h3 mt-4"><a href="#" class="btn btn-round">Register</a></p></div></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 21',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-22
+  bm.add('froala-contents-style-22', {
+      label: 'Style 22',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-lg-8 col-xl-6 text-center"> <img alt="image" width="200" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png"/> <h1>Froala Design Blocks</h1> <p class="text-h3">Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies</p><p class="text-h3 mt-5"><a href="#" class="btn btn-round">Download Now</a></p><p>Latest Version: 2.3.5</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 22',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-23
+  bm.add('froala-contents-style-23', {
+      label: 'Style 23',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pb-0"> <div class="container"> <div class="row align-items-center"> <div class="col-10 col-sm-6 col-md-5 col-lg-4 m-auto pb-5 pb-md-0"> <img alt="image" class="img-fluid br-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_tall.png"> </div><div class="col-12 ml-md-auto col-md-7 col-lg-5 pb-5 pb-md-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"> <h1>Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts</p><p class="mt-4"><a class="btn" href="#">Download</a><a class="btn" href="#">Register</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 23',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-24
+  bm.add('froala-contents-style-24', {
+      label: 'Style 24',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pb-0"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-7 col-lg-5 ml-md-auto"> <h1>Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts</p><p class="mt-5"> <img alt="image" height="25" class="mr-4" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/samsung.svg"> <img alt="image" height="25" class="mr-4" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/adobe.svg"> <img alt="image" height="25" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/amazon.svg"> </p></div><div class="col-10 col-sm-6 col-md-5 col-lg-4 m-auto pt-5 pt-md-0"> <img alt="image" class="img-fluid br-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_tall.png"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 24',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-25
+  bm.add('froala-contents-style-25', {
+      label: 'Style 25',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col-12"> <div class="row justify-content-center pb-5"> <div class="col-12 col-lg-8 text-center"> <h1>Froala Design Blocks is Open Source and free to use</h1> </div></div><img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 25',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-26
+  bm.add('froala-contents-style-26', {
+      label: 'Style 26',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contents-style-26{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_c_1.svg);}</style>'+
+               '<section class="fdb-block"> <div class="col-fill-left contents-style-26"> </div><div class="container"> <div class="row justify-content-end"> <div class="col-12 col-md-5 text-center"> <h1>Froala Blocks</h1> <p class="text-h3">When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove</p><p class="mt-4"><a href="#">Learn More &gt;</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 26',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-27
+  bm.add('froala-contents-style-27', {
+      label: 'Style 27',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contents-style-27{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_c_2.svg)}</style>'+
+               '<section class="fdb-block pt-0 pb-0"> <div class="col-fill-right contents-style-27"> </div><div class="container pt-5 pb-5"> <div class="row"> <div class="col-12 col-md-5 text-center"> <h1>Froala Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p><p class="mt-4 mb-5"><a class="btn" href="#">Button</a></p><p>Follow us on</p><p> <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="#"><i class="fa fa-google" aria-hidden="true"></i></a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 27',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-28
+  bm.add('froala-contents-style-28', {
+      label: 'Style 28',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contents-style-28{background: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_bg.jpg);}</style>'+
+               '<section class="fdb-block fdb-image-bg contents-style-28"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>Made with <span class="fa fa-heart heart"></span> by Froala</h1> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 28',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-29
+  bm.add('froala-contents-style-29', {
+      label: 'Style 29',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center align-items-center"> <div class="col-8 col-md-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"> </div><div class="col-4 col-md-2"> <div class="row"> <div class="col-12"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_3.svg"> </div></div><div class="row mt-4"> <div class="col-12"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_4.svg"> </div></div></div><div class="col-12 col-md-6 col-lg-5 ml-auto pt-5 pt-md-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h1>Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 29',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-30
+  bm.add('froala-contents-style-30', {
+      label: 'Style 30',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-6 col-lg-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col-6 col-lg-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_2.jpg"> </div><div class="col-12 col-lg-6 pt-5 pt-lg-0"> <p class="text-h3 text-left">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.</p><p class="text-h3 text-left">Right at the coast of the Semantics, a large language ocean. A small river named Duden. <a href="#">[Read More]</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 30',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-31
+  bm.add('froala-contents-style-31', {
+      label: 'Style 31',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-left align-items-center"> <div class="col-12 col-md-6 col-lg-4"> <h2>Your Website</h2> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p><p class="text-h3"><a href="#">Read More</a></p></div><div class="col-12 col-md-6 col-lg-4 pt-4 pt-md-0"> <h2>Amazing Design</h2> <p class="text-h3">Right at the coast of the Semantics, a large language ocean. A small river named Dude a rge language ocean there live the blind.</p><p class="text-h3"><a href="#">Read More</a></p></div><div class="col-12 col-md-8 m-auto m-lg-0 col-lg-4 pt-5 pt-lg-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 31',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-32
+  bm.add('froala-contents-style-32', {
+      label: 'Style 32',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>Froala Design Blocks</h1> <p class="text-h2"><em>Right at the coast of the Semantics, a large language ocean.</em></p></div></div><div class="row text-center pt-3 pt-xl-5"> <div class="col-12 col-sm-10 m-auto m-md-0 col-md-6"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p></div><div class="col-12 col-sm-10 m-auto m-md-0 col-md-6 pt-5 pt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_2.jpg"> <p class="text-h3">Right at the coast of the Semantics, a large language ocean. A small river named Duden.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 32',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-33
+  bm.add('froala-contents-style-33', {
+      label: 'Style 33',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contents-style-33{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_0.svg);}</style>'+
+               '<section class="fdb-block pb-0 contents-style-33"> <div class="container"> <div class="row text-left"> <div class="col-12 col-md-8 col-lg-6"> <div class="fdb-box fdb-touch br-0"> <h2><strong>Design Blocks</strong></h2> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics</p><p class="text-h3 mt-4"><a href="#">Read More</a></p></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 33',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-34
+  bm.add('froala-contents-style-34', {
+      label: 'Style 34',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contents-style-34{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block pb-0 contents-style-34"> <div class="container"> <div class="row text-left justify-content-end"> <div class="col-12 col-md-6 col-xl-4"> <div class="fdb-box br-0"> <h2><strong>Design Blocks</strong></h2> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p><p class="text-h3 mt-4"><a href="#">Read More</a></p></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 34',
+      },
+      category: 'Content Blocks'
+  });
+
+  // Style-35
+  bm.add('froala-contents-style-35', {
+      label: 'Style 35',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;} .contents-style-34{background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg);}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-left align-items-center"> <div class="col-10 col-sm-6 m-auto m-lg-0 col-lg-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"> </div><div class="col-12 col-lg-8 pt-4 pt-lg-0"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics.</p><div class="row mt-5"> <div class="col-12 col-sm-6"> <h3><strong>Open Source</strong></h3> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p></div><div class="col-12 col-sm-6 pt-3 pt-sm-0"> <h3><strong>Bootstrap</strong></h3> <p class="text-h3">Right at the coast of the Semantics, a large language ocean. A small river named Duden.</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-th-large',
+          title: 'Style 35',
+      },
+      category: 'Content Blocks'
+  });
+
+
+
+
+
+
+
+
+  // Features Blocks
+  // Style-1
+  bm.add('froala-features-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center justify-content-sm-center no-gutters"> <div class="col-12 col-sm-8 col-md-3 m-auto"> <h3><strong>Feature 1</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p></div><div class="col-12 col-sm-8 col-md-3 m-auto pt-3 pt-md-0"> <h3><strong>Feature 2</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div><div class="col-12 col-sm-8 col-md-3 m-auto pt-3 pt-md-0"> <h3><strong>Feature 3</strong></h3> <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p></div></div><div class="row text-center justify-content-md-center pt-3 pt-md-5"> <div class="col-12 col-sm-8 col-md-3 m-auto"> <h3><strong>Feature 4</strong></h3> <p>It is a paradisematic country, in which roasted parts of sentences fly into your mouth</p></div><div class="col-12 col-sm-8 col-md-3 m-auto pt-3 pt-md-0"> <h3><strong>Feature 5</strong></h3> <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day.</p></div><div class="col-12 col-sm-8 col-md-3 m-auto pt-3 pt-md-0"> <h3><strong>Feature 6</strong></h3> <p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 1',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-2
+  bm.add('froala-features-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-left justify-content-sm-center"> <div class="col-12 col-sm-6 col-lg-3 col-xl-2 ml-xl-auto mr-xl-auto"> <h3><strong>Feature 1</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia.</p></div><div class="col-12 col-sm-6 col-lg-3 col-xl-2 ml-xl-auto mr-xl-auto pt-3 pt-lg-0"> <h3><strong>Feature 2</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast of the.</p></div><div class="col-12 col-sm-6 col-lg-3 col-xl-2 ml-xl-auto mr-xl-auto pt-3 pt-lg-0"> <h3><strong>Feature 3</strong></h3> <p>A small river named Duden flows by their place and supplies it with.</p></div><div class="col-12 col-sm-6 col-lg-3 col-xl-2 ml-xl-auto mr-xl-auto pt-3 pt-lg-0"> <h3><strong>Feature 4</strong></h3> <p>But nothing the copy said could convince her and so it didn’t take long</p></div></div><div class="row text-left justify-content-sm-center pt-3 pt-lg-5"> <div class="col-12 col-sm-6 col-lg-3 col-xl-2 ml-xl-auto mr-xl-auto"> <h3><strong>Feature 5</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia.</p></div><div class="col-12 col-sm-6 col-lg-3 col-xl-2 ml-xl-auto mr-xl-auto pt-3 pt-lg-0"> <h3><strong>Feature 6</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast of the.</p></div><div class="col-12 col-sm-6 col-lg-3 col-xl-2 ml-xl-auto mr-xl-auto pt-3 pt-lg-0"> <h3><strong>Feature 7</strong></h3> <p>A small river named Duden flows by their place and supplies it with.</p></div><div class="col-12 col-sm-6 col-lg-3 col-xl-2 ml-xl-auto mr-xl-auto pt-3 pt-lg-0"> <h3><strong>Feature 8</strong></h3> <p>But nothing the copy said could convince her and so it didn’t take long</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 2',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-3
+  bm.add('froala-features-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col-12 text-center"> <h1>Features</h1> </div></div><div class="row text-left justify-content-center pt-5"> <div class="col-12 col-md-6 col-lg-5 m-auto"> <h3><strong>Feature One</strong></h3> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div><div class="col-12 col-md-6 col-lg-5 m-auto pt-3 pt-md-0"> <h3><strong>Feature Two</strong></h3> <p class="text-h3">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line.</p></div></div><div class="row text-left justify-content-center pt-lg-4"> <div class="col-12 col-md-6 col-lg-5 m-auto pt-3 pt-lg-0"> <h3><strong>Feature Three</strong></h3> <p class="text-h3">On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times.</p></div><div class="col-12 col-md-6 col-lg-5 m-auto pt-3 pt-lg-0"> <h3><strong>Feature Four</strong></h3> <p class="text-h3">A small river named Duden flows by their place far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 3',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-4
+  bm.add('froala-features-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block bg-dark" style="background-image: url(//s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_0.svg)"> <div class="container"> <div class="row"> <div class="col text-center"> <h1>Froala Design Blocks</h1> </div></div><div class="row-70"></div><div class="row text-center justify-content-sm-center no-gutters"> <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-3 m-auto"> <div class="fdb-box fdb-touch"> <h2>Feature 1</h2> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p><p class="mt-4"><a href="#">Learn More &gt;</a></p></div></div><div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-3 m-auto pt-5 pt-xl-0"> <div class="fdb-box fdb-touch"> <h2>Feature 2</h2> <p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><p class="mt-4"><a href="#">Learn More &gt;</a></p></div></div><div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-3 m-auto pt-5 pt-xl-0"> <div class="fdb-box fdb-touch"> <h2>Feature 3</h2> <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p><p class="mt-4"><a href="#">Learn More &gt;</a></p></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 4',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-5
+  bm.add('froala-features-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-lg-6 col-xl-5"> <h1>Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><div class="row pt-4 pt-xl-5"> <div class="col-12 col-md-5"> <h4><strong>Feature One</strong></h4> <p>A small river named Duden flows</p></div><div class="col-12 col-md-5 m-auto pt-3 pt-md-0"> <h4><strong>Feature Two</strong></h4> <p>Separated they live in Bookmarksgrove</p></div></div></div><div class="col-12 col-md-8 col-lg-6 m-auto mr-lg-0 ml-lg-auto pt-5 pt-lg-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 5',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-6
+  bm.add('froala-features-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-8 col-lg-6 m-md-auto ml-lg-0 mr-lg-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col-12 col-lg-6 col-xl-5 ml-sm-auto pt-5 pt-lg-0"> <h1>Design Blocks</h1> <div class="row pt-4 pt-xl-5"> <div class="col-12 col-sm-6 col-xl-5"> <h4><strong>Feature One</strong></h4> <p>Far far away, behind the word mountains</p></div><div class="col-12 col-sm-6 col-xl-5 m-auto pt-3 pt-sm-0"> <h4><strong>Feature Two</strong></h4> <p>Separated they live in Bookmarksgrove</p></div></div><div class="row pt-3"> <div class="col-12 col-sm-6 col-xl-5"> <h4><strong>Feature Three</strong></h4> <p>A small river named Duden flows by me</p></div><div class="col-12 col-sm-6 col-xl-5 m-auto pt-3 pt-sm-0"> <h4><strong>Feature Four</strong></h4> <p>Separated they live in Bookmarksgrove</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 6',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-7
+  bm.add('froala-features-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12 col-sm-6 col-lg-5 col-xl-4 m-auto"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature 1</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts</p></div><div class="col-12 col-sm-6 col-lg-5 col-xl-4 m-auto pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature 2</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 7',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-8
+  bm.add('froala-features-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>Features</h1> <img alt="image" class="img-fluid mt-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_wide.svg"> </div></div><div class="row text-center justify-content-center mt-5"> <div class="col-12 col-sm-4 col-lg-3 m-md-auto"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature 1</strong></h3> </div><div class="col-12 col-sm-4 col-lg-3 m-auto pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature 2</strong></h3> </div><div class="col-12 col-sm-4 col-lg-3 m-auto pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature 3</strong></h3> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 8',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-9
+  bm.add('froala-features-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>Features</h1> </div></div><div class="row text-center justify-content-center mt-5"> <div class="col-12 col-sm-4 col-xl-3 m-md-auto"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature 1</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p></div><div class="col-12 col-sm-4 col-xl-3 m-auto pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature 2</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div><div class="col-12 col-sm-4 col-xl-3 m-auto pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature 3</strong></h3> <p>A small river named Duden flows by their place and supplies it with the necessary regelialia</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 9',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-10
+  bm.add('froala-features-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>Features</h1> </div></div><div class="row text-center justify-content-center mt-5"> <div class="col-12 col-sm-6 col-lg-3"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature One</strong></h3> <p>Far far away, behind the word mountains, far from the countries</p></div><div class="col-12 col-sm-6 col-lg-3 pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature Two</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast</p></div><div class="col-12 col-sm-6 col-lg-3 pt-4 pt-lg-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature Three</strong></h3> <p>A small river named Duden flows by their place and supplies it</p></div><div class="col-12 col-sm-6 col-lg-3 pt-4 pt-lg-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature Four</strong></h3> <p>Duden flows by their place far far away, behind the word mountains.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 10',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-11
+  bm.add('froala-features-style-11', {
+      label: 'Style 11',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>Features</h1> </div></div><div class="row text-left mt-5"> <div class="col-12 col-md-4"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature One</strong></h3> <p>Far far away, behind the word mountains, far from the countries</p></div></div></div><div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Two</strong></h3> <p>Even the all-powerful Pointing has no control about the blind texts.</p></div></div></div><div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Three</strong></h3> <p>A small river named Duden flows by their place and supplies it</p></div></div></div></div><div class="row text-left pt-3 pt-sm-4 pt-md-5"> <div class="col-12 col-md-4"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Four</strong></h3> <p>Duden flows by their place far far away, behind the word mountains.</p></div></div></div><div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Five</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast</p></div></div></div><div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Six</strong></h3> <p>On her way she met a copy. The copy warned the Little Blind Text.</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 11',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-12
+  bm.add('froala-features-style-12', {
+      label: 'Style 12',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>Features</h1> </div></div><div class="row text-left mt-5"> <div class="col-12 col-sm-6 col-lg-3"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature One</strong></h3> <p>Even the all-powerful Pointing has no control about the blind texts</p></div></div></div><div class="col-12 col-sm-6 col-lg-3 pt-3 pt-sm-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Two</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast</p></div></div></div><div class="col-12 col-sm-6 col-lg-3 pt-3 pt-lg-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Three</strong></h3> <p>A small river named Duden flows by their place and supplies it</p></div></div></div><div class="col-12 col-sm-6 col-lg-3 pt-3 pt-lg-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Four</strong></h3> <p>Far far away, behind the word mountains, far from the countries</p></div></div></div></div><div class="row text-left pt-3 pt-lg-5"> <div class="col-12 col-sm-6 col-lg-3"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Five</strong></h3> <p>On her way she met a copy. The copy warned the Little Blind Text.</p></div></div></div><div class="col-12 col-sm-6 col-lg-3 pt-3 pt-sm-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Six</strong></h3> <p>Far far away, behind the word mountains, far from the countries</p></div></div></div><div class="col-12 col-sm-6 col-lg-3 pt-3 pt-lg-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Seven</strong></h3> <p>Duden flows by their place far far away, behind the word mountains.</p></div></div></div><div class="col-12 col-sm-6 col-lg-3 pt-3 pt-lg-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Eight</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 12',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-13
+  bm.add('froala-features-style-13', {
+      label: 'Style 13',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pb-0"> <div class="container"> <div class="row text-lg-right align-items-center"> <div class="col-12 col-sm-6 col-lg-3"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4><strong>Feature One</strong></h4> <p>Far far away, behind the word mountains is hope.</p><img alt="image" class="fdb-icon mt-3 mt-xl-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4><strong>Feature Two</strong></h4> <p>On her way she met a copy of the Little Blind Text.</p><img alt="image" class="fdb-icon mt-3 mt-xl-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4><strong>Feature Three</strong></h4> <p>Even the all-powerful has no control about the blind texts</p></div><div class="col-12 col-sm-6 col-lg-3 text-left pt-3 pt-sm-0 order-lg-12"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4><strong>Feature Four</strong></h4> <p>Duden flows by their place, behind the word mountains.</p><img alt="image" class="fdb-icon mt-3 mt-xl-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4><strong>Feature Five</strong></h4> <p>Separated they live in Bookmark right at the coast</p><img alt="image" class="fdb-icon mt-3 mt-xl-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4><strong>Feature Six</strong></h4> <p>A small river named Duden flows by their place and supplies it</p></div><div class="col-7 col-sm-4 col-lg-4 m-auto pt-5 pt-lg-0 order-lg-1"> <img alt="image" class="img-fluid br-b-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_tall.png"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 13',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-14
+  bm.add('froala-features-style-14', {
+      label: 'Style 14',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pb-md-0"> <div class="container"> <div class="row text-right align-items-center"> <div class="col-7 col-md-4 m-auto"> <img alt="image" class="img-fluid br-b-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_tall.png"> </div><div class="col-12 col-md-7 col-lg-5 m-auto text-left pt-5 pt-md-0"> <div class="row pb-lg-5"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Seven</strong></h3> <p>Even the all-powerful Pointing has no control about the blind texts.</p></div></div><div class="row pt-4 pt-md-5 pb-lg-5"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Seven</strong></h3> <p>Duden flows by their place far far away, behind the word mountains.</p></div></div><div class="row pt-4 pt-md-5"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Seven</strong></h3> <p>A small river named Duden flows by their place and supplies it.</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 14',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-15
+  bm.add('froala-features-style-15', {
+      label: 'Style 15',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pb-0"> <div class="container"> <div class="row text-right align-items-center"> <div class="col-12 col-lg-6 col-xl-5 m-lg-auto text-left"> <h1>Features</h1> <p class="text-h3 pb-xl-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><div class="row pt-5"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences.</p></div></div><div class="row pt-5"> <div class="col-9 text-right"> <p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, there live the blind texts.</p></div><div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div></div></div><div class="col-7 col-sm-4 m-auto pt-5 pt-md-0"> <img alt="image" class="img-fluid br-b-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_tall.png"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 15',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-16
+  bm.add('froala-features-style-16', {
+      label: 'Style 16',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block pb-md-0"> <div class="container"> <div class="row justify-content-center pb-xl-5"> <div class="col-12 col-md-8 text-center"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div></div><div class="row text-right align-items-center-lg align-items-end pt-5"> <div class="col-7 col-sm-4 m-auto mb-md-0 mt-md-0 m-lg-auto"> <img alt="image" class="img-fluid br-b-0" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_tall.png"> </div><div class="col-12 col-md-7 col-lg-6 col-xl-5 m-auto text-left pt-5 pt-md-0"> <h3><strong>Feature One</strong></h3> <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences.</p><h3 class="mt-4 mt-xl-5"><strong>Feature Two</strong></h3> <p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, there live the blind texts.</p><h3 class="mt-4 mt-xl-5"><strong>Feature Three</strong></h3> <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 16',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-17
+  bm.add('froala-features-style-17', {
+      label: 'Style 17',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 text-left"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><img alt="image" class="img-fluid mt-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_wide.svg"> </div></div><div class="row text-left mt-5"> <div class="col-12 col-md-4"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature One</strong></h3> <p>Far far away, behind the word mountains, far from the countries</p></div></div></div><div class="col-12 col-md-4 pt-4 pt-md-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Two</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast</p></div></div></div><div class="col-12 col-md-4 pt-4 pt-md-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Three</strong></h3> <p>A small river named Duden flows by their place and supplies it</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 17',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-18
+  bm.add('froala-features-style-18', {
+      label: 'Style 18',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 text-center"> <h1>Features</h1> </div></div><div class="row text-center mt-5"> <div class="col-12 col-sm-4"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature One</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts</p></div><div class="col-12 col-sm-4 pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature Two</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. </p></div><div class="col-12 col-sm-4 pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature Three</strong></h3> <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country,</p></div></div><div class="row mt-5"> <div class="col-12"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_wide.svg"> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 18',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-19
+  bm.add('froala-features-style-19', {
+      label: 'Style 19',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 text-left"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div></div><div class="row text-left mt-5"> <div class="col-12 col-sm-8 col-md-4 col-lg-3 m-sm-auto mr-md-auto ml-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"> <h3><strong>Feature One</strong></h3> <p>Far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div><div class="col-12 col-sm-8 col-md-4 col-lg-3 m-sm-auto pt-5 pt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"> <h3><strong>Feature Two</strong></h3> <p> It is a paradisematic country, in which roasted parts of sentences fly into your mouth. Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life.</p></div><div class="col-12 col-sm-8 col-md-4 col-lg-3 m-sm-auto ml-md-auto mr-md-0 pt-5 pt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_3.svg"> <h3><strong>Feature Three</strong></h3> <p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 19',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-20
+  bm.add('froala-features-style-20', {
+      label: 'Style 20',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 text-left"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><img alt="image" class="img-fluid mt-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_wide.svg"> </div></div><div class="row text-left pt-5"> <div class="col-12 col-md-6"> <h3><strong>Feature One</strong></h3> <p>Far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane.</p><p><a href="#">Learn More &gt;</a></p></div><div class="col-12 col-md-6 pt-4 pt-md-0"> <h3><strong>Feature Two</strong></h3> <p> It is a paradisematic country, in which roasted parts of sentences fly into your mouth. Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli. On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin.</p><p><a href="#">Learn More &gt;</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 20',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-21
+  bm.add('froala-features-style-21', {
+      label: 'Style 21',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 text-left"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text.</p></div></div><div class="row text-left pt-5"> <div class="col-12 col-sm-6 col-md-5"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"> <h3><strong>Feature One</strong></h3> <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p></div><div class="col-12 col-sm-6 col-md-5 ml-sm-auto pt-5 pt-sm-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_4.svg"> <h3><strong>Feature Two</strong></h3> <p>It is a paradisematic country, in which roasted parts of sentences fly into your mouth. Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 21',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-22
+  bm.add('froala-features-style-22', {
+      label: 'Style 22',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center pb-5"> <div class="col-12 text-center"> <h1>Froala Design Blocks</h1> </div></div><div class="row text-left align-items-center pt-5 pb-md-5"> <div class="col-4 col-md-5"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"> </div><div class="col-12 col-md-5 m-md-auto"> <h2><strong>Feature One</strong></h2> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><p><a href="#">Learn More &gt;</a></p></div></div><div class="row text-left align-items-center pt-5 pb-md-5"> <div class="col-4 col-md-5 m-md-auto order-md-5"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_3.svg"> </div><div class="col-12 col-md-5"> <h2><strong>Feature Two</strong></h2> <p class="text-h3">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p><p><a href="#">Learn More &gt;</a></p></div></div><div class="row text-left align-items-center pt-5"> <div class="col-4 col-md-5"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"> </div><div class="col-12 col-md-5 m-md-auto"> <h2><strong>Feature Three</strong></h2> <p class="text-h3">On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around.</p><p><a href="#">Learn More &gt;</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 22',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-23
+  bm.add('froala-features-style-23', {
+      label: 'Style 23',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row"> <div class="col-12 col-md-10 col-lg-8 text-left"> <h1>Froala Design Blocks is simply ahead the word mountains</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p><p class="text-h3"><a href="#">Explore all features &gt;</a></p></div></div><div class="row text-center no-gutters pt-5"> <div class="col-12 col-md-10 col-lg-8"> <div class="row"> <div class="col-8 col-sm-5 col-md-2 m-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4>Feature One</h4> </div><div class="col-8 col-sm-5 col-md-2 m-auto pt-5 pt-sm-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4>Feature Two</h4> </div><div class="col-8 col-sm-5 col-md-2 m-auto pt-5 pt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4>Feature Three</h4> </div><div class="col-8 col-sm-5 col-md-2 m-auto pt-5 pt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h4>Feature Four</h4> </div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 23',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-24
+  bm.add('froala-features-style-24', {
+      label: 'Style 24',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-top"> <div class="col-12 col-md-6 col-xl-4 m-auto"> <h2>Learn more about the Froala Design Blocks you love</h2> </div><div class="col-12 col-md-6 pt-5 pt-md-0"> <div class="row justify-content-left"> <div class="col-3 m-auto text-center"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <p><a href="#">One &gt;</a></p></div><div class="col-3 m-auto text-center"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <p><a href="#">Two &gt;</a></p></div><div class="col-3 m-auto text-center"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <p><a href="#">Three &gt;</a></p></div></div><div class="row justify-content-left mt-4 mt-xl-5"> <div class="col-3 m-auto text-center"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <p><a href="#">Four &gt;</a></p></div><div class="col-3 m-auto text-center"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <p><a href="#">Five &gt;</a></p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 24',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-25
+  bm.add('froala-features-style-25', {
+      label: 'Style 25',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>There is a feature for everyone</h1> <p class="text-h3"><a href="#">See all features &gt;</a> </div></div><div class="row text-center justify-content-center mt-5"> <div class="col-10 col-sm-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"> <h3><strong>Feature One</strong></h3> </div><div class="col-10 col-sm-3 pt-5 pt-sm-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_4.svg"> <h3><strong>Feature Two</strong></h3> </div><div class="col-10 col-sm-3 pt-5 pt-sm-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"> <h3><strong>Feature Three</strong></h3> </div><div class="col-10 col-sm-3 pt-5 pt-sm-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_3.svg"> <h3><strong>Feature Four</strong></h3> </div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 25',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-26
+  bm.add('froala-features-style-26', {
+      label: 'Style 26',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row align-items-center pb-xl-5"> <div class="col-12 col-md-7 col-xl-5"> <h1>Froala Design Blocks</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div><div class="col-12 col-sm-6 col-md-4 m-sm-auto mr-md-0 ml-md-auto pt-4 pt-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"> </div></div><div class="row pt-5"> <div class="col-12 col-sm-6 col-md-3"> <h3><strong>Feature One</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large ocean.</p></div><div class="col-12 col-sm-6 col-md-3 pt-3 pt-sm-0"> <h3><strong>Feature Two</strong></h3> <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p></div><div class="col-12 col-sm-6 col-md-3 pt-3 pt-md-0"> <h3><strong>Feature Three</strong></h3> <p>It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p></div><div class="col-12 col-sm-6 col-md-3 pt-3 pt-md-0"> <h3><strong>Feature Four</strong></h3> <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 26',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-27
+  bm.add('froala-features-style-27', {
+      label: 'Style 27',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center pb-xl-5"> <div class="col-12 col-sm-11 text-center"> <h1>Froala Design Blocks</h1> <img alt="image" class="img-fluid mt-5" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_wide.svg"> </div></div><div class="row text-left justify-content-center pt-5"> <div class="col-12 col-md-6 col-lg-5 m-sm-auto"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature One</strong></h3> <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life.</p></div></div></div><div class="col-12 col-md-6 col-lg-5 m-sm-auto pt-3 pt-sm-5 pt-md-0"> <div class="row"> <div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> </div><div class="col-9"> <h3><strong>Feature Two</strong></h3> <p>Separated they live in Bookmarksgrove, right at the coast of the Semantics, a large language ocean.</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 27',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-28
+  bm.add('froala-features-style-28', {
+      label: 'Style 28',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12"> <h1>Features</h1> </div></div><div class="row text-center justify-content-center mt-5"> <div class="col-12 col-md-4 col-lg-3 m-md-auto"> <h3><strong>Feature 1</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p></div><div class="col-12 col-md-4 col-lg-3 m-md-auto pt-3 pt-md-0"> <h3><strong>Feature 2</strong></h3> <p>Separated they live in Bookmarksgrove right at the coast, a large language ocean.</p></div><div class="col-12 col-md-4 col-lg-3 m-md-auto pt-3 pt-md-0"> <h3><strong>Feature 3</strong></h3> <p>A small river named Duden flows by their place and supplies it with the necessary regelialia</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 28',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-29
+  bm.add('froala-features-style-29', {
+      label: 'Style 29',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12col-md-10 col-lg-8 text-center"> <h1>Froala Design Blocks</h1> </div></div><div class="row justify-content-center text-center mt-5"> <div class="col-12 col-sm-6 col-md-5 col-lg-3"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature one longer Text</strong></h3> </div><div class="col-12 col-sm-6 col-md-5 col-lg-3 pt-4 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Feature two shorter</strong></h3> </div></div><div class="row justify-content-center text-center mt-5 mt-md-4"> <div class="col-12 col-md-10 col-lg-8"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_very_wide.svg"> <p><em>Coming this fall</em></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 29',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-30
+  bm.add('froala-features-style-30', {
+      label: 'Style 30',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12 col-sm-6 col-md-3"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>The all-powerful Pointing has no control</strong></h3> <p class="mt-3"><a class="btn" href="#">Learn</a></p></div><div class="col-12 col-sm-6 col-md-3 pt-5 pt-sm-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>Far far away, behind the word mountains</strong></h3> <p class="mt-3"><a class="btn" href="#">Learn</a></p></div><div class="col-12 col-sm-6 col-md-3 pt-5 pt-md-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>The Big Oxmox advised her not to do so</strong></h3> <p class="mt-3"><a class="btn" href="#">Learn</a></p></div><div class="col-12 col-sm-6 col-md-3 pt-5 pt-md-0"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h3><strong>The copy warned the Little Blind Text</strong></h3> <p class="mt-3"><a class="btn" href="#">Learn</a></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 30',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-31
+  bm.add('froala-features-style-31', {
+      label: 'Style 31',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-center"> <div class="col-12 col-md-8 m-auto col-lg-4"> <div class="fdb-box fdb-touch"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h2>Feature 1</h2> <p>Far far away, behind the word mountains, far from the countries.</p></div></div><div class="col-12 col-md-8 m-auto col-lg-4 pt-5 pt-lg-0"> <div class="fdb-box fdb-touch"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h2>Feature 2</h2> <p>Separated they live in Bookmarksgrove right at the coast.</p></div></div><div class="col-12 col-md-8 m-auto col-lg-4 pt-5 pt-lg-0"> <div class="fdb-box fdb-touch"> <img alt="image" class="fdb-icon" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h2>Feature 3</h2> <p>A small river named Duden flows by their place and supplies.</p></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 31',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-32
+  bm.add('froala-features-style-32', {
+      label: 'Style 32',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-left"> <div class="col-12 col-md-8 m-auto col-lg-4"> <div class="fdb-box fdb-touch"> <h2>Feature 1</h2> <p>Far far away, behind the word mountains, far from the country Vokalia, there live the blind texts.</p><p><a href="#">Read more</a></p></div></div><div class="col-12 col-md-8 m-auto col-lg-4 pt-5 pt-lg-0"> <div class="fdb-box fdb-touch"> <h2>Feature 2</h2> <p>Separated they live in Bookmarks right at the coast of the Semantics, a large language ocean.</p><p><a href="#">Read more</a></p></div></div><div class="col-12 col-md-8 m-auto col-lg-4 pt-5 pt-lg-0"> <div class="fdb-box fdb-touch"> <h2>Feature 3</h2> <p>A small river named Duden flows by their small place and supplies it with the necessary regelialia.</p><p><a href="#">Read more</a></p></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 32',
+      },
+      category: 'Feature Blocks'
+  });
+
+  // Style-33
+  bm.add('froala-features-style-33', {
+      label: 'Style 33',
+      content: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css" rel="stylesheet" type="text/css">'+
+               '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>'+
+               '<section class="fdb-block"> <div class="container"> <div class="row text-left"> <div class="col-12 col-md-4"> <h2>Feature One</h2> <p><strong>Far far away</strong>, behind the word mountains, far from the countries <a href="#">Vokalia and Consonantia</a>, there live the blind texts.</p></div><div class="col-12 col-md-4 pt-5 pt-sm-4 pt-md-0"> <h2>Feature Two</h2> <p> A small river named Duden flows by their place and supplies it with the necessary regelialia.</p></div><div class="col-12 col-md-4 pt-5 pt-sm-4 pt-md-0"> <h2>Feature Three</h2> <p>Even the all-powerful Pointing has no control about the <strong>blind texts</strong> it is an almost unorthographic life.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-bolt',
+          title: 'Style 33',
+      },
+      category: 'Feature Blocks'
+  });
+
+
+  // Headers
+  //Style 1 
+  bm.add('froala-header-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><header> <div class="container text-center"> <nav class="navbar"> <a class="ml-auto mr-auto" href="https://www.froala.com"> <img src="https://github.com/froala/design-blocks/blob/master/dist/imgs/img_logo.png?raw=true" height="30" alt="image"> </a> </nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Header-1'
+      },
+      category: 'Headers'
+  });
+
+  //Style 2 
+  bm.add('froala-header-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><header> <div class="container"> <nav class="navbar navbar-expand-md"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav0" aria-controls="navbarNav0" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav0"> <ul class="navbar-nav mr-auto ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-2'
+      },
+      category: 'Headers'
+  });
+
+  //Style 3 
+  bm.add('froala-header-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'http://linerpro.ml/extra/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style><header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-3 text-left"> <a href="https://www.froala.com"> <img src="https://github.com/froala/design-blocks/blob/master/dist/imgs/img_logo.png?raw=true" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-4" aria-controls="navbarNav7" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse navbar-collapse-4 justify-content-center col-md-6" id="navbarNav7"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li></ul> </div><div class="collapse navbar-collapse navbar-collapse-4"> <ul class="navbar-nav ml-auto justify-content-end"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> <a class="btn ml-md-3" href="https://www.froala.com">Register</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-3'
+      },
+      category: 'Headers'
+  });
+
+
+  //Style 4 
+  bm.add('froala-header-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style><header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-2 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-3" aria-controls="navbarNav6" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse justify-content-center col-md-8 navbar-collapse-3"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li></ul> </div><div class="collapse navbar-collapse justify-content-end col-md-2 navbar-collapse-3"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-4'
+      },
+      category: 'Headers'
+  });
+
+  //Style 5 
+  bm.add('froala-header-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-lg"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav13" aria-controls="navbarNav13" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav13"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end ml-auto"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Docs</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> <a class="btn btn-white ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-5'
+      },
+      category: 'Headers'
+  });
+
+  
+  //Style 6 
+  bm.add('froala-header-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-2 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav12" aria-controls="navbarNav12" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse justify-content-center col-md-8" id="navbarNav12"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div><ul class="navbar-nav col-2 justify-content-end d-none d-md-flex"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-facebook"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-google"></i></a> </li></ul> </nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-6'
+      },
+      category: 'Headers'
+  });
+
+
+  //Style 7 
+  bm.add('froala-header-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav10" aria-controls="navbarNav10" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="col-4 col-sm-2 text-center order-lg-6"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><div class="collapse navbar-collapse col-12 col-md-5 order-lg-1" id="navbarNav10"> <ul class="navbar-nav col-5"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div><ul class="navbar-nav justify-content-end col-sm-5 order-lg-12 d-none d-md-flex"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li></ul> </nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-7'
+      },
+      category: 'Headers'
+  });
+
+  //Style 8 
+  bm.add('froala-header-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>   <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav11" aria-controls="navbarNav11" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav11"> <ul class="navbar-nav ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> <a class="btn btn-white btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-8'
+      },
+      category: 'Headers'
+  });
+
+  //Style 9 
+  bm.add('froala-header-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav9" aria-controls="navbarNav9" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav9"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end d-none d-lg-flex ml-md-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li></ul> <a class="btn btn-white btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-9'
+      },
+      category: 'Headers'
+  });
+
+  //Style 10 
+  bm.add('froala-header-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav8" aria-controls="navbarNav8" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav8"> <ul class="navbar-nav mr-auto ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-10'
+      },
+      category: 'Headers'
+  });
+
+
+  //Style 11 
+  bm.add('froala-header-style-11', {
+      label: 'Style 11',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"><div class="container text-center"><nav class="navbar"><a class="ml-auto mr-auto" href="https://www.froala.com"><img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"></a></nav></div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-11'
+      },
+      category: 'Headers'
+  });
+
+  //Style 12 
+  bm.add('froala-header-style-12', {
+      label: 'Style 12',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <header class="bg-dark"> <div class="container"> <nav class="navbar"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-12'
+      },
+      category: 'Headers'
+  });
+
+
+ //Style 13 
+  bm.add('froala-header-style-13', {
+      label: 'Style 13',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>   <header> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-3 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-2" aria-controls="navbarNav7" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse navbar-collapse-2 justify-content-center col-md-6" id="navbarNav7"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li></ul> </div><div class="collapse navbar-collapse navbar-collapse-2"> <ul class="navbar-nav ml-auto justify-content-end"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> <a class="btn ml-md-3" href="https://www.froala.com">Register</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-13'
+      },
+      category: 'Headers'
+  });
+
+  //Style 14 
+  bm.add('froala-header-style-14', {
+      label: 'Style 14',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>    <header> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-2 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-1" aria-controls="navbarNav6" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse justify-content-center col-md-8 navbar-collapse-1"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li></ul> </div><div class="collapse navbar-collapse justify-content-end col-md-2 navbar-collapse-1"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In &rarr;</a> </li></ul> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-14'
+      },
+      category: 'Headers'
+  });
+
+
+  //Style 15 
+  bm.add('froala-header-style-15', {
+      label: 'Style 15',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>    <header> <div class="container"> <nav class="navbar navbar-expand-lg"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav5" aria-controls="navbarNav5" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav5"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end ml-auto"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Docs</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> <a class="btn ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-15'
+      },
+      category: 'Headers'
+  });
+
+  //Style 16 
+  bm.add('froala-header-style-16', {
+      label: 'Style 16',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>    <header> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-2 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav4" aria-controls="navbarNav4" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse justify-content-center col-md-8" id="navbarNav4"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div><ul class="navbar-nav col-2 justify-content-end d-none d-md-flex"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-facebook"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-google"></i></a> </li></ul> </nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-16'
+      },
+      category: 'Headers'
+  });
+
+   //Style 17 
+  bm.add('froala-header-style-17', {
+      label: 'Style 17',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>     <header> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav3" aria-controls="navbarNav3" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav3"> <ul class="navbar-nav ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> <a class="btn btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-17'
+      },
+      category: 'Headers'
+  });
+
+
+  //Style 18 
+  bm.add('froala-header-style-18', {
+      label: 'Style 18',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>     <header> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav3" aria-controls="navbarNav3" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav3"> <ul class="navbar-nav ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> <a class="btn btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-18'
+      },
+      category: 'Headers'
+  });
+
+  //Style 18 
+  bm.add('froala-header-style-18', {
+      label: 'Style 18',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>      <header> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="col-4 col-md-2 text-right text-md-center order-lg-6"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><div class="collapse navbar-collapse col-12 col-md-5 order-lg-1" id="navbarNav2"> <ul class="navbar-nav col-5"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div><ul class="navbar-nav justify-content-end col-sm-5 order-lg-12 d-none d-md-flex"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li></ul> </nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-18'
+      },
+      category: 'Headers'
+  });
+
+  //Style 19 
+  bm.add('froala-header-style-19', {
+      label: 'Style 19',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>      <header> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav1" aria-controls="navbarNav1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav1"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end d-none d-lg-flex ml-md-auto"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li></ul> <a class="btn btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-19'
+      },
+      category: 'Headers'
+  });
+
+  //Style 20 
+  bm.add('froala-header-style-20', {
+      label: 'Style 20',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>      <header> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav1" aria-controls="navbarNav1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav1"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end d-none d-lg-flex ml-md-auto"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li></ul> <a class="btn btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-20'
+      },
+      category: 'Headers'
+  });
+
+
+  //Style 21 
+  bm.add('froala-header-style-21', {
+      label: 'Style 21',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>      <header> <div class="container"> <nav class="navbar navbar-expand-md"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav0" aria-controls="navbarNav0" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav0"> <ul class="navbar-nav mr-auto ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div></nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-21'
+      },
+      category: 'Headers'
+  });
+
+  //Style 22 
+  bm.add('froala-header-style-22', {
+      label: 'Style 22',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>   <header> <div class="container text-center"> <nav class="navbar"> <a class="ml-auto mr-auto" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </nav> </div></header>',
+      attributes: {
+          class: 'fa fa-header',
+          title: 'Froala-Header-layout-22'
+      },
+      category: 'Headers'
+  });
+
+  // Footers
+  // Style 1
+  bm.add('froala-footer-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style><footer class="fdb-block footer-small"> <div class="container"> <div class="row text-center"> <div class="col"> <p>&copy; 2017 Froala. All Rights Reserved</p></div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 1'
+      },
+      category: 'Footers'
+  });
+
+  // Style 2
+  bm.add('froala-footer-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style><footer class="fdb-block footer-small bg-dark"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-8"> <ul class="nav justify-content-center justify-content-md-start"> <li class="nav-item"> <a class="nav-link active" href="https://www.froala.com">Home</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> </div><div class="col-12 col-md-4 mt-4 mt-md-0 text-center text-md-right"> &copy; 2017 Froala. All Rights Reserved </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 2'
+      },
+      category: 'Footers'
+  });
+
+  // Style 3
+  bm.add('froala-footer-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-small"> <div class="container"> <div class="row text-center align-items-center"> <div class="col-12 col-md-8"> <ul class="nav justify-content-center justify-content-md-start align-items-center"> <li class="nav-item"> <a class="nav-link active" href="https://www.froala.com"> <img alt="image" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="40"> </a> </li><li class="w-100 d-block d-sm-none"></li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> </div><div class="col-12 col-md-4 mt-4 mt-md-0 text-md-right"> &copy; 2013-2017 Froala </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 3'
+      },
+      category: 'Footers'
+  });
+
+  // Style 4
+  bm.add('froala-footer-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-small"> <div class="container"> <div class="row text-center align-items-center"> <div class="col-12 col-sm-6 col-md-4 text-sm-left"> <img alt="image" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="40"> </div><div class="col-12 col-sm-6 col-md-4 mt-4 mt-sm-0 text-center text-sm-right text-md-center"> &copy; 2013-2017 Froala </div><div class="col-12 col-md-4 mt-4 mt-md-0 text-center text-md-right"> <a href="https://www.froala.com"><i class="fa fa-twitter" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-facebook" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-instagram" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-google" aria-hidden="true"></i></a> </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 4'
+      },
+      category: 'Footers'
+  });
+
+  // Style 5
+  bm.add('froala-footer-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <footer class="fdb-block footer-small"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-6"> <ul class="nav justify-content-center justify-content-md-start"> <li class="nav-item"> <a class="nav-link active" href="https://www.froala.com">Home</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> </div><div class="col-12 col-md-6 mt-4 mt-md-0 text-center text-md-right"> <a href="https://www.froala.com"><i class="fa fa-twitter" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-facebook" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-instagram" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-google" aria-hidden="true"></i></a> </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 5'
+      },
+      category: 'Footers'
+  });
+
+  // Style 6
+  bm.add('froala-footer-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-small bg-dark"> <div class="container"> <div class="row text-center align-items-center"> <div class="col"> <ul class="nav justify-content-center"> <li class="nav-item"> <a class="nav-link active" href="https://www.froala.com">Home</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Privacy Policy</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> <p class="text-h5 mt-5">&copy; 2013-2017 Froala</p></div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 6'
+      },
+      category: 'Footers'
+  });
+
+  // Style 7
+  bm.add('froala-footer-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-small"> <div class="container"> <div class="row text-center align-items-center"> <div class="col-12 col-lg-2 text-lg-left"> <img alt="image" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="40"> </div><div class="col mt-4 mt-lg-0 text-center"> <ul class="nav justify-content-center"> <li class="nav-item"> <a class="nav-link active" href="https://www.froala.com">Home</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Privacy Policy</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> </div><div class="col-12 col-lg-2 mt-4 mt-lg-0 text-lg-right"> <a href="https://www.froala.com"><i class="fa fa-twitter" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-facebook" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-instagram" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-google" aria-hidden="true"></i></a> </div></div><div class="row mt-4"> <div class="col text-center"> &copy; 2017 Froala. All Rights Reserved </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 7'
+      },
+      category: 'Footers'
+  });
+
+  // Style 8
+  bm.add('froala-footer-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <footer class="fdb-block footer-small"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-6"> <ul class="nav justify-content-center justify-content-md-start"> <li class="nav-item"> <a class="nav-link active" href="https://www.froala.com">Home</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> </div><div class="col mt-4 mt-md-0 text-center text-md-right"> <a href="https://www.froala.com" class="btn">Contact Us</a> </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 8'
+      },
+      category: 'Footers'
+  });
+
+  // Style 9
+  bm.add('froala-footer-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-large"> <div class="container"> <div class="row align-items-top text-center"> <div class="col-12 col-sm-6 col-md-4 col-lg-3 text-sm-left"> <h3><strong>Group 1</strong></h3> <nav class="nav flex-column"> <a class="nav-link active" href="https://www.froala.com">Home</a> <a class="nav-link" href="https://www.froala.com">Features</a> <a class="nav-link" href="https://www.froala.com">Pricing</a> <a class="nav-link" href="https://www.froala.com">Team</a> <a class="nav-link" href="https://www.froala.com">Contact Us</a> </nav> </div><div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-5 mt-sm-0 text-sm-left"> <h3><strong>Group 2</strong></h3> <nav class="nav flex-column"> <a class="nav-link active" href="https://www.froala.com">Privacy Policy</a> <a class="nav-link" href="https://www.froala.com">Terms</a> <a class="nav-link" href="https://www.froala.com">FAQ</a> <a class="nav-link" href="https://www.froala.com">Support</a> </nav> </div><div class="col-12 col-md-4 col-lg-3 text-md-left mt-5 mt-md-0"> <h3><strong>About Us</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div><div class="col-12 col-lg-2 ml-auto text-lg-left mt-4 mt-lg-0"> <h3><strong>Follow Us</strong></h3> <p class="text-h3"> <a href="https://www.froala.com"><i class="fa fa-twitter" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-facebook" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-instagram" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-google" aria-hidden="true"></i></a> </p></div></div><div class="row mt-3"> <div class="col text-center"> &copy; 2017 Froala. All Rights Reserved </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 9'
+      },
+      category: 'Footers'
+  });
+
+  // Style 10
+  bm.add('froala-footer-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-large bg-dark"> <div class="container"> <div class="row align-items-top text-center text-md-left"> <div class="col-12 col-sm-6 col-md-4"> <h3><strong>Country A</strong></h3> <p>Street Address 52<br>Contact Name</p><p>+44 827 312 5002</p><p><a href="https://www.froala.com">countrya@amazing.com</a></p></div><div class="col-12 col-sm-6 col-md-4 mt-4 mt-sm-0"> <h3><strong>Country B</strong></h3> <p>Street Address 100<br>Contact Name</p><p>+13 827 312 5002</p><p><a href="https://www.froala.com">countryb@amazing.com</a></p></div><div class="col-12 col-md-4 mt-5 mt-md-0 text-md-left"> <h3><strong>About Us</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div></div><div class="row mt-5"> <div class="col text-center"> &copy; 2017 Froala. All Rights Reserved </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 10'
+      },
+      category: 'Footers'
+  });
+
+  // Style 11
+  bm.add('froala-footer-style-11', {
+      label: 'Style 11',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <footer class="fdb-block footer-small"> <div class="container"> <div class="row align-items-center text-center"> <div class="col-12 col-lg-4 text-lg-left"> &copy; 2017 Froala </div><div class="col-12 col-lg-4 mt-4 mt-lg-0"> <img alt="image" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="40"> </div><div class="col-12 col-lg-4 text-lg-right mt-4 mt-lg-0"> <ul class="nav justify-content-lg-end justify-content-center"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Privacy</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> </div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 11'
+      },
+      category: 'Footers'
+  });
+
+  // Style 12
+  bm.add('froala-footer-style-12', {
+      label: 'Style 12',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <footer class="fdb-block footer-large"> <div class="container"> <div class="row text-center"> <div class="col"> <h3>Company Name</h3> <p>70 Bowman St.<br>South Windsor, CT 06074</p><p>USA</p><p>+13 827 312 5002</p></div></div><div class="row mt-4"> <div class="col text-center"> <p class="text-h3"> <a href="https://www.froala.com"><i class="fa fa-twitter" aria-hidden="true"></i></a> &nbsp; &nbsp; <a href="https://www.froala.com"><i class="fa fa-facebook" aria-hidden="true"></i></a> &nbsp; &nbsp; <a href="https://www.froala.com"><i class="fa fa-instagram" aria-hidden="true"></i></a> &nbsp; &nbsp; <a href="https://www.froala.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a> &nbsp; &nbsp; <a href="https://www.froala.com"><i class="fa fa-google" aria-hidden="true"></i></a> </p></div></div></div></footer>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 12'
+      },
+      category: 'Footers'
+  });
+
+
+
+
+
+
+  // Form Controls
+  // Style 1
+  bm.add('froala-forms-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-6 text-center"> <h1>Subscribe</h1> <div class="input-group mt-4 mb-4"> <input type="text" class="form-control" placeholder="Enter your email address"> <span class="input-group-btn"> <button class="btn" type="button">Submit</button> </span> </div><p class="text-h4">Find us on <a href="https://www.froala.com">Facebook</a> and <a href="https://www.froala.com">Twitter</a>.</p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 1'
+      },
+      category: 'Designed Forms'
+  });
+
+  // Style 2
+  bm.add('froala-forms-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(./imgs/bg_2.svg)"> <div class="container"> <div class="fdb-box"> <div class="row justify-content-center align-items-center"> <div class="col-12 col-lg-6"> <h2>Join us!</h2> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. </p></div><div class="col-12 col-lg-5 text-center"> <div class="input-group mt-4"> <input type="text" class="form-control" placeholder="Enter your email address"> <span class="input-group-btn"> <button class="btn" type="button">Submit</button> </span> </div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 2'
+      },
+      category: 'Designed Forms'
+  });
+
+  // Style 3
+  bm.add('froala-forms-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-lg-10 col-xl-8 text-center"> <div class="row"> <div class="col"> <h1>Register</h1> <p class="text-h3">When she reached the first hills, she had a last view back on the skyline of her hometown.</p></div></div><div class="row align-items-center"> <div class="col-12 col-md-5 mt-4"> <input type="text" class="form-control" placeholder="Email"> </div><div class="col-12 col-md-5 mt-4"> <input type="password" class="form-control" placeholder="Password"> </div><div class="col-12 col-md-2 mt-4"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 3'
+      },
+      category: 'Designed Forms'
+  });
+
+
+   // Style 4
+  bm.add('froala-forms-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(./imgs/alt_wide_1.svg)"> <div class="container"> <div class="row"> <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-left"> <div class="row"> <div class="col"> <h1>Sign Up</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. </p></div></div><div class="row"> <div class="col mt-4"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control" placeholder="Password"> </div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 4'
+      },
+      category: 'Designed Forms'
+  });
+
+   // Style 5
+  bm.add('froala-forms-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(./imgs/bg_4.svg)"> <div class="container"> <div class="row justify-content-end"> <div class="col-12 col-md-8 col-lg-6 col-xl-5 text-left"> <div class="fdb-box"> <div class="row"> <div class="col"> <h1>Log In</h1> <p class="text-h3">Right at the coast of the Semantics, a large language ocean. A small river named Duden.</p></div></div><div class="row"> <div class="col mt-4"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control" placeholder="Password"> </div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 5'
+      },
+      category: 'Designed Forms'
+  });
+
+   // Style 6
+  bm.add('froala-forms-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-8 col-xl-6"> <div class="row"> <div class="col text-center"> <h1>Register</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. </p></div></div><div class="row align-items-center"> <div class="col mt-4"> <input type="text" class="form-control" placeholder="Company Name"> </div></div><div class="row align-items-center mt-4"> <div class="col"> <input type="email" class="form-control" placeholder="Email"> </div></div><div class="row align-items-center mt-4"> <div class="col"> <input type="password" class="form-control" placeholder="Password"> </div><div class="col"> <input type="password" class="form-control" placeholder="Confirm Password"> </div></div><div class="row justify-content-start mt-4"> <div class="col"> <div class="form-check"> <label class="form-check-label"> <input type="checkbox" class="form-check-input"> I Read and Accept <a href="https://www.froala.com">Terms and Conditions</a> </label> </div><button class="btn mt-4">Submit</button> </div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 6'
+      },
+      category: 'Designed Forms'
+  });
+
+   // Style 7
+  bm.add('froala-forms-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block" style="background-image: url(./imgs/bg_0.svg)"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Log In</h1> </div></div><div class="row mt-4"> <div class="col"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control mb-1" placeholder="Password"> <p class="text-right"><a href="https://www.froala.com">Recover Password</a></p></div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 7'
+      },
+      category: 'Designed Forms'
+  });
+
+  // Style 8
+  bm.add('froala-forms-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-7 col-md-5 text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Register</h1> </div></div><div class="row"> <div class="col mt-4"> <input type="text" class="form-control" placeholder="Name"> </div></div><div class="row mt-4"> <div class="col"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control mb-1" placeholder="Password"> <p class="text-right"><a href="https://www.froala.com">Already have an account?</a></p></div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 8'
+      },
+      category: 'Designed Forms'
+  });
+
+   // Style 9
+  bm.add('froala-forms-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style><section class="fdb-block bg-gray"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center"> <img alt="image" height="40" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <h1>Never miss an update</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p><div class="input-group mt-4 mb-4"> <input type="text" class="form-control" placeholder="Enter your email address"> <span class="input-group-btn"> <button class="btn" type="button">Submit</button> </span> </div><p class="text-h5"><em>*Your email address is safe with us. We never share your email address.</em></p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 9'
+      },
+      category: 'Designed Forms'
+  });
+
+  // Style 10
+  bm.add('froala-forms-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style><section class="fdb-block"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center"> <h1>Company Name</h1> <p class="text-h3">When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown.</p><div class="input-group mt-5 mb-5"> <input type="text" class="form-control" placeholder="Enter your email address"> <span class="input-group-btn"> <button class="btn" type="button">Submit</button> </span> </div><p class="text-h2"> <a href="https://www.froala.com"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-instagram"></i></a>&nbsp;&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-google"></i></a>&nbsp;&nbsp;&nbsp; <a href="https://www.froala.com"><i class="fa fa-pinterest"></i></a> </p></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 10'
+      },
+      category: 'Designed Forms'
+  });
+
+  // Style 11
+  bm.add('froala-forms-style-11', {
+      label: 'Style 11',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block"> <div class="container"> <div class="row"> <div class="col-12 col-md-6 m-md-auto ml-lg-0 col-lg-5"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"> </div><div class="col-12 col-md-10 col-lg-6 mt-4 mt-lg-0 ml-auto mr-auto ml-lg-auto text-left"> <div class="row"> <div class="col"> <h1>Subscribe</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. </p></div></div><div class="row mt-4"> <div class="col"> <div class="input-group"> <input type="text" class="form-control" placeholder="Enter your email address"> <span class="input-group-btn"> <button class="btn" type="button">Submit</button> </span> </div></div></div><div class="row"> <div class="col"> <p class="text-h4">* Leave your email address to be notified first.</p></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 11'
+      },
+      category: 'Designed Forms'
+  });
+
+   // Style 12
+  bm.add('froala-forms-style-12', {
+      label: 'Style 12',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block" style="background-image: url(//s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_c_2.svg);"> <div class="container"> <div class="row justify-content-end"> <div class="col-12 col-md-9 col-lg-8"> <div class="fdb-box fdb-touch"> <div class="row justify-content-center"> <div class="col-12 col-lg-10"> <h1>Subscribe</h1> <p class="text-h3">When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove.</p></div></div><div class="row justify-content-center mt-4"> <div class="col-12 col-lg-10"> <div class="input-group"> <input type="text" class="form-control" placeholder="Enter your email address"> <span class="input-group-btn"> <button class="btn" type="button">Submit</button> </span> </div></div></div></div></div></div></div></section>',
+      attributes: {
+          class: 'fa fa-square-o',
+          title: 'Style 12'
+      },
+      category: 'Designed Forms'
+  });
+
+
+
+
+
+
+
+  // Pricing Tables
+  //Style 1
+  bm.add('froala-pricing-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing</h1></div></div><div class="row mt-5 align-items-center"><div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center"><div class="bg-dark pb-5 pt-5 pl-3 pr-3 br"><h2 class="font-weight-light">Hobby</h2><p class="text-h2"><strong>$9 / month</strong></p><p class="text-h3">Even the all-powerful Pointing has no control about the blind texts.</p><ul class="text-left mt-5 mb-5"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p><a href="https://www.froala.com" class="btn mt-4">Subscribe</a></p></div></div><div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0"><div class="bg-dark pb-5 pt-5 pl-3 pr-3 fdb-touch br"><h2 class="font-weight-light">Professional</h2><p class="text-h2"><strong>$19 / month</strong></p><p class="text-h3">Far far away, behind the word mountains, far from the countries.</p><ul class="text-left mt-5 mb-5"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p><a href="https://www.froala.com" class="btn mt-4">Subscribe</a></p></div></div><div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0"><div class="bg-dark pb-5 pt-5 pl-3 pr-3 br"><h2 class="font-weight-light">Business</h2><p class="text-h2"><strong>$49 / month</strong></p><p class="text-h3">Wild Question Marks, but the Little Blind Text didn’t listen.</p><ul class="text-left mt-5 mb-5"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p><a href="https://www.froala.com" class="btn mt-4">Subscribe</a></p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 1',
+      },
+      category: 'Pricing Tables'
+  });
+
+  //Style 2
+  bm.add('froala-pricing-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing</h1></div></div><div class="row mt-5 align-items-center"><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left"><div class="fdb-box fdb-touch p-5 br"><h2>Hobby <strong class="float-xl-right d-lg-block d-xl-inline">$99</strong></h2><p class="text-h3"><em>Copy Writers ambushed her, made her drunk with Longe.</em></p><ul class="text-left pl-3 mt-5 mb-5"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p class="text-left pt-4"><a href="https://www.froala.com" class="btn">Buy Now</a></p></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left pt-4 pt-lg-0"><div class="fdb-box fdb-touch p-5 br"><h2>Advanced <strong class="float-xl-right d-lg-block d-xl-inline">$349</strong></h2><p class="text-h3"><em>Separated they live in Bookmarks right at the coast.</em></p><ul class="text-left pl-3 mt-5 mb-5"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p class="text-left pt-4"><a href="https://www.froala.com" class="btn">Buy Now</a></p></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left pt-4 pt-lg-0"><div class="fdb-box fdb-touch p-5 br"><h2>Business <strong class="float-xl-right d-lg-block d-xl-inline">$849</strong></h2><p class="text-h3"><em>A small river named Duden flows by their place.</em></p><ul class="text-left pl-3 mt-5 mb-5"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p class="text-left pt-4"><a href="https://www.froala.com" class="btn">Buy Now</a></p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 2',
+      },
+      category: 'Pricing Tables'
+  });
+
+  // Style 3
+  bm.add('Ffroala-pricing-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block bg-dark" style="background-image: url(//s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_0.svg);"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing</h1></div></div><div class="row mt-5 align-items-center"><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-center"><div class="fdb-box fdb-touch p-4 br"><h2>Hobby</h2><p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p><p class="text-h1 mt-5 mb-5">$99</p><p><a href="https://www.froala.com" class="btn">Buy Now</a></p></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0"><div class="fdb-box fdb-touch p-4 br"><h2>Advanced</h2><p class="text-h3">Separated they live in Bookmarksgrove right at the coast, a large language ocean.</p><p class="text-h1 mt-5 mb-5">$299</p><p><a href="https://www.froala.com" class="btn">Buy Now</a></p></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0"><div class="fdb-box fdb-touch p-4 br"><h2>Business</h2><p class="text-h3">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life.</p><p class="text-h1 mb-5 mt-5">$799</p><p><a href="https://www.froala.com" class="btn">Buy Now</a></p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 3',
+      },
+      category: 'Pricing Tables'
+  });
+
+  //Style 4
+  bm.add('froala-pricing-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing Plans</h1></div></div><div class="row mt-5 align-items-top"><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left"><div class="bg-gray pb-5 pt-5 pl-4 pr-4 br"><h2 class="font-weight-light">Startup</h2><hr><p class="text-h2"><strong>$9.90</strong></p><p class="text-h4">Far far away, behind the word mountains, far from the countries.</p><hr><p class="text-right"><em>Unlimited calls</em></p><p class="text-right"><em>Free hosting</em></p><p class="text-right"><em>40MB of storage</em></p><p><br></p><p><br></p><p><br></p><p class="text-center pt-4"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left pt-4 pt-lg-0"><div class="bg-gray pb-5 pt-5 pl-4 pr-4 br"><h2 class="font-weight-light">Standard</h2><hr><p class="text-h2"><strong>$29.90</strong></p><p class="text-h4">The copy warned the Blind Text, that it would have been rewritten</p><hr><p class="text-right"><em>Unlimited calls</em></p><p class="text-right"><em>Free hosting</em></p><p class="text-right"><em>1GB of storage</em></p><p class="text-right"><em>10 hours of support</em></p><p class="text-right"><em>Custom domain</em></p><p><br></p><p class="text-center pt-4"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left pt-4 pt-lg-0"><div class="bg-gray pb-5 pt-5 pl-4 pr-4 br"><h2 class="font-weight-light">Professional</h2><hr><p class="text-h2"><strong>$59.90</strong></p><p class="text-h4"> the headline of Alphabet Village and the subline of her own road.</p><hr><p class="text-right"><em>Unlimited calls</em></p><p class="text-right"><em>Free hosting</em></p><p class="text-right"><em>1GB of storage</em></p><p class="text-right"><em>20 hours of support</em></p><p class="text-right"><em>Custom domain</em></p><p class="text-right"><em>Analytics and SEO</em></p><p class="text-center pt-4"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 4',
+      },
+      category: 'Pricing Tables'
+  });
+
+  //Style 5
+  bm.add('froala-pricing-style-5', {
+      label: 'Style 5',
+      content:'<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block bg-dark" style="background-image: url(//s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_1.svg)"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing Plans</h1></div></div><div class="row mt-5 align-items-center no-gutters"><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-center"><div class="bg-gray pb-5 pt-5 pl-4 pr-4"><h2 class="font-weight-light">Basic</h2><p class="text-h1 mt-5 mb-5"><strong>$19</strong> <span class="text-h4">/month</span></p><ul class="text-left"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p class="text-center pt-4"><a href="https://www.froala.com" class="btn btn-round btn-white btn-shadow">Choose Plan</a></p></div></div><div class="col-12 col-sm-10 col-md-8 ml-auto mr-auto col-lg-4 text-center mt-4 mt-lg-0 sl-1 pt-0 pt-lg-3 pb-0 pb-lg-3 bg-gray fdb-touch"><div class="pb-5 pt-5 pl-4 pr-4"><h2 class="font-weight-light">Standard</h2><p class="text-h1 mt-5 mb-5"><strong>$49</strong> <span class="text-h4">/month</span></p><ul class="text-left"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p class="text-center pt-4"><a href="https://www.froala.com" class="btn btn-round btn-shadow">Choose Plan</a></p></div></div><div class="col-12 col-sm-10 col-md-8 ml-auto mr-auto col-lg-4 text-center mt-4 mt-lg-0"><div class="bg-gray pb-5 pt-5 pl-4 pr-4"><h2 class="font-weight-light">OEM</h2><p class="text-h1 mt-5 mb-5"><strong>$99</strong> <span class="text-h4">/month</span></p><ul class="text-left"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul><p class="text-center pt-4"><a href="https://www.froala.com" class="btn btn-round btn-white btn-shadow">Choose Plan</a></p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 5',
+      },
+      category: 'Pricing Tables'
+  });
+
+  //Style 6
+  bm.add('froala-pricing-style-6', {
+     label: 'Style 6',
+     content:'<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing Plans</h1></div></div><div class="row mt-5 align-items-top"><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left"><div class="br"><div class="bg-dark p-3 text-center"><h2 class="font-weight-light">Startup</h2><p class="text-h2"><strong>$9.90</strong></p></div><div class="bg-gray p-5 text-center"><p><img alt="image" height="40" src=" https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></p><p class="text-h4"><strong>For small companies</strong></p><p><br></p><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p><p class="text-center pt-5"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left pt-4 pt-lg-0"><div class="br"><div class="bg-dark p-3 text-center"><h2 class="font-weight-light">Standard</h2><p class="text-h2"><strong>$19.90</strong></p></div><div class="bg-gray p-5 text-center"><p><img alt="image" height="40" src=" https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></p><p class="text-h4"><strong>For medium companies</strong></p><p><br></p><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p><p class="text-center pt-5"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-left pt-4 pt-lg-0"><div class="br"><div class="bg-dark p-3 text-center"><h2 class="font-weight-light">Business</h2><p class="text-h2"><strong>$29.90</strong></p></div><div class="bg-gray p-5 text-center"><p><img alt="image" height="40" src=" https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></p><p class="text-h4"><strong>For large companies</strong></p><p><br></p><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p><p class="text-center pt-5"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div></div></div></div></div> </section>',
+     attributes: {
+         class: 'fa fa-money',
+         title: 'Style 6',
+     },
+     category: 'Pricing Tables'
+  });
+
+  //Style 7
+  bm.add('froala-pricing-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing Plans</h1></div></div><div class="row mt-5 align-items-top"><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-center"><div class="bg-gray pb-5 pt-5 pl-4 pr-4 br"><h3><strong>Startup</strong></h3><p class="text-h4">&lt; 10 employees</p><p class="text-h1 mt-5">$9.90 <span class="text-h3">/ month</span></p><p>Far far away, behind the word mountains, far from the countries.</p><hr><p><em>Unlimited calls</em></p><p><em>Free hosting</em></p><p><em>40MB of storage</em></p><p class="text-center pt-5"><a href="https://www.froala.com" class="btn btn-round">Subscribe</a></p></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0"><div class="bg-gray pb-5 pt-5 pl-4 pr-4 br"><h3><strong>Agency</strong></h3><p class="text-h4">10-100 employees</p><p class="text-h1 mt-5">$19.90 <span class="text-h3">/ month</span></p><p>And if she hasn’t been rewritten, then they are still using her.</p><hr><p><em>Unlimited calls</em></p><p><em>Free hosting</em></p><p><em>40MB of storage</em></p><p class="text-center pt-5"><a href="https://www.froala.com" class="btn btn-round">Subscribe</a></p></div></div><div class="col-12 col-sm-10 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0"><div class="bg-gray pb-5 pt-5 pl-4 pr-4 br"><h3><strong>Business</strong></h3><p class="text-h4">>100 employees</p><p class="text-h1 mt-5">$99.90 <span class="text-h3">/ month</span></p><p>Separated they live in Bookmarksgrove right at the coast of the Semantics.</p><hr><p><em>Unlimited calls</em></p><p><em>Free hosting</em></p><p><em>40MB of storage</em></p><p class="text-center pt-5"><a href="https://www.froala.com" class="btn btn-round">Subscribe</a></p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 7',
+      },
+      category: 'Pricing Tables'
+  });
+
+  //Style 8
+  bm.add('froala-pricing-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing Plans</h1></div></div><div class="row mt-5 align-items-top"><div class="col-12 col-md-8 m-auto col-lg-4 text-center"> <img alt="image" height="80" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h2><strong>Startup</strong></h2><p class="text-h3 mb-4 mb-lg-5"><em>$9 / month</em></p><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p><p class="text-center mt-4 mt-lg-5"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div><div class="col-12 col-md-8 col-lg-4 text-center m-auto pt-5 pt-lg-0"> <img alt="image" height="80" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h2><strong>Advanced</strong></h2><p class="text-h3 mb-4 mb-lg-5"><em>$19 / month</em></p><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p><p class="text-center mt-4 mt-lg-5"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div><div class="col-12 col-md-8 m-auto col-lg-4 text-center pt-5 pt-lg-0"> <img alt="image" height="80" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h2><strong>Business</strong></h2><p class="text-h3 mb-4 mb-lg-5"><em>$29 / month</em></p><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p><p class="text-center mt-4 mt-lg-5"><a href="https://www.froala.com" class="btn btn-round">Choose Plan</a></p></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 8',
+      },
+      category: 'Pricing Tables'
+  });
+
+  //Style 9
+  bm.add('froala-pricing-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing Plans</h1></div></div><div class="row mt-5 align-items-top"><div class="col-12 col-sm-10 col-md-6 col-lg-5 m-auto col-xl-3 text-left"><div class="bg-gray p-3 text-center br sl-1"><h2 class="font-weight-light">Startup</h2><p class="text-h2">$99</p><p class="text-center"><a href="https://www.froala.com" class="btn btn-empty">Buy Now</a></p><hr class="mt-5 mb-5"><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p></div></div><div class="col-12 col-sm-10 col-md-6 col-lg-5 m-auto col-xl-3 text-left pt-5 pt-md-0"><div class="bg-gray p-3 text-center br sl-1"><h2 class="font-weight-light">Advanced</h2><p class="text-h2">$399</p><p class="text-center"><a href="https://www.froala.com" class="btn">Buy Now</a></p><hr class="mt-5 mb-5"><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p></div></div><div class="col-12 col-sm-10 col-md-6 col-lg-5 m-auto col-xl-3 text-left pt-5 pt-xl-0"><div class="bg-gray p-3 text-center br sl-1"><h2 class="font-weight-light">Business</h2><p class="text-h2">$999</p><p class="text-center"><a href="https://www.froala.com" class="btn btn-empty">Buy Now</a></p><hr class="mt-5 mb-5"><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p></div></div><div class="col-12 col-sm-10 col-md-6 col-lg-5 m-auto col-xl-3 text-left pt-5 pt-xl-0"><div class="bg-gray p-3 text-center br sl-1"><h2 class="font-weight-light">Enterprise</h2><p class="text-h2">Call Us</p><p class="text-center"><a href="https://www.froala.com" class="btn btn-empty">Contact</a></p><hr class="mt-5 mb-5"><p>10 hours of support</p><p>40MB of storage</p><p>Subdomain</p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 9',
+      },
+      category: 'Pricing Tables'
+  });
+
+
+  //Style 10
+  bm.add('froala-pricing-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col"><h1>Pricing Plans</h1></div></div><table class="table text-center mt-5 d-none d-lg-table"><tbody><tr class="no-border"><th scope="row"></th><td class="text-center"><h2 class="font-weight-light">Hobby</h2><p class="text-h2">$99</p><p><a href="https://www.froala.com" class="btn btn-empty">Buy Now</a></p></td><td class="text-center"><h2 class="font-weight-light">Professional</h2><p class="text-h2">$399</p><p><a href="https://www.froala.com" class="btn btn-empty">Buy Now</a></p></td><td class="text-center"><h2 class="font-weight-light">Business</h2><p class="text-h2">$899</p><p><a href="https://www.froala.com" class="btn">Buy Now</a></p></td><td class="text-center"><h2 class="font-weight-light">Enterprise</h2><p class="text-h2">Call us</p><p><a href="https://www.froala.com" class="btn btn-empty">Contact</a></p></td></tr><tr><th scope="row">Support</th><td>3 months</td><td>6 months</td><td>12 months</td><td>Custom</td></tr><tr><th scope="row">Full source code</th><td>yes</td><td>yes</td><td>yes</td><td>yes</td></tr><tr><th scope="row">SaaS / Subscription</th><td>yes</td><td>yes</td><td>yes</td><td>yes</td></tr><tr><th scope="row">Intranet</th><td></td><td>yes</td><td>yes</td><td>yes</td></tr><tr><th scope="row">Downloadable Software</th><td></td><td></td><td>yes</td><td>yes</td></tr><tr><th scope="row">Redistribute</th><td></td><td></td><td></td><td>yes</td></tr><tr><th scope="row">Custom code</th><td></td><td></td><td></td><td>yes</td></tr></tbody></table><table class="table text-center mt-5 d-table d-lg-none"><tbody><tr class="no-border"><td class="text-center" colspan="2"><h2 class="font-weight-light">Hobby</h2><p class="text-h2">$99</p><p><a href="https://www.froala.com" class="btn btn-empty">Buy Now</a></p></td></tr><tr><th scope="row">Support</th><td>3 months</td></tr><tr><th scope="row">Full source code</th><td>yes</td></tr><tr><th scope="row">SaaS / Subscription</th><td>yes</td></tr><tr><th scope="row">Intranet</th><td></td></tr><tr><th scope="row">Downloadable Software</th><td></td></tr><tr><th scope="row">Redistribute</th><td></td></tr><tr><th scope="row">Custom code</th><td></td></tr></tbody></table><table class="table text-center mt-5 d-table d-lg-none"><tbody><tr class="no-border"><td class="text-center" colspan="2"><h2 class="font-weight-light">Professional</h2><p class="text-h2">$399</p><p><a href="https://www.froala.com" class="btn btn-empty">Buy Now</a></p></td></tr><tr><th scope="row">Support</th><td>6 months</td></tr><tr><th scope="row">Full source code</th><td>yes</td></tr><tr><th scope="row">SaaS / Subscription</th><td>yes</td></tr><tr><th scope="row">Intranet</th><td>yes</td></tr><tr><th scope="row">Downloadable Software</th><td></td></tr><tr><th scope="row">Redistribute</th><td></td></tr><tr><th scope="row">Custom code</th><td></td></tr></tbody></table><table class="table text-center mt-5 d-table d-lg-none"><tbody><tr class="no-border"><td class="text-center" colspan="2"><h2 class="font-weight-light">Business</h2><p class="text-h2">$899</p><p><a href="https://www.froala.com" class="btn">Buy Now</a></p></td></tr><tr><th scope="row">Support</th><td>12 months</td></tr><tr><th scope="row">Full source code</th><td>yes</td></tr><tr><th scope="row">SaaS / Subscription</th><td>yes</td></tr><tr><th scope="row">Intranet</th><td>yes</td></tr><tr><th scope="row">Downloadable Software</th><td>yes</td></tr><tr><th scope="row">Redistribute</th><td></td></tr><tr><th scope="row">Custom code</th><td></td></tr></tbody></table><table class="table text-center mt-5 d-table d-lg-none"><tbody><tr class="no-border"><td class="text-center" colspan="2"><h2 class="font-weight-light">Enterprise</h2><p class="text-h2">Call us</p><p><a href="https://www.froala.com" class="btn btn-empty">Contact</a></p></td></tr><tr><th scope="row">Support</th><td>Custom</td></tr><tr><th scope="row">Full source code</th><td>yes</td></tr><tr><th scope="row">SaaS / Subscription</th><td>yes</td></tr><tr><th scope="row">Intranet</th><td>yes</td></tr><tr><th scope="row">Downloadable Software</th><td>yes</td></tr><tr><th scope="row">Redistribute</th><td>yes</td></tr><tr><th scope="row">Custom code</th><td>yes</td></tr></tbody></table></div> </section>',
+      attributes: {
+          class: 'fa fa-money',
+          title: 'Style 10',
+      },
+      category: 'Pricing Tables'
+  }); 
+
+
+
+
+
+
+  // Team Members
+  //Style 1
+  bm.add('froala-team-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block team-1"><div class="container"><div class="row text-center justify-content-center"><div class="col-8"><h1>Our Team</h1><p class="text-h3">Far far away, behind the word mountains, far from the countries.</p></div></div><div class="row-50"></div><div class="row"><div class="col-sm-3 text-left"><div class="fdb-box"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_1.svg"><div class="content"><h3><strong>Sara Doe</strong></h3><p>Founder</p></div></div></div><div class="col-sm-3 text-left"><div class="fdb-box"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_2.svg"><div class="content"><h3><strong>Sara Doe</strong></h3><p>Founder</p></div></div></div><div class="col-sm-3 text-left"><div class="fdb-box"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_3.svg"><div class="content"><h3><strong>Sara Doe</strong></h3><p>Founder</p></div></div></div><div class="col-sm-3 text-left"><div class="fdb-box"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_square_4.svg"><div class="content"><h3><strong>Sara Doe</strong></h3><p>Founder</p></div></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-users',
+          title: 'Style 1',
+      },
+      category: 'Team Members'
+  });
+
+  //Style 2
+  bm.add('froala-team-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block team-2"><div class="container"><div class="row text-center justify-content-center"><div class="col-8"><h1>Meet Our Team</h1></div></div><div class="row-50"></div><div class="row text-center justify-content-center"><div class="col-sm-3 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h2>Sara Doe</h2><p>Founder</p></div><div class="col-sm-3 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h2>Sara Doe</h2><p>Founder</p></div><div class="col-sm-3 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h2>Sara Doe</h2><p>Founder</p></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-users',
+          title: 'Style 2',
+      },
+      category: 'Team Members'
+  });
+
+  //Style 3
+  bm.add('froala-team-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block team-3"><div class="container"><div class="row text-center justify-content-center"><div class="col-8"><h1>Meet Our Team</h1></div></div><div class="row-70"></div><div class="row text-center justify-content-center"><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src=" https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p><em>Founder</em></p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p><em>Founder</em></p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p><em>Founder</em></p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p><em>Founder</em></p></div></div><div class="row justify-content-center text-center"><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p><em>Founder</em></p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p><em>Founder</em></p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p><em>Founder</em></p></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-users',
+        title: 'Style 3',
+      },
+      category: 'Team Members'
+  });
+
+  //Style 4
+  bm.add('froala-team-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block team-4"><div class="container"><div class="row text-center justify-content-center"><div class="col-8"><h1>Team</h1></div></div><div class="row text-center"><div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"><h3><strong>John Smith</strong></h3><p>Position</p><p>A wonderful serenity has taken possession of my entire soul.</p></div><div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"><h3><strong>John Smith</strong></h3><p>Position</p><p>Pityful a rethoric question ran over her cheek.</p></div><div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"><h3><strong>John Smith</strong></h3><p>Position</p><p>And if she hasn’t been rewritten, then they are still using her.</p></div><div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"><h3><strong>John Smith</strong></h3><p>Position</p><p>Wild Question Marks, but the Little Blind Text didn’t listen.</p></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-users',
+          title: 'Style 4',
+      },
+      category: 'Team Members'
+  });
+
+  //Style 5
+  bm.add('froala-team-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block team-5"><div class="container"><div class="row text-center justify-content-center"><div class="col-8"><h1>Meet Our Team</h1></div></div><div class="row-70"></div><div class="row text-center justify-content-center"><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p>"Wild Question Marks, but the Little Blind"</p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p>"Wild Question Marks, but the Little Blind"</p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p>"Wild Question Marks, but the Little Blind"</p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p>"Wild Question Marks, but the Little Blind"</p></div></div><div class="row justify-content-center text-center"><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p>"Wild Question Marks, but the Little Blind"</p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p>"Wild Question Marks, but the Little Blind"</p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p>"Wild Question Marks, but the Little Blind"</p></div><div class="col-sm-2 m-sm-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"><h3><strong>Sara Doe</strong></h3><p>"Wild Question Marks, but the Little Blind"</p></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-users',
+        title: 'Style 5',
+      },
+      category: 'Team Members'
+  });
+
+  //Style 6
+  bm.add('froala-team-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block team-6"><div class="container"><div class="row text-center justify-content-center"><div class="col-8"><h1>Team</h1></div></div><div class="row text-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"><h3><strong>John Smith</strong></h3><p>Position</p><p>Separated they live in Bookmarksgrove right at the coast of the Semantics.</p></div><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"><h3><strong>John Smith</strong></h3><p>Position</p><p>One morning, when Gregor Samsa woke from troubled dreams.</p></div><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/colors_wide_1.jpg"><h3><strong>John Smith</strong></h3><p>Position</p><p>A small river named Duden flows by their place and supplies it.</p></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-users',
+        title: 'Style 6',
+      },
+      category: 'Team Members'
+  });
+
+  //Style 7
+  bm.add('froala-team-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block team-7"><div class="container"><div class="row text-center justify-content-center"><div class="col-8"><h1>Team</h1></div></div><div class="row-70"></div><div class="row justify-content-center"><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div></div><div class="row-50"></div><div class="row justify-content-center"><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div></div><div class="row-50"></div><div class="row justify-content-center"><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div><div class="col-sm-3 m-sm-auto"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3>Employee Name</h3><p>Position</p></div></div></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-users',
+        title: 'Style 7',
+      },
+      category: 'Team Members'
+  });
+
+  //Style 8
+  bm.add('froala-team-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block team-8"><div class="container"><div class="row text-center justify-content-center"><div class="col-8"><h1>Our Amazing Team</h1><p class="text-h3">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p></div></div><div class="row-100"></div><div class="row justify-content-center text-left"><div class="col-sm-6"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3><strong>Employee Name</strong></h3><p class="text-h3">Position</p><p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div></div></div><div class="col-sm-6"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3><strong>Employee Name</strong></h3><p class="text-h3">Position</p><p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p></div></div></div></div><div class="row-70"></div><div class="row justify-content-center text-left"><div class="col-sm-6"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3><strong>Employee Name</strong></h3><p class="text-h3">Position</p><p>One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p></div></div></div><div class="col-sm-6"><div class="row align-items-center"><div class="col-4"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></div><div class="col-8"><h3><strong>Employee Name</strong></h3><p class="text-h3">Position</p><p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life.</p></div></div></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-users',
+        title: 'Style 8',
+      },
+      category: 'Team Members'
+  });
+
+
+
+
+
+
+  // Testimonials
+  //Style 1
+  bm.add('froala-testimonials-style-1', {
+      label: 'Style 1',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row align-items-center justify-content-center"><div class="col-12 col-md-10 col-lg-8"><p class="text-h3"> "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p><p class="text-h3"><strong>Person Name</strong>&nbsp; &nbsp;&nbsp;<em>Co-founder at Company</em></p></div><div class="col-8 col-sm-6 col-md-2 col-lg-3 col-xl-2 mt-4 mt-md-0 ml-auto mr-auto mr-md-0"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"/></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-comments-o',
+        title: 'Style 1',
+      },
+      category: 'Testimonials Section'
+  });
+
+
+  //Style 2
+  bm.add('froala-testimonials-style-2', {
+      label: 'Style 2',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block" style="background-image: url(//s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_3.svg)"><div class="container"><div class="fdb-box"><div class="row align-items-center justify-content-center"><div class="col-10 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"/></div><div class="col-12 col-md-8 ml-auto mr-auto mt-4 mt-md-0"><p class="text-h3"> "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar."</p><p class="text-h3 mt-4 mt-lg-5"><strong>Person Name</strong></p><p><em>Co-founder at Company</em></p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-comments-o',
+          title: 'Style 2',
+      },
+      category: 'Testimonials Section'
+  });
+
+
+  //Style 3
+  bm.add('froala-testimonials-style-3', {
+      label: 'Style 3',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center"><div class="col-12"><h3><strong>You are in good company</strong></h3><div class="mt-5 justify-content-center"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/adobe.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/discovery.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/ebay.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/samsung.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/orange.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/salesforce.svg"></div><div class="mt-2 mt-md-5 justify-content-center"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/cisco.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/apple.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/ibm.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/intel.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/panasonic.svg"></div></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-comments-o',
+        title: 'Style 3',
+      },
+      category: 'Testimonials Section'
+  });
+
+  //Style 4
+  bm.add('froala-testimonials-style-4', {
+      label: 'Style 4',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row align-items-center justify-content-center"><div class="col-md-6"><div class="fdb-box fdb-touch"><p class="text-h3 mb-4">"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics."</p><p> <img alt="image" height="50" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <strong class="ml-3">Person Name</strong></p></div></div><div class="col-md-6 mt-4 mt-md-0"><div class="fdb-box fdb-touch"><p class="text-h3 mb-4">"A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth."</p><p> <img alt="image" height="50" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"> <strong class="ml-3">Person Name</strong></p></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-comments-o',
+          title: 'Style 4',
+      },
+      category: 'Testimonials Section'
+  });
+
+
+  //Style 5
+  bm.add('froala-testimonials-style-5', {
+      label: 'Style 5',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block" style="background-image: url(//s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_2.svg)"><div class="container"><div class="row align-items-center justify-content-center"><div class="col-lg-9 col-xl-6"><div class="fdb-box"><div class="row"><div class="col-8 col-sm-6 col-md-4 col-xl-3 ml-auto mr-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"/></div><div class="col-md-8 mt-4 mt-md-0"><p class="text-h3"> "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar."</p><p class="text-h3 mt-4 mt-xl-5"><strong>Person Name</strong></p><p><em>Co-founder at Company</em></p></div></div></div></div><div class="col-lg-9 col-xl-6 mt-4 mt-xl-0"><div class="fdb-box"><div class="row"><div class="col-8 col-sm-6 col-md-4 col-xl-3 ml-auto mr-auto"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"/></div><div class="col-md-8 mt-4 mt-md-0"><p class="text-h3"> "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p><p class="text-h3 mt-4 mt-xl-5"><strong>Person Name</strong></p><p><em>Co-founder at Company</em></p></div></div></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-comments-o',
+          title: 'Style 5',
+      },
+      category: 'Testimonials Section'
+  });
+
+
+  //Style 6
+  bm.add('froala-testimonials-style-6', {
+      label: 'Style 6',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center justify-content-center"><div class="col-lg-8"><h2>You are in good company</h2><p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p><div class="mt-5 justify-content-center"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/adobe.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/discovery.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/ebay.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/samsung.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/orange.svg"> <img alt="image" height="30" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/salesforce.svg"></div></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-comments-o',
+          title: 'Style 6',
+      },
+      category: 'Testimonials Section'
+  });
+
+
+  //Style 7
+  bm.add('froala-testimonials-style-7', {
+      label: 'Style 7',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block bg-dark"><div class="container"><div class="row justify-content-center text-center"><div class="col"> <img alt="image" height="40" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/adobe.svg"> <img alt="image" height="40" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/discovery.svg"> <img alt="image" height="40" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/ebay.svg"> <img alt="image" height="40" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/samsung.svg"> <img alt="image" height="40" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/orange.svg"> <img alt="image" height="40" class="ml-3 mr-3 mb-2 mt-2" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/salesforce.svg"></div></div></div> </section>',
+      attributes: {
+          class: 'fa fa-comments-o',
+          title: 'Style 7',
+      },
+      category: 'Testimonials Section'
+  });
+
+  //Style 8
+  bm.add('froala-testimonials-style-8', {
+      label: 'Style 8',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row pb-xl-5 text-center justify-content-center"><div class="col-md-10 col-lg-7"><h1>Testimonials</h1></div></div><div class="row mt-5 justify-content-center"><div class="col-md-8 col-lg-4 col-xl-3 m-auto text-center"> <img alt="image" height="50" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/intel.svg"><p class="text-h3 mt-3">"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia."</p><p class="text-h3 mt-4 mt-xl-5"><strong>Person Name</strong></p><p>Co-founder at Company</p></div><div class="col-md-8 col-lg-4 col-xl-3 pt-5 pt-lg-0 m-auto text-center"> <img alt="image" height="50" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/apple.svg"><p class="text-h3 mt-3">"Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p><p class="text-h3 mt-4 mt-xl-5"><strong>Person Name</strong></p><p>Co-founder at Company</p></div><div class="col-md-8 col-lg-4 col-xl-3 pt-5 pt-lg-0 m-auto text-center"> <img alt="image" height="50" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/customers/samsung.svg"><p class="text-h3 mt-3">"A small river named Duden flows by their place and supplies it with the necessary regelialia."</p><p class="text-h3 mt-4 mt-xl-5"><strong>Person Name</strong></p><p>Co-founder at Company</p></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-comments-o',
+        title: 'Style 8',
+      },
+      category: 'Testimonials Section'
+  });
+
+
+  //Style 9
+  bm.add('froala-testimonials-style-9', {
+      label: 'Style 9',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block bg-dark" style="background-image: url(//s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_4.svg)"><div class="container"><div class="row text-center justify-content-center"><div class="col-md-10 col-lg-8 col-xl-7"><h1>Testimonials</h1><p class="text-h3">A small river named Duden flows by their place and supplies it with the necessary regelialia. Separated they live in Bookmarksgrove right at the coast of the Semantics.</p></div></div><div class="row mt-5 align-items-center justify-content-center"><div class="col-md-8 col-lg-4"><div class="fdb-box"><div class="row no-gutters align-items-center"><div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"/></div><div class="col-8 ml-auto"><p> <strong>Person Name</strong><br> <em>Co-founder at Company</em></p></div></div><div class="row mt-4"><div class="col-12"><p class="text-h3"> "Even the all-powerful Pointing has no control about the blind texts it is an unorthographic life. One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar."</p></div></div></div></div><div class="col-md-8 col-lg-4 mt-4 mt-lg-0"><div class="fdb-box"><div class="row no-gutters align-items-center"><div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"/></div><div class="col-8 ml-auto"><p> <strong>Person Name</strong><br> <em>Co-founder at Company</em></p></div></div><div class="row mt-4"><div class="col-12"><p class="text-h3"> "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p></div></div></div></div><div class="col-md-8 col-lg-4 mt-4 mt-lg-0"><div class="fdb-box"><div class="row no-gutters align-items-center"><div class="col-3"> <img alt="image" class="img-fluid" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"/></div><div class="col-8 ml-auto"><p> <strong>Person Name</strong><br> <em>Co-founder at Company</em></p></div></div><div class="row mt-4"><div class="col-12"><p class="text-h3"> "Separated they live in Bookmarksgrove right at the coast of the Semantics, far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts."</p></div></div></div></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-comments-o',
+        title: 'Style 9',
+      },
+      category: 'Testimonials Section'
+  });
+
+
+  //Style 10
+  bm.add('froala-testimonials-style-10', {
+      label: 'Style 10',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom:solid 1px #EEE}</style><section class="fdb-block"><div class="container"><div class="row text-center justify-content-center"><div class="col-md-10 col-lg-7"><h1>Testimonials</h1></div></div><div class="row mt-5 justify-content-center"><div class="col-md-10 col-lg-3 ml-auto mr-auto text-center"><p class="text-h3 mb-4 mb-lg-5">"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia."</p><p><img alt="image" height="50" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></p><p class="text-h3"><strong>Person Name</strong></p><p>Co-founder, Company</p></div><div class="col-md-10 col-lg-3 pt-5 pt-lg-0 ml-auto mr-auto text-center"><p class="text-h3 mb-4 mb-lg-5">"Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p><p><img alt="image" height="50" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></p><p class="text-h3"><strong>Person Name</strong></p><p>Co-founder, Company</p></div><div class="col-md-10 col-lg-3 pt-5 pt-lg-0 ml-auto mr-auto text-center"><p class="text-h3 mb-4 mb-lg-5">"A small river named Duden flows by their place and supplies it with the necessary regelialia."</p><p><img alt="image" height="50" src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_round.svg"></p><p class="text-h3"><strong>Person Name</strong></p><p>Co-founder, Company</p></div></div></div> </section>',
+      attributes: {
+        class: 'fa fa-comments-o',
+        title: 'Style 10',
+      },
+      category: 'Testimonials Section'
+  });
+
 
 
   // Get DomComponents module
@@ -1048,6 +3374,91 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
+  comps.addType('productReactiveSearch', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+        
+          {
+            label: 'API URL',
+            name: 'apiurl'
+          },
+          {
+            label: 'Username',
+            name: 'apiusername',
+            type: 'text'
+          },
+          {
+            label: 'Password',
+            name: 'apipassword',
+            type: 'password'
+          },
+          {
+            label: 'category',
+            name: 'selectcategory_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Prices',
+            name: 'selectPrices_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Colours',
+            name: 'selectColours_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Brands',
+            name: 'selectBrands_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+           {
+            label: 'Tags',
+            name: 'selectTags_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          }
+
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'PRODUCTREACTIVESEARCH'){
+          return {type: 'productReactiveSearch'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+
+
 
   comps.addType('globalImage', {
     // Define the Model
@@ -1058,8 +3469,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         droppable: true,
         traits: [
           {
-            label: 'Id',
-            name: 'id',
+            label: 'Data Id',
+            name: 'data-id',
             type: 'text'
           }
         ],
@@ -1097,8 +3508,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         droppable: true,
         traits: [
           {
-            label: 'Id',
-            name: 'id',
+            label: 'Data Id',
+            name: 'data-id',
             type: 'text'
           }
         ],
@@ -1123,6 +3534,269 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       return this;
     },
   });
+
+
+
+
+
+  comps.addType('globalHtmlVariable', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+          {
+            label: 'Data Id',
+            name: 'data-id',
+            type: 'text'
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'GLOBALHTMLVARIABLE'){
+          return {type: 'globalHtmlVariable'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+
+
+  comps.addType('globalTextVariable', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+          {
+            label: 'Data Id',
+            name: 'data-id',
+            type: 'text'
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'GLOBALTEXTVARIABLE'){
+          return {type: 'globalTextVariable'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+
+
+
+
+
+
+  // ReUse Component
+    var comps = editor.DomComponents;
+    var defaultType = comps.getType('default');
+    var defaultModel = defaultType.model;
+    var defaultView = defaultType.view;
+    var traits;
+    var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+    for (var i = 0; i < storedTemplates.length; i++) {
+      console.log("value...", storedTemplates[i])
+      if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets') {
+        storedTemplates.splice(i, 1)
+      }
+    }
+    console.log("++++++++++", storedTemplates)
+    let arr = [{
+      "value": "Select_Partial",
+      "name": "Select Partial"
+    }]
+    let traits_arr = []
+    let partials_arr = [{
+      "value": "SelectID",
+      "name": "selectID"
+    }]
+    for (var i = storedTemplates.length - 1; i >= 0; i--) {
+      arr.push({
+        "value": storedTemplates[i],
+        "name": storedTemplates[i]
+      })
+    }
+    console.log(arr)
+    comps.addType('ReUseComponent', {
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:selectPartial', this.doStuff);
+          this.listenTo(this, 'change:selectID', this.doStuff_second);
+        },
+        doStuff() {
+          console.log("getPartials called")
+          this.get('traits').each(function(trait) {
+            console.log(trait.get('value'));
+            traits_arr.push(trait.get('value'))
+          });
+          traits_arr_val = traits_arr[0]
+          var folderUrl = localStorage.getItem("folderUrl");
+          console.log("&&&&&&&&&&", folderUrl)
+          var request = new XMLHttpRequest();
+          request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + traits_arr_val, false);
+          request.setRequestHeader("Content-type", "application/json");
+          request.send();
+          resp = JSON.parse(request.responseText);
+          console.log("files", resp)
+          arr.splice(0, 1);
+          console.log("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", arr)
+          for (var i = resp.length - 1; i >= 0; i--) {
+            partials_arr.push({
+              "value": resp[i],
+              "name": resp[i]
+            })
+          }
+          console.log("**********", partials_arr)
+          var categsTrait = this.get('traits').where({
+            name: 'selectID'
+          })[0];
+          categsTrait.set('options', partials_arr)
+          editor.trigger('change:ReUseComponent');
+          console.log(this.get('traits').where({
+            name: 'selectID'
+          })[0].get('options'));
+          console.log("folderUrl", folderUrl);
+          console.log("traits_arr[6]", traits_arr[1])
+          var folderUrl = localStorage.getItem("folderUrl");
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send();
+          var response = JSON.parse(xhttp.responseText);
+          var counter = JSON.parse(localStorage.getItem("counter"));
+          console.log("counter", counter)
+          console.log("counter", counter)
+          traits_arr = []
+          partials_arr = []
+        },
+        doStuff_second() {
+          this.get('traits').each(function(trait) {
+            console.log(trait.get('value'));
+            traits_arr.push(trait.get('value'))
+          });
+          console.log("traits_arr[1]", traits_arr[1])
+          console.log("doStuff_second");
+          var folderUrl = localStorage.getItem("folderUrl");
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send();
+          partials_arr.splice(0, 1);
+          var response = JSON.parse(xhttp.responseText);
+          editor.addComponents(response);
+          traits_arr = []
+        },
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+
+            {
+              label: 'PartialName',
+              name: 'selectPartial',
+              type: 'select',
+              changeProp: 1,
+              options: arr
+            }, {
+              label: 'PartialID',
+              name: 'selectID',
+              type: 'select',
+              changeProp: 1,
+              options: ''
+            }
+          ],
+        }),
+      }, {
+        isComponent: function(el) {
+          if (el.tagName == 'REUSECOMPONENT') {
+            return {
+              type: 'ReUseComponent'
+            };
+          }
+        },
+      }),
+      view: defaultType.view,
+      render: function() {
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here';
+        return this;
+      },
+    });
+
+
+
+
+
+    comps.addType('progressBar', {
+        // Define the Model
+        model: defaultModel.extend({
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [
+                    {
+                        label: 'Progress %',
+                        name: 'progress',
+                        type: 'text'
+                    }
+                ],
+            }),
+
+        }, {
+            isComponent: function(el) {
+                if (el.tagName == 'PROGRESSBAR') {
+                    return {
+                        type: 'progressBar'
+                    };
+                }
+            },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function() {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+        },
+    });
 
 
 

@@ -1,6 +1,6 @@
 <template id="GrapesComponent">
   <div class="GrapesComponent">
-    <div id="gjs" style="width: 100%; min-height: 90vh;"></div>
+    <div id="gjs" style="width: 100%; height: 89vh !important;"></div>
   </div>
 </template>
 
@@ -50,8 +50,10 @@ export default {
             lp+'work-desk.jpg', lp+'phone-app.png', lp+'bg-gr-v.png'
         ];
 
+        // 'gjs-plugin-ckeditor'
+
 		editor = grapesjs.init({
-			plugins: ['gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin'],
+			plugins: ['gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin' ],
       		container : '#gjs',
       		components: this.$store.state.content,
       		storageManager: {
@@ -147,7 +149,7 @@ export default {
                 content: '<div class="badges">' +
                     '<div class="badge">' +
                     '<div class="badge-header"></div>' +
-                    '<img class="badge-avatar" src="img/team1.jpg">' +
+                    '<img class="badge-avatar" src="https://api.adorable.io/avatars/100/kavi@officebrain.png">' +
                     '<div class="badge-body">' +
                     '<div class="badge-name">Adam Smith</div><div class="badge-role">CEO</div><div class="badge-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ipsum dolor sit</div>' +
                     '</div>' +
@@ -155,7 +157,7 @@ export default {
                     '</div>' +
                     '<div class="badge">' +
                     '<div class="badge-header"></div>' +
-                    '<img class="badge-avatar" src="img/team2.jpg">' +
+                    '<img class="badge-avatar" src="https://api.adorable.io/avatars/100/faizan@officebrain.png">' +
                     '<div class="badge-body">' +
                     '<div class="badge-name">John Black</div><div class="badge-role">Software Engineer</div><div class="badge-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ipsum dolor sit</div>' +
                     '</div>' +
@@ -163,7 +165,7 @@ export default {
                     '</div>' +
                     '<div class="badge">' +
                     '<div class="badge-header"></div>' +
-                    '<img class="badge-avatar" src="img/team3.jpg">' +
+                    '<img class="badge-avatar" src="https://api.adorable.io/avatars/100/john@officebrain.png">' +
                     '<div class="badge-body">' +
                     '<div class="badge-name">Jessica White</div><div class="badge-role">Web Designer</div><div class="badge-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ipsum dolor sit</div>' +
                     '</div>' +
@@ -269,22 +271,6 @@ export default {
                     class: 'fa fa-flag',
                 },
                 content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
-            },{
-                id: 'globalTextVariable',
-                label: 'Text Variable',
-                category: 'Global Variables',
-                attributes: {
-                    class: 'fa fa-font',
-                },
-                content: '<span>Global Variable</span>',
-            },{
-                id: 'globalHtmlVariable',
-                label: 'HTML Variable',
-                category: 'Global Variables',
-                attributes: {
-                    class: 'fa fa-code',
-                },
-                content: '<div>HTML Code</div>',
             }],
         },
 
@@ -303,9 +289,9 @@ export default {
             switch(this.globalVariables[i].variableType){
 
                 case 'text':
-                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                    if(($('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         // var encodeText = String(this.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').text(this.globalVariables[i].variableValue);
+                        $('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').text(this.globalVariables[i].variableValue);
                     } 
                     break;
 
@@ -314,19 +300,19 @@ export default {
                     var _varId = this.globalVariables[i].variableId;
                     var _varValue = this.globalVariables[i].variableValue;
 
-                    if(($('.gjs-frame').contents().find('body [id="' + _varId + '"]').length > 0)){
+                    if(($('.gjs-frame').contents().find('body [data-id="' + _varId + '"]').length > 0)){
                         
                         // Get all local images
                         if(this.globalVariables[i].isImageUrl == true){
                             console.log('Image is URL link.');
-                            $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', _varValue);
+                            $('.gjs-frame').contents().find('body [data-id="' + _varId + '"]').children('img').attr('src', _varValue);
                         } else {
                             let getImage = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue, {
                             })
                             .then((res) => {
                                 // If image is present in assets folder
                                 console.log('Image found in /assets folder.');
-                                $('.gjs-frame').contents().find('body [id="' + _varId + '"]').children('img').attr('src', res.data);
+                                $('.gjs-frame').contents().find('body [data-id="' + _varId + '"]').children('img').attr('src', res.data);
                             })
                             .catch((e) => {
                                 console.log(e);
@@ -337,15 +323,15 @@ export default {
                     break;
 
                 case 'hyperlink':
-                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
-                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('a')[0].text = this.globalVariables[i].variableTitle;
-                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
+                    if(($('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].text = this.globalVariables[i].variableTitle;
+                        $('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
                     }
                     break; 
 
                 case 'html':
-                    if(($('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').length > 0)){
-                        $('.gjs-frame').contents().find('body [id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
+                    if(($('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [data-id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
                     } 
                     break;
 
@@ -393,7 +379,25 @@ export default {
             this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
                 "\n\n\n\n" + grapesHtml;
         }
-	}
+	},
+
+    // beforeDestroy() {
+    //     this.$swal({
+    //         title: 'You are Leaving..',
+    //         text: 'You want you save this file?',
+    //         type: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Yes, save it!',
+    //         cancelButtonText: 'No, discard changes'
+    //     }).then(() => {
+    //             this.getHtml();
+    //             // this.$parent.$options.methods.saveFile();
+    //             this.$dispatch('saveFileFromChild');  
+    //             console.log('File Saved');
+    //     }).catch((dismiss) => {
+    //         console.log('error', dismiss);
+    //     })
+    // }
 }
 </script>
 
@@ -410,5 +414,9 @@ export default {
 
 .gjs-am-file-uploader>form{
     min-height: 325px;
+}
+
+.gjs-editor-cont{
+  height: 89vh !important;
 }
 </style>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Ecommerce Website</title>
+  <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+  <style>
+  @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
+  * {
+    box-sizing: border-box;
+  }
+
+  h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  body {
+    font-family: "Open Sans", sans-serif;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+  }
+
+  .logo {
+    text-transform: uppercase;
+    font-weight: 300;
+    line-height: 1;
+  }
+  .logo span {
+    font-weight: 700;
+  }
+  .logo .sub-info {
+    font-size: 12px;
+    letter-spacing: 4px;
+  }
+
+  .navigation a {
+    color: black;
+    text-transform: uppercase;
+    font-size: 14x;
+    margin-left: 20px;
+    font-weight: 700;
+  }
+  .navigation a.active {
+    color: #c8ad78;
+  }
+
+  .more {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+  }
+  .more .figure {
+    position: absolute;
+    bottom: 80%;
+    right: 0;
+    color: white;
+    font-size: 14px;
+    font-weight: 900;
+    background: #c8ad78;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 50%;
+  }
+  .more .menu {
+    font-size: 30px;
+    color: black;
+  }
+
+  .container {
+    width: 80%;
+    margin: 80px auto 0 auto;
+  }
+
+  .sub-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  .sub-header .close-btn {
+    font-size: 30px;
+    color: #c8ad78;
+    cursor: pointer;
+  }
+  .sub-header .title {
+    line-height: 1;
+    font-size: 30px;
+    text-transform: uppercase;
+  }
+  .sub-header .title span {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: lowercase;
+    color: #c8ad78;
+  }
+
+  .thumb-wrapper {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .thumb-unit {
+    width: 24%;
+    margin: 0 0.5% 20px 0.5%;
+    padding: 15px 20px;
+    border: 1px solid #c8ad78;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all ease-in-out 300ms;
+  }
+  .thumb-unit.is-active {
+    border: none;
+    box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+    z-index: 1000;
+    background: white;
+    animation: tada ease-in-out 1000ms forwards;
+  }
+  .thumb-unit.stop-animation {
+    animation-play-state: pause;
+  }
+  .thumb-unit:hover {
+    border: none;
+    box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+    z-index: 1000;
+    background: white;
+  }
+  .thumb-unit:nth-child(2) .box {
+    background-image: url(http://www.purseblog.com/images/2016/03/Chanel-Drawstring-Bags-3200.jpg);
+  }
+  .thumb-unit:nth-child(3) .box {
+    background-image: url(https://image.rakuten.co.jp/import-collection/cabinet/mainimage/coach/2016/f37249_main.jpg);
+  }
+  .thumb-unit:nth-child(4) .box {
+    background-image: url(https://www.pinkorchard.com/media/catalog/product/cache/1/small_image/178x170/9df78eab33525d08d6e5fb8d27136e95/3/2/320223-coach-34340-prairie-satchel-bag-in-pebble-leather-red-front.jpg);
+  }
+  .thumb-unit:nth-child(5) .box {
+    background-image: url(http://static.wixstatic.com/media/d94d5c_810db4caf45b473d82c8235bf63fdb60~mv2_d_3082_3221_s_4_2.jpg_srz_320_334_85_22_0.50_1.20_0.00_jpg_srz);
+  }
+  .thumb-unit:nth-child(6) .box {
+    background-image: url(http://image.wikifoundry.com/image/1/HVAf_tnDRf2u3sHGLmR_wQ28120/GW400H280);
+  }
+  .thumb-unit:nth-child(7) .box {
+    background-image: url(https://s-media-cache-ak0.pinimg.com/736x/b9/8a/ff/b98affe37ee8b2257210ee5958bd078b.jpg);
+  }
+  .thumb-unit:nth-child(8) .box {
+    background-image: url(http://stayglam.com/wp-content/uploads/2014/07/The-Mouawads-10001-Night-Diamond-Purse.jpg);
+  }
+  .thumb-unit .heading {
+    display: flex;
+    justify-content: space-between;
+  }
+  .thumb-unit .heading span {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .thumb-unit .box {
+    width: 100%;
+    margin: 10px 0px;
+    transition: all ease-in-out 300ms;
+    background-image: url(https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTXPoeXWgsnGXHUV281dC1GJF95aPYl-F0WcQ1ZG5UJ4P3xc9n81Q);
+    background-size: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .thumb-unit .box:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
+  .thumb-unit .info {
+    display: flex;
+    justify-content: space-between;
+    line-height: 1.2;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .thumb-unit .info .icon {
+    font-size: 20px;
+    color: #c8ad78;
+  }
+
+  @media (max-width: 1200px) {
+    .thumb-unit {
+      width: 31.33%;
+      margin: 0px 0.5% 20px 0.5%;
+    }
+  }
+  @media (max-width: 640px) {
+    .thumb-unit {
+      width: 100%;
+      margin: 0 0 20px 0;
+    }
+
+    .navigation {
+      display: none;
+    }
+  }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="thumb-wrapper">
+    <div class="thumb-unit">
+      <div class="heading"><span>$120</span><span><i class="fa fa-heart-o"></i></span></div>
+      <div class="box"></div>
+      <div class="info">
+        <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit</p><span class="icon"><i class="fa fa-shopping-cart"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

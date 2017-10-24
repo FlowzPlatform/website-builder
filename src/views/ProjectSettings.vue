@@ -1,15 +1,14 @@
 <template>
   <div class="ProjectSettings">
-    <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
+    
+    <!-- Save/Publish/Cancel Buttons -->
+    <div class="page-buttons">
+      <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
+      <el-button type="info" @click="publishMetalsmith">Publish Settings</el-button>
+      <el-button type="danger" @click="cancelSettings">Cancel</el-button>
+    </div>
 
-      <!-- Save/Publish/Cancel Buttons -->
-      <div class="row">
-        <div class="col-md-12" style="margin-bottom: 2%;">
-          <el-button class="pull-right" style="margin-left: 1%;">Cancel</el-button>
-          <el-button class="pull-right" type="info" style="margin-left: 1%;" @click="publishMetalsmith">Publish Settings</el-button>
-          <el-button class="pull-right" type="primary" @click="saveProjectSettings">Save Settings</el-button>
-        </div>
-      </div>
+    <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
 
       <!-- Commit Section -->
       <div class="well">
@@ -46,7 +45,7 @@
               </el-form-item>
 
               <el-form-item label="Brand name">
-                <el-input v-model="form.brandName"></el-input>
+                <el-input v-model="form.brandName" placeholder="My Company"></el-input>
               </el-form-item>
 
               <el-form-item label="Brand Logo">
@@ -55,20 +54,20 @@
                     <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                   </label> 
                   <input type="file" name="" id="upload-validation">
-                  <span class="dis">(max 3 MB. .png only)</span>
+                  <span class="dis">(max 1 MB. .jpg or .png only)</span>
                 </div>
               </el-form-item>
 
               <el-form-item label="Project SEO Title">
-                <el-input v-model="form.seoTitle"></el-input>
+                <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
               </el-form-item>
 
               <el-form-item label="Project SEO Keywords">
-                <el-input v-model="form.seoKeywords"></el-input>
+                <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
               </el-form-item>
               
               <el-form-item label="Project SEO Description">
-                <el-input type="textarea" :rows="5" v-model="form.seoDesc"></el-input>
+                <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
               </el-form-item>    
 
             </el-form> 
@@ -128,7 +127,7 @@
 
                         <!-- Image Value as Name -->
                         <div class="col-md-8" style="margin-right: 0; padding-right: 0">
-                          <el-input placeholder="Image URL" v-model="n.variableValue"></el-input>
+                          <el-input placeholder="Image URL" v-model="n.variableValue" :disabled="imageInputIsDisabled"></el-input>
                         </div>
 
                         <!-- Image Thumbnail Preview -->
@@ -159,6 +158,7 @@
                   </div>
                 </el-form-item>
               </div>
+              <!-- Ends V-FOR looping -->
               
               <!-- Create new variable -->
               <el-button type="primary" @click="addNewVariable">New Variable</el-button>
@@ -191,11 +191,11 @@
                 >
               </el-table-column>
 
-              <el-table-column
+              <!-- <el-table-column
                 prop="commitSHA"
                 label="Commit SHA"
                 >
-              </el-table-column>
+              </el-table-column> -->
               
               <el-table-column
                 label="Revert To Commit"
@@ -234,6 +234,7 @@ export default {
       form: {
         name: '',
         brandName: '',
+        brandLogoName: '',
         seoTitle: '',
         seoKeywords: '',
         seoDesc: '',
@@ -264,7 +265,8 @@ export default {
         value: 'html',
         label: 'HTML'
       }],
-      globalVariables: []
+      globalVariables: [],
+      imageInputIsDisabled: false,
       // fileData:{
       //   url: 'urlHere'
       // }
@@ -275,6 +277,9 @@ export default {
   methods: {
 
     async globalImageUploading(currentImageVariableIndex, file) {
+      
+      this.imageInputIsDisabled = true;
+
       var fileParts = file.target.value.split('\\');
       var imageName = fileParts[fileParts.length-1];
 
@@ -311,6 +316,7 @@ export default {
     addNewVariable() {
       let newVariable = { variableId: '', variableType: '', variableTitle: '', variableValue: '' , isImageUrl: true};
       this.globalVariables.push(newVariable);
+      this.imageInputIsDisabled = false;
     },
 
     deleteVariable(deleteIndex) {
@@ -318,28 +324,25 @@ export default {
     },
 
     uploadImage(fileData, fileBlob) {
-      console.log(fileBlob);
-      let ext = fileData.type.split('/');
-      let name = 'brand-logo.' + ext[1]
+      
+      this.form.brandLogoName = fileData.name;
 
       axios.post( this.baseURL + '/image-upload', {
-          filename : this.folderUrl + '/assets/' + name,
+          filename : this.folderUrl + '/assets/' + this.form.brandLogoName,
           text : fileBlob,
           type : 'file'
       })
       .then((res) => {
-        console.log(res.data);
+        console.log('Brand Logo Uploaded: ', res.data);
       })
       .catch((e) => { 
-        console.log(e)
+        console.log('Some error occured. Here is full log: ', e)
       });
     },
 
     saveProjectSettings() {
-
-      console.log('Image URL: ', this.imageUrl);
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName,"ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables}];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables}];
 
       this.settings[1].projectSettings = ProjectSettings;
 
@@ -350,7 +353,7 @@ export default {
           type : 'file'
       })
       .then((res) => {
-          console.log(res);
+          console.log('Config File saved: ', res);
           this.$message({
               showClose: true,
               message: 'Config Saved!',
@@ -358,7 +361,7 @@ export default {
           });
       })
       .catch((e) => {
-          console.log(e);
+          console.log('Some error occured while saving config file. Here is full log: ', e);
           this.$message({
               showClose: true,
               message: 'Cannot save file! Some error occured, try again.',
@@ -372,7 +375,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
-      console.log(this.commitsData[index].commitSHA);
+      // console.log(this.commitsData[index].commitSHA);
       axios.post( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
       }).then(response => {
         console.log(response.data);
@@ -420,13 +423,13 @@ export default {
 
       var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n" + partials + " Metalsmith(__dirname)\n.metadata({title:'" + this.form.seoTitle + "',description:'" + this.form.seoDesc + "'})\n.source('" + this.$store.state.fileUrl + "/Pages')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(permalinks())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){console.log(err)}});"
 
-      console.log(this.$store.state.fileUrl);
+      // console.log(this.$store.state.fileUrl);
       axios.post('http://localhost:3030/flows-dir-listing', {
           filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
           text: (metalsmithJSON),
           type: 'file'
       }).then((response) => {
-        console.log('Axios call 1');
+          // console.log('Axios call 1');
           console.log('successfully created metalsmith file :', (response.data))
           this.$message({
               showClose: true,
@@ -436,7 +439,7 @@ export default {
 
           axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {
           }).then((response) => {
-              console.log('Axios call 2');
+              // console.log('Axios call 2');
               console.log('successfully  :' + (response))
           })
           .catch((err) => {
@@ -448,7 +451,7 @@ export default {
           })
       })
       .catch((e) => {
-          console.log('error while creating metalsmithJSON file' + e)
+          console.log('Mrror while creating MetalSmith JSON file' + e)
           this.$message({
               showClose: true,
               message: 'Cannot save file! Some error occured, try again.',
@@ -478,6 +481,10 @@ export default {
 
     exportWebsite(){
       window.open('http://162.209.122.250/' + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
+    },
+
+    cancelSettings(){
+      location.reload();
     }
   },
   async created () {
@@ -490,6 +497,7 @@ export default {
       this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
       this.repoName = this.settings[0].repoSettings[0].RepositoryName;
       this.form.brandName = this.settings[1].projectSettings[0].BrandName;
+      this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
       this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
       this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
       this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
@@ -497,6 +505,22 @@ export default {
 
       this.form.Header = this.settings[2].layoutOptions[0].headers;
       this.form.Footer = this.settings[2].layoutOptions[0].footers;
+
+      // Set Brand Logo Name
+      if(this.form.brandLogoName != ''){
+        if (this.form.brandLogoName.length > 18) {
+            $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
+            $('.valid').removeClass('error').addClass('correct');
+            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+         }else{
+            $('#text2').text(this.form.brandLogoName);
+            $('.valid').removeClass('error').addClass('correct');
+            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+        }  
+      } else {
+        console.log('BrandLogoName not found!');
+      }
+      
 
     } else {
       console.log('Cannot get config file!');
@@ -689,6 +713,21 @@ h1{
   width: 0;
   height: 100%;
   opacity: 0;
+}
+
+.page-buttons{
+  position: absolute;
+  top: 0;
+  right: 110px;
+  margin-top: 17.5px;
+}
+
+@media(max-width: 680px){
+  .page-buttons{
+    position: relative;
+    left: auto;
+    right: auto;
+  }
 }
 
 </style>
