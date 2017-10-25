@@ -99,8 +99,16 @@ export default {
 
   .el-menu{
     background-color: #292929;
+    /*background-color: rgba(41,41,41,0.6);*/
     box-shadow: 0px 0px 25px;
     border-radius: 0;
+    /*opacity: 0.6;*/
+    transition: 0.2s all linear;
+  }
+
+  .el-menu:hover{
+    opacity: 1;
+    transition: 0.2s all linear;
   }
 
   .el-menu--horizontal .el-menu-item:hover, .el-menu--horizontal .el-submenu__title:hover{
