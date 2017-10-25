@@ -43,11 +43,16 @@ export default {
         this.globalCssVariables = rawConfigs[1].projectSettings[0].GlobalCssVariables;
         console.log('GlobalCssVariables:', this.globalCssVariables);
 
+        // Clear root element if already stored in file
+        // let allContents = this.$store.state.content;
+        // let fileContents = allContents.substr(allContents.search(':root{'), allContents.search('.'));
+        // console.log('File Sub Contents:', fileContents);
+
         // Set CSS variable colors
         let variableCss = ':root{\n';
 
         if(this.globalCssVariables != undefined){
-           for(var i = 0; i < this.globalCssVariables.length; i++){
+            for(var i = 0; i < this.globalCssVariables.length; i++){
                 variableCss += '\t' + this.globalCssVariables[i].variableName + ': ' + this.globalCssVariables[i].variableValue + ';\n';
             } 
         }
@@ -297,6 +302,15 @@ export default {
   		style: variableCss + css,
   		
   		});
+
+        const categories = editor.BlockManager.getCategories();
+        categories.each(category => {
+            category.set('open', false).on('change:open', opened => {
+                opened.get('open') && categories.each(category => {
+                    category !== opened && category.set('open', false)
+                })
+            })
+        });
 
         var bm = editor.BlockManager;
         bm.add('brandName', {

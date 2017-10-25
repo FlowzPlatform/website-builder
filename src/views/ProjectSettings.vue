@@ -5,7 +5,7 @@
     <div class="page-buttons">
       <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
       <el-button type="info" @click="publishMetalsmith">Publish Settings</el-button>
-      <el-button type="danger" @click="cancelSettings">Cancel</el-button>
+      <!-- <el-button type="danger" @click="cancelSettings">Cancel</el-button> -->
     </div>
 
     <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
@@ -811,7 +811,7 @@ h1{
 .page-buttons{
   position: absolute;
   top: 0;
-  right: 110px;
+  right: 80px;
   margin-top: 17.5px;
 }
 

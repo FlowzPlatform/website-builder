@@ -12,7 +12,9 @@
 		            <el-button type="info" v-if="isLoggedIn === 'no'" @click="loginPage">Login</el-button>
                 <div v-else>
                   <!-- <span class="welcomeUser">Welcome <strong>{{username}}</strong>!</span> -->
-                  <el-button class="btn-dark" @click="doLogout">Logout</el-button>
+                  <el-tooltip class="item" effect="dark" content="Logout" placement="bottom">
+                    <el-button type="danger" class="" @click="doLogout"><i class="fa fa-sign-out"></i></el-button>
+                  </el-tooltip>
                 </div>
 		        </el-menu-item>
 		        
