@@ -3838,141 +3838,141 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
-  	// ReUse Component
-    var comps = editor.DomComponents;
-    var defaultType = comps.getType('default');
-    var defaultModel = defaultType.model;
-    var defaultView = defaultType.view;
-    var traits;
-    var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-    for (var i = 0; i < storedTemplates.length; i++) {
-      console.log("value...", storedTemplates[i])
-      if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets') {
-        storedTemplates.splice(i, 1)
-      }
-    }
-    console.log("++++++++++", storedTemplates)
-    let arr = [{
-      "value": "Select_Partial",
-      "name": "Select Partial"
-    }]
-    let traits_arr = []
-    let partials_arr = [{
-      "value": "SelectID",
-      "name": "selectID"
-    }]
-    for (var i = storedTemplates.length - 1; i >= 0; i--) {
-      arr.push({
-        "value": storedTemplates[i],
-        "name": storedTemplates[i]
-      })
-    }
-    console.log(arr)
-    comps.addType('ReUseComponent', {
-      model: defaultModel.extend({
-        init() {
-          this.listenTo(this, 'change:selectPartial', this.doStuff);
-          this.listenTo(this, 'change:selectID', this.doStuff_second);
-        },
-        doStuff() {
-          console.log("getPartials called")
-          this.get('traits').each(function(trait) {
-            console.log(trait.get('value'));
-            traits_arr.push(trait.get('value'))
-          });
-          traits_arr_val = traits_arr[0]
-          var folderUrl = localStorage.getItem("folderUrl");
-          console.log("&&&&&&&&&&", folderUrl)
-          var request = new XMLHttpRequest();
-          request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + traits_arr_val, false);
-          request.setRequestHeader("Content-type", "application/json");
-          request.send();
-          resp = JSON.parse(request.responseText);
-          console.log("files", resp)
-          arr.splice(0, 1);
-          console.log("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", arr)
-          for (var i = resp.length - 1; i >= 0; i--) {
-            partials_arr.push({
-              "value": resp[i],
-              "name": resp[i]
-            })
-          }
-          console.log("**********", partials_arr)
-          var categsTrait = this.get('traits').where({
-            name: 'selectID'
-          })[0];
-          categsTrait.set('options', partials_arr)
-          editor.trigger('change:ReUseComponent');
-          console.log(this.get('traits').where({
-            name: 'selectID'
-          })[0].get('options'));
-          console.log("folderUrl", folderUrl);
-          console.log("traits_arr[6]", traits_arr[1])
-          var folderUrl = localStorage.getItem("folderUrl");
-          var xhttp = new XMLHttpRequest();
-          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send();
-          var response = JSON.parse(xhttp.responseText);
-          var counter = JSON.parse(localStorage.getItem("counter"));
-          console.log("counter", counter)
-          console.log("counter", counter)
-          traits_arr = []
-          partials_arr = []
-        },
-        doStuff_second() {
-          this.get('traits').each(function(trait) {
-            console.log(trait.get('value'));
-            traits_arr.push(trait.get('value'))
-          });
-          console.log("traits_arr[1]", traits_arr[1])
-          console.log("doStuff_second");
-          var folderUrl = localStorage.getItem("folderUrl");
-          var xhttp = new XMLHttpRequest();
-          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send();
-          partials_arr.splice(0, 1);
-          var response = JSON.parse(xhttp.responseText);
-          editor.addComponents(response);
-          traits_arr = []
-        },
-        defaults: Object.assign({}, defaultModel.prototype.defaults, {
-          editable: true,
-          droppable: true,
-          traits: [
+  	// // ReUse Component
+   //  var comps = editor.DomComponents;
+   //  var defaultType = comps.getType('default');
+   //  var defaultModel = defaultType.model;
+   //  var defaultView = defaultType.view;
+   //  var traits;
+   //  var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+   //  for (var i = 0; i < storedTemplates.length; i++) {
+   //    console.log("value...", storedTemplates[i])
+   //    if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets') {
+   //      storedTemplates.splice(i, 1)
+   //    }
+   //  }
+   //  console.log("++++++++++", storedTemplates)
+   //  let arr = [{
+   //    "value": "Select_Partial",
+   //    "name": "Select Partial"
+   //  }]
+   //  let traits_arr = []
+   //  let partials_arr = [{
+   //    "value": "SelectID",
+   //    "name": "selectID"
+   //  }]
+   //  for (var i = storedTemplates.length - 1; i >= 0; i--) {
+   //    arr.push({
+   //      "value": storedTemplates[i],
+   //      "name": storedTemplates[i]
+   //    })
+   //  }
+   //  console.log(arr)
+   //  comps.addType('ReUseComponent', {
+   //    model: defaultModel.extend({
+   //      init() {
+   //        this.listenTo(this, 'change:selectPartial', this.doStuff);
+   //        this.listenTo(this, 'change:selectID', this.doStuff_second);
+   //      },
+   //      doStuff() {
+   //        console.log("getPartials called")
+   //        this.get('traits').each(function(trait) {
+   //          console.log(trait.get('value'));
+   //          traits_arr.push(trait.get('value'))
+   //        });
+   //        traits_arr_val = traits_arr[0]
+   //        var folderUrl = localStorage.getItem("folderUrl");
+   //        console.log("&&&&&&&&&&", folderUrl)
+   //        var request = new XMLHttpRequest();
+   //        request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + traits_arr_val, false);
+   //        request.setRequestHeader("Content-type", "application/json");
+   //        request.send();
+   //        resp = JSON.parse(request.responseText);
+   //        console.log("files", resp)
+   //        arr.splice(0, 1);
+   //        console.log("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", arr)
+   //        for (var i = resp.length - 1; i >= 0; i--) {
+   //          partials_arr.push({
+   //            "value": resp[i],
+   //            "name": resp[i]
+   //          })
+   //        }
+   //        console.log("**********", partials_arr)
+   //        var categsTrait = this.get('traits').where({
+   //          name: 'selectID'
+   //        })[0];
+   //        categsTrait.set('options', partials_arr)
+   //        editor.trigger('change:ReUseComponent');
+   //        console.log(this.get('traits').where({
+   //          name: 'selectID'
+   //        })[0].get('options'));
+   //        console.log("folderUrl", folderUrl);
+   //        console.log("traits_arr[6]", traits_arr[1])
+   //        var folderUrl = localStorage.getItem("folderUrl");
+   //        var xhttp = new XMLHttpRequest();
+   //        xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
+   //        xhttp.setRequestHeader("Content-type", "application/json");
+   //        xhttp.send();
+   //        var response = JSON.parse(xhttp.responseText);
+   //        var counter = JSON.parse(localStorage.getItem("counter"));
+   //        console.log("counter", counter)
+   //        console.log("counter", counter)
+   //        traits_arr = []
+   //        partials_arr = []
+   //      },
+   //      doStuff_second() {
+   //        this.get('traits').each(function(trait) {
+   //          console.log(trait.get('value'));
+   //          traits_arr.push(trait.get('value'))
+   //        });
+   //        console.log("traits_arr[1]", traits_arr[1])
+   //        console.log("doStuff_second");
+   //        var folderUrl = localStorage.getItem("folderUrl");
+   //        var xhttp = new XMLHttpRequest();
+   //        xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
+   //        xhttp.setRequestHeader("Content-type", "application/json");
+   //        xhttp.send();
+   //        partials_arr.splice(0, 1);
+   //        var response = JSON.parse(xhttp.responseText);
+   //        editor.addComponents(response);
+   //        traits_arr = []
+   //      },
+   //      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+   //        editable: true,
+   //        droppable: true,
+   //        traits: [
 
-            {
-              label: 'PartialName',
-              name: 'selectPartial',
-              type: 'select',
-              changeProp: 1,
-              options: arr
-            }, {
-              label: 'PartialID',
-              name: 'selectID',
-              type: 'select',
-              changeProp: 1,
-              options: ''
-            }
-          ],
-        }),
-      }, {
-        isComponent: function(el) {
-          if (el.tagName == 'REUSECOMPONENT') {
-            return {
-              type: 'ReUseComponent'
-            };
-          }
-        },
-      }),
-      view: defaultType.view,
-      render: function() {
-        defaultType.view.prototype.render.apply(this, arguments);
-        this.el.placeholder = 'Text here';
-        return this;
-      },
-    });
+   //          {
+   //            label: 'PartialName',
+   //            name: 'selectPartial',
+   //            type: 'select',
+   //            changeProp: 1,
+   //            options: arr
+   //          }, {
+   //            label: 'PartialID',
+   //            name: 'selectID',
+   //            type: 'select',
+   //            changeProp: 1,
+   //            options: ''
+   //          }
+   //        ],
+   //      }),
+   //    }, {
+   //      isComponent: function(el) {
+   //        if (el.tagName == 'REUSECOMPONENT') {
+   //          return {
+   //            type: 'ReUseComponent'
+   //          };
+   //        }
+   //      },
+   //    }),
+   //    view: defaultType.view,
+   //    render: function() {
+   //      defaultType.view.prototype.render.apply(this, arguments);
+   //      this.el.placeholder = 'Text here';
+   //      return this;
+   //    },
+   //  });
 
 
 

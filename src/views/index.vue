@@ -47,7 +47,7 @@
                             <!-- <el-button type="primary" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save</el-button> -->
                             <el-button type="primary" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
                             <el-button type="primary" @click="saveFile()" :loading="saveFileLoading">Save</el-button>
-                            <el-button type="danger" @click="cancelEditing()">Cancel</el-button>
+                            <!-- <el-button type="danger" @click="cancelEditing()">Cancel</el-button> -->
                         </div>
                     </div>
 
@@ -3557,7 +3557,7 @@ label.imgThumbnail img {
 .editor-buttons{
   position: absolute;
   top: 2.5px;
-  right: 75px;
+  right: 50px;
 }
 
 @media(max-width: 580px){
