@@ -165,6 +165,70 @@
 
             </el-form>
           </div>
+          <div class="col-md-12" style="margin-top: 4%;">
+            <h3>CSS Variables</h3>
+            <hr>
+            <el-form ref="form" :model="form">
+              <div v-for="(n, index) in globalCssVariables">
+                <el-form-item>
+                  <div class="row">
+
+                    <!-- Enter Variable ID -->
+                    <div class="col-md-5">
+                      <el-input placeholder="Variable Name" v-model="n.variableName"></el-input>
+                    </div>
+
+                    <!-- Select Type -->
+                    <div class="col-md-2" style="margin: 0; padding: 0">
+                      <el-select v-model="n.variableType" placeholder="Select">
+                        <el-option
+                          v-for="item in selectCssVariableType"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+
+                    <!-- Enter Color Variable Value -->
+                    <div class="col-md-4" v-if="n.variableType === 'color'">
+                      <el-color-picker v-model="n.variableValue" show-alpha></el-color-picker>
+                    </div>
+
+                    <!-- Enter Pixel Variable Value -->
+                    <div class="col-md-4" v-if="n.variableType === 'px'">
+                      <el-input placeholder="Pixels Value" v-model="n.variableValue"></el-input>
+                    </div>
+
+                    <!-- Enter Percentage Variable Value -->
+                    <div class="col-md-4" v-if="n.variableType === 'percent'">
+                      <el-slider v-model="n.variableValue"></el-slider>
+                    </div>
+
+                    <!-- Enter Number Variable Value -->
+                    <div class="col-md-4" v-if="n.variableType === 'number'">
+                      <el-input-number v-model="n.variableValue"></el-input-number>
+                    </div>
+
+                    <!-- Enter Custom Variable Value -->
+                    <div class="col-md-4" v-if="n.variableType === 'custom'">
+                      <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
+                    </div>
+                    
+                    <!-- Delete Variable -->
+                    <div class="col-md-1">
+                      <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>      
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+              <!-- Ends V-FOR looping -->
+              
+              <!-- Create new variable -->
+              <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
+
+            </el-form>
+          </div>
         </div>
       </div>
       <!-- Global Variable section ends -->
@@ -265,7 +329,26 @@ export default {
         value: 'html',
         label: 'HTML'
       }],
+
+      selectCssVariableType: [{
+        value: 'color',
+        label: 'Color'
+      }, {
+        value: 'px',
+        label: 'Pixel'
+      }, {
+        value: 'percent',
+        label: 'Percentage'
+      }, {
+        value: 'number',
+        label: 'Number'
+      }, {
+        value: 'custom',
+        label: 'Custom'
+      }],
+
       globalVariables: [],
+      globalCssVariables: [],
       imageInputIsDisabled: false,
       // fileData:{
       //   url: 'urlHere'
@@ -319,8 +402,17 @@ export default {
       this.imageInputIsDisabled = false;
     },
 
+    addNewCssVariable() {
+      let newVariable = { variableName: '', variableType: '', variableValue: ''};
+      this.globalCssVariables.push(newVariable);
+    },
+
     deleteVariable(deleteIndex) {
       this.globalVariables.splice(deleteIndex, 1);
+    },
+
+    deleteCssVariable(deleteIndex) {
+      this.globalCssVariables.splice(deleteIndex, 1);
     },
 
     uploadImage(fileData, fileBlob) {
@@ -342,7 +434,7 @@ export default {
 
     saveProjectSettings() {
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables}];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables}];
 
       this.settings[1].projectSettings = ProjectSettings;
 
@@ -502,6 +594,7 @@ export default {
       this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
       this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
       this.globalVariables = this.settings[1].projectSettings[0].GlobalVariables;
+      this.globalCssVariables = this.settings[1].projectSettings[0].GlobalCssVariables;
 
       this.form.Header = this.settings[2].layoutOptions[0].headers;
       this.form.Footer = this.settings[2].layoutOptions[0].footers;

@@ -304,6 +304,7 @@ export default {
       autoFolders: true,
       isLoggedInUser: false,
       baseURL : 'http://localhost:3030',
+      pluginsPath : '/home/software/AllProjects/FlowzBuilder/src/assets/plugins',
       directoryTree: [],
       currentFile : null,
       defaultProps: {
@@ -1504,7 +1505,7 @@ export default {
       // Product Listing Plugin
       let listingPlugin = newFolderName + '/assets/client-plugins/client-product-listing-plugin.js';
       let pluginJsData = '';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/product-listing-plugin-cleaned.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/product-listing-plugin-cleaned.js', {
           
       })
       .then((response) => {
@@ -1531,7 +1532,7 @@ export default {
 
       // Product Detail Plugin
       let productDetailPlugin = newFolderName + '/assets/client-plugins/client-product-detail-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/product-detail-plugin-cleaned.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/product-detail-plugin-cleaned.js', {
           
       })
       .then((res) => {
@@ -1555,7 +1556,7 @@ export default {
 
       // Carousel Slider Plugin
       let sliderPlugin = newFolderName + '/assets/client-plugins/client-slider-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/client-slider-plugin.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-slider-plugin.js', {
           
       })
       .then((res) => {
@@ -1579,7 +1580,7 @@ export default {
 
       // Popular Product Slider 
       let popularSliderPlugin = newFolderName + '/assets/client-plugins/client-popular-product-slider-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/popular-product-slider-plugin.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/popular-product-slider-plugin.js', {
           
       })
       .then((res) => {
@@ -1605,7 +1606,7 @@ export default {
 
       // Pagination Plugin 
       let paginationPlugin = newFolderName + '/assets/client-plugins/client-pagination-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/client-pagination-plugin.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-pagination-plugin.js', {
           
       })
       .then((res) => {
@@ -1629,7 +1630,7 @@ export default {
 
       // Pagination Plugin 
       let gradientAnimationPlugin = newFolderName + '/assets/client-plugins/image-gradient-animation.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/image-gradient-animation.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/image-gradient-animation.js', {
           
       })
       .then((res) => {
@@ -1653,7 +1654,7 @@ export default {
 
       // Dynamic menu Navbar Plugin 
       let navbarPlugin = newFolderName + '/assets/client-plugins/client-navbar-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/client-navbar-plugin.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-navbar-plugin.js', {
           
       })
       .then((res) => {
@@ -1676,7 +1677,7 @@ export default {
 
       // Template
       let template1 = newFolderName + '/Templates/template1.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/Templates/template1.html', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template1.html', {
           
       })
       .then((res) => {
@@ -1699,7 +1700,7 @@ export default {
 
       // Template
       let templateListing2 = newFolderName + '/Templates/template2.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/Templates/template2.html', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template2.html', {
           
       })
       .then((res) => {
@@ -1722,7 +1723,7 @@ export default {
 
       // Template
       let template3 = newFolderName + '/Templates/template3.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/Templates/template3.html', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template3.html', {
           
       })
       .then((res) => {
@@ -1745,7 +1746,7 @@ export default {
 
       // Template
       let template4 = newFolderName + '/Templates/template4.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/Templates/template4.html', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template4.html', {
           
       })
       .then((res) => {
@@ -1768,7 +1769,7 @@ export default {
 
       // Template
       let template5 = newFolderName + '/Templates/template5.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/Templates/template5.html', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template5.html', {
           
       })
       .then((res) => {
@@ -1791,7 +1792,7 @@ export default {
 
       // Template
       let productList = newFolderName + '/Templates/productList.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/Templates/productlist.html', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/productlist.html', {
           
       })
       .then((res) => {
@@ -1814,7 +1815,7 @@ export default {
 
       // Template
       let landscape = newFolderName + '/Templates/landscape.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/Templates/landscape.html', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/landscape.html', {
           
       })
       .then((res) => {
@@ -1837,7 +1838,7 @@ export default {
 
       // Template
       let creative = newFolderName + '/Templates/creative.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/Templates/creative.html', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/creative.html', {
           
       })
       .then((res) => {
@@ -1860,7 +1861,7 @@ export default {
 
       // Template
       let globalVariablesPlugin = newFolderName + '/assets/client-plugins/global-variables-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/global-variables-plugin.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/global-variables-plugin.js', {
           
       })
       .then((res) => {
@@ -1883,7 +1884,7 @@ export default {
 
       // Progress bars plugin
       let progressBarsPlugin = newFolderName + '/assets/client-plugins/progress-bars.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/progress-bars.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/progress-bars.js', {
           
       })
       .then((res) => {
@@ -1907,7 +1908,7 @@ export default {
 
       // My Cart Plugin
       let myCartPlugin = newFolderName + '/assets/client-plugins/client-my-cart-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=/home/software/AllProjects/FlowzBuilder/src/assets/plugins/js/client-my-cart-plugin.js', {
+      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-my-cart-plugin.js', {
           
       })
       .then((res) => {

@@ -20,10 +20,14 @@ export default {
       baseURL: 'http://localhost:3030',
       brandName: '',
       imageBlob: '',
-      globalVariables: []
+      globalVariables: [],
+      globalCssVariables: []
     }
   },
     async mounted () {
+
+
+
 
         // Get Config File
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -36,6 +40,22 @@ export default {
         let rawConfigs = JSON.parse(responseConfig.data);
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[0].GlobalVariables;
+        this.globalCssVariables = rawConfigs[1].projectSettings[0].GlobalCssVariables;
+        console.log('GlobalCssVariables:', this.globalCssVariables);
+
+        // Set CSS variable colors
+        let variableCss = ':root{\n';
+
+        if(this.globalCssVariables != undefined){
+           for(var i = 0; i < this.globalCssVariables.length; i++){
+                variableCss += '\t' + this.globalCssVariables[i].variableName + ': ' + this.globalCssVariables[i].variableValue + ';\n';
+            } 
+        }
+
+        
+
+        variableCss += '}'
+        console.log('Variable CSS: ', variableCss);
 
         let imageData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
         this.imageBlob = imageData.data;
@@ -53,7 +73,7 @@ export default {
         // 'gjs-plugin-ckeditor'
 
 		editor = grapesjs.init({
-			plugins: ['gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin' ],
+			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin' ],
       		container : '#gjs',
       		components: this.$store.state.content,
       		storageManager: {
@@ -181,7 +201,7 @@ export default {
                 attributes: {
                     class: 'gjs-fonts gjs-f-text'
                 },
-                category: 'Basic',
+                category: 'gjs-blocks-basic',
                 content: {
                     type: 'text',
                     content: 'Insert your text here',
@@ -274,9 +294,28 @@ export default {
             }],
         },
 
-  		style: css,
+  		style: variableCss + css,
   		
   		});
+
+        var bm = editor.BlockManager;
+        bm.add('brandName', {
+            label: 'Brand Name',
+            category: 'Global Variables',
+            attributes: {
+                class: 'fa fa-facebook-official',
+            },
+            content: '<span id="brandName">'+this.brandName+'</span>',
+        });
+
+        bm.add('brandLogo', {
+            label: 'Brand Logo',
+            category: 'Global Variables',
+            attributes: {
+                class: 'fa fa-flag',
+            },
+            content: '<img id="brandLogo" src="'+this.imageBlob+'" alt="company-logo" class="brand-logo"/>',
+        });
         
         $('.gjs-frame').contents().find('body [id="brandName"]').html(this.brandName);
         
@@ -340,6 +379,12 @@ export default {
             }
 
         }
+
+        // Collapse all Category Blocks
+        // $(".gjs-block-category").trigger("click");
+        // $(".gjs-block-category").removeClass("gjs-open");
+        // $(".gjs-blocks-c").css('display', 'none');
+        // $(".gjs-block-category").trigger("click");
 
 	},
 
