@@ -81,7 +81,16 @@
       <div class="well">
         <div class="row">
           <div class="col-md-12">
-            <h3>Global Variables</h3>
+            <div class="row">
+              <div class="col-md-4">
+                <h3>Global Variables</h3>
+              </div>
+              <div class="col-md-8" align="right">
+                <el-tooltip class="item" effect="dark" content="Download JSON" placement="top">
+                  <button class="btn btn-info" @click="downloadGlobalVariables"><i class="fa fa-download"></i></button>
+                </el-tooltip>
+              </div>
+            </div>
             <hr>
             <el-form ref="form" :model="form">
               <div v-for="(n, index) in globalVariables">
@@ -286,6 +295,8 @@ Vue.use(VueSession)
 
 import axios from 'axios'
 
+import fileSaver from 'file-saver'
+
 export default {
   name: 'ProjectSettings',
   props: {
@@ -416,6 +427,18 @@ export default {
       this.globalCssVariables.splice(deleteIndex, 1);
     },
 
+    downloadGlobalVariables() {
+      this.saveProjectSettings();
+      let exportVariables = this.settings[1].projectSettings[1];
+
+      let textToSave = JSON.stringify(exportVariables);
+      let saveFileName = 'globalVariablesData.json';
+      let jsonData = new Blob([textToSave], {type: "application/json;charset=utf-8"});
+    
+      fileSaver.saveAs(jsonData, saveFileName);
+      // console.log(exportVariables);
+    },
+
     uploadImage(fileData, fileBlob) {
       
       this.form.brandLogoName = fileData.name;
@@ -435,7 +458,7 @@ export default {
 
     saveProjectSettings() {
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables}];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}, { "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables }];
 
       this.settings[1].projectSettings = ProjectSettings;
 
@@ -594,9 +617,12 @@ export default {
       this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
       this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
       this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
-      this.globalVariables = this.settings[1].projectSettings[0].GlobalVariables;
-      this.globalCssVariables = this.settings[1].projectSettings[0].GlobalCssVariables;
+      this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
+      this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
 
+      if(this.globalVariables == undefined){
+        this.globalVariables = []
+      }
       if(this.globalCssVariables == undefined){
         this.globalCssVariables = []
       }

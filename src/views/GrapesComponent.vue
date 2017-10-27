@@ -39,8 +39,8 @@ export default {
         let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
         let rawConfigs = JSON.parse(responseConfig.data);
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
-        this.globalVariables = rawConfigs[1].projectSettings[0].GlobalVariables;
-        this.globalCssVariables = rawConfigs[1].projectSettings[0].GlobalCssVariables;
+        this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
+        this.globalCssVariables = rawConfigs[1].projectSettings[1].GlobalCssVariables;
         console.log('GlobalCssVariables:', this.globalCssVariables);
 
         // Clear root element if already stored in file
