@@ -1,4 +1,5 @@
 var globalVariables = [];
+var brandName;
 
 $(document).ready(function() {
     ImpletementSocekt();
@@ -19,12 +20,14 @@ function ImpletementSocekt() {
       // Get Config Data
       $.getJSON( "../assets/config.json", function( data ) {  
           var configData = data;
+          brandName = configData[1].projectSettings[0].BrandName;
           globalVariables = configData[1].projectSettings[0].GlobalVariables;
       });
 
       // Variable Replacements
       setTimeout(async function(){
           $('body [id="brandName"]').html(brandName);
+          $('body [id="brandLogo"]').attr('src', '../assets/brand-logo.png');
         
           // Replace all global variables
           for (var i = 0; i < globalVariables.length; i++){

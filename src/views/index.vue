@@ -48,6 +48,17 @@
                             <el-button type="primary" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
                             <el-button type="primary" @click="saveFile()" :loading="saveFileLoading">Save</el-button>
                             <!-- <el-button type="danger" @click="cancelEditing()">Cancel</el-button> -->
+
+                            <!-- <el-dialog title="Confirmation" :visible.sync="dialogFormVisible">
+                              <div v-for='i in form.namearray'>
+                               <el-checkbox v-model="form.checked[i]">{{i}}</el-checkbox>
+                              </div>
+
+                              <span slot="footer" class="dialog-footer">
+                                <el-button @click="dialogFormVisible = false, dialogFormVisibleCancel()">Cancel</el-button>
+                                <el-button type="primary" @click="dialogFormVisible = false, dialogFormVisibleAdd()">Add</el-button>
+                              </span>
+                            </el-dialog> -->
                         </div>
                     </div>
 
@@ -363,8 +374,12 @@ export default {
         Layout: '',
         headers: [{ value: 'NOH', label: 'No Header' }],
         footers: [{ value: 'NOF', label: 'No Footer' }],
-        layouts: [{ value: 'Blank', label: 'Blank' }]
-      }
+        layouts: [{ value: 'Blank', label: 'Blank' }],
+        namearray: [],
+        checked: [],
+        partials: ''
+      },
+      dialogFormVisible: false
     }
   },
   components: {
@@ -821,6 +836,533 @@ export default {
     },
 
     // Generate Preview of page using MetalSmith
+    // async generatePreview() {
+    //   console.log(" calling api Get for metalsmith for this page.");
+
+    //   let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
+
+    //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //   let urlparts = configFileUrl.split("/");
+    //   let fileNameOrginal = urlparts[urlparts.length - 1];
+    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //   var folderUrl = configFileUrl.replace(fileName, '');
+
+    //   console.log("page name:" + nameF)
+    //   let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //   console.log("response:", responseConfig.data)
+    //   let rawSettings = JSON.parse(responseConfig.data);
+
+    //   for (let i = 0; i < rawSettings[1].pageSettings.length; i++) {
+    //     if (rawSettings[1].pageSettings[i].PageName == (nameF + '.html')) {
+    //       console.log("file found in pageSettings")
+    //       this.form.Layout = rawSettings[1].pageSettings[i].PageLayout
+    //       this.form.partials = rawSettings[1].pageSettings[i].partials
+    //     }
+    //   }
+
+    //   let responseMetal = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
+    //   console.log("response of metalsmith", responseMetal.data);
+    //   var index = responseMetal.data.search('.source')
+
+    //   responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
+
+    //   var indexPartial = responseMetal.data.search("('handlebars')");
+    //   console.log("form.partialsList:", this.form.partials)
+
+    //   var partials = '';
+    //   for (var i = 0; i < this.form.partials.length; i++) {
+    //     let key = Object.keys(this.form.partials[i])[0];
+    //     console.log("key :", key)
+    //     let value = this.form.partials[i]
+    //     let key2 = key;
+    //     console.log("value:", value[key2])
+    //     key = key.trim();
+    //     if (value[key2].match('html')) {
+    //       console.log("inside html if")
+    //       key = key.split('.')[0]
+    //       var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+    //     } else if (value[key2].match('hbs')) {
+    //       console.log("inside hbs if")
+    //       key = key.split('.')[0]
+    //       var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+    //     } else {
+    //       console.log("inside else")
+    //       var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + ".html').toString())\n"
+    //     }
+
+    //     partials = partials + temp;
+
+    //   }
+    //   console.log("src for metalsmith:", partials);
+
+    //   responseMetal.data = responseMetal.data.substr(0, indexPartial + 15) + partials + responseMetal.data.substr(indexPartial + 15);
+
+    //   console.log("final metalsmith file ready for api call:", responseMetal.data);
+
+    //   let mainMetal = folderUrl + '/assets/metalsmith.js'
+
+    //   axios.post('http://localhost:3030/flows-dir-listing', {
+    //     filename: mainMetal,
+    //     text: responseMetal.data,
+    //     type: 'file'
+    //   }).then((response) => {
+    //     console.log('successfully created metalsmith file :' + (response.data))
+    //     this.$message({
+    //       showClose: true,
+    //       message: 'MetalSmith Config Saved!',
+    //       type: 'success'
+    //     });
+
+    //     let newFolderName = folderUrl + '/Preview';
+    //     return axios.post(this.baseURL + '/flows-dir-listing', {
+    //         foldername: newFolderName,
+    //         type: 'folder'
+    //       })
+    //       .then((res) => {
+    //         console.log(res)
+
+    //         let newContent = this.$store.state.content;
+    //         if (this.form.Layout == 'Blank') {
+    //           if (newContent.match('---')) {
+    //             let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+    //             console.log("substr:" + substr)
+    //             newContent = newContent.replace(substr, '')
+    //           } else {
+    //             newContent = this.$store.state.content;
+    //           }
+
+    //         } else {
+    //           let tempValueLayout = '---\nlayout: ' + this.form.Layout + '.layout\n---\n';
+
+    //           console.log("tempValueLayout:" + tempValueLayout)
+
+    //           if (newContent.match('---')) {
+    //             let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+    //             console.log("substr:" + substr)
+    //             newContent = newContent.replace(substr, tempValueLayout)
+    //           } else {
+    //             newContent = tempValueLayout + this.$store.state.content;
+    //           }
+
+    //         }
+
+    //         this.PageLayout = '';
+    //         this.form.Header = '';
+    //         this.form.Footers = '';
+    //         this.form.Sidebar = '';
+    //         this.form.Menu = '';
+
+    //         let previewFileName = folderUrl + '/Preview/' + nameF + '.html';
+
+    //         return axios.post('http://localhost:3030/flows-dir-listing', {
+    //             filename: previewFileName,
+    //             text: newContent,
+    //             type: 'file'
+    //           })
+    //           .then((res) => {
+    //             this.saveFileLoading = false;
+
+    //             axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
+    //                 console.log('successfully  :' + (response))
+
+    //                 var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+    //                 return axios.post(this.baseURL + '/flows-dir-listing', {
+    //                     filename: mainMetal,
+    //                     text: metalsmithJSON,
+    //                     type: 'file'
+    //                   })
+    //                   .then((res) => {
+    //                     console.log('Now previewing: ' + this.$store.state.fileUrl.replace(/\\/g, "\/"))
+    //                     let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //                     previewFile = folderUrl.replace('/var/www/html', '');
+    //                     console.log(previewFile.replace('Pages' + nameF, ''));
+    //                     window.open('http://localhost' + previewFile + '/MetalsmithOutput/' + nameF + '.html');
+
+    //                     axios.delete(this.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+    //                       .then((res) => {
+
+    //                         console.log(res);
+
+    //                       })
+    //                       .catch((e) => {
+    //                         console.log(e)
+    //                       })
+
+    //                   })
+    //                   .catch((e) => {
+    //                     console.log(e)
+    //                   })
+
+    //               })
+    //               .catch((err) => {
+    //                 console.log('error while creating metalsmithJSON file' + err)
+    //               })
+
+    //             this.$message({
+    //               showClose: true,
+    //               message: 'File Saved!',
+    //               type: 'success'
+    //             });
+    //           })
+    //           .catch((e) => {
+    //             this.saveFileLoading = false
+    //             this.$message({
+    //               showClose: true,
+    //               message: 'File not saved! Please try again.',
+    //               type: 'error'
+    //             });
+    //             console.log(e)
+    //           })
+
+    //       })
+    //       .catch((e) => {
+    //         console.log(e)
+    //       })
+
+    //   })
+    //   .catch((e) => {
+    //     console.log('error while creating metalsmithJSON file' + e)
+    //     this.$message({
+    //       showClose: true,
+    //       message: 'Cannot save file! Some error occured, try again.',
+    //       type: 'danger'
+    //     });
+    //   })
+
+    // },
+
+    // async generatePreview () {
+    //   console.log(" calling api Get for metalsmith for this page.");
+
+    //   //get header, footer from pagesetting from config.json and then set the value in js file to call the api.
+
+    //   let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
+
+    //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //   let urlparts = configFileUrl.split("/");
+    //   let fileNameOrginal = urlparts[urlparts.length - 1];
+    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //   var folderUrl = configFileUrl.replace(fileName, '');
+
+    //   console.log("page name:" + nameF)
+    //   let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //   console.log("response:", responseConfig.data)
+    //   let rawSettings = JSON.parse(responseConfig.data);
+    //   // console.log("response of pageSettings:", rawSettings[0].pageSettings[0].PageName)
+
+    //   for (let i = 0; i < rawSettings[1].pageSettings.length; i++) {
+    //       if (rawSettings[1].pageSettings[i].PageName == (nameF+'.html')) {
+    //           console.log("file found in pageSettings")
+    //           // this.form.Header = rawSettings[1].pageSettings[i].PageHeader
+    //           // this.form.Footer = rawSettings[1].pageSettings[i].PageFooter
+    //           this.form.Layout = rawSettings[1].pageSettings[i].PageLayout
+    //           this.form.partials = rawSettings[1].pageSettings[i].partials
+    //           // this.form.Sidebar = rawSettings[1].pageSettings[i].PageSidebar
+    //           // this.form.Menu = rawSettings[1].pageSettings[i].PageMenu
+    //       }
+    //   }
+
+    //   let responseMetal = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
+    //   console.log("response of metalsmith", responseMetal.data);
+    //   var index = responseMetal.data.search('.source')
+
+    //   responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
+    //   // console.log("src for metalsmith", src);
+
+    //   var indexPartial = responseMetal.data.search("('handlebars')");
+    //   console.log("form.partialsList:",this.form.partials)
+      
+    //   var partials='';
+    //   for (var i = 0; i<this.form.partials.length; i++) {
+    //     let key=Object.keys(this.form.partials[i])[0];
+    //     console.log("key :",key)
+    //     let value=this.form.partials[i]
+    //     let key2=key;
+    //     console.log("value:",value[key2])
+    //     key=key.trim();
+    //     // key=key.split('.')[0]
+    //     if(value[key2].match('html')){
+    //       console.log("inside html if")
+    //       key=key.split('.')[0]
+    //        var temp= "Handlebars.registerPartial('"+key+"', fs.readFileSync('" + folderUrl + "/"+key+"/" + value[key2] + "').toString())\n"
+    //     }
+    //     else if(value[key2].match('hbs'))
+    //     {
+    //       console.log("inside hbs if")
+    //       key=key.split('.')[0]
+    //       var temp= "Handlebars.registerPartial('"+key+"', fs.readFileSync('" + folderUrl + "/"+key+"/" + value[key2] + "').toString())\n"
+    //     }
+    //     else{
+    //       console.log("inside else")
+    //       var temp= "Handlebars.registerPartial('"+key+"', fs.readFileSync('" + folderUrl + "/"+key+"/" + value[key2] + ".html').toString())\n"
+    //     }
+        
+    //     partials=partials+temp;
+
+    //   }
+    //   console.log("src for metalsmith:", partials);
+
+    //   responseMetal.data = responseMetal.data.substr(0, indexPartial + 15) + partials + responseMetal.data.substr(indexPartial + 15);
+
+    //   console.log("final metalsmith file ready for api call:", responseMetal.data);
+
+    //   let mainMetal = folderUrl + '/assets/metalsmith.js'
+
+    //   axios.post('http://localhost:3030/flows-dir-listing', {
+    //           filename: mainMetal,
+    //           text: responseMetal.data,
+    //           type: 'file'
+    //       }).then((response) => {
+    //           console.log('successfully created metalsmith file :' + (response.data))
+    //           this.$message({
+    //               showClose: true,
+    //               message: 'MetalSmith Config Saved!',
+    //               type: 'success'
+    //           });
+
+    //           // Create temporary preview folder
+    //           let newFolderName = folderUrl + '/Preview';
+    //           return axios.post(this.baseURL + '/flows-dir-listing', {
+    //               foldername : newFolderName,
+    //               type : 'folder'
+    //           })
+    //           .then((res) => {
+    //               console.log(res)
+    //               // Create preview file
+                  
+
+
+
+
+    //               let rawContent = this.$store.state.content;
+
+    //               let newContent = "<html>\n<head>\n"+
+    //               "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+    //               "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+    //               "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+    //               "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+    //               "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+    //               "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n"+
+    //               "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n"+
+    //               "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+    //               "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+    //               '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+    //               '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+    //               "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+    //               rawContent +
+    //               '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+    //               '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+    //               '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+    //               '<script src="./../assets/main.js"><\/script>\n'+
+    //               '</body>\n</html>';
+
+    //               if (this.form.Layout == 'Blank') {
+    //                 if (newContent.match('---')) {
+    //                   let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+    //                   console.log("substr:" + substr)
+    //                   newContent = newContent.replace(substr, '')
+    //                 } else {
+    //                   newContent = "<html>\n<head>\n"+
+    //                   "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+    //                   "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+    //                   "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+    //                   "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+    //                   "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+    //                   "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n"+
+    //                   "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n"+
+    //                   "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+    //                   "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+    //                   '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+    //                   '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+    //                   "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+    //                   rawContent +
+    //                   '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+    //                   '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+    //                   '<script src="./../assets/main.js"><\/script>\n'+
+    //                   '</body>\n</html>';
+    //                 }
+
+    //               } else {
+    //                 let tempValueLayout = '---\nlayout: ' + this.form.Layout + '.layout\n---\n';
+
+    //                 if (newContent.match('---')) {
+    //                   let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+    //                   newContent = newContent.replace(substr, tempValueLayout)
+    //                 } else {
+    //                   newContent = tempValueLayout + "<html>\n<head>\n"+
+    //                   "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+    //                   "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+    //                   "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+    //                   "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+    //                   "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+    //                   "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n"+
+    //                   "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n"+
+    //                   "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+    //                   "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+    //                   '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+    //                   '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+    //                   "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+    //                   rawContent +
+    //                   '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+    //                   '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+    //                   '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+    //                   '<script src="./../assets/main.js"><\/script>\n'+
+    //                   '</body>\n</html>';
+    //                 }
+
+    //               }
+                
+    //               this.PageLayout='';
+    //               this.form.Header='';
+    //               this.form.Footers='';
+    //               this.form.Sidebar='';
+    //               this.form.Menu='';
+
+    //               let previewFileName = folderUrl + '/Preview/'+nameF+'.html';
+
+    //                return axios.post('http://localhost:3030/flows-dir-listing', {
+    //                     filename : previewFileName,
+    //                     text : newContent,
+    //                     type : 'file'
+    //                 })
+    //                 .then((res) => {
+    //                     this.saveFileLoading = false;
+
+    //                     axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
+    //                       console.log('successfully  :' + (response))
+    //                       // revert changes in metalsmith 
+                         
+    //                       var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+folderUrl+"/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+folderUrl+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+    //                       return axios.post(this.baseURL + '/flows-dir-listing', {
+    //                               filename: mainMetal,
+    //                               text: metalsmithJSON,
+    //                               type: 'file'
+    //                           })
+    //                           .then((res) => {
+    //                             console.log('Now previewing: ' + this.$store.state.fileUrl.replace(/\\/g, "\/"))
+    //                             let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //                             previewFile = folderUrl.replace('/var/www/html','');
+    //                             console.log(previewFile.replace('Pages'+nameF, ''));
+    //                             window.open('http://localhost'+previewFile+'/MetalsmithOutput/'+nameF+'.html');
+
+
+
+    //                             // Delete Preview Folder
+
+
+    //                             axios.delete(this.baseURL + '/flows-dir-listing/0?filename='+folderUrl+'/Preview')
+    //                             .then((res) => {
+                                    
+    //                                 console.log(res);
+
+                                    
+
+    //                             })
+    //                             .catch((e) => {
+    //                                 console.log(e)
+    //                             })
+
+
+
+
+
+    //                           })
+    //                           .catch((e) => {
+    //                               console.log(e)
+    //                           })
+
+
+    //                   })
+    //                   .catch((err) => {
+    //                       console.log('error while creating metalsmithJSON file' + err)
+    //                   })
+
+
+    //                     this.$message({
+    //                         showClose: true,
+    //                         message: 'File Saved!',
+    //                         type: 'success'
+    //                     });
+    //                 })
+    //                 .catch((e) => {
+    //                     this.saveFileLoading = false
+    //                     this.$message({
+    //                         showClose: true,
+    //                         message: 'File not saved! Please try again.',
+    //                         type: 'error'
+    //                     });
+    //                     console.log(e)
+    //                 })
+
+
+
+
+
+
+    //           })
+    //           .catch((e) => {
+    //               console.log(e)
+    //           })
+
+              
+
+
+
+    //       })
+    //       .catch((e) => {
+    //           console.log('error while creating metalsmithJSON file' + e)
+    //           this.$message({
+    //               showClose: true,
+    //               message: 'Cannot save file! Some error occured, try again.',
+    //               type: 'danger'
+    //           });
+    //       })
+
+
+    //   //revert changes in the metalsmith file 
+
+    //   //Then, show file in preview 
+    //   // switch (this.componentId) {
+    //   //     case 'GridManager':
+    //   //         this.$refs.contentComponent.getHtml();
+    //   //         this.previewGrid = true;
+    //   //         this.isPreviewComponent = true;
+    //   //         break;
+    //   //     default:
+    //   //         this.previewGrid = false;
+    //   //         this.isPreviewComponent = false;
+    //   //         break;
+    //   // }
+    // },
+
+    // Code Before 25-Oct Before Demo
     async generatePreview() {
 
       console.log("Generating and Previewing Page");
@@ -1975,10 +2517,1609 @@ export default {
     },
 
     // Save file
+
+    // saveFile() {
+    //   this.saveFileLoading = true
+    //   let newContent = this.$store.state.content;
+
+    //   switch (this.componentId) {
+    //     case 'GrapesComponent':
+    //       this.$refs.contentComponent.getHtml();
+    //       newContent = this.$store.state.content;
+    //       break;
+    //     case 'json-viewer':
+    //       newContent = JSON.stringify(this.$store.state.content);
+    //       break;
+    //     case 'GridManager':
+    //       this.$refs.contentComponent.getHtml();
+    //       newContent = this.$store.state.content;
+    //       this.saveLayoutFile();
+    //       break;
+    //     case 'MenuBuilder':
+    //       this.saveJsonFile();
+    //       break;
+        
+    //   }
+
+    //   axios.post(this.baseURL + '/flows-dir-listing', {
+    //     filename: this.currentFile.path.replace(/\\/g, "\/"),
+    //     text: newContent,
+    //     type: 'file'
+    //   }).then(async(res) => {
+
+    //     this.saveFileLoading = false
+    //     this.$message({
+    //       showClose: true,
+    //       message: 'File Saved!',
+    //       type: 'success'
+    //     });
+
+    //     if (this.currentFile.path.replace(/\\/g, "\/").match('Footer')) {
+
+    //       let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //       let urlparts = configFileUrl.split("/");
+    //       let fileNameOrginal = urlparts[urlparts.length - 1];
+    //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //       var folderUrl = configFileUrl.replace(fileName, '');
+    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+    //       this.layoutSettings = JSON.parse(configData.data);
+
+    //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Footer/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
+    //       let temp = {
+    //         value: name,
+    //         label: name
+    //       }
+    //       let checkValue = false;
+
+    //       for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Footer.length; i++) {
+    //         var obj = this.layoutSettings[2].layoutOptions[0].Footer[i];
+    //         if ((obj.label) == name) {
+    //           checkValue = true;
+    //         }
+    //       }
+
+    //       if (checkValue == true) {
+    //         console.log("File already exists")
+    //       } else {
+    //         console.log('File doesnt exists');
+    //         this.layoutSettings[2].layoutOptions[0].Footer.push(temp);
+    //         this.saveConfigFile(folderUrl);
+    //       }
+
+    //     } else if (this.currentFile.path.replace(/\\/g, "\/").match('Header')) {
+
+    //       let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //       let urlparts = configFileUrl.split("/");
+    //       let fileNameOrginal = urlparts[urlparts.length - 1];
+    //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //       var folderUrl = configFileUrl.replace(fileName, '');
+    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+    //       this.layoutSettings = JSON.parse(configData.data);
+    //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Header/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
+    //       let temp = {
+    //         value: name,
+    //         label: name
+    //       }
+    //       let checkValue = false;
+
+    //       for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Header.length; i++) {
+    //         var obj = this.layoutSettings[2].layoutOptions[0].Header[i];
+    //         if ((obj.label) == name) {
+    //           checkValue = true;
+    //         }
+    //       }
+
+    //       if (checkValue == true) {
+    //         console.log("file already exists")
+    //       } else {
+    //         this.layoutSettings[2].layoutOptions[0].Header.push(temp);
+    //         this.saveConfigFile(folderUrl);
+    //       }
+
+    //     } else if (this.currentFile.path.replace(/\\/g, "\/").match('Sidebar')) {
+
+    //       let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //       let urlparts = configFileUrl.split("/");
+    //       let fileNameOrginal = urlparts[urlparts.length - 1];
+    //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //       var folderUrl = configFileUrl.replace(fileName, '');
+    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+    //       this.layoutSettings = JSON.parse(configData.data);
+
+    //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Sidebar/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
+    //       let temp = {
+    //         value: name,
+    //         label: name
+    //       }
+    //       let checkValue = false;
+
+    //       for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Sidebar.length; i++) {
+    //         var obj = this.layoutSettings[2].layoutOptions[0].Sidebar[i];
+    //         if ((obj.label) == name) {
+    //           checkValue = true;
+    //         }
+    //       }
+
+    //       if (checkValue == true) {
+    //         console.log("file already exists")
+    //       } else {
+    //         this.layoutSettings[2].layoutOptions[0].Sidebar.push(temp);
+    //         this.saveConfigFile(folderUrl);
+    //       }
+    //     } else if (this.currentFile.path.replace(/\\/g, "\/").match('Menu')) {
+
+    //       let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //       let urlparts = configFileUrl.split("/");
+    //       let fileNameOrginal = urlparts[urlparts.length - 1];
+    //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //       var folderUrl = configFileUrl.replace(fileName, '');
+    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+    //       this.layoutSettings = JSON.parse(configData.data);
+
+    //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Menu/') + 5, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
+    //       let temp = {
+    //         value: name,
+    //         label: name
+    //       }
+
+    //       let checkValue = false;
+
+    //       for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Menu.length; i++) {
+    //         var obj = this.layoutSettings[2].layoutOptions[0].Menu[i];
+    //         if ((obj.label) == name) {
+    //           checkValue = true;
+    //         }
+    //       }
+
+    //       if (checkValue == true) {
+    //         console.log("file already exists")
+    //       } else {
+    //         this.layoutSettings[2].layoutOptions[0].Menu.push(temp);
+    //         this.saveConfigFile(folderUrl);
+    //       }
+
+    //     } else if (this.currentFile.path.replace(/\\/g, "\/").match('Layout')) {
+
+    //       let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //       let urlparts = configFileUrl.split("/");
+    //       let fileNameOrginal = urlparts[urlparts.length - 1];
+    //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //       var folderUrl = configFileUrl.replace(fileName, '');
+    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+    //       this.layoutSettings = JSON.parse(configData.data);
+
+    //       var content = this.$store.state.content;
+    //       var getFromBetween = {
+    //         results: [],
+    //         string: "",
+    //         getFromBetween: function(sub1, sub2) {
+    //           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //           var SP = this.string.indexOf(sub1) + sub1.length;
+    //           var string1 = this.string.substr(0, SP);
+    //           var string2 = this.string.substr(SP);
+    //           var TP = string1.length + string2.indexOf(sub2);
+    //           return this.string.substring(SP, TP);
+    //         },
+    //         removeFromBetween: function(sub1, sub2) {
+    //           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //           var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+    //           this.string = this.string.replace(removal, "");
+    //         },
+    //         getAllResults: function(sub1, sub2) {
+    //           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+    //           var result = this.getFromBetween(sub1, sub2);
+    //           this.results.push(result);
+    //           this.removeFromBetween(sub1, sub2);
+    //           if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+    //             this.getAllResults(sub1, sub2);
+    //           } else return;
+    //         },
+    //         get: function(string, sub1, sub2) {
+    //           this.results = [];
+    //           this.string = string;
+    //           this.getAllResults(sub1, sub2);
+    //           return this.results;
+    //         }
+    //       };
+
+    //       var result = (getFromBetween.get(content, "{{>", "}}"));
+
+    //       var resultParam = result
+    //       var DefaultParams = [];
+
+    //       for(let i=0;i<resultParam.length;i++){
+    //         var temp;
+    //         temp=resultParam[i].trim()
+    //         result[i]=result[i].trim();
+    //         temp = temp.replace(/&nbsp;/g, ' ')
+    //         temp = temp.replace(/\s+/g, ' ');
+    //         temp=temp.split(' ')
+    //         console.log("temp",temp)
+    //         for(let j=0;j<temp.length;j++){
+
+    //           console.log("temp[",j,"]:",temp[j])
+    //           if ((temp[j].indexOf('id')!=-1 || temp[j].indexOf('=')!=-1)  ) {
+    //             // console.log("condition check value:",temp[j+1],':-',temp[j+1].search('.'))
+    //             if( temp[j+1]!=undefined){
+    //              console.log("!=undefined")
+    //               console.log("temp[j]:",temp[j])
+    //               console.log("temp[j+1]:",temp[j+1])
+    //                   result[i]=temp[0];
+    //               if(temp[j+1].indexOf('.')>-1)
+    //               {
+    //                 console.log("inside ")
+    //                 let x=temp[j+1]
+    //                 x=temp[j+1].split(/'/)[1];
+    //                 let obj={}
+    //                 obj[temp[0]]=x
+    //                 DefaultParams.push(obj)
+    //                 break;
+    //               } 
+    //             }
+
+    //             else if((temp[j].indexOf('.')>-1) && (temp[j+1]==undefined )){
+    //               console.log("temp[j]:",temp[j])
+    //               console.log("temp[j+1]:",temp[j+1])
+    //               result[i]=temp[0];
+    //               if(temp[j])
+    //               {
+    //                 console.log("inside ")
+    //                 let x=temp[j]
+    //                 x=temp[j].split(/'/)[1];
+    //                 let obj={}
+    //                 obj[temp[0]]=x
+    //                 DefaultParams.push(obj)
+    //                 break;
+    //               }
+
+    //             }
+    //           }
+    //           console.log("temp at end of j loop:",temp)
+    //         }
+    //       }
+    //       console.log("DefaultParams:",DefaultParams)
+
+    //       let totalPartial = content.match(/{{>/g).length;
+    //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Layout/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.layout'));
+    //       let temp = {
+    //         value: name,
+    //         label: name,
+    //         partialsList: result,
+    //         defaultList: DefaultParams
+    //       }
+
+    //       let checkValue = false;
+    //       for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Layout.length; i++) {
+    //         var obj = this.layoutSettings[2].layoutOptions[0].Layout[i];
+    //         if ((obj.label) == name) {
+    //           checkValue = true;
+    //         }
+    //       }
+
+    //       if (checkValue == true) {
+
+    //         let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0].Layout, {
+    //           'label': name
+    //         });
+
+    //         this.layoutSettings[2].layoutOptions[0].Layout[currentFileIndex].partialsList = result;
+    //         this.layoutSettings[2].layoutOptions[0].Layout[currentFileIndex].defaultList = DefaultParams;
+    //         this.saveConfigFile(folderUrl);
+
+    //       } else {
+    //         this.layoutSettings[2].layoutOptions[0].Layout.push(temp);
+    //         this.saveConfigFile(folderUrl);
+    //       }
+
+    //       var foldernameKey = Object.keys(this.layoutSettings[2].layoutOptions[0]);
+
+    //       for (var i = 0; i < result.length; i++) {
+    //         var check = false;
+    //         result[i]=result[i].trim();
+    //         for (var j = 0; j < foldernameKey.length; j++) {
+    //           if (result[i] == foldernameKey[j]) {
+    //             check = true
+    //           }
+    //         }
+
+    //         if (check == false) {
+    //           let newName = result[i]
+    //           let newFolderName = folderUrl + '/' + result[i];
+    //           axios.post(this.baseURL + '/flows-dir-listing', {
+    //             foldername: newFolderName,
+    //             type: 'folder'
+    //           }).then((res) => {
+
+    //             this.newFolderDialog = false
+    //             this.addNewFolderLoading = false
+    //             let x = newName
+
+    //             this.addNewFileLoading = true
+    //             let newfilename = newFolderName + '/default.html'
+    //             axios.post(this.baseURL + '/flows-dir-listing', {
+    //               filename: newfilename,
+    //               text: ' ',
+    //               type: 'file'
+    //             }).then((res) => {
+    //               this.newFileDialog = false
+    //               this.addNewFileLoading = false
+    //               this.formAddFile.filename = null
+    //               this.layoutSettings[2].layoutOptions[0][x] = [];
+    //               let temp = {
+    //                 value: "default",
+    //                 label: "default"
+    //               }
+
+    //               this.layoutSettings[2].layoutOptions[0][x].push(temp)
+    //               this.saveConfigFile(folderUrl);
+
+    //             }).catch((e) => {
+    //               console.log(e)
+    //             })
+    //           }).catch((e) => {
+    //             console.log(e)
+    //           })
+    //         }
+    //       }
+    //     } else {
+
+    //       let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //       let urlparts = configFileUrl.split("/");
+    //       let fileNameOrginal = urlparts[urlparts.length - 1];
+    //       let foldername = urlparts[urlparts.length - 2];
+    //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //       var folderUrl = configFileUrl.replace(fileName, '');
+    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+    //       this.layoutSettings = JSON.parse(configData.data);
+
+    //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length + 1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
+    //       let temp = {
+    //         value: name,
+    //         label: name
+    //       }
+
+    //       let checkValue = false;
+
+    //       if (this.layoutSettings[2].layoutOptions[0][foldername]) {
+
+    //         for (var i = 0; i < this.layoutSettings[2].layoutOptions[0][foldername].length; i++) {
+    //           var obj = this.layoutSettings[2].layoutOptions[0][foldername][i];
+    //           if ((obj.label) == name) {
+    //             checkValue = true;
+    //           }
+    //         }
+
+    //         if (checkValue == true) {
+    //           console.log("File already exists")
+    //         } else {
+    //           this.layoutSettings[2].layoutOptions[0][foldername].push(temp);
+    //           this.saveConfigFile(folderUrl);
+    //         }
+
+    //       } else {
+    //         this.layoutSettings[2].layoutOptions[0][foldername] = [];
+    //         this.layoutSettings[2].layoutOptions[0][foldername].push(temp)
+    //         this.saveConfigFile(folderUrl);
+    //       }
+    //     }
+    //   }).catch((e) => {
+    //     this.saveFileLoading = false
+    //     this.$message({
+    //       showClose: true,
+    //       message: 'File not saved! Please try again.',
+    //       type: 'error'
+    //     });
+    //     console.log(e)
+    //   })
+    // },
+
+    // async dialogFormVisibleAdd() {
+    //   console.log("from add")
+    //   console.log("this.form.checked:", this.form.checked)
+    //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //   let urlparts = configFileUrl.split("/");
+    //   let fileNameOrginal = urlparts[urlparts.length - 1];
+    //   let foldername = urlparts[urlparts.length - 2];
+    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //   var folderUrl = configFileUrl.replace(fileName, '');
+    //   var content = this.$store.state.content;
+    //   let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //   var getFromBetween = {
+    //     results: [],
+    //     string: "",
+    //     getFromBetween: function(sub1, sub2) {
+    //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //       var SP = this.string.indexOf(sub1) + sub1.length;
+    //       var string1 = this.string.substr(0, SP);
+    //       var string2 = this.string.substr(SP);
+    //       var TP = string1.length + string2.indexOf(sub2);
+    //       return this.string.substring(SP, TP);
+    //     },
+    //     removeFromBetween: function(sub1, sub2) {
+    //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //       var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+    //       this.string = this.string.replace(removal, "");
+    //     },
+    //     getAllResults: function(sub1, sub2) {
+    //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+
+    //       var result = this.getFromBetween(sub1, sub2);
+    //       this.results.push(result);
+    //       this.removeFromBetween(sub1, sub2);
+
+    //       if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+    //         this.getAllResults(sub1, sub2);
+    //       } else return;
+    //     },
+    //     get: function(string, sub1, sub2) {
+    //       this.results = [];
+    //       this.string = string;
+    //       this.getAllResults(sub1, sub2);
+    //       return this.results;
+    //     }
+    //   };
+    //   var result = (getFromBetween.get(content, "{{>", "}}"));
+    //   console.log(result);
+    //   var resultParam = result
+
+    //   var DefaultParams = [];
+    //   for (let i = 0; i < resultParam.length; i++) {
+    //     var temp;
+    //     temp = resultParam[i].trim()
+    //     result[i] = result[i].trim()
+    //     temp = temp.replace(/&nbsp;/g, ' ')
+    //     temp = temp.replace(/\s+/g, ' ');
+    //     temp = temp.split(' ')
+    //     console.log("temp", temp)
+    //     for (let j = 0; j < temp.length; j++) {
+
+    //       console.log("temp[", j, "]:", temp[j])
+    //       if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+    //         if (temp[j + 1] != undefined) {
+    //           console.log("!=undefined")
+    //           console.log("temp[j]:", temp[j])
+    //           console.log("temp[j+1]:", temp[j + 1])
+    //           result[i] = temp[0];
+    //           if (temp[j + 1].indexOf('.') > -1) {
+    //             console.log("inside ")
+    //             let x = temp[j + 1]
+    //             x = temp[j + 1].split(/'/)[1];
+    //             let obj = {}
+    //             obj[temp[0]] = x
+    //             DefaultParams.push(obj)
+    //             break;
+    //           }
+    //         } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+    //           console.log("temp[j]:", temp[j])
+    //           console.log("temp[j+1]:", temp[j + 1])
+    //           result[i] = temp[0];
+    //           if (temp[j]) {
+    //             console.log("inside ")
+    //             let x = temp[j]
+    //             x = temp[j].split(/'/)[1];
+    //             let obj = {}
+    //             obj[temp[0]] = x
+    //             DefaultParams.push(obj)
+    //             break;
+    //           }
+
+    //         }
+    //       }
+    //       console.log("temp at end of j loop:", temp)
+    //     }
+    //   }
+    //   this.layoutSettings = JSON.parse(configData.data);
+    //   console.log("this.form.checked:", Object.keys(this.form.checked))
+    //   console.log("inside add")
+    //   if (this.form.checked.length > -1) {
+    //     console.log("namearray found not equal to -1")
+
+    //     for (let k = 0; k < Object.keys(this.form.checked).length; k++) {
+    //       console.log("calling function to addNewPartialFolder with following name:", Object.keys(this.form.checked)[k])
+    //       let newName = Object.keys(this.form.checked)[k]
+    //       let newFolderName = folderUrl + '/' + Object.keys(this.form.checked)[k];
+    //       axios.post(this.baseURL + '/flows-dir-listing', {
+    //           foldername: newFolderName,
+    //           type: 'folder'
+    //         })
+    //         .then((res) => {
+    //           console.log(res)
+    //           this.newFolderDialog = false
+    //           this.addNewFolderLoading = false
+    //           let x = newName
+    //           console.log("x", x)
+
+    //           this.addNewFileLoading = true
+
+    //           let newfilename = newFolderName + '/default.html'
+    //           axios.post(this.baseURL + '/flows-dir-listing', {
+    //               filename: newfilename,
+    //               text: ' ',
+    //               type: 'file'
+    //             })
+    //             .then((res) => {
+    //               console.log(res)
+    //               this.newFileDialog = false
+    //               this.addNewFileLoading = false
+    //               this.formAddFile.filename = null
+    //               this.layoutSettings[2].layoutOptions[0][x] = [];
+
+    //               let temp1 = {
+    //                 value: "default",
+    //                 label: "default"
+    //               }
+    //               this.layoutSettings[2].layoutOptions[0][x].push(temp1)
+    //               this.saveConfigFile(folderUrl);
+
+    //               let totalPartial = content.match(/{{>/g).length;
+
+    //               console.log('filename:', fileNameOrginal)
+    //               let namefile = fileNameOrginal.split('.')[0];
+    //               let namefolder = foldername;
+    //               console.log("namefile:", namefile.trim())
+    //               console.log("namefolder:", namefolder.trim())
+    //               let temp = {
+    //                 value: namefile,
+    //                 label: namefile,
+    //                 partialsList: result,
+    //                 defaultList: DefaultParams
+
+    //               }
+
+    //               let checkValue = false;
+    //               for (var i = 0; i < Object.keys(this.layoutSettings[2].layoutOptions[0]).length; i++) {
+    //                 var obj = Object.keys(this.layoutSettings[2].layoutOptions[0])[i];
+    //                 console.log("obj:", obj)
+    //                 if ((obj) == namefolder) {
+    //                   checkValue = true;
+    //                   console.log("selected obj:", obj)
+    //                 }
+    //               }
+    //               if (checkValue == true) {
+
+    //                 console.log("content of currentFileIndex", this.layoutSettings[2].layoutOptions[0][namefolder])
+    //                 let checkFileNamevalue = false;
+    //                 for (let j = 0; j < this.layoutSettings[2].layoutOptions[0][namefolder].length; j++) {
+    //                   if (this.layoutSettings[2].layoutOptions[0][namefolder][j].label == namefile) {
+    //                     checkFileNamevalue = true
+    //                     this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = [];
+    //                     this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = [];
+    //                     this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = result;
+    //                     this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
+    //                   }
+    //                 }
+    //                 if (checkFileNamevalue != true) {
+    //                   console.log("file not found inside currentFileIndex, hence formed new")
+    //                   this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+    //                 }
+
+    //                 console.log("file already exists")
+    //                 this.saveConfigFile(folderUrl);
+    //               } else {
+    //                 console.log('file doesnt exists');
+
+    //                 this.saveConfigFile(folderUrl);
+    //               }
+
+    //             })
+    //             .catch((e) => {
+    //               console.log(e)
+    //             })
+    //         })
+    //         .catch((e) => {
+    //           console.log(e)
+    //         })
+    //     }
+
+    //     this.form.checked = []
+    //     this.form.namearray = []
+    //   }
+    // },
+
+    // saveFile (){
+    //     this.saveFileLoading = true
+    //     let newContent = this.$store.state.content;
+    //     switch(this.componentId){
+    //         case 'GrapesComponent' :
+    //             this.$refs.contentComponent.getHtml();
+    //             newContent = this.$store.state.content;
+    //             break;
+    //         case 'json-viewer':
+    //             newContent = JSON.stringify(this.$store.state.content);
+    //             break;
+    //         case 'GridManager':
+    //             this.$refs.contentComponent.getHtml();
+    //             newContent = this.$store.state.content;
+    //             this.saveLayoutFile();
+    //             break;
+    //     }
+        
+    //     axios.post(this.baseURL + '/flows-dir-listing', {
+    //         filename : this.currentFile.path.replace(/\\/g, "\/"),
+    //         text : newContent,
+    //         type : 'file'
+    //     })
+    //     .then(async (res) => {
+    //         this.saveFileLoading = false
+    //         this.$message({
+    //             showClose: true,
+    //             message: 'File Saved!',
+    //             type: 'success'
+    //         });
+
+    //         if (this.currentFile.path.replace(/\\/g, "\/").match('Footer')) {
+    //             let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //             let urlparts = configFileUrl.split("/");
+    //             let fileNameOrginal = urlparts[urlparts.length-1];
+    //             let foldername = urlparts[urlparts.length - 2];
+    //             let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
+    //             var folderUrl = configFileUrl.replace(fileName, '');
+
+    //             let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+                
+    //             this.layoutSettings = JSON.parse(configData.data);
+    //             let checkValue = false;
+
+    //               if (fileName.search('hbs') != -1) {
+
+    //                   console.log("hello from hbs file")
+    //                   var content = this.$store.state.content;
+    //                   // console.log("content of grid",content);
+    //                   var getFromBetween = {
+    //                       results: [],
+    //                       string: "",
+    //                       getFromBetween: function(sub1, sub2) {
+    //                           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //                           var SP = this.string.indexOf(sub1) + sub1.length;
+    //                           var string1 = this.string.substr(0, SP);
+    //                           var string2 = this.string.substr(SP);
+    //                           var TP = string1.length + string2.indexOf(sub2);
+    //                           return this.string.substring(SP, TP);
+    //                       },
+    //                       removeFromBetween: function(sub1, sub2) {
+    //                           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //                           var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+    //                           this.string = this.string.replace(removal, "");
+    //                       },
+    //                       getAllResults: function(sub1, sub2) {
+    //                           // first check to see if we do have both substrings
+    //                           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+
+    //                           // find one result
+    //                           var result = this.getFromBetween(sub1, sub2);
+    //                           // push it to the results array
+    //                           this.results.push(result);
+    //                           // remove the most recently found one from the string
+    //                           this.removeFromBetween(sub1, sub2);
+
+    //                           // if there's more substrings
+    //                           if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+    //                               this.getAllResults(sub1, sub2);
+    //                           } else return;
+    //                       },
+    //                       get: function(string, sub1, sub2) {
+    //                           this.results = [];
+    //                           this.string = string;
+    //                           this.getAllResults(sub1, sub2);
+    //                           return this.results;
+    //                       }
+    //                   };
+    //                   var result = (getFromBetween.get(content, "{{>", "}}"));
+    //                   console.log(result);
+    //                   var resultParam = result
+
+    //                   var DefaultParams = [];
+    //                   for (let i = 0; i < resultParam.length; i++) {
+    //                       var temp;
+    //                       temp = resultParam[i].trim()
+    //                       result[i] = result[i].trim()
+    //                       temp = temp.replace(/&nbsp;/g, ' ')
+    //                       temp = temp.replace(/\s+/g, ' ');
+    //                       temp = temp.split(' ')
+    //                       console.log("temp", temp)
+    //                       for (let j = 0; j < temp.length; j++) {
+
+    //                           console.log("temp[", j, "]:", temp[j])
+    //                           if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+    //                               // console.log("condition check value:",temp[j+1],':-',temp[j+1].search('.'))
+    //                               if (temp[j + 1] != undefined) {
+    //                                   console.log("!=undefined")
+    //                                   console.log("temp[j]:", temp[j])
+    //                                   console.log("temp[j+1]:", temp[j + 1])
+    //                                   result[i] = temp[0];
+    //                                   if (temp[j + 1].indexOf('.') > -1) {
+    //                                       console.log("inside ")
+    //                                       let x = temp[j + 1]
+    //                                       x = temp[j + 1].split(/'/)[1];
+    //                                       let obj = {}
+    //                                       obj[temp[0]] = x
+    //                                       DefaultParams.push(obj)
+    //                                       break;
+    //                                   }
+    //                               } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+    //                                   console.log("temp[j]:", temp[j])
+    //                                   console.log("temp[j+1]:", temp[j + 1])
+    //                                   result[i] = temp[0];
+    //                                   if (temp[j]) {
+    //                                       console.log("inside ")
+    //                                       let x = temp[j]
+    //                                       x = temp[j].split(/'/)[1];
+    //                                       let obj = {}
+    //                                       obj[temp[0]] = x
+    //                                       DefaultParams.push(obj)
+    //                                       break;
+    //                                   }
+
+    //                               }
+    //                           }
+    //                           console.log("temp at end of j loop:", temp)
+    //                       }
+    //                   }
+
+    //                   console.log("DefaultParams:", DefaultParams);
+    //                   /*****
+    //                     adding new code for prompt 
+    //                   ******/
+    //                   // var promptArray=[]
+    //                   var foldernameKey = Object.keys(this.layoutSettings[2].layoutOptions[0])
+    //                   console.log("foldernameKey", foldernameKey)
+    //                   for (var i = 0; i < result.length; i++) {
+    //                       var check = false;
+    //                       for (var j = 0; j < foldernameKey.length; j++) {
+    //                           console.log("result:", result[i])
+    //                           if (result[i] == foldernameKey[j]) {
+    //                               check = true
+    //                           }
+
+    //                       }
+    //                       if (check == false) {
+    //                           // this.addNewPartialFolder(result[i].trim())
+    //                           this.form.namearray.push(result[i])
+    //                           // this.form.checked.push(result[i])
+    //                           // this.form.checked.push(result[i])
+    //                           console.log("new partial found:",this.form.namearray)
+
+    //                       }
+    //                     }
+    //                       /**
+    //                         prompt user here
+    //                       **/
+                          
+    //                       console.log("namearray content:",this.form.namearray)
+    //                       if(this.form.namearray.length>0){
+
+    //                       this.dialogFormVisible=true
+    //                       }
+    //                       else{
+    //                         let totalPartial = content.match(/{{>/g).length;
+    //                       // console.log("totalPartial",totalPartial);
+
+    //                       console.log('filename:', fileNameOrginal)
+    //                       // console.log('redefined:',fileNameOrginal.split('.')[0])
+    //                       // console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+    //                       let namefile = fileNameOrginal.split('.')[0];
+    //                       let namefolder = foldername;
+    //                       console.log("namefile:", namefile.trim())
+    //                       console.log("namefolder:", namefolder.trim())
+    //                       let temp = {
+    //                           value: namefile,
+    //                           label: namefile,
+    //                           partialsList: result,
+    //                           defaultList: DefaultParams
+
+    //                       }
+
+    //                       let checkValue = false;
+    //                       for (var i = 0; i < Object.keys(this.layoutSettings[2].layoutOptions[0]).length; i++) {
+    //                           var obj = Object.keys(this.layoutSettings[2].layoutOptions[0])[i];
+    //                           console.log("obj:", obj)
+    //                           if ((obj) == namefolder) {
+    //                               checkValue = true;
+    //                               // obj.partialsList=result
+    //                               console.log("selected obj:", obj)
+    //                               // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':namefolder});
+    //                           }
+    //                       }
+    //                       if (checkValue == true) {
+
+    //                           // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':name});
+    //                           // console.log("index of change in existing",namefolder)
+    //                           console.log("content of currentFileIndex", this.layoutSettings[2].layoutOptions[0][namefolder])
+    //                           let checkFileNamevalue = false;
+    //                           for (let j = 0; j < this.layoutSettings[2].layoutOptions[0][namefolder].length; j++) {
+    //                               if (this.layoutSettings[2].layoutOptions[0][namefolder][j].label == namefile) {
+    //                                   checkFileNamevalue = true
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = [];
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = [];
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = result;
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
+    //                               }
+    //                           }
+    //                           if (checkFileNamevalue != true) {
+    //                               console.log("file not found inside currentFileIndex, hence formed new")
+    //                               this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+    //                           }
+
+
+    //                           // this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].value=result.value;
+    //                           // console.log("partials",this.layoutSettings[2].layoutOptions[0][currentFileIndex][].partialsList)
+    //                           console.log("file already exists")
+    //                           this.saveConfigFile(folderUrl);
+    //                       } else {
+    //                           console.log('file doesnt exists');
+    //                           // this.$store.state.LayoutOptions.push(temp);
+    //                           // this.layoutSettings[2].layoutOptions[0][namefolder]=[];
+    //                           // this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+
+    //                           // saveConfigFile
+    //                           this.saveConfigFile(folderUrl);
+    //                       }
+
+
+    //                       }
+    //                       console.log("back from dialog pop up")
+
+                         
+                      
+
+
+    //               } else {
+    //             console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+
+    //             let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Footer/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
+    //             let temp = {
+    //                 value: name,
+    //                 label: name
+    //             }
+    //             let checkValue = false;
+    //             for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Footer.length; i++) {
+    //                 var obj = this.layoutSettings[2].layoutOptions[0].Footer[i];
+    //                 if ((obj.label) == name) {
+    //                     checkValue = true;
+    //                 }
+    //             }
+
+
+    //             if (checkValue == true) {
+    //                 console.log("file already exists")
+    //             } else {
+    //                 console.log('file doesnt exists');
+    //                 // this.$store.state.FooterOptions.push(temp);
+    //                 this.layoutSettings[2].layoutOptions[0].Footer.push(temp);
+                    
+    //                 // saveConfigFile
+    //                 this.saveConfigFile(folderUrl);
+    //             }
+    //           }
+
+           
+
+    //         } else if (this.currentFile.path.replace(/\\/g, "\/").match('Layout')) {
+    //           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //           let urlparts = configFileUrl.split("/");
+    //           let fileNameOrginal = urlparts[urlparts.length-1];
+    //           let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
+    //           var folderUrl = configFileUrl.replace(fileName, '');
+
+    //           let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+              
+    //           this.layoutSettings = JSON.parse(configData.data);
+    //           var content=this.$store.state.content;
+    //             // console.log("content of grid",content);
+    //             var getFromBetween = {
+    //             results:[],
+    //             string:"",
+    //             getFromBetween:function (sub1,sub2) {
+    //                 if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //                 var SP = this.string.indexOf(sub1)+sub1.length;
+    //                 var string1 = this.string.substr(0,SP);
+    //                 var string2 = this.string.substr(SP);
+    //                 var TP = string1.length + string2.indexOf(sub2);
+    //                 return this.string.substring(SP,TP);
+    //             },
+    //             removeFromBetween:function (sub1,sub2) {
+    //                 if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //                 var removal = sub1+this.getFromBetween(sub1,sub2)+sub2;
+    //                 this.string = this.string.replace(removal,"");
+    //             },
+    //             getAllResults:function (sub1,sub2) {
+    //                 // first check to see if we do have both substrings
+    //                 if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+
+    //                 // find one result
+    //                 var result = this.getFromBetween(sub1,sub2);
+    //                 // push it to the results array
+    //                 this.results.push(result);
+    //                 // remove the most recently found one from the string
+    //                 this.removeFromBetween(sub1,sub2);
+
+    //                 // if there's more substrings
+    //                 if(this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+    //                     this.getAllResults(sub1,sub2);
+    //                 }
+    //                 else return;
+    //             },
+    //             get:function (string,sub1,sub2) {
+    //                 this.results = [];
+    //                 this.string = string;
+    //                 this.getAllResults(sub1,sub2);
+    //                 return this.results;
+    //             }
+    //             };
+    //             var result = (getFromBetween.get(content,"{{>","}}"));
+    //             console.log(result);
+    //             var resultParam=result
+
+    //             var DefaultParams=[];
+    //             for(let i=0;i<resultParam.length;i++){
+    //               var temp;
+    //               temp=resultParam[i].trim()
+    //               result[i]=result[i].trim()
+    //               temp = temp.replace(/&nbsp;/g, ' ')
+    //               temp = temp.replace(/\s+/g, ' ');
+    //               temp=temp.split(' ')
+    //               console.log("temp",temp)
+    //               for(let j=0;j<temp.length;j++){
+
+    //                 console.log("temp[",j,"]:",temp[j])
+    //                 if ((temp[j].indexOf('id')!=-1 || temp[j].indexOf('=')!=-1)  ) {
+    //                   // console.log("condition check value:",temp[j+1],':-',temp[j+1].search('.'))
+    //                   if( temp[j+1]!=undefined){
+    //                    console.log("!=undefined")
+    //                     console.log("temp[j]:",temp[j])
+    //                     console.log("temp[j+1]:",temp[j+1])
+    //                         result[i]=temp[0];
+    //                     if(temp[j+1].indexOf('.')>-1)
+    //                     {
+    //                       console.log("inside ")
+    //                       let x=temp[j+1]
+    //                       x=temp[j+1].split(/'/)[1];
+    //                       let obj={}
+    //                       obj[temp[0]]=x
+    //                       DefaultParams.push(obj)
+    //                       break;
+    //                     } 
+    //                   }
+
+    //                   else if((temp[j].indexOf('.')>-1) && (temp[j+1]==undefined )){
+    //                     console.log("temp[j]:",temp[j])
+    //                     console.log("temp[j+1]:",temp[j+1])
+    //                     result[i]=temp[0];
+    //                     if(temp[j])
+    //                     {
+    //                       console.log("inside ")
+    //                       let x=temp[j]
+    //                       x=temp[j].split(/'/)[1];
+    //                       let obj={}
+    //                       obj[temp[0]]=x
+    //                       DefaultParams.push(obj)
+    //                       break;
+    //                     }
+
+    //                   }
+    //                 }
+    //                 console.log("temp at end of j loop:",temp)
+    //               }
+    //             }
+                
+    //             console.log("DefaultParams:",DefaultParams);
+
+    //             let totalPartial=content.match(/{{>/g).length;
+    //             // console.log("totalPartial",totalPartial);
+
+
+    //             // console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+    //             let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Layout/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.layout'));
+    //             let temp = {
+    //                 value: name,
+    //                 label: name,
+    //                 partialsList: result,
+    //                 defaultList: DefaultParams
+                    
+    //             }
+              
+    //             let checkValue = false;
+    //             for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Layout.length; i++) {
+    //                 var obj = this.layoutSettings[2].layoutOptions[0].Layout[i];
+    //                 if ((obj.label) == name) {
+    //                     checkValue = true;
+    //                     // obj.partialsList=result
+    //                 }
+    //             }
+    //             if (checkValue == true) {
+    //               console.log("name",name)
+    //                 let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0].Layout,{'label':name});
+    //                 console.log("index of change in existing",currentFileIndex)
+    //                 this.layoutSettings[2].layoutOptions[0].Layout[currentFileIndex].partialsList=result;
+    //                 this.layoutSettings[2].layoutOptions[0].Layout[currentFileIndex].defaultList=DefaultParams;
+    //                 // this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].value=result.value;
+    //                 console.log("partials",this.layoutSettings[2].layoutOptions[0].Layout[currentFileIndex].partialsList)
+    //                 console.log("file already exists")
+    //                 this.saveConfigFile(folderUrl);
+    //             } else {
+    //                 console.log('file doesnt exists');
+    //                 // this.$store.state.LayoutOptions.push(temp);
+    //                 this.layoutSettings[2].layoutOptions[0].Layout.push(temp);
+                    
+    //                 // saveConfigFile
+    //                 this.saveConfigFile(folderUrl);
+    //             }
+
+    //             var foldernameKey= Object.keys(this.layoutSettings[2].layoutOptions[0])
+    //             console.log("foldernameKey",foldernameKey)
+    //             for(var i=0;i<result.length;i++){
+    //              var check=false ;
+    //               for(var j=0;j<foldernameKey.length;j++)
+    //               { console.log("result:",result[i])
+    //                 if (result[i]==foldernameKey[j]) {
+    //                   check=true
+    //                 }
+
+    //               }
+    //               if (check==false) {
+    //                 // this.addNewPartialFolder(result[i].trim())
+    //                 console.log("calling function to addNewPartialFolder with following name",result[i])
+    //                 let newName=result[i]
+    //                 let newFolderName = folderUrl+ '/' + result[i];
+    //                  axios.post(this.baseURL + '/flows-dir-listing', {
+    //                     foldername : newFolderName,
+    //                     type : 'folder'
+    //                 })
+    //                 .then((res) => {
+    //                     console.log(res)
+    //                     this.newFolderDialog = false
+    //                     this.addNewFolderLoading = false
+    //                     let x=newName
+    //                     console.log("x",x)
+    //                     // this.layoutSettings[2].layoutOptions[0][x]=[];
+                    
+    //                     // this.saveConfigFile(folderUrl);
+    //                     this.addNewFileLoading = true
+                        
+    //                     let newfilename = newFolderName + '/default.html'
+    //                      axios.post(this.baseURL + '/flows-dir-listing', {
+    //                         filename : newfilename,
+    //                         text : ' ',
+    //                         type : 'file'
+    //                     })
+    //                     .then((res) => {
+    //                         console.log(res)
+    //                         this.newFileDialog = false
+    //                         this.addNewFileLoading = false
+    //                         this.formAddFile.filename = null
+    //                          this.layoutSettings[2].layoutOptions[0][x]=[];
+
+    //                          let temp = {
+    //                                 value: "default",
+    //                                 label: "default"
+    //                             }
+    //                           this.layoutSettings[2].layoutOptions[0][x].push(temp)
+    //                           this.saveConfigFile(folderUrl);
+    //                     })
+    //                     .catch((e) => {
+    //                         console.log(e)
+    //                     })
+    //                     // this.layoutSettings[2].layoutOptions[0].push(result[i].trim())
+    //                     // this.saveConfigFile(folderUrl);
+    //                 })
+    //                 .catch((e) => {
+    //                     console.log(e)
+    //                 })
+
+    //               }
+    //            }
+
+
+    //         } else {
+    //             let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //             let urlparts = configFileUrl.split("/");
+    //             let fileNameOrginal = urlparts[urlparts.length - 1];
+    //             let foldername = urlparts[urlparts.length - 2];
+    //             let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //             var folderUrl = configFileUrl.replace(fileName, '');
+
+    //             let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+    //             this.layoutSettings = JSON.parse(configData.data);
+    //             console.log("check for hbs")
+
+
+    //             let checkValue = false;
+
+    //               if (fileName.search('hbs') != -1) {
+
+    //                   console.log("hello from hbs file")
+    //                   var content = this.$store.state.content;
+    //                   // console.log("content of grid",content);
+    //                   var getFromBetween = {
+    //                       results: [],
+    //                       string: "",
+    //                       getFromBetween: function(sub1, sub2) {
+    //                           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //                           var SP = this.string.indexOf(sub1) + sub1.length;
+    //                           var string1 = this.string.substr(0, SP);
+    //                           var string2 = this.string.substr(SP);
+    //                           var TP = string1.length + string2.indexOf(sub2);
+    //                           return this.string.substring(SP, TP);
+    //                       },
+    //                       removeFromBetween: function(sub1, sub2) {
+    //                           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //                           var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+    //                           this.string = this.string.replace(removal, "");
+    //                       },
+    //                       getAllResults: function(sub1, sub2) {
+    //                           // first check to see if we do have both substrings
+    //                           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+
+    //                           // find one result
+    //                           var result = this.getFromBetween(sub1, sub2);
+    //                           // push it to the results array
+    //                           this.results.push(result);
+    //                           // remove the most recently found one from the string
+    //                           this.removeFromBetween(sub1, sub2);
+
+    //                           // if there's more substrings
+    //                           if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+    //                               this.getAllResults(sub1, sub2);
+    //                           } else return;
+    //                       },
+    //                       get: function(string, sub1, sub2) {
+    //                           this.results = [];
+    //                           this.string = string;
+    //                           this.getAllResults(sub1, sub2);
+    //                           return this.results;
+    //                       }
+    //                   };
+    //                   var result = (getFromBetween.get(content, "{{>", "}}"));
+    //                   console.log(result);
+    //                   var resultParam = result
+
+    //                   var DefaultParams = [];
+    //                   for (let i = 0; i < resultParam.length; i++) {
+    //                       var temp;
+    //                       temp = resultParam[i].trim()
+    //                       result[i] = result[i].trim()
+    //                       temp = temp.replace(/&nbsp;/g, ' ')
+    //                       temp = temp.replace(/\s+/g, ' ');
+    //                       temp = temp.split(' ')
+    //                       console.log("temp", temp)
+    //                       for (let j = 0; j < temp.length; j++) {
+
+    //                           console.log("temp[", j, "]:", temp[j])
+    //                           if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+    //                               // console.log("condition check value:",temp[j+1],':-',temp[j+1].search('.'))
+    //                               if (temp[j + 1] != undefined) {
+    //                                   console.log("!=undefined")
+    //                                   console.log("temp[j]:", temp[j])
+    //                                   console.log("temp[j+1]:", temp[j + 1])
+    //                                   result[i] = temp[0];
+    //                                   if (temp[j + 1].indexOf('.') > -1) {
+    //                                       console.log("inside ")
+    //                                       let x = temp[j + 1]
+    //                                       x = temp[j + 1].split(/'/)[1];
+    //                                       let obj = {}
+    //                                       obj[temp[0]] = x
+    //                                       DefaultParams.push(obj)
+    //                                       break;
+    //                                   }
+    //                               } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+    //                                   console.log("temp[j]:", temp[j])
+    //                                   console.log("temp[j+1]:", temp[j + 1])
+    //                                   result[i] = temp[0];
+    //                                   if (temp[j]) {
+    //                                       console.log("inside ")
+    //                                       let x = temp[j]
+    //                                       x = temp[j].split(/'/)[1];
+    //                                       let obj = {}
+    //                                       obj[temp[0]] = x
+    //                                       DefaultParams.push(obj)
+    //                                       break;
+    //                                   }
+
+    //                               }
+    //                           }
+    //                           console.log("temp at end of j loop:", temp)
+    //                       }
+    //                   }
+
+    //                   console.log("DefaultParams:", DefaultParams);
+    //                   /*****
+    //                     adding new code for prompt 
+    //                   ******/
+    //                   // var promptArray=[]
+    //                   var foldernameKey = Object.keys(this.layoutSettings[2].layoutOptions[0])
+    //                   console.log("foldernameKey", foldernameKey)
+    //                   for (var i = 0; i < result.length; i++) {
+    //                       var check = false;
+    //                       for (var j = 0; j < foldernameKey.length; j++) {
+    //                           console.log("result:", result[i])
+    //                           if (result[i] == foldernameKey[j]) {
+    //                               check = true
+    //                           }
+
+    //                       }
+    //                       if (check == false) {
+    //                           // this.addNewPartialFolder(result[i].trim())
+    //                           this.form.namearray.push(result[i])
+    //                           // this.form.checked.push(result[i])
+    //                           // this.form.checked.push(result[i])
+    //                           console.log("new partial found:",this.form.namearray)
+
+    //                       }
+    //                     }
+    //                       /**
+    //                         prompt user here
+    //                       **/
+                          
+    //                       console.log("namearray content:",this.form.namearray)
+
+    //                       if(this.form.namearray.length>0){
+    //                         console.log('Name array is filled, Inside');
+    //                       this.dialogFormVisible=true
+    //                       }
+    //                       else{
+    //                         let totalPartial = content.match(/{{>/g).length;
+    //                       // console.log("totalPartial",totalPartial);
+
+    //                       console.log('filename:', fileNameOrginal)
+    //                       // console.log('redefined:',fileNameOrginal.split('.')[0])
+    //                       // console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+    //                       let namefile = fileNameOrginal.split('.')[0];
+    //                       let namefolder = foldername;
+    //                       console.log("namefile:", namefile.trim())
+    //                       console.log("namefolder:", namefolder.trim())
+    //                       let temp = {
+    //                           value: namefile,
+    //                           label: namefile,
+    //                           partialsList: result,
+    //                           defaultList: DefaultParams
+
+    //                       }
+
+    //                       let checkValue = false;
+    //                       for (var i = 0; i < Object.keys(this.layoutSettings[2].layoutOptions[0]).length; i++) {
+    //                           var obj = Object.keys(this.layoutSettings[2].layoutOptions[0])[i];
+    //                           console.log("obj:", obj)
+    //                           if ((obj) == namefolder) {
+    //                               checkValue = true;
+    //                               // obj.partialsList=result
+    //                               console.log("selected obj:", obj)
+    //                               // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':namefolder});
+    //                           }
+    //                       }
+    //                       if (checkValue == true) {
+
+    //                           // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':name});
+    //                           // console.log("index of change in existing",namefolder)
+    //                           console.log("content of currentFileIndex", this.layoutSettings[2].layoutOptions[0][namefolder])
+    //                           let checkFileNamevalue = false;
+    //                           for (let j = 0; j < this.layoutSettings[2].layoutOptions[0][namefolder].length; j++) {
+    //                               if (this.layoutSettings[2].layoutOptions[0][namefolder][j].label == namefile) {
+    //                                   checkFileNamevalue = true
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = [];
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = [];
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = result;
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
+    //                               }
+    //                           }
+    //                           if (checkFileNamevalue != true) {
+    //                               console.log("file not found inside currentFileIndex, hence formed new")
+    //                               this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+    //                           }
+
+
+    //                           // this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].value=result.value;
+    //                           // console.log("partials",this.layoutSettings[2].layoutOptions[0][currentFileIndex][].partialsList)
+    //                           console.log("file already exists")
+    //                           this.saveConfigFile(folderUrl);
+    //                       } else {
+    //                           console.log('file doesnt exists');
+    //                           // this.$store.state.LayoutOptions.push(temp);
+    //                           // this.layoutSettings[2].layoutOptions[0][namefolder]=[];
+    //                           // this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+
+    //                           // saveConfigFile
+    //                           this.saveConfigFile(folderUrl);
+    //                       }
+
+
+    //                       }
+    //                       console.log("back from dialog pop up")
+
+                          
+
+
+    //               } else {
+    //                 let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length+1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
+    //                 let temp = {
+    //                     value: name,
+    //                     label: name
+    //                 }
+    //                   let checkValue = false;
+
+
+    //                   if (this.layoutSettings[2].layoutOptions[0][foldername]) {
+    //                       console.log("it already exist in config file;")
+    //                       for (var i = 0; i < this.layoutSettings[2].layoutOptions[0][foldername].length; i++) {
+    //                           var obj = this.layoutSettings[2].layoutOptions[0][foldername][i];
+    //                           if ((obj.label) == name) {
+    //                               checkValue = true;
+    //                           }
+    //                       }
+    //                       if (checkValue == true) {
+    //                           console.log("file already exists")
+    //                       } else {
+    //                           this.layoutSettings[2].layoutOptions[0][foldername].push(temp);
+
+    //                           // saveConfigFile
+    //                           this.saveConfigFile(folderUrl);
+    //                       }
+
+    //                   } else {
+    //                       // this.layoutSettings[2].layoutOptions[0].put(foldername);
+    //                       this.layoutSettings[2].layoutOptions[0][foldername] = [];
+    //                       this.layoutSettings[2].layoutOptions[0][foldername].push(temp)
+    //                       this.saveConfigFile(folderUrl);
+    //                   }
+
+    //               }
+    //             }
+    //             })
+    //             .catch((e) => {
+    //                 this.saveFileLoading = false
+    //                 this.$message({
+    //                     showClose: true,
+    //                     message: 'File not saved! Please try again.',
+    //                     type: 'error'
+    //                 });
+    //                 console.log(e)
+    //             })
+    //       },
+
+    
+    // async dialogFormVisibleAdd(){
+    //   console.log("from add")
+    //   console.log("this.form.checked:",this.form.checked)
+    //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //   let urlparts = configFileUrl.split("/");
+    //   let fileNameOrginal = urlparts[urlparts.length - 1];
+    //   let foldername = urlparts[urlparts.length - 2];
+    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //   var folderUrl = configFileUrl.replace(fileName, '');
+    //   var content = this.$store.state.content;
+    //   let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //   var getFromBetween = {
+    //   results: [],
+    //   string: "",
+    //   getFromBetween: function(sub1, sub2) {
+    //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //       var SP = this.string.indexOf(sub1) + sub1.length;
+    //       var string1 = this.string.substr(0, SP);
+    //       var string2 = this.string.substr(SP);
+    //       var TP = string1.length + string2.indexOf(sub2);
+    //       return this.string.substring(SP, TP);
+    //   },
+    //   removeFromBetween: function(sub1, sub2) {
+    //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+    //       var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+    //       this.string = this.string.replace(removal, "");
+    //   },
+    //   getAllResults: function(sub1, sub2) {
+    //       // first check to see if we do have both substrings
+    //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+
+    //       // find one result
+    //       var result = this.getFromBetween(sub1, sub2);
+    //       // push it to the results array
+    //       this.results.push(result);
+    //       // remove the most recently found one from the string
+    //       this.removeFromBetween(sub1, sub2);
+
+    //       // if there's more substrings
+    //       if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+    //           this.getAllResults(sub1, sub2);
+    //       } else return;
+    //   },
+    //   get: function(string, sub1, sub2) {
+    //       this.results = [];
+    //       this.string = string;
+    //       this.getAllResults(sub1, sub2);
+    //       return this.results;
+    //   }
+    //   };
+    //   var result = (getFromBetween.get(content, "{{>", "}}"));
+    //   console.log(result);
+    //    var resultParam = result
+
+    //     var DefaultParams = [];
+    //     for (let i = 0; i < resultParam.length; i++) {
+    //         var temp;
+    //         temp = resultParam[i].trim()
+    //         result[i] = result[i].trim()
+    //         temp = temp.replace(/&nbsp;/g, ' ')
+    //         temp = temp.replace(/\s+/g, ' ');
+    //         temp = temp.split(' ')
+    //         console.log("temp", temp)
+    //         for (let j = 0; j < temp.length; j++) {
+
+    //             console.log("temp[", j, "]:", temp[j])
+    //             if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+    //                 // console.log("condition check value:",temp[j+1],':-',temp[j+1].search('.'))
+    //                 if (temp[j + 1] != undefined) {
+    //                     console.log("!=undefined")
+    //                     console.log("temp[j]:", temp[j])
+    //                     console.log("temp[j+1]:", temp[j + 1])
+    //                     result[i] = temp[0];
+    //                     if (temp[j + 1].indexOf('.') > -1) {
+    //                         console.log("inside ")
+    //                         let x = temp[j + 1]
+    //                         x = temp[j + 1].split(/'/)[1];
+    //                         let obj = {}
+    //                         obj[temp[0]] = x
+    //                         DefaultParams.push(obj)
+    //                         break;
+    //                     }
+    //                 } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+    //                     console.log("temp[j]:", temp[j])
+    //                     console.log("temp[j+1]:", temp[j + 1])
+    //                     result[i] = temp[0];
+    //                     if (temp[j]) {
+    //                         console.log("inside ")
+    //                         let x = temp[j]
+    //                         x = temp[j].split(/'/)[1];
+    //                         let obj = {}
+    //                         obj[temp[0]] = x
+    //                         DefaultParams.push(obj)
+    //                         break;
+    //                     }
+
+    //                 }
+    //             }
+    //             console.log("temp at end of j loop:", temp)
+    //         }
+    //     }
+    //   this.layoutSettings = JSON.parse(configData.data);
+    //   console.log("this.form.checked:",Object.keys(this.form.checked))
+    //     console.log("inside add")
+    //     if(this.form.checked.length>-1){
+    //     console.log("namearray found not equal to -1")
+
+    //     for(let k=0;k<Object.keys(this.form.checked).length;k++)
+    //     {
+    //     console.log("calling function to addNewPartialFolder with following name:",Object.keys(this.form.checked)[k])
+    //       let newName = Object.keys(this.form.checked)[k]
+    //       let newFolderName = folderUrl + '/' + Object.keys(this.form.checked)[k];
+    //       axios.post(this.baseURL + '/flows-dir-listing', {
+    //               foldername: newFolderName,
+    //               type: 'folder'
+    //           })
+    //           .then((res) => {
+    //               console.log(res)
+    //               this.newFolderDialog = false
+    //               this.addNewFolderLoading = false
+    //               let x = newName
+    //               console.log("x", x)
+    //               // this.layoutSettings[2].layoutOptions[0][x]=[];
+
+    //               // this.saveConfigFile(folderUrl);
+    //               this.addNewFileLoading = true
+
+    //               let newfilename = newFolderName + '/default.html'
+    //               axios.post(this.baseURL + '/flows-dir-listing', {
+    //                       filename: newfilename,
+    //                       text: ' ',
+    //                       type: 'file'
+    //                   })
+    //                   .then((res) => {
+    //                       console.log(res)
+    //                       this.newFileDialog = false
+    //                       this.addNewFileLoading = false
+    //                       this.formAddFile.filename = null
+    //                       this.layoutSettings[2].layoutOptions[0][x] = [];
+
+    //                       let temp1 = {
+    //                           value: "default",
+    //                           label: "default"
+    //                       }
+    //                       this.layoutSettings[2].layoutOptions[0][x].push(temp1)
+    //                       this.saveConfigFile(folderUrl);
+
+
+    //                       /****
+    //                       updating function 
+    //                       ***/
+    //                       let totalPartial = content.match(/{{>/g).length;
+    //                       // console.log("totalPartial",totalPartial);
+
+    //                       console.log('filename:', fileNameOrginal)
+    //                       // console.log('redefined:',fileNameOrginal.split('.')[0])
+    //                       // console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+    //                       let namefile = fileNameOrginal.split('.')[0];
+    //                       let namefolder = foldername;
+    //                       console.log("namefile:", namefile.trim())
+    //                       console.log("namefolder:", namefolder.trim())
+    //                       let temp = {
+    //                           value: namefile,
+    //                           label: namefile,
+    //                           partialsList: result,
+    //                           defaultList: DefaultParams
+
+    //                       }
+
+    //                       let checkValue = false;
+    //                       for (var i = 0; i < Object.keys(this.layoutSettings[2].layoutOptions[0]).length; i++) {
+    //                           var obj = Object.keys(this.layoutSettings[2].layoutOptions[0])[i];
+    //                           console.log("obj:", obj)
+    //                           if ((obj) == namefolder) {
+    //                               checkValue = true;
+    //                               // obj.partialsList=result
+    //                               console.log("selected obj:", obj)
+    //                               // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':namefolder});
+    //                           }
+    //                       }
+    //                       if (checkValue == true) {
+
+    //                           // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':name});
+    //                           // console.log("index of change in existing",namefolder)
+    //                           console.log("content of currentFileIndex", this.layoutSettings[2].layoutOptions[0][namefolder])
+    //                           let checkFileNamevalue = false;
+    //                           for (let j = 0; j < this.layoutSettings[2].layoutOptions[0][namefolder].length; j++) {
+    //                               if (this.layoutSettings[2].layoutOptions[0][namefolder][j].label == namefile) {
+    //                                   checkFileNamevalue = true
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = [];
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = [];
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = result;
+    //                                   this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
+    //                               }
+    //                           }
+    //                           if (checkFileNamevalue != true) {
+    //                               console.log("file not found inside currentFileIndex, hence formed new")
+    //                               this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+    //                           }
+
+
+    //                           // this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].value=result.value;
+    //                           // console.log("partials",this.layoutSettings[2].layoutOptions[0][currentFileIndex][].partialsList)
+    //                           console.log("file already exists")
+    //                           this.saveConfigFile(folderUrl);
+    //                       } else {
+    //                           console.log('file doesnt exists');
+    //                           // this.$store.state.LayoutOptions.push(temp);
+    //                           // this.layoutSettings[2].layoutOptions[0][namefolder]=[];
+    //                           // this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+
+    //                           // saveConfigFile
+    //                           this.saveConfigFile(folderUrl);
+    //                       }
+
+    //                   })
+    //                   .catch((e) => {
+    //                       console.log(e)
+    //                   })
+    //               // this.layoutSettings[2].layoutOptions[0].push(result[i].trim())
+    //               // this.saveConfigFile(folderUrl);
+    //           })
+    //           .catch((e) => {
+    //               console.log(e)
+    //           })
+    //   } 
+      
+      
+    //   this.form.checked=[]
+    //   this.form.namearray=[]
+    //   }
+    // },
+
+    // Backup Before Demo 26 Oct
     saveFile() {
       this.saveFileLoading = true
       let newContent = this.$store.state.content;
-
       switch (this.componentId) {
         case 'GrapesComponent':
           this.$refs.contentComponent.getHtml();
@@ -1993,45 +4134,37 @@ export default {
           this.saveLayoutFile();
           break;
       }
-
       axios.post(this.baseURL + '/flows-dir-listing', {
         filename: this.currentFile.path.replace(/\\/g, "\/"),
         text: newContent,
         type: 'file'
       }).then(async(res) => {
-
         this.saveFileLoading = false
         this.$message({
           showClose: true,
           message: 'File Saved!',
           type: 'success'
         });
-
         if (this.currentFile.path.replace(/\\/g, "\/").match('Footer')) {
-
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           let urlparts = configFileUrl.split("/");
           let fileNameOrginal = urlparts[urlparts.length - 1];
           let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
           var folderUrl = configFileUrl.replace(fileName, '');
           let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-
           this.layoutSettings = JSON.parse(configData.data);
-
           let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Footer/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
           let temp = {
             value: name,
             label: name
           }
           let checkValue = false;
-
           for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Footer.length; i++) {
             var obj = this.layoutSettings[2].layoutOptions[0].Footer[i];
             if ((obj.label) == name) {
               checkValue = true;
             }
           }
-
           if (checkValue == true) {
             console.log("File already exists")
           } else {
@@ -2039,16 +4172,13 @@ export default {
             this.layoutSettings[2].layoutOptions[0].Footer.push(temp);
             this.saveConfigFile(folderUrl);
           }
-
         } else if (this.currentFile.path.replace(/\\/g, "\/").match('Header')) {
-
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           let urlparts = configFileUrl.split("/");
           let fileNameOrginal = urlparts[urlparts.length - 1];
           let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
           var folderUrl = configFileUrl.replace(fileName, '');
           let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-
           this.layoutSettings = JSON.parse(configData.data);
           let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Header/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
           let temp = {
@@ -2056,46 +4186,38 @@ export default {
             label: name
           }
           let checkValue = false;
-
           for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Header.length; i++) {
             var obj = this.layoutSettings[2].layoutOptions[0].Header[i];
             if ((obj.label) == name) {
               checkValue = true;
             }
           }
-
           if (checkValue == true) {
             console.log("file already exists")
           } else {
             this.layoutSettings[2].layoutOptions[0].Header.push(temp);
             this.saveConfigFile(folderUrl);
           }
-
         } else if (this.currentFile.path.replace(/\\/g, "\/").match('Sidebar')) {
-
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           let urlparts = configFileUrl.split("/");
           let fileNameOrginal = urlparts[urlparts.length - 1];
           let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
           var folderUrl = configFileUrl.replace(fileName, '');
           let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-
           this.layoutSettings = JSON.parse(configData.data);
-
           let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Sidebar/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
           let temp = {
             value: name,
             label: name
           }
           let checkValue = false;
-
           for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Sidebar.length; i++) {
             var obj = this.layoutSettings[2].layoutOptions[0].Sidebar[i];
             if ((obj.label) == name) {
               checkValue = true;
             }
           }
-
           if (checkValue == true) {
             console.log("file already exists")
           } else {
@@ -2103,49 +4225,39 @@ export default {
             this.saveConfigFile(folderUrl);
           }
         } else if (this.currentFile.path.replace(/\\/g, "\/").match('Menu')) {
-
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           let urlparts = configFileUrl.split("/");
           let fileNameOrginal = urlparts[urlparts.length - 1];
           let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
           var folderUrl = configFileUrl.replace(fileName, '');
           let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-
           this.layoutSettings = JSON.parse(configData.data);
-
           let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Menu/') + 5, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
           let temp = {
             value: name,
             label: name
           }
-
           let checkValue = false;
-
           for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Menu.length; i++) {
             var obj = this.layoutSettings[2].layoutOptions[0].Menu[i];
             if ((obj.label) == name) {
               checkValue = true;
             }
           }
-
           if (checkValue == true) {
             console.log("file already exists")
           } else {
             this.layoutSettings[2].layoutOptions[0].Menu.push(temp);
             this.saveConfigFile(folderUrl);
           }
-
         } else if (this.currentFile.path.replace(/\\/g, "\/").match('Layout')) {
-
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           let urlparts = configFileUrl.split("/");
           let fileNameOrginal = urlparts[urlparts.length - 1];
           let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
           var folderUrl = configFileUrl.replace(fileName, '');
           let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-
           this.layoutSettings = JSON.parse(configData.data);
-
           var content = this.$store.state.content;
           var getFromBetween = {
             results: [],
@@ -2179,12 +4291,9 @@ export default {
               return this.results;
             }
           };
-
           var result = (getFromBetween.get(content, "{{>", "}}"));
-
           var resultParam = result
           var DefaultParams = [];
-
           for(let i=0;i<resultParam.length;i++){
             var temp;
             temp=resultParam[i].trim()
@@ -2194,7 +4303,6 @@ export default {
             temp=temp.split(' ')
             console.log("temp",temp)
             for(let j=0;j<temp.length;j++){
-
               console.log("temp[",j,"]:",temp[j])
               if ((temp[j].indexOf('id')!=-1 || temp[j].indexOf('=')!=-1)  ) {
                 // console.log("condition check value:",temp[j+1],':-',temp[j+1].search('.'))
@@ -2214,7 +4322,6 @@ export default {
                     break;
                   } 
                 }
-
                 else if((temp[j].indexOf('.')>-1) && (temp[j+1]==undefined )){
                   console.log("temp[j]:",temp[j])
                   console.log("temp[j+1]:",temp[j+1])
@@ -2229,14 +4336,12 @@ export default {
                     DefaultParams.push(obj)
                     break;
                   }
-
                 }
               }
               console.log("temp at end of j loop:",temp)
             }
           }
           console.log("DefaultParams:",DefaultParams)
-
           let totalPartial = content.match(/{{>/g).length;
           let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Layout/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.layout'));
           let temp = {
@@ -2245,7 +4350,6 @@ export default {
             partialsList: result,
             defaultList: DefaultParams
           }
-
           let checkValue = false;
           for (var i = 0; i < this.layoutSettings[2].layoutOptions[0].Layout.length; i++) {
             var obj = this.layoutSettings[2].layoutOptions[0].Layout[i];
@@ -2253,24 +4357,18 @@ export default {
               checkValue = true;
             }
           }
-
           if (checkValue == true) {
-
             let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0].Layout, {
               'label': name
             });
-
             this.layoutSettings[2].layoutOptions[0].Layout[currentFileIndex].partialsList = result;
             this.layoutSettings[2].layoutOptions[0].Layout[currentFileIndex].defaultList = DefaultParams;
             this.saveConfigFile(folderUrl);
-
           } else {
             this.layoutSettings[2].layoutOptions[0].Layout.push(temp);
             this.saveConfigFile(folderUrl);
           }
-
           var foldernameKey = Object.keys(this.layoutSettings[2].layoutOptions[0]);
-
           for (var i = 0; i < result.length; i++) {
             var check = false;
             result[i]=result[i].trim();
@@ -2279,7 +4377,6 @@ export default {
                 check = true
               }
             }
-
             if (check == false) {
               let newName = result[i]
               let newFolderName = folderUrl + '/' + result[i];
@@ -2287,11 +4384,9 @@ export default {
                 foldername: newFolderName,
                 type: 'folder'
               }).then((res) => {
-
                 this.newFolderDialog = false
                 this.addNewFolderLoading = false
                 let x = newName
-
                 this.addNewFileLoading = true
                 let newfilename = newFolderName + '/default.html'
                 axios.post(this.baseURL + '/flows-dir-listing', {
@@ -2307,10 +4402,8 @@ export default {
                     value: "default",
                     label: "default"
                   }
-
                   this.layoutSettings[2].layoutOptions[0][x].push(temp)
                   this.saveConfigFile(folderUrl);
-
                 }).catch((e) => {
                   console.log(e)
                 })
@@ -2320,7 +4413,6 @@ export default {
             }
           }
         } else {
-
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           let urlparts = configFileUrl.split("/");
           let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -2328,33 +4420,26 @@ export default {
           let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
           var folderUrl = configFileUrl.replace(fileName, '');
           let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-
           this.layoutSettings = JSON.parse(configData.data);
-
           let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length + 1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
           let temp = {
             value: name,
             label: name
           }
-
           let checkValue = false;
-
           if (this.layoutSettings[2].layoutOptions[0][foldername]) {
-
             for (var i = 0; i < this.layoutSettings[2].layoutOptions[0][foldername].length; i++) {
               var obj = this.layoutSettings[2].layoutOptions[0][foldername][i];
               if ((obj.label) == name) {
                 checkValue = true;
               }
             }
-
             if (checkValue == true) {
               console.log("File already exists")
             } else {
               this.layoutSettings[2].layoutOptions[0][foldername].push(temp);
               this.saveConfigFile(folderUrl);
             }
-
           } else {
             this.layoutSettings[2].layoutOptions[0][foldername] = [];
             this.layoutSettings[2].layoutOptions[0][foldername].push(temp)
@@ -2700,13 +4785,10 @@ export default {
     saveJsonFile: function(){
         this.saveFileLoading = true
         let newContent = this.$store.state.content;
-        switch(this.componentId){
-            case 'MenuBuilder' :
-                this.$refs.contentComponent.getMenuJson();
-                newContent = this.$store.state.content;
-                break;
-        }
 
+        this.$refs.contentComponent.getMenuJson();
+        newContent = this.$store.state.content;
+        
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
         let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -2727,7 +4809,7 @@ export default {
             this.saveFileLoading = false
             this.$message({
                 showClose: true,
-                message: 'File Saved!',
+                message: 'Menu Saved!',
                 type: 'success'
             });
             // console.log(res)

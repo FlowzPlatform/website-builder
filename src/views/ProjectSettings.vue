@@ -4,7 +4,7 @@
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" @click="publishMetalsmith">Publish Settings</el-button>
+      <!-- <el-button type="info" @click="publishMetalsmith">Publish Settings</el-button> -->
       <!-- <el-button type="danger" @click="cancelSettings">Cancel</el-button> -->
     </div>
 
@@ -403,6 +403,7 @@ export default {
     },
 
     addNewCssVariable() {
+      console.log('Global Css Vars:', this.globalCssVariables)
       let newVariable = { variableName: '', variableType: '', variableValue: ''};
       this.globalCssVariables.push(newVariable);
     },
@@ -595,6 +596,10 @@ export default {
       this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
       this.globalVariables = this.settings[1].projectSettings[0].GlobalVariables;
       this.globalCssVariables = this.settings[1].projectSettings[0].GlobalCssVariables;
+
+      if(this.globalCssVariables == undefined){
+        this.globalCssVariables = []
+      }
 
       this.form.Header = this.settings[2].layoutOptions[0].headers;
       this.form.Footer = this.settings[2].layoutOptions[0].footers;

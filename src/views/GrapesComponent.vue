@@ -53,7 +53,13 @@ export default {
 
         if(this.globalCssVariables != undefined){
             for(var i = 0; i < this.globalCssVariables.length; i++){
-                variableCss += '\t' + this.globalCssVariables[i].variableName + ': ' + this.globalCssVariables[i].variableValue + ';\n';
+                if(this.globalCssVariables[i].variableType == 'px'){
+                    variableCss += '\t' + this.globalCssVariables[i].variableName + ': ' + this.globalCssVariables[i].variableValue + 'px;\n';
+                } else if (this.globalCssVariables[i].variableType == 'percent'){
+                    variableCss += '\t' + this.globalCssVariables[i].variableName + ': ' + this.globalCssVariables[i].variableValue + '%;\n';
+                } else {
+                    variableCss += '\t' + this.globalCssVariables[i].variableName + ': ' + this.globalCssVariables[i].variableValue + ';\n';
+                }
             } 
         }
 

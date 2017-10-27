@@ -2,7 +2,7 @@
 	<div class="root">
 		<section class="container" style="margin-top: 2%;">
 		  <h3 id="user-menu">Customize Menu:</h3>
-		  	<div class="row">
+		  	<!-- <div class="row">
 		  		<div class="col-md-6">
 		  			<form class="form form-horizontal">
 		  				<div class="form-group">
@@ -17,9 +17,9 @@
 		  			</form>
 		  			
 		  		</div>
-		  	</div>
+		  	</div> -->
 
-		  	<hr>
+		  	<!-- <hr> -->
 		  	
 		  	<div class="row">
 		  		<div class="col-md-12">
@@ -114,16 +114,31 @@ import domenu from 'domenu'
 	    components: {
 	    },
 		async mounted () {
-			// let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-			// let urlparts = configFileUrl.split("/");
-			// let fileNameOrginal = urlparts[urlparts.length - 1];
-			// let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-			// let fileNameParts = fileNameOrginal.split('.');
-			// let actualFileNameOnly = fileNameParts[0];
-			// var folderUrl = configFileUrl.replace(fileName, '');
-			// console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
+			let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+			let urlparts = configFileUrl.split("/");
+			let fileNameOrginal = urlparts[urlparts.length - 1];
+			let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+			let fileNameParts = fileNameOrginal.split('.');
+			let actualFileNameOnly = fileNameParts[0];
+			var folderUrl = configFileUrl.replace(fileName, '');
+			console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
 
-			// let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
+			try {
+			    let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
+				console.log('Response Menu file:', responseConfig);
+				// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
+				if(responseConfig.data){
+					window.localStorage.setItem('domenu-1Json', responseConfig.data);
+				}
+			}
+			catch(err) {
+			    console.log('Menu file not found!');
+			    localStorage.removeItem('domenu-1Json');
+			    // window.localStorage.clear();
+			}
+
+			
+
 			// this.MenuJSON = responseConfig.data;
 
 			let montedself = this;

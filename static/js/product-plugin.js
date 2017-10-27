@@ -498,10 +498,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 	});
 
 	// Dynamic navigation menu from JSON created from menu builder
-	bm.add('navMenu',{
+	bm.add('navimenu',{
 		label: 'Navbar Menu',
 		content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">'+
-				'<navMenu><div class="navbar navbar-default" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> </div><div class="collapse navbar-collapse" id="navigationDiv"><ul class="nav navbar-nav"><li class="active"><a href="#" target="_blank">Home</a></li></ul></li></ul></div></div></div></navMenu>',
+				'<navimenu style="padding: 10px; display: block; min-height: 75px;"><div class="navbar navbar-default" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> </div><div class="collapse navbar-collapse" id="navigationDiv"><ul class="nav navbar-nav"><li class="active"><a href="#" target="_blank">Home</a></li></ul></li></ul></div></div></div></navimenu>',
 		attributes: {
 			class: 'fa fa-bars',
 			title: 'Navigation Menu'
@@ -3386,7 +3386,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     },
   });
 
-  comps.addType('navMenu', {
+  comps.addType('navimenu', {
     // Define the Model
     model: defaultModel.extend({
       // Extend default properties
@@ -3395,11 +3395,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         droppable: true,
         traits: [
           {
-            label: 'Menu Type',
-            name: 'menuType',
-            type: 'select',
-            // changeProp: 1,
-            options: [{value: 'select', name:'Select Menu Type'},{value: 'mini', name:'Mini Top'},{value: 'mainNavigation', name:'Main Navigation'},{value: 'footerNav', name:'Footer Nvigation'}]
+            label: 'Menu Id',
+            name: 'menuid'
           }
         ],
       }),
@@ -3407,8 +3404,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     },
     {
       isComponent: function(el) {
-        if(el.tagName == 'NAVMENU'){
-          return {type: 'navMenu'};
+        if(el.tagName == 'NAVIMENU'){
+          return {type: 'navimenu'};
         }
       },
     }),
@@ -3623,6 +3620,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
             type: 'password'
           },
           {
+            label: 'Search',
+            name: 'selectadvance_search_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
             label: 'category',
             name: 'selectcategory_Filter',
             type: 'select',
@@ -3639,6 +3643,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
           {
             label: 'Colours',
             name: 'selectColours_Filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Brands',
+            name: 'selectBrands_Filter',
             type: 'select',
             // changeProp: 1,
             options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
@@ -3838,141 +3849,242 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
-  	// // ReUse Component
-   //  var comps = editor.DomComponents;
-   //  var defaultType = comps.getType('default');
-   //  var defaultModel = defaultType.model;
-   //  var defaultView = defaultType.view;
-   //  var traits;
-   //  var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-   //  for (var i = 0; i < storedTemplates.length; i++) {
-   //    console.log("value...", storedTemplates[i])
-   //    if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets') {
-   //      storedTemplates.splice(i, 1)
-   //    }
-   //  }
-   //  console.log("++++++++++", storedTemplates)
-   //  let arr = [{
-   //    "value": "Select_Partial",
-   //    "name": "Select Partial"
-   //  }]
-   //  let traits_arr = []
-   //  let partials_arr = [{
-   //    "value": "SelectID",
-   //    "name": "selectID"
-   //  }]
-   //  for (var i = storedTemplates.length - 1; i >= 0; i--) {
-   //    arr.push({
-   //      "value": storedTemplates[i],
-   //      "name": storedTemplates[i]
-   //    })
-   //  }
-   //  console.log(arr)
-   //  comps.addType('ReUseComponent', {
-   //    model: defaultModel.extend({
-   //      init() {
-   //        this.listenTo(this, 'change:selectPartial', this.doStuff);
-   //        this.listenTo(this, 'change:selectID', this.doStuff_second);
-   //      },
-   //      doStuff() {
-   //        console.log("getPartials called")
-   //        this.get('traits').each(function(trait) {
-   //          console.log(trait.get('value'));
-   //          traits_arr.push(trait.get('value'))
-   //        });
-   //        traits_arr_val = traits_arr[0]
-   //        var folderUrl = localStorage.getItem("folderUrl");
-   //        console.log("&&&&&&&&&&", folderUrl)
-   //        var request = new XMLHttpRequest();
-   //        request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + traits_arr_val, false);
-   //        request.setRequestHeader("Content-type", "application/json");
-   //        request.send();
-   //        resp = JSON.parse(request.responseText);
-   //        console.log("files", resp)
-   //        arr.splice(0, 1);
-   //        console.log("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", arr)
-   //        for (var i = resp.length - 1; i >= 0; i--) {
-   //          partials_arr.push({
-   //            "value": resp[i],
-   //            "name": resp[i]
-   //          })
-   //        }
-   //        console.log("**********", partials_arr)
-   //        var categsTrait = this.get('traits').where({
-   //          name: 'selectID'
-   //        })[0];
-   //        categsTrait.set('options', partials_arr)
-   //        editor.trigger('change:ReUseComponent');
-   //        console.log(this.get('traits').where({
-   //          name: 'selectID'
-   //        })[0].get('options'));
-   //        console.log("folderUrl", folderUrl);
-   //        console.log("traits_arr[6]", traits_arr[1])
-   //        var folderUrl = localStorage.getItem("folderUrl");
-   //        var xhttp = new XMLHttpRequest();
-   //        xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
-   //        xhttp.setRequestHeader("Content-type", "application/json");
-   //        xhttp.send();
-   //        var response = JSON.parse(xhttp.responseText);
-   //        var counter = JSON.parse(localStorage.getItem("counter"));
-   //        console.log("counter", counter)
-   //        console.log("counter", counter)
-   //        traits_arr = []
-   //        partials_arr = []
-   //      },
-   //      doStuff_second() {
-   //        this.get('traits').each(function(trait) {
-   //          console.log(trait.get('value'));
-   //          traits_arr.push(trait.get('value'))
-   //        });
-   //        console.log("traits_arr[1]", traits_arr[1])
-   //        console.log("doStuff_second");
-   //        var folderUrl = localStorage.getItem("folderUrl");
-   //        var xhttp = new XMLHttpRequest();
-   //        xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
-   //        xhttp.setRequestHeader("Content-type", "application/json");
-   //        xhttp.send();
-   //        partials_arr.splice(0, 1);
-   //        var response = JSON.parse(xhttp.responseText);
-   //        editor.addComponents(response);
-   //        traits_arr = []
-   //      },
-   //      defaults: Object.assign({}, defaultModel.prototype.defaults, {
-   //        editable: true,
-   //        droppable: true,
-   //        traits: [
+  	// ReUse Component
+    // var comps = editor.DomComponents;
+    // var defaultType = comps.getType('default');
+    // var defaultModel = defaultType.model;
+    // var defaultView = defaultType.view;
+    // var traits;
+    // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+    // for (var i = 0; i < storedTemplates.length; i++) {
+    //   console.log("value...", storedTemplates[i])
+    //   if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets') {
+    //     storedTemplates.splice(i, 1)
+    //   }
+    // }
+    // console.log("++++++++++", storedTemplates)
+    // let arr = [{
+    //   "value": "Select_Partial",
+    //   "name": "Select Partial"
+    // }]
+    // let traits_arr = []
+    // let partials_arr = [{
+    //   "value": "SelectID",
+    //   "name": "selectID"
+    // }]
+    // for (var i = storedTemplates.length - 1; i >= 0; i--) {
+    //   arr.push({
+    //     "value": storedTemplates[i],
+    //     "name": storedTemplates[i]
+    //   })
+    // }
+    // console.log(arr)
+    // comps.addType('ReUseComponent', {
+    //   model: defaultModel.extend({
+    //     init() {
+    //       this.listenTo(this, 'change:selectPartial', this.doStuff);
+    //       this.listenTo(this, 'change:selectID', this.doStuff_second);
+    //     },
+    //     doStuff() {
+    //       console.log("getPartials called")
+    //       this.get('traits').each(function(trait) {
+    //         console.log(trait.get('value'));
+    //         traits_arr.push(trait.get('value'))
+    //       });
+    //       traits_arr_val = traits_arr[0]
+    //       var folderUrl = localStorage.getItem("folderUrl");
+    //       console.log("&&&&&&&&&&", folderUrl)
+    //       var request = new XMLHttpRequest();
+    //       request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + traits_arr_val, false);
+    //       request.setRequestHeader("Content-type", "application/json");
+    //       request.send();
+    //       resp = JSON.parse(request.responseText);
+    //       console.log("files", resp)
+    //       arr.splice(0, 1);
+    //       console.log("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", arr)
+    //       for (var i = resp.length - 1; i >= 0; i--) {
+    //         partials_arr.push({
+    //           "value": resp[i],
+    //           "name": resp[i]
+    //         })
+    //       }
+    //       console.log("**********", partials_arr)
+    //       var categsTrait = this.get('traits').where({
+    //         name: 'selectID'
+    //       })[0];
+    //       categsTrait.set('options', partials_arr)
+    //       editor.trigger('change:ReUseComponent');
+    //       console.log(this.get('traits').where({
+    //         name: 'selectID'
+    //       })[0].get('options'));
+    //       console.log("folderUrl", folderUrl);
+    //       console.log("traits_arr[6]", traits_arr[1])
+    //       var folderUrl = localStorage.getItem("folderUrl");
+    //       var xhttp = new XMLHttpRequest();
+    //       xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
+    //       xhttp.setRequestHeader("Content-type", "application/json");
+    //       xhttp.send();
+    //       var response = JSON.parse(xhttp.responseText);
+    //       var counter = JSON.parse(localStorage.getItem("counter"));
+    //       console.log("counter", counter)
+    //       console.log("counter", counter)
+    //       traits_arr = []
+    //       partials_arr = []
+    //     },
+    //     doStuff_second() {
+    //       this.get('traits').each(function(trait) {
+    //         console.log(trait.get('value'));
+    //         traits_arr.push(trait.get('value'))
+    //       });
+    //       console.log("traits_arr[1]", traits_arr[1])
+    //       console.log("doStuff_second");
+    //       var folderUrl = localStorage.getItem("folderUrl");
+    //       var xhttp = new XMLHttpRequest();
+    //       xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
+    //       xhttp.setRequestHeader("Content-type", "application/json");
+    //       xhttp.send();
+    //       partials_arr.splice(0, 1);
+    //       var response = JSON.parse(xhttp.responseText);
+    //       editor.addComponents(response);
+    //       traits_arr = []
+    //     },
+    //     defaults: Object.assign({}, defaultModel.prototype.defaults, {
+    //       editable: true,
+    //       droppable: true,
+    //       traits: [
 
-   //          {
-   //            label: 'PartialName',
-   //            name: 'selectPartial',
-   //            type: 'select',
-   //            changeProp: 1,
-   //            options: arr
-   //          }, {
-   //            label: 'PartialID',
-   //            name: 'selectID',
-   //            type: 'select',
-   //            changeProp: 1,
-   //            options: ''
-   //          }
-   //        ],
-   //      }),
-   //    }, {
-   //      isComponent: function(el) {
-   //        if (el.tagName == 'REUSECOMPONENT') {
-   //          return {
-   //            type: 'ReUseComponent'
-   //          };
-   //        }
-   //      },
-   //    }),
-   //    view: defaultType.view,
-   //    render: function() {
-   //      defaultType.view.prototype.render.apply(this, arguments);
-   //      this.el.placeholder = 'Text here';
-   //      return this;
-   //    },
-   //  });
+    //         {
+    //           label: 'PartialName',
+    //           name: 'selectPartial',
+    //           type: 'select',
+    //           changeProp: 1,
+    //           options: arr
+    //         }, {
+    //           label: 'PartialID',
+    //           name: 'selectID',
+    //           type: 'select',
+    //           changeProp: 1,
+    //           options: ''
+    //         }
+    //       ],
+    //     }),
+    //   }, {
+    //     isComponent: function(el) {
+    //       if (el.tagName == 'REUSECOMPONENT') {
+    //         return {
+    //           type: 'ReUseComponent'
+    //         };
+    //       }
+    //     },
+    //   }),
+    //   view: defaultType.view,
+    //   render: function() {
+    //     defaultType.view.prototype.render.apply(this, arguments);
+    //     this.el.placeholder = 'Text here';
+    //     return this;
+    //   },
+    // });
+
+    // ReUse Component
+    var comps = editor.DomComponents;
+    var defaultType = comps.getType('default');
+    var defaultModel = defaultType.model;
+    var defaultView = defaultType.view;
+    var traits;
+    var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+    for (var i = 0; i < storedTemplates.length; i++) {
+      console.log("value...", storedTemplates[i])
+      if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets' || storedTemplates[i] == '.git') {
+        storedTemplates.splice(i, 1)
+      }
+    }
+    console.log("++++++++++Hello", storedTemplates)
+
+    let arr = [{
+      "value": "Select_Partial",
+      "name": "Select Partial"
+    }]
+
+    let arr_to_print = []
+    var folderUrl = localStorage.getItem("folderUrl");
+    for (var i = 0; i <= storedTemplates.length - 1; i++) {
+      var request = new XMLHttpRequest();
+      request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + storedTemplates[i], false);
+      request.setRequestHeader("Content-type", "application/json");
+      request.send();
+      resp = JSON.parse(request.responseText);
+      if (resp.length != 0) {
+        if (resp.length > 2) {
+            for (let j = 0; j < resp.length; j++) {
+                arr_to_print.push(storedTemplates[i] + '-' + resp[j])
+            }
+        } else {
+            arr_to_print.push(storedTemplates[i] + '-' + resp)
+        }
+      }
+    }
+    console.log("arr_to_print", arr_to_print)
+    for (var i = arr_to_print.length - 1; i >= 0; i--) {
+      arr.push({
+        "value": arr_to_print[i],
+        "name": arr_to_print[i]
+      })
+    }
+    console.log(arr)
+
+    comps.addType('ReUseComponent', {
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:selectPartial', this.doStuff);
+        },
+        doStuff() {
+          let foldername;
+          let filename;
+          this.get('traits').each(function(trait) {
+            let value_selct = trait.get('value')
+            let split = value_selct.split('-')
+            foldername = split[0];
+            filename = split[1];
+          });
+
+          var folderUrl = localStorage.getItem("folderUrl");
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + foldername + '/' + filename + '.html', false);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send();
+          var response = JSON.parse(xhttp.responseText);
+          editor.addComponents(response);
+        },
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+
+            {
+              label: 'PartialName',
+              name: 'selectPartial',
+              type: 'select',
+              changeProp: 1,
+              options: arr
+            }
+          ],
+        }),
+      }, {
+        isComponent: function(el) {
+          if (el.tagName == 'REUSECOMPONENT') {
+            return {
+              type: 'ReUseComponent'
+            };
+          }
+        },
+      }),
+      view: defaultType.view,
+      render: function() {
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here';
+        return this;
+      },
+    });
 
 
 
