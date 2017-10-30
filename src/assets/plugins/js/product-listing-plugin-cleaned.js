@@ -6,7 +6,7 @@ $('body [id="brandLogo"]').attr('src', '../assets/brand-logo.png');
 $.getJSON( "../assets/config.json", function( data ) {  
     var configData = data;
     brandName = configData[1].projectSettings[0].BrandName;
-    globalVariables = configData[1].projectSettings[0].GlobalVariables;
+    globalVariables = configData[1].projectSettings[1].GlobalVariables;
 });
 
 // Bootstrap Tooltips

@@ -17,7 +17,7 @@ export default {
     name: 'GrapesComponent',
     data () {
     return {
-      baseURL: 'http://localhost:3030',
+      baseURL: 'http://172.16.230.84:3030',
       brandName: '',
       imageBlob: '',
       globalVariables: [],
