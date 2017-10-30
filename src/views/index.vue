@@ -1547,7 +1547,7 @@ export default {
 
                   axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
 
-                      var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                      var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                       return axios.post(this.baseURL + '/flows-dir-listing', {
                           filename: mainMetal,
@@ -1559,7 +1559,7 @@ export default {
                           let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                           previewFile = folderUrl.replace('/var/www/html', '');
 
-                          window.open('http://localhost' + previewFile + '/MetalsmithOutput/' + nameF + '.html');
+                          window.open('http://localhost' + previewFile + '/public/' + nameF + '.html');
 
                           axios.delete(this.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                           .then((res) => {
@@ -1848,7 +1848,7 @@ export default {
 
       let newfilename = newFolderName + '/assets/config.json';
 
-      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": '', "BrandLogoName": '', "ProjectLayout": '',"ProjectHeader":'',"ProjectFooter":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":'', "GlobalVariables": []}],"pageSettings":[] }, { "layoutOptions": [ { "Header": [{ value: 'NOH', label: 'No Header' }, { value: 'default', label: 'default' }], "Footer": [{ value: 'NOF', label: 'No Footer' },{ value: 'default', label: 'default' }],"Sidebar": [{ value: 'NOS', label: 'No SideBar' },{ value: 'default', label: 'default' }],"Menu": [{ value: 'NOM', label: 'No Menu' },{ value: 'default', label: 'default' }], "Layout": [{ value: 'Blank', label: 'Blank',partialsList:[], defaultList:[] }, { value: 'default', label: 'default',partialsList:['Header','Footer'], defaultList:[] }] } ] } ];
+      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": '', "BrandLogoName": '', "ProjectLayout": '',"ProjectHeader":'',"ProjectFooter":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}, { "GlobalVariables": [], "GlobalCssVariables": [] } ],"pageSettings":[] }, { "layoutOptions": [ { "Header": [{ value: 'NOH', label: 'No Header' }, { value: 'default', label: 'default' }], "Footer": [{ value: 'NOF', label: 'No Footer' },{ value: 'default', label: 'default' }],"Sidebar": [{ value: 'NOS', label: 'No SideBar' },{ value: 'default', label: 'default' }],"Menu": [{ value: 'NOM', label: 'No Menu' },{ value: 'default', label: 'default' }], "Layout": [{ value: 'Blank', label: 'Blank',partialsList:[], defaultList:[] }, { value: 'default', label: 'default',partialsList:['Header','Footer'], defaultList:[] }] } ] } ];
 
       axios.post(this.baseURL + '/flows-dir-listing', {
           filename : newfilename,
@@ -1933,7 +1933,7 @@ export default {
       // Create metalsmith file
       let mainMetal = newFolderName + '/assets/metalsmith.js'
 
-      var metalsmithJSON="var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+      var metalsmithJSON="var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(true)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
        axios.post(this.baseURL + '/flows-dir-listing', {
           filename : mainMetal,
@@ -2478,6 +2478,89 @@ export default {
     },
 
     // Create new File
+    // async addFile(formName){
+    //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //   let urlparts = configFileUrl.split("/");
+    //   let fileNameOrginal = urlparts[urlparts.length - 1];
+    //   let foldername = urlparts[urlparts.length - 1];
+    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //   var folderUrl = configFileUrl.replace(fileName, '');
+
+
+    //   let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+    //   this.layoutSettings = JSON.parse(configData.data);
+    //   // console.log("check for hbs")
+      
+    //   console.log("file is being added:")
+    //   this.$refs[formName].validate((valid) => {
+    //       if (valid) {
+    //           this.addNewFileLoading = true
+    //           var name=this.formAddFile.filename;
+    //           var newfilename = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
+    //           return axios.post(this.baseURL + '/flows-dir-listing', {
+    //               filename : newfilename,
+    //               text : ' ',
+    //               type : 'file'
+    //           })
+    //           .then( (res) => {
+    //               console.log(res)
+    //               this.newFileDialog = false
+    //               this.addNewFileLoading = false
+    //               this.formAddFile.filename = null
+                  
+    //               // this.saveFile()
+    //                // let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length+1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
+    //                 let temp = {
+    //                     value: name.split('.')[0],
+    //                     label: name.split('.')[0]
+    //                 }
+    //                   let checkValue = false;
+    //                   var namefolder=this.currentFile.path.replace(/\\/g, "\/").split('/')
+    //                   namefolder=namefolder[namefolder.length - 1 ]
+    //                   console.log("foldername:",namefolder)
+    //                   if (this.layoutSettings[2].layoutOptions[0][namefolder]) {
+    //                       console.log("folder already exist in config file;")
+    //                       for (var i = 0; i < this.layoutSettings[2].layoutOptions[0][namefolder].length; i++) {
+    //                           var obj = this.layoutSettings[2].layoutOptions[0][namefolder][i];
+    //                           if ((obj.label) == name) {
+    //                               checkValue = true;
+    //                           }
+    //                       }
+    //                       if (checkValue == true) {
+    //                           console.log("file already exists in config file;")
+    //                       } else {
+    //                           this.layoutSettings[2].layoutOptions[0][namefolder].push(temp);
+
+    //                           // saveConfigFile
+    //                           this.saveConfigFile(folderUrl);
+    //                       }
+
+    //                   } else {
+    //                       // this.layoutSettings[2].layoutOptions[0].put(foldername);
+    //                       this.layoutSettings[2].layoutOptions[0][namefolder] = [];
+    //                       this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+    //                       this.saveConfigFile(folderUrl);
+    //                   }
+    //                   if(namefolder=='Pages'){
+    //                     var PageSettings = {"PageName":name,"PageSEOTitle": "", "PageSEOKeywords": "", "PageSEODescription": "","PageLayout":"default","partials":[{"Header": "default"},{"Footer": "default" }]};
+    //                     this.layoutSettings[1].pageSettings.push((PageSettings))
+    //                     this.saveConfigFile(folderUrl);
+
+
+    //                   }
+
+
+    //           })
+    //           .catch((e) => {
+    //               console.log(e)
+    //           })
+    //       } else {
+    //           console.log('error submit!!');
+    //           return false;
+    //       }
+    //   });
+    // },
     addFile(formName){
       this.$refs[formName].validate((valid) => {
           if (valid) {

@@ -4,7 +4,7 @@
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
-      <!-- <el-button type="info" @click="publishMetalsmith">Publish Settings</el-button> -->
+      <el-button type="info" @click="publishMetalsmith">Publish Website</el-button>
       <!-- <el-button type="danger" @click="cancelSettings">Cancel</el-button> -->
     </div>
 
@@ -86,9 +86,13 @@
                 <h3>Global Variables</h3>
               </div>
               <div class="col-md-8" align="right">
-                <el-tooltip class="item" effect="dark" content="Download JSON" placement="top">
-                  <button class="btn btn-info" @click="downloadGlobalVariables"><i class="fa fa-download"></i></button>
-                </el-tooltip>
+                <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
+                  <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Upload JSON</button>
+                  <input type="file" name="uploaderVariableJson">
+                <!-- </el-tooltip> -->
+                <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
+                  <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Download JSON</button>
+                <!-- </el-tooltip> -->
               </div>
             </div>
             <hr>
@@ -361,6 +365,7 @@ export default {
       globalVariables: [],
       globalCssVariables: [],
       imageInputIsDisabled: false,
+      uploadedVariableJsonData: ''
       // fileData:{
       //   url: 'urlHere'
       // }
@@ -438,6 +443,10 @@ export default {
       fileSaver.saveAs(jsonData, saveFileName);
       // console.log(exportVariables);
     },
+
+    // uploadGlobalVariables(fileData){
+    //   console.log('Uploading Global Variables...');
+    // },
 
     uploadImage(fileData, fileBlob) {
       
@@ -526,55 +535,223 @@ export default {
       }) 
     },
 
-    publishMetalsmith(){
-      var partials = '';
-      if (this.form.Header != '') {
-          var partialHeader = "Handlebars.registerPartial('Header', fs.readFileSync('" + this.$store.state.fileUrl + "/Headers/" + this.form.Header + ".html').toString());\n";
-          partials = partials + partialHeader;
-      }
-      if (this.form.Footer != '') {
-          var partialFooter = "Handlebars.registerPartial('Footer', fs.readFileSync('" + this.$store.state.fileUrl + "/Footers/" + this.form.Footer + ".html').toString());\n"
-          partials = partials + partialFooter;
-      }
+    async publishMetalsmith() {
+      var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      var responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      var rawConfigs = JSON.parse(responseConfig.data);
+      var partialstotal = []
+      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
 
-      var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n" + partials + " Metalsmith(__dirname)\n.metadata({title:'" + this.form.seoTitle + "',description:'" + this.form.seoDesc + "'})\n.source('" + this.$store.state.fileUrl + "/Pages')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(permalinks())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){console.log(err)}});"
+        console.log("i:", i)
 
-      // console.log(this.$store.state.fileUrl);
-      axios.post('http://localhost:3030/flows-dir-listing', {
-          filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
-          text: (metalsmithJSON),
-          type: 'file'
-      }).then((response) => {
-          // console.log('Axios call 1');
-          console.log('successfully created metalsmith file :', (response.data))
-          this.$message({
-              showClose: true,
-              message: 'MetalSmith Config Saved!',
-              type: 'success'
-          });
+        var partials = ''
+        console.log("rawConfigs[1].pageSettings[i].PageName:", rawConfigs[1].pageSettings[i].PageName)
 
-          axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {
-          }).then((response) => {
-              // console.log('Axios call 2');
-              console.log('successfully  :' + (response))
+        let responseConfigLoop = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+        var rawSettings = JSON.parse(responseConfigLoop.data);
+        var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
+        console.log("page name:", nameF)
+        var Layout = ''
+        var partialsPage = [];
+        Layout = rawSettings[1].pageSettings[i].PageLayout
+        partialsPage = rawSettings[1].pageSettings[i].partials
+        console.log("partialsPage:", partialsPage)
+        console.log("layout name:", Layout)
+        var responseMetal = ''
+        console.log("value of responseMetal:", responseMetal)
+        responseMetal = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+        var index = responseMetal.search('.source')
+
+        responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
+        var indexPartial = responseMetal.search("('handlebars')");
+        for (var x = 0; x < partialsPage.length; x++) {
+          let key = Object.keys(partialsPage[x])[0];
+          console.log("key :", key)
+          let value = partialsPage[x]
+          let key2 = key;
+          console.log("value:", value[key2])
+          key = key.trim();
+          if (value[key2].match('html')) {
+            console.log("inside html if")
+            key = key.split('.')[0]
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+          } else if (value[key2].match('hbs')) {
+            console.log("inside hbs if")
+            key = key.split('.')[0]
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+          } else {
+            console.log("inside else")
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + ".html').toString())\n"
+          }
+
+          partials = partials + temp;
+
+        }
+        console.log("partials of metalsmith:", partials);
+
+        responseMetal = responseMetal.substr(0, indexPartial + 15) + partials + responseMetal.substr(indexPartial + 15);
+
+        var mainMetal = folderUrl + '/assets/metalsmith.js'
+        console.log("final metalsmith file ready for api call:", responseMetal);
+        console.log("@@@@@@@@@@@@@@@@@:")
+        console.log("mainMetal:", mainMetal)
+        var value = true;
+        await axios.post('http://localhost:3030/flows-dir-listing', {
+            filename: mainMetal,
+            text: responseMetal,
+            type: 'file'
+          }).then(async(response) => {
+            var newFolderName = folderUrl + '/Preview';
+            await axios.post(this.baseURL + '/flows-dir-listing', {
+                foldername: newFolderName,
+                type: 'folder'
+              })
+              .then(async(res) => {
+                console.log(res)
+                var newContent = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Pages/' + nameF + '.html');
+
+                newContent = newContent.data;
+                if (Layout == 'Blank') {
+                  if (newContent.match('---')) {
+                    let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+                    console.log("substr:" + substr)
+                    newContent = newContent.replace(substr, '')
+                  } else {
+                    newContent = newContent
+                  }
+
+                } else {
+                  let tempValueLayout = '---\nlayout: ' + Layout + '.layout\n---\n';
+                  if (newContent.match('---')) {
+                    let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+                    newContent = newContent.replace(substr, tempValueLayout)
+                  } else {
+                    newContent = tempValueLayout + newContent
+                  }
+
+                }
+
+                var previewFileName = folderUrl + '/Preview/' + nameF + '.html';
+
+                await axios.post('http://localhost:3030/flows-dir-listing', {
+                    filename: previewFileName,
+                    text: newContent,
+                    type: 'file'
+                  })
+                  .then(async(res) => {
+                    this.saveFileLoading = false;
+
+                    await axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then(async(response) => {
+
+                        await axios.post(this.baseURL + '/flows-dir-listing', {
+                            filename: mainMetal,
+                            text: responseMetal,
+                            type: 'file'
+                          })
+                          .then(async(res) => {
+                            console.log('Now previewing: ' + this.$store.state.fileUrl.replace(/\\/g, "\/"))
+                            let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                            previewFile = folderUrl.replace('/var/www/html', '');
+                            console.log(previewFile.replace('Pages' + nameF, ''));
+                            await axios.delete(this.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              .then((res) => {
+                                console.log(res);
+                                // value = false;
+                                // return value
+
+                              })
+                              .catch((e) => {
+                                console.log(e)
+                              })
+                          })
+
+                      })
+                      .catch((err) => {
+                        console.log('error while creating metalsmithJSON file' + err)
+                      })
+                  })
+                  .catch((e) => {
+                    this.saveFileLoading = false
+                    this.$message({
+                      showClose: true,
+                      message: 'File not saved! Please try again.',
+                      type: 'error'
+                    });
+                    console.log(e)
+                  })
+
+              })
+              .catch((e) => {
+                console.log(e)
+              })
+
           })
-          .catch((err) => {
-              this.$message({
-                  showClose: true,
-                  message: 'Cannot get Metalsmith file! Some error occured, try again.',
-                  type: 'error'
-              });
-          })
-      })
-      .catch((e) => {
-          console.log('Mrror while creating MetalSmith JSON file' + e)
-          this.$message({
+          .catch((e) => {
+            console.log('error while creating metalsmithJSON file' + e)
+            this.$message({
               showClose: true,
               message: 'Cannot save file! Some error occured, try again.',
-              type: 'error'
-          });
-      })
+              type: 'danger'
+            });
+          })
+
+      }
+
+      window.open('http://localhost' + folderUrl.replace('var/www/html/', '') + '/public/');
+
     },
+
+    // Code before Full Publish of project
+    // publishMetalsmith(){
+    //   var partials = '';
+    //   if (this.form.Header != '') {
+    //       var partialHeader = "Handlebars.registerPartial('Header', fs.readFileSync('" + this.$store.state.fileUrl + "/Headers/" + this.form.Header + ".html').toString());\n";
+    //       partials = partials + partialHeader;
+    //   }
+    //   if (this.form.Footer != '') {
+    //       var partialFooter = "Handlebars.registerPartial('Footer', fs.readFileSync('" + this.$store.state.fileUrl + "/Footers/" + this.form.Footer + ".html').toString());\n"
+    //       partials = partials + partialFooter;
+    //   }
+
+    //   var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n" + partials + " Metalsmith(__dirname)\n.metadata({title:'" + this.form.seoTitle + "',description:'" + this.form.seoDesc + "'})\n.source('" + this.$store.state.fileUrl + "/Pages')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(permalinks())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){console.log(err)}});"
+
+    //   // console.log(this.$store.state.fileUrl);
+    //   axios.post('http://localhost:3030/flows-dir-listing', {
+    //       filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
+    //       text: (metalsmithJSON),
+    //       type: 'file'
+    //   }).then((response) => {
+    //       // console.log('Axios call 1');
+    //       console.log('successfully created metalsmith file :', (response.data))
+    //       this.$message({
+    //           showClose: true,
+    //           message: 'MetalSmith Config Saved!',
+    //           type: 'success'
+    //       });
+
+    //       axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {
+    //       }).then((response) => {
+    //           // console.log('Axios call 2');
+    //           console.log('successfully  :' + (response))
+    //       })
+    //       .catch((err) => {
+    //           this.$message({
+    //               showClose: true,
+    //               message: 'Cannot get Metalsmith file! Some error occured, try again.',
+    //               type: 'error'
+    //           });
+    //       })
+    //   })
+    //   .catch((e) => {
+    //       console.log('Mrror while creating MetalSmith JSON file' + e)
+    //       this.$message({
+    //           showClose: true,
+    //           message: 'Cannot save file! Some error occured, try again.',
+    //           type: 'error'
+    //       });
+    //   })
+    // },
 
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -618,7 +795,9 @@ export default {
       this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
       this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
       this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
+      console.log(JSON.stringify(this.globalVariables));
       this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
+      console.log(JSON.stringify(this.globalCssVariables));
 
       if(this.globalVariables == undefined){
         this.globalVariables = []
@@ -743,6 +922,55 @@ export default {
       }
     });
 
+    // Global Variable JSON uploader
+    $('#jsonUploaderBtn').on('click', function(){
+      $('[name=uploaderVariableJson]').trigger('click');
+    });
+
+    $('[name=uploaderVariableJson]').on('change', function(e){
+      var file = $(this)[0].files[0];
+
+      var fileName = e.target.files[0].name;
+      var ext = $(this).val().split('.').pop().toLowerCase();
+
+      if(ext != 'json'){
+        scope.$message({
+            showClose: true,
+            message: 'File must be of "JSON" type.',
+            type: 'error'
+        });
+        console.log('File must be of "JSON" type.');
+      } else {
+
+        var fileData = '';
+
+        // readFile
+        var reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = async function(e) {
+            fileData = await e.target.result;
+        };
+
+        setTimeout(function(){
+          var jsonFileData = JSON.parse(fileData);
+          if(jsonFileData.GlobalVariables && jsonFileData.GlobalCssVariables){
+            // New values
+            scope.globalVariables = jsonFileData.GlobalVariables;
+            scope.globalCssVariables = jsonFileData.GlobalCssVariables;
+
+            scope.saveProjectSettings();
+          } else {
+            scope.$message({
+                showClose: true,
+                message: 'Not a Proper variables file.',
+                type: 'error'
+            });
+            console.log('Not a Proper variables file');
+          }
+        }, 1000);
+      }
+
+    });
   }
 }
 </script>

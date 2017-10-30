@@ -246,183 +246,8 @@ export default {
       console.log("partials:", this.partialsList);
     },
 
-    // async savePageSettings() {
-    //   console.log("this.form.parent_id:", this.form.parent_id)
-
-    //   let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    //   let urlparts = url.split("/");
-    //   let fileNameOrginal = urlparts[urlparts.length - 1];
-    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-    //   this.folderUrl = url.replace(fileName, '');
-
-    //   this.Data = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
-    //   if (this.Data.status == 200 || this.Data.status == 204) {
-    //     this.settingsData = JSON.parse(this.Data.data);
-    //     this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
-    //       'PageName': fileNameOrginal
-    //     });
-    //     this.form.nameSecond = fileNameOrginal;
-    //     this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout;
-
-    //   } else {
-    //     console.log('Cannot get config file!');
-    //   }
-
-    //   for (var i = 0; i < this.form.secondlayouts.length; i++) {
-    //     if (this.form.secondlayouts[i].label === this.form.Layout) {
-    //       console.log("matched partialsList:", this.form.secondlayouts[i].partialsList)
-    //       this.partialsListSelection = this.form.secondlayouts[i].partialsList;
-
-    //     }
-    //   }
-
-    //   var PageSettings = {
-    //     "PageName": this.form.name,
-    //     "PageSEOTitle": this.form.seoTitle,
-    //     "PageSEOKeywords": this.form.seoKeywords,
-    //     "PageSEODescription": this.form.seoDesc,
-    //     "PageLayout": this.form.Layout,
-    //     "partials": []
-    //   };
-
-    //   if (this.currentFileIndex != null) {
-
-    //     console.log('Update existing Page Settings');
-
-    //     this.settings[1].pageSettings[this.currentFileIndex].partials = [];
-    //     this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
-
-    //     console.log("partialsListSelection:", this.partialsListSelection)
-    //     console.log("$$$$$$$$$$$$$$$$$$$$$$$$$")
-    //     console.log("Object.keys(this.form.parent_id):", Object.keys(this.form.parent_id))
-    //     for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
-    //       console.log("checking for inherited partials")
-
-    //       if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
-    //         var extraPartial = [];
-    //         var hbsvalue;
-    //         hbsvalue = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value
-    //         console.log("hbsvalue:", hbsvalue)
-    //         if (hbsvalue.indexOf('hbs') <= -1) {
-
-    //           this.form.parent_id[Object.keys(this.form.parent_id)[j]].value = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value + '.hbs'
-    //         }
-
-    //         extraPartial.push(Object.keys(this.form.parent_id)[j])
-    //         console.log("found a Object:", Object.keys(this.form.parent_id)[j])
-    //         console.log("partialsList:", this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList)
-    //         var temp1 = (this.form.parent_id[Object.keys(this.form.parent_id)[j]].defaultList)
-    //         console.log("temp INSIDE inherited partialsList:", temp1)
-    //         for (let x = 0; x < temp1.length; x++) {
-    //           var obj1 = {};
-
-    //           obj1[Object.keys(temp1[x])] = temp1[x][Object.keys(temp1[x])]
-    //           this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj1)
-    //         }
-
-    //       }
-
-    //     }
-    //     for (var i = 0; i < this.partialsListSelection.length; i++) {
-
-    //       console.log("this.AllData[i]:", this.AllData[i])
-    //       for (let z = 0; z < this.AllData[i].length; z++) {
-    //         if (this.AllData[i][z]['disabled'] == true)
-    //           this.AllData[i][z]['disabled'] = false
-    //       }
-    //       let temp = this.partialsListSelection[i]
-    //       console.log("temp:", temp)
-    //       var obj = {};
-
-    //       let change = false;
-    //       for (var j = 0; j < this.defaultParams.length; j++) {
-
-    //         if (Object.keys(this.defaultParams[j])[0] == temp.trim()) {
-    //           console.log("default  value is found ");
-    //           let x = Object.keys(this.defaultParams[j])[0];
-    //           console.log("x:", x)
-    //           let y = this.defaultParams[j][x]
-    //           obj[temp] = y;
-    //           change = true;
-    //         }
-    //       }
-    //       if (change != true) {
-
-    //         obj[temp] = this.form.parent_id[temp].value;
-    //         change = false;
-    //       }
-    //       this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
-    //     }
-    //     console.log("this.form.parent_id:", this.form.parent_id)
-
-    //     let newfilename = this.folderUrl + '/assets/config.json';
-    //     axios.post(this.baseURL + '/flows-dir-listing', {
-    //         filename: newfilename,
-    //         text: JSON.stringify(this.settings),
-    //         type: 'file'
-    //       })
-    //       .then((res) => {
-
-    //         this.$message({
-    //           showClose: true,
-    //           message: 'Config Saved!',
-    //           type: 'success'
-    //         });
-
-    //       })
-    //       .catch((e) => {
-    //         console.log(e);
-    //         this.$message({
-    //           showClose: true,
-    //           message: 'Cannot save config file! Some error occured, try again.',
-    //           type: 'error'
-    //         });
-    //       })
-
-    //   } else {
-    //     for (var i = 0; i < this.partialsListSelection.length; i++) {
-    //       console.log("key:", this.partialsListSelection[i])
-    //       console.log("value:", this.form.parent_id[this.partialsListSelection[i]])
-    //       let temp = this.partialsListSelection[i]
-    //       var obj = {};
-    //       obj[temp] = this.form.parent_id[temp];
-    //       PageSettings.partials.push(obj)
-    //     }
-    //     console.log("pageSettings Object:", PageSettings)
-    //     console.log('Create new Page Settings');
-
-    //     this.settings[1].pageSettings.push(PageSettings);
-
-    //     let newfilename = this.folderUrl + '/assets/config.json';
-    //     axios.post(this.baseURL + '/flows-dir-listing', {
-    //         filename: newfilename,
-    //         text: JSON.stringify(this.settings),
-    //         type: 'file'
-    //       })
-    //       .then((res) => {
-    //         console.log(res);
-    //         this.$message({
-    //           showClose: true,
-    //           message: 'Config Saved!',
-    //           type: 'success'
-    //         });
-
-    //       })
-    //       .catch((e) => {
-    //         console.log(e);
-    //         this.$message({
-    //           showClose: true,
-    //           message: 'Cannot save file! Some error occured, try again.',
-    //           type: 'error'
-    //         });
-    //       })
-
-    //   }
-
-    // },
-
-    // Befor auto Folder metal smith 26-Oct Before Demo
     async savePageSettings() {
+      console.log("this.form.parent_id:", this.form.parent_id)
 
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let urlparts = url.split("/");
@@ -432,21 +257,22 @@ export default {
 
       this.Data = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
       if (this.Data.status == 200 || this.Data.status == 204) {
-          
         this.settingsData = JSON.parse(this.Data.data);
         this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
-            'PageName': fileNameOrginal
+          'PageName': fileNameOrginal
         });
         this.form.nameSecond = fileNameOrginal;
         this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout;
-          
+
       } else {
-          console.log('Cannot get config file!');
+        console.log('Cannot get config file!');
       }
 
       for (var i = 0; i < this.form.secondlayouts.length; i++) {
         if (this.form.secondlayouts[i].label === this.form.Layout) {
-            this.partialsListSelection = this.form.secondlayouts[i].partialsList;
+          console.log("matched partialsList:", this.form.secondlayouts[i].partialsList)
+          this.partialsListSelection = this.form.secondlayouts[i].partialsList;
+
         }
       }
 
@@ -461,56 +287,109 @@ export default {
 
       if (this.currentFileIndex != null) {
 
+        console.log('Update existing Page Settings');
+
         this.settings[1].pageSettings[this.currentFileIndex].partials = [];
         this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
 
-        for (var i = 0; i < this.partialsListSelection.length; i++) {
-            let temp = this.partialsListSelection[i]
-            var obj = {};
+        console.log("partialsListSelection:", this.partialsListSelection)
+        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$")
+        console.log("Object.keys(this.form.parent_id):", Object.keys(this.form.parent_id))
+        for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
+          console.log("checking for inherited partials")
 
-            let change = false;
-            if (change != true) {
-                obj[temp] = this.form.parent_id[temp];
-                change = false;
+          if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
+            var extraPartial = [];
+            var hbsvalue;
+            hbsvalue = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value
+            console.log("hbsvalue:", hbsvalue)
+            if (hbsvalue.indexOf('hbs') <= -1) {
+
+              this.form.parent_id[Object.keys(this.form.parent_id)[j]].value = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value + '.hbs'
             }
 
-            this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj);
-        }
+            extraPartial.push(Object.keys(this.form.parent_id)[j])
+            console.log("found a Object:", Object.keys(this.form.parent_id)[j])
+            console.log("partialsList:", this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList)
+            var temp1 = (this.form.parent_id[Object.keys(this.form.parent_id)[j]].defaultList)
+            console.log("temp INSIDE inherited partialsList:", temp1)
+            for (let x = 0; x < temp1.length; x++) {
+              var obj1 = {};
 
+              obj1[Object.keys(temp1[x])] = temp1[x][Object.keys(temp1[x])]
+              this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj1)
+            }
+
+          }
+
+        }
+        for (var i = 0; i < this.partialsListSelection.length; i++) {
+
+          console.log("this.AllData[i]:", this.AllData[i])
+          for (let z = 0; z < this.AllData[i].length; z++) {
+            if (this.AllData[i][z]['disabled'] == true)
+              this.AllData[i][z]['disabled'] = false
+          }
+          let temp = this.partialsListSelection[i]
+          console.log("temp:", temp)
+          var obj = {};
+
+          let change = false;
+          for (var j = 0; j < this.defaultParams.length; j++) {
+
+            if (Object.keys(this.defaultParams[j])[0] == temp.trim()) {
+              console.log("default  value is found ");
+              let x = Object.keys(this.defaultParams[j])[0];
+              console.log("x:", x)
+              let y = this.defaultParams[j][x]
+              obj[temp] = y;
+              change = true;
+            }
+          }
+          if (change != true) {
+
+            obj[temp] = this.form.parent_id[temp].value;
+            change = false;
+          }
+          this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
+        }
+        console.log("this.form.parent_id:", this.form.parent_id)
 
         let newfilename = this.folderUrl + '/assets/config.json';
         axios.post(this.baseURL + '/flows-dir-listing', {
             filename: newfilename,
             text: JSON.stringify(this.settings),
             type: 'file'
-        })
-        .then((res) => {
+          })
+          .then((res) => {
 
             this.$message({
-                showClose: true,
-                message: 'Config Saved!',
-                type: 'success'
+              showClose: true,
+              message: 'Config Saved!',
+              type: 'success'
             });
 
-        })
-        .catch((e) => {
+          })
+          .catch((e) => {
             console.log(e);
             this.$message({
-                showClose: true,
-                message: 'Cannot save config file! Some error occured, try again.',
-                type: 'error'
+              showClose: true,
+              message: 'Cannot save config file! Some error occured, try again.',
+              type: 'error'
             });
-        })
+          })
 
       } else {
         for (var i = 0; i < this.partialsListSelection.length; i++) {
-            let temp = this.partialsListSelection[i]
-            var obj = {};
-
-            obj[temp] = this.form.parent_id[temp];
-            PageSettings.partials.push(obj)
-
+          console.log("key:", this.partialsListSelection[i])
+          console.log("value:", this.form.parent_id[this.partialsListSelection[i]])
+          let temp = this.partialsListSelection[i]
+          var obj = {};
+          obj[temp] = this.form.parent_id[temp];
+          PageSettings.partials.push(obj)
         }
+        console.log("pageSettings Object:", PageSettings)
+        console.log('Create new Page Settings');
 
         this.settings[1].pageSettings.push(PageSettings);
 
@@ -519,26 +398,147 @@ export default {
             filename: newfilename,
             text: JSON.stringify(this.settings),
             type: 'file'
-        })
-        .then((res) => {
-
+          })
+          .then((res) => {
+            console.log(res);
             this.$message({
-                showClose: true,
-                message: 'Config Saved!',
-                type: 'success'
+              showClose: true,
+              message: 'Config Saved!',
+              type: 'success'
             });
 
-        })
-        .catch((e) => {
+          })
+          .catch((e) => {
             console.log(e);
             this.$message({
-                showClose: true,
-                message: 'Cannot save file! Some error occured, try again.',
-                type: 'error'
+              showClose: true,
+              message: 'Cannot save file! Some error occured, try again.',
+              type: 'error'
             });
-        })
+          })
+
       }
-    }
+
+    },
+
+    // Befor auto Folder metal smith 26-Oct Before Demo
+    // async savePageSettings() {
+
+    //   let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //   let urlparts = url.split("/");
+    //   let fileNameOrginal = urlparts[urlparts.length - 1];
+    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+    //   this.folderUrl = url.replace(fileName, '');
+
+    //   this.Data = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+    //   if (this.Data.status == 200 || this.Data.status == 204) {
+          
+    //     this.settingsData = JSON.parse(this.Data.data);
+    //     this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
+    //         'PageName': fileNameOrginal
+    //     });
+    //     this.form.nameSecond = fileNameOrginal;
+    //     this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout;
+          
+    //   } else {
+    //       console.log('Cannot get config file!');
+    //   }
+
+    //   for (var i = 0; i < this.form.secondlayouts.length; i++) {
+    //     if (this.form.secondlayouts[i].label === this.form.Layout) {
+    //         this.partialsListSelection = this.form.secondlayouts[i].partialsList;
+    //     }
+    //   }
+
+    //   var PageSettings = {
+    //     "PageName": this.form.name,
+    //     "PageSEOTitle": this.form.seoTitle,
+    //     "PageSEOKeywords": this.form.seoKeywords,
+    //     "PageSEODescription": this.form.seoDesc,
+    //     "PageLayout": this.form.Layout,
+    //     "partials": []
+    //   };
+
+    //   if (this.currentFileIndex != null) {
+
+    //     this.settings[1].pageSettings[this.currentFileIndex].partials = [];
+    //     this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
+
+    //     for (var i = 0; i < this.partialsListSelection.length; i++) {
+    //         let temp = this.partialsListSelection[i]
+    //         var obj = {};
+
+    //         let change = false;
+    //         if (change != true) {
+    //             obj[temp] = this.form.parent_id[temp];
+    //             change = false;
+    //         }
+
+    //         this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj);
+    //     }
+
+
+    //     let newfilename = this.folderUrl + '/assets/config.json';
+    //     axios.post(this.baseURL + '/flows-dir-listing', {
+    //         filename: newfilename,
+    //         text: JSON.stringify(this.settings),
+    //         type: 'file'
+    //     })
+    //     .then((res) => {
+
+    //         this.$message({
+    //             showClose: true,
+    //             message: 'Config Saved!',
+    //             type: 'success'
+    //         });
+
+    //     })
+    //     .catch((e) => {
+    //         console.log(e);
+    //         this.$message({
+    //             showClose: true,
+    //             message: 'Cannot save config file! Some error occured, try again.',
+    //             type: 'error'
+    //         });
+    //     })
+
+    //   } else {
+    //     for (var i = 0; i < this.partialsListSelection.length; i++) {
+    //         let temp = this.partialsListSelection[i]
+    //         var obj = {};
+
+    //         obj[temp] = this.form.parent_id[temp];
+    //         PageSettings.partials.push(obj)
+
+    //     }
+
+    //     this.settings[1].pageSettings.push(PageSettings);
+
+    //     let newfilename = this.folderUrl + '/assets/config.json';
+    //     axios.post(this.baseURL + '/flows-dir-listing', {
+    //         filename: newfilename,
+    //         text: JSON.stringify(this.settings),
+    //         type: 'file'
+    //     })
+    //     .then((res) => {
+
+    //         this.$message({
+    //             showClose: true,
+    //             message: 'Config Saved!',
+    //             type: 'success'
+    //         });
+
+    //     })
+    //     .catch((e) => {
+    //         console.log(e);
+    //         this.$message({
+    //             showClose: true,
+    //             message: 'Cannot save file! Some error occured, try again.',
+    //             type: 'error'
+    //         });
+    //     })
+    //   }
+    // }
     //savePageSettings() ends
 
     // async savePageSettings() {
