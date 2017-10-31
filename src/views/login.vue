@@ -24,9 +24,12 @@
 <script>
 import Vue from 'vue'
 import VueSession from 'vue-session'
+
 Vue.use(VueSession)
 
 import axios from 'axios'
+
+const config = require('../config');
 
 export default {
   name: 'Login',
@@ -91,7 +94,7 @@ export default {
                 this.$router.push('/');
               }
 
-              axios.get('http://localhost:3030/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
+              axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
               }).then(response => {
                 if (response.data) {
                     console.log(response.data.private_token);

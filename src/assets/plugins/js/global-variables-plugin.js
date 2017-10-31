@@ -5,7 +5,9 @@ $(document).ready(function() {
     ImpletementSocekt();
 })
 
-var host = "http://172.16.61.20:3030/";
+// var host = "http://localhost:3030/";
+// var host = "http://172.16.61.20:3030/";
+var host = "http://172.16.230.84:3030/";
 
 function ImpletementSocekt() {
   var socket = io(host);

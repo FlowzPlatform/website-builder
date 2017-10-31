@@ -115,6 +115,7 @@ import VueSession from 'vue-session'
 Vue.use(VueSession)
 
 var daex = require('json-daex')
+const config = require('../config');
 
 import axios from 'axios'
 
@@ -150,7 +151,6 @@ export default {
       PageLayout: '',
       PageFooter: '',
       PageHeader: '',
-      baseURL: 'http://172.16.230.84:3030',
       currentFileIndex: '',
       configData: [],
       Data:[],
@@ -192,7 +192,7 @@ export default {
            console.log("i:", this.partialsList[i])
        }
 
-       this.configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+       this.configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
        this.AllData=[];
        // console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
        if (this.configData.status == 200 || this.configData.status == 204) {
@@ -256,6 +256,22 @@ export default {
            }
        }
        console.log("AllData:",this.AllData)
+       for(let x=0;x<this.AllData.length;x++){
+        var checkingValue=false
+        for(let y=0;y<this.defaultParams.length;y++){
+
+          if(Object.keys(this.defaultParams[y])[0]==this.partialsList[x]){
+            checkingValue=true
+            
+        }
+
+        }
+        if(checkingValue!=true){
+
+        this.form.parent_id[this.partialsList[x]]=this.AllData[x][0]
+        }
+
+       }
        console.log("partials:", this.partialsList);
        
 
@@ -285,7 +301,7 @@ export default {
     //     console.log("i:", this.partialsList[i])
     //   }
 
-    //   this.configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+    //   this.configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
     //   this.AllData = [];
     //   if (this.configData.status == 200 || this.configData.status == 204) {
     //     console.log("@@@@@@@@@@@@@")
@@ -351,7 +367,7 @@ export default {
       let fileNameOrginal = urlparts[urlparts.length - 1];
       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
       this.folderUrl = url.replace(fileName, '');
-      this.Data = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+      this.Data = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
       if (this.Data.status == 200 || this.Data.status == 204) {
           this.settingsData = JSON.parse(this.Data.data);
           this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
@@ -434,7 +450,7 @@ export default {
           }
           console.log("this.form.parent_id:", this.form.parent_id)
           let newfilename = this.folderUrl + '/assets/config.json';
-          axios.post(this.baseURL + '/flows-dir-listing', {
+          axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: newfilename,
                   text: JSON.stringify(this.settings),
                   type: 'file'
@@ -468,7 +484,7 @@ export default {
           console.log('Create new Page Settings');
           this.settings[1].pageSettings.push(PageSettings);
           let newfilename = this.folderUrl + '/assets/config.json';
-          axios.post(this.baseURL + '/flows-dir-listing', {
+          axios.post(config.baseURL + '/flows-dir-listing', {
               filename: newfilename,
               text: JSON.stringify(this.settings),
               type: 'file'
@@ -501,7 +517,7 @@ export default {
     //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
     //   this.folderUrl = url.replace(fileName, '');
 
-    //   this.Data = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+    //   this.Data = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
     //   if (this.Data.status == 200 || this.Data.status == 204) {
           
     //     this.settingsData = JSON.parse(this.Data.data);
@@ -550,7 +566,7 @@ export default {
 
 
     //     let newfilename = this.folderUrl + '/assets/config.json';
-    //     axios.post(this.baseURL + '/flows-dir-listing', {
+    //     axios.post(config.baseURL + '/flows-dir-listing', {
     //         filename: newfilename,
     //         text: JSON.stringify(this.settings),
     //         type: 'file'
@@ -586,7 +602,7 @@ export default {
     //     this.settings[1].pageSettings.push(PageSettings);
 
     //     let newfilename = this.folderUrl + '/assets/config.json';
-    //     axios.post(this.baseURL + '/flows-dir-listing', {
+    //     axios.post(config.baseURL + '/flows-dir-listing', {
     //         filename: newfilename,
     //         text: JSON.stringify(this.settings),
     //         type: 'file'
@@ -620,7 +636,7 @@ export default {
     let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
     this.folderUrl = url.replace(fileName, '');
 
-    this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+    this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
     if(this.configData.status == 200 || this.configData.status == 204){
       this.settings = JSON.parse(this.configData.data);
       

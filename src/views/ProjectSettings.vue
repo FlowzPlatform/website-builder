@@ -44,11 +44,11 @@
                 <el-input v-model="repoName" :disabled="true"></el-input>
               </el-form-item>
 
-              <el-form-item label="Brand name">
+              <!-- <el-form-item label="Brand name">
                 <el-input v-model="form.brandName" placeholder="My Company"></el-input>
-              </el-form-item>
+              </el-form-item> -->
 
-              <el-form-item label="Brand Logo">
+              <!-- <el-form-item label="Brand Logo">
                 <div class="col6 valid"> 
                   <label for="upload-validation">
                     <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
@@ -56,7 +56,7 @@
                   <input type="file" name="" id="upload-validation">
                   <span class="dis">(max 1 MB. .jpg or .png only)</span>
                 </div>
-              </el-form-item>
+              </el-form-item> -->
 
               <el-form-item label="Project SEO Title">
                 <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
@@ -299,6 +299,8 @@ Vue.use(VueSession)
 
 import axios from 'axios'
 
+const config = require('../config');
+
 import fileSaver from 'file-saver'
 
 export default {
@@ -324,7 +326,6 @@ export default {
       },
       commitsData: [],
       commitMessage: '',
-      baseURL: 'http://172.16.230.84:3030',
       newRepoId: '',
       repoName: '',
       configData: [],
@@ -452,7 +453,7 @@ export default {
       
       this.form.brandLogoName = fileData.name;
 
-      axios.post( this.baseURL + '/image-upload', {
+      axios.post( config.baseURL + '/image-upload', {
           filename : this.folderUrl + '/assets/' + this.form.brandLogoName,
           text : fileBlob,
           type : 'file'
@@ -472,7 +473,7 @@ export default {
       this.settings[1].projectSettings = ProjectSettings;
 
       let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
-      axios.post( this.baseURL + '/flows-dir-listing', {
+      axios.post( config.baseURL + '/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(this.settings),
           type : 'file'
@@ -501,7 +502,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
       }).then(response => {
         console.log(response.data);
         this.$message({
@@ -518,7 +519,7 @@ export default {
       this.$store.state.currentIndex = 0;
 
       // Push repository changes
-      axios.post(this.baseURL + '/gitlab-add-repo', {
+      axios.post(config.baseURL + '/gitlab-add-repo', {
         commitMessage: this.commitMessage,
         repoName: this.repoName
       }).then(response => {
@@ -537,7 +538,7 @@ export default {
 
     async publishMetalsmith() {
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      var responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      var responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       var rawConfigs = JSON.parse(responseConfig.data);
       var partialstotal = []
       for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
@@ -547,7 +548,7 @@ export default {
         var partials = ''
         console.log("rawConfigs[1].pageSettings[i].PageName:", rawConfigs[1].pageSettings[i].PageName)
 
-        let responseConfigLoop = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+        let responseConfigLoop = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
 
         var rawSettings = JSON.parse(responseConfigLoop.data);
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
@@ -597,19 +598,19 @@ export default {
         console.log("@@@@@@@@@@@@@@@@@:")
         console.log("mainMetal:", mainMetal)
         var value = true;
-        await axios.post('http://localhost:3030/flows-dir-listing', {
+        await axios.post( config.baseURL + '/flows-dir-listing', {
             filename: mainMetal,
             text: responseMetal,
             type: 'file'
           }).then(async(response) => {
             var newFolderName = folderUrl + '/Preview';
-            await axios.post(this.baseURL + '/flows-dir-listing', {
+            await axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName,
                 type: 'folder'
               })
               .then(async(res) => {
                 console.log(res)
-                var rawContent = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Pages/' + nameF + '.html');
+                var rawContent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Pages/' + nameF + '.html');
 
                 // newContent = newContent.data;
                 // if (Layout == 'Blank') {
@@ -737,7 +738,7 @@ export default {
 
                 var previewFileName = folderUrl + '/Preview/' + nameF + '.html';
 
-                await axios.post('http://localhost:3030/flows-dir-listing', {
+                await axios.post( config.baseURL + '/flows-dir-listing', {
                     filename: previewFileName,
                     text: newContent,
                     type: 'file'
@@ -745,9 +746,9 @@ export default {
                   .then(async(res) => {
                     this.saveFileLoading = false;
 
-                    await axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then(async(response) => {
+                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async(response) => {
 
-                        await axios.post(this.baseURL + '/flows-dir-listing', {
+                        await axios.post(config.baseURL + '/flows-dir-listing', {
                             filename: mainMetal,
                             text: responseMetal,
                             type: 'file'
@@ -757,7 +758,7 @@ export default {
                             let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                             previewFile = folderUrl.replace('/var/www/html', '');
                             console.log(previewFile.replace('Pages' + nameF, ''));
-                            await axios.delete(this.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               .then((res) => {
                                 console.log(res);
                                 // value = false;
@@ -886,7 +887,7 @@ export default {
   async created () {
     this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
     let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+    this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
     if(this.configData.status == 200 || this.configData.status == 204){
       console.log('Config file found! Updating fields..');
       this.settings = JSON.parse(this.configData.data);
@@ -938,7 +939,7 @@ export default {
     for (var i = 0; i < this.globalVariables.length; i++){
       if(this.globalVariables[i].variableType == 'image'){
         let _imageIndex = i;
-        axios.get( this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
+        axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
         }).then(response => {
           $('[name = ' + _imageIndex + ']').attr('src', response.data);
         }).catch(error => {
@@ -949,7 +950,7 @@ export default {
     }
 
     // Get all commits list
-    await axios.get( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
+    await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
     }).then(response => {
       for(var i in response.data){
         this.commitsData.push({

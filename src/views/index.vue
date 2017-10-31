@@ -264,6 +264,8 @@ import io from 'socket.io-client';
 
 var daex = require('json-daex');
 
+const config = require('../config');
+
 // Custom Components
 
 // Home page
@@ -314,7 +316,6 @@ export default {
     return {
       autoFolders: true,
       isLoggedInUser: false,
-      baseURL : 'http://172.16.230.84:3030',
       pluginsPath : '/home/software/AllProjects/FlowzBuilder/src/assets/plugins',
       directoryTree: [],
       currentFile : null,
@@ -433,7 +434,7 @@ export default {
 
     // Project Directory Listing
     let self = this
-    const app = feathers().configure(socketio(io(this.baseURL)))
+    const app = feathers().configure(socketio(io(config.baseURL)))
     app.service("flows-dir-listing").on("created", (response) => {
         response.path = response.path.replace(/\//g, "\\")
         var s = response.path.replace(this.rootpath, '').split('\\');
@@ -519,7 +520,7 @@ export default {
 
     // Get directory listing data
     getData() {
-      axios.get(this.baseURL + '/flows-dir-listing')
+      axios.get(config.baseURL + '/flows-dir-listing')
       .then(response => {
           response.data.children = this.getTreeData(response.data);
           if (this.directoryTree.length == 0) {
@@ -706,7 +707,7 @@ export default {
         let ext = url.split('.').pop();
 
         this.$store.state.fileUrl = url;
-        let response = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + url);
+        let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + url);
 
         this.$store.dispatch('updateContent', { text: response.data })
         if(response.status == 200 || response.status == 204){
@@ -819,7 +820,7 @@ export default {
       var folderUrl = configFileUrl.replace(fileName, '');
       console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
 
-      let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       let rawConfigs = JSON.parse(responseConfig.data);
 
       this.form.headers = rawConfigs[2].layoutOptions[0].headers;
@@ -848,7 +849,7 @@ export default {
       var folderUrl = configFileUrl.replace(fileName, '');
 
       console.log("page name:" + nameF)
-      let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       console.log("response:", responseConfig.data)
       let rawSettings = JSON.parse(responseConfig.data);
 
@@ -860,7 +861,7 @@ export default {
         }
       }
 
-      let responseMetal = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
+      let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
       console.log("response of metalsmith", responseMetal.data);
       var index = responseMetal.data.search('.source')
 
@@ -901,7 +902,7 @@ export default {
 
       let mainMetal = folderUrl + '/assets/metalsmith.js'
 
-      axios.post('http://localhost:3030/flows-dir-listing', {
+      axios.post( config.baseURL + '/flows-dir-listing', {
         filename: mainMetal,
         text: responseMetal.data,
         type: 'file'
@@ -914,7 +915,7 @@ export default {
         });
 
         let newFolderName = folderUrl + '/Preview';
-        return axios.post(this.baseURL + '/flows-dir-listing', {
+        return axios.post(config.baseURL + '/flows-dir-listing', {
             foldername: newFolderName,
             type: 'folder'
           })
@@ -954,7 +955,7 @@ export default {
 
             let previewFileName = folderUrl + '/Preview/' + nameF + '.html';
 
-            return axios.post('http://localhost:3030/flows-dir-listing', {
+            return axios.post( config.baseURL + '/flows-dir-listing', {
                 filename: previewFileName,
                 text: newContent,
                 type: 'file'
@@ -962,12 +963,12 @@ export default {
               .then((res) => {
                 this.saveFileLoading = false;
 
-                axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
+                axios.get( config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                     console.log('successfully  :' + (response))
 
                     var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                    return axios.post(this.baseURL + '/flows-dir-listing', {
+                    return axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: mainMetal,
                         text: metalsmithJSON,
                         type: 'file'
@@ -979,7 +980,7 @@ export default {
                         console.log(previewFile.replace('Pages' + nameF, ''));
                         window.open('http://localhost' + previewFile + '/MetalsmithOutput/' + nameF + '.html');
 
-                        axios.delete(this.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                           .then((res) => {
 
                             console.log(res);
@@ -1046,7 +1047,7 @@ export default {
       var folderUrl = configFileUrl.replace(fileName, '');
 
       console.log("page name:" + nameF)
-      let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       console.log("response:", responseConfig.data)
       let rawSettings = JSON.parse(responseConfig.data);
       // console.log("response of pageSettings:", rawSettings[0].pageSettings[0].PageName)
@@ -1063,7 +1064,7 @@ export default {
           }
       }
 
-      let responseMetal = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
+      let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
       console.log("response of metalsmith", responseMetal.data);
       var index = responseMetal.data.search('.source')
 
@@ -1109,7 +1110,7 @@ export default {
 
       let mainMetal = folderUrl + '/assets/metalsmith.js'
 
-      axios.post('http://localhost:3030/flows-dir-listing', {
+      axios.post( config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
               text: responseMetal.data,
               type: 'file'
@@ -1123,7 +1124,7 @@ export default {
 
               // Create temporary preview folder
               let newFolderName = folderUrl + '/Preview';
-              return axios.post(this.baseURL + '/flows-dir-listing', {
+              return axios.post(config.baseURL + '/flows-dir-listing', {
                   foldername : newFolderName,
                   type : 'folder'
               })
@@ -1246,7 +1247,7 @@ export default {
 
                   let previewFileName = folderUrl + '/Preview/'+nameF+'.html';
 
-                   return axios.post('http://localhost:3030/flows-dir-listing', {
+                   return axios.post( config.baseURL + '/flows-dir-listing', {
                         filename : previewFileName,
                         text : newContent,
                         type : 'file'
@@ -1254,13 +1255,13 @@ export default {
                     .then((res) => {
                         this.saveFileLoading = false;
 
-                        axios.get('http://localhost:3030/metalsmith?path=' + folderUrl, {}).then((response) => {
+                        axios.get( config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                           console.log('successfully  :' + (response))
                           // revert changes in metalsmith 
                          
                           var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+folderUrl+"/public')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+folderUrl+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                          return axios.post(this.baseURL + '/flows-dir-listing', {
+                          return axios.post(config.baseURL + '/flows-dir-listing', {
                                   filename: mainMetal,
                                   text: metalsmithJSON,
                                   type: 'file'
@@ -1277,7 +1278,7 @@ export default {
                                 // Delete Preview Folder
 
 
-                                axios.delete(this.baseURL + '/flows-dir-listing/0?filename='+folderUrl+'/Preview')
+                                axios.delete(config.baseURL + '/flows-dir-listing/0?filename='+folderUrl+'/Preview')
                                 .then((res) => {
                                     
                                     console.log(res);
@@ -1359,7 +1360,7 @@ export default {
     //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
     //   var folderUrl = configFileUrl.replace(fileName, '');
 
-    //   let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //   let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
     //   let rawSettings = JSON.parse(responseConfig.data);
 
     //   for (let i = 0; i < rawSettings[1].pageSettings.length; i++) {
@@ -1369,7 +1370,7 @@ export default {
     //     }
     //   }
 
-    //   let responseMetal = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
+    //   let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
     //   var index = responseMetal.data.search('.source')
 
     //   responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
@@ -1404,7 +1405,7 @@ export default {
     //       });
 
     //       let newFolderName = folderUrl + '/Preview';
-    //       return axios.post(this.baseURL + '/flows-dir-listing', {
+    //       return axios.post(config.baseURL + '/flows-dir-listing', {
     //           foldername: newFolderName,
     //           type: 'folder'
     //         })
@@ -1533,7 +1534,7 @@ export default {
 
     //                   var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-    //                   return axios.post(this.baseURL + '/flows-dir-listing', {
+    //                   return axios.post(config.baseURL + '/flows-dir-listing', {
     //                       filename: mainMetal,
     //                       text: metalsmithJSON,
     //                       type: 'file'
@@ -1545,7 +1546,7 @@ export default {
 
     //                       window.open('http://localhost' + previewFile + '/public/' + nameF + '.html');
 
-    //                       axios.delete(this.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+    //                       axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
     //                       .then((res) => {
     //                         console.log(res);
     //                       })
@@ -1608,7 +1609,7 @@ export default {
     // Create new Folder
     addFolder(){
         let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
-        return axios.post(this.baseURL + '/flows-dir-listing', {
+        return axios.post(config.baseURL + '/flows-dir-listing', {
             foldername : newFolderName,
             type : 'folder'
         })
@@ -1630,7 +1631,7 @@ export default {
     // Create new Website
     addProjectFolder(){
         let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-        return axios.post(this.baseURL + '/flows-dir-listing', {
+        return axios.post(config.baseURL + '/flows-dir-listing', {
             foldername : newFolderName,
             type : 'folder'
         })
@@ -1640,7 +1641,7 @@ export default {
             this.addNewProjectFolderLoading = false
 
             // Create repositoroty on GitLab
-            axios.get(this.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddProjectFolder.projectName + '&privateToken='+ this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {
+            axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddProjectFolder.projectName + '&privateToken='+ this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {
             })
             .then((response) => {
                 console.log(response.data);
@@ -1699,7 +1700,7 @@ export default {
       console.log('Creating essential folders...')
 
       // Create Assets folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/assets',
         type : 'folder'
       })
@@ -1711,7 +1712,7 @@ export default {
       });
 
       // Create Assets folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/assets/client-plugins',
         type : 'folder'
       })
@@ -1723,7 +1724,7 @@ export default {
       });
 
       // Create Headers Folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/Header',
         type : 'folder'
       })
@@ -1735,7 +1736,7 @@ export default {
       });
 
       // Create Layouts Folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/Layout',
         type : 'folder'
 
@@ -1748,7 +1749,7 @@ export default {
       });
 
       // Create menus Folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/Menu',
         type : 'folder'
 
@@ -1761,7 +1762,7 @@ export default {
       });
 
       // Create Footers Folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/Footer',
         type : 'folder'
       })
@@ -1773,7 +1774,7 @@ export default {
       });
 
       // Create Pages Folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/Pages',
         type : 'folder'
       })
@@ -1785,7 +1786,7 @@ export default {
       });
 
       // Create Templates Folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/Templates',
         type : 'folder'
       })
@@ -1797,7 +1798,7 @@ export default {
       });
 
       // Create Sidebars Folder
-      axios.post(this.baseURL+'/flows-dir-listing' , {
+      axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : newFolderName+'/Sidebar',
         type : 'folder'
       })
@@ -1809,7 +1810,7 @@ export default {
       });
 
       // Create Default header Folder
-      // axios.post(this.baseURL+'/flows-dir-listing' , {
+      // axios.post(config.baseURL+'/flows-dir-listing' , {
       //   foldername : newFolderName+'/Headers/default',
       //   type : 'folder'
       // })
@@ -1848,7 +1849,7 @@ export default {
         ]
         }] }, { "layoutOptions": [ { "Header": [{ value: 'default', label: 'default' }], "Footer": [{ value: 'default', label: 'default' }],"Sidebar": [{ value: 'default', label: 'default' }],"Menu": [{ value: 'default', label: 'default' }], "Layout": [{ value: 'Blank', label: 'Blank',partialsList:[], defaultList:[] }, { value: 'default', label: 'default',partialsList:['Header','Footer'], defaultList:[] }] } ] } ];
 
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(repoSettings),
           type : 'file'
@@ -1862,7 +1863,7 @@ export default {
 
       // Create main.css file
       let maincss = newFolderName + '/assets/main.css'
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : maincss,
           text : '/* Add your custom CSS styles here. It will be automatically included in every page. */',
           type : 'file'
@@ -1876,7 +1877,7 @@ export default {
 
       // Create main.js file
       let mainjs = newFolderName + '/assets/main.js'
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : mainjs,
           text : '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */',
           type : 'file'
@@ -1891,7 +1892,7 @@ export default {
       // Brand Logo
       let brandLogo = newFolderName + '/assets/brand-logo.png';
       
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
         filename : brandLogo,
         text : '',
         type : 'file'
@@ -1916,7 +1917,7 @@ export default {
       }
       let indexLayout = newFolderName + '/Pages/index.html';
 
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : indexLayout,
           text : indexLayoutContent,
           type : 'file'
@@ -1933,7 +1934,7 @@ export default {
 
       var metalsmithJSON="var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(true)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-       axios.post(this.baseURL + '/flows-dir-listing', {
+       axios.post(config.baseURL + '/flows-dir-listing', {
           filename : mainMetal,
           text : metalsmithJSON,
           type : 'file'
@@ -1952,7 +1953,7 @@ export default {
 
       var layoutFileData='<div class="row"><div class="column col-md-12 col-sm-12 col-xs-12"><!--gm-editable-region--><p>{{> Header }}</p><!--/gm-editable-region--></div></div><div class="row"><div class="column col-md-12 col-sm-12 col-xs-12"><!--gm-editable-region--><p>{{{ contents }}}</p><!--/gm-editable-region--></div></div><div class="row"><div class="column col-md-12 col-sm-12 col-xs-12"><!--gm-editable-region--><p>{{> Footer }}</p><!--/gm-editable-region--></div></div>'
 
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : layoutFileName,
           text : layoutFileData,
           type : 'file'
@@ -1969,7 +1970,7 @@ export default {
 
       var headerFileData='<style type="text/css">@import url(\'http://fonts.googleapis.com/css?family=Open+Sans:400,700\');html{background-color: #eaf0f2;}body{font:14px/1.5 Arial, Helvetica, sans-serif;padding:0;margin:0;}.menu{text-align: center;padding-top: 25px;margin-bottom:200px;}.menu img{opacity: 0.4;margin: 20px auto;}.menu h1{margin-top:0;font: normal 32px/1.5 \'Open Sans\', sans-serif;color: #3F71AE;padding-bottom: 16px;}.menu h2{color: #F05283;}.menu h2 a{color:inherit;text-decoration: none;display: inline-block;border: 1px solid #F05283;padding: 10px 15px;border-radius: 3px;font: bold 14px/1 \'Open Sans\', sans-serif;text-transform: uppercase;}.menu h2 a:hover{background-color:#F05283;transition:0.2s;color:#fff;}.menu ul{max-width: 600px;margin: 60px auto 0;}.menu ul a{text-decoration: none;color: #FFF;text-align: left;background-color: #B9C1CA;padding: 10px 16px;border-radius: 2px;opacity: 0.8;font-size: 16px;display: inline-block;margin: 4px;line-height: 1;outline: none;transition: 0.2s ease;}.menu ul li a.active{background-color: #66B650;pointer-events: none;}.menu ul li a:hover{opacity: 1;}.menu ul{list-style: none;padding: 0;}.menu ul li{display: inline-block;}@media (max-height:800px){.menu{padding-top:40px;}}/* -- Demo ads -- */@media (max-width: 1200px){#bsaHolder{display:none;}}/* -- Link to Tutorialzine -- */.tz-link{text-decoration: none;color: #fff !important;font: bold 36px Arial,Helvetica,sans-serif !important;}.tz-link span{color: #da431c;}.header-basic-light{padding: 20px 40px;box-sizing:border-box;box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);height: 80px;background-color: #fff;}.header-basic-light .header-limiter{max-width: 1200px;text-align: center;margin: 0 auto;}/* Logo */.header-basic-light .header-limiter h1{float: left;font: normal 28px Cookie, Arial, Helvetica, sans-serif;line-height: 40px;margin: 0;}.header-basic-light .header-limiter h1 span{color: #5383d3;}/* The header links */.header-basic-light .header-limiter a{color: #5c616a;text-decoration: none;}.header-basic-light .header-limiter nav{font:15px Arial, Helvetica, sans-serif;line-height: 40px;float: right;}.header-basic-light .header-limiter nav a{display: inline-block;padding: 0 5px;opacity: 0.9;text-decoration:none;color: #5c616a;line-height:1;}.header-basic-light .header-limiter nav a.selected{background-color: #86a3d5;color: #ffffff;border-radius: 3px;padding:6px 10px;}/* Making the header responsive. */@media all and (max-width: 600px){.header-basic-light{padding: 20px 0;height: 85px;}.header-basic-light .header-limiter h1{float: none;margin: -8px 0 10px;text-align: center;font-size: 24px;line-height: 1;}.header-basic-light .header-limiter nav{line-height: 1;float:none;}.header-basic-light .header-limiter nav a{font-size: 13px;}}/* For the headers to look good, be sure to reset the margin and padding of the body */body{margin:0;padding:0;}</style><link href=\'default.css\' rel=\'stylesheet\' type=\'text/css\'><link href=\'http://fonts.googleapis.com/css?family=Cookie\' rel=\'stylesheet\' type=\'text/css\'><header class="header-basic-light"><div class="header-limiter"><h1><a href="#">Company<span>logo</span></a></h1><nav><a href="#">Home</a><a href="#" class="selected">Blog</a><a href="#">Pricing</a><a href="#">About</a><a href="#">Faq</a><a href="#">Contact</a></nav></div></header><script src=\'default.js\'><\/script>'
 
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : headerFileName,
           text : headerFileData,
           type : 'file'
@@ -1984,7 +1985,7 @@ export default {
       // Create demo header CSS file
       // let headerCSSFileName = newFolderName + '/Headers/default/default.css'
 
-      // axios.post(this.baseURL + '/flows-dir-listing', {
+      // axios.post(config.baseURL + '/flows-dir-listing', {
       //     filename : headerCSSFileName,
       //     text : '/* Add Default Header CSS styles here. */\n',
       //     type : 'file'
@@ -1999,7 +2000,7 @@ export default {
       // Create demo header JS file
       // let headerJSFileName = newFolderName + '/Headers/default/default.js'
 
-      // axios.post(this.baseURL + '/flows-dir-listing', {
+      // axios.post(config.baseURL + '/flows-dir-listing', {
       //     filename : headerJSFileName,
       //     text : '/* Add Default Header JS scripts here. */',
       //     type : 'file'
@@ -2016,7 +2017,7 @@ export default {
 
       var footerFileData='<style type="text/css">@import url(\'http://fonts.googleapis.com/css?family=Open+Sans:400,700\');*{padding:0;margin:0;}body{font:14px/1.5 Arial, Helvetica, sans-serif;}@media (max-height:800px){footer{position: static;}}.footer-distributed{background-color: #80CBC4;box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);box-sizing: border-box;width: 100%;text-align: left;font: normal 16px sans-serif;padding: 45px 50px;margin-top: 80px;}.footer-distributed .footer-left p{color: #8f9296;font-size: 14px;margin: 0;}/* Footer links */.footer-distributed p.footer-links{font-size:18px;font-weight: bold;color: #ffffff;margin: 0 0 10px;padding: 0;}.footer-distributed p.footer-links a{display:inline-block;line-height: 1.8;text-decoration: none;color: inherit;}.footer-distributed .footer-right{float: right;margin-top: 6px;max-width: 180px;}.footer-distributed .footer-right a{display: inline-block;width: 35px;height: 35px;background-color: #4b7188;border-radius: 2px;font-size: 20px;color: #ffffff;text-align: center;line-height: 35px;margin-left: 3px;}/* If you don\'t want the footer to be responsive, remove these media queries */@media (max-width: 600px){.footer-distributed .footer-left,.footer-distributed .footer-right{text-align: center;}.footer-distributed .footer-right{float: none;margin: 0 auto 20px;}.footer-distributed .footer-left p.footer-links{line-height: 1.8;}}</style><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><footer class="footer-distributed"><div class="footer-right"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-linkedin"></i></a><a href="#"><i class="fa fa-github"></i></a></div><div class="footer-left"><p class="footer-links"><a href="#">Home</a>·<a href="#">Blog</a>·<a href="#">Pricing</a>·<a href="#">About</a>·<a href="#">Faq</a>·<a href="#">Contact</a></p><p>Company Name &copy; 2017</p></div></footer>'
 
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : footerFileName,
           text : footerFileData,
           type : 'file'
@@ -2030,7 +2031,7 @@ export default {
 
       // Create default sidebar file file
       let sidebar = newFolderName + '/Sidebar/default.html'
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : sidebar,
           text : '<div id="sidebar" style="display: block; width: 100%; min-height: 20px"> <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> <style type="text/css">#wrapper{padding-left: 250px; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}#wrapper.toggled{padding-left: 250px;}#sidebar-wrapper{z-index: 1000; position: fixed; left: 250px; width: 250px; height: 100%; margin-left: -250px; overflow-y: auto; background: #000; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}#wrapper.toggled #sidebar-wrapper{width: 250px;}#page-content-wrapper{width: 100%; position: absolute; padding: 15px;}#wrapper.toggled #page-content-wrapper{position: absolute; margin-right: -250px;}/* Sidebar Styles */.sidebar-nav{position: absolute; top: 0; width: 250px; margin: 0; padding: 0; list-style: none; width: 100%;}.sidebar-nav li{text-indent: 20px; line-height: 40px;}.sidebar-nav li a{display: block; text-decoration: none; color: #999999; width: 100%;}.sidebar-nav li a:hover{text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);}.sidebar-nav li a:active,.sidebar-nav li a:focus{text-decoration: none;}.sidebar-nav > .sidebar-brand{height: 65px; font-size: 18px; line-height: 60px;}.sidebar-nav > .sidebar-brand a{color: #999999;}.sidebar-nav > .sidebar-brand a:hover{color: #fff; background: none;}</style><div id="wrapper" class="wrapper"> <div id="sidebar-wrapper" class="sidebar-bg"> <ul class="sidebar-nav"> <li class="sidebar-brand"> <a href="#"> Company Name </a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Dashboard</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Shortcuts</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Overview</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Events</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">About</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Services</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Contact</a> </li></ul> </div></div></div>',
           type : 'file'
@@ -2045,7 +2046,7 @@ export default {
       // Product Listing Plugin
       let listingPlugin = newFolderName + '/assets/client-plugins/client-product-listing-plugin.js';
       let pluginJsData = '';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/product-listing-plugin-cleaned.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/product-listing-plugin-cleaned.js', {
           
       })
       .then((response) => {
@@ -2053,7 +2054,7 @@ export default {
         let ProjectName = newFolderName.replace('/var/www/html/websites/', '')
         pluginJsData = pluginJsData.replace('setNameHere', ProjectName);
         
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : listingPlugin,
             text : pluginJsData,
             type : 'file'
@@ -2072,12 +2073,12 @@ export default {
 
       // Product Detail Plugin
       let productDetailPlugin = newFolderName + '/assets/client-plugins/client-product-detail-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/product-detail-plugin-cleaned.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/product-detail-plugin-cleaned.js', {
           
       })
       .then((res) => {
         let pluginDetailJsData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : productDetailPlugin,
             text : pluginDetailJsData,
             type : 'file'
@@ -2096,12 +2097,12 @@ export default {
 
       // Carousel Slider Plugin
       let sliderPlugin = newFolderName + '/assets/client-plugins/client-slider-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-slider-plugin.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-slider-plugin.js', {
           
       })
       .then((res) => {
         let sliderPluginData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : sliderPlugin,
             text : sliderPluginData,
             type : 'file'
@@ -2120,14 +2121,14 @@ export default {
 
       // Popular Product Slider 
       let popularSliderPlugin = newFolderName + '/assets/client-plugins/client-popular-product-slider-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/popular-product-slider-plugin.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/popular-product-slider-plugin.js', {
           
       })
       .then((res) => {
         let popularSliderPluginData = res.data;
         let ProjectName = newFolderName.replace('/var/www/html/websites/', '')
         popularSliderPluginData = popularSliderPluginData.replace('setNameHere', ProjectName);
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : popularSliderPlugin,
             text : popularSliderPluginData,
             type : 'file'
@@ -2146,12 +2147,12 @@ export default {
 
       // Pagination Plugin 
       let paginationPlugin = newFolderName + '/assets/client-plugins/client-pagination-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-pagination-plugin.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-pagination-plugin.js', {
           
       })
       .then((res) => {
         let paginationPluginData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : paginationPlugin,
             text : paginationPluginData,
             type : 'file'
@@ -2170,12 +2171,12 @@ export default {
 
       // Pagination Plugin 
       let gradientAnimationPlugin = newFolderName + '/assets/client-plugins/image-gradient-animation.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/image-gradient-animation.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/image-gradient-animation.js', {
           
       })
       .then((res) => {
         let gradientAnimationPluginData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : gradientAnimationPlugin,
             text : gradientAnimationPluginData,
             type : 'file'
@@ -2194,12 +2195,12 @@ export default {
 
       // Dynamic menu Navbar Plugin 
       let navbarPlugin = newFolderName + '/assets/client-plugins/client-navbar-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-navbar-plugin.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-navbar-plugin.js', {
           
       })
       .then((res) => {
         let navbarPluginData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : navbarPlugin,
             text : navbarPluginData,
             type : 'file'
@@ -2217,12 +2218,12 @@ export default {
 
       // Template
       let template1 = newFolderName + '/Templates/template1.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template1.html', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template1.html', {
           
       })
       .then((res) => {
         let template1Data = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : template1,
             text : template1Data,
             type : 'file'
@@ -2240,12 +2241,12 @@ export default {
 
       // Template
       let templateListing2 = newFolderName + '/Templates/template2.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template2.html', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template2.html', {
           
       })
       .then((res) => {
         let template2Data = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : templateListing2,
             text : template2Data,
             type : 'file'
@@ -2263,12 +2264,12 @@ export default {
 
       // Template
       let template3 = newFolderName + '/Templates/template3.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template3.html', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template3.html', {
           
       })
       .then((res) => {
         let template3Data = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : template3,
             text : template3Data,
             type : 'file'
@@ -2286,12 +2287,12 @@ export default {
 
       // Template
       let template4 = newFolderName + '/Templates/template4.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template4.html', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template4.html', {
           
       })
       .then((res) => {
         let template4Data = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : template4,
             text : template4Data,
             type : 'file'
@@ -2309,12 +2310,12 @@ export default {
 
       // Template
       let template5 = newFolderName + '/Templates/template5.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template5.html', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/template5.html', {
           
       })
       .then((res) => {
         let template5Data = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : template5,
             text : template5Data,
             type : 'file'
@@ -2332,12 +2333,12 @@ export default {
 
       // Template
       let productList = newFolderName + '/Templates/productList.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/productlist.html', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/productlist.html', {
           
       })
       .then((res) => {
         let productListData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : productList,
             text : productListData,
             type : 'file'
@@ -2355,12 +2356,12 @@ export default {
 
       // Template
       let landscape = newFolderName + '/Templates/landscape.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/landscape.html', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/landscape.html', {
           
       })
       .then((res) => {
         let landscapeData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : landscape,
             text : landscapeData,
             type : 'file'
@@ -2378,12 +2379,12 @@ export default {
 
       // Template
       let creative = newFolderName + '/Templates/creative.html';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/creative.html', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/Templates/creative.html', {
           
       })
       .then((res) => {
         let creativeData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : creative,
             text : creativeData,
             type : 'file'
@@ -2401,12 +2402,12 @@ export default {
 
       // Template
       let globalVariablesPlugin = newFolderName + '/assets/client-plugins/global-variables-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/global-variables-plugin.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/global-variables-plugin.js', {
           
       })
       .then((res) => {
         let globalVariablesPluginData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : globalVariablesPlugin,
             text : globalVariablesPluginData,
             type : 'file'
@@ -2424,12 +2425,12 @@ export default {
 
       // Progress bars plugin
       let progressBarsPlugin = newFolderName + '/assets/client-plugins/progress-bars.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/progress-bars.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/progress-bars.js', {
           
       })
       .then((res) => {
         let progressBarsPluginData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : progressBarsPlugin,
             text : progressBarsPluginData,
             type : 'file'
@@ -2448,12 +2449,12 @@ export default {
 
       // My Cart Plugin
       let myCartPlugin = newFolderName + '/assets/client-plugins/client-my-cart-plugin.js';
-      axios.get(this.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-my-cart-plugin.js', {
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.pluginsPath + '/js/client-my-cart-plugin.js', {
           
       })
       .then((res) => {
         let myCartPluginData = res.data;
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : myCartPlugin,
             text : myCartPluginData,
             type : 'file'
@@ -2485,7 +2486,7 @@ export default {
       let fileName = '/' + urlparts[urlparts.length - 1];
       var folderUrl = configFileUrl.replace(fileName, '');
 
-      let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
 
       this.layoutSettings = JSON.parse(configData.data);
       // console.log("check for hbs")
@@ -2496,7 +2497,7 @@ export default {
               this.addNewFileLoading = true
               var name=this.formAddFile.filename;
               var newfilename = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
-              return axios.post(this.baseURL + '/flows-dir-listing', {
+              return axios.post(config.baseURL + '/flows-dir-listing', {
                   filename : newfilename,
                   text : ' ',
                   type : 'file'
@@ -2581,7 +2582,7 @@ export default {
     //       if (valid) {
     //           this.addNewFileLoading = true
     //           let newfilename = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
-    //           return axios.post(this.baseURL + '/flows-dir-listing', {
+    //           return axios.post(config.baseURL + '/flows-dir-listing', {
     //               filename : newfilename,
     //               text : ' ',
     //               type : 'file'
@@ -2633,7 +2634,7 @@ export default {
                 break;
         }
         
-        axios.post(this.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/flows-dir-listing', {
             filename : this.currentFile.path.replace(/\\/g, "\/"),
             text : newContent,
             type : 'file'
@@ -2652,7 +2653,7 @@ export default {
                 let foldername = urlparts[urlparts.length - 2];
                 let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
                 var folderUrl = configFileUrl.replace(fileName, '');
-                let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+                let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
                 
                 this.layoutSettings = JSON.parse(configData.data);
                 let checkValue = false;
@@ -2869,7 +2870,7 @@ export default {
               let fileNameOrginal = urlparts[urlparts.length-1];
               let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
               var folderUrl = configFileUrl.replace(fileName, '');
-              let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+              let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
               
               this.layoutSettings = JSON.parse(configData.data);
               var content=this.$store.state.content;
@@ -3018,7 +3019,7 @@ export default {
                     console.log("calling function to addNewPartialFolder with following name",result[i])
                     let newName=result[i]
                     let newFolderName = folderUrl+ '/' + result[i];
-                     axios.post(this.baseURL + '/flows-dir-listing', {
+                     axios.post(config.baseURL + '/flows-dir-listing', {
                         foldername : newFolderName,
                         type : 'folder'
                     })
@@ -3034,7 +3035,7 @@ export default {
                         this.addNewFileLoading = true
                         
                         let newfilename = newFolderName + '/default.html'
-                         axios.post(this.baseURL + '/flows-dir-listing', {
+                         axios.post(config.baseURL + '/flows-dir-listing', {
                             filename : newfilename,
                             text : ' ',
                             type : 'file'
@@ -3070,7 +3071,7 @@ export default {
                 let foldername = urlparts[urlparts.length - 2];
                 let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
                 var folderUrl = configFileUrl.replace(fileName, '');
-                let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+                let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
                 this.layoutSettings = JSON.parse(configData.data);
                 console.log("check for hbs")
                 let checkValue = false;
@@ -3307,7 +3308,7 @@ export default {
       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
       var folderUrl = configFileUrl.replace(fileName, '');
       var content = this.$store.state.content;
-      let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       var getFromBetween = {
       results: [],
       string: "",
@@ -3404,7 +3405,7 @@ export default {
         console.log("calling function to addNewPartialFolder with following name:",Object.keys(this.form.checked)[k])
           let newName = Object.keys(this.form.checked)[k]
           let newFolderName = folderUrl + '/' + Object.keys(this.form.checked)[k];
-          axios.post(this.baseURL + '/flows-dir-listing', {
+          axios.post(config.baseURL + '/flows-dir-listing', {
                   foldername: newFolderName,
                   type: 'folder'
               })
@@ -3418,7 +3419,7 @@ export default {
                   // this.saveConfigFile(folderUrl);
                   this.addNewFileLoading = true
                   let newfilename = newFolderName + '/default.html'
-                  axios.post(this.baseURL + '/flows-dir-listing', {
+                  axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: newfilename,
                           text: ' ',
                           type: 'file'
@@ -3536,7 +3537,7 @@ export default {
     //       this.saveLayoutFile();
     //       break;
     //   }
-    //   axios.post(this.baseURL + '/flows-dir-listing', {
+    //   axios.post(config.baseURL + '/flows-dir-listing', {
     //     filename: this.currentFile.path.replace(/\\/g, "\/"),
     //     text: newContent,
     //     type: 'file'
@@ -3553,7 +3554,7 @@ export default {
     //       let fileNameOrginal = urlparts[urlparts.length - 1];
     //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
     //       var folderUrl = configFileUrl.replace(fileName, '');
-    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //       let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
     //       this.layoutSettings = JSON.parse(configData.data);
     //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Footer/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
     //       let temp = {
@@ -3580,7 +3581,7 @@ export default {
     //       let fileNameOrginal = urlparts[urlparts.length - 1];
     //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
     //       var folderUrl = configFileUrl.replace(fileName, '');
-    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //       let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
     //       this.layoutSettings = JSON.parse(configData.data);
     //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Header/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
     //       let temp = {
@@ -3606,7 +3607,7 @@ export default {
     //       let fileNameOrginal = urlparts[urlparts.length - 1];
     //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
     //       var folderUrl = configFileUrl.replace(fileName, '');
-    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //       let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
     //       this.layoutSettings = JSON.parse(configData.data);
     //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Sidebar/') + 8, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
     //       let temp = {
@@ -3632,7 +3633,7 @@ export default {
     //       let fileNameOrginal = urlparts[urlparts.length - 1];
     //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
     //       var folderUrl = configFileUrl.replace(fileName, '');
-    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //       let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
     //       this.layoutSettings = JSON.parse(configData.data);
     //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Menu/') + 5, this.currentFile.path.replace(/\\/g, "\/").indexOf('.html'));
     //       let temp = {
@@ -3658,7 +3659,7 @@ export default {
     //       let fileNameOrginal = urlparts[urlparts.length - 1];
     //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
     //       var folderUrl = configFileUrl.replace(fileName, '');
-    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //       let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
     //       this.layoutSettings = JSON.parse(configData.data);
     //       var content = this.$store.state.content;
     //       var getFromBetween = {
@@ -3782,7 +3783,7 @@ export default {
     //         if (check == false) {
     //           let newName = result[i]
     //           let newFolderName = folderUrl + '/' + result[i];
-    //           axios.post(this.baseURL + '/flows-dir-listing', {
+    //           axios.post(config.baseURL + '/flows-dir-listing', {
     //             foldername: newFolderName,
     //             type: 'folder'
     //           }).then((res) => {
@@ -3791,7 +3792,7 @@ export default {
     //             let x = newName
     //             this.addNewFileLoading = true
     //             let newfilename = newFolderName + '/default.html'
-    //             axios.post(this.baseURL + '/flows-dir-listing', {
+    //             axios.post(config.baseURL + '/flows-dir-listing', {
     //               filename: newfilename,
     //               text: ' ',
     //               type: 'file'
@@ -3821,7 +3822,7 @@ export default {
     //       let foldername = urlparts[urlparts.length - 2];
     //       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
     //       var folderUrl = configFileUrl.replace(fileName, '');
-    //       let configData = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+    //       let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
     //       this.layoutSettings = JSON.parse(configData.data);
     //       let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length + 1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
     //       let temp = {
@@ -3875,7 +3876,7 @@ export default {
       var folderUrl = configFileUrl.replace(fileName, '');
 
       console.log("page name:"+nameF)
-      let response = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl+'/assets/config.json');
+      let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl+'/assets/config.json');
       console.log("response:",response.data)
       let rawSettings = JSON.parse(response.data);
       // console.log("response of pageSettings:", rawSettings[0].pageSettings[0].PageName)
@@ -4161,7 +4162,7 @@ export default {
 
       let newJsonName = folderUrl + '/assets/config.json';
 
-      axios.post(this.baseURL + '/flows-dir-listing', {
+      axios.post(config.baseURL + '/flows-dir-listing', {
           filename : newJsonName ,
           text : JSON.stringify(this.layoutSettings),
           type : 'file'
@@ -4202,7 +4203,7 @@ export default {
         
         let newJsonName = folderUrl + '/assets/'+actualFileNameOnly+'.json';
         console.log(newJsonName);
-        return axios.post(this.baseURL + '/flows-dir-listing', {
+        return axios.post(config.baseURL + '/flows-dir-listing', {
             filename : newJsonName ,
             text : newContent,
             type : 'file'
@@ -4232,7 +4233,7 @@ export default {
         let newContent = "Hello";
         let file_name = this.currentFile.path.replace(/\\/g, "\/").replace("Grid","Layout").replace(".grid",".layout");
         console.log(file_name)
-        return axios.post(this.baseURL + '/flows-dir-listing', {
+        return axios.post(config.baseURL + '/flows-dir-listing', {
             filename : file_name,
             text : newContent,
             type : 'file'
@@ -4254,7 +4255,7 @@ export default {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, keep it'
       }).then(() => {
-          axios.delete(this.baseURL + '/flows-dir-listing/0?filename='+data.path.replace(/\\/g,"/"))
+          axios.delete(config.baseURL + '/flows-dir-listing/0?filename='+data.path.replace(/\\/g,"/"))
           .then((res) => {
               this.currentFile = null
               this.componentId = 'HomePage';
@@ -4321,7 +4322,7 @@ export default {
       // Get Config File
       let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
-      let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       let rawConfigs = JSON.parse(responseConfig.data);
       let repositoryId = rawConfigs[0].repoSettings[0].RepositoryId;
 
@@ -4333,11 +4334,11 @@ export default {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, keep it'
       }).then(() => {
-          axios.delete(this.baseURL + '/flows-dir-listing/0?filename='+data.path.replace(/\\/g,"/"))
+          axios.delete(config.baseURL + '/flows-dir-listing/0?filename='+data.path.replace(/\\/g,"/"))
           .then(async (res) => {
 
             // Delete Repository from GitLab Server
-            let response = await axios.get(this.baseURL + '/gitlab-add-repo/' + repositoryId + '?privateToken='+ this.$session.get('privateToken'), {
+            let response = await axios.get(config.baseURL + '/gitlab-add-repo/' + repositoryId + '?privateToken='+ this.$session.get('privateToken'), {
             })
             .then((response) => {
                 console.log(response.data);
