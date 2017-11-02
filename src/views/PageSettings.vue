@@ -256,22 +256,22 @@ export default {
            }
        }
        console.log("AllData:",this.AllData)
-       for(let x=0;x<this.AllData.length;x++){
-        var checkingValue=false
-        for(let y=0;y<this.defaultParams.length;y++){
+       // for(let x=0;x<this.AllData.length;x++){
+       //  var checkingValue=false
+       //  for(let y=0;y<this.defaultParams.length;y++){
 
-          if(Object.keys(this.defaultParams[y])[0]==this.partialsList[x]){
-            checkingValue=true
+       //    if(Object.keys(this.defaultParams[y])[0]==this.partialsList[x]){
+       //      checkingValue=true
             
-        }
+       //  }
 
-        }
-        if(checkingValue!=true){
+       //  }
+       //  if(checkingValue!=true){
 
-        this.form.parent_id[this.partialsList[x]]=this.AllData[x][0]
-        }
+       //  this.form.parent_id[this.partialsList[x]]=this.AllData[x][0]
+       //  }
 
-       }
+       // }
        console.log("partials:", this.partialsList);
        
 

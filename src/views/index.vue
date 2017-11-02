@@ -32,21 +32,27 @@
 
             <!-- Page Content -->
             <div id="page-content-wrapper">
-                <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
-                    <span class="hamb-top"></span>
-                    <span class="hamb-middle"></span>
-                    <span class="hamb-bottom"></span>
-                </button>
+                <div class="sideMenuOpener">
+                  <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
+                      <!-- <span class="hamb-top"></span>
+                      <span class="hamb-middle"></span>
+                      <span class="hamb-bottom"></span> -->
+                      <div class="sideOpener">
+                        <i class="fa fa-angle-right text-white"></i>
+                        <i class="fa fa-angle-left text-white"></i>
+                      </div>
+                  </button>
+                </div>
                 <div class="allComponents">
                   <!-- && componentId != null -->
                   <div class="row" v-if="isHomePage === false && isSettingsPage === false" style="margin-top: 0px;">
                     <!-- <div v-else class="col-md-4"></div> -->
                     <div class="col-md-4 editor-buttons" align="right" v-if="componentId != null">
                         <div style="margin-right:10px; margin: 15px;">
-                            <el-button type="info" @click="generatePreview()" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
+                            <el-button type="info" size="small" @click="generatePreview()" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
                             <!-- <el-button type="primary" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save</el-button> -->
-                            <el-button type="primary" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                            <el-button type="primary" @click="saveFile()" :loading="saveFileLoading">Save</el-button>
+                            <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
+                            <el-button type="primary" size="small" @click="saveFile()" :loading="saveFileLoading">Save</el-button>
                             <!-- <el-button type="danger" @click="cancelEditing()">Cancel</el-button> -->
 
                             <el-dialog title="Confirmation" :visible.sync="dialogFormVisible" style="text-align: left">
@@ -230,7 +236,7 @@
                       <PreviewGrid></PreviewGrid>
                   </div>
 
-                  <div v-if="!previewGrid">
+                  <div v-if="!previewGrid" style="margin-left: 10px;">
                     <component :is="componentId" ref="contentComponent"></component>
                   </div>
                   
@@ -297,6 +303,9 @@ import PageSettings from './PageSettings'
 // Project Settings
 import ProjectSettings from './ProjectSettings'
 
+// Project Settings
+import ProjectStats from './ProjectStats'
+
 let checkFileName = (rule, value, callback) => {
     console.log('value',/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))
     if (!value) {
@@ -343,6 +352,7 @@ export default {
       isPreviewComponent: false,
       isPageEditing: false,
       isProjectEditing: false,
+      isProjectStats: false,
       isPagesFolder: false,
       isPageCodeEditor: false,
       // isLayoutFile: false,
@@ -392,7 +402,8 @@ export default {
     GridManager,
     PreviewGrid,
     PageSettings,
-    ProjectSettings
+    ProjectSettings,
+    ProjectStats
   },
   created () {
     if(!this.$session.exists()){
@@ -523,10 +534,18 @@ export default {
       axios.get(config.baseURL + '/flows-dir-listing')
       .then(response => {
           response.data.children = this.getTreeData(response.data);
+
+          for(let i = 0; i<response.data.children.length; i++){
+            // console.dir(response.data.children[i].children,{depth:null})
+            response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
+              return !( child.name == 'public' || child.name == '.git')
+            })
+          }
+
           if (this.directoryTree.length == 0) {
             this.directoryTree = [response.data]
           } else {
-            console.log(response.data.children)
+            // console.log(response.data.children)
             this.directoryTree[0].children = response.data.children
           }
           this.loadingTree = false
@@ -569,6 +588,12 @@ export default {
         this.$store.state.fileUrl = data.path;
         this.isSettingsPage = true;
         this.componentId = 'ProjectSettings';
+      } else if(this.isProjectStats) {
+        this.isProjectEditing = false;
+        this.isProjectStats = false;
+        this.$store.state.fileUrl = data.path;
+        this.isSettingsPage = false;
+        this.componentId = 'ProjectStats';
       } else {
         this.componentId = null;
         this.isPageEditing = false;
@@ -1150,7 +1175,7 @@ export default {
                   "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
                   '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                   '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
-                  "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+                  "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
                   rawContent +
                   '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
@@ -1163,7 +1188,7 @@ export default {
                   '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
                   // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-                  '<script src="./../assets/main.js"><\/script>\n'+
+                  '<script src="./../main-files/main.js"><\/script>\n'+
                   '</body>\n</html>';
 
                   if (this.form.Layout == 'Blank') {
@@ -1184,7 +1209,7 @@ export default {
                       "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
                       '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
-                      "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+                      "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
                       rawContent +
                       '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
@@ -1197,7 +1222,7 @@ export default {
                       '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
                       // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-                      '<script src="./../assets/main.js"><\/script>\n'+
+                      '<script src="./../main-files/main.js"><\/script>\n'+
                       '</body>\n</html>';
                     }
 
@@ -1220,7 +1245,7 @@ export default {
                       "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
                       '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
-                      "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+                      "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
                       rawContent +
                       '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
@@ -1233,7 +1258,7 @@ export default {
                       '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
                       // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-                      '<script src="./../assets/main.js"><\/script>\n'+
+                      '<script src="./../main-files/main.js"><\/script>\n'+
                       '</body>\n</html>';
                     }
 
@@ -1809,6 +1834,18 @@ export default {
         console.log("Error from pages"+res)
       });
 
+      // Create Sidebars Folder
+      axios.post(config.baseURL+'/flows-dir-listing' , {
+        foldername : newFolderName+'/main-files',
+        type : 'folder'
+      })
+      .then((res) => {
+        console.log('main-files Folder created!');
+      })
+      .catch((e)=>{
+        console.log("Error from pages"+res)
+      });
+
       // Create Default header Folder
       // axios.post(config.baseURL+'/flows-dir-listing' , {
       //   foldername : newFolderName+'/Headers/default',
@@ -1862,10 +1899,10 @@ export default {
       });
 
       // Create main.css file
-      let maincss = newFolderName + '/assets/main.css'
+      let maincss = newFolderName + '/main-files/main.css'
       axios.post(config.baseURL + '/flows-dir-listing', {
           filename : maincss,
-          text : '/* Add your custom CSS styles here. It will be automatically included in every page. */',
+          text : '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}',
           type : 'file'
       })
       .then((res) => {
@@ -1876,10 +1913,10 @@ export default {
       });
 
       // Create main.js file
-      let mainjs = newFolderName + '/assets/main.js'
+      let mainjs = newFolderName + '/main-files/main.js'
       axios.post(config.baseURL + '/flows-dir-listing', {
           filename : mainjs,
-          text : '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */',
+          text : '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */\n$(document).on("click", "smooth-scroll", function(event){event.preventDefault(); $("html, body").animate({scrollTop: $($.attr(this, "href")).offset().top}, 500);});',
           type : 'file'
       })
       .then((res) => {
@@ -1968,7 +2005,7 @@ export default {
       // Create demo header file
       let headerFileName = newFolderName + '/Header/default.html'
 
-      var headerFileData='<style type="text/css">@import url(\'http://fonts.googleapis.com/css?family=Open+Sans:400,700\');html{background-color: #eaf0f2;}body{font:14px/1.5 Arial, Helvetica, sans-serif;padding:0;margin:0;}.menu{text-align: center;padding-top: 25px;margin-bottom:200px;}.menu img{opacity: 0.4;margin: 20px auto;}.menu h1{margin-top:0;font: normal 32px/1.5 \'Open Sans\', sans-serif;color: #3F71AE;padding-bottom: 16px;}.menu h2{color: #F05283;}.menu h2 a{color:inherit;text-decoration: none;display: inline-block;border: 1px solid #F05283;padding: 10px 15px;border-radius: 3px;font: bold 14px/1 \'Open Sans\', sans-serif;text-transform: uppercase;}.menu h2 a:hover{background-color:#F05283;transition:0.2s;color:#fff;}.menu ul{max-width: 600px;margin: 60px auto 0;}.menu ul a{text-decoration: none;color: #FFF;text-align: left;background-color: #B9C1CA;padding: 10px 16px;border-radius: 2px;opacity: 0.8;font-size: 16px;display: inline-block;margin: 4px;line-height: 1;outline: none;transition: 0.2s ease;}.menu ul li a.active{background-color: #66B650;pointer-events: none;}.menu ul li a:hover{opacity: 1;}.menu ul{list-style: none;padding: 0;}.menu ul li{display: inline-block;}@media (max-height:800px){.menu{padding-top:40px;}}/* -- Demo ads -- */@media (max-width: 1200px){#bsaHolder{display:none;}}/* -- Link to Tutorialzine -- */.tz-link{text-decoration: none;color: #fff !important;font: bold 36px Arial,Helvetica,sans-serif !important;}.tz-link span{color: #da431c;}.header-basic-light{padding: 20px 40px;box-sizing:border-box;box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);height: 80px;background-color: #fff;}.header-basic-light .header-limiter{max-width: 1200px;text-align: center;margin: 0 auto;}/* Logo */.header-basic-light .header-limiter h1{float: left;font: normal 28px Cookie, Arial, Helvetica, sans-serif;line-height: 40px;margin: 0;}.header-basic-light .header-limiter h1 span{color: #5383d3;}/* The header links */.header-basic-light .header-limiter a{color: #5c616a;text-decoration: none;}.header-basic-light .header-limiter nav{font:15px Arial, Helvetica, sans-serif;line-height: 40px;float: right;}.header-basic-light .header-limiter nav a{display: inline-block;padding: 0 5px;opacity: 0.9;text-decoration:none;color: #5c616a;line-height:1;}.header-basic-light .header-limiter nav a.selected{background-color: #86a3d5;color: #ffffff;border-radius: 3px;padding:6px 10px;}/* Making the header responsive. */@media all and (max-width: 600px){.header-basic-light{padding: 20px 0;height: 85px;}.header-basic-light .header-limiter h1{float: none;margin: -8px 0 10px;text-align: center;font-size: 24px;line-height: 1;}.header-basic-light .header-limiter nav{line-height: 1;float:none;}.header-basic-light .header-limiter nav a{font-size: 13px;}}/* For the headers to look good, be sure to reset the margin and padding of the body */body{margin:0;padding:0;}</style><link href=\'default.css\' rel=\'stylesheet\' type=\'text/css\'><link href=\'http://fonts.googleapis.com/css?family=Cookie\' rel=\'stylesheet\' type=\'text/css\'><header class="header-basic-light"><div class="header-limiter"><h1><a href="#">Company<span>logo</span></a></h1><nav><a href="#">Home</a><a href="#" class="selected">Blog</a><a href="#">Pricing</a><a href="#">About</a><a href="#">Faq</a><a href="#">Contact</a></nav></div></header><script src=\'default.js\'><\/script>'
+      var headerFileData='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"/><link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css"/><header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-lg"> <a class="navbar-brand" href="#"> <img src="https://imgur.com/ak2v9y7.png" height="30" alt="image"/> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav13" aria-controls="navbarNav13" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav13"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="#">Features</a> </li><li class="nav-item"> <a class="nav-link" href="#">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="#">Team</a> </li></ul> <ul class="navbar-nav justify-content-end ml-auto"> <li class="nav-item"> <a class="nav-link" href="#">Docs</a> </li><li class="nav-item"> <a class="nav-link" href="#">Contact</a> </li><li class="nav-item"> <a class="nav-link" href="#">Log In</a> </li></ul> <a class="btn btn-white ml-md-3" href="#">Button</a> </div></nav> </div></header>'
 
       axios.post(config.baseURL + '/flows-dir-listing', {
           filename : headerFileName,
@@ -2015,7 +2052,7 @@ export default {
       // Create demo footer file
       let footerFileName = newFolderName + '/Footer/default.html'
 
-      var footerFileData='<style type="text/css">@import url(\'http://fonts.googleapis.com/css?family=Open+Sans:400,700\');*{padding:0;margin:0;}body{font:14px/1.5 Arial, Helvetica, sans-serif;}@media (max-height:800px){footer{position: static;}}.footer-distributed{background-color: #80CBC4;box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);box-sizing: border-box;width: 100%;text-align: left;font: normal 16px sans-serif;padding: 45px 50px;margin-top: 80px;}.footer-distributed .footer-left p{color: #8f9296;font-size: 14px;margin: 0;}/* Footer links */.footer-distributed p.footer-links{font-size:18px;font-weight: bold;color: #ffffff;margin: 0 0 10px;padding: 0;}.footer-distributed p.footer-links a{display:inline-block;line-height: 1.8;text-decoration: none;color: inherit;}.footer-distributed .footer-right{float: right;margin-top: 6px;max-width: 180px;}.footer-distributed .footer-right a{display: inline-block;width: 35px;height: 35px;background-color: #4b7188;border-radius: 2px;font-size: 20px;color: #ffffff;text-align: center;line-height: 35px;margin-left: 3px;}/* If you don\'t want the footer to be responsive, remove these media queries */@media (max-width: 600px){.footer-distributed .footer-left,.footer-distributed .footer-right{text-align: center;}.footer-distributed .footer-right{float: none;margin: 0 auto 20px;}.footer-distributed .footer-left p.footer-links{line-height: 1.8;}}</style><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><footer class="footer-distributed"><div class="footer-right"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-linkedin"></i></a><a href="#"><i class="fa fa-github"></i></a></div><div class="footer-left"><p class="footer-links"><a href="#">Home</a>·<a href="#">Blog</a>·<a href="#">Pricing</a>·<a href="#">About</a>·<a href="#">Faq</a>·<a href="#">Contact</a></p><p>Company Name &copy; 2017</p></div></footer>'
+      var footerFileData='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"/><link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css"/><footer class="fdb-block footer-large bg-dark"> <div class="container"> <div class="row align-items-top text-center text-md-left"> <div class="col-12 col-sm-6 col-md-4"> <h3><strong>Country A</strong></h3> <p>Street Address 52 <br/>Contact Name</p><p>+44 827 312 5002</p><p><a href="#">countrya@amazing.com</a> </p></div><div class="col-12 col-sm-6 col-md-4 mt-4 mt-sm-0"> <h3><strong>Country B</strong></h3> <p>Street Address 100 <br/>Contact Name</p><p>+13 827 312 5002</p><p><a href="#">countryb@amazing.com</a> </p></div><div class="col-12 col-md-4 mt-5 mt-md-0 text-md-left"> <h3><strong>About Us</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div></div><div class="row mt-5"> <div class="col text-center" data-highlightable="1">(c) 2017 Flowz. All Rights Reserved</div></div></div></footer>'
 
       axios.post(config.baseURL + '/flows-dir-listing', {
           filename : footerFileName,
@@ -4376,11 +4413,11 @@ export default {
           // If node is a website project directory
           if(node.level == 2){
             return (<span>
-                  <span class="nodelabel">
+                  <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
                       <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
                       <span>{node.label}</span>
                   </span>
-                  <span class="" style="float: right; padding-right: 5px;">
+                  <span class="action-button" style="float: right; padding-right: 5px;">
                     <el-tooltip content="Add folder" placement="top">
                         <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
                     </el-tooltip>
@@ -4396,12 +4433,13 @@ export default {
                   </span>
               </span>)  
           } else {
+            // If it's a simple directory
             return(<span>
                 <span class="nodelabel">
                     <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
                     <span>{node.label}</span>
                 </span>
-                <span class="" style="float: right; padding-right: 5px;">
+                <span class="action-button" style="float: right; padding-right: 5px;">
                   <el-tooltip content="Add folder" placement="top">
                       <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
                   </el-tooltip>
@@ -4419,6 +4457,8 @@ export default {
         // var filePath = data.path;
         // var pathParts = filePath.split('/');
         // var parentFolderName = pathParts[pathParts.length-2];
+
+        // If it's a HTML file
         if(data.extension == '.html'){
           return (<span>
               <span class="filelabel">
@@ -4438,6 +4478,7 @@ export default {
               </span>
           </span>)
         } else if(data.extension == '.layout'){
+          // If it's a LAYOUT file
           return (<span>
               <span class="filelabel">
                   <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
@@ -4453,6 +4494,7 @@ export default {
               </span>
           </span>)
         } else {
+          // All other files
           return (<span>
                 <span class="filelabel">
                     <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
@@ -4467,6 +4509,7 @@ export default {
         }
         
       }else{
+        // Root Folder
         return (<span>
                   <span class="nodelabel">
                       <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
@@ -4774,12 +4817,12 @@ export default {
 
 .hamburger {
   position: fixed;
-  top: 20px;  
+  top: 0px;  
   z-index: 999;
   display: block;
   width: 32px;
   height: 32px;
-  margin-left: 15px;
+  margin-left: 0px;
   background: transparent;
   border: none;
   margin-top: -4px;
@@ -4825,20 +4868,32 @@ export default {
   background-color: #fcfcfc;
 }
 .hamburger.is-closed .hamb-top { 
-  box-shadow: 0px 0px 5px #333;
+  /*box-shadow: 0px 0px 5px #333;*/
   top: 5px; 
   -webkit-transition: all .35s ease-in-out;
 }
 .hamburger.is-closed .hamb-middle {
-  box-shadow: 0px 0px 5px #333;
+  /*box-shadow: 0px 0px 5px #333;*/
   top: 50%;
   margin-top: -2px;
 }
 .hamburger.is-closed .hamb-bottom {
-  box-shadow: 0px 0px 5px #333;
+  /*box-shadow: 0px 0px 5px #333;*/
   bottom: 5px;  
   -webkit-transition: all .35s ease-in-out;
 }
+
+/*.sideMenuOpener{
+  background-color: #999;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 9999;
+}*/
+
+
 
 .hamburger.is-closed:hover .hamb-top {
   top: 0;
@@ -5040,9 +5095,10 @@ label.imgThumbnail img {
 }
 
 .editor-buttons{
-  position: absolute;
-  top: 2.5px;
-  right: 50px;
+  position: fixed;
+  bottom: -8px;
+  right: 25px;
+  z-index: 3;
 }
 
 @media(max-width: 580px){
@@ -5054,6 +5110,59 @@ label.imgThumbnail img {
 
 .el-dialog{
   text-align: left !importants;
+}
+
+
+.el-tree-node:hover > .el-tree-node__content .action-button i{
+    display:block;
+}
+.action-button i{
+    display:none;
+}
+
+
+
+.sideOpener{
+  width: 10px;
+  height: 100vh;
+  background-color: #292929;
+  margin-left: -6px;
+  display: table;
+  transition: 0.2s all linear;
+  opacity: 0.6;
+}
+
+.sideOpener:hover{
+  width: 20px;
+  transition: 0.2s all linear;
+  opacity: 1;
+}
+
+.sideOpener i{
+  display: table-cell;
+  vertical-align: middle;
+  font-weight: bolder;
+  font-size: 18px;
+}
+
+.hamburger.is-closed > .sideOpener > .fa-angle-right{
+  /*visibility: visible;*/
+  display: table-cell;
+}
+
+.hamburger.is-closed > .sideOpener > .fa-angle-left{
+  /*visibility: hidden;*/
+  display: none;
+}
+
+.hamburger.is-open > .sideOpener > .fa-angle-right{
+  /*visibility: hidden;*/
+  display: none;
+}
+
+.hamburger.is-open > .sideOpener > .fa-angle-left{
+  /*visibility: visible;*/
+  display: table-cell;
 }
 
 </style>

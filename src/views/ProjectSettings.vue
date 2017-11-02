@@ -3,8 +3,8 @@
     
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
-      <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" @click="publishMetalsmith">Publish Website</el-button>
+      <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
+      <el-button type="info" size="small" @click="publishMetalsmith">Publish Website</el-button>
       <!-- <el-button type="danger" @click="cancelSettings">Cancel</el-button> -->
     </div>
 
@@ -34,7 +34,7 @@
 
           <div class="col-md-12" style="margin-top: 4%;">
           
-            <el-form ref="form" :model="form" label-width="120px">
+            <el-form ref="form" :model="form" label-width="180px">
 
             <el-form-item label="Repository Id:">
                 <el-input v-model="newRepoId" :disabled="true"></el-input>
@@ -647,7 +647,7 @@ export default {
                   "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
                   '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                   '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
-                  "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+                  "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
                   rawContent +
                   '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
@@ -660,7 +660,7 @@ export default {
                   '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
                   // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-                  '<script src="./../assets/main.js"><\/script>\n'+
+                  '<script src="./../main-files/main.js"><\/script>\n'+
                   '</body>\n</html>';
 
                   if (this.form.Layout == 'Blank') {
@@ -681,7 +681,7 @@ export default {
                       "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
                       '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
-                      "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+                      "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
                       rawContent +
                       '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
@@ -694,7 +694,7 @@ export default {
                       '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
                       // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-                      '<script src="./../assets/main.js"><\/script>\n'+
+                      '<script src="./../main-files/main.js"><\/script>\n'+
                       '</body>\n</html>';
                     }
 
@@ -717,7 +717,7 @@ export default {
                       "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
                       '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
-                      "<link rel='stylesheet' href='./../assets/main.css'/>\n"+
+                      "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
                       rawContent +
                       '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
@@ -730,7 +730,7 @@ export default {
                       '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
                       // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-                      '<script src="./../assets/main.js"><\/script>\n'+
+                      '<script src="./../main-files/main.js"><\/script>\n'+
                       '</body>\n</html>';
                     }
 
@@ -882,91 +882,96 @@ export default {
 
     cancelSettings(){
       location.reload();
-    }
-  },
-  async created () {
-    this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
-    if(this.configData.status == 200 || this.configData.status == 204){
-      console.log('Config file found! Updating fields..');
-      this.settings = JSON.parse(this.configData.data);
-      this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
-      this.repoName = this.settings[0].repoSettings[0].RepositoryName;
-      this.form.brandName = this.settings[1].projectSettings[0].BrandName;
-      this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
-      this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
-      this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
-      this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
-      this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
-      console.log(JSON.stringify(this.globalVariables));
-      this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
-      console.log(JSON.stringify(this.globalCssVariables));
+    },
 
-      if(this.globalVariables == undefined){
-        this.globalVariables = []
-      }
-      if(this.globalCssVariables == undefined){
-        this.globalCssVariables = []
-      }
+    async init () {
+      this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+      if(this.configData.status == 200 || this.configData.status == 204){
+        console.log('Config file found! Updating fields..');
+        this.settings = JSON.parse(this.configData.data);
+        this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
+        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.form.brandName = this.settings[1].projectSettings[0].BrandName;
+        this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
+        this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
+        this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
+        this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+        this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
+        console.log(JSON.stringify(this.globalVariables));
+        this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
+        console.log(JSON.stringify(this.globalCssVariables));
 
-      this.form.Header = this.settings[2].layoutOptions[0].headers;
-      this.form.Footer = this.settings[2].layoutOptions[0].footers;
+        if(this.globalVariables == undefined){
+          this.globalVariables = []
+        }
+        if(this.globalCssVariables == undefined){
+          this.globalCssVariables = []
+        }
 
-      // Set Brand Logo Name
-      if(this.form.brandLogoName != ''){
-        if (this.form.brandLogoName.length > 18) {
-            $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
-            $('.valid').removeClass('error').addClass('correct');
-            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-         }else{
-            $('#text2').text(this.form.brandLogoName);
-            $('.valid').removeClass('error').addClass('correct');
-            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-        }  
+        this.form.Header = this.settings[2].layoutOptions[0].headers;
+        this.form.Footer = this.settings[2].layoutOptions[0].footers;
+
+        // Set Brand Logo Name
+        if(this.form.brandLogoName != ''){
+          if (this.form.brandLogoName.length > 18) {
+              $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
+              $('.valid').removeClass('error').addClass('correct');
+              $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+           }else{
+              $('#text2').text(this.form.brandLogoName);
+              $('.valid').removeClass('error').addClass('correct');
+              $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+          }  
+        } else {
+          console.log('BrandLogoName not found!');
+        }
+        
+
       } else {
-        console.log('BrandLogoName not found!');
+        console.log('Cannot get config file!');
+      } 
+
+
+      // replace all image tag source with index as name attribute to get the image file preview
+      
+      for (var i = 0; i < this.globalVariables.length; i++){
+        if(this.globalVariables[i].variableType == 'image'){
+          let _imageIndex = i;
+          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
+          }).then(response => {
+            $('[name = ' + _imageIndex + ']').attr('src', response.data);
+          }).catch(error => {
+            console.log("Some error occured while fetching image: ", error);
+          });
+
+        }
       }
+
+      // Get all commits list
+      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
+      }).then(response => {
+        this.commitsData = [];
+        for(var i in response.data){
+          this.commitsData.push({
+            commitDate: response.data[i].created_at,
+            commitSHA: response.data[i].id,
+            commitsMessage: response.data[i].title, 
+          });
+        }
+      }).catch(error => {
+        console.log("Some error occured: ", error);
+      });
       
 
-    } else {
-      console.log('Cannot get config file!');
-    } 
-
-
-    // replace all image tag source with index as name attribute to get the image file preview
-    
-    for (var i = 0; i < this.globalVariables.length; i++){
-      if(this.globalVariables[i].variableType == 'image'){
-        let _imageIndex = i;
-        axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
-        }).then(response => {
-          $('[name = ' + _imageIndex + ']').attr('src', response.data);
-        }).catch(error => {
-          console.log("Some error occured while fetching image: ", error);
-        });
-
-      }
+      if(this.commitsData[0]){
+        return 'positive-row';
+      } 
     }
-
-    // Get all commits list
-    await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
-    }).then(response => {
-      for(var i in response.data){
-        this.commitsData.push({
-          commitDate: response.data[i].created_at,
-          commitSHA: response.data[i].id,
-          commitsMessage: response.data[i].title, 
-        });
-      }
-    }).catch(error => {
-      console.log("Some error occured: ", error);
-    });
-    
-
-    if(this.commitsData[0]){
-      return 'positive-row';
-    }  
+  },
+  created () {
+    this.init(); 
   },
 
   async mounted () {
@@ -1075,6 +1080,11 @@ export default {
       }
 
     });
+  },
+  watch: {
+    '$store.state.fileUrl': function(newvalue) {
+      this.init()
+    }
   }
 }
 </script>
@@ -1172,10 +1182,11 @@ h1{
 }
 
 .page-buttons{
-  position: absolute;
-  top: 0;
-  right: 80px;
+  position: fixed;
+  bottom: 7px;
+  right: 50px;
   margin-top: 17.5px;
+  z-index: 3
 }
 
 @media(max-width: 680px){
@@ -1185,5 +1196,7 @@ h1{
     right: auto;
   }
 }
+
+
 
 </style>
