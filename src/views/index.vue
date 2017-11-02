@@ -50,11 +50,11 @@
                     <div class="col-md-4 editor-buttons" align="right" v-if="componentId != null">
                         <div style="margin-right:10px; margin: 15px;">
                             <el-button type="info" size="small" @click="generatePreview()" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
-                            <!-- <el-button type="primary" @click="saveJsonFile()" :loading="saveFileLoading" v-if="isMenuBuilder">Save</el-button> -->
                             <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                            <el-button type="primary" size="small" @click="saveFile()" :loading="saveFileLoading">Save</el-button>
+                            <el-button type="primary" size="small" @click="saveFile()" :loading="saveFileLoading" v-if="componentId != 'ProjectStats'">Save</el-button>
                             <!-- <el-button type="danger" @click="cancelEditing()">Cancel</el-button> -->
 
+                            <!-- Partial list dialog -->
                             <el-dialog title="Confirmation" :visible.sync="dialogFormVisible" style="text-align: left">
                               <div v-for='i in form.namearray'>
                                <el-checkbox v-model="form.checked[i]">{{i}}</el-checkbox>
@@ -65,6 +65,7 @@
                                 <el-button type="primary" @click="dialogFormVisible = false, dialogFormVisibleAdd()">Add</el-button>
                               </span>
                             </el-dialog>
+
                         </div>
                     </div>
 
@@ -73,8 +74,7 @@
                             <el-form-item prop="filename">
                               <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
                               <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="FileName.ext"></el-input>
-                            </el-form-item>
-                             
+                            </el-form-item> 
                         </el-form>
                         <span slot="footer" class="dialog-footer">
                             <el-button @click="newFileDialog = false">Cancel</el-button>
@@ -536,7 +536,6 @@ export default {
           response.data.children = this.getTreeData(response.data);
 
           for(let i = 0; i<response.data.children.length; i++){
-            // console.dir(response.data.children[i].children,{depth:null})
             response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
               return !( child.name == 'public' || child.name == '.git')
             })
@@ -545,7 +544,6 @@ export default {
           if (this.directoryTree.length == 0) {
             this.directoryTree = [response.data]
           } else {
-            // console.log(response.data.children)
             this.directoryTree[0].children = response.data.children
           }
           this.loadingTree = false
@@ -577,25 +575,34 @@ export default {
 
     // Selecting any node in Listing tree 
     handleNodeClick(data) {
+      // Store file/folder path
       this.$store.state.fileUrl = data.path;
+      // If PageSettings Clicked
       if(this.isPageEditing){
         this.isPageEditing = false;
         this.isProjectEditing = false;
         this.isSettingsPage = true;
         this.componentId = 'PageSettings';
-      } else if(this.isProjectEditing) {
+      }
+      // If ProjectSettings is clicked 
+      else if(this.isProjectEditing) {
         this.isProjectEditing = false;
         this.$store.state.fileUrl = data.path;
         this.isSettingsPage = true;
         this.componentId = 'ProjectSettings';
-      } else if(this.isProjectStats) {
+      }
+      // If Clicked in ProjectName 
+      else if(this.isProjectStats) {
         this.isProjectEditing = false;
         this.isProjectStats = false;
         this.$store.state.fileUrl = data.path;
         this.isSettingsPage = false;
         this.componentId = 'ProjectStats';
-      } else {
-        this.componentId = null;
+      }
+      // Every other clicks
+      else {
+        this.isProjectStats = false;
+        this.componentId = 'ProjectStats';
         this.isPageEditing = false;
         this.isProjectEditing = false;
         this.previewGrid = false;
@@ -605,121 +612,6 @@ export default {
             this.getFileContent(data.path);
         }
       }
-    },
-
-    // Remote GITLab file Fetch (Not Using Currently)
-    getGitFileContent: async function(){
-      console.log("Getting GIT file content");
-      let response = await axios.get('http://localhost:3030/file-service?projectId=9&fileName=README.md&branchName=master&privateToken=' + this.$session.get('privateToken'));
-
-      // Create Base64 Object
-      var Base64 = {
-          _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-          encode: function(input) {
-              var output = "";
-              var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-              var i = 0;
-              input = Base64._utf8_encode(input);
-              while (i < input.length) {
-                  chr1 = input.charCodeAt(i++);
-                  chr2 = input.charCodeAt(i++);
-                  chr3 = input.charCodeAt(i++);
-                  enc1 = chr1 >> 2;
-                  enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-                  enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-                  enc4 = chr3 & 63;
-                  if (isNaN(chr2)) {
-                      enc3 = enc4 = 64;
-                  } else if (isNaN(chr3)) {
-                      enc4 = 64;
-                  }
-                  output = output + this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) + this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
-              }
-              return output;
-          },
-          decode: function(input) {
-              var output = "";
-              var chr1, chr2, chr3;
-              var enc1, enc2, enc3, enc4;
-              var i = 0;
-              input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-              while (i < input.length) {
-                  enc1 = this._keyStr.indexOf(input.charAt(i++));
-                  enc2 = this._keyStr.indexOf(input.charAt(i++));
-                  enc3 = this._keyStr.indexOf(input.charAt(i++));
-                  enc4 = this._keyStr.indexOf(input.charAt(i++));
-                  chr1 = (enc1 << 2) | (enc2 >> 4);
-                  chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-                  chr3 = ((enc3 & 3) << 6) | enc4;
-                  output = output + String.fromCharCode(chr1);
-                  if (enc3 != 64) {
-                      output = output + String.fromCharCode(chr2);
-                  }
-                  if (enc4 != 64) {
-                      output = output + String.fromCharCode(chr3);
-                  }
-              }
-              output = Base64._utf8_decode(output);
-              return output;
-          },
-
-          _utf8_encode: function(string) {
-              string = string.replace(/\r\n/g, "\n");
-              var utftext = "";
-              for (var n = 0; n < string.length; n++) {
-                  var c = string.charCodeAt(n);
-                  if (c < 128) {
-                      utftext += String.fromCharCode(c);
-                  }
-                  else if ((c > 127) && (c < 2048)) {
-                      utftext += String.fromCharCode((c >> 6) | 192);
-                      utftext += String.fromCharCode((c & 63) | 128);
-                  }
-                  else {
-                      utftext += String.fromCharCode((c >> 12) | 224);
-                      utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                      utftext += String.fromCharCode((c & 63) | 128);
-                  }
-              }
-              return utftext;
-          },
-
-          _utf8_decode: function(utftext) {
-              var string = "";
-              var i = 0;
-              var c = 0; 
-              var c1 = 0; 
-              var c2 = 0;
-              while (i < utftext.length) {
-                  c = utftext.charCodeAt(i);
-                  if (c < 128) {
-                      string += String.fromCharCode(c);
-                      i++;
-                  }
-                  else if ((c > 191) && (c < 224)) {
-                      c2 = utftext.charCodeAt(i + 1);
-                      string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-                      i += 2;
-                  }
-                  else {
-                      c2 = utftext.charCodeAt(i + 1);
-                      c3 = utftext.charCodeAt(i + 2);
-                      string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-                      i += 3;
-                  }
-              }
-              return string;
-          }
-      }
-
-      // Define the string
-      var encryptedData = response.data.content;
-
-      var fileData = Base64.decode(encryptedData);
-
-      console.log("FileData: " + fileData);
-
-      // this.$store.dispatch('updateContent', { text: fileData });
     },
 
     // Get File content Locally
@@ -851,14 +743,6 @@ export default {
       this.form.headers = rawConfigs[2].layoutOptions[0].headers;
       this.form.footers = rawConfigs[2].layoutOptions[0].footers;
       this.form.layouts = rawConfigs[2].layoutOptions[0].layouts;
-    },
-
-    // Preview Every other files (Not in Use)
-    previewThisFile() {
-      let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      previewFile = previewFile.replace('/var/www/html','');
-      console.log(previewFile);
-      window.open('http://localhost'+previewFile);
     },
 
     // Generate Preview of page using MetalSmith
@@ -1055,7 +939,6 @@ export default {
           type: 'danger'
         });
       })
-
     },
 
     async generatePreview () {
@@ -1625,12 +1508,6 @@ export default {
 
     // },
 
-    // Back to GridManager editing(Not in Use)
-    backToGrid: function(){
-      this.previewGrid = false;
-      this.isPreviewComponent = false;
-    },
-
     // Create new Folder
     addFolder(){
         let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
@@ -1669,6 +1546,8 @@ export default {
             axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo='+this.formAddProjectFolder.projectName + '&privateToken='+ this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {
             })
             .then((response) => {
+              console.log(response);
+              if(response.status == 200 || response.status == 201){
                 console.log(response.data);
 
                 localStorage.setItem("folderUrl",newFolderName);
@@ -1707,6 +1586,15 @@ export default {
                 this.autoFolders=false;
 
                 this.formAddProjectFolder.projectName = null;
+              } else {
+                console.log(response);
+                this.$message({
+                    showClose: true,
+                    message: 'Some error occured. Please refresh and try again.',
+                    type: 'error'
+                });
+              }
+
             })
             .catch((e) => {
                 console.log(e)
@@ -1860,7 +1748,6 @@ export default {
 
       console.log('Now creating essential files...');
       this.createEssentialFiles(newFolderName);
-          
     },
 
     // Create necessary files for project
@@ -2667,7 +2554,7 @@ export default {
             case 'GridManager':
                 this.$refs.contentComponent.getHtml();
                 newContent = this.$store.state.content;
-                this.saveLayoutFile();
+                // this.saveLayoutFile();
                 break;
         }
         
@@ -3333,11 +3220,14 @@ export default {
                     });
                     console.log(e)
                 })
+                this.form.checked = [];
+                this.form.namearray = [];
           },
     
-    async dialogFormVisibleAdd(){
+    // New Partials confirmation dialog
+    async dialogFormVisibleAdd() {
       console.log("from add")
-      console.log("this.form.checked:",this.form.checked)
+      console.log("this.form.checked:", this.form.checked)
       let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let urlparts = configFileUrl.split("/");
       let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -3347,22 +3237,22 @@ export default {
       var content = this.$store.state.content;
       let configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       var getFromBetween = {
-      results: [],
-      string: "",
-      getFromBetween: function(sub1, sub2) {
+        results: [],
+        string: "",
+        getFromBetween: function(sub1, sub2) {
           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
           var SP = this.string.indexOf(sub1) + sub1.length;
           var string1 = this.string.substr(0, SP);
           var string2 = this.string.substr(SP);
           var TP = string1.length + string2.indexOf(sub2);
           return this.string.substring(SP, TP);
-      },
-      removeFromBetween: function(sub1, sub2) {
+        },
+        removeFromBetween: function(sub1, sub2) {
           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
           var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
           this.string = this.string.replace(removal, "");
-      },
-      getAllResults: function(sub1, sub2) {
+        },
+        getAllResults: function(sub1, sub2) {
           // first check to see if we do have both substrings
           if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
           // find one result
@@ -3373,188 +3263,186 @@ export default {
           this.removeFromBetween(sub1, sub2);
           // if there's more substrings
           if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
-              this.getAllResults(sub1, sub2);
+            this.getAllResults(sub1, sub2);
           } else return;
-      },
-      get: function(string, sub1, sub2) {
+        },
+        get: function(string, sub1, sub2) {
           this.results = [];
           this.string = string;
           this.getAllResults(sub1, sub2);
           return this.results;
-      }
+        }
       };
       var result = (getFromBetween.get(content, "{{>", "}}"));
       console.log(result);
-       var resultParam = result
-        var DefaultParams = [];
-        for (let i = 0; i < resultParam.length; i++) {
-            var temp;
-            temp = resultParam[i].trim()
-            result[i] = result[i].trim()
-            temp = temp.replace(/&nbsp;/g, ' ')
-            temp = temp.replace(/\s+/g, ' ');
-            temp = temp.split(' ')
-            console.log("temp", temp)
-            for (let j = 0; j < temp.length; j++) {
-                console.log("temp[", j, "]:", temp[j])
-                if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                    // console.log("condition check value:",temp[j+1],':-',temp[j+1].search('.'))
-                    if (temp[j + 1] != undefined) {
-                        console.log("!=undefined")
-                        console.log("temp[j]:", temp[j])
-                        console.log("temp[j+1]:", temp[j + 1])
-                        result[i] = temp[0];
-                        if (temp[j + 1].indexOf('.') > -1) {
-                            console.log("inside ")
-                            let x = temp[j + 1]
-                            x = temp[j + 1].split(/'/)[1];
-                            let obj = {}
-                            obj[temp[0]] = x
-                            DefaultParams.push(obj)
-                            break;
-                        }
-                    } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                        console.log("temp[j]:", temp[j])
-                        console.log("temp[j+1]:", temp[j + 1])
-                        result[i] = temp[0];
-                        if (temp[j]) {
-                            console.log("inside ")
-                            let x = temp[j]
-                            x = temp[j].split(/'/)[1];
-                            let obj = {}
-                            obj[temp[0]] = x
-                            DefaultParams.push(obj)
-                            break;
-                        }
-                    }
-                }
-                console.log("temp at end of j loop:", temp)
+      var resultParam = result
+      var DefaultParams = [];
+      for (let i = 0; i < resultParam.length; i++) {
+        var temp;
+        temp = resultParam[i].trim()
+        result[i] = result[i].trim()
+        temp = temp.replace(/&nbsp;/g, ' ')
+        temp = temp.replace(/\s+/g, ' ');
+        temp = temp.split(' ')
+        console.log("temp", temp)
+        for (let j = 0; j < temp.length; j++) {
+          console.log("temp[", j, "]:", temp[j])
+          if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+            // console.log("condition check value:",temp[j+1],':-',temp[j+1].search('.'))
+            if (temp[j + 1] != undefined) {
+              console.log("!=undefined")
+              console.log("temp[j]:", temp[j])
+              console.log("temp[j+1]:", temp[j + 1])
+              result[i] = temp[0];
+              if (temp[j + 1].indexOf('.') > -1) {
+                console.log("inside ")
+                let x = temp[j + 1]
+                x = temp[j + 1].split(/'/)[1];
+                let obj = {}
+                obj[temp[0]] = x
+                DefaultParams.push(obj)
+                break;
+              }
+            } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+              console.log("temp[j]:", temp[j])
+              console.log("temp[j+1]:", temp[j + 1])
+              result[i] = temp[0];
+              if (temp[j]) {
+                console.log("inside ")
+                let x = temp[j]
+                x = temp[j].split(/'/)[1];
+                let obj = {}
+                obj[temp[0]] = x
+                DefaultParams.push(obj)
+                break;
+              }
             }
+          }
+          console.log("temp at end of j loop:", temp)
         }
+      }
       this.layoutSettings = JSON.parse(configData.data);
-      console.log("this.form.checked:",Object.keys(this.form.checked))
-      console.log("this.form.checked length:",Object.keys(this.form.checked).length)
+      console.log("this.form.checked:", Object.keys(this.form.checked))
+      console.log("this.form.checked length:", Object.keys(this.form.checked).length)
         // console.log("inside add")
-        if(Object.keys(this.form.checked).length>0){
+      if (Object.keys(this.form.checked).length > 0) {
         console.log("namearray found not equal to -1")
-        for(let k=0;k<Object.keys(this.form.checked).length;k++)
-        {
-        console.log("calling function to addNewPartialFolder with following name:",Object.keys(this.form.checked)[k])
+        for (let k = 0; k < Object.keys(this.form.checked).length; k++) {
+          console.log("calling function to addNewPartialFolder with following name:", Object.keys(this.form.checked)[k])
           let newName = Object.keys(this.form.checked)[k]
           let newFolderName = folderUrl + '/' + Object.keys(this.form.checked)[k];
           axios.post(config.baseURL + '/flows-dir-listing', {
-                  foldername: newFolderName,
-                  type: 'folder'
-              })
-              .then((res) => {
+              foldername: newFolderName,
+              type: 'folder'
+            })
+            .then((res) => {
+              console.log(res)
+              this.newFolderDialog = false
+              this.addNewFolderLoading = false
+              let x = newName
+              console.log("x", x)
+                // this.layoutSettings[2].layoutOptions[0][x]=[];
+                // this.saveConfigFile(folderUrl);
+              this.addNewFileLoading = true
+              let newfilename = newFolderName + '/default.html'
+              axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: newfilename,
+                  text: ' ',
+                  type: 'file'
+                })
+                .then((res) => {
                   console.log(res)
-                  this.newFolderDialog = false
-                  this.addNewFolderLoading = false
-                  let x = newName
-                  console.log("x", x)
-                  // this.layoutSettings[2].layoutOptions[0][x]=[];
-                  // this.saveConfigFile(folderUrl);
-                  this.addNewFileLoading = true
-                  let newfilename = newFolderName + '/default.html'
-                  axios.post(config.baseURL + '/flows-dir-listing', {
-                          filename: newfilename,
-                          text: ' ',
-                          type: 'file'
-                      })
-                      .then((res) => {
-                          console.log(res)
-                          this.newFileDialog = false
-                          this.addNewFileLoading = false
-                          this.formAddFile.filename = null
-                          this.layoutSettings[2].layoutOptions[0][x] = [];
-                          let temp1 = {
-                              value: "default",
-                              label: "default"
-                          }
-                          this.layoutSettings[2].layoutOptions[0][x].push(temp1)
-                          this.saveConfigFile(folderUrl);
-                          /****
-                          updating function 
-                          ***/
-                          let totalPartial = content.match(/{{>/g).length;
-                          // console.log("totalPartial",totalPartial);
-                          console.log('filename:', fileNameOrginal)
-                          // console.log('redefined:',fileNameOrginal.split('.')[0])
-                          // console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
-                          let namefile = fileNameOrginal.split('.')[0];
-                          let namefolder = foldername;
-                          console.log("namefile:", namefile.trim())
-                          console.log("namefolder:", namefolder.trim())
-                          let temp = {
-                              value: namefile,
-                              label: namefile,
-                              partialsList: result,
-                              defaultList: DefaultParams
-                          }
-                          let checkValue = false;
-                          for (var i = 0; i < Object.keys(this.layoutSettings[2].layoutOptions[0]).length; i++) {
-                              var obj = Object.keys(this.layoutSettings[2].layoutOptions[0])[i];
-                              console.log("obj:", obj)
-                              if ((obj) == namefolder) {
-                                  checkValue = true;
-                                  // obj.partialsList=result
-                                  console.log("selected obj:", obj)
-                                  // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':namefolder});
-                              }
-                          }
-                          if (checkValue == true) {
-                              // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':name});
-                              // console.log("index of change in existing",namefolder)
-                              console.log("content of currentFileIndex", this.layoutSettings[2].layoutOptions[0][namefolder])
-                              let checkFileNamevalue = false;
-                              for (let j = 0; j < this.layoutSettings[2].layoutOptions[0][namefolder].length; j++) {
-                                  if (this.layoutSettings[2].layoutOptions[0][namefolder][j].label == namefile) {
-                                      checkFileNamevalue = true
-                                      this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = [];
-                                      this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = [];
-                                      this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = result;
-                                      this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
-                                  }
-                              }
-                              if (checkFileNamevalue != true) {
-                                  console.log("file not found inside currentFileIndex, hence formed new")
-                                  this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
-                              }
-                              // this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].value=result.value;
-                              // console.log("partials",this.layoutSettings[2].layoutOptions[0][currentFileIndex][].partialsList)
-                              console.log("file already exists")
-                              this.saveConfigFile(folderUrl);
-                          } else {
-                              console.log('file doesnt exists');
-                              // this.$store.state.LayoutOptions.push(temp);
-                              // this.layoutSettings[2].layoutOptions[0][namefolder]=[];
-                              // this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
-                              // saveConfigFile
-                              this.saveConfigFile(folderUrl);
-                          }
-                      })
-                      .catch((e) => {
-                          console.log(e)
-                      })
-                  // this.layoutSettings[2].layoutOptions[0].push(result[i].trim())
-                  // this.saveConfigFile(folderUrl);
-              })
-              .catch((e) => {
+                  this.newFileDialog = false
+                  this.addNewFileLoading = false
+                  this.formAddFile.filename = null
+                  this.layoutSettings[2].layoutOptions[0][x] = [];
+                  let temp1 = {
+                    value: "default",
+                    label: "default"
+                  }
+                  this.layoutSettings[2].layoutOptions[0][x].push(temp1)
+                  this.saveConfigFile(folderUrl);
+                  /****
+                  updating function 
+                  ***/
+                  let totalPartial = content.match(/{{>/g).length;
+                  // console.log("totalPartial",totalPartial);
+                  console.log('filename:', fileNameOrginal)
+                    // console.log('redefined:',fileNameOrginal.split('.')[0])
+                    // console.log("html file saved:" + this.currentFile.path.replace(/\\/g, "\/"))
+                  let namefile = fileNameOrginal.split('.')[0];
+                  let namefolder = foldername;
+                  console.log("namefile:", namefile.trim())
+                  console.log("namefolder:", namefolder.trim())
+                  let temp = {
+                    value: namefile,
+                    label: namefile,
+                    partialsList: result,
+                    defaultList: DefaultParams
+                  }
+                  let checkValue = false;
+                  for (var i = 0; i < Object.keys(this.layoutSettings[2].layoutOptions[0]).length; i++) {
+                    var obj = Object.keys(this.layoutSettings[2].layoutOptions[0])[i];
+                    console.log("obj:", obj)
+                    if ((obj) == namefolder) {
+                      checkValue = true;
+                      // obj.partialsList=result
+                      console.log("selected obj:", obj)
+                        // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':namefolder});
+                    }
+                  }
+                  if (checkValue == true) {
+                    // let currentFileIndex = daex.indexFirst(this.layoutSettings[2].layoutOptions[0],{'label':name});
+                    // console.log("index of change in existing",namefolder)
+                    console.log("content of currentFileIndex", this.layoutSettings[2].layoutOptions[0][namefolder])
+                    let checkFileNamevalue = false;
+                    for (let j = 0; j < this.layoutSettings[2].layoutOptions[0][namefolder].length; j++) {
+                      if (this.layoutSettings[2].layoutOptions[0][namefolder][j].label == namefile) {
+                        checkFileNamevalue = true
+                        this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = [];
+                        this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = [];
+                        this.layoutSettings[2].layoutOptions[0][namefolder][j].partialsList = result;
+                        this.layoutSettings[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
+                      }
+                    }
+                    if (checkFileNamevalue != true) {
+                      console.log("file not found inside currentFileIndex, hence formed new")
+                      this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+                    }
+                    // this.layoutSettings[2].layoutOptions[0].layouts[currentFileIndex].value=result.value;
+                    // console.log("partials",this.layoutSettings[2].layoutOptions[0][currentFileIndex][].partialsList)
+                    console.log("file already exists")
+                    this.saveConfigFile(folderUrl);
+                  } else {
+                    console.log('file doesnt exists');
+                    // this.$store.state.LayoutOptions.push(temp);
+                    // this.layoutSettings[2].layoutOptions[0][namefolder]=[];
+                    // this.layoutSettings[2].layoutOptions[0][namefolder].push(temp)
+                    // saveConfigFile
+                    this.saveConfigFile(folderUrl);
+                  }
+                })
+                .catch((e) => {
                   console.log(e)
-              })
-        } 
-      
-      
-      this.form.checked=[]
-      this.form.namearray=[]
-      }
-       this.form.checked=[]
-      this.form.namearray=[]
-    },
-    dialogFormVisibleCancel(){
-  this.form.namearray=[]
+                })
+                // this.layoutSettings[2].layoutOptions[0].push(result[i].trim())
+                // this.saveConfigFile(folderUrl);
+            })
+            .catch((e) => {
+              console.log(e)
+            })
+        }
 
-},
+        this.form.checked = []
+        this.form.namearray = []
+      }
+      this.form.checked = []
+      this.form.namearray = []
+    },
+
+    dialogFormVisibleCancel() {
+      this.form.namearray = []
+    },
 
     // Backup Before Demo 26 Oct
     // saveFile() {
@@ -4191,7 +4079,6 @@ export default {
             });
             console.log(e)
         })
-
     },
 
     // Save config File
@@ -4262,18 +4149,6 @@ export default {
                 type: 'error'
             });
             console.log(e)
-        })
-    },
-
-    // Save Layout File(Not in use)
-    saveLayoutFile: function(){
-        let newContent = "Hello";
-        let file_name = this.currentFile.path.replace(/\\/g, "\/").replace("Grid","Layout").replace(".grid",".layout");
-        console.log(file_name)
-        return axios.post(config.baseURL + '/flows-dir-listing', {
-            filename : file_name,
-            text : newContent,
-            type : 'file'
         })
     },
 
@@ -4409,34 +4284,12 @@ export default {
     // Displaying icons in tree nodes  
     renderContent(h, { node, data, store }) {
 
-        if(data.type=='directory' && node.label != 'websites'){
-          // If node is a website project directory
-          if(node.level == 2){
-            return (<span>
-                  <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
-                      <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
-                      <span>{node.label}</span>
-                  </span>
-                  <span class="action-button" style="float: right; padding-right: 5px;">
-                    <el-tooltip content="Add folder" placement="top">
-                        <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
-                    </el-tooltip>
-                    <el-tooltip content="Add file" placement="top">
-                        <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
-                    </el-tooltip>
-                    <el-tooltip content="Project Settings" placement="top">
-                      <i class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
-                    </el-tooltip>
-                    <el-tooltip content="Remove" placement="top">
-                        <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removeProject(store, data) }></i>
-                    </el-tooltip>
-                  </span>
-              </span>)  
-          } else {
-            // If it's a simple directory
-            return(<span>
-                <span class="nodelabel">
-                    <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+      if(data.type=='directory' && node.label != 'websites'){
+        // If node is a website project directory
+        if(node.level == 2){
+          return (<span>
+                <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
+                    <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
                     <span>{node.label}</span>
                 </span>
                 <span class="action-button" style="float: right; padding-right: 5px;">
@@ -4446,12 +4299,34 @@ export default {
                   <el-tooltip content="Add file" placement="top">
                       <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
                   </el-tooltip>
+                  <el-tooltip content="Project Settings" placement="top">
+                    <i class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                  </el-tooltip>
                   <el-tooltip content="Remove" placement="top">
-                      <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                      <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removeProject(store, data) }></i>
                   </el-tooltip>
                 </span>
-            </span>)
-          }
+            </span>)  
+        } else {
+          // If it's a simple directory
+          return(<span>
+              <span class="nodelabel">
+                  <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+                  <span>{node.label}</span>
+              </span>
+              <span class="action-button" style="float: right; padding-right: 5px;">
+                <el-tooltip content="Add folder" placement="top">
+                    <i class="fa fa-folder-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
+                </el-tooltip>
+                <el-tooltip content="Add file" placement="top">
+                    <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
+                </el-tooltip>
+                <el-tooltip content="Remove" placement="top">
+                    <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                </el-tooltip>
+              </span>
+          </span>)
+        }
           
       } else if(data.type=='file'){
         // var filePath = data.path;
@@ -4515,7 +4390,7 @@ export default {
                       <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
                       <span>{node.label}</span>
                   </span>
-                  <span class="action-button">
+                  <span class="">
                       <el-tooltip content="Create New Website" placement="top">
                           <i class="fa fa-folder-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px;"  on-click={ () => this.newProjectFolderDialog = true }></i>
                       </el-tooltip>
@@ -4523,14 +4398,6 @@ export default {
               </span>)
       }
     },
-
-    // <b-dropdown> 
-    //   <b-dropdown-item>New Layout File</b-dropdown-item>
-    //   <b-dropdown-item>New Menu File</b-dropdown-item>
-    //   <b-dropdown-divider></b-dropdown-divider>
-    //   <b-dropdown-item>New Folder</b-dropdown-item>
-    //   <b-dropdown-item>Delete</b-dropdown-item>
-    // </b-dropdown>
 
     // Cancel and go back to dashboard
     cancelEditing() {
@@ -4553,616 +4420,669 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.clearfix{
-  clear:both;
-}
-.header-banner{
-  color:rgb(255, 255, 255);
-  font-family:Helvetica, serif;
-  font-weight:100;
-  background-image: url("/static/building-blocks.jpeg");
-  background-attachment:scroll;
-  background-position-x:center;
-  background-position-y:center;
-  background-repeat-x:no-repeat;
-  background-repeat-y:no-repeat;
-  background-size:cover;
-  padding:186px 0px 348px 0px;
-}
-.container-width{
-  width:90%;
-  max-width:1150px;
-  margin-top:0px;
-  margin-right:auto;
-  margin-bottom:0px;
-  margin-left:auto;
-}
-.lead-title{
-  margin-top:150px;
-  margin-right:0px;
-  margin-bottom:30px;
-  margin-left:0px;
-  font-size:40px;
-}
-.lead-btn{
-  margin-top:15px;
-  padding-top:10px;
-  padding-right:10px;
-  padding-bottom:10px;
-  padding-left:10px;
-  width:190px;
-  min-height:30px;
-  font-size:20px;
-  text-align:center;
-  letter-spacing:3px;
-  line-height:30px;
-  background-color:rgb(217, 131, 166);
-  border-top-left-radius:5px;
-  border-top-right-radius:5px;
-  border-bottom-right-radius:5px;
-  border-bottom-left-radius:5px;
-  transition-duration:0.5s;
-  transition-timing-function:ease;
-  transition-delay:initial;
-  transition-property:all;
-  cursor:pointer;
-}
-.lead-btn:hover{
-  background-color:rgb(255, 255, 255);
-  color:rgb(76, 17, 78);
-}
-.lead-btn:active{
-  background-color:rgb(77, 17, 79);
-  color:rgb(255, 255, 255);
-}
-
-.displayColumn{
-  display: table;
-}
-
-.treeView{
-  display: table-cell;
-}
-
-.mainDisplay{
-  min-height: 90vh;
-  display: table-cell;
-  background-color: #fff;
-}
-
-.treeViewBlock{
-}
-
-.el-tree{
-  border: none;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/*SideBar Styles*/
-
-.nav .open > a, 
-.nav .open > a:hover, 
-.nav .open > a:focus {background-color: transparent;}
-
-/*-------------------------------*/
-/*           Wrappers            */
-/*-------------------------------*/
-
-#wrapper {
-    padding-left: 0;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
-
-#wrapper.toggled {
-    padding-left: 320px;
-}
-
-#sidebar-wrapper {
-    box-shadow: 0px 0px 25px rgba(0,0,0,0.2);
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    width: 0;
-    height: 100%;
-    left: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background: #fff;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
-
-#sidebar-wrapper::-webkit-scrollbar {
-  display: none;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-    width: 320px;
-}
-
-#page-content-wrapper {
-    width: 100%;
-}
-
-#wrapper.toggled #page-content-wrapper {
-    /*position: absolute;*/
-    margin-right: -320px;
-}
-
-/*-------------------------------*/
-/*     Sidebar nav styles        */
-/*-------------------------------*/
-
-.sidebar-nav {
-    position: absolute;
-    top: 0;
-    width: 320px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.sidebar-nav li {
-    position: relative; 
-    line-height: 20px;
-    display: inline-block;
-    width: 100%;
-}
-
-.sidebar-nav li:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    height: 100%;
-    width: 3px;
-    background-color: #1c1c1c;
-    -webkit-transition: width .2s ease-in;
-      -moz-transition:  width .2s ease-in;
-       -ms-transition:  width .2s ease-in;
-            transition: width .2s ease-in;
-
-}
-.sidebar-nav li:first-child a {
-    color: #fff;
-    background-color: #1a1a1a;
-}
-.sidebar-nav li:nth-child(2):before {
-    background-color: #ec1b5a;   
-}
-.sidebar-nav li:nth-child(3):before {
-    background-color: #79aefe;   
-}
-.sidebar-nav li:nth-child(4):before {
-    background-color: #314190;   
-}
-.sidebar-nav li:nth-child(5):before {
-    background-color: #279636;   
-}
-.sidebar-nav li:nth-child(6):before {
-    background-color: #7d5d81;   
-}
-.sidebar-nav li:nth-child(7):before {
-    background-color: #ead24c;   
-}
-.sidebar-nav li:nth-child(8):before {
-    background-color: #2d2366;   
-}
-.sidebar-nav li:nth-child(9):before {
-    background-color: #35acdf;   
-}
-.sidebar-nav li:hover:before,
-.sidebar-nav li.open:hover:before {
-    width: 100%;
-    -webkit-transition: width .2s ease-in;
-      -moz-transition:  width .2s ease-in;
-       -ms-transition:  width .2s ease-in;
-            transition: width .2s ease-in;
-
-}
-
-.sidebar-nav li a {
-    display: block;
-    color: #ddd;
-    text-decoration: none;
-    padding: 10px 15px 10px 30px;    
-}
-
-.sidebar-nav li a:hover,
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus,
-.sidebar-nav li.open a:hover,
-.sidebar-nav li.open a:active,
-.sidebar-nav li.open a:focus{
-    color: #fff;
-    text-decoration: none;
-    background-color: transparent;
-}
-
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
-    font-size: 20px;
-    line-height: 44px;
-}
-.sidebar-nav .dropdown-menu {
-    position: relative;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    border-radius: 0;
-    border: none;
-    background-color: #222;
-    box-shadow: none;
-}
-
-/*-------------------------------*/
-/*       Hamburger-Cross         */
-/*-------------------------------*/
-
-.hamburger {
-  position: fixed;
-  top: 0px;  
-  z-index: 999;
-  display: block;
-  width: 32px;
-  height: 32px;
-  margin-left: 0px;
-  background: transparent;
-  border: none;
-  margin-top: -4px;
-}
-.hamburger:hover,
-.hamburger:focus,
-.hamburger:active {
-  outline: none;
-}
-.hamburger.is-closed:before {
-  content: '';
-  display: block;
-  width: 100px;
-  font-size: 14px;
-  color: #fff;
-  line-height: 32px;
-  text-align: center;
-  opacity: 0;
-  -webkit-transform: translate3d(0,0,0);
-  -webkit-transition: all .35s ease-in-out;
-}
-.hamburger.is-closed:hover:before {
-  opacity: 1;
-  display: block;
-  -webkit-transform: translate3d(-100px,0,0);
-  -webkit-transition: all .35s ease-in-out;
-}
-
-.hamburger.is-closed .hamb-top,
-.hamburger.is-closed .hamb-middle,
-.hamburger.is-closed .hamb-bottom,
-.hamburger.is-open .hamb-top,
-.hamburger.is-open .hamb-middle,
-.hamburger.is-open .hamb-bottom {
-  position: absolute;
-  left: 0;
-  height: 4px;
-  width: 100%;
-}
-.hamburger.is-closed .hamb-top,
-.hamburger.is-closed .hamb-middle,
-.hamburger.is-closed .hamb-bottom {
-  background-color: #fcfcfc;
-}
-.hamburger.is-closed .hamb-top { 
-  /*box-shadow: 0px 0px 5px #333;*/
-  top: 5px; 
-  -webkit-transition: all .35s ease-in-out;
-}
-.hamburger.is-closed .hamb-middle {
-  /*box-shadow: 0px 0px 5px #333;*/
-  top: 50%;
-  margin-top: -2px;
-}
-.hamburger.is-closed .hamb-bottom {
-  /*box-shadow: 0px 0px 5px #333;*/
-  bottom: 5px;  
-  -webkit-transition: all .35s ease-in-out;
-}
-
-/*.sideMenuOpener{
-  background-color: #999;
-  width: 40px;
-  height: 40px;
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  z-index: 9999;
-}*/
-
-
-
-.hamburger.is-closed:hover .hamb-top {
-  top: 0;
-  -webkit-transition: all .35s ease-in-out;
-}
-.hamburger.is-closed:hover .hamb-bottom {
-  bottom: 0;
-  -webkit-transition: all .35s ease-in-out;
-}
-.hamburger.is-open .hamb-top,
-.hamburger.is-open .hamb-middle,
-.hamburger.is-open .hamb-bottom {
-  background-color: #fcfcfc;
-}
-.hamburger.is-open .hamb-top,
-.hamburger.is-open .hamb-bottom {
-  top: 50%;
-  margin-top: -2px;  
-}
-.hamburger.is-open .hamb-top { 
-  -webkit-transform: rotate(45deg);
-  -webkit-transition: -webkit-transform .2s cubic-bezier(.73,1,.28,.08);
-}
-.hamburger.is-open .hamb-middle { display: none; }
-.hamburger.is-open .hamb-bottom {
-  -webkit-transform: rotate(-45deg);
-  -webkit-transition: -webkit-transform .2s cubic-bezier(.73,1,.28,.08);
-}
-.hamburger.is-open:before {
-  content: '';
-  display: block;
-  width: 100px;
-  font-size: 14px;
-  color: #fff;
-  line-height: 32px;
-  text-align: center;
-  opacity: 0;
-  -webkit-transform: translate3d(0,0,0);
-  -webkit-transition: all .35s ease-in-out;
-}
-.hamburger.is-open:hover:before {
-  opacity: 1;
-  display: block;
-  -webkit-transform: translate3d(-100px,0,0);
-  -webkit-transition: all .35s ease-in-out;
-}
-
-/*-------------------------------*/
-/*            Overlay            */
-/*-------------------------------*/
-
-/*.overlay {
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,.6); 
-    z-index: 1;
-}*/
-
-/*Sidebar Styles ends*/
-
-
-
-
-.el-tree-node__children{
-  width: 100%;
-}
-
-.gjs-editor{
-  min-height: 90vh;
-}
-
-.jsoneditor-vue div.jsoneditor-tree{
-  background-color: #fff;
-}
-
-.gjs-am-assets-cont{
-  height: 373px;
-}
-
-.dropdown-toggle{
-    background-color: transparent;
-    border: none;
-    margin: 0;
-    padding: 0;
-}
-
-.dropdown-menu{
-  right: 0;
-  left: auto;
-  position: absolute;
-}
-
-.newWebsite{
-  width: 90%;
-  margin: 15px;
-}
-
-.gjs-am-file-uploader>form{
-    min-height: 325px !important;
-}
-
-/*.el-tree-node__expand-icon{
-  border: 8px solid transparent;
-  border-left-width: 10px; 
-}*/
-
-
-
-
-
-
-
-
-
-
-
-/*Template selection radio images*/
-.radio-img  > input { 
-  display:none;
-}
-.radio-img  > img{
-  cursor:pointer;
-  border:2px solid transparent;
-}
-.radio-img  > input:checked + img{ 
-  border:2px solid red;
-}
-  /**/
-img {
-  margin-top: -220px;
-}
-input[type="radio"] {
-  display: none;
-}
-ul li {
-  float: left;
-  list-style: none;
-}
-label.imgThumbnail {
-  height: 170px;
-  padding: 10px;
-  display: block;
-  position: relative;
-  margin: 10px;
-  cursor: pointer;
-}
-label.imgThumbnail:before {
-  background-color: white;
-  color: white;
-  content: " ";
-  display: block;
-  border-radius: 50%;
-  position: absolute;
-  top: 20px;
-  left: -5px;
-  width: 25px;
-  height: 25px;
-  text-align: center;
-  line-height: 28px;
-  transition-duration: 0.4s;
-  transform: scale(0);
-}
-label.imgThumbnail img {
-  height: 100px;
-  width: 100px;
-  transition-duration: 0.2s;
-  transform-origin: 50% 50%;
-}
-:checked + label.imgThumbnail:before {
-  content: "✓";
-  background-color: green;
-  transform: scale(1);
-}
-:checked + label.imgThumbnail img {
-  transform: scale(0.9);
-  /* box-shadow: 0 0 5px #333; */
-  z-index: -1;
-}
-  /**/
-.templateThumbnail{
-  width: 210px;
-  height: 150px;
-  padding: 20px
-}
-
-
-
-
-
-/*Page grapes editor dropdowns*/
-.el-select-dropdown__item{
-  width: 100%;
-}
-
-.editor-buttons{
-  position: fixed;
-  bottom: -8px;
-  right: 25px;
-  z-index: 3;
-}
-
-@media(max-width: 580px){
-  .editor-buttons{
-    position: relative;
-    left: 0;
+  .clearfix {
+    clear: both;
   }
-}
 
-.el-dialog{
-  text-align: left !importants;
-}
+  .header-banner {
+      color: rgb(255, 255, 255);
+      font-family: Helvetica, serif;
+      font-weight: 100;
+      background-image: url("/static/building-blocks.jpeg");
+      background-attachment: scroll;
+      background-position-x: center;
+      background-position-y: center;
+      background-repeat-x: no-repeat;
+      background-repeat-y: no-repeat;
+      background-size: cover;
+      padding: 186px 0px 348px 0px;
+  }
+
+  .container-width {
+      width: 90%;
+      max-width: 1150px;
+      margin-top: 0px;
+      margin-right: auto;
+      margin-bottom: 0px;
+      margin-left: auto;
+  }
+
+  .lead-title {
+      margin-top: 150px;
+      margin-right: 0px;
+      margin-bottom: 30px;
+      margin-left: 0px;
+      font-size: 40px;
+  }
+
+  .lead-btn {
+      margin-top: 15px;
+      padding-top: 10px;
+      padding-right: 10px;
+      padding-bottom: 10px;
+      padding-left: 10px;
+      width: 190px;
+      min-height: 30px;
+      font-size: 20px;
+      text-align: center;
+      letter-spacing: 3px;
+      line-height: 30px;
+      background-color: rgb(217, 131, 166);
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+      transition-duration: 0.5s;
+      transition-timing-function: ease;
+      transition-delay: initial;
+      transition-property: all;
+      cursor: pointer;
+  }
+
+  .lead-btn:hover {
+      background-color: rgb(255, 255, 255);
+      color: rgb(76, 17, 78);
+  }
+
+  .lead-btn:active {
+      background-color: rgb(77, 17, 79);
+      color: rgb(255, 255, 255);
+  }
+
+  .displayColumn {
+      display: table;
+  }
+
+  .treeView {
+      display: table-cell;
+  }
+
+  .mainDisplay {
+      min-height: 90vh;
+      display: table-cell;
+      background-color: #fff;
+  }
+
+  .treeViewBlock {}
+
+  .el-tree {
+      border: none;
+  }
 
 
-.el-tree-node:hover > .el-tree-node__content .action-button i{
-    display:block;
-}
-.action-button i{
-    display:none;
-}
+  /*SideBar Styles*/
+
+  .nav .open > a,
+  .nav .open > a:hover,
+  .nav .open > a:focus {
+      background-color: transparent;
+  }
 
 
+  /*-------------------------------*/
 
-.sideOpener{
-  width: 10px;
-  height: 100vh;
-  background-color: #292929;
-  margin-left: -6px;
-  display: table;
-  transition: 0.2s all linear;
-  opacity: 0.6;
-}
 
-.sideOpener:hover{
-  width: 20px;
-  transition: 0.2s all linear;
-  opacity: 1;
-}
+  /*           Wrappers            */
 
-.sideOpener i{
-  display: table-cell;
-  vertical-align: middle;
-  font-weight: bolder;
-  font-size: 18px;
-}
 
-.hamburger.is-closed > .sideOpener > .fa-angle-right{
-  /*visibility: visible;*/
-  display: table-cell;
-}
+  /*-------------------------------*/
 
-.hamburger.is-closed > .sideOpener > .fa-angle-left{
-  /*visibility: hidden;*/
-  display: none;
-}
+  #wrapper {
+      padding-left: 0;
+      -webkit-transition: all 0.5s ease;
+      -moz-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease;
+      transition: all 0.5s ease;
+  }
 
-.hamburger.is-open > .sideOpener > .fa-angle-right{
-  /*visibility: hidden;*/
-  display: none;
-}
+  #wrapper.toggled {
+      padding-left: 320px;
+  }
 
-.hamburger.is-open > .sideOpener > .fa-angle-left{
-  /*visibility: visible;*/
-  display: table-cell;
-}
+  #sidebar-wrapper {
+      box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.2);
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      width: 0;
+      height: 100%;
+      left: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #fff;
+      -webkit-transition: all 0.5s ease;
+      -moz-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease;
+      transition: all 0.5s ease;
+  }
+
+  #sidebar-wrapper::-webkit-scrollbar {
+      display: none;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+      width: 320px;
+  }
+
+  #page-content-wrapper {
+      width: 100%;
+  }
+
+  #wrapper.toggled #page-content-wrapper {
+      /*position: absolute;*/
+      margin-right: -320px;
+  }
+
+
+  /*-------------------------------*/
+
+
+  /*     Sidebar nav styles        */
+
+
+  /*-------------------------------*/
+
+  .sidebar-nav {
+      position: absolute;
+      top: 0;
+      width: 320px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+  }
+
+  .sidebar-nav li {
+      position: relative;
+      line-height: 20px;
+      display: inline-block;
+      width: 100%;
+  }
+
+  .sidebar-nav li:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      height: 100%;
+      width: 3px;
+      background-color: #1c1c1c;
+      -webkit-transition: width .2s ease-in;
+      -moz-transition: width .2s ease-in;
+      -ms-transition: width .2s ease-in;
+      transition: width .2s ease-in;
+  }
+
+  .sidebar-nav li:first-child a {
+      color: #fff;
+      background-color: #1a1a1a;
+  }
+
+  .sidebar-nav li:nth-child(2):before {
+      background-color: #ec1b5a;
+  }
+
+  .sidebar-nav li:nth-child(3):before {
+      background-color: #79aefe;
+  }
+
+  .sidebar-nav li:nth-child(4):before {
+      background-color: #314190;
+  }
+
+  .sidebar-nav li:nth-child(5):before {
+      background-color: #279636;
+  }
+
+  .sidebar-nav li:nth-child(6):before {
+      background-color: #7d5d81;
+  }
+
+  .sidebar-nav li:nth-child(7):before {
+      background-color: #ead24c;
+  }
+
+  .sidebar-nav li:nth-child(8):before {
+      background-color: #2d2366;
+  }
+
+  .sidebar-nav li:nth-child(9):before {
+      background-color: #35acdf;
+  }
+
+  .sidebar-nav li:hover:before,
+  .sidebar-nav li.open:hover:before {
+      width: 100%;
+      -webkit-transition: width .2s ease-in;
+      -moz-transition: width .2s ease-in;
+      -ms-transition: width .2s ease-in;
+      transition: width .2s ease-in;
+  }
+
+  .sidebar-nav li a {
+      display: block;
+      color: #ddd;
+      text-decoration: none;
+      padding: 10px 15px 10px 30px;
+  }
+
+  .sidebar-nav li a:hover,
+  .sidebar-nav li a:active,
+  .sidebar-nav li a:focus,
+  .sidebar-nav li.open a:hover,
+  .sidebar-nav li.open a:active,
+  .sidebar-nav li.open a:focus {
+      color: #fff;
+      text-decoration: none;
+      background-color: transparent;
+  }
+
+  .sidebar-nav > .sidebar-brand {
+      height: 65px;
+      font-size: 20px;
+      line-height: 44px;
+  }
+
+  .sidebar-nav .dropdown-menu {
+      position: relative;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      border-radius: 0;
+      border: none;
+      background-color: #222;
+      box-shadow: none;
+  }
+
+
+  /*-------------------------------*/
+
+
+  /*       Hamburger-Cross         */
+
+
+  /*-------------------------------*/
+
+  .hamburger {
+      position: fixed;
+      top: 0px;
+      z-index: 999;
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin-left: 0px;
+      background: transparent;
+      border: none;
+      margin-top: -4px;
+  }
+
+  .hamburger:hover,
+  .hamburger:focus,
+  .hamburger:active {
+      outline: none;
+  }
+
+  .hamburger.is-closed:before {
+      content: '';
+      display: block;
+      width: 100px;
+      font-size: 14px;
+      color: #fff;
+      line-height: 32px;
+      text-align: center;
+      opacity: 0;
+      -webkit-transform: translate3d(0, 0, 0);
+      -webkit-transition: all .35s ease-in-out;
+  }
+
+  .hamburger.is-closed:hover:before {
+      opacity: 1;
+      display: block;
+      -webkit-transform: translate3d(-100px, 0, 0);
+      -webkit-transition: all .35s ease-in-out;
+  }
+
+  .hamburger.is-closed .hamb-top,
+  .hamburger.is-closed .hamb-middle,
+  .hamburger.is-closed .hamb-bottom,
+  .hamburger.is-open .hamb-top,
+  .hamburger.is-open .hamb-middle,
+  .hamburger.is-open .hamb-bottom {
+      position: absolute;
+      left: 0;
+      height: 4px;
+      width: 100%;
+  }
+
+  .hamburger.is-closed .hamb-top,
+  .hamburger.is-closed .hamb-middle,
+  .hamburger.is-closed .hamb-bottom {
+      background-color: #fcfcfc;
+  }
+
+  .hamburger.is-closed .hamb-top {
+      /*box-shadow: 0px 0px 5px #333;*/
+      top: 5px;
+      -webkit-transition: all .35s ease-in-out;
+  }
+
+  .hamburger.is-closed .hamb-middle {
+      /*box-shadow: 0px 0px 5px #333;*/
+      top: 50%;
+      margin-top: -2px;
+  }
+
+  .hamburger.is-closed .hamb-bottom {
+      /*box-shadow: 0px 0px 5px #333;*/
+      bottom: 5px;
+      -webkit-transition: all .35s ease-in-out;
+  }
+
+
+  /*.sideMenuOpener{
+    background-color: #999;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 9999;
+  }*/
+
+  .hamburger.is-closed:hover .hamb-top {
+      top: 0;
+      -webkit-transition: all .35s ease-in-out;
+  }
+
+  .hamburger.is-closed:hover .hamb-bottom {
+      bottom: 0;
+      -webkit-transition: all .35s ease-in-out;
+  }
+
+  .hamburger.is-open .hamb-top,
+  .hamburger.is-open .hamb-middle,
+  .hamburger.is-open .hamb-bottom {
+      background-color: #fcfcfc;
+  }
+
+  .hamburger.is-open .hamb-top,
+  .hamburger.is-open .hamb-bottom {
+      top: 50%;
+      margin-top: -2px;
+  }
+
+  .hamburger.is-open .hamb-top {
+      -webkit-transform: rotate(45deg);
+      -webkit-transition: -webkit-transform .2s cubic-bezier(.73, 1, .28, .08);
+  }
+
+  .hamburger.is-open .hamb-middle {
+      display: none;
+  }
+
+  .hamburger.is-open .hamb-bottom {
+      -webkit-transform: rotate(-45deg);
+      -webkit-transition: -webkit-transform .2s cubic-bezier(.73, 1, .28, .08);
+  }
+
+  .hamburger.is-open:before {
+      content: '';
+      display: block;
+      width: 100px;
+      font-size: 14px;
+      color: #fff;
+      line-height: 32px;
+      text-align: center;
+      opacity: 0;
+      -webkit-transform: translate3d(0, 0, 0);
+      -webkit-transition: all .35s ease-in-out;
+  }
+
+  .hamburger.is-open:hover:before {
+      opacity: 1;
+      display: block;
+      -webkit-transform: translate3d(-100px, 0, 0);
+      -webkit-transition: all .35s ease-in-out;
+  }
+
+
+  /*-------------------------------*/
+
+
+  /*            Overlay            */
+
+
+  /*-------------------------------*/
+
+
+  /*.overlay {
+      position: fixed;
+      display: none;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,.6); 
+      z-index: 1;
+  }*/
+
+
+  /*Sidebar Styles ends*/
+
+  .el-tree-node__children {
+      width: 100%;
+  }
+
+  .gjs-editor {
+      min-height: 90vh;
+  }
+
+  .jsoneditor-vue div.jsoneditor-tree {
+      background-color: #fff;
+  }
+
+  .gjs-am-assets-cont {
+      height: 373px;
+  }
+
+  .dropdown-toggle {
+      background-color: transparent;
+      border: none;
+      margin: 0;
+      padding: 0;
+  }
+
+  .dropdown-menu {
+      right: 0;
+      left: auto;
+      position: absolute;
+  }
+
+  .newWebsite {
+      width: 90%;
+      margin: 15px;
+  }
+
+  .gjs-am-file-uploader>form {
+      min-height: 325px !important;
+  }
+
+
+  /*.el-tree-node__expand-icon{
+    border: 8px solid transparent;
+    border-left-width: 10px; 
+  }*/
+
+
+  /*Template selection radio images*/
+
+  .radio-img > input {
+      display: none;
+  }
+
+  .radio-img > img {
+      cursor: pointer;
+      border: 2px solid transparent;
+  }
+
+  .radio-img > input:checked + img {
+      border: 2px solid red;
+  }
+
+
+  /**/
+
+  img {
+      margin-top: -220px;
+  }
+
+  input[type="radio"] {
+      display: none;
+  }
+
+  ul li {
+      float: left;
+      list-style: none;
+  }
+
+  label.imgThumbnail {
+      height: 170px;
+      padding: 10px;
+      display: block;
+      position: relative;
+      margin: 10px;
+      cursor: pointer;
+  }
+
+  label.imgThumbnail:before {
+      background-color: white;
+      color: white;
+      content: " ";
+      display: block;
+      border-radius: 50%;
+      position: absolute;
+      top: 20px;
+      left: -5px;
+      width: 25px;
+      height: 25px;
+      text-align: center;
+      line-height: 28px;
+      transition-duration: 0.4s;
+      transform: scale(0);
+  }
+
+  label.imgThumbnail img {
+      height: 100px;
+      width: 100px;
+      transition-duration: 0.2s;
+      transform-origin: 50% 50%;
+  }
+
+  :checked + label.imgThumbnail:before {
+      content: "✓";
+      background-color: green;
+      transform: scale(1);
+  }
+
+  :checked + label.imgThumbnail img {
+      transform: scale(0.9);
+      /* box-shadow: 0 0 5px #333; */
+      z-index: -1;
+  }
+
+
+  /**/
+
+  .templateThumbnail {
+      width: 210px;
+      height: 150px;
+      padding: 20px
+  }
+
+
+  /*Page grapes editor dropdowns*/
+
+  .el-select-dropdown__item {
+      width: 100%;
+  }
+
+  .editor-buttons {
+      position: fixed;
+      bottom: -8px;
+      right: 25px;
+      z-index: 3;
+  }
+
+  @media(max-width: 580px) {
+      .editor-buttons {
+          position: relative;
+          left: 0;
+      }
+  }
+
+
+  /*Partials list modal fix*/
+
+  .el-dialog {
+      text-align: left !importants;
+  }
+
+
+  /*Show icons on hover in directory tree */
+
+  .el-tree-node:hover > .el-tree-node__content .action-button i {
+      display: block;
+  }
+
+  .action-button i {
+      display: none;
+  }
+
+
+  /*Sidemenu opener*/
+
+  .sideOpener {
+      width: 10px;
+      height: 100vh;
+      background-color: #292929;
+      margin-left: -6px;
+      display: table;
+      transition: 0.2s all linear;
+      opacity: 0.6;
+  }
+
+  .sideOpener:hover {
+      width: 20px;
+      transition: 0.2s all linear;
+      opacity: 1;
+  }
+
+  .sideOpener i {
+      display: table-cell;
+      vertical-align: middle;
+      font-weight: bolder;
+      font-size: 18px;
+  }
+
+
+  /*Change angle arrow in open/closed */
+
+  .hamburger.is-closed > .sideOpener > .fa-angle-right {
+      display: table-cell;
+  }
+
+  .hamburger.is-closed > .sideOpener > .fa-angle-left {
+      display: none;
+  }
+
+  .hamburger.is-open > .sideOpener > .fa-angle-right {
+      display: none;
+  }
+
+  .hamburger.is-open > .sideOpener > .fa-angle-left {
+      display: table-cell;
+  }
 
 </style>
