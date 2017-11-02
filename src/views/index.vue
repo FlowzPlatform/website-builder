@@ -2667,6 +2667,12 @@ export default {
                                       }
                                   }
                               }
+                              else if((temp[j+1]== undefined )){
+                                  console.log("NO default value given:")
+                                  let obj = {}
+                                  obj[temp[j]] ='default.html' 
+                                  DefaultParams.push(obj)
+                                }
                               console.log("temp at end of j loop:", temp)
                           }
                       }
@@ -2847,6 +2853,7 @@ export default {
                   result[i]=result[i].trim()
                   temp = temp.replace(/&nbsp;/g, ' ')
                   temp = temp.replace(/\s+/g, ' ');
+                  temp=temp.trim()
                   temp=temp.split(' ')
                   console.log("temp",temp)
                   for(let j=0;j<temp.length;j++){
@@ -3085,6 +3092,12 @@ export default {
                                       }
                                   }
                               }
+                              else if((temp[j+1]== undefined )){
+                                  console.log("NO default value given:")
+                                  let obj = {}
+                                  obj[temp[j]] ='default.html' 
+                                  DefaultParams.push(obj)
+                                }
                               console.log("temp at end of j loop:", temp)
                           }
                       }
@@ -3317,6 +3330,12 @@ export default {
                 break;
               }
             }
+          }
+          else if((temp[j+1]== undefined )){
+            console.log("NO default value given:")
+            let obj = {}
+            obj[temp[j]] ='default.html' 
+            DefaultParams.push(obj)
           }
           console.log("temp at end of j loop:", temp)
         }
