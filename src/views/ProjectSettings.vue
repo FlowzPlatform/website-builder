@@ -3,8 +3,8 @@
     
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
-      <el-button type="primary" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" @click="publishMetalsmith">Publish Settings</el-button>
+      <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
+      <el-button type="info" size="small" @click="publishMetalsmith">Publish Website</el-button>
       <!-- <el-button type="danger" @click="cancelSettings">Cancel</el-button> -->
     </div>
 
@@ -34,7 +34,7 @@
 
           <div class="col-md-12" style="margin-top: 4%;">
           
-            <el-form ref="form" :model="form" label-width="120px">
+            <el-form ref="form" :model="form" label-width="180px">
 
             <el-form-item label="Repository Id:">
                 <el-input v-model="newRepoId" :disabled="true"></el-input>
@@ -44,11 +44,11 @@
                 <el-input v-model="repoName" :disabled="true"></el-input>
               </el-form-item>
 
-              <el-form-item label="Brand name">
+              <!-- <el-form-item label="Brand name">
                 <el-input v-model="form.brandName" placeholder="My Company"></el-input>
-              </el-form-item>
+              </el-form-item> -->
 
-              <el-form-item label="Brand Logo">
+              <!-- <el-form-item label="Brand Logo">
                 <div class="col6 valid"> 
                   <label for="upload-validation">
                     <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
@@ -56,7 +56,7 @@
                   <input type="file" name="" id="upload-validation">
                   <span class="dis">(max 1 MB. .jpg or .png only)</span>
                 </div>
-              </el-form-item>
+              </el-form-item> -->
 
               <el-form-item label="Project SEO Title">
                 <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
@@ -81,7 +81,20 @@
       <div class="well">
         <div class="row">
           <div class="col-md-12">
-            <h3>Global Variables</h3>
+            <div class="row">
+              <div class="col-md-4">
+                <h3>Dynamic Values</h3>
+              </div>
+              <div class="col-md-8" align="right">
+                <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
+                  <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
+                  <input type="file" name="uploaderVariableJson">
+                <!-- </el-tooltip> -->
+                <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
+                  <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
+                <!-- </el-tooltip> -->
+              </div>
+            </div>
             <hr>
             <el-form ref="form" :model="form">
               <div v-for="(n, index) in globalVariables">
@@ -166,7 +179,7 @@
             </el-form>
           </div>
           <div class="col-md-12" style="margin-top: 4%;">
-            <h3>CSS Variables</h3>
+            <h3>Dynamic Styles</h3>
             <hr>
             <el-form ref="form" :model="form">
               <div v-for="(n, index) in globalCssVariables">
@@ -286,6 +299,10 @@ Vue.use(VueSession)
 
 import axios from 'axios'
 
+const config = require('../config');
+
+import fileSaver from 'file-saver'
+
 export default {
   name: 'ProjectSettings',
   props: {
@@ -309,7 +326,6 @@ export default {
       },
       commitsData: [],
       commitMessage: '',
-      baseURL: 'http://localhost:3030',
       newRepoId: '',
       repoName: '',
       configData: [],
@@ -350,6 +366,7 @@ export default {
       globalVariables: [],
       globalCssVariables: [],
       imageInputIsDisabled: false,
+      uploadedVariableJsonData: ''
       // fileData:{
       //   url: 'urlHere'
       // }
@@ -403,6 +420,7 @@ export default {
     },
 
     addNewCssVariable() {
+      console.log('Global Css Vars:', this.globalCssVariables)
       let newVariable = { variableName: '', variableType: '', variableValue: ''};
       this.globalCssVariables.push(newVariable);
     },
@@ -415,11 +433,27 @@ export default {
       this.globalCssVariables.splice(deleteIndex, 1);
     },
 
+    downloadGlobalVariables() {
+      this.saveProjectSettings();
+      let exportVariables = this.settings[1].projectSettings[1];
+
+      let textToSave = JSON.stringify(exportVariables);
+      let saveFileName = 'globalVariablesData.json';
+      let jsonData = new Blob([textToSave], {type: "application/json;charset=utf-8"});
+    
+      fileSaver.saveAs(jsonData, saveFileName);
+      // console.log(exportVariables);
+    },
+
+    // uploadGlobalVariables(fileData){
+    //   console.log('Uploading Global Variables...');
+    // },
+
     uploadImage(fileData, fileBlob) {
       
       this.form.brandLogoName = fileData.name;
 
-      axios.post( this.baseURL + '/image-upload', {
+      axios.post( config.baseURL + '/image-upload', {
           filename : this.folderUrl + '/assets/' + this.form.brandLogoName,
           text : fileBlob,
           type : 'file'
@@ -434,12 +468,12 @@ export default {
 
     saveProjectSettings() {
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc, "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables}];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}, { "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables }];
 
       this.settings[1].projectSettings = ProjectSettings;
 
       let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
-      axios.post( this.baseURL + '/flows-dir-listing', {
+      axios.post( config.baseURL + '/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(this.settings),
           type : 'file'
@@ -468,7 +502,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
       }).then(response => {
         console.log(response.data);
         this.$message({
@@ -485,7 +519,7 @@ export default {
       this.$store.state.currentIndex = 0;
 
       // Push repository changes
-      axios.post(this.baseURL + '/gitlab-add-repo', {
+      axios.post(config.baseURL + '/gitlab-add-repo', {
         commitMessage: this.commitMessage,
         repoName: this.repoName
       }).then(response => {
@@ -502,55 +536,326 @@ export default {
       }) 
     },
 
-    publishMetalsmith(){
-      var partials = '';
-      if (this.form.Header != '') {
-          var partialHeader = "Handlebars.registerPartial('Header', fs.readFileSync('" + this.$store.state.fileUrl + "/Headers/" + this.form.Header + ".html').toString());\n";
-          partials = partials + partialHeader;
-      }
-      if (this.form.Footer != '') {
-          var partialFooter = "Handlebars.registerPartial('Footer', fs.readFileSync('" + this.$store.state.fileUrl + "/Footers/" + this.form.Footer + ".html').toString());\n"
-          partials = partials + partialFooter;
-      }
+    async publishMetalsmith() {
+      var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      var responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      var rawConfigs = JSON.parse(responseConfig.data);
+      var partialstotal = []
+      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
 
-      var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n" + partials + " Metalsmith(__dirname)\n.metadata({title:'" + this.form.seoTitle + "',description:'" + this.form.seoDesc + "'})\n.source('" + this.$store.state.fileUrl + "/Pages')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(permalinks())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){console.log(err)}});"
+        console.log("i:", i)
 
-      // console.log(this.$store.state.fileUrl);
-      axios.post('http://localhost:3030/flows-dir-listing', {
-          filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
-          text: (metalsmithJSON),
-          type: 'file'
-      }).then((response) => {
-          // console.log('Axios call 1');
-          console.log('successfully created metalsmith file :', (response.data))
-          this.$message({
-              showClose: true,
-              message: 'MetalSmith Config Saved!',
-              type: 'success'
-          });
+        var partials = ''
+        console.log("rawConfigs[1].pageSettings[i].PageName:", rawConfigs[1].pageSettings[i].PageName)
 
-          axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {
-          }).then((response) => {
-              // console.log('Axios call 2');
-              console.log('successfully  :' + (response))
+        let responseConfigLoop = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+        var rawSettings = JSON.parse(responseConfigLoop.data);
+        var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
+        console.log("page name:", nameF)
+        var Layout = ''
+        var partialsPage = [];
+        Layout = rawSettings[1].pageSettings[i].PageLayout
+        partialsPage = rawSettings[1].pageSettings[i].partials
+        console.log("partialsPage:", partialsPage)
+        console.log("layout name:", Layout)
+        var responseMetal = ''
+        console.log("value of responseMetal:", responseMetal)
+        responseMetal = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+        var index = responseMetal.search('.source')
+
+        responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
+        var indexPartial = responseMetal.search("('handlebars')");
+        for (var x = 0; x < partialsPage.length; x++) {
+          let key = Object.keys(partialsPage[x])[0];
+          console.log("key :", key)
+          let value = partialsPage[x]
+          let key2 = key;
+          console.log("value:", value[key2])
+          key = key.trim();
+          if (value[key2].match('html')) {
+            console.log("inside html if")
+            key = key.split('.')[0]
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+          } else if (value[key2].match('hbs')) {
+            console.log("inside hbs if")
+            key = key.split('.')[0]
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+          } else {
+            console.log("inside else")
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + ".html').toString())\n"
+          }
+
+          partials = partials + temp;
+
+        }
+        console.log("partials of metalsmith:", partials);
+
+        responseMetal = responseMetal.substr(0, indexPartial + 15) + partials + responseMetal.substr(indexPartial + 15);
+
+        var mainMetal = folderUrl + '/assets/metalsmith.js'
+        console.log("final metalsmith file ready for api call:", responseMetal);
+        console.log("@@@@@@@@@@@@@@@@@:")
+        console.log("mainMetal:", mainMetal)
+        var value = true;
+        await axios.post( config.baseURL + '/flows-dir-listing', {
+            filename: mainMetal,
+            text: responseMetal,
+            type: 'file'
+          }).then(async(response) => {
+            var newFolderName = folderUrl + '/Preview';
+            await axios.post(config.baseURL + '/flows-dir-listing', {
+                foldername: newFolderName,
+                type: 'folder'
+              })
+              .then(async(res) => {
+                console.log(res)
+                var rawContent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Pages/' + nameF + '.html');
+
+                // newContent = newContent.data;
+                // if (Layout == 'Blank') {
+                //   if (newContent.match('---')) {
+                //     let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+                //     console.log("substr:" + substr)
+                //     newContent = newContent.replace(substr, '')
+                //   } else {
+                //     newContent = newContent
+                //   }
+
+                // } else {
+                //   let tempValueLayout = '---\nlayout: ' + Layout + '.layout\n---\n';
+                //   if (newContent.match('---')) {
+                //     let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+                //     newContent = newContent.replace(substr, tempValueLayout)
+                //   } else {
+                //     newContent = tempValueLayout + newContent
+                //   }
+
+                // }
+
+                // let rawContent = this.$store.state.content;
+
+                  let newContent = "<html>\n<head>\n"+
+                  "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+                  "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+                  "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+                  "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+                  "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+                  "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n"+
+                  "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n"+
+                  "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+                  "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+                  '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+                  '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+                  "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
+                  rawContent +
+                  '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+                  '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+                  // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+                  '<script src="./../main-files/main.js"><\/script>\n'+
+                  '</body>\n</html>';
+
+                  if (this.form.Layout == 'Blank') {
+                    if (newContent.match('---')) {
+                      let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+                      console.log("substr:" + substr)
+                      newContent = newContent.replace(substr, '')
+                    } else {
+                      newContent = "<html>\n<head>\n"+
+                      "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+                      "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+                      "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+                      "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+                      "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+                      "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n"+
+                      "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n"+
+                      "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+                      "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+                      '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+                      '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+                      "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
+                      rawContent +
+                      '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+                      // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+                      '<script src="./../main-files/main.js"><\/script>\n'+
+                      '</body>\n</html>';
+                    }
+
+                  } else {
+                    let tempValueLayout = '---\nlayout: ' + this.form.Layout + '.layout\n---\n';
+
+                    if (newContent.match('---')) {
+                      let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
+                      newContent = newContent.replace(substr, tempValueLayout)
+                    } else {
+                      newContent = tempValueLayout + "<html>\n<head>\n"+
+                      "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n"+
+                      "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n"+
+                      "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n"+
+                      "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n"+
+                      "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n"+
+                      "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n"+
+                      "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n"+
+                      "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n"+
+                      "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n"+
+                      '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
+                      '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
+                      "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
+                      rawContent +
+                      '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n'+
+                      '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n'+
+                      // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+                      '<script src="./../main-files/main.js"><\/script>\n'+
+                      '</body>\n</html>';
+                    }
+
+                  }
+
+                var previewFileName = folderUrl + '/Preview/' + nameF + '.html';
+
+                await axios.post( config.baseURL + '/flows-dir-listing', {
+                    filename: previewFileName,
+                    text: newContent,
+                    type: 'file'
+                  })
+                  .then(async(res) => {
+                    this.saveFileLoading = false;
+
+                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async(response) => {
+
+                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename: mainMetal,
+                            text: responseMetal,
+                            type: 'file'
+                          })
+                          .then(async(res) => {
+                            console.log('Now previewing: ' + this.$store.state.fileUrl.replace(/\\/g, "\/"))
+                            let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                            previewFile = folderUrl.replace('/var/www/html', '');
+                            console.log(previewFile.replace('Pages' + nameF, ''));
+                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              .then((res) => {
+                                console.log(res);
+                                // value = false;
+                                // return value
+
+                              })
+                              .catch((e) => {
+                                console.log(e)
+                              })
+                          })
+
+                      })
+                      .catch((err) => {
+                        console.log('error while creating metalsmithJSON file' + err)
+                      })
+                  })
+                  .catch((e) => {
+                    this.saveFileLoading = false
+                    this.$message({
+                      showClose: true,
+                      message: 'File not saved! Please try again.',
+                      type: 'error'
+                    });
+                    console.log(e)
+                  })
+
+              })
+              .catch((e) => {
+                console.log(e)
+              })
+
           })
-          .catch((err) => {
-              this.$message({
-                  showClose: true,
-                  message: 'Cannot get Metalsmith file! Some error occured, try again.',
-                  type: 'error'
-              });
-          })
-      })
-      .catch((e) => {
-          console.log('Mrror while creating MetalSmith JSON file' + e)
-          this.$message({
+          .catch((e) => {
+            console.log('error while creating metalsmithJSON file' + e)
+            this.$message({
               showClose: true,
               message: 'Cannot save file! Some error occured, try again.',
-              type: 'error'
-          });
-      })
+              type: 'danger'
+            });
+          })
+
+      }
+
+      window.open('http://localhost' + folderUrl.replace('var/www/html/', '') + '/public/');
+
     },
+
+    // Code before Full Publish of project
+    // publishMetalsmith(){
+    //   var partials = '';
+    //   if (this.form.Header != '') {
+    //       var partialHeader = "Handlebars.registerPartial('Header', fs.readFileSync('" + this.$store.state.fileUrl + "/Headers/" + this.form.Header + ".html').toString());\n";
+    //       partials = partials + partialHeader;
+    //   }
+    //   if (this.form.Footer != '') {
+    //       var partialFooter = "Handlebars.registerPartial('Footer', fs.readFileSync('" + this.$store.state.fileUrl + "/Footers/" + this.form.Footer + ".html').toString());\n"
+    //       partials = partials + partialFooter;
+    //   }
+
+    //   var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n" + partials + " Metalsmith(__dirname)\n.metadata({title:'" + this.form.seoTitle + "',description:'" + this.form.seoDesc + "'})\n.source('" + this.$store.state.fileUrl + "/Pages')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(permalinks())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){console.log(err)}});"
+
+    //   // console.log(this.$store.state.fileUrl);
+    //   axios.post('http://localhost:3030/flows-dir-listing', {
+    //       filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
+    //       text: (metalsmithJSON),
+    //       type: 'file'
+    //   }).then((response) => {
+    //       // console.log('Axios call 1');
+    //       console.log('successfully created metalsmith file :', (response.data))
+    //       this.$message({
+    //           showClose: true,
+    //           message: 'MetalSmith Config Saved!',
+    //           type: 'success'
+    //       });
+
+    //       axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {
+    //       }).then((response) => {
+    //           // console.log('Axios call 2');
+    //           console.log('successfully  :' + (response))
+    //       })
+    //       .catch((err) => {
+    //           this.$message({
+    //               showClose: true,
+    //               message: 'Cannot get Metalsmith file! Some error occured, try again.',
+    //               type: 'error'
+    //           });
+    //       })
+    //   })
+    //   .catch((e) => {
+    //       console.log('Mrror while creating MetalSmith JSON file' + e)
+    //       this.$message({
+    //           showClose: true,
+    //           message: 'Cannot save file! Some error occured, try again.',
+    //           type: 'error'
+    //       });
+    //   })
+    // },
 
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -577,82 +882,96 @@ export default {
 
     cancelSettings(){
       location.reload();
-    }
-  },
-  async created () {
-    this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    this.configData = await axios.get( this.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
-    if(this.configData.status == 200 || this.configData.status == 204){
-      console.log('Config file found! Updating fields..');
-      this.settings = JSON.parse(this.configData.data);
-      this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
-      this.repoName = this.settings[0].repoSettings[0].RepositoryName;
-      this.form.brandName = this.settings[1].projectSettings[0].BrandName;
-      this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
-      this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
-      this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
-      this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
-      this.globalVariables = this.settings[1].projectSettings[0].GlobalVariables;
-      this.globalCssVariables = this.settings[1].projectSettings[0].GlobalCssVariables;
+    },
 
-      this.form.Header = this.settings[2].layoutOptions[0].headers;
-      this.form.Footer = this.settings[2].layoutOptions[0].footers;
+    async init () {
+      this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+      if(this.configData.status == 200 || this.configData.status == 204){
+        console.log('Config file found! Updating fields..');
+        this.settings = JSON.parse(this.configData.data);
+        this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
+        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.form.brandName = this.settings[1].projectSettings[0].BrandName;
+        this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
+        this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
+        this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
+        this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+        this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
+        console.log(JSON.stringify(this.globalVariables));
+        this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
+        console.log(JSON.stringify(this.globalCssVariables));
 
-      // Set Brand Logo Name
-      if(this.form.brandLogoName != ''){
-        if (this.form.brandLogoName.length > 18) {
-            $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
-            $('.valid').removeClass('error').addClass('correct');
-            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-         }else{
-            $('#text2').text(this.form.brandLogoName);
-            $('.valid').removeClass('error').addClass('correct');
-            $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-        }  
+        if(this.globalVariables == undefined){
+          this.globalVariables = []
+        }
+        if(this.globalCssVariables == undefined){
+          this.globalCssVariables = []
+        }
+
+        this.form.Header = this.settings[2].layoutOptions[0].headers;
+        this.form.Footer = this.settings[2].layoutOptions[0].footers;
+
+        // Set Brand Logo Name
+        if(this.form.brandLogoName != ''){
+          if (this.form.brandLogoName.length > 18) {
+              $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
+              $('.valid').removeClass('error').addClass('correct');
+              $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+           }else{
+              $('#text2').text(this.form.brandLogoName);
+              $('.valid').removeClass('error').addClass('correct');
+              $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+          }  
+        } else {
+          console.log('BrandLogoName not found!');
+        }
+        
+
       } else {
-        console.log('BrandLogoName not found!');
+        console.log('Cannot get config file!');
+      } 
+
+
+      // replace all image tag source with index as name attribute to get the image file preview
+      
+      for (var i = 0; i < this.globalVariables.length; i++){
+        if(this.globalVariables[i].variableType == 'image'){
+          let _imageIndex = i;
+          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
+          }).then(response => {
+            $('[name = ' + _imageIndex + ']').attr('src', response.data);
+          }).catch(error => {
+            console.log("Some error occured while fetching image: ", error);
+          });
+
+        }
       }
+
+      // Get all commits list
+      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
+      }).then(response => {
+        this.commitsData = [];
+        for(var i in response.data){
+          this.commitsData.push({
+            commitDate: response.data[i].created_at,
+            commitSHA: response.data[i].id,
+            commitsMessage: response.data[i].title, 
+          });
+        }
+      }).catch(error => {
+        console.log("Some error occured: ", error);
+      });
       
 
-    } else {
-      console.log('Cannot get config file!');
-    } 
-
-
-    // replace all image tag source with index as name attribute to get the image file preview
-    
-    for (var i = 0; i < this.globalVariables.length; i++){
-      if(this.globalVariables[i].variableType == 'image'){
-        let _imageIndex = i;
-        axios.get( this.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
-        }).then(response => {
-          $('[name = ' + _imageIndex + ']').attr('src', response.data);
-        }).catch(error => {
-          console.log("Some error occured while fetching image: ", error);
-        });
-
-      }
+      if(this.commitsData[0]){
+        return 'positive-row';
+      } 
     }
-
-    // Get all commits list
-    await axios.get( this.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
-    }).then(response => {
-      for(var i in response.data){
-        this.commitsData.push({
-          commitDate: response.data[i].created_at,
-          commitSHA: response.data[i].id,
-          commitsMessage: response.data[i].title, 
-        });
-      }
-    }).catch(error => {
-      console.log("Some error occured: ", error);
-    });
-    
-
-    if(this.commitsData[0]){
-      return 'positive-row';
-    }  
+  },
+  created () {
+    this.init(); 
   },
 
   async mounted () {
@@ -712,6 +1031,60 @@ export default {
       }
     });
 
+    // Global Variable JSON uploader
+    $('#jsonUploaderBtn').on('click', function(){
+      $('[name=uploaderVariableJson]').trigger('click');
+    });
+
+    $('[name=uploaderVariableJson]').on('change', function(e){
+      var file = $(this)[0].files[0];
+
+      var fileName = e.target.files[0].name;
+      var ext = $(this).val().split('.').pop().toLowerCase();
+
+      if(ext != 'json'){
+        scope.$message({
+            showClose: true,
+            message: 'File must be of "JSON" type.',
+            type: 'error'
+        });
+        console.log('File must be of "JSON" type.');
+      } else {
+
+        var fileData = '';
+
+        // readFile
+        var reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = async function(e) {
+            fileData = await e.target.result;
+        };
+
+        setTimeout(function(){
+          var jsonFileData = JSON.parse(fileData);
+          if(jsonFileData.GlobalVariables && jsonFileData.GlobalCssVariables){
+            // New values
+            scope.globalVariables = jsonFileData.GlobalVariables;
+            scope.globalCssVariables = jsonFileData.GlobalCssVariables;
+
+            scope.saveProjectSettings();
+          } else {
+            scope.$message({
+                showClose: true,
+                message: 'Not a Proper variables file.',
+                type: 'error'
+            });
+            console.log('Not a Proper variables file');
+          }
+        }, 1000);
+      }
+
+    });
+  },
+  watch: {
+    '$store.state.fileUrl': function(newvalue) {
+      this.init()
+    }
   }
 }
 </script>
@@ -809,10 +1182,11 @@ h1{
 }
 
 .page-buttons{
-  position: absolute;
-  top: 0;
-  right: 80px;
+  position: fixed;
+  bottom: 7px;
+  right: 50px;
   margin-top: 17.5px;
+  z-index: 3
 }
 
 @media(max-width: 680px){
@@ -822,5 +1196,7 @@ h1{
     right: auto;
   }
 }
+
+
 
 </style>

@@ -64,9 +64,10 @@ footer{
     bottom: 0;
     left: 0;
     right: 0;
-    height: 35px;
+    height: 46px;
     text-align: center;
     color: #CCC;
+    padding-top: 7px;
 }
 
 footer p {

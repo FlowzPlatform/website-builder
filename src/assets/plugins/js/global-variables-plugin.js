@@ -1,10 +1,13 @@
 var globalVariables = [];
+var brandName;
 
 $(document).ready(function() {
     ImpletementSocekt();
 })
 
-var host = "http://localhost:3030/";
+// var host = "http://localhost:3030/";
+// var host = "http://172.16.61.20:3030/";
+var host = "http://172.16.230.84:3030/";
 
 function ImpletementSocekt() {
   var socket = io(host);
@@ -19,12 +22,14 @@ function ImpletementSocekt() {
       // Get Config Data
       $.getJSON( "../assets/config.json", function( data ) {  
           var configData = data;
-          globalVariables = configData[1].projectSettings[0].GlobalVariables;
+          brandName = configData[1].projectSettings[0].BrandName;
+          globalVariables = configData[1].projectSettings[1].GlobalVariables;
       });
 
       // Variable Replacements
       setTimeout(async function(){
           $('body [id="brandName"]').html(brandName);
+          $('body [id="brandLogo"]').attr('src', '../assets/brand-logo.png');
         
           // Replace all global variables
           for (var i = 0; i < globalVariables.length; i++){

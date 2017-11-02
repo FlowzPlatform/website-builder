@@ -34,6 +34,7 @@ import VueSession from 'vue-session'
 Vue.use(VueSession)
 
 import axios from 'axios'
+const config = require('../config');
 
 export default {
   name: 'Register',
@@ -128,7 +129,7 @@ export default {
                 }
               }).then(response => {
                 window.location = '/login'
-                axios.post('http://localhost:3030/user-service', {
+                axios.post( config.baseURL + '/user-service', {
                     username : this.form.Uname,
                     password : this.form.pass,
                     email : this.form.email,
