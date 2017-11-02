@@ -2,15 +2,17 @@ var id = $('productDetail').attr('id');
 
 var productDetailUrl = new URL(location.href);
 var sku = productDetailUrl.searchParams.get("sku");
-var apiUsername = 'elastic';
-var apiPassword = 'KdZuapCcaHrQajxC15EVos0a';
+
+var apiUrl = '';
+var apiUsername = '';
+var apiPassword = '';
 
 var productHtml;
 var productData;
 
 $.ajax({
   type: 'GET',
-  url: 'https://b9934e7ce239fa438ae416c8c7181a94.us-east-1.aws.found.io:9243/pdm1/_search?q=sku:'+sku,
+  url: apiUrl +'?q=sku:'+sku,
   async: false,
   beforeSend: function (xhr) {
 		xhr.setRequestHeader ("Authorization", "Basic " + btoa( apiUsername + ":" + apiPassword));

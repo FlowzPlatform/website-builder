@@ -4,15 +4,17 @@ var productDetailUrl = new URL(location.href);
 var sku = productDetailUrl.searchParams.get("sku");
 // var username = productDetailUrl.searchParams.get("username");
 // var password = productDetailUrl.searchParams.get("password");
-var apiUsername = 'elastic';
-var apiPassword = '4t4AplzzRsGmarJ6txoSHJIX';
+
+var apiUrl = '';
+var apiUsername = '';
+var apiPassword = '';
 
 var productHtml;
 var productData;
 
 $.ajax({
   type: 'GET',
-  url: 'https://9d89b0632a794a289b08f4de77dbf09a.us-east-1.aws.found.io:9243/pdm1/_search?q=sku:'+sku,
+  url: apiUrl + '?q=sku:' + sku,
   // url: ''
   async: false,
   beforeSend: function (xhr) {
