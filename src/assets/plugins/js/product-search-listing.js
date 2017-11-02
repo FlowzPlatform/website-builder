@@ -28,9 +28,9 @@ $('.searchButton').click(function(){
 // Do Login
 $.ajax({
   type: 'GET',
-  url: 'http://ec2-54-88-11-110.compute-1.amazonaws.com/api/login',
+  url: '',
   async: false,
-  data: "{ 'email': 'fsaiyed@officebrain.com', 'password': '123456789' }",
+  data: "{ 'email': '', 'password': '' }",
   dataType: 'json',
   success: function (data) {
     console.log("Logged in successfully!");

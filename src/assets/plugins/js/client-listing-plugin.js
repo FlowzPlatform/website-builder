@@ -52,7 +52,7 @@ $('productListing').html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw">');
 $(function() {
     $.ajax({
         type: 'POST',
-        url: 'https://9d89b0632a794a289b08f4de77dbf09a.us-east-1.aws.found.io:9243/pdm1/_search',
+        url: apiUrl,
         async: true,
         data: " {\r\n \t\"_source\":[\"product_name\",\"sku\"]\r\n}",
         beforeSend: function(xhr) {
