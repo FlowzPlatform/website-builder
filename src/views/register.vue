@@ -20,9 +20,9 @@
         <el-form-item>
           <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;" :loading="form.isLoading">Register</el-button>
         </el-form-item>
-        <!-- <el-form-item> -->
-          <p class="newUser">Already Registered? <a href="/login" class="registerNow">Login Now</a></p>
-        <!-- </el-form-item> -->
+
+        <p class="newUser">Already Registered? <a href="/login" class="registerNow">Login Now</a></p>
+        
       </el-form>
     </el-card>
   </div>
@@ -34,6 +34,7 @@ import VueSession from 'vue-session'
 Vue.use(VueSession)
 
 import axios from 'axios'
+const config = require('../config');
 
 export default {
   name: 'Register',
@@ -85,7 +86,8 @@ export default {
         checkPass: '',
         Uname: '',
         email: '',
-        pass: ''
+        pass: '',
+        isLoading: false
       },
       registerRules: {
         pass: [
@@ -115,26 +117,46 @@ export default {
       validate (formName) {
         this.$refs[formName].validate((valid) => {
             if (valid) {
-              axios.post('http://172.16.120.64:3000/api/setup', {
+              this.form.isLoading = true;
+              axios.post('http://ec2-54-88-11-110.compute-1.amazonaws.com/api/setup', {
                 username: this.form.Uname,
                 password: this.form.pass,
                 email: this.form.email,
-                fullname: this.form.name
+                fullname: this.form.Name
               }, {
                 headers: {
                   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                 }
               }).then(response => {
                 window.location = '/login'
+                axios.post( config.baseURL + '/user-service', {
+                    username : this.form.Uname,
+                    password : this.form.pass,
+                    email : this.form.email,
+                    name : this.form.name                  
+                }).then(response => {
+                  this.form.isLoading = false;
+                  console.log(response);
+                  window.location = '/login'
+                }).catch(error => {
+                  this.$notify.error({
+                    title: 'Error',
+                    message: error.response.data,
+                    offset: 100
+                  });
+                  this.form.isLoading = false;
+                })
               }).catch(error => {
                 this.$notify.error({
                   title: 'Error',
                   message: error.response.data,
                   offset: 100
-                })
+                });
+                this.form.isLoading = false;
               })
             } else {
               console.log('error submit!!');
+              this.form.isLoading = false;
               return false;
             }
           });
@@ -144,11 +166,12 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style >
+<style scoped>
 .box-card{
   width: 450px;
   margin:auto;
   margin-top: 9%;
+  margin-bottom: 25px;
   background-color: rgba(80,80,80,0.07);
   box-shadow: 0px 0px 2px #999999;
   transition: 0.2s linear all;

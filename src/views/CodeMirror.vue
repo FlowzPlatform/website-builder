@@ -1,6 +1,6 @@
 <template id="code-mirror">
     <div>
-        <codemirror v-model="$store.state.content" :options="editorOption"></codemirror>
+        <codemirror v-model="$store.state.content" :options="editorOption" ></codemirror>
     </div> 
 </template>
 
@@ -14,8 +14,16 @@
         name:'code-mirror',
         data: () => ({
             editorOption : {
-                mode: 'text/javascript'
+                mode: 'text/javascript',
+                lineWrapping: true
             }
         })
     }
 </script>
+
+<style >
+    .CodeMirror{
+        min-height: 80vh;
+        margin-top: 2%;
+    }
+</style>

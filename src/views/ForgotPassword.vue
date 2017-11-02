@@ -89,11 +89,12 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
 .box-card{
   width: 450px;
   margin:auto;
   margin-top: 15%;
+  margin-bottom: 25px;
   background-color: rgba(80,80,80,0.07);
   box-shadow: 0px 0px 2px #999999;
   transition: 0.2s linear all;

@@ -1,7 +1,14 @@
 <template>
   <div class="SiteFooter">
     <footer>
-        <p>© 2017<a style="color:#0a93a6; text-decoration:none;" href="/"> Flowz</a>, All rights reserved 2016-2017.</p>
+        <p>© 2017<a style="color:#0a93a6; text-decoration:none;" href="/"> Flowz</a>, All rights reserved 2016-2017. 
+          <!-- <el-tooltip class="item" effect="dark" content="Logout" placement="left">
+            <a v-if="isLoggedIn === 'yes'" href="#" style=" text-decoration:none; margin-top: -5px;" class="btn btn-danger btn-sm pull-right" @click="doLogout">
+              <i class="fa fa-sign-out"></i>
+            </a>
+          </el-tooltip> -->
+        </p>
+
     </footer>
   </div>
 </template>
@@ -17,12 +24,32 @@ export default {
   },
   data () {
     return {
-      data: 'data'
+      data: 'data',
+      isLoggedIn: 'no'
     }
   },
   component: {
   },
+  updated: function () {
+    if (this.$session.exists()) {
+      this.isLoggedIn = 'yes';
+    }
+  },
+  mounted: function () {
+    if (this.$session.exists()) {
+      this.isLoggedIn = 'yes';
+    }
+
+    // $(document).ready(function(){
+    //     $('[data-toggle="tooltip"]').tooltip(); 
+    // });
+  },
   methods: {
+    doLogout() {
+      this.$session.destroy();
+      this.isLoggedIn = 'no';
+      this.$router.push('/login');
+    }
   }
 }
 </script>
@@ -37,9 +64,10 @@ footer{
     bottom: 0;
     left: 0;
     right: 0;
-    height: 35px;
+    height: 46px;
     text-align: center;
     color: #CCC;
+    padding-top: 7px;
 }
 
 footer p {

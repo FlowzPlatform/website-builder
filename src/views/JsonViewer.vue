@@ -3,6 +3,9 @@
     <div class="container" style="margin-top: 2%;">
       <div class="row">
         <div class="col-md-12">
+          <div class="alert alert-danger">
+            <strong>Warning!</strong> Please do not edit any configuration files unless and until you know what you are doing. Else, it may lead to non-working state of your project/website.
+          </div>
           <vue-json-editor v-model="$store.state.content" :showBtns="false" @json-change="onJsonChange"></vue-json-editor>
         </div>
       </div>
@@ -28,3 +31,10 @@
     }
   }
 </script>
+
+<style>
+  div.jsoneditor{
+    min-height: 700px;
+    margin-bottom: 100px;
+  }
+</style>

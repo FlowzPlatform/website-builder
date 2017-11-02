@@ -1,0 +1,566 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.2.1.js" ></script>
+
+<style type="text/css">
+
+.portrait {}
+
+.creative {
+    display: none;
+    visibility: hidden;
+}
+
+.product-card {
+    max-width: 23%;
+    font-size: 12px;
+    margin: 5px;
+    display: inline-block;
+    box-shadow: 2px 2px 15px #999
+}
+
+.product-card>a {
+    background: #f2f2f2;
+    color: #333;
+    transition: all .1s;
+    position: relative;
+    display: block;
+    z-index: 0;
+    padding-bottom: 5px;
+    text-decoration: none
+}
+
+.product-card>a:hover {
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .3)
+}
+
+.product-card-title {
+    min-height: 70px;
+    font-size: 21px
+}
+
+.product-card-img {
+    display: block;
+    height: 250px;
+    width: 100%
+}
+
+.product-card figcaption {
+    display: block;
+    padding: 0 10px
+}
+
+.product-card .product-card-address {
+    color: #888;
+    line-height: 1.2
+}
+
+.product-card .product-card-address i {
+    font-size: 14px;
+    margin-right: 2px;
+    line-height: 1.2
+}
+
+.product-card .product-card-price {
+    display: block;
+    text-align: right
+}
+
+.product-card .product-card-price .original-price,
+.product-card .product-card-price .price-savings {
+    line-height: 22px;
+    display: inline-block;
+    vertical-align: middle
+}
+
+.product-card .product-card-price .price-savings {
+    float: left;
+    color: #82b548
+}
+
+.product-card .product-card-price .original-price {
+    color: #aaa;
+    font-size: 14px
+}
+
+.product-card .product-card-price .amount-price {
+    text-align: right;
+    font-size: 20px;
+    color: #82b548
+}
+
+.product-card .product-card-price .from {
+    font-size: 12px
+}
+
+.product_price span,
+.product_title h5 {
+    font-size: 1.1em;
+    line-height: 1
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: "Open Sans", Arial, sans-serif
+}
+
+img {
+    max-width: 100%;
+    height: auto
+}
+
+ul.product_list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: inline
+}
+
+.product_grid {
+    text-decoration: none;
+}
+
+.product_item {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: relative;
+    overflow: hidden
+}
+
+.product_sale {
+    position: absolute;
+    z-index: 2;
+    right: -28px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg)
+}
+
+.product_image {
+    position: relative;
+    overflow: hidden
+}
+
+.product_image img {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out
+}
+
+.info,
+.product {
+    position: relative
+}
+
+.product_image img:hover {
+    -o-transform: scale(1.2, 1.2);
+    -moz-transform: scale(1.2, 1.2);
+    -webkit-transform: scale(1.2, 1.2);
+    -ms-transform: scale(1.2, 1.2);
+    transform: scale(1.2, 1.2)
+}
+
+.product_title {
+    float: left;
+    width: 100%;
+    text-transform: uppercase
+}
+
+.product_title h5 {
+    margin: auto;
+    font-weight: 500;
+    padding-bottom: 5px
+}
+
+.product_price a {
+    color: #000
+}
+
+.price_old {
+    color: #ea2e49;
+    text-decoration: line-through
+}
+
+.product_desc p {
+    margin: 0;
+    line-height: 1.3;
+    padding: 10px 0
+}
+
+.product_rating {
+    float: right;
+    width: 100px;
+    height: 20px;
+    overflow: hidden;
+    background: url(https://bit.ly/1B4PjyM) 0 76% no-repeat
+}
+
+.product_buttons {
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    font-smoothing: antialiased
+}
+
+.product_buttons .product_heart:hover {
+    color: #DF0404;
+    background: rgba(255, 255, 255, .5)
+}
+
+.product_buttons .product_compare:hover {
+    color: #129612;
+    background: rgba(255, 255, 255, .5)
+}
+
+.product_buttons .add_to_cart:hover {
+    color: #4DC8D3;
+    background: rgba(255, 255, 255, .5)
+}
+
+@media only screen and (min-width:320px) {
+    .product_sale p {
+        margin: 0;
+        color: #fff;
+        background: red;
+        padding: 3px 25px;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .4)
+    }
+    .product_values {
+        float: left;
+        width: calc(100% - 100px);
+        padding: 0 10px
+    }
+    .product_rating {
+        margin-right: 10px
+    }
+    .product_image {
+        height: 150px;
+        float: left;
+        width: 100px
+    }
+    .product_image .product_buttons {
+        display: none
+    }
+    .product_desc {
+        overflow: hidden;
+        auto: left;
+        line-height: 1
+    }
+    .product_values .product_buttons {
+        position: relative;
+        text-align: left;
+        float: left;
+        margin-top: 32%;
+        margin-left: 66%;
+    }
+    .product_values .product_buttons button {
+        color: #252525;
+        background: rgba(255, 255, 255, 1);
+        font-size: 1em;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border: 1px solid #000
+    }
+}
+
+@media only screen and (min-width:480px) {
+    .product_image {
+        height: 250px;
+        width: 175px
+    }
+    .product_values {
+        width: calc(100% - 175px)
+    }
+}
+
+@media only screen and (min-width:678px) {
+    .product_item {
+        width: 49.5%
+    }
+    .product_image {
+        height: 150px;
+        width: 100px
+    }
+    .product_values {
+        width: calc(100% - 100px)
+    }
+}
+
+@media only screen and (min-width:992px) {
+    .product_image {
+        height: 250px;
+        width: 175px
+    }
+    .product_values {
+        width: calc(100% - 175px)
+    }
+    .product_desc {
+        max-height: 200px
+    }
+}
+
+@media only screen and (min-width:1200px) {
+    .product_item {
+        width: 33%
+    }
+    .product_desc {
+        max-height: 131px
+    }
+}
+
+@media only screen and (max-width:992px) {
+    .product_desc {
+        max-height: 67px
+    }
+}
+
+@media only screen and (max-width:480px) {
+    .product_title h5 {
+        font-weight: 700
+    }
+}
+
+@media only screen and (max-width:320px) {
+    .product_buttons,
+    .product_desc,
+    .product_sale {
+        display: none
+    }
+    .product_image img {
+        position: relative
+    }
+    .product_price span {
+        float: left;
+        width: 100%
+    }
+}
+
+.listing {
+    list-style: none;
+    margin: 20px;
+    padding: 0;
+}
+
+.product {
+    width: 240px
+}
+
+.img-wrapper,
+.info {
+    width: 100%;
+    text-align: center
+}
+
+.product a {
+    text-decoration: none
+}
+
+.img-wrapper {
+    display: block;
+    height: 240px;
+    border: 1px solid #afafaf;
+    border-bottom: 0;
+    overflow: hidden
+}
+
+.info {
+    background: #000;
+    color: #fff;
+    padding: 40px 10px 20px;
+    vertical-align: middle;
+    transform: translateZ(0);
+    box-shadow: 0 0 1px transparent;
+    backface-visibility: hidden;
+    transition-property: color, height;
+    transition-duration: .3s, .4s;
+    transition-timing-function: ease-out;
+    height: 83px
+}
+
+.info:after,
+.info:before,
+.note,
+.price {
+    position: absolute
+}
+
+.info:before {
+    content: "";
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    transform: scaleY(0);
+    transform-origin: 50%;
+    transition: transform .3s ease-out
+}
+
+.info:after {
+    visibility: hidden;
+    pointer-events: none;
+    z-index: -1;
+    content: "";
+    border-style: solid;
+    transition-duration: .3s;
+    transition-property: transform;
+    left: calc(50% - 11px);
+    bottom: 0;
+    border-width: 10px 10px 0;
+    border-color: #000 transparent transparent
+}
+
+.product:hover .info {
+    height: 40px
+}
+
+.product:hover .info:before {
+    transform: scaleY(.7)
+}
+
+.product:hover .info:after {
+    visibility: visible;
+    transform: translateY(10px)
+}
+
+.slide-title {
+    transition: transform .3s ease-out
+}
+
+.slide-title a {
+    color: inherit
+}
+
+.product:hover .slide-title {
+    transform: translateY(-18px);
+    font-weight: 700;
+    color: #000
+}
+
+.price {
+    background: #e32d2c;
+    font-size: 1.3em;
+    padding: 4px 13px;
+    top: -15px;
+    right: 10px
+}
+
+.note.on-sale,
+.price.sale {
+    background: #00ba2f
+}
+
+.price.old {
+    font-size: .95em;
+    padding: 4px 6px;
+    text-decoration: line-through;
+    top: -43px
+}
+
+.actions-wrapper {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-around
+}
+
+.actions-wrapper * {
+    width: 50%;
+    padding: 2px 0;
+    text-align: center;
+    color: #191919;
+    font-size: .95em;
+    font-weight: 700
+}
+
+.actions-wrapper:before {
+    font-family: FontAwesome;
+    margin-right: 8px
+}
+
+.wishlist {
+    border-right: 1px solid #afafaf
+}
+
+.wishlist:hover {
+    color: #e32d2c
+}
+
+.cart:hover {
+    color: #0a75b9
+}
+
+.product:hover .actions-wrapper * {
+    visibility: visible
+}
+
+.note {
+    top: 0;
+    left: 0;
+    padding: 4px 8px;
+    font-size: .9em
+}
+
+.note.on-sale {
+    color: #fff
+}
+
+.note.no-stock {
+    background: #191919;
+    color: #fff
+}
+
+</style>
+<productListing style="display: block; width: 100%;">
+    <div class="product_grid landscape">
+        <ul class="product_list list">
+            <projectName>
+                <li class="product_item">
+                    <div class="product_sale">
+                        <p>On Sale</p>
+                    </div>
+                    <div class="product_image">
+                        <div id="productImage">
+                            <a href="#12"><img src="http://placehold.it/400x300" alt="Product images"></a>
+                        </div>
+                        <div class="product_buttons">
+                            <button class="product_heart"><i class="fa fa-heart"></i></button>
+                            <button class="product_compare"><i class="fa fa-random"></i></button>
+                            <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button>
+                            <div class="quick_view">
+                                <a href="#">
+                                    <h6>Quick View</h6> </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product_values">
+                        <div class="product_title">
+                            <h5><Product Title></h5> </div>
+                        <div class="product_price"> <a href="#"><span class="price_old">$80</span> <span class="price_new">$10</span></a> <span class="product_rating"></span> </div>
+                        <div class="product_desc">
+                            <p class="truncate">
+                                Product Description
+                            </p>
+                        </div>
+                        <div class="product_buttons">
+                            <button class="product_heart"><i class="fa fa-heart"></i></button>
+                            <button class="product_compare"><i class="fa fa-random"></i></button>
+                            <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                </li>
+        </ul>
+    </div>
+</productListing>

@@ -2,7 +2,7 @@
 	<div class="root">
 		<section class="container" style="margin-top: 2%;">
 		  <h3 id="user-menu">Customize Menu:</h3>
-		  	<div class="row">
+		  	<!-- <div class="row">
 		  		<div class="col-md-6">
 		  			<form class="form form-horizontal">
 		  				<div class="form-group">
@@ -17,9 +17,9 @@
 		  			</form>
 		  			
 		  		</div>
-		  	</div>
+		  	</div> -->
 
-		  	<hr>
+		  	<!-- <hr> -->
 		  	
 		  	<div class="row">
 		  		<div class="col-md-12">
@@ -100,16 +100,47 @@
 // let domenu = null;
 // import $ from 'jquery'
 
+import axios from 'axios'
+
 import domenu from 'domenu'
 
 	export default {
 		name: 'menuBuilder',
 		data: () => ({
-	        outputJson: []
+	        outputJson: [],
+	        baseURL: 'http://localhost:3030',
+	        MenuJSON: []
 	    }),
 	    components: {
 	    },
-		mounted () {
+		async mounted () {
+			let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+			let urlparts = configFileUrl.split("/");
+			let fileNameOrginal = urlparts[urlparts.length - 1];
+			let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+			let fileNameParts = fileNameOrginal.split('.');
+			let actualFileNameOnly = fileNameParts[0];
+			var folderUrl = configFileUrl.replace(fileName, '');
+			console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
+
+			try {
+			    let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
+				console.log('Response Menu file:', responseConfig);
+				// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
+				if(responseConfig.data){
+					window.localStorage.setItem('domenu-1Json', responseConfig.data);
+				}
+			}
+			catch(err) {
+			    console.log('Menu file not found!');
+			    localStorage.removeItem('domenu-1Json');
+			    // window.localStorage.clear();
+			}
+
+			
+
+			// this.MenuJSON = responseConfig.data;
+
 			let montedself = this;
 			$(document).ready(function() {
 		    var $domenu            = $('#domenu-1'),
@@ -118,6 +149,27 @@ import domenu from 'domenu'
 		        $jsonOutput        = $outputContainer.find('.jsonOutput'),
 		        $keepChanges       = $outputContainer.find('.keepChanges'),
 		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
+
+	        
+
+		    // var MenuJSON;
+	     //    var jsonUrl = 'http://localhost:3030/flows-dir-listing/0?path=/home/software/AllProjects/FlowzServiceApi/projects/product-listing/assets/menu.json';
+
+	     //    $.ajax({
+		    //     type: 'GET',
+		    //     url: jsonUrl,
+		    //     async: true,
+		    //     dataType: 'json',
+		    //     success: function(data) {
+		    //         MenuJSON = data;
+		    //     }
+		    // });
+
+		    // console.log(this.MenuJSON);
+
+		    // if(!this.MenuJSON){
+		    // 	MenuJSON = [];
+		    // }
 
 		    $domenu.domenu({
 		        slideAnimationDuration: 0,
@@ -128,7 +180,8 @@ import domenu from 'domenu'
 		            tags: true
 		          }
 		        },
-		        data:                   window.localStorage.getItem('domenu-1Json') || '[{"title":"Account","customSelect":"select something...","select2ScrollPosition":{"x":0,"y":0}},{"title":"Settings","customSelect":"select something...","select2ScrollPosition":{"x":0,"y":0}},{"title":"Call","customSelect":"select something..."},{"title":"Support","customSelect":"select something..."},{"title":"Email","customSelect":"select something..."},{"title":"Orders","customSelect":"select something..."},{"title":"Manage","customSelect":"select something..."},{"title":"Settings","customSelect":"select something..."}]'
+		        data: window.localStorage.getItem('domenu-1Json')
+		        // data: montedself.MenuJSON
 		      })
 		      // Example: initializing functionality of a custom button #21
 		      .onCreateItem(function(blueprint) {
@@ -218,7 +271,7 @@ import domenu from 'domenu'
 
 		    // Init textarea
 		    $jsonOutput.val(domenu.toJson());
-		    montedself.outputJson = JSON.parse(domenu.toJson());
+		    // montedself.outputJson = JSON.parse(domenu.toJson());
 		    //montedself.outputJson = [{"abc":"test"}]
 		    //console.log(this.outputJson);
 		    $keepChanges.on('click', function() {

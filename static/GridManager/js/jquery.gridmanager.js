@@ -973,7 +973,7 @@
               elem = null;
           $(('.'+gm.options.gmToolClass+':last'),container)
           .before(elem = $('<div>').addClass(gm.options.gmEditRegion+' '+gm.options.contentDraggableClass)
-            .append(gm.options.controlContentElem+'<div class="'+gm.options.gmContentRegion+'"><p>New Content</p></div>')).before(cTagClose).prev().before(cTagOpen);
+            .append(gm.options.controlContentElem+'<div class="'+gm.options.gmContentRegion+'">New Content</div>')).before(cTagClose).prev().before(cTagOpen);
           gm.initNewContentElem(elem);
         };
 
