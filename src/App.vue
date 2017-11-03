@@ -151,7 +151,7 @@ export default {
     position: fixed;
     right: 7px;
     bottom: 7px;
-    z-index: 2;
+    z-index: 10;
     width: 30px;
     height: 30px;
   }
@@ -160,5 +160,9 @@ export default {
     position: absolute;
     left: 10px;
     top: 8px;
+  }
+
+  .SiteFooter{
+    z-index: 10;
   }
 </style>

@@ -2,6 +2,21 @@
   <div class="index">
 
     <div class="isNotLoggedIn" v-if="isLoggedInUser === false">
+
+      <el-menu class="el-menu-demo" mode="horizontal">
+        <el-row style="margin-bottom: 0">
+          <el-col :span="4">
+            <div class="logo">
+              <img src="./../../static/img/Flowz-logo.png" height="40px" style="margin-top: 5px;">
+            </div>
+          </el-col>
+          <el-menu-item index="1" style="float: right; margin-top: 5px;">
+              <el-button type="info" @click="loginPage">Login</el-button>
+          </el-menu-item>
+          
+        </el-row>
+      </el-menu>
+
       <header class="header-banner"> 
         <div class="container-width">
           <nav class="navbar">
@@ -602,7 +617,7 @@ export default {
       // Every other clicks
       else {
         this.isProjectStats = false;
-        this.componentId = 'ProjectStats';
+        // this.componentId = 'ProjectStats';
         this.isPageEditing = false;
         this.isProjectEditing = false;
         this.previewGrid = false;
@@ -4300,6 +4315,11 @@ export default {
       })
     },
 
+    // If clicked the root folder
+    goToHomePage () {
+      this.componentId = 'HomePage';
+    },
+
     // Displaying icons in tree nodes  
     renderContent(h, { node, data, store }) {
 
@@ -4405,7 +4425,7 @@ export default {
       }else{
         // Root Folder
         return (<span>
-                  <span class="nodelabel">
+                  <span class="nodelabel" on-click={ () => this.goToHomePage() }>
                       <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
                       <span>{node.label}</span>
                   </span>
@@ -4438,6 +4458,72 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  /*Navigation bar on landing page*/
+  .layout-logo{
+      width: 140px;
+      height: 40px;
+      top: 10px;
+      text-align: center;
+      padding: 2px;
+    }
+    .layout-logo h4{
+      color: #fff !important;
+    }
+
+    .loginLink{
+      color: #fff;
+    }
+
+  .logo{
+    padding: 8px 70px;
+    cursor: pointer; 
+  }
+  .loginBtn{
+    float: right;
+    right: 0;
+  }
+
+
+  .el-menu{
+    background-color: #292929;
+    /*background-color: rgba(41,41,41,0.6);*/
+    box-shadow: 0px 0px 25px;
+    border-radius: 0;
+    /*opacity: 0.6;*/
+    transition: 0.2s all linear;
+    /*position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 0;*/
+  }
+
+  .el-menu:hover{
+    opacity: 1;
+    transition: 0.2s all linear;
+  }
+
+  .el-menu--horizontal .el-menu-item:hover, .el-menu--horizontal .el-submenu__title:hover{
+    background-color: transparent;
+  }
+
+  .welcomeUser{
+    color: #eee;
+    margin-right: 15px;
+    pointer-events: none;
+  }
+
+  .btn-dark{
+    background-color: #444;
+    color: #eee;
+    border: 1px solid #333;
+    transition: 0.2s all linear;
+  }
+
+  .btn-dark:hover{
+    background-color: #222;
+    transition: 0.2s all linear;
+  }
 
   .clearfix {
     clear: both;
@@ -5031,7 +5117,7 @@ export default {
       position: fixed;
       bottom: -8px;
       right: 25px;
-      z-index: 3;
+      z-index: 15;
   }
 
   @media(max-width: 580px) {

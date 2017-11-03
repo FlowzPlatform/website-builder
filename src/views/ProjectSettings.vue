@@ -468,7 +468,7 @@ export default {
 
     saveProjectSettings() {
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoTitle,"ProjectSEODescription":this.form.seoDesc}, { "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables }];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoKeywords,"ProjectSEODescription":this.form.seoDesc}, { "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables }];
 
       this.settings[1].projectSettings = ProjectSettings;
 
@@ -1186,7 +1186,7 @@ h1{
   bottom: 7px;
   right: 50px;
   margin-top: 17.5px;
-  z-index: 3
+  z-index: 10
 }
 
 @media(max-width: 680px){

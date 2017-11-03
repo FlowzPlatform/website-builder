@@ -68,6 +68,7 @@ footer{
     text-align: center;
     color: #CCC;
     padding-top: 7px;
+    z-index: 9;
 }
 
 footer p {
