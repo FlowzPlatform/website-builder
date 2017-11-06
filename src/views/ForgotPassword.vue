@@ -41,7 +41,11 @@ export default {
   },
   methods: {
 	forgot () {
-    	console.log('!!!forgot password request received!!!')
+      this.$message({
+        showClose: true,
+        message: 'Password reset link sent to your email',
+        type: 'success'
+      });
   	},
   	goBack() {
   		this.$router.push('/login');
@@ -75,7 +79,11 @@ export default {
               this.isLoading = false;
             })
         } else {
-          console.log('Enter proper details.');
+          this.$message({
+              showClose: true,
+              message: 'Enter proper details..',
+              type: 'success'
+          });
           this.isLoading = false;
           return false;
         }

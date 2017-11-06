@@ -164,8 +164,6 @@ export default {
   methods: {
   	async init () {
 
-      console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
-
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
       this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
       if(this.configData.status == 200 || this.configData.status == 204){
@@ -245,7 +243,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');
+/*@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');*/
 
 .ProjectStats {
   font-family: 'Lato', sans-serif;
@@ -332,11 +330,11 @@ hr{
 }
 
 .block-2 {
-  background: -moz-linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
-  background: -webkit-linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
-  background: -o-linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
-  background: -ms-linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
-  background: linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
+  background: -moz-linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
+  background: -webkit-linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
+  background: -o-linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
+  background: -ms-linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
+  background: linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
 }
 
 .block-3 {
@@ -443,6 +441,7 @@ h3.subtitle{
 }
 
 .table-title{
+  box-shadow: 0px 0px 10px #999;
   padding: 20px;
   padding-bottom: 5px;
   margin: 10px;
@@ -473,7 +472,7 @@ h3.subtitle{
   position: relative;
   width: 100%;
   z-index: 5;
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.14);
 }
 
 .table thead{
