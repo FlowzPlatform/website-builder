@@ -68,7 +68,6 @@ export default {
         
 
         variableCss += '}'
-        console.log('Variable CSS: ', variableCss);
 
         let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
         this.imageBlob = imageData.data;

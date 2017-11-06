@@ -390,7 +390,6 @@ export default {
       var reader = new FileReader();
       reader.readAsDataURL(file.target.files[0]);
       reader.onload = await function(e) {
-          console.log('Image Result:', e.target.result);
           $('[name = '+currentImageVariableIndex+']').attr('src', e.target.result);
           // browser completed reading file - display it
           globalFileData = e.target.result;
@@ -420,7 +419,6 @@ export default {
     },
 
     addNewCssVariable() {
-      console.log('Global Css Vars:', this.globalCssVariables)
       let newVariable = { variableName: '', variableType: '', variableValue: ''};
       this.globalCssVariables.push(newVariable);
     },
@@ -442,12 +440,8 @@ export default {
       let jsonData = new Blob([textToSave], {type: "application/json;charset=utf-8"});
     
       fileSaver.saveAs(jsonData, saveFileName);
-      // console.log(exportVariables);
     },
 
-    // uploadGlobalVariables(fileData){
-    //   console.log('Uploading Global Variables...');
-    // },
 
     uploadImage(fileData, fileBlob) {
       
@@ -515,7 +509,6 @@ export default {
     },
 
     commitProject() {
-      console.log('Publish Website');
       this.$store.state.currentIndex = 0;
 
       // Push repository changes
@@ -543,24 +536,18 @@ export default {
       var partialstotal = []
       for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
 
-        console.log("i:", i)
-
         var partials = ''
-        console.log("rawConfigs[1].pageSettings[i].PageName:", rawConfigs[1].pageSettings[i].PageName)
 
         let responseConfigLoop = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
 
         var rawSettings = JSON.parse(responseConfigLoop.data);
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-        console.log("page name:", nameF)
         var Layout = ''
         var partialsPage = [];
         Layout = rawSettings[1].pageSettings[i].PageLayout
         partialsPage = rawSettings[1].pageSettings[i].partials
-        console.log("partialsPage:", partialsPage)
-        console.log("layout name:", Layout)
         var responseMetal = ''
-        console.log("value of responseMetal:", responseMetal)
+
         responseMetal = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
         var index = responseMetal.search('.source')
 
@@ -568,35 +555,27 @@ export default {
         var indexPartial = responseMetal.search("('handlebars')");
         for (var x = 0; x < partialsPage.length; x++) {
           let key = Object.keys(partialsPage[x])[0];
-          console.log("key :", key)
+
           let value = partialsPage[x]
           let key2 = key;
-          console.log("value:", value[key2])
           key = key.trim();
           if (value[key2].match('html')) {
-            console.log("inside html if")
             key = key.split('.')[0]
             var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
           } else if (value[key2].match('hbs')) {
-            console.log("inside hbs if")
             key = key.split('.')[0]
             var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
           } else {
-            console.log("inside else")
             var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + ".html').toString())\n"
           }
 
           partials = partials + temp;
 
         }
-        console.log("partials of metalsmith:", partials);
 
         responseMetal = responseMetal.substr(0, indexPartial + 15) + partials + responseMetal.substr(indexPartial + 15);
 
         var mainMetal = folderUrl + '/assets/metalsmith.js'
-        console.log("final metalsmith file ready for api call:", responseMetal);
-        console.log("@@@@@@@@@@@@@@@@@:")
-        console.log("mainMetal:", mainMetal)
         var value = true;
         await axios.post( config.baseURL + '/flows-dir-listing', {
             filename: mainMetal,
@@ -754,10 +733,8 @@ export default {
                             type: 'file'
                           })
                           .then(async(res) => {
-                            console.log('Now previewing: ' + this.$store.state.fileUrl.replace(/\\/g, "\/"))
                             let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                             previewFile = folderUrl.replace('/var/www/html', '');
-                            console.log(previewFile.replace('Pages' + nameF, ''));
                             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               .then((res) => {
                                 console.log(res);
@@ -899,9 +876,7 @@ export default {
         this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
         this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
-        console.log(JSON.stringify(this.globalVariables));
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
-        console.log(JSON.stringify(this.globalCssVariables));
 
         if(this.globalVariables == undefined){
           this.globalVariables = []

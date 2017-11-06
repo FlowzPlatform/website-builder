@@ -1,13 +1,5 @@
 <template>
   <div class="HomePage">
-    <!-- <div class="container-fluid">
-    	<div class="row">
-    		<div class="col-md-12 mainDiv" align="center">
-    			<h3>Looks like youe haven't selected any file yet. get started by selecting file from the sidemenu</h3>
-    		</div>
-    	</div>
-    </div> -->
-
     <div class="container">
       <div class="block">
         <div class="number">52</div>
