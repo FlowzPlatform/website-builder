@@ -57,7 +57,7 @@
       <div class="row" style="margin-top: 40px;">
         <div class="col-md-12">
           <div class="creative-table">
-            <div class="table-title">
+            <div class="table-title title-style-1">
               <h4>{{repoName}}</h4>
               <p>Repository Id: {{newRepoId}}</p>
             </div>
@@ -83,6 +83,44 @@
           </div>
         </div>
       </div>
+
+      <div class="row" style="margin-top: 40px;">
+        <div class="col-md-12">
+          <div class="creative-table">
+            <div class="table-title ">
+              <h4>Project Details</h4>
+              <p>Other important Project Details</p>
+            </div>
+            <div class="table-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <td width="20%">Title.</td>
+                    <td>Description</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- {{tablePagesData}} -->
+                  <tr>
+                    <td>Project SEO Title:</td>
+                    <td>{{seoTitle}}</td>
+                  </tr>
+                  <tr>
+                    <td>Project SEO Keywords:</td>
+                    <td>{{seoKeywords}}</td>
+                  </tr>
+                  <tr>
+                    <td>Project SEO Description:</td>
+                    <td>{{seoDesc}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
   	</div>
   </div>
 </template>
@@ -108,6 +146,9 @@ export default {
     return {
       newRepoId: '',
       repoName: '',
+      seoTitle: '',
+      seoKeywords: '',
+      seoDesc: '',
       tablePagesData: [],
       counts: {
         layouts: 0,
@@ -123,8 +164,6 @@ export default {
   methods: {
   	async init () {
 
-      console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
-
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
       this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
       if(this.configData.status == 200 || this.configData.status == 204){
@@ -134,6 +173,10 @@ export default {
 
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+
+        this.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
+        this.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
+        this.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
 
         this.counts.layouts = 0;
         this.counts.pages = 0;
@@ -200,7 +243,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');
+/*@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');*/
 
 .ProjectStats {
   font-family: 'Lato', sans-serif;
@@ -287,11 +330,11 @@ hr{
 }
 
 .block-2 {
-  background: -moz-linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
-  background: -webkit-linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
-  background: -o-linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
-  background: -ms-linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
-  background: linear-gradient(-124deg, #eaff00 0%, #7afa8b 100%);
+  background: -moz-linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
+  background: -webkit-linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
+  background: -o-linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
+  background: -ms-linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
+  background: linear-gradient(-124deg, #7afa8b 0%, #eaff00 100%);
 }
 
 .block-3 {
@@ -398,6 +441,7 @@ h3.subtitle{
 }
 
 .table-title{
+  box-shadow: 0px 0px 10px #999;
   padding: 20px;
   padding-bottom: 5px;
   margin: 10px;
@@ -414,16 +458,27 @@ h3.subtitle{
   background: linear-gradient(45deg, #1a9992 0, #4eb864 100%);
   filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#1a9992', endColorstr='#4eb864', GradientType=1);
 }
+
+@media(max-width: 680px){
+  .table-title{
+    width: 350px;
+  }
+}
+
+.title-style-1{
+  background: linear-gradient(to right, #AB64F6 0%, #61DBF7 100%);
+}
+
 .table-body{
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
-  padding-top: 95px;
+  padding-top: 75px;
   margin-top: 0px;
   position: relative;
   width: 100%;
   z-index: 5;
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.14);
 }
 
 .table thead{

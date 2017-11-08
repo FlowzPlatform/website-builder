@@ -1,13 +1,5 @@
 <template>
   <div class="HomePage">
-    <!-- <div class="container-fluid">
-    	<div class="row">
-    		<div class="col-md-12 mainDiv" align="center">
-    			<h3>Looks like youe haven't selected any file yet. get started by selecting file from the sidemenu</h3>
-    		</div>
-    	</div>
-    </div> -->
-
     <div class="container">
       <div class="block">
         <div class="number">52</div>
@@ -142,6 +134,13 @@ export default {
   font-size: 12px;
   line-height: 18px;
   opacity: 0.7;
+}
+
+@media(max-width: 680px){
+  .HomePage .container {
+    width: 95%;
+    margin-left: 5px;
+  }
 }
 
 </style>

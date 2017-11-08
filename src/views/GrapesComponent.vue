@@ -43,7 +43,6 @@ export default {
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
         this.globalCssVariables = rawConfigs[1].projectSettings[1].GlobalCssVariables;
-        console.log('GlobalCssVariables:', this.globalCssVariables);
 
         // Clear root element if already stored in file
         // let allContents = this.$store.state.content;
@@ -68,7 +67,6 @@ export default {
         
 
         variableCss += '}'
-        console.log('Variable CSS: ', variableCss);
 
         let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
         this.imageBlob = imageData.data;

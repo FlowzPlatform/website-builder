@@ -98,7 +98,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="savePageSettings">Save</el-button>
-              <el-button>Cancel</el-button>
+              <!-- <el-button>Cancel</el-button> -->
             </el-form-item>
           </el-form> 
         </div>
@@ -173,9 +173,6 @@ export default {
        let fileNameOrginal = urlparts[urlparts.length - 1];
        let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
        this.folderUrl = url.replace(fileName, '');
-       console.log("change layout triggered");
-      //  console.log("this.form.layouts",this.form.layouts)
-      // console.log("this.form.Layout",this.form.Layout)
        for (var i = 0; i < this.form.layouts.length; i++) {
            if (this.form.layouts[i].label === this.form.Layout) {
                let variable = this.form.layouts[i].partialsList;
@@ -183,57 +180,37 @@ export default {
                this.defaultParams=this.form.layouts[i].defaultList;
            }
        }
-       console.log("partials:", this.partialsList)
-       
-        console.log("defaultList:", this.defaultParams)
-
-
-       for (i = 0; i < this.partialsList.length; i++) {
-           console.log("i:", this.partialsList[i])
-       }
 
        this.configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
        this.AllData=[];
        // console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
        if (this.configData.status == 200 || this.configData.status == 204) {
-           // console.log("inside fn.")
-           console.log("@@@@@@@@@@@@@")
+           
            this.settings = JSON.parse(this.configData.data);
            
            for (var i = 0; i <this.partialsList.length; i++) {
 
                var nameP = this.partialsList[i];
-               console.log("nameP:",nameP)
-                // nameP=nameP.trim()
                if ( this.settings[2].layoutOptions[0][nameP]) {
                    
                    let change=false;
                    for(var j=0;j<this.defaultParams.length;j++){
-                   // console.log("defaultParams[",j,"]:","and its key:",Object.keys(this.defaultParams[j])[0]) 
                       if (Object.keys(this.defaultParams[j])[0]==nameP) {
-                      console.log("default value found ");
                       this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
                       let tp=this.defaultParams[j][nameP].split('.')
-                      console.log("tp:",tp)
                       if(tp[1]=='hbs'){
-                          // this.form.parent_id[nameP]=tp[0]
                         for(let k=0;k<(this.AllData[i]).length;k++)
                          {
-                          console.log("this.AllData[i][k].value:",(this.AllData[i][k].value).split('.')[0])
-
                           if((this.AllData[i][k].value).split('.')[0]==tp[0])
                             this.form.parent_id[nameP]=this.AllData[i][k]
                          }
-                        // this.form.parent_id[nameP]=this.AllData[i]
                       }else{
 
-                      this.form.parent_id[nameP]=tp[0]////////////////////////////////
+                      this.form.parent_id[nameP]=tp[0];
                       }
-                      console.log("parent_id:",this.form.parent_id)
 
                      for(let k=0;k<Object.keys(this.AllData[i]).length;k++)
                      {
-                      console.log("i of AllData:",this.AllData[i][k])
                       this.AllData[i][k]['disabled']=true;
                      }
 
@@ -246,16 +223,15 @@ export default {
                     {
                       this.form.parent_id[nameP]=this.AllData[i][0]
                     }
-                     console.log("not found default , data of ", nameP, ":", this.AllData[i]);
                      change=false;
                    }     
                } 
                else {
-                   console.log("partials not found in config file.")
+                   console.log("Partials not found in config file.")
                }
            }
        }
-       console.log("AllData:",this.AllData)
+
        // for(let x=0;x<this.AllData.length;x++){
        //  var checkingValue=false
        //  for(let y=0;y<this.defaultParams.length;y++){
@@ -272,10 +248,7 @@ export default {
        //  }
 
        // }
-       console.log("partials:", this.partialsList);
        
-
-
 
     },
 
@@ -361,7 +334,6 @@ export default {
 
 
     async savePageSettings() {
-      console.log("this.form.parent_id:", this.form.parent_id)
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let urlparts = url.split("/");
       let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -380,7 +352,6 @@ export default {
       }
       for (var i = 0; i < this.form.secondlayouts.length; i++) {
         if (this.form.secondlayouts[i].label === this.form.Layout) {
-            console.log("matched partialsList:", this.form.secondlayouts[i].partialsList)
             this.partialsListSelection = this.form.secondlayouts[i].partialsList;
         }
       }
@@ -393,27 +364,20 @@ export default {
           "partials": []
       };
       if (this.currentFileIndex != null) {
-          console.log('Update existing Page Settings');
           this.settings[1].pageSettings[this.currentFileIndex].partials = [];
           this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
-          console.log("partialsListSelection:", this.partialsListSelection)
-          console.log("$$$$$$$$$$$$$$$$$$$$$$$$$")
-          console.log("Object.keys(this.form.parent_id):", Object.keys(this.form.parent_id))
+
           for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
-            console.log("checking for inherited partials")
             if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
               var extraPartial = [];
               var hbsvalue;
               hbsvalue = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value
-              console.log("hbsvalue:", hbsvalue)
+
               if (hbsvalue.indexOf('hbs') <= -1) {
                   this.form.parent_id[Object.keys(this.form.parent_id)[j]].value = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value + '.hbs'
               }
               extraPartial.push(Object.keys(this.form.parent_id)[j])
-              console.log("found a Object:", Object.keys(this.form.parent_id)[j])
-              console.log("partialsList:", this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList)
               var temp1 = (this.form.parent_id[Object.keys(this.form.parent_id)[j]].defaultList)
-              console.log("temp INSIDE inherited partialsList:", temp1)
               for (let x = 0; x < temp1.length; x++) {
                   var obj1 = {};
                   obj1[Object.keys(temp1[x])] = temp1[x][Object.keys(temp1[x])]
@@ -423,20 +387,16 @@ export default {
           }
           }
           for (var i = 0; i < this.partialsListSelection.length; i++) {
-              console.log("this.AllData[i]:", this.AllData[i])
               for (let z = 0; z < this.AllData[i].length; z++) {
                   if (this.AllData[i][z]['disabled'] == true)
                       this.AllData[i][z]['disabled'] = false
               }
               let temp = this.partialsListSelection[i]
-              console.log("temp:", temp)
               var obj = {};
               let change = false;
               for (var j = 0; j < this.defaultParams.length; j++) {
                   if (Object.keys(this.defaultParams[j])[0] == temp.trim()) {
-                      console.log("default  value is found ");
                       let x = Object.keys(this.defaultParams[j])[0];
-                      console.log("x:", x)
                       let y = this.defaultParams[j][x]
                       obj[temp] = y;
                       change = true;
@@ -448,7 +408,6 @@ export default {
               }
               this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
           }
-          console.log("this.form.parent_id:", this.form.parent_id)
           let newfilename = this.folderUrl + '/assets/config.json';
           axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: newfilename,
@@ -473,15 +432,11 @@ export default {
 
         } else {
           for (var i = 0; i < this.partialsListSelection.length; i++) {
-            console.log("key:", this.partialsListSelection[i])
-            console.log("value:", this.form.parent_id[this.partialsListSelection[i]])
             let temp = this.partialsListSelection[i]
             var obj = {};
             obj[temp] = this.form.parent_id[temp];
             PageSettings.partials.push(obj)
           }
-          console.log("pageSettings Object:", PageSettings)
-          console.log('Create new Page Settings');
           this.settings[1].pageSettings.push(PageSettings);
           let newfilename = this.folderUrl + '/assets/config.json';
           axios.post(config.baseURL + '/flows-dir-listing', {

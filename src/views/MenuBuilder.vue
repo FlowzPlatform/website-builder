@@ -121,18 +121,15 @@ import domenu from 'domenu'
 			let fileNameParts = fileNameOrginal.split('.');
 			let actualFileNameOnly = fileNameParts[0];
 			var folderUrl = configFileUrl.replace(fileName, '');
-			console.log(this.$store.state.fileUrl.replace(/\\/g, "\/"));
 
 			try {
 			    let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
-				console.log('Response Menu file:', responseConfig);
 				// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
 					window.localStorage.setItem('domenu-1Json', responseConfig.data);
 				}
 			}
 			catch(err) {
-			    console.log('Menu file not found!');
 			    localStorage.removeItem('domenu-1Json');
 			    // window.localStorage.clear();
 			}
