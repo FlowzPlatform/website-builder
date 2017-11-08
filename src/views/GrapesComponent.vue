@@ -30,7 +30,19 @@ export default {
 
 
 
+        // // get bootstrap css
+        // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
 
+        // // get bootstrap v4 css
+        // let bootstrapv4css = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css');
+
+        // // get froala css
+        // let froalacss = await axios.get('https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css');
+
+        // // get fontawesome css
+        // let fontawesomecss = await axios.get('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
+
+        
         // Get Config File
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
@@ -76,9 +88,9 @@ export default {
 		var lp = './static/img/';
         var plp = 'http://placehold.it/350x250/';
         var images = [
-            lp+'TransparentBG1.png', lp+'team1.jpg', lp+'team2.jpg', lp+'team3.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
+            'https://imgur.com/XQuOMKc.png', 'https://imgur.com/fBuNwuy.jpg', 'https://imgur.com/GgCaYku.jpg', 'https://imgur.com/AGMTzXe.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
             plp+'c5d647/fff/image4.jpg', plp+'f28c33/fff/image5.jpg', plp+'e868a2/fff/image6.jpg', plp+'cc4360/fff/image7.jpg',
-            lp+'work-desk.jpg', lp+'phone-app.png', lp+'bg-gr-v.png'
+            'https://imgur.com/IbSijwv.jpg', 'https://imgur.com/181uTO9.png', 'https://i.imgur.com/XTo3DiU.png'
         ];
 
         // 'gjs-plugin-ckeditor'

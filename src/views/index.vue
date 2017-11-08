@@ -25,7 +25,6 @@
           <el-menu-item index="1" style="float: right; margin-top: 5px;">
               <el-button type="info" @click="loginPage">Login</el-button>
           </el-menu-item>
-          
         </el-row>
       </el-menu>
 
@@ -162,7 +161,7 @@
                       </el-form>
                       <span slot="footer" class="dialog-footer">
                           <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                          <el-button type="primary" @click="addProjectFolder()" :loading="addNewFolderLoading">Create Project</el-button>
+                          <el-button type="primary" @click="addProjectFolder()" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
                       </span>
                     </el-dialog>
                   </div>
@@ -244,7 +243,7 @@
                       </el-form>
                       <span slot="footer" class="dialog-footer">
                           <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                          <el-button type="primary" @click="addProjectFolder()" :loading="addNewFolderLoading">Create Project</el-button>
+                          <el-button type="primary" @click="addProjectFolder()" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
                       </span>
                     </el-dialog>
                   </div>
@@ -323,6 +322,7 @@ import ProjectSettings from './ProjectSettings'
 // Project Settings
 import ProjectStats from './ProjectStats'
 
+// New File creaation validator
 let checkFileName = (rule, value, callback) => {
     console.log('value',/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))
     if (!value) {
@@ -356,6 +356,7 @@ export default {
       loadingTree : true,
       loadingContent : false,
       saveFileLoading : false,
+      fullscreenLoading: false,
       previewGrid : false,
       btnPreview : false,
       breadcrumbArr : [],
@@ -1056,6 +1057,9 @@ export default {
 
     // Create new Website
     addProjectFolder() {
+
+      this.fullscreenLoading = true;
+
       let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
       return axios.post(config.baseURL + '/flows-dir-listing', {
           foldername: newFolderName,
@@ -1106,6 +1110,7 @@ export default {
                   message: 'Some error occured. Please refresh and try again.',
                   type: 'error'
                 });
+                return;
               }
 
             })
@@ -1120,7 +1125,7 @@ export default {
     },
 
     // Create neccessary folders for project
-    addOtherFolder(newFolderName){
+    async addOtherFolder(newFolderName){
 
       // Create Assets folder
       axios.post(config.baseURL+'/flows-dir-listing' , {
@@ -1128,22 +1133,21 @@ export default {
         type : 'folder'
       })
       .then((res) => {
-         console.log('Assets Folder created!');  
+        console.log('Assets Folder created!'); 
+        // Create Assets folder
+        axios.post(config.baseURL+'/flows-dir-listing' , {
+          foldername : newFolderName+'/assets/client-plugins',
+          type : 'folder'
+        })
+        .then((res) => {
+           console.log('Client-Plugins Folder created!');  
+        })
+        .catch((e)=>{
+          console.log("Error from Client-Plugins"+res)
+        }); 
       })
       .catch((e)=>{
         console.log("Error from Assests"+res)
-      });
-
-      // Create Assets folder
-      axios.post(config.baseURL+'/flows-dir-listing' , {
-        foldername : newFolderName+'/assets/client-plugins',
-        type : 'folder'
-      })
-      .then((res) => {
-         console.log('Client-Plugins Folder created!');  
-      })
-      .catch((e)=>{
-        console.log("Error from Client-Plugins"+res)
       });
 
       // Create Headers Folder
@@ -1869,11 +1873,18 @@ export default {
         })
         .then((res) => {
           console.log(myCartPlugin + ' file created');
-          this.$message({
+
+          this.fullscreenLoading = false;
+
+          let self = this;
+          setTimeout(function(){
+            self.$message({
               showClose: true,
               message: 'Project Created!',
               type: 'success'
-          });
+            });
+          },500);
+
         })
         .catch((e) => {
             console.log(e)
