@@ -5,6 +5,10 @@
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
       <el-button type="info" size="small" @click="publishMetalsmith">Publish Website</el-button>
+      <el-tooltip class="item" effect="dark" content="Download Config.json" placement="top-start">
+        <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
+      </el-tooltip>
+      
       <!-- <el-button type="danger" @click="cancelSettings">Cancel</el-button> -->
     </div>
 
@@ -268,11 +272,11 @@
                 >
               </el-table-column>
 
-              <!-- <el-table-column
+              <el-table-column
                 prop="commitSHA"
                 label="Commit SHA"
                 >
-              </el-table-column> -->
+              </el-table-column>
               
               <el-table-column
                 label="Revert To Commit"
@@ -437,6 +441,17 @@ export default {
 
       let textToSave = JSON.stringify(exportVariables);
       let saveFileName = 'globalVariablesData.json';
+      let jsonData = new Blob([textToSave], {type: "application/json;charset=utf-8"});
+    
+      fileSaver.saveAs(jsonData, saveFileName);
+    },
+
+    downloadConfigFile() {
+      this.saveProjectSettings();
+      let exportConfigFile = this.settings;
+
+      let textToSave = JSON.stringify(exportConfigFile);
+      let saveFileName = 'config.json';
       let jsonData = new Blob([textToSave], {type: "application/json;charset=utf-8"});
     
       fileSaver.saveAs(jsonData, saveFileName);

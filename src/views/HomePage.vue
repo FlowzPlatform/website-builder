@@ -136,4 +136,11 @@ export default {
   opacity: 0.7;
 }
 
+@media(max-width: 680px){
+  .HomePage .container {
+    width: 95%;
+    margin-left: 5px;
+  }
+}
+
 </style>

@@ -306,38 +306,38 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 	});
 
 	// Static components for page
-	bm.add('featureSlider', {
-		label: 'Feature Slider',
-		content: '<style type="text/css"> /*It will be a full-screen slider so we set it to position absolute.*/.css-slider-wrapper{display: block; background: #FFF; overflow: hidden; position: absolute; left: 0; right: 0; top: 0; bottom: 0;}/* Slider */.slider{width: 100%; height: 100%; position: absolute; left: 0; top: 0; opacity: 1; z-index: 0; display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; -webkit-transition: -webkit-transform 1600ms; transition: -webkit-transform 1600ms, transform 1600ms; -webkit-transform: scale(1); transform: scale(1);}/* Slides Background Color */.slide-1{background: #fbad99; left: 0;}.slide-2{background: #a9785c; left: 100%}.slide-3{background: #9ea6b3; left: 200%}.slide-4{background: #b1a494; left: 300%;}.slider{display: flex; justify-content: flex-start;}.slider-content{width: 635px; padding-left: 100px;}/*Now style elements within each slide. text, a button and an image.*//* Slider Inner Slide Effect */.slider h2{color: #333333; font-weight: 900; text-transform: capitalize; font-size: 60px; font-weight: 300; line-height: 1.2; opacity: 0; -webkit-transform: translateX(500px); transform: translateX(500px); margin-top: 0; letter-spacing: 2px;}.slider h4{font-size: 22px; font-family: "Oswald"; color: rgba(51, 51, 51, 0.349); font-weight: bold; text-transform: uppercase; line-height: 1.2; opacity: 0; -webkit-transform: translateX(500px); transform: translateX(500px);}.slider > img{position: absolute; right: 10%; bottom: 0; height: 100%; opacity: 0; -webkit-transform: translateX(500px); transform: translateX(500px);}.slide-1 > img{right: 0;}.buy-now-btn{background-color: #ea2e49; width: 220px; height: 50px; border-radius: 30px; border: none; font-family: Montserrat; font-size: 20px; font-weight: 100; color: #fff; text-align: left; padding-left: 35px; position: relative; cursor: pointer; transition: all .2s;}.buy-now-btn:hover{box-shadow: 0px 0px 60px -17px rgba(51,51,51,1);}.buy-now-btn:after{content: \'Buy Now\'; font-size: 12px; font-weight: bold; text-transform: uppercase; position: absolute; right: 35px; top: 18px;}.slider .buy-now-btn:focus,.navigation .login-btn:focus{outline: none;}/*Let’s also make sure that when the slide changes, elements within it — such as text and images — animate.*//* Animations */.slider h2{-webkit-transition: opacity 800ms, -webkit-transform 800ms; transition: transform 800ms, opacity 800ms; -webkit-transition-delay: 1s; /* Safari */ transition-delay: 1s;}.slider h4{-webkit-transition: opacity 800ms, -webkit-transform 800ms; transition: transform 800ms, opacity 800ms; -webkit-transition-delay: 1.4s; /* Safari */ transition-delay: 1.4s;}.slider > img{-webkit-transition: opacity 800ms, -webkit-transform 800ms; transition: transform 800ms, opacity 800ms; -webkit-transition-delay: 1.2s; /* Safari */ transition-delay: 1.2s;}/*number pagination in the right corner of each slide. Let’s style that, too*//* Number Pagination */.number-pagination{position: absolute; bottom: 30px; right: 100px; font-family: "Oswald"; font-weight: bold;}.number-pagination span{font-size: 30px; color: #ea2e49; letter-spacing: 4px;}.number-pagination span:after{content: "/4"; font-size: 16px; color: #fff;}/*Awesome! Now, style the slider pagination.*//* Slider Pagger */.slider-pagination{position: absolute; bottom: 30px; width: 575px; left: 100px; z-index: 1000; display: flex; align-items: center;}.slider-pagination label{width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: #fff; margin: 0 10px; cursor: pointer;}/*magically style the radiobuttons to the label styles*//* Slider Pagger Event */.slide-radio1:checked ~ .slider-pagination .page1,.slide-radio2:checked ~ .slider-pagination .page2,.slide-radio3:checked ~ .slider-pagination .page3,.slide-radio4:checked ~ .slider-pagination .page4{width: 14px; height: 14px; border: 2px solid #ea2e49; background: transparent;}/* Slider Slide Effect */.slide-radio1:checked ~ .slider{-webkit-transform: translateX(0%); transform: translateX(0%);}.slide-radio2:checked ~ .slider{-webkit-transform: translateX(-100%); transform: translateX(-100%);}.slide-radio3:checked ~ .slider{-webkit-transform: translateX(-200%); transform: translateX(-200%);}.slide-radio4:checked ~ .slider{-webkit-transform: translateX(-300%); transform: translateX(-300%);}.slide-radio1:checked ~ .slide-1 h2,.slide-radio2:checked ~ .slide-2 h2,.slide-radio3:checked ~ .slide-3 h2,.slide-radio4:checked ~ .slide-4 h2,.slide-radio1:checked ~ .slide-1 h4,.slide-radio2:checked ~ .slide-2 h4,.slide-radio3:checked ~ .slide-3 h4,.slide-radio4:checked ~ .slide-4 h4,.slide-radio1:checked ~ .slide-1 > img,.slide-radio2:checked ~ .slide-2 > img,.slide-radio3:checked ~ .slide-3 > img,.slide-radio4:checked ~ .slide-4 > img{-webkit-transform: translateX(0); transform: translateX(0); opacity: 1}/* Responsive */@media only screen and (max-width: 768px){.slider h2{font-size: 20px;}.slider h4{font-size: 16px;}.slider-content{padding: 0 2%}.navigation{padding: 0 2%;}.navigation-left{display: none;}.number-pagination{right: 2%;}.slider-pagination{left: 2%;}.slider .buy-now-btn{padding: 0 15px; width: 175px; height: 42px;}.slider .buy-now-btn:after{top: 15px;}.slider > img{right: 2%;}.slide-1 > img{right: -110px;}}</style>'+
-				'<FeatureSlider><div class="css-slider-wrapper"> <input type="radio" name="slider" class="slide-radio1" checked id="slider_1"> <input type="radio" name="slider" class="slide-radio2" id="slider_2"> <input type="radio" name="slider" class="slide-radio3" id="slider_3"> <input type="radio" name="slider" class="slide-radio4" id="slider_4"> <div class="slider-pagination"> <label for="slider_1" class="page1"></label> <label for="slider_2" class="page2"></label> <label for="slider_3" class="page3"></label> <label for="slider_4" class="page4"></label> </div><div class="slider slide-1"> <img src="https://designmodo.com/demo/full-screen-slider/images/model-1.png" alt=""> <div class="slider-content"> <h4>New Product</h4> <h2>Denim Longline T-Shirt Dress With Split</h2> <button type="button" class="buy-now-btn" name="button">$130</button> </div><div class="number-pagination"> <span>1</span> </div></div><div class="slider slide-2"> <img src="https://designmodo.com/demo/full-screen-slider/images/model-2.png" alt=""> <div class="slider-content"> <h4>New Product</h4> <h2>Denim Longline T-Shirt Dress With Split</h2> <button type="button" class="buy-now-btn" name="button">$130</button> </div><div class="number-pagination"> <span>2</span> </div></div><div class="slider slide-3"> <img src="https://designmodo.com/demo/full-screen-slider/images/model-3.png" alt=""> <div class="slider-content"> <h4>New Product</h4> <h2>Denim Longline T-Shirt Dress With Split</h2> <button type="button" class="buy-now-btn" name="button">$130</button> </div><div class="number-pagination"> <span>3</span> </div></div><div class="slider slide-4"> <img src="https://designmodo.com/demo/full-screen-slider/images/model-4.png" alt=""> <div class="slider-content"> <h4>New Product</h4> <h2>Denim Longline T-Shirt Dress With Split</h2> <button type="button" class="buy-now-btn" name="button">$130</button> </div><div class="number-pagination"> <span>4</span> </div></div></div></FeatureSlider>',
-		attributes: {
-			class: 'fa fa-code',
-			title: 'Feature Slider'
-		},
-		category: 'Static Components'
-	});
+	// bm.add('featureSlider', {
+	// 	label: 'Feature Slider',
+	// 	content: '<style type="text/css"> /*It will be a full-screen slider so we set it to position absolute.*/.css-slider-wrapper{display: block; background: #FFF; overflow: hidden; position: absolute; left: 0; right: 0; top: 0; bottom: 0;}/* Slider */.slider{width: 100%; height: 100%; position: absolute; left: 0; top: 0; opacity: 1; z-index: 0; display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; -webkit-transition: -webkit-transform 1600ms; transition: -webkit-transform 1600ms, transform 1600ms; -webkit-transform: scale(1); transform: scale(1);}/* Slides Background Color */.slide-1{background: #fbad99; left: 0;}.slide-2{background: #a9785c; left: 100%}.slide-3{background: #9ea6b3; left: 200%}.slide-4{background: #b1a494; left: 300%;}.slider{display: flex; justify-content: flex-start;}.slider-content{width: 635px; padding-left: 100px;}/*Now style elements within each slide. text, a button and an image.*//* Slider Inner Slide Effect */.slider h2{color: #333333; font-weight: 900; text-transform: capitalize; font-size: 60px; font-weight: 300; line-height: 1.2; opacity: 0; -webkit-transform: translateX(500px); transform: translateX(500px); margin-top: 0; letter-spacing: 2px;}.slider h4{font-size: 22px; font-family: "Oswald"; color: rgba(51, 51, 51, 0.349); font-weight: bold; text-transform: uppercase; line-height: 1.2; opacity: 0; -webkit-transform: translateX(500px); transform: translateX(500px);}.slider > img{position: absolute; right: 10%; bottom: 0; height: 100%; opacity: 0; -webkit-transform: translateX(500px); transform: translateX(500px);}.slide-1 > img{right: 0;}.buy-now-btn{background-color: #ea2e49; width: 220px; height: 50px; border-radius: 30px; border: none; font-family: Montserrat; font-size: 20px; font-weight: 100; color: #fff; text-align: left; padding-left: 35px; position: relative; cursor: pointer; transition: all .2s;}.buy-now-btn:hover{box-shadow: 0px 0px 60px -17px rgba(51,51,51,1);}.buy-now-btn:after{content: \'Buy Now\'; font-size: 12px; font-weight: bold; text-transform: uppercase; position: absolute; right: 35px; top: 18px;}.slider .buy-now-btn:focus,.navigation .login-btn:focus{outline: none;}/*Let’s also make sure that when the slide changes, elements within it — such as text and images — animate.*//* Animations */.slider h2{-webkit-transition: opacity 800ms, -webkit-transform 800ms; transition: transform 800ms, opacity 800ms; -webkit-transition-delay: 1s; /* Safari */ transition-delay: 1s;}.slider h4{-webkit-transition: opacity 800ms, -webkit-transform 800ms; transition: transform 800ms, opacity 800ms; -webkit-transition-delay: 1.4s; /* Safari */ transition-delay: 1.4s;}.slider > img{-webkit-transition: opacity 800ms, -webkit-transform 800ms; transition: transform 800ms, opacity 800ms; -webkit-transition-delay: 1.2s; /* Safari */ transition-delay: 1.2s;}/*number pagination in the right corner of each slide. Let’s style that, too*//* Number Pagination */.number-pagination{position: absolute; bottom: 30px; right: 100px; font-family: "Oswald"; font-weight: bold;}.number-pagination span{font-size: 30px; color: #ea2e49; letter-spacing: 4px;}.number-pagination span:after{content: "/4"; font-size: 16px; color: #fff;}/*Awesome! Now, style the slider pagination.*//* Slider Pagger */.slider-pagination{position: absolute; bottom: 30px; width: 575px; left: 100px; z-index: 1000; display: flex; align-items: center;}.slider-pagination label{width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: #fff; margin: 0 10px; cursor: pointer;}/*magically style the radiobuttons to the label styles*//* Slider Pagger Event */.slide-radio1:checked ~ .slider-pagination .page1,.slide-radio2:checked ~ .slider-pagination .page2,.slide-radio3:checked ~ .slider-pagination .page3,.slide-radio4:checked ~ .slider-pagination .page4{width: 14px; height: 14px; border: 2px solid #ea2e49; background: transparent;}/* Slider Slide Effect */.slide-radio1:checked ~ .slider{-webkit-transform: translateX(0%); transform: translateX(0%);}.slide-radio2:checked ~ .slider{-webkit-transform: translateX(-100%); transform: translateX(-100%);}.slide-radio3:checked ~ .slider{-webkit-transform: translateX(-200%); transform: translateX(-200%);}.slide-radio4:checked ~ .slider{-webkit-transform: translateX(-300%); transform: translateX(-300%);}.slide-radio1:checked ~ .slide-1 h2,.slide-radio2:checked ~ .slide-2 h2,.slide-radio3:checked ~ .slide-3 h2,.slide-radio4:checked ~ .slide-4 h2,.slide-radio1:checked ~ .slide-1 h4,.slide-radio2:checked ~ .slide-2 h4,.slide-radio3:checked ~ .slide-3 h4,.slide-radio4:checked ~ .slide-4 h4,.slide-radio1:checked ~ .slide-1 > img,.slide-radio2:checked ~ .slide-2 > img,.slide-radio3:checked ~ .slide-3 > img,.slide-radio4:checked ~ .slide-4 > img{-webkit-transform: translateX(0); transform: translateX(0); opacity: 1}/* Responsive */@media only screen and (max-width: 768px){.slider h2{font-size: 20px;}.slider h4{font-size: 16px;}.slider-content{padding: 0 2%}.navigation{padding: 0 2%;}.navigation-left{display: none;}.number-pagination{right: 2%;}.slider-pagination{left: 2%;}.slider .buy-now-btn{padding: 0 15px; width: 175px; height: 42px;}.slider .buy-now-btn:after{top: 15px;}.slider > img{right: 2%;}.slide-1 > img{right: -110px;}}</style>'+
+	// 			'<FeatureSlider><div class="css-slider-wrapper"> <input type="radio" name="slider" class="slide-radio1" checked id="slider_1"> <input type="radio" name="slider" class="slide-radio2" id="slider_2"> <input type="radio" name="slider" class="slide-radio3" id="slider_3"> <input type="radio" name="slider" class="slide-radio4" id="slider_4"> <div class="slider-pagination"> <label for="slider_1" class="page1"></label> <label for="slider_2" class="page2"></label> <label for="slider_3" class="page3"></label> <label for="slider_4" class="page4"></label> </div><div class="slider slide-1"> <img src="https://designmodo.com/demo/full-screen-slider/images/model-1.png" alt=""> <div class="slider-content"> <h4>New Product</h4> <h2>Denim Longline T-Shirt Dress With Split</h2> <button type="button" class="buy-now-btn" name="button">$130</button> </div><div class="number-pagination"> <span>1</span> </div></div><div class="slider slide-2"> <img src="https://designmodo.com/demo/full-screen-slider/images/model-2.png" alt=""> <div class="slider-content"> <h4>New Product</h4> <h2>Denim Longline T-Shirt Dress With Split</h2> <button type="button" class="buy-now-btn" name="button">$130</button> </div><div class="number-pagination"> <span>2</span> </div></div><div class="slider slide-3"> <img src="https://designmodo.com/demo/full-screen-slider/images/model-3.png" alt=""> <div class="slider-content"> <h4>New Product</h4> <h2>Denim Longline T-Shirt Dress With Split</h2> <button type="button" class="buy-now-btn" name="button">$130</button> </div><div class="number-pagination"> <span>3</span> </div></div><div class="slider slide-4"> <img src="https://designmodo.com/demo/full-screen-slider/images/model-4.png" alt=""> <div class="slider-content"> <h4>New Product</h4> <h2>Denim Longline T-Shirt Dress With Split</h2> <button type="button" class="buy-now-btn" name="button">$130</button> </div><div class="number-pagination"> <span>4</span> </div></div></div></FeatureSlider>',
+	// 	attributes: {
+	// 		class: 'fa fa-code',
+	// 		title: 'Feature Slider'
+	// 	},
+	// 	category: 'Static Components'
+	// });
 
-  bm.add('teamMembers', {
-      label: 'Team Members',
-      content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" ><style>@import url(https://fonts.googleapis.com/css?family=Raleway:200);body{color: #858585; font-family: \'Raleway\',sans-serif; font-size: 16px; font-weight: 200;}h4,.h4{font-size: 18px; font-weight: bold;}.container{width: 1170px;}.container{margin-left: auto; margin-right: auto; padding-left: 15px; padding-right: 15px;}.team{width: 350px; min-height: 100%; border: 1px solid rgba(133,133,133,.15); background-color: #fff; -moz-box-shadow: 0 0 8px rgba(0,0,0,.09); -webkit-box-shadow: 0 0 8px rgba(0,0,0,.09); box-shadow: 0 0 8px rgba(0,0,0,.09); float: left; margin-left: 16px;}.teamimg{display: block; margin-left: auto; margin-right: auto; position: relative; margin-top: -80px; width:170px; height:170px; background: #fff;}.team-img{width: 170px; height: 170px;}.teamsocial{height: 48px; background-color: #f7f5f5; position: relative; bottom: -14px; left: 0;}.facebook-team{float: left; width: 48px; height: 48px; color: #D1CFCF; display:block; font-size:30px; padding: 7px;}.twitter-team{float: left; width: 48px; height: 48px; color: #D1CFCF; display:block; font-size:30px; padding: 7px;}.google-team{float: left; width: 48px; height: 48px; color: #D1CFCF; display:block; font-size:30px; padding: 7px;}.pinterest-team{float: left; width: 48px; height: 48px; color: #D1CFCF; display:block; font-size:30px; padding: 7px;}.facebook-team:hover{color: #3B5998;}.twitter-team:hover{color: #29B3E1;}.google-team:hover{color: #DE5845;}.pinterest-team:hover{color: #C51C23;}</style>'+
-          ' <div class="container" style="padding-top: 130px;margin-bottom:48px;"> <div class="row"> <div class="team"> <div class="teamimg"> <img class="team-img" src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png"> </div><h4 style="text-align:center;margin-bottom: 2px;margin-top: 25px;">Alex Morrison</h4> <p style="text-align:center;">GRAPHIC DESIGNER / CO-FOUNDER</p><p style="text-align:center;margin-top: -14px;margin-bottom:-8px;padding:23px;">Maecenas non elit egestas, interdum elit eget, ornare massa. Vestibulum imperdiet urna at rutrum interdum. Nullam luctus lorem non magna commodo mattis. Curabitur pharetra pulvinar quam et viverra. Duis interdum et nunc sed laoreet. Cras ultrices dolor id ipsum malesuada congue.Quisque luctus.</p><div class="teamsocial"> <ul> <li style="margin-left:35px;float:left;list-style: none outside none;"> <a href="#" title="Facebook"> <div class="facebook-team"> <i class="fa fa-facebook"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Twitter"> <div class="twitter-team"><i class="fa fa-twitter"></i></div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Google"> <div class="google-team"> <i class="fa fa-google-plus"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Pinterest"> <div class="pinterest-team"> <i class="fa fa-pinterest"></i> </div></a> </li></ul> </div></div><div class="team"> <div class="teamimg"><img class="team-img" src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png"></div><h4 style="text-align:center;margin-bottom: 2px;margin-top: 25px;">Bryan Jones</h4> <p style="text-align:center;">UI / UX DESIGNER</p><p style="text-align:center;margin-top: -14px;margin-bottom:-8px;padding:23px;">Quisque dapibus tincidunt luctus. Nulla consequat lorem vel turpis porta pharetra. Aliquam faucibus magna erat, a gravida dui bibendum eu. Curabitur elementum nibh vel diam luctus varius. Curabitur sem lectus, viverra ultricies quam iaculis, elementum dapibus dui. Phasellus viverra fringilla nunc varius dictum.</p><div class="teamsocial"> <ul> <li style="margin-left:35px;float:left;list-style: none outside none;"> <a href="#" title="Facebook"> <div class="facebook-team"> <i class="fa fa-facebook"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Twitter"> <div class="twitter-team"><i class="fa fa-twitter"></i></div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Google"> <div class="google-team"> <i class="fa fa-google-plus"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Pinterest"> <div class="pinterest-team"> <i class="fa fa-pinterest"></i> </div></a> </li></ul> </div></div><div class="team"> <div class="teamimg"><img class="team-img" src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png"></div><h4 style="text-align:center;margin-bottom: 2px;margin-top: 25px;">Gabrielle Vasques</h4> <p style="text-align:center;">ILLUSTRATOR / CO-FOUNDER</p><p style="text-align:center;margin-top: -14px;margin-bottom:-8px;padding:23px;">Ut tincidunt sollicitudin arcu, non bibendum mi adipiscing sit amet. Nulla et facilisis orci. Fusce bibendum leo sodales, sollicitudin turpis eu, scelerisque nulla. Aliquam et urna ac felis ornare consectetur at vitae libero. Donec nec quam ut odio suscipit aliquam. Nulla sit amet tortor molestie, blandit justo non, imperdiet velit.</p><div class="teamsocial"> <ul> <li style="margin-left:35px;float:left;list-style: none outside none;"> <a href="#" title="Facebook"> <div class="facebook-team"> <i class="fa fa-facebook"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Twitter"> <div class="twitter-team"><i class="fa fa-twitter"></i></div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Google"> <div class="google-team"> <i class="fa fa-google-plus"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Pinterest"> <div class="pinterest-team"> <i class="fa fa-pinterest"></i> </div></a> </li></ul> </div></div></div></div>',
-      attributes: {
-          class: 'fa fa-users',
-          title: 'Team Members',
-      },
-      category: 'Static Components'
-  });
+  // bm.add('teamMembers', {
+  //     label: 'Team Members',
+  //     content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" ><style>@import url(https://fonts.googleapis.com/css?family=Raleway:200);body{color: #858585; font-family: \'Raleway\',sans-serif; font-size: 16px; font-weight: 200;}h4,.h4{font-size: 18px; font-weight: bold;}.container{width: 1170px;}.container{margin-left: auto; margin-right: auto; padding-left: 15px; padding-right: 15px;}.team{width: 350px; min-height: 100%; border: 1px solid rgba(133,133,133,.15); background-color: #fff; -moz-box-shadow: 0 0 8px rgba(0,0,0,.09); -webkit-box-shadow: 0 0 8px rgba(0,0,0,.09); box-shadow: 0 0 8px rgba(0,0,0,.09); float: left; margin-left: 16px;}.teamimg{display: block; margin-left: auto; margin-right: auto; position: relative; margin-top: -80px; width:170px; height:170px; background: #fff;}.team-img{width: 170px; height: 170px;}.teamsocial{height: 48px; background-color: #f7f5f5; position: relative; bottom: -14px; left: 0;}.facebook-team{float: left; width: 48px; height: 48px; color: #D1CFCF; display:block; font-size:30px; padding: 7px;}.twitter-team{float: left; width: 48px; height: 48px; color: #D1CFCF; display:block; font-size:30px; padding: 7px;}.google-team{float: left; width: 48px; height: 48px; color: #D1CFCF; display:block; font-size:30px; padding: 7px;}.pinterest-team{float: left; width: 48px; height: 48px; color: #D1CFCF; display:block; font-size:30px; padding: 7px;}.facebook-team:hover{color: #3B5998;}.twitter-team:hover{color: #29B3E1;}.google-team:hover{color: #DE5845;}.pinterest-team:hover{color: #C51C23;}</style>'+
+  //         ' <div class="container" style="padding-top: 130px;margin-bottom:48px;"> <div class="row"> <div class="team"> <div class="teamimg"> <img class="team-img" src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png"> </div><h4 style="text-align:center;margin-bottom: 2px;margin-top: 25px;">Alex Morrison</h4> <p style="text-align:center;">GRAPHIC DESIGNER / CO-FOUNDER</p><p style="text-align:center;margin-top: -14px;margin-bottom:-8px;padding:23px;">Maecenas non elit egestas, interdum elit eget, ornare massa. Vestibulum imperdiet urna at rutrum interdum. Nullam luctus lorem non magna commodo mattis. Curabitur pharetra pulvinar quam et viverra. Duis interdum et nunc sed laoreet. Cras ultrices dolor id ipsum malesuada congue.Quisque luctus.</p><div class="teamsocial"> <ul> <li style="margin-left:35px;float:left;list-style: none outside none;"> <a href="#" title="Facebook"> <div class="facebook-team"> <i class="fa fa-facebook"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Twitter"> <div class="twitter-team"><i class="fa fa-twitter"></i></div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Google"> <div class="google-team"> <i class="fa fa-google-plus"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Pinterest"> <div class="pinterest-team"> <i class="fa fa-pinterest"></i> </div></a> </li></ul> </div></div><div class="team"> <div class="teamimg"><img class="team-img" src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png"></div><h4 style="text-align:center;margin-bottom: 2px;margin-top: 25px;">Bryan Jones</h4> <p style="text-align:center;">UI / UX DESIGNER</p><p style="text-align:center;margin-top: -14px;margin-bottom:-8px;padding:23px;">Quisque dapibus tincidunt luctus. Nulla consequat lorem vel turpis porta pharetra. Aliquam faucibus magna erat, a gravida dui bibendum eu. Curabitur elementum nibh vel diam luctus varius. Curabitur sem lectus, viverra ultricies quam iaculis, elementum dapibus dui. Phasellus viverra fringilla nunc varius dictum.</p><div class="teamsocial"> <ul> <li style="margin-left:35px;float:left;list-style: none outside none;"> <a href="#" title="Facebook"> <div class="facebook-team"> <i class="fa fa-facebook"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Twitter"> <div class="twitter-team"><i class="fa fa-twitter"></i></div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Google"> <div class="google-team"> <i class="fa fa-google-plus"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Pinterest"> <div class="pinterest-team"> <i class="fa fa-pinterest"></i> </div></a> </li></ul> </div></div><div class="team"> <div class="teamimg"><img class="team-img" src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png"></div><h4 style="text-align:center;margin-bottom: 2px;margin-top: 25px;">Gabrielle Vasques</h4> <p style="text-align:center;">ILLUSTRATOR / CO-FOUNDER</p><p style="text-align:center;margin-top: -14px;margin-bottom:-8px;padding:23px;">Ut tincidunt sollicitudin arcu, non bibendum mi adipiscing sit amet. Nulla et facilisis orci. Fusce bibendum leo sodales, sollicitudin turpis eu, scelerisque nulla. Aliquam et urna ac felis ornare consectetur at vitae libero. Donec nec quam ut odio suscipit aliquam. Nulla sit amet tortor molestie, blandit justo non, imperdiet velit.</p><div class="teamsocial"> <ul> <li style="margin-left:35px;float:left;list-style: none outside none;"> <a href="#" title="Facebook"> <div class="facebook-team"> <i class="fa fa-facebook"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Twitter"> <div class="twitter-team"><i class="fa fa-twitter"></i></div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Google"> <div class="google-team"> <i class="fa fa-google-plus"></i> </div></a> </li><li style="float:left;list-style: none outside none;"> <a href="#" title="Pinterest"> <div class="pinterest-team"> <i class="fa fa-pinterest"></i> </div></a> </li></ul> </div></div></div></div>',
+  //     attributes: {
+  //         class: 'fa fa-users',
+  //         title: 'Team Members',
+  //     },
+  //     category: 'Static Components'
+  // });
 
-  bm.add('pricingTable', {
-      label: 'Pricing Table',
-      content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" ><style>body{background: #303030;}#pricing-table{margin: 100px auto;text-align: center;width: 892px; /* total computed width=222 x 3 + 226 */}#pricing-table .plan{font: 12px \'Lucida Sans\', \'trebuchet MS\', Arial, Helvetica;text-shadow: 0 1px rgba(255,255,255,.8); background: #fff; border: 1px solid #ddd;color: #333;padding: 20px;width: 180px; /* plan width=180 + 20 + 20 + 1 + 1=222px */ float: left;position: relative;}#pricing-table #most-popular{z-index: 2;top: -13px;border-width: 3px;padding: 30px 20px;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;-moz-box-shadow: 20px 0 10px -10px rgba(0, 0, 0, .15), -20px 0 10px -10px rgba(0, 0, 0, .15);-webkit-box-shadow: 20px 0 10px -10px rgba(0, 0, 0, .15), -20px 0 10px -10px rgba(0, 0, 0, .15);box-shadow: 20px 0 10px -10px rgba(0, 0, 0, .15), -20px 0 10px -10px rgba(0, 0, 0, .15);}#pricing-table .plan:nth-child(1){-moz-border-radius: 5px 0 0 5px;-webkit-border-radius: 5px 0 0 5px;border-radius: 5px 0 0 5px;}#pricing-table .plan:nth-child(4){-moz-border-radius: 0 5px 5px 0;-webkit-border-radius: 0 5px 5px 0;border-radius: 0 5px 5px 0;}/* --------------- */#pricing-table h3{font-size: 20px;font-weight: normal;padding: 20px;margin: -20px -20px 50px -20px;background-color: #eee;background-image: -moz-linear-gradient(#fff,#eee);background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee)); background-image: -webkit-linear-gradient(#fff, #eee);background-image: -o-linear-gradient(#fff, #eee);background-image: -ms-linear-gradient(#fff, #eee);background-image: linear-gradient(#fff, #eee);}#pricing-table #most-popular h3{background-color: #ddd;background-image: -moz-linear-gradient(#eee,#ddd);background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ddd)); background-image: -webkit-linear-gradient(#eee, #ddd);background-image: -o-linear-gradient(#eee, #ddd);background-image: -ms-linear-gradient(#eee, #ddd);background-image: linear-gradient(#eee, #ddd);margin-top: -30px;padding-top: 30px;-moz-border-radius: 5px 5px 0 0;-webkit-border-radius: 5px 5px 0 0;border-radius: 5px 5px 0 0;}#pricing-table .plan:nth-child(1) h3{-moz-border-radius: 5px 0 0 0;-webkit-border-radius: 5px 0 0 0;border-radius: 5px 0 0 0;}#pricing-table .plan:nth-child(4) h3{-moz-border-radius: 0 5px 0 0;-webkit-border-radius: 0 5px 0 0;border-radius: 0 5px 0 0;}#pricing-table h3 span{display: block;font: bold 25px/100px Georgia, Serif;color: #777;background: #fff;border: 5px solid #fff;height: 100px;width: 100px;margin: 10px auto -65px;-moz-border-radius: 100px;-webkit-border-radius: 100px;border-radius: 100px;-moz-box-shadow: 0 5px 20px #ddd inset, 0 3px 0 #999 inset;-webkit-box-shadow: 0 5px 20px #ddd inset, 0 3px 0 #999 inset;box-shadow: 0 5px 20px #ddd inset, 0 3px 0 #999 inset;}/* --------------- */#pricing-table ul{margin: 20px 0 0 0;padding: 0;list-style: none;}#pricing-table li{border-top: 1px solid #ddd;padding: 10px 0;}/* --------------- */#pricing-table .signup{position: relative;padding: 8px 20px;margin: 20px 0 0 0; color: #fff;font: bold 14px Arial, Helvetica;text-transform: uppercase;text-decoration: none;display: inline-block; background-color: #72ce3f;background-image: -moz-linear-gradient(#72ce3f, #62bc30);background-image: -webkit-gradient(linear, left top, left bottom, from(#72ce3f), to(#62bc30)); background-image: -webkit-linear-gradient(#72ce3f, #62bc30);background-image: -o-linear-gradient(#72ce3f, #62bc30);background-image: -ms-linear-gradient(#72ce3f, #62bc30);background-image: linear-gradient(#72ce3f, #62bc30);-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px; text-shadow: 0 1px 0 rgba(0,0,0,.3); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 2px 0 rgba(0, 0, 0, .7);-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 2px 0 rgba(0, 0, 0, .7);box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 2px 0 rgba(0, 0, 0, .7);}#pricing-table .signup:hover{background-color: #62bc30;background-image: -moz-linear-gradient(#62bc30, #72ce3f);background-image: -webkit-gradient(linear, left top, left bottom, from(#62bc30), to(#72ce3f)); background-image: -webkit-linear-gradient(#62bc30, #72ce3f);background-image: -o-linear-gradient(#62bc30, #72ce3f);background-image: -ms-linear-gradient(#62bc30, #72ce3f);background-image: linear-gradient(#62bc30, #72ce3f);}#pricing-table .signup:active, #pricing-table .signup:focus{background: #62bc30; top: 2px;-moz-box-shadow: 0 0 3px rgba(0, 0, 0, .7) inset;-webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .7) inset;box-shadow: 0 0 3px rgba(0, 0, 0, .7) inset;}/* --------------- */.clear:before, .clear:after{content:""; display:table}.clear:after{clear:both}.clear{zoom:1}</style>'+
-          '<div class="container"><div class="col-md-12"><div id="pricing-table" class="clear"> <div class="plan"> <h3>Enterprise<span>$59</span></h3> <a class="signup" href="">Sign up</a> <ul> <li><b>10GB</b> Disk Space</li><li><b>100GB</b> Monthly Bandwidth</li><li><b>20</b> Email Accounts</li><li><b>Unlimited</b> subdomains</li></ul> </div><div class="plan" id="most-popular"> <h3>Professional<span>$29</span></h3> <a class="signup" href="">Sign up</a> <ul> <li><b>5GB</b> Disk Space</li><li><b>50GB</b> Monthly Bandwidth</li><li><b>10</b> Email Accounts</li><li><b>Unlimited</b> subdomains</li></ul> </div><div class="plan"> <h3>Standard<span>$17</span></h3><a class="signup" href="">Sign up</a> <ul> <li><b>3GB</b> Disk Space</li><li><b>25GB</b> Monthly Bandwidth</li><li><b>5</b> Email Accounts</li><li><b>Unlimited</b> subdomains</li></ul> </div><div class="plan"> <h3>Basic<span>$9</span></h3> <a class="signup" href="">Sign up</a> <ul> <li><b>1GB</b> Disk Space</li><li><b>10GB</b> Monthly Bandwidth</li><li><b>2</b> Email Accounts</li><li><b>Unlimited</b> subdomains</li></ul> </div></div></div></div>',
-      attributes: {
-          class: 'fa fa-usd',
-          title: 'Pricing Table',
-      },
-      category: 'Static Components'
-  });
+  // bm.add('pricingTable', {
+  //     label: 'Pricing Table',
+  //     content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" ><style>body{background: #303030;}#pricing-table{margin: 100px auto;text-align: center;width: 892px; /* total computed width=222 x 3 + 226 */}#pricing-table .plan{font: 12px \'Lucida Sans\', \'trebuchet MS\', Arial, Helvetica;text-shadow: 0 1px rgba(255,255,255,.8); background: #fff; border: 1px solid #ddd;color: #333;padding: 20px;width: 180px; /* plan width=180 + 20 + 20 + 1 + 1=222px */ float: left;position: relative;}#pricing-table #most-popular{z-index: 2;top: -13px;border-width: 3px;padding: 30px 20px;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;-moz-box-shadow: 20px 0 10px -10px rgba(0, 0, 0, .15), -20px 0 10px -10px rgba(0, 0, 0, .15);-webkit-box-shadow: 20px 0 10px -10px rgba(0, 0, 0, .15), -20px 0 10px -10px rgba(0, 0, 0, .15);box-shadow: 20px 0 10px -10px rgba(0, 0, 0, .15), -20px 0 10px -10px rgba(0, 0, 0, .15);}#pricing-table .plan:nth-child(1){-moz-border-radius: 5px 0 0 5px;-webkit-border-radius: 5px 0 0 5px;border-radius: 5px 0 0 5px;}#pricing-table .plan:nth-child(4){-moz-border-radius: 0 5px 5px 0;-webkit-border-radius: 0 5px 5px 0;border-radius: 0 5px 5px 0;}/* --------------- */#pricing-table h3{font-size: 20px;font-weight: normal;padding: 20px;margin: -20px -20px 50px -20px;background-color: #eee;background-image: -moz-linear-gradient(#fff,#eee);background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee)); background-image: -webkit-linear-gradient(#fff, #eee);background-image: -o-linear-gradient(#fff, #eee);background-image: -ms-linear-gradient(#fff, #eee);background-image: linear-gradient(#fff, #eee);}#pricing-table #most-popular h3{background-color: #ddd;background-image: -moz-linear-gradient(#eee,#ddd);background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ddd)); background-image: -webkit-linear-gradient(#eee, #ddd);background-image: -o-linear-gradient(#eee, #ddd);background-image: -ms-linear-gradient(#eee, #ddd);background-image: linear-gradient(#eee, #ddd);margin-top: -30px;padding-top: 30px;-moz-border-radius: 5px 5px 0 0;-webkit-border-radius: 5px 5px 0 0;border-radius: 5px 5px 0 0;}#pricing-table .plan:nth-child(1) h3{-moz-border-radius: 5px 0 0 0;-webkit-border-radius: 5px 0 0 0;border-radius: 5px 0 0 0;}#pricing-table .plan:nth-child(4) h3{-moz-border-radius: 0 5px 0 0;-webkit-border-radius: 0 5px 0 0;border-radius: 0 5px 0 0;}#pricing-table h3 span{display: block;font: bold 25px/100px Georgia, Serif;color: #777;background: #fff;border: 5px solid #fff;height: 100px;width: 100px;margin: 10px auto -65px;-moz-border-radius: 100px;-webkit-border-radius: 100px;border-radius: 100px;-moz-box-shadow: 0 5px 20px #ddd inset, 0 3px 0 #999 inset;-webkit-box-shadow: 0 5px 20px #ddd inset, 0 3px 0 #999 inset;box-shadow: 0 5px 20px #ddd inset, 0 3px 0 #999 inset;}/* --------------- */#pricing-table ul{margin: 20px 0 0 0;padding: 0;list-style: none;}#pricing-table li{border-top: 1px solid #ddd;padding: 10px 0;}/* --------------- */#pricing-table .signup{position: relative;padding: 8px 20px;margin: 20px 0 0 0; color: #fff;font: bold 14px Arial, Helvetica;text-transform: uppercase;text-decoration: none;display: inline-block; background-color: #72ce3f;background-image: -moz-linear-gradient(#72ce3f, #62bc30);background-image: -webkit-gradient(linear, left top, left bottom, from(#72ce3f), to(#62bc30)); background-image: -webkit-linear-gradient(#72ce3f, #62bc30);background-image: -o-linear-gradient(#72ce3f, #62bc30);background-image: -ms-linear-gradient(#72ce3f, #62bc30);background-image: linear-gradient(#72ce3f, #62bc30);-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px; text-shadow: 0 1px 0 rgba(0,0,0,.3); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 2px 0 rgba(0, 0, 0, .7);-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 2px 0 rgba(0, 0, 0, .7);box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 2px 0 rgba(0, 0, 0, .7);}#pricing-table .signup:hover{background-color: #62bc30;background-image: -moz-linear-gradient(#62bc30, #72ce3f);background-image: -webkit-gradient(linear, left top, left bottom, from(#62bc30), to(#72ce3f)); background-image: -webkit-linear-gradient(#62bc30, #72ce3f);background-image: -o-linear-gradient(#62bc30, #72ce3f);background-image: -ms-linear-gradient(#62bc30, #72ce3f);background-image: linear-gradient(#62bc30, #72ce3f);}#pricing-table .signup:active, #pricing-table .signup:focus{background: #62bc30; top: 2px;-moz-box-shadow: 0 0 3px rgba(0, 0, 0, .7) inset;-webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .7) inset;box-shadow: 0 0 3px rgba(0, 0, 0, .7) inset;}/* --------------- */.clear:before, .clear:after{content:""; display:table}.clear:after{clear:both}.clear{zoom:1}</style>'+
+  //         '<div class="container"><div class="col-md-12"><div id="pricing-table" class="clear"> <div class="plan"> <h3>Enterprise<span>$59</span></h3> <a class="signup" href="">Sign up</a> <ul> <li><b>10GB</b> Disk Space</li><li><b>100GB</b> Monthly Bandwidth</li><li><b>20</b> Email Accounts</li><li><b>Unlimited</b> subdomains</li></ul> </div><div class="plan" id="most-popular"> <h3>Professional<span>$29</span></h3> <a class="signup" href="">Sign up</a> <ul> <li><b>5GB</b> Disk Space</li><li><b>50GB</b> Monthly Bandwidth</li><li><b>10</b> Email Accounts</li><li><b>Unlimited</b> subdomains</li></ul> </div><div class="plan"> <h3>Standard<span>$17</span></h3><a class="signup" href="">Sign up</a> <ul> <li><b>3GB</b> Disk Space</li><li><b>25GB</b> Monthly Bandwidth</li><li><b>5</b> Email Accounts</li><li><b>Unlimited</b> subdomains</li></ul> </div><div class="plan"> <h3>Basic<span>$9</span></h3> <a class="signup" href="">Sign up</a> <ul> <li><b>1GB</b> Disk Space</li><li><b>10GB</b> Monthly Bandwidth</li><li><b>2</b> Email Accounts</li><li><b>Unlimited</b> subdomains</li></ul> </div></div></div></div>',
+  //     attributes: {
+  //         class: 'fa fa-usd',
+  //         title: 'Pricing Table',
+  //     },
+  //     category: 'Static Components'
+  // });
 
   // Social Media icons designed by gaurav
   bm.add('socialmedia', {
@@ -896,6 +896,82 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     },
     content: '<globalTextVariable style="padding: 2px; display: inline-block;">Global Variable</globalTextVariable>',
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Invoice Filters
+    bm.add('InvoiceDetail', {
+        label: 'Invoice',
+        // '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <body> <div class="container-fluid"><InvoiceDetail> <div class="row" style=""> <div clss="col-sm-3 col-md-2"> </div><div class="col-sm-8 col-md-8" style="margin-top:51px;margin-left:auto !important;margin-right:auto !important;"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> InvoiceID </td><td> ContactName </td><td> Date </td><td> AmountPaid </td><td> AmountDue </td> <td> Total Amount</td> </tr></tbody> </table> </div><div clss="col-sm-3 col-md-2"> </div></div></InvoiceDetail></div>',  
+        //  content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <body> <div class="container-fluid"><InvoiceDetail>  <div class="col-sm-8 col-md-8" style="margin-top:51px;margin-left:auto !important;margin-right:auto !important;"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> InvoiceID </td><td> ContactName </td><td> Date </td><td> AmountPaid </td><td> AmountDue </td> <td> Total Amount</td> </tr></tbody> </table> </div><div clss="col-sm-3 col-md-2"> </div></InvoiceDetail></div>', 
+        content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><InvoiceDetail style="display: block; width: 100%;padding:15px"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th><div class="invoiceTableBody"></div></table> </InvoiceDetail>',
+        // content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><InvoiceDetail><div class="container-fluid"></InvoiceDetail><InvoiceDetail>   <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> 1  </td> <td> krishna </td> <td> 04/01/2017 </td> <td> 1000</td> <td>500 </td> <td> 1500 </td> </tr> <tr> <td> 2  </td> <td> dweep </td> <td> 04/05/2017 </td> <td> 2500</td> <td>500 </td> <td> 3000 </td> </tr> <td> 3  </td> <td> ekta </td> <td> 12/05/2017 </td> <td> 3500</td> <td>500 </td> <td> 4000 </td> </tr> <td> 4  </td> <td> ashwini </td> <td> 10/05/2017 </td> <td> 4500</td> <td>500 </td> <td> 5000 </td> </tr></tbody>  </table> </InvoiceDetail></div>',
+ 
+        attributes: {
+            class: 'fa fa-file-text-o',
+            title: 'Invoice Page',
+        },
+        category: 'Accounting Components'
+    });
+
+
+
+    bm.add('InvoiceCustomer', {
+        label: 'Customers',
+        // content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><InvoiceCustomer style="display: block; width: 100%;padding:15px"><h3> Customer </h3> <table class="table table-bordered table-striped table-collapsed"> <th>Customer Name</th> <div class="invoiceTableBody"> </div> </table></InvoiceCustomer></div>',
+        content: '<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"></head> <InvoiceFilter style="display: block; width: 100%;padding:15px"><div class="container"><div class="form-group"> <label>status</label> <select class="form-control" id="Select1" style="width: 100px !important; min-width: 100px; max-width: 100px;"><option>Select</option><option>Paid</option><option>Unpaid</option> </select></div><div class="form-group"><div class="form-group row"><div class="col-xs-2"> <label>Amount</label> <select class="form-control" id="Select2" style="width: 150px !important; min-width: 150px; max-width: 150px;"><option>Select</option><option>Paid</option><option>Unpaid</option><option>Total</option> </select></div><div class="col-xs-2"> <label> choice</label> <select class="form-control" id="Select3" style="width: 150px !important; min-width: 150px; max-width: 150px;"><option>Select</option><option>Greater Than</option><option>less Than</option> </select></div></div></div></div> </InvoiceFilter></html>',
+        attributes: {
+            class: 'fa fa-users',
+            title: 'Invoice Page',
+        },
+        category: 'Accounting Components'
+    });
+
+    bm.add('InvoiceFilter', {
+        label: 'Invoice Filter',
+        // content:'<div><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"> <InvoiceFilter style="display: block; width: 100%;padding:15px"><div class="container"><div class="form-group"> <label>status</label> <select class="form-control" id="Select1" style="width: 150px !important; min-width: 150px; max-width: 150px;"><option>Select</option><option>Paid</option><option>Unpaid</option> </select></div><div class="form-group"><div class="form-group row"><div class="col-xs-2"> <label>Select Amount</label> <select class="form-control" id="Select2" style="width: 150px !important; min-width: 150px; max-width: 150px;"><option>Select</option><option>Paid</option><option>Unpaid</option><option>Total</option> </select></div><div class="col-xs-2"> <label> choice</label> <select class="form-control" id="Select3" style="width: 150px !important; min-width: 150px; max-width: 150px;"><option>Select</option><option>Greater Than</option><option>less Than</option> </select></div><div class="col-xs-2"> <label> Amount </label> <input class="form-control" style="width: 150px !important; min-width: 150px; max-width: 150px;" type="text"></div></div></div> <div class="form-group"><h3> Invoices</h3><table class="table table-bordered table-striped table-collapsed"><th>Id</th><th>Name</th><th>Date</th><th>Amount Paid</th><th>Amount Due</th><th> Total Amount</th></table></div> </div> </InvoiceFilter></div>',
+        content:'<div><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"> <InvoiceFilter style="display: block; width: 100%;padding:15px"><div class="container"><div class="form-group"> <label>status</label> <select class="form-control ye no y n s" id="menu" style="width: 150px !important; min-width: 160px; max-width: 160px;" onChange="checkOption(this)"><option value="Select">Select</option><option value="Paid">Paid</option><option value="Unpaid">Unpaid</option> </select></div><div class="form-group"><div class="form-group row"><div class="col-xs-2"> <label>Select Amount</label> <select class="form-control yes no y n s" id="Select2" style="width: 150px !important; min-width: 160px; max-width: 160px;" onChange="checkOption(this)"><option value="Select">Select</option><option value="Paid">Paid</option><option value="Unpaid">Unpaid</option><option value="Total">Total</option> </select></div><div class="col-xs-2"> <label> choice</label> <select class="form-control yes no y n s" id="Select3" style="width: 150px !important; min-width: 160px; max-width: 160px;"><option>Select</option><option>Greater Than Or Equal To</option><option>less ThanOr Equal To</option> </select></div><div class="col-xs-2"> <label> Amount </label> <input id="input" class="form-control yes no y n s" id="text1" style="width: 150px !important; min-width: 160px; max-width: 160px;" type="text"></div></div></div><div class="form-group"><div class="form-group row"><div class="col-xs-2"> <label>Select Date</label> <select class="form-control yes ye y n s" id="Select4" style="width: 150px !important; min-width: 160px; max-width: 160px;" onChange="checkOption(this)"><option value="Select">Select</option><option value="Due_Date">Due Date</option><option value="Gen_Date">Generation Date</option> </select></div><div class="col-xs-2"> <label> choice</label> <select class="form-control yes ye y n s" id="Select5" style="width: 150px !important; min-width: 160px; max-width: 160px;"><option>Select</option><option>Greater Than Or Equal To</option><option>less ThanOr Equal To</option> </select></div><div class="col-xs-2"> <label> Choose Date </label> <input type="date" class="form-control yes ye y n s" id="date1" style="width: 100px !important; min-width: 160px; max-width: 160px;"></div></div></div><div class="form-group"><div class="form-group row"><div class="col-xs-2"> <label> Choose Date </label> <input type="date" class="form-control yes ye no n s" id="date2" style="width: 150px !important; min-width: 160px; max-width: 160px;" onChange="checkOption(this)"></div><div class="col-xs-2"> <label style="margin-top: 25px;margin-left: 50px;"> To </label></div><div class="col-xs-2"> <label> Choose Date </label> <input type="date" class="form-control yes ye no n s" id="date3" style="width: 150px !important; min-width: 160px; max-width: 160px;"></div></div></div><div class="form-group"><div class="form-group row"><div class="col-xs-2"> <label> Name </label> <input class="form-control yes ye no y s" id="text2" style="width: 150px !important; min-width: 160px; max-width: 160px;" type="text" onkeyup="check(this)"></div><div class="col-xs-2"> <label> Choose Date </label> <input type="date" class="form-control yes ye no y s" id="date4" style="width: 150px !important; min-width: 160px; max-width: 160px;"></div><div class="col-xs-2"> <label> Paid Amount </label> <input class="form-control yes ye no y s" id="text3" style="width: 150px !important; min-width: 160px; max-width: 160px;" type="text"></div><div class="col-xs-2"> <label> Total Amount </label> <input class="form-control yes ye no y s" id="text4" style="width: 150px !important; min-width: 160px; max-width: 160px;" type="text"></div></div></div><div class="form-group"><h3> Invoices</h3><table class="table table-bordered table-striped table-collapsed" id="tbdata"> <th>  </th> <th>Id</th><th>Name</th><th>Date</th><th>Amount Paid</th><th>Amount Due</th><th> Total Amount</th></table><input type="text" style="width: 100px; padding: 2px; border: 1px solid black"/></div></div> </InvoiceFilter></div>',
+        attributes: {
+            class: 'fa fa-filter',
+            title: 'Invoice Filter',
+        },
+        category: 'Accounting Components'
+    });
+
+    bm.add('InvoicePayment', {
+        label: 'Payment',
+        content:'<InvoicePayment style="display: block; width: 100%;padding:15px"><div class="container"><div class="form-group"> <input type="submit" class="btn btn-success pull-right" value="Pay Now" style="width: 150px !important; min-width: 160px; max-width: 160px; margin-right: 2px;"></div></div></InvoicePayment>',
+        attributes: {
+            class:'fa fa-cc-paypal',
+            title: 'Invoice Payment',
+        },
+        category: 'Accounting Components'
+    });
 
 
 
@@ -4049,6 +4125,392 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
             return this;
         },
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // All Product Filters and Invoice Settings
+    comps.addType('InvoiceDetail', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL Invoice',
+                name: 'apiurl'
+              }
+              // {
+              //   label: 'Domain',
+              //   name: 'selectdomain',
+              //   type: 'select',
+              //   // changeProp: 1,
+              //   options: [{value: 'Select', name:'Select Domain'},{value: 'QB', name:'QB'},{value: 'Xero', name:'Xero'}]
+              // }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'INVOICEDETAIL'){
+              return {type: 'InvoiceDetail'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
+
+
+     comps.addType('InvoiceCustomer', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL Customer',
+                name: 'apiurl'
+              //  options: [{value: 'select', name:'Select Menu Type'},{value: 'mini', name:'Mini Top'},{value: 'mainNavigation', name:'Main Navigation'},{value: 'footerNav', name:'Footer Nvigation'}]
+              }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'INVOICECUSTOMER'){
+              return {type: 'InvoiceCustomer'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
+
+     comps.addType('InvoiceFilter', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL Filter',
+                name: 'apiurl'
+              //  options: [{value: 'select', name:'Select Menu Type'},{value: 'mini', name:'Mini Top'},{value: 'mainNavigation', name:'Main Navigation'},{value: 'footerNav', name:'Footer Nvigation'}]
+              }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'INVOICEFILTER'){
+              return {type: 'InvoiceFilter'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
+
+     comps.addType('InvoicePayment', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL Payment',
+                name: 'apiurl'
+              //  options: [{value: 'select', name:'Select Menu Type'},{value: 'mini', name:'Mini Top'},{value: 'mainNavigation', name:'Main Navigation'},{value: 'footerNav', name:'Footer Nvigation'}]
+              }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'INVOICEPAYMENT'){
+              return {type: 'InvoicePayment'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
+
+     comps.addType('productFilters', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL product filter',
+                name: 'apiurl'
+              //  options: [{value: 'select', name:'Select Menu Type'},{value: 'mini', name:'Mini Top'},{value: 'mainNavigation', name:'Main Navigation'},{value: 'footerNav', name:'Footer Nvigation'}]
+              }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'PRODUCTFILTERS'){
+              return {type: 'productFilters'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
+
+     comps.addType('productCategory', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL',
+                name: 'apiurl'
+              //  options: [{value: 'select', name:'Select Menu Type'},{value: 'mini', name:'Mini Top'},{value: 'mainNavigation', name:'Main Navigation'},{value: 'footerNav', name:'Footer Nvigation'}]
+              },
+               {
+                label: 'Username',
+                name: 'apiusername',
+                type: 'text'
+              },
+              {
+                label: 'Password',
+                name: 'apipassword',
+                type: 'password'
+              }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'PRODUCTCATEGORY'){
+              return {type: 'productCategory'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
+
+     comps.addType('productColors', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL',
+                name: 'apiurl_color'
+              },
+               {
+                label: 'Username',
+                name: 'apiusername_color',
+                type: 'text'
+              },
+              {
+                label: 'Password',
+                name: 'apipassword_color',
+                type: 'password'
+              }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'PRODUCTCOLORS'){
+              return {type: 'productColors'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
+
+     comps.addType('productBrand', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL',
+                name: 'apiurl_brand'
+              },
+               {
+                label: 'Username',
+                name: 'apiusername_brand',
+                type: 'text'
+              },
+              {
+                label: 'Password',
+                name: 'apipassword_brand',
+                type: 'password'
+              }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'PRODUCTBRAND'){
+              return {type: 'productBrand'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
+
+     comps.addType('productTags', {
+        // Define the Model
+        model: defaultModel.extend({
+          // Extend default properties
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+            editable: true,
+            droppable: true,
+            traits: [
+              {
+                label: 'API URL',
+                name: 'apiurl_brand'
+              },
+               {
+                label: 'Username',
+                name: 'apiusername_brand',
+                type: 'text'
+              },
+              {
+                label: 'Password',
+                name: 'apipassword_brand',
+                type: 'password'
+              }
+            ],
+          }),
+
+        },
+        {
+          isComponent: function(el) {
+            if(el.tagName == 'PRODUCTTAGS'){
+              return {type: 'productTags'};
+            }
+          },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+          // Extend the original render method
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+          return this;
+        },
+      });
 
 
 

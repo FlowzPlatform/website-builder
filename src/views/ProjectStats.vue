@@ -459,6 +459,12 @@ h3.subtitle{
   filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#1a9992', endColorstr='#4eb864', GradientType=1);
 }
 
+@media(max-width: 680px){
+  .table-title{
+    width: 350px;
+  }
+}
+
 .title-style-1{
   background: linear-gradient(to right, #AB64F6 0%, #61DBF7 100%);
 }
