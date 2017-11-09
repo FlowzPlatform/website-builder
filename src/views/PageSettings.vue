@@ -403,8 +403,30 @@ export default {
                   }
               }
               if (change != true) {
-                  obj[temp] = this.form.parent_id[temp].value;
-                  change = false;
+
+                  // obj[temp] = this.form.parent_id[temp].value;
+
+                  if(this.form.parent_id[temp] != undefined){
+                    
+                    // console.log("no value defined, hence DEFAULT set:")
+                    obj[temp] = this.form.parent_id[temp].value;
+                      change = false;
+                  }else{
+                    let self = this;
+                    
+                    setTimeout(function(){
+                      self.$notify.info({
+                          title: 'AutoSet',
+                          message: temp+': Default ',
+                          type: 'warning'
+                        });  
+                    },100);
+                    
+                    obj[temp]='default'
+                    change = false;
+                  }
+
+                  // change = false;
               }
               this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
           }
