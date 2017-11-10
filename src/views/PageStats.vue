@@ -23,7 +23,7 @@
 	                  <td>{{item.number}}</td>
 	                  <td>{{item.pageName}}</td>
 	                  <td>{{item.layoutName}}</td>
-                    <td>{{item.partialsList}}</td>
+                    <td v-html="item.partialsList"></td>
 	                </tr>
 	              </tbody>
 	            </table>
@@ -84,7 +84,7 @@ export default {
           let partialsList = this.settings[1].pageSettings[i].partials;
           let partialsListString = '';
           for(let j = 0; j < partialsList.length; j++){
-            partialsListString += Object.keys(partialsList[j]) + ' => ' + Object.values(partialsList[j]) + ', ';
+            partialsListString += '<span class="label label-primary" style="padding: 0.7em .6em .6em; border-top-right-radius: 0; border-bottom-right-radius: 0;">' + Object.keys(partialsList[j]) + '</span><span class="label label-info" style="padding: 0.7em .6em .6em; margin-right: 5px; border-top-left-radius: 0; border-bottom-left-radius: 0;">' + Object.values(partialsList[j]) + '</span>';
           }
           this.tablePagesData.push({
             number: i + 1,

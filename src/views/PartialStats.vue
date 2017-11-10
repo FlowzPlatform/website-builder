@@ -21,7 +21,7 @@
 	                <tr v-for="item in tablePagesData">
 	                  <td>{{item.number}}</td>
 	                  <td>{{item.partialName}}</td>
-	                  <td>{{item.partialFiles}}</td>
+	                  <td v-html="item.partialFiles"></td>
 	                </tr>
 	              </tbody>
 	            </table>
@@ -85,7 +85,7 @@ export default {
         for(var i = 0; i < partialItems.length; i++){
           var eachPartialFileList = '';
           for(var j = 0; j < this.settings[2].layoutOptions[0][partialItems[i]].length; j++){
-            eachPartialFileList += this.settings[2].layoutOptions[0][partialItems[i]][j].value + ', ';
+            eachPartialFileList += '<span class="label label-info" style="margin-right: 5px; padding: 0.7em .6em .6em;">' + this.settings[2].layoutOptions[0][partialItems[i]][j].value + '</span>';
           }
           this.tablePagesData.push({
             number: i + 1,
@@ -351,4 +351,5 @@ h3.subtitle{
 .table thead{
   color: #00A092;
 }
+
 </style>

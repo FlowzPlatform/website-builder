@@ -77,7 +77,7 @@
                         <div style="margin-right:10px; margin: 15px;">
                             <el-button type="info" size="small" @click="generatePreview()" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
                             <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                            <el-button type="primary" size="small" @click="saveFile()" :loading="saveFileLoading" v-if="componentId != 'ProjectStats'">Save</el-button>
+                            <el-button type="primary" size="small" @click="saveFile()" :loading="saveFileLoading" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'">Save</el-button>
                         </div>
                     </div>
 
@@ -1987,6 +1987,8 @@ export default {
           if (valid) {
               this.addNewFileLoading = true
               var name=this.formAddFile.filename;
+              // console.log('This currentFile:', this.currentFile.path);
+              console.log('Store path:', this.$store.state.fileUrl);
               var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
               return axios.post(config.baseURL + '/flows-dir-listing', {
                   filename : newfilename,
@@ -1996,7 +1998,7 @@ export default {
               .then( (res) => {
 
                   // For ReUse Component
-                  let currentFile_path = this.currentFile.path.split('/');
+                  let currentFile_path = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/');
                   
                   var last_element = currentFile_path[currentFile_path.length - 1];
                   
@@ -2017,7 +2019,7 @@ export default {
                         label: name.split('.')[0]
                     }
                       let checkValue = false;
-                      var namefolder=this.currentFile.path.replace(/\\/g, "\/").split('/')
+                      var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
                       namefolder=namefolder[namefolder.length - 1 ];
                       console.log(this.globalConfigData);
                       if (this.globalConfigData[2].layoutOptions[0][namefolder]) {

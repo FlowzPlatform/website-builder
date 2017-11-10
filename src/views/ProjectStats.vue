@@ -1,5 +1,8 @@
 <template>
   <div class="ProjectStats">
+    <div class="page-buttons">
+      <el-button type="info" size="small" @click="previewWebsite">Preview Website</el-button>
+    </div>
   	<div class="container-fluid">
     	<div class="row" style="margin-top: 20px;">
        <!-- <div class="col-md-12">
@@ -203,7 +206,12 @@ export default {
       } else {
         console.log('Cannot get config file!');
       } 
-  	}
+  	},
+
+    previewWebsite () {
+      var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
+    }
   },
   async mounted () {
   	let response = await this.init();
@@ -483,5 +491,22 @@ h3.subtitle{
 
 .table thead{
   color: #00A092;
+}
+
+
+.page-buttons{
+  position: fixed;
+  bottom: 7px;
+  right: 50px;
+  margin-top: 17.5px;
+  z-index: 10
+}
+
+@media(max-width: 680px){
+  .page-buttons{
+    position: relative;
+    left: auto;
+    right: auto;
+  }
 }
 </style>

@@ -21,7 +21,7 @@
 	                <tr v-for="item in tablePagesData">
 	                  <td>{{item.number}}</td>
 	                  <td>{{item.layoutName}}</td>
-	                  <td>{{item.partialsName}}</td>
+	                  <td v-html="item.partialsName"></td>
 	                </tr>
 	              </tbody>
 	            </table>
@@ -82,7 +82,7 @@ export default {
           let partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
           let partialsListString = '';
           for(let j = 0; j < partialsList.length; j++){
-            partialsListString += partialsList[j] + ', ';
+            partialsListString += '<span class="label label-info" style="padding: 0.7em .6em .6em; margin-right: 5px; ">' + partialsList[j] + '</span>';
           }
           this.tablePagesData.push({
             number: i,

@@ -576,12 +576,12 @@ export default {
           key = key.trim();
           if (value[key2].match('html')) {
             key = key.split('.')[0]
-            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + "').toString())\n"
           } else if (value[key2].match('hbs')) {
             key = key.split('.')[0]
-            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + "').toString())\n"
           } else {
-            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + ".html').toString())\n"
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + ".html').toString())\n"
           }
 
           partials = partials + temp;
@@ -603,7 +603,8 @@ export default {
                 type: 'folder'
               })
               .then(async(res) => {
-                console.log(res)
+                console.log(res);
+                console.log('Current URL:', this.$store.state.fileUrl.replace(/\\/g, "\/"));
                 var rawContent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Pages/' + nameF + '.html');
 
                 // newContent = newContent.data;
@@ -642,7 +643,7 @@ export default {
                   '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                   '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
                   "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
-                  rawContent +
+                  rawContent.data +
                   '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
@@ -657,7 +658,7 @@ export default {
                   '<script src="./../main-files/main.js"><\/script>\n'+
                   '</body>\n</html>';
 
-                  if (this.form.Layout == 'Blank') {
+                  if (Layout == 'Blank') {
                     if (newContent.match('---')) {
                       let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
                       console.log("substr:" + substr)
@@ -676,7 +677,7 @@ export default {
                       '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
                       "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
-                      rawContent +
+                      rawContent.data +
                       '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
@@ -693,7 +694,7 @@ export default {
                     }
 
                   } else {
-                    let tempValueLayout = '---\nlayout: ' + this.form.Layout + '.layout\n---\n';
+                    let tempValueLayout = '---\nlayout: ' + Layout + '.layout\n---\n';
 
                     if (newContent.match('---')) {
                       let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
@@ -712,7 +713,7 @@ export default {
                       '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
                       "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
-                      rawContent +
+                      rawContent.data +
                       '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
@@ -794,7 +795,7 @@ export default {
 
       }
 
-      window.open('http://localhost' + folderUrl.replace('var/www/html/', '') + '/public/');
+      window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
 
     },
 
@@ -869,7 +870,7 @@ export default {
     },
 
     exportWebsite(){
-      window.open('http://162.209.122.250/' + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
+      window.open(config.ipAddress + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
     },
 
     cancelSettings(){
