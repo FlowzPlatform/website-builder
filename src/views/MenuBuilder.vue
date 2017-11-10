@@ -117,7 +117,7 @@ import domenu from 'domenu'
 			let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
 			let urlparts = configFileUrl.split("/");
 			let fileNameOrginal = urlparts[urlparts.length - 1];
-			let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+			let fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
 			let fileNameParts = fileNameOrginal.split('.');
 			let actualFileNameOnly = fileNameParts[0];
 			var folderUrl = configFileUrl.replace(fileName, '');

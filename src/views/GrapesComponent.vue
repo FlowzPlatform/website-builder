@@ -8,6 +8,7 @@
 
 const beautify = require('beautify');
 import axios from 'axios';
+import _ from 'lodash';
 
 const config = require('../config');
 
@@ -47,7 +48,15 @@ export default {
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
         let fileNameOrginal = urlparts[urlparts.length - 1];
-        let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        let fileName = '';
+        // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+
+        if(_.includes(configFileUrl, 'Partials')){
+            fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        } else {
+            fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        }
+
         var folderUrl = configFileUrl.replace(fileName, '');
 
         let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
