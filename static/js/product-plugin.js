@@ -2,6 +2,20 @@
 grapesjs.plugins.add('product-plugin', function(editor, options){
   var bm = editor.BlockManager;
 
+    // bm.add('scriptingTag', {
+    //     label: 'Scriptiing',
+    //     category: 'Scripting',
+    //     content: {
+    //         script : '$(".addToCart").on())',
+    //         content : '<a href="" class="addoCart" >Add to cart</a>'
+    //     },
+    //     attributes: {
+    //         class: 'gjs-fonts gjs-f-hero'
+    //     }
+    // });
+
+
+
   	// Sections
 	bm.add('hero', {
 		label: 'Hero section',
@@ -302,8 +316,51 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 			class: 'fa fa-file-o',
 			title: 'Content Block'
 		},
-		category: 'Static Components'
+		category: 'Extra'
 	});
+
+    // Copyright
+      bm.add('Copyright', {
+        label: 'Copyright',
+        content: '<style type="text/css">.footerCopyright{background-color:#292929; color:#fff; text-align:center; min-height:25px;padding:5px;}</style><div class="footerCopyright"><p>©2017 <a href="#">Flowz</a> | All rights reserved.</p></div>',
+        attributes: {
+            class: 'fa fa-copyright',
+            title: 'Copyright'
+        },
+        category: 'Extra'
+      });
+      // Subscribe
+      bm.add('Subscribe', {
+        label: 'Subscribe',
+        content: '<p class="newsletter">Sign up and Save!</p><input type="email" value="" name="EMAIL" class="required email" id="" aria-required="true"><input type="submit" value="Subscribe" name="subscribe" id="" class="btn btn-default">',
+        attributes: {
+            class: 'fa fa-rss',
+            title: 'Subscribe'
+        },
+        category: 'Extra'
+      });
+
+      // Social Media icons designed by gaurav
+  bm.add('socialmedia', {
+      label: 'Social Medai Icons',
+      content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"><style>/*=========================Icons=================*//* footer social icons */ul.social-network{list-style: none;display: inline;margin-left:0 !important;padding: 0;}ul.social-network li{display: inline;margin: 0 5px;}/* footer social icons */.social-network a.icoRss:hover{background-color: #F56505;}.social-network a.icoFacebook:hover{background-color:#3B5998;}.social-network a.icoTwitter:hover{background-color:#33ccff;}.social-network a.icoGoogle:hover{background-color:#BD3518;}.social-network a.icoVimeo:hover{background-color:#0590B8;}.social-network a.icoLinkedin:hover{background-color:#007bb7;}.social-network a.icoRss:hover i, .social-network a.icoFacebook:hover i, .social-network a.icoTwitter:hover i,.social-network a.icoGoogle:hover i, .social-network a.icoVimeo:hover i, .social-network a.icoLinkedin:hover i{color:#fff;}a.socialIcon:hover, .socialHoverClass{color:#44BCDD;}.social-circle li a{display:inline-block;position:relative;margin:0 auto 0 auto;-moz-border-radius:50%;-webkit-border-radius:50%;border-radius:50%;text-align:center;width: 50px;height: 50px;font-size:20px;}.social-circle li i{margin:0;line-height:50px;text-align: center;}.social-circle li a:hover i, .triggeredHover{-moz-transform: rotate(360deg);-webkit-transform: rotate(360deg);-ms--transform: rotate(360deg);transform: rotate(360deg);-webkit-transition: all 0.2s;-moz-transition: all 0.2s;-o-transition: all 0.2s;-ms-transition: all 0.2s;transition: all 0.2s;}.social-circle i{color: #fff;-webkit-transition: all 0.8s;-moz-transition: all 0.8s;-o-transition: all 0.8s;-ms-transition: all 0.8s;transition: all 0.8s;}a{background-color: #D3D3D3;}</style><div class="col-md-12"><ul class="social-network social-circle"> <li><a href="#" class="icoRss" title="Rss"><i class="fa fa-rss"></i></a></li><li><a href="#" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li><li><a href="#" class="icoTwitter" title="Twitter"><i class="fa fa-twitter"></i></a></li><li><a href="#" class="icoGoogle" title="Google +"><i class="fa fa-google-plus"></i></a></li><li><a href="#" class="icoLinkedin" title="Linkedin"><i class="fa fa-linkedin"></i></a></li></ul></div>',
+      attributes: {
+          class: 'fa fa-facebook',
+          title: 'socialmedia'
+      },
+      category: 'Extra'
+  });
+
+  // Image Animation Page Layout
+  bm.add('imageanimation', {
+    label: 'imageanimation',
+    content: '<imageanimation style="display: block; width:100%; min-height:25px; padding: 5px"><title>Animated Background Gradient</title> <style type="text/css"> body{padding: 0px; margin: 0px;}#gradient{width: 40%; height: 500px; padding: 0px; margin: 0px;}.hero-image{position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; z-index: 2; opacity: 0.5;background-position: 50% 50%; background-repeat: no-repeat;}img{width: 40%; height: 500px;}</style> <img class="hero-image" src="https://wallpapershome.com/images/wallpapers/polygon-2560x1600-4k-hd-wallpaper-orange-red-blue-background-pattern-225.jpg"> <div id="gradient"/></imageanimation>',
+    attributes: {
+        class: 'fa fa-home',
+        title: 'imageanimation'
+    },
+    category: 'Extra'
+  });
 
 	// Static components for page
 	// bm.add('featureSlider', {
@@ -339,27 +396,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //     category: 'Static Components'
   // });
 
-  // Social Media icons designed by gaurav
-  bm.add('socialmedia', {
-      label: 'Social Medai Icons',
-      content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"><style>/*=========================Icons=================*//* footer social icons */ul.social-network{list-style: none;display: inline;margin-left:0 !important;padding: 0;}ul.social-network li{display: inline;margin: 0 5px;}/* footer social icons */.social-network a.icoRss:hover{background-color: #F56505;}.social-network a.icoFacebook:hover{background-color:#3B5998;}.social-network a.icoTwitter:hover{background-color:#33ccff;}.social-network a.icoGoogle:hover{background-color:#BD3518;}.social-network a.icoVimeo:hover{background-color:#0590B8;}.social-network a.icoLinkedin:hover{background-color:#007bb7;}.social-network a.icoRss:hover i, .social-network a.icoFacebook:hover i, .social-network a.icoTwitter:hover i,.social-network a.icoGoogle:hover i, .social-network a.icoVimeo:hover i, .social-network a.icoLinkedin:hover i{color:#fff;}a.socialIcon:hover, .socialHoverClass{color:#44BCDD;}.social-circle li a{display:inline-block;position:relative;margin:0 auto 0 auto;-moz-border-radius:50%;-webkit-border-radius:50%;border-radius:50%;text-align:center;width: 50px;height: 50px;font-size:20px;}.social-circle li i{margin:0;line-height:50px;text-align: center;}.social-circle li a:hover i, .triggeredHover{-moz-transform: rotate(360deg);-webkit-transform: rotate(360deg);-ms--transform: rotate(360deg);transform: rotate(360deg);-webkit-transition: all 0.2s;-moz-transition: all 0.2s;-o-transition: all 0.2s;-ms-transition: all 0.2s;transition: all 0.2s;}.social-circle i{color: #fff;-webkit-transition: all 0.8s;-moz-transition: all 0.8s;-o-transition: all 0.8s;-ms-transition: all 0.8s;transition: all 0.8s;}a{background-color: #D3D3D3;}</style><div class="col-md-12"><ul class="social-network social-circle"> <li><a href="#" class="icoRss" title="Rss"><i class="fa fa-rss"></i></a></li><li><a href="#" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li><li><a href="#" class="icoTwitter" title="Twitter"><i class="fa fa-twitter"></i></a></li><li><a href="#" class="icoGoogle" title="Google +"><i class="fa fa-google-plus"></i></a></li><li><a href="#" class="icoLinkedin" title="Linkedin"><i class="fa fa-linkedin"></i></a></li></ul></div>',
-      attributes: {
-          class: 'fa fa-facebook',
-          title: 'socialmedia'
-      },
-      category: 'Static Components'
-  });
-
-  // Image Animation Page Layout
-  bm.add('imageanimation', {
-    label: 'imageanimation',
-    content: '<imageanimation style="display: block; width:100%; min-height:25px; padding: 5px"><title>Animated Background Gradient</title> <style type="text/css"> body{padding: 0px; margin: 0px;}#gradient{width: 40%; height: 500px; padding: 0px; margin: 0px;}.hero-image{position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; z-index: 2; opacity: 0.5;background-position: 50% 50%; background-repeat: no-repeat;}img{width: 40%; height: 500px;}</style> <img class="hero-image" src="https://wallpapershome.com/images/wallpapers/polygon-2560x1600-4k-hd-wallpaper-orange-red-blue-background-pattern-225.jpg"> <div id="gradient"/></imageanimation>',
-    attributes: {
-        class: 'fa fa-home',
-        title: 'imageanimation'
-    },
-    category: 'Static Components'
-  });
+  
 
 	// bm.add('bootstrapSlider',{
 	// 	label: 'Bootstrap Slider',
@@ -383,42 +420,42 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
   // Ecommerce Components
 	// Pre Defined Site Header
-	bm.add('siteHeader', {
-		label: 'Header',
-		content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><style>.clearfix{clear:both}.card,.product-card>a,.product_image img{transition-delay:initial;transition-property:all}.product a,.product-card>a,.product-card>a:hover{text-decoration-line:none;text-decoration-color:initial}.product-card>a{background-image:initial;background-position-x:initial;background-position-y:initial;background-size:initial;background-repeat-x:initial;background-repeat-y:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#f2f2f2;color:#333;transition-duration:.1s;transition-timing-function:initial;position:relative;display:block;z-index:0;padding-bottom:5px;text-decoration-style:initial}.product_buttons .add_to_cart:hover,.product_buttons .product_compare:hover,.product_buttons .product_heart:hover{background-image:initial;background-position-x:initial;background-position-y:initial;background-size:initial;background-repeat-x:initial;background-repeat-y:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:rgba(255,255,255,.5)}.product-card>a:hover{text-decoration-style:initial;box-shadow:rgba(0,0,0,.3) 0 1px 3px}.product-card figcaption{display:block;padding-top:0;padding-right:10px;padding-bottom:0;padding-left:10px}.product-card .product-card-address{color:#888;line-height:1.2}.product-card .product-card-address i{font-size:14px;margin-right:2px;line-height:1.2}.product-card .product-card-price{display:block;text-align:right}.product-card .product-card-price .original-price,.product-card .product-card-price .price-savings{line-height:22px;display:inline-block;vertical-align:middle}.product-card .product-card-price .price-savings{float:left;color:#82b548}.product-card .product-card-price .original-price{color:#aaa;font-size:14px}.product-card .product-card-price .amount-price{text-align:right;font-size:20px;color:#82b548}.product-card .product-card-price .from{font-size:12px}.product_price span,.product_title h5{font-size:1.1em;line-height:1}*{box-sizing:border-box;font-family:"Open Sans",Arial,sans-serif}img{max-width:100%;height:auto}ul.product_list{list-style-type:none;width:100%;display:inline;margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;padding-top:0;padding-right:0;padding-bottom:0;padding-left:0}.product_image img{display:block;position:absolute;top:0;bottom:0;left:0;right:0;transition-duration:.5s;transition-timing-function:ease-in-out;margin-top:auto;margin-right:auto;margin-bottom:auto;margin-left:auto}.product_image img:hover{transform:scale(1.2,1.2)}.product_title h5{font-weight:500;padding-bottom:5px;margin-top:auto;margin-right:auto;margin-bottom:auto;margin-left:auto}.product_price a{color:#000}.product_desc p{line-height:1.3;margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;padding-top:10px;padding-right:0;padding-bottom:10px;padding-left:0}.product_buttons .product_heart:hover{color:#df0404}.product_buttons .product_compare:hover{color:#129612}.product_buttons .add_to_cart:hover{color:#4dc8d3}.product a{text-decoration-style:initial}.product:hover .info{height:40px}.product:hover .info::before{transform:scaleY(.7)}.product:hover .info::after{visibility:visible;transform:translateY(10px)}.title a{color:inherit}.product:hover .title{transform:translateY(-18px);font-weight:700;color:#000}.actions-wrapper *{width:50%;text-align:center;color:#191919;font-size:.95em;font-weight:700;padding-top:2px;padding-right:0;padding-bottom:2px;padding-left:0}.actions-wrapper::before{font-family:FontAwesome;margin-right:8px}.product:hover .actions-wrapper *{visibility:visible}body{margin-top:0;margin-right:0;margin-bottom:0;margin-left:0}#c18765,#c18771{position:relative}#c18793,.footer-div-fix{background-color: transparent !important; border: none !important; font-weight: normal}#c18805{left:-1131px;top:0}#c18765,#c18770,#c18772,#c18801,#c18805,#c18810,#c18846,#c18874{width:1170px;height:370px}#c18801,#c18813{opacity:0;position:absolute}#c17455,#c18772,#c18793,#c18801{display:none}#c18770,#c18772,#c18773,#c18777,#c18784,#c18793,#c18800,#c18805,#c18810,#c18813,#c18821,#c18822,#c18826,#c18836,#c18846,#c18853,#c18854,#c18858,#c18868,#c18874,#c18881,#c18882,#c18886{position:absolute}#c18765,#c18784,#c18800,#c18805,#c18836,#c18868{overflow-x:hidden;overflow-y:hidden}#c18770{top:0;left:0;transform-origin:0 0 0;transform:scale(1)}#c18771{overflow-x:visible;overflow-y:visible;display:block;top:0;left:0}#c18772{top:0;left:0}#c18773,#c18822,#c18854,#c18882{opacity:.7;display:block;background-color:#000;top:0;left:0;width:100%;height:100%}#c18777,#c18826,#c18858,#c18886{display:block;background-image:url(/bundles/officebrainpage/images/img/loading.gif);background-position-x:50%;background-position-y:50%;background-size:initial;background-repeat-x:no-repeat;background-repeat-y:no-repeat;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:initial;top:0;left:0;width:100%;height:100%}#c18784,#c18800{cursor:move;left:0;top:0;z-index:0}#c18793{z-index:0;pointer-events:none}#c18801{top:0;left:0;background-color:#000}#c18810,#c18846,#c18874{top:0;left:0}#c18813{width:599px;right:auto;height:65px;bottom:auto;left:-693px;top:4px}#c18821,#c18836,#c18841,#c18853,#c18868,#c18873,#c18881,.js-banner-dynamic-height-width{width:1170px;height:370px}#c18821,#c18853,#c18881{top:0;left:0;z-index:1000;display:none}#c18836{top:0;left:39px}#c18841,#c18873{top:0;left:0}#c18868{top:0;left:-1170px}#c18899{top:157.5px;left:8px}#c18907{top:157.5px;right:8px}.home-content{margin-top:150px}.ob-qa-basic-search-btn{position:absolute;background-color:teal;color:#f8efef;padding:8px 10px 12px 10px;margin:0}.ob-qa-basic-search-btn:hover{color:#f8efef}.js-banner-dynamic-height-width{margin:0 auto 0 auto}@media only screen and (min-width:320px){.product_sale p,.product_values .product_buttons button{background-image:initial;background-position-x:initial;background-position-y:initial;background-size:initial;background-repeat-x:initial;background-repeat-y:initial;background-attachment:initial;background-origin:initial;background-clip:initial}.product_sale p{color:#fff;background-color:red;box-shadow:rgba(0,0,0,.4) 0 2px 8px 0;margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;padding-top:3px;padding-right:25px;padding-bottom:3px;padding-left:25px}.product_image .product_buttons{display:none}.product_values .product_buttons{position:relative;text-align:left;float:left;margin-top:7px}.product_values .product_buttons button{color:#252525;background-color:#fff;font-size:1em;width:40px;height:40px;border-image-source:initial;border-image-slice:initial;border-image-width:initial;border-image-outset:initial;border-image-repeat:initial;border-top-left-radius:50%;border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%;border-top-width:1px;border-right-width:1px;border-bottom-width:1px;border-left-width:1px;border-top-style:solid;border-right-style:solid;border-bottom-style:solid;border-left-style:solid;border-top-color:#000;border-right-color:#000;border-bottom-color:#000;border-left-color:#000}}@media only screen and (max-width:480px){.product_title h5{font-weight:700}}@media only screen and (max-width:320px){.product_image img{position:relative}.product_price span{float:left;width:100%}}</style>'+
-				'<body><homepage><div class="js-body-container js-theme-publish"id=ob-SmcDistributorTheme><header><div id=js-fix-header-controller><div class=ob-header><div class=main-logo-part><div class=ob-logo-block><div class=container><div class=row><div class="col-md-6 col-lg-6 col-xs-6 col-sm-8 logo-col"><a href=http://localhost/exported/index.html class="js-editable js-draggable"data-id=header_logo_area data-title=Logo><img src=http://i.imgur.com/WQhZy0t.png class="img-responsive js-logo"data-highlightable=1 data-id=header_logo_area></a></div><div class="col-md-6 col-lg-6 col-xs-6 col-sm-4 shop-menu-col"><div class="shop-menu slidemenu"id=slidemenu><div class=clearfix></div></div><div class=clearfix></div></div><ul class="position-inherit nav navbar-nav pull-right ui-advance-search"><li class="dropdown js-advance-menu nav-search-btn position-inherit"><a href=javascript:void(0) class="dropdown-toggle header-search-medium"aria-expanded=true data-toggle=dropdown><i class="fa fa-search"></i>Search In</a><div class=top-search-block><div class="pull-left search-form searchbox"><span class="dropdown advance-search-wrap header-search js-advance-search-wrap search-field"><input class="form-control ob-qa-srch-txt-box"id=search_query name=search_query placeholder="Enter Keyword here"><a style="cursor: pointer" class="ob-qa-basic-search-btn searchButton"><i class="fa fa-search fa-fw"data-highlightable=1></i></a></span><div style="display: inline-block; padding-top: 19px; font-size: 14px; color: #232F3E;"><a class="" style="font-family: \'HelveticaNeueLTStd55-Roman\';" href="product-listing.html">Advanced Search</a></div></div></div></ul></div></div></div></div></div><div class=ob-menu><div class=container><div class="mainmenu-nav menu-box menu-box-op2 navbar-default navbar2"id=mainmenu-nav role=navigation><div class=navbar-header2><a class=navbar-toggle><span class=sr-only>Toggle navigation</span><span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></a></div><div id=mainmenu><span class=scroll-logo><a href=https://smcmadetoorder.com/en_us><img src=Service%20Master%20Clean%20Made%20To%20Order%20Store_files/1492085906_signet-logo.png class=img-responsive></a></span></div><div id=navbar-height-col2></div></div></div></div></div></header></div><div class="blk-row" style="min-height: 50px; margin-top:180px"></div><div class=clearfix></div><div class=middle-footer><div class=container><div class="row js-row-elements"><div class="col-xs-12 col-lg-4 col-md-3 col-sm-3"><div class=common-title><h3 class=footer-heading>My account</h3></div><div class=clearfix></div><ul class="footer-link list-unstyled"><li><a href=https://smcmadetoorder.com/en_us/my-account/info title="My account">My account</a><li><a href=https://smcmadetoorder.com/en_us/order-list title="Order History">Order History</a><li><a href=https://smcmadetoorder.com/en_us/wish-list title="Wish List">Wish List</a><li><a href=https://smcmadetoorder.com/en_us/cart-list title="My Cart">My Cart</a></ul></div><div class="col-xs-12 col-lg-4 col-md-3 col-sm-3"><div class=common-title><h3 class=footer-heading>information</h3></div><div class=clearfix></div><ul class="footer-link list-unstyled"><ul class="footer-link list-unstyled"><li><a href=https://smcmadetoorder.com/en_us/page/about-us title="About Us">About Us</a><li><a href=https://smcmadetoorder.com/en_us/page/general-info title="General Information">General Information</a><li><a href=https://smcmadetoorder.com/en_us/customer-survey title="Customer Satisfaction Survey">Customer Satisfaction Survey</a><li><a href=https://smcmadetoorder.com/en_us/page/privacy-policy title="Privacy Policy">Privacy Policy</a></ul></ul></div><div class="col-xs-12 col-lg-4 col-md-6 col-sm-6"><div class="js-element ui-state-default footer-div-fix"><div class=common-title><h3 class=footer-heading>Contact Details</h3></div><div class=clearfix></div><div class=js-editable data-id=footer_contact_area data-title="Contact Detail"data-type=footer-contact-area><ul class="footer-link footer-contact-detail js-sub-sortable"><li class="js-sub-element phone-number"data-element-title=Phone data-id=phone data-sort=1>(800) 654-3889<li class="js-sub-element email-css"data-element-title=Email data-id=email data-sort=2><i class="fa fa-envelope"></i> <span data-title=yes>info@smcmadetoorder.com</span><li class="js-sub-element address-contact"data-element-title=Address data-id=address data-sort=3>SIGNET, INC.<li class="js-sub-element address-contact-1"data-element-title=Address1 data-id=address1>1801 N. Shelby Oaks Drive, Suite 12<li class="js-sub-element address-contact-1"data-element-title=Address2 data-id=address2>Memphis, TN 38134</ul></div></div></div></div></div></div><div class=bottom-footer><div class=container><div class=social-icon-box><div class=pull-left><ul><li class=social-icon><a href=https://facebook.com/gosignet target=_blank><i class="strip-icon fb-icon"></i></a><li class=social-icon><a href=https://twitter.com/signetpromo target=_blank><i class="strip-icon twitter-icon"></i></a><li class=social-icon><a href=https://www.linkedin.com/company/signet-inc- target=_blank><i class="strip-icon in-icon"></i></a><li class=social-icon><a href=https://www.instagram.com/signetinc/ target=_blank><i class="strip-icon instagram-icon"></i></a></ul></div><div class=pull-right><p class=newslatter>JOIN OUR NEWSLETTER<form action=https://smcmadetoorder.com/en_us/newsletter class="form-inline news-box"role=form><div class=form-group><input class=form-control id=email_id name=email_send placeholder="Enter Your Email Address"type=email></div><button class="btn btn-default news-letter-validation-submit-btn"type=submit>Subscribe</button></form></div><div class=clearfix></div></div><span class=pull-left>Powered by: <a href=http://i.imgur.com/WQhZy0t.png target=_blank><img src=http://i.imgur.com/WQhZy0t.png></a></span><span class="col-xs-12 col-lg-7 col-md-7 col-sm-7 text-center">Copyright © 2017 Flowz, Inc. All rights reserved</span></div></div><link href=https://smcmadetoorder.com/bundles/officebraincustombundletheme/SmcDistributorTheme/css/all-css.css rel=stylesheet></homepage></script>',
-		attributes: {
-			class: 'fa fa-file-text',
-			title: 'Header'
-		},
-		category: 'Ecommerce Components'
-	});
+	// bm.add('siteHeader', {
+	// 	label: 'Header',
+	// 	content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><style>.clearfix{clear:both}.card,.product-card>a,.product_image img{transition-delay:initial;transition-property:all}.product a,.product-card>a,.product-card>a:hover{text-decoration-line:none;text-decoration-color:initial}.product-card>a{background-image:initial;background-position-x:initial;background-position-y:initial;background-size:initial;background-repeat-x:initial;background-repeat-y:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#f2f2f2;color:#333;transition-duration:.1s;transition-timing-function:initial;position:relative;display:block;z-index:0;padding-bottom:5px;text-decoration-style:initial}.product_buttons .add_to_cart:hover,.product_buttons .product_compare:hover,.product_buttons .product_heart:hover{background-image:initial;background-position-x:initial;background-position-y:initial;background-size:initial;background-repeat-x:initial;background-repeat-y:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:rgba(255,255,255,.5)}.product-card>a:hover{text-decoration-style:initial;box-shadow:rgba(0,0,0,.3) 0 1px 3px}.product-card figcaption{display:block;padding-top:0;padding-right:10px;padding-bottom:0;padding-left:10px}.product-card .product-card-address{color:#888;line-height:1.2}.product-card .product-card-address i{font-size:14px;margin-right:2px;line-height:1.2}.product-card .product-card-price{display:block;text-align:right}.product-card .product-card-price .original-price,.product-card .product-card-price .price-savings{line-height:22px;display:inline-block;vertical-align:middle}.product-card .product-card-price .price-savings{float:left;color:#82b548}.product-card .product-card-price .original-price{color:#aaa;font-size:14px}.product-card .product-card-price .amount-price{text-align:right;font-size:20px;color:#82b548}.product-card .product-card-price .from{font-size:12px}.product_price span,.product_title h5{font-size:1.1em;line-height:1}*{box-sizing:border-box;font-family:"Open Sans",Arial,sans-serif}img{max-width:100%;height:auto}ul.product_list{list-style-type:none;width:100%;display:inline;margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;padding-top:0;padding-right:0;padding-bottom:0;padding-left:0}.product_image img{display:block;position:absolute;top:0;bottom:0;left:0;right:0;transition-duration:.5s;transition-timing-function:ease-in-out;margin-top:auto;margin-right:auto;margin-bottom:auto;margin-left:auto}.product_image img:hover{transform:scale(1.2,1.2)}.product_title h5{font-weight:500;padding-bottom:5px;margin-top:auto;margin-right:auto;margin-bottom:auto;margin-left:auto}.product_price a{color:#000}.product_desc p{line-height:1.3;margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;padding-top:10px;padding-right:0;padding-bottom:10px;padding-left:0}.product_buttons .product_heart:hover{color:#df0404}.product_buttons .product_compare:hover{color:#129612}.product_buttons .add_to_cart:hover{color:#4dc8d3}.product a{text-decoration-style:initial}.product:hover .info{height:40px}.product:hover .info::before{transform:scaleY(.7)}.product:hover .info::after{visibility:visible;transform:translateY(10px)}.title a{color:inherit}.product:hover .title{transform:translateY(-18px);font-weight:700;color:#000}.actions-wrapper *{width:50%;text-align:center;color:#191919;font-size:.95em;font-weight:700;padding-top:2px;padding-right:0;padding-bottom:2px;padding-left:0}.actions-wrapper::before{font-family:FontAwesome;margin-right:8px}.product:hover .actions-wrapper *{visibility:visible}body{margin-top:0;margin-right:0;margin-bottom:0;margin-left:0}#c18765,#c18771{position:relative}#c18793,.footer-div-fix{background-color: transparent !important; border: none !important; font-weight: normal}#c18805{left:-1131px;top:0}#c18765,#c18770,#c18772,#c18801,#c18805,#c18810,#c18846,#c18874{width:1170px;height:370px}#c18801,#c18813{opacity:0;position:absolute}#c17455,#c18772,#c18793,#c18801{display:none}#c18770,#c18772,#c18773,#c18777,#c18784,#c18793,#c18800,#c18805,#c18810,#c18813,#c18821,#c18822,#c18826,#c18836,#c18846,#c18853,#c18854,#c18858,#c18868,#c18874,#c18881,#c18882,#c18886{position:absolute}#c18765,#c18784,#c18800,#c18805,#c18836,#c18868{overflow-x:hidden;overflow-y:hidden}#c18770{top:0;left:0;transform-origin:0 0 0;transform:scale(1)}#c18771{overflow-x:visible;overflow-y:visible;display:block;top:0;left:0}#c18772{top:0;left:0}#c18773,#c18822,#c18854,#c18882{opacity:.7;display:block;background-color:#000;top:0;left:0;width:100%;height:100%}#c18777,#c18826,#c18858,#c18886{display:block;background-image:url(/bundles/officebrainpage/images/img/loading.gif);background-position-x:50%;background-position-y:50%;background-size:initial;background-repeat-x:no-repeat;background-repeat-y:no-repeat;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:initial;top:0;left:0;width:100%;height:100%}#c18784,#c18800{cursor:move;left:0;top:0;z-index:0}#c18793{z-index:0;pointer-events:none}#c18801{top:0;left:0;background-color:#000}#c18810,#c18846,#c18874{top:0;left:0}#c18813{width:599px;right:auto;height:65px;bottom:auto;left:-693px;top:4px}#c18821,#c18836,#c18841,#c18853,#c18868,#c18873,#c18881,.js-banner-dynamic-height-width{width:1170px;height:370px}#c18821,#c18853,#c18881{top:0;left:0;z-index:1000;display:none}#c18836{top:0;left:39px}#c18841,#c18873{top:0;left:0}#c18868{top:0;left:-1170px}#c18899{top:157.5px;left:8px}#c18907{top:157.5px;right:8px}.home-content{margin-top:150px}.ob-qa-basic-search-btn{position:absolute;background-color:teal;color:#f8efef;padding:8px 10px 12px 10px;margin:0}.ob-qa-basic-search-btn:hover{color:#f8efef}.js-banner-dynamic-height-width{margin:0 auto 0 auto}@media only screen and (min-width:320px){.product_sale p,.product_values .product_buttons button{background-image:initial;background-position-x:initial;background-position-y:initial;background-size:initial;background-repeat-x:initial;background-repeat-y:initial;background-attachment:initial;background-origin:initial;background-clip:initial}.product_sale p{color:#fff;background-color:red;box-shadow:rgba(0,0,0,.4) 0 2px 8px 0;margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;padding-top:3px;padding-right:25px;padding-bottom:3px;padding-left:25px}.product_image .product_buttons{display:none}.product_values .product_buttons{position:relative;text-align:left;float:left;margin-top:7px}.product_values .product_buttons button{color:#252525;background-color:#fff;font-size:1em;width:40px;height:40px;border-image-source:initial;border-image-slice:initial;border-image-width:initial;border-image-outset:initial;border-image-repeat:initial;border-top-left-radius:50%;border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%;border-top-width:1px;border-right-width:1px;border-bottom-width:1px;border-left-width:1px;border-top-style:solid;border-right-style:solid;border-bottom-style:solid;border-left-style:solid;border-top-color:#000;border-right-color:#000;border-bottom-color:#000;border-left-color:#000}}@media only screen and (max-width:480px){.product_title h5{font-weight:700}}@media only screen and (max-width:320px){.product_image img{position:relative}.product_price span{float:left;width:100%}}</style>'+
+	// 			'<body><homepage><div class="js-body-container js-theme-publish"id=ob-SmcDistributorTheme><header><div id=js-fix-header-controller><div class=ob-header><div class=main-logo-part><div class=ob-logo-block><div class=container><div class=row><div class="col-md-6 col-lg-6 col-xs-6 col-sm-8 logo-col"><a href=http://localhost/exported/index.html class="js-editable js-draggable"data-id=header_logo_area data-title=Logo><img src=http://i.imgur.com/WQhZy0t.png class="img-responsive js-logo"data-highlightable=1 data-id=header_logo_area></a></div><div class="col-md-6 col-lg-6 col-xs-6 col-sm-4 shop-menu-col"><div class="shop-menu slidemenu"id=slidemenu><div class=clearfix></div></div><div class=clearfix></div></div><ul class="position-inherit nav navbar-nav pull-right ui-advance-search"><li class="dropdown js-advance-menu nav-search-btn position-inherit"><a href=javascript:void(0) class="dropdown-toggle header-search-medium"aria-expanded=true data-toggle=dropdown><i class="fa fa-search"></i>Search In</a><div class=top-search-block><div class="pull-left search-form searchbox"><span class="dropdown advance-search-wrap header-search js-advance-search-wrap search-field"><input class="form-control ob-qa-srch-txt-box"id=search_query name=search_query placeholder="Enter Keyword here"><a style="cursor: pointer" class="ob-qa-basic-search-btn searchButton"><i class="fa fa-search fa-fw"data-highlightable=1></i></a></span><div style="display: inline-block; padding-top: 19px; font-size: 14px; color: #232F3E;"><a class="" style="font-family: \'HelveticaNeueLTStd55-Roman\';" href="product-listing.html">Advanced Search</a></div></div></div></ul></div></div></div></div></div><div class=ob-menu><div class=container><div class="mainmenu-nav menu-box menu-box-op2 navbar-default navbar2"id=mainmenu-nav role=navigation><div class=navbar-header2><a class=navbar-toggle><span class=sr-only>Toggle navigation</span><span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></a></div><div id=mainmenu><span class=scroll-logo><a href=https://smcmadetoorder.com/en_us><img src=Service%20Master%20Clean%20Made%20To%20Order%20Store_files/1492085906_signet-logo.png class=img-responsive></a></span></div><div id=navbar-height-col2></div></div></div></div></div></header></div><div class="blk-row" style="min-height: 50px; margin-top:180px"></div><div class=clearfix></div><div class=middle-footer><div class=container><div class="row js-row-elements"><div class="col-xs-12 col-lg-4 col-md-3 col-sm-3"><div class=common-title><h3 class=footer-heading>My account</h3></div><div class=clearfix></div><ul class="footer-link list-unstyled"><li><a href=https://smcmadetoorder.com/en_us/my-account/info title="My account">My account</a><li><a href=https://smcmadetoorder.com/en_us/order-list title="Order History">Order History</a><li><a href=https://smcmadetoorder.com/en_us/wish-list title="Wish List">Wish List</a><li><a href=https://smcmadetoorder.com/en_us/cart-list title="My Cart">My Cart</a></ul></div><div class="col-xs-12 col-lg-4 col-md-3 col-sm-3"><div class=common-title><h3 class=footer-heading>information</h3></div><div class=clearfix></div><ul class="footer-link list-unstyled"><ul class="footer-link list-unstyled"><li><a href=https://smcmadetoorder.com/en_us/page/about-us title="About Us">About Us</a><li><a href=https://smcmadetoorder.com/en_us/page/general-info title="General Information">General Information</a><li><a href=https://smcmadetoorder.com/en_us/customer-survey title="Customer Satisfaction Survey">Customer Satisfaction Survey</a><li><a href=https://smcmadetoorder.com/en_us/page/privacy-policy title="Privacy Policy">Privacy Policy</a></ul></ul></div><div class="col-xs-12 col-lg-4 col-md-6 col-sm-6"><div class="js-element ui-state-default footer-div-fix"><div class=common-title><h3 class=footer-heading>Contact Details</h3></div><div class=clearfix></div><div class=js-editable data-id=footer_contact_area data-title="Contact Detail"data-type=footer-contact-area><ul class="footer-link footer-contact-detail js-sub-sortable"><li class="js-sub-element phone-number"data-element-title=Phone data-id=phone data-sort=1>(800) 654-3889<li class="js-sub-element email-css"data-element-title=Email data-id=email data-sort=2><i class="fa fa-envelope"></i> <span data-title=yes>info@smcmadetoorder.com</span><li class="js-sub-element address-contact"data-element-title=Address data-id=address data-sort=3>SIGNET, INC.<li class="js-sub-element address-contact-1"data-element-title=Address1 data-id=address1>1801 N. Shelby Oaks Drive, Suite 12<li class="js-sub-element address-contact-1"data-element-title=Address2 data-id=address2>Memphis, TN 38134</ul></div></div></div></div></div></div><div class=bottom-footer><div class=container><div class=social-icon-box><div class=pull-left><ul><li class=social-icon><a href=https://facebook.com/gosignet target=_blank><i class="strip-icon fb-icon"></i></a><li class=social-icon><a href=https://twitter.com/signetpromo target=_blank><i class="strip-icon twitter-icon"></i></a><li class=social-icon><a href=https://www.linkedin.com/company/signet-inc- target=_blank><i class="strip-icon in-icon"></i></a><li class=social-icon><a href=https://www.instagram.com/signetinc/ target=_blank><i class="strip-icon instagram-icon"></i></a></ul></div><div class=pull-right><p class=newslatter>JOIN OUR NEWSLETTER<form action=https://smcmadetoorder.com/en_us/newsletter class="form-inline news-box"role=form><div class=form-group><input class=form-control id=email_id name=email_send placeholder="Enter Your Email Address"type=email></div><button class="btn btn-default news-letter-validation-submit-btn"type=submit>Subscribe</button></form></div><div class=clearfix></div></div><span class=pull-left>Powered by: <a href=http://i.imgur.com/WQhZy0t.png target=_blank><img src=http://i.imgur.com/WQhZy0t.png></a></span><span class="col-xs-12 col-lg-7 col-md-7 col-sm-7 text-center">Copyright © 2017 Flowz, Inc. All rights reserved</span></div></div><link href=https://smcmadetoorder.com/bundles/officebraincustombundletheme/SmcDistributorTheme/css/all-css.css rel=stylesheet></homepage></script>',
+	// 	attributes: {
+	// 		class: 'fa fa-file-text',
+	// 		title: 'Header'
+	// 	},
+	// 	category: 'Ecommerce Blocks'
+	// });
 
 	// Flipkart Like header
-	bm.add('siteHeaderNew', {
-		label: 'Ecommerce Navabar',
-		content: '<style type="text/css">#flipkart-navbar{background-color: #232F3E; color: #FFFFFF;}.row1{padding-top: 10px;}.row2{padding-bottom: 20px;}.flipkart-navbar-input{padding: 11px 16px; border-radius: 2px 0 0 2px; border: 0 none; outline: 0 none; font-size: 15px; color: #000;}.flipkart-navbar-button{background-color: rgb(254, 189, 105); border: 1px solid #ffe11b; border-radius: 0 2px 2px 0; color: #565656; padding: 10px 0; height: 43px; cursor: pointer; padding-left: 18px;}.cart-button{background-color: rgb(254, 189, 105); box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .23), inset 1px 1px 0 0 hsla(0, 0%, 100%, .2); padding: 10px 0; text-align: center; height: 41px; border-radius: 2px; font-weight: 500; width: 120px; display: inline-block; color: #FFFFFF; text-decoration: none; color: inherit; border: none; outline: none;}.cart-button:hover{text-decoration: none; color: #fff; cursor: pointer;}.cart-svg{display: inline-block; width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;}.item-number{border-radius: 3px; background-color: rgba(0, 0, 0, .1); height: 20px; padding: 3px 6px; font-weight: 500; display: inline-block; color: #fff; line-height: 12px; margin-left: 10px;}.upper-links{display: inline-block; padding: 0 11px; line-height: 23px; font-family: \'Roboto\', sans-serif; letter-spacing: 0; color: inherit; border: none; outline: none; font-size: 12px;}.dropdown{position: relative; display: inline-block; margin-bottom: 0px;}.dropdown:hover{background-color: #fff;}.dropdown:hover .links{color: #000;}.dropdown:hover .dropdown-menu{display: block;}.dropdown .dropdown-menu{position: absolute; top: 100%; display: none; background-color: #fff; color: #333; left: 0px; border: 0; border-radius: 0; box-shadow: 0 4px 8px -3px #555454; margin: 0; padding: 0px;}.links{color: #fff; text-decoration: none;}.links:hover{color: #fff; text-decoration: none;}.profile-links{font-size: 12px; font-family: \'Roboto\', sans-serif; border-bottom: 1px solid #e9e9e9; box-sizing: border-box; display: block; padding: 0 11px; line-height: 23px;}.profile-li{padding-top: 2px;}.largenav{display: none;}.smallnav{display: block;}.smallsearch{margin-left: 15px; margin-top: 15px;}.menu{cursor: pointer;}@media screen and (min-width: 768px){.largenav{display: block;}.smallnav{display: none;}.smallsearch{margin: 0px;}}/*Sidenav*/.sidenav{height: 100%; width: 0; position: fixed; z-index: 1; top: 0; left: 0; background-color: #fff; overflow-x: hidden; transition: 0.5s; box-shadow: 0 4px 8px -3px #555454; padding-top: 0px;}.sidenav a{padding: 8px 8px 8px 32px; text-decoration: none; font-size: 25px; color: #818181; display: block; transition: 0.3s}.sidenav .closebtn{position: absolute; top: 0; right: 25px; font-size: 36px; margin-left: 50px; color: #fff;}@media screen and (max-height: 450px){.sidenav a{font-size: 18px;}}.sidenav-heading{font-size: 36px; color: #fff;}'+
-					' .footer-top-layout{background: #232F3E none repeat scroll 0 0; color: #ffffff; padding: 40px 0;}.OurBlog{margin-bottom: 32px; text-align: center;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.OurBlog > p{color: #ffffff;}.post-blog-date::after{background: #ffffff none repeat scroll 0 0; bottom: 0; content: ""; height: 4px; left: 0; margin: auto; position: absolute; right: 0; width: 50px;}.post-blog-date{padding-bottom: 25px; position: relative;}body{color: #fff; font-family: "Open Sans",sans-serif; line-height: 24px;}.footer-top-layout [class*="col-sm-"]:first-child{padding: 0;}.footer-top-layout [class*="col-sm-"]{border-right: 2px solid #333333; padding: 0 0 0 28px;}.footer-top-layout{color: #ffffff;}.footer-col-item{min-height: 140px;}address{color: #eee;}.footer-top-layout [class*="col-sm-"]:last-child{border-right: medium none;}.footer-top-layout{color: #ffffff;}body{color: #666666; font-family: "Open Sans",sans-serif;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{color: #eee; font-family: "Roboto",sans-serif; font-weight: 500; line-height: 1.1; margin-top: 0;}body{color: #eee; font-family: "Open Sans",sans-serif; line-height: 24px;}.footer-col-item .item-contact a{color: #eee; display: inline-block; margin-bottom: 7px; width: 100%;}.footer-col-item .item-contact a .link-id{color: #ffffff; margin-left: 0; margin-right: 6px;}.footer-col-item span{margin-left: 7px;}.footer-col-item .item-contact a{color: #eee;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.signUpNewsletter{position: relative;}.signUpNewsletter .gt-email{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border: 1px solid #eee; border-radius: 0; color: #ffffff; height: 52px;}.signUpNewsletter .btn-go{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-color: #eee; border-style: solid; border-width: 0 0 0 1px; bottom: 0; color: #ffffff; font-size: 16px; position: absolute; right: 0; text-transform: uppercase; top: 0; width: 52px;}.footer-bottom-layout{background: #292929 none repeat scroll 0 0; padding: 20px 0; text-align: center; color: #eee;}.socialMedia-footer{margin-bottom: 20px;}.socialMedia-footer > a{display: inline-block; margin: 0 8px;}.footer-bottom-layout{text-align: center;}</style><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">'+
-					'<commonLayout><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"><div id="flipkart-navbar"> <div class="container"> <div class="row row1"> <ul class="largenav pull-right"> <li class="upper-links"><a class="links" href="#">Link 1</a></li><li class="upper-links"><a class="links" href="#">Link 2</a></li><li class="upper-links"><a class="links" href="#">Link 3</a></li><li class="upper-links"><a class="links" href="#">Link 4</a></li><li class="upper-links"><a class="links" href="#">Link 5</a></li><li class="upper-links"><a class="links" href="#">Link 6</a></li><li class="upper-links"> <a class="links" href="#"> <svg class="" width="16px" height="12px" style="overflow: visible;"> <path d="M8.037 17.546c1.487 0 2.417-.93 2.417-2.417H5.62c0 1.486.93 2.415 2.417 2.415m5.315-6.463v-2.97h-.005c-.044-3.266-1.67-5.46-4.337-5.98v-.81C9.01.622 8.436.05 7.735.05 7.033.05 6.46.624 6.46 1.325v.808c-2.667.52-4.294 2.716-4.338 5.98h-.005v2.972l-1.843 1.42v1.376h14.92v-1.375l-1.842-1.42z" fill="#fff"></path> </svg> </a> </li><li class="upper-links dropdown"><a class="links" href="http://clashhacks.in/">Dropdown</a> <ul class="dropdown-menu"> <li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li></ul> </li></ul> </div><div class="row row2"> <div class="col-sm-2"><a href="http://localhost/exported/index.html" style="color: #fff"><h1 style="margin:0px;"><span class="largenav">Flowz</span></h1></a> </div><div class="flipkart-navbar-search smallsearch col-sm-8 col-xs-11"> <div class="row"> <input class="flipkart-navbar-input col-xs-11" type="" placeholder="Search for Products, Brands and more" id=search_query name=search_query> <a style="cursor:pointer"><a class="flipkart-navbar-button col-xs-1 searchButton" > <i class="fa fa-search"></i> </a> </div></div><div class="cart largenav col-sm-2"> <a class="cart-button" href="http://localhost/exported/product-listing.html"> <i class="fa fa-shopping-cart"></i> Link <span class="item-number ">0</span> </a> </div></div></div></div><div id="mySidenav" class="sidenav"> <div class="container" style="background-color: #2874f0; padding-top: 10px;"> <span class="sidenav-heading">Home</span> <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a> </div><a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a></div>'+
-					'<div class="blk1" style="min-height: 50px; display: block; width:100%"></div><footer id="footer-Section"> <div class="footer-top-layout"> <div class="container"> <div class="row"> <div class="OurBlog"> <h4>Our Blog</h4> <p>BCM wins mandate for Avendus Wealth Management portal revamp</p><div class="post-blog-date">20th Oct 2016</div></div><div class=" col-lg-8 col-lg-offset-2"> <div class="col-sm-4"> <div class="footer-col-item"> <h4>Go Travel Cloud</h4> <address> 501,507 your company address<br>400015 Maharashtra, UK </address> </div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Reach Us</h4> <div class="item-contact"> <a href="tel:630-885-9200"><span class="link-id">P</span>:<span>630-885-9200</span></a> <a href="tel:630-839.2006"><span class="link-id">F</span>:<span>630-839.2006</span></a> <a href="mailto:info@brandcatmedia.com"><span class="link-id">E</span>:<span>info@brandcatmedia.com</span></a> </div></div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Sign up for Newsletter</h4> <form class="signUpNewsletter" action="" method="get"> <input name="" class="gt-email form-control" placeholder="You@youremail.com" type="text"> <input name="" class="btn-go" value="Go" type="button"> </form> </div></div></div></div></div></div><div class="footer-bottom-layout"> <div class="socialMedia-footer"> <i class="fa fa-facebook fa-fw fa-2x"></i> <i class="fa fa-google-plus fa-fw fa-2x"></i> <i class="fa fa-twitter fa-fw fa-2x"></i> <i class="fa fa-youtube fa-fw fa-2x"></i> </div><div class="copyright-tag">Copyright © 2017 company name. All Rights Reserved.</div></div></footer></commonLayout>',
-		attributes: {
-			class: 'fa fa-file-code-o',
-			title: 'Ecommerce Navbar'
-		},
-		category: 'Ecommerce Components'
-	});
+	// bm.add('siteHeaderNew', {
+	// 	label: 'Ecommerce Navabar',
+	// 	content: '<style type="text/css">#flipkart-navbar{background-color: #232F3E; color: #FFFFFF;}.row1{padding-top: 10px;}.row2{padding-bottom: 20px;}.flipkart-navbar-input{padding: 11px 16px; border-radius: 2px 0 0 2px; border: 0 none; outline: 0 none; font-size: 15px; color: #000;}.flipkart-navbar-button{background-color: rgb(254, 189, 105); border: 1px solid #ffe11b; border-radius: 0 2px 2px 0; color: #565656; padding: 10px 0; height: 43px; cursor: pointer; padding-left: 18px;}.cart-button{background-color: rgb(254, 189, 105); box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .23), inset 1px 1px 0 0 hsla(0, 0%, 100%, .2); padding: 10px 0; text-align: center; height: 41px; border-radius: 2px; font-weight: 500; width: 120px; display: inline-block; color: #FFFFFF; text-decoration: none; color: inherit; border: none; outline: none;}.cart-button:hover{text-decoration: none; color: #fff; cursor: pointer;}.cart-svg{display: inline-block; width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;}.item-number{border-radius: 3px; background-color: rgba(0, 0, 0, .1); height: 20px; padding: 3px 6px; font-weight: 500; display: inline-block; color: #fff; line-height: 12px; margin-left: 10px;}.upper-links{display: inline-block; padding: 0 11px; line-height: 23px; font-family: \'Roboto\', sans-serif; letter-spacing: 0; color: inherit; border: none; outline: none; font-size: 12px;}.dropdown{position: relative; display: inline-block; margin-bottom: 0px;}.dropdown:hover{background-color: #fff;}.dropdown:hover .links{color: #000;}.dropdown:hover .dropdown-menu{display: block;}.dropdown .dropdown-menu{position: absolute; top: 100%; display: none; background-color: #fff; color: #333; left: 0px; border: 0; border-radius: 0; box-shadow: 0 4px 8px -3px #555454; margin: 0; padding: 0px;}.links{color: #fff; text-decoration: none;}.links:hover{color: #fff; text-decoration: none;}.profile-links{font-size: 12px; font-family: \'Roboto\', sans-serif; border-bottom: 1px solid #e9e9e9; box-sizing: border-box; display: block; padding: 0 11px; line-height: 23px;}.profile-li{padding-top: 2px;}.largenav{display: none;}.smallnav{display: block;}.smallsearch{margin-left: 15px; margin-top: 15px;}.menu{cursor: pointer;}@media screen and (min-width: 768px){.largenav{display: block;}.smallnav{display: none;}.smallsearch{margin: 0px;}}/*Sidenav*/.sidenav{height: 100%; width: 0; position: fixed; z-index: 1; top: 0; left: 0; background-color: #fff; overflow-x: hidden; transition: 0.5s; box-shadow: 0 4px 8px -3px #555454; padding-top: 0px;}.sidenav a{padding: 8px 8px 8px 32px; text-decoration: none; font-size: 25px; color: #818181; display: block; transition: 0.3s}.sidenav .closebtn{position: absolute; top: 0; right: 25px; font-size: 36px; margin-left: 50px; color: #fff;}@media screen and (max-height: 450px){.sidenav a{font-size: 18px;}}.sidenav-heading{font-size: 36px; color: #fff;}'+
+	// 				' .footer-top-layout{background: #232F3E none repeat scroll 0 0; color: #ffffff; padding: 40px 0;}.OurBlog{margin-bottom: 32px; text-align: center;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.OurBlog > p{color: #ffffff;}.post-blog-date::after{background: #ffffff none repeat scroll 0 0; bottom: 0; content: ""; height: 4px; left: 0; margin: auto; position: absolute; right: 0; width: 50px;}.post-blog-date{padding-bottom: 25px; position: relative;}body{color: #fff; font-family: "Open Sans",sans-serif; line-height: 24px;}.footer-top-layout [class*="col-sm-"]:first-child{padding: 0;}.footer-top-layout [class*="col-sm-"]{border-right: 2px solid #333333; padding: 0 0 0 28px;}.footer-top-layout{color: #ffffff;}.footer-col-item{min-height: 140px;}address{color: #eee;}.footer-top-layout [class*="col-sm-"]:last-child{border-right: medium none;}.footer-top-layout{color: #ffffff;}body{color: #666666; font-family: "Open Sans",sans-serif;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{color: #eee; font-family: "Roboto",sans-serif; font-weight: 500; line-height: 1.1; margin-top: 0;}body{color: #eee; font-family: "Open Sans",sans-serif; line-height: 24px;}.footer-col-item .item-contact a{color: #eee; display: inline-block; margin-bottom: 7px; width: 100%;}.footer-col-item .item-contact a .link-id{color: #ffffff; margin-left: 0; margin-right: 6px;}.footer-col-item span{margin-left: 7px;}.footer-col-item .item-contact a{color: #eee;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.signUpNewsletter{position: relative;}.signUpNewsletter .gt-email{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border: 1px solid #eee; border-radius: 0; color: #ffffff; height: 52px;}.signUpNewsletter .btn-go{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-color: #eee; border-style: solid; border-width: 0 0 0 1px; bottom: 0; color: #ffffff; font-size: 16px; position: absolute; right: 0; text-transform: uppercase; top: 0; width: 52px;}.footer-bottom-layout{background: #292929 none repeat scroll 0 0; padding: 20px 0; text-align: center; color: #eee;}.socialMedia-footer{margin-bottom: 20px;}.socialMedia-footer > a{display: inline-block; margin: 0 8px;}.footer-bottom-layout{text-align: center;}</style><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">'+
+	// 				'<commonLayout><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"><div id="flipkart-navbar"> <div class="container"> <div class="row row1"> <ul class="largenav pull-right"> <li class="upper-links"><a class="links" href="#">Link 1</a></li><li class="upper-links"><a class="links" href="#">Link 2</a></li><li class="upper-links"><a class="links" href="#">Link 3</a></li><li class="upper-links"><a class="links" href="#">Link 4</a></li><li class="upper-links"><a class="links" href="#">Link 5</a></li><li class="upper-links"><a class="links" href="#">Link 6</a></li><li class="upper-links"> <a class="links" href="#"> <svg class="" width="16px" height="12px" style="overflow: visible;"> <path d="M8.037 17.546c1.487 0 2.417-.93 2.417-2.417H5.62c0 1.486.93 2.415 2.417 2.415m5.315-6.463v-2.97h-.005c-.044-3.266-1.67-5.46-4.337-5.98v-.81C9.01.622 8.436.05 7.735.05 7.033.05 6.46.624 6.46 1.325v.808c-2.667.52-4.294 2.716-4.338 5.98h-.005v2.972l-1.843 1.42v1.376h14.92v-1.375l-1.842-1.42z" fill="#fff"></path> </svg> </a> </li><li class="upper-links dropdown"><a class="links" href="http://clashhacks.in/">Dropdown</a> <ul class="dropdown-menu"> <li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li><li class="profile-li"><a class="profile-links" href="#">Link</a></li></ul> </li></ul> </div><div class="row row2"> <div class="col-sm-2"><a href="http://localhost/exported/index.html" style="color: #fff"><h1 style="margin:0px;"><span class="largenav">Flowz</span></h1></a> </div><div class="flipkart-navbar-search smallsearch col-sm-8 col-xs-11"> <div class="row"> <input class="flipkart-navbar-input col-xs-11" type="" placeholder="Search for Products, Brands and more" id=search_query name=search_query> <a style="cursor:pointer"><a class="flipkart-navbar-button col-xs-1 searchButton" > <i class="fa fa-search"></i> </a> </div></div><div class="cart largenav col-sm-2"> <a class="cart-button" href="http://localhost/exported/product-listing.html"> <i class="fa fa-shopping-cart"></i> Link <span class="item-number ">0</span> </a> </div></div></div></div><div id="mySidenav" class="sidenav"> <div class="container" style="background-color: #2874f0; padding-top: 10px;"> <span class="sidenav-heading">Home</span> <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a> </div><a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a></div>'+
+	// 				'<div class="blk1" style="min-height: 50px; display: block; width:100%"></div><footer id="footer-Section"> <div class="footer-top-layout"> <div class="container"> <div class="row"> <div class="OurBlog"> <h4>Our Blog</h4> <p>BCM wins mandate for Avendus Wealth Management portal revamp</p><div class="post-blog-date">20th Oct 2016</div></div><div class=" col-lg-8 col-lg-offset-2"> <div class="col-sm-4"> <div class="footer-col-item"> <h4>Go Travel Cloud</h4> <address> 501,507 your company address<br>400015 Maharashtra, UK </address> </div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Reach Us</h4> <div class="item-contact"> <a href="tel:630-885-9200"><span class="link-id">P</span>:<span>630-885-9200</span></a> <a href="tel:630-839.2006"><span class="link-id">F</span>:<span>630-839.2006</span></a> <a href="mailto:info@brandcatmedia.com"><span class="link-id">E</span>:<span>info@brandcatmedia.com</span></a> </div></div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Sign up for Newsletter</h4> <form class="signUpNewsletter" action="" method="get"> <input name="" class="gt-email form-control" placeholder="You@youremail.com" type="text"> <input name="" class="btn-go" value="Go" type="button"> </form> </div></div></div></div></div></div><div class="footer-bottom-layout"> <div class="socialMedia-footer"> <i class="fa fa-facebook fa-fw fa-2x"></i> <i class="fa fa-google-plus fa-fw fa-2x"></i> <i class="fa fa-twitter fa-fw fa-2x"></i> <i class="fa fa-youtube fa-fw fa-2x"></i> </div><div class="copyright-tag">Copyright © 2017 company name. All Rights Reserved.</div></div></footer></commonLayout>',
+	// 	attributes: {
+	// 		class: 'fa fa-file-code-o',
+	// 		title: 'Ecommerce Navbar'
+	// 	},
+	// 	category: 'Ecommerce Blocks'
+	// });
 
 	// Predefined footer matching with Flipkart like Header
-	bm.add('footer',{
-		label: 'Footer & Copyright',
-		content: '<style type="text/css">.footer-top-layout{background: #232F3E none repeat scroll 0 0; color: #ffffff; padding: 40px 0;}.OurBlog{margin-bottom: 32px; text-align: center;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.OurBlog > p{color: #ffffff;}.post-blog-date::after{background: #ffffff none repeat scroll 0 0; bottom: 0; content: ""; height: 4px; left: 0; margin: auto; position: absolute; right: 0; width: 50px;}.post-blog-date{padding-bottom: 25px; position: relative;}body{color: #fff; font-family: "Open Sans",sans-serif; line-height: 24px;}.footer-top-layout [class*="col-sm-"]:first-child{padding: 0;}.footer-top-layout [class*="col-sm-"]{border-right: 2px solid #333333; padding: 0 0 0 28px;}.footer-top-layout{color: #ffffff;}.footer-col-item{min-height: 140px;}address{color: #eee;}.footer-top-layout [class*="col-sm-"]:last-child{border-right: medium none;}.footer-top-layout{color: #ffffff;}body{color: #666666; font-family: "Open Sans",sans-serif;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{color: #eee; font-family: "Roboto",sans-serif; font-weight: 500; line-height: 1.1; margin-top: 0;}body{color: #eee; font-family: "Open Sans",sans-serif; line-height: 24px;}.footer-col-item .item-contact a{color: #eee; display: inline-block; margin-bottom: 7px; width: 100%;}.footer-col-item .item-contact a .link-id{color: #ffffff; margin-left: 0; margin-right: 6px;}.footer-col-item span{margin-left: 7px;}.footer-col-item .item-contact a{color: #eee;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.signUpNewsletter{position: relative;}.signUpNewsletter .gt-email{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border: 1px solid #eee; border-radius: 0; color: #ffffff; height: 52px;}.signUpNewsletter .btn-go{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-color: #eee; border-style: solid; border-width: 0 0 0 1px; bottom: 0; color: #ffffff; font-size: 16px; position: absolute; right: 0; text-transform: uppercase; top: 0; width: 52px;}.footer-bottom-layout{background: #008888 none repeat scroll 0 0; padding: 20px 0; text-align: center; color: #eee;}.socialMedia-footer{margin-bottom: 20px;}.socialMedia-footer > a{display: inline-block; margin: 0 8px;}.footer-bottom-layout{text-align: center;}</style><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">'+
-				'<footer id="footer-Section"> <div class="footer-top-layout"> <div class="container"> <div class="row"> <div class="OurBlog"> <h4>Our Blog</h4> <p>BCM wins mandate for Avendus Wealth Management portal revamp</p><div class="post-blog-date">20th Oct 2016</div></div><div class=" col-lg-8 col-lg-offset-2"> <div class="col-sm-4"> <div class="footer-col-item"> <h4>Go Travel Cloud</h4> <address> 501,507 your company address<br>400015 Maharashtra, UK </address> </div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Reach Us</h4> <div class="item-contact"> <a href="tel:630-885-9200"><span class="link-id">P</span>:<span>630-885-9200</span></a> <a href="tel:630-839.2006"><span class="link-id">F</span>:<span>630-839.2006</span></a> <a href="mailto:info@brandcatmedia.com"><span class="link-id">E</span>:<span>info@brandcatmedia.com</span></a> </div></div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Sign up for Newsletter</h4> <form class="signUpNewsletter" action="" method="get"> <input name="" class="gt-email form-control" placeholder="You@youremail.com" type="text"> <input name="" class="btn-go" value="Go" type="button"> </form> </div></div></div></div></div></div><div class="footer-bottom-layout"> <div class="socialMedia-footer"> <i class="fa fa-facebook fa-fw fa-2x"></i> <i class="fa fa-google-plus fa-fw fa-2x"></i> <i class="fa fa-twitter fa-fw fa-2x"></i> <i class="fa fa-youtube fa-fw fa-2x"></i> </div><div class="copyright-tag">Copyright © 2017 company name. All Rights Reserved.</div></div></footer>',
-		attributes: {
-			class: 'fa fa-html5',
-			title: 'Footer & Copyright'
-		},
-		category: 'Ecommerce Components'
-	});
+	// bm.add('footer',{
+	// 	label: 'Footer & Copyright',
+	// 	content: '<style type="text/css">.footer-top-layout{background: #232F3E none repeat scroll 0 0; color: #ffffff; padding: 40px 0;}.OurBlog{margin-bottom: 32px; text-align: center;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.OurBlog > p{color: #ffffff;}.post-blog-date::after{background: #ffffff none repeat scroll 0 0; bottom: 0; content: ""; height: 4px; left: 0; margin: auto; position: absolute; right: 0; width: 50px;}.post-blog-date{padding-bottom: 25px; position: relative;}body{color: #fff; font-family: "Open Sans",sans-serif; line-height: 24px;}.footer-top-layout [class*="col-sm-"]:first-child{padding: 0;}.footer-top-layout [class*="col-sm-"]{border-right: 2px solid #333333; padding: 0 0 0 28px;}.footer-top-layout{color: #ffffff;}.footer-col-item{min-height: 140px;}address{color: #eee;}.footer-top-layout [class*="col-sm-"]:last-child{border-right: medium none;}.footer-top-layout{color: #ffffff;}body{color: #666666; font-family: "Open Sans",sans-serif;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{color: #eee; font-family: "Roboto",sans-serif; font-weight: 500; line-height: 1.1; margin-top: 0;}body{color: #eee; font-family: "Open Sans",sans-serif; line-height: 24px;}.footer-col-item .item-contact a{color: #eee; display: inline-block; margin-bottom: 7px; width: 100%;}.footer-col-item .item-contact a .link-id{color: #ffffff; margin-left: 0; margin-right: 6px;}.footer-col-item span{margin-left: 7px;}.footer-col-item .item-contact a{color: #eee;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.signUpNewsletter{position: relative;}.signUpNewsletter .gt-email{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border: 1px solid #eee; border-radius: 0; color: #ffffff; height: 52px;}.signUpNewsletter .btn-go{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-color: #eee; border-style: solid; border-width: 0 0 0 1px; bottom: 0; color: #ffffff; font-size: 16px; position: absolute; right: 0; text-transform: uppercase; top: 0; width: 52px;}.footer-bottom-layout{background: #008888 none repeat scroll 0 0; padding: 20px 0; text-align: center; color: #eee;}.socialMedia-footer{margin-bottom: 20px;}.socialMedia-footer > a{display: inline-block; margin: 0 8px;}.footer-bottom-layout{text-align: center;}</style><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">'+
+	// 			'<footer id="footer-Section"> <div class="footer-top-layout"> <div class="container"> <div class="row"> <div class="OurBlog"> <h4>Our Blog</h4> <p>BCM wins mandate for Avendus Wealth Management portal revamp</p><div class="post-blog-date">20th Oct 2016</div></div><div class=" col-lg-8 col-lg-offset-2"> <div class="col-sm-4"> <div class="footer-col-item"> <h4>Go Travel Cloud</h4> <address> 501,507 your company address<br>400015 Maharashtra, UK </address> </div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Reach Us</h4> <div class="item-contact"> <a href="tel:630-885-9200"><span class="link-id">P</span>:<span>630-885-9200</span></a> <a href="tel:630-839.2006"><span class="link-id">F</span>:<span>630-839.2006</span></a> <a href="mailto:info@brandcatmedia.com"><span class="link-id">E</span>:<span>info@brandcatmedia.com</span></a> </div></div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Sign up for Newsletter</h4> <form class="signUpNewsletter" action="" method="get"> <input name="" class="gt-email form-control" placeholder="You@youremail.com" type="text"> <input name="" class="btn-go" value="Go" type="button"> </form> </div></div></div></div></div></div><div class="footer-bottom-layout"> <div class="socialMedia-footer"> <i class="fa fa-facebook fa-fw fa-2x"></i> <i class="fa fa-google-plus fa-fw fa-2x"></i> <i class="fa fa-twitter fa-fw fa-2x"></i> <i class="fa fa-youtube fa-fw fa-2x"></i> </div><div class="copyright-tag">Copyright © 2017 company name. All Rights Reserved.</div></div></footer>',
+	// 	attributes: {
+	// 		class: 'fa fa-html5',
+	// 		title: 'Footer & Copyright'
+	// 	},
+	// 	category: 'Ecommerce Blocks'
+	// });
 
 	// Dynamic navigation menu from JSON created from menu builder
 	bm.add('navimenu',{
@@ -429,7 +466,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 			class: 'fa fa-bars',
 			title: 'Navigation Menu'
 		},
-		category: 'Ecommerce Components'
+		category: 'Ecommerce Blocks'
 	});
 
 	// Lisiting Page sidebar filters
@@ -441,7 +478,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 			class: 'fa fa-filter',
 			title: 'Product Filters'
 		},
-		category: 'Ecommerce Components'
+		category: 'Ecommerce Blocks'
 	});
 
   // Custom droppable block of product listing
@@ -456,7 +493,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         class: 'fa fa-tags',
         title: 'Product Block'
     },
-    category: 'Ecommerce Components'
+    category: 'Ecommerce Blocks'
   });
 
   
@@ -469,7 +506,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         class: 'fa fa-shopping-bag',
         title: 'Product Detail Page',
     },
-    category: 'Ecommerce Components'
+    category: 'Ecommerce Blocks'
   });
 
   bm.add('productReactiveSearch', {
@@ -483,7 +520,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         class: 'fa fa-search',
         title: 'Product Block'
     },
-    category: 'Ecommerce Components'
+    category: 'Ecommerce Blocks'
   });
 
   bm.add('productCompare', {
@@ -494,7 +531,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
           class: 'fa fa-random',
           title: 'Compare Products',
       },
-      category: 'Ecommerce Components'
+      category: 'Ecommerce Blocks'
   });
 
   bm.add('productWishlist', {
@@ -504,7 +541,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
           class: 'fa fa-heart',
           title: 'My Wishlist',
       },
-      category: 'Ecommerce Components'
+      category: 'Ecommerce Blocks'
   });
 
   bm.add('wishlistPopup', {
@@ -514,7 +551,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
           class: 'fa fa-heart-o',
           title: 'Wishlist Popup',
       },
-      category: 'Ecommerce Components'
+      category: 'Ecommerce Blocks'
   });
 
   bm.add('comparePopup', {
@@ -524,18 +561,88 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
           class: 'fa fa-random',
           title: 'Compare Popup',
       },
-      category: 'Ecommerce Components'
+      category: 'Ecommerce Blocks'
   });
 
-  bm.add('divBlock', {
-      label: 'Division Block',
-      content: '<div style="width:100%; display: block; min-height: 20px;" data-gjs-type="text">Divistion Block</div>',
-      attributes: {
-          class: 'fa fa-random',
-          title: 'Compare Popup',
-      },
-      category: 'Ecommerce Components'
-  });
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // E-comm WishList
+     bm.add('WishList_Button', {
+        label: 'WishList Button',
+        content: {
+          script: "",
+          content: '<div><a href=""><i class="fa fa-heart"></i> Add to Wishlist</a></div>'
+        },
+        attributes: {
+            class: 'fa fa-list-alt',
+            title: 'WishList Button',
+        },
+        category: 'Ecommerce Component'
+    });
+
+     // E-comm Add to cart
+     bm.add('cartButton', {
+        label: 'Cart Button',
+        content: {
+          script: "",
+          content: '<div><a href=""><i class="fa fa-shopping-cart"></i> Add to cart</a></div>'
+        },
+        attributes: {
+            class: 'fa fa-list-alt',
+            title: 'Cart Button',
+        },
+        category: 'Ecommerce Component'
+    });
+
+
+     // E-comm Add to cart
+     bm.add('CompareButton', {
+        label: 'Compare Button',
+        content: {
+          script: "",
+          content: '<div><a href=""><i class="fa fa-retweet"></i> Add to Compare</a></div>'
+        },
+        attributes: {
+            class: 'fa fa-list-alt',
+            title: 'Compare Button',
+        },
+        category: 'Ecommerce Component'
+    });
+
+    // E-comm Add to cart
+     bm.add('More_Details', {
+        label: 'More Details',
+        content: {
+          script: "",
+          content: '<div><a href=""><i class="fa fa-list-alt"></i> More details</a></div>'
+        },
+        attributes: {
+            class: 'fa fa-list-alt',
+            title: 'More Details',
+        },
+        category: 'Ecommerce Component'
+    });
 
 	
 
@@ -567,35 +674,35 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   // Page Templates
 
   // Coming Soon
-  bm.add('Template-Coming-Soon', {
-    label: 'Template',
-    content: '<!DOCTYPE html><html><title>W3.CSS Template</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway"><style>body,h1{font-family: "Raleway", sans-serif}body, html{height: 100%}.bgimg{background-image: url(\'https:\/\/wallpapercave.com/wp/Fj4g4zO.jpg\'); min-height: 100%; background-position: center; background-size: cover;}</style><body><div class="bgimg w3-display-container w3-animate-opacity w3-text-white"> <div class="w3-display-topleft w3-padding-large w3-xlarge"> Logo </div><div class="w3-display-middle"> <h1 class="w3-jumbo w3-animate-top">COMING SOON</h1> <hr class="w3-border-grey" style="margin:auto;width:40%"> <p class="w3-large w3-center">35 days left</p></div><div class="w3-display-bottomleft w3-padding-large"> Powered by <a href="#" target="_blank">Flowz</a> </div></div></body></html>',
-    attributes: {
-        class: 'fa fa-home',
-        title: 'Template'
-    },
-    category: 'Template'
-  });
-  // Portfolio
-  bm.add('Template-Portfolio', {
-    label: 'Template',
-    content: '<!DOCTYPE html><html><title>W3.CSS Template</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel=\'stylesheet\' href=\'https://fonts.googleapis.com/css?family=Roboto\'><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>html,body,h1,h2,h3,h4,h5,h6{font-family: "Roboto", sans-serif}</style><body class="w3-light-grey"><div class="w3-content w3-margin-top" style="max-width:1400px;"> <div class="w3-row-padding"> <div class="w3-third"> <div class="w3-white w3-text-grey w3-card-4"> <div class="w3-display-container"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9WeLZdFD62GEKO_wITiHKZ8pC43XS6Nakaoq5PfjIqJ6MNx6zHw" style="width:100%" alt="Avatar"> <div class="w3-display-bottomleft w3-container w3-text-black"> <h2 style="color: #009688!important">Jane Doe</h2> </div></div><div class="w3-container"> <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Designer</p><p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>London, UK</p><p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>ex@mail.com</p><p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>1224435534</p><hr> <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Skills</b></p><p>Adobe Photoshop</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div></div><p>Photography</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:80%"> <div class="w3-center w3-text-white">80%</div></div></div><p>Illustrator</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:75%">75%</div></div><p>Media</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:50%">50%</div></div><br><p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Languages</b></p><p>English</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div></div><p>Spanish</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:55%"></div></div><p>German</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:25%"></div></div><br></div></div><br></div><div class="w3-twothird"> <div class="w3-container w3-card-2 w3-white w3-margin-bottom"> <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Work Experience</h2> <div class="w3-container"> <h5 class="w3-opacity"><b>Front End Developer / w3schools.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2015 - <span class="w3-tag w3-teal w3-round">Current</span></h6> <p>Lorem ipsum dolor sit amet. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>Web Developer / something.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2012 - Dec 2014</h6> <p>Consectetur adipisicing elit. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>Graphic Designer / designsomething.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun 2010 - Mar 2012</h6> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p><br></div></div><div class="w3-container w3-card-2 w3-white"> <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Education</h2> <div class="w3-container"> <h5 class="w3-opacity"><b>W3Schools.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Forever</h6> <p>Web Development! All I need to know in one place</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>London Business School</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2013 - 2015</h6> <p>Master Degree</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>School of Coding</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2010 - 2013</h6> <p>Bachelor Degree</p><br></div></div></div></div></div><footer class="w3-container w3-teal w3-center w3-margin-top"> <p>Find me on social media.</p><i class="fa fa-facebook-official w3-hover-opacity"></i> <i class="fa fa-instagram w3-hover-opacity"></i> <i class="fa fa-snapchat w3-hover-opacity"></i> <i class="fa fa-pinterest-p w3-hover-opacity"></i> <i class="fa fa-twitter w3-hover-opacity"></i> <i class="fa fa-linkedin w3-hover-opacity"></i> <p>Powered by <a href="#" target="_blank">Flowz</a></p></footer></body></html>',
-    attributes: {
-        class: 'fa fa-home',
-        title: 'Template-2'
-    },
-    category: 'Template'
-  });
-  // Basic Site
-  bm.add('Template-Basic-Site', {
-    label: 'Template',
-    content: '<!DOCTYPE html><html><title>W3.CSS Template</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>body,h1,h2,h3,h4,h5,h6{font-family: "Lato", sans-serif}.w3-bar,h1,button{font-family: "Montserrat", sans-serif}.fa-anchor,.fa-coffee{font-size:200px}</style><body><div class="w3-top"> <div class="w3-bar w3-red w3-card-2 w3-left-align w3-large"> <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a> <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 1</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 2</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 3</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 4</a> </div><div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large"> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 1</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 2</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 3</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 4</a> </div></div><header class="w3-container w3-red w3-center" style="padding:128px 16px"> <h1 class="w3-margin w3-jumbo">START PAGE</h1> <p class="w3-xlarge">Template by w3.css</p><button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Get Started</button></header><div class="w3-row-padding w3-padding-64 w3-container"> <div class="w3-content"> <div class="w3-twothird"> <h1>Lorem Ipsum</h1> <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5> <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div><div class="w3-third w3-center"> <i class="fa fa-anchor w3-padding-64 w3-text-red"></i> </div></div></div><div class="w3-row-padding w3-light-grey w3-padding-64 w3-container"> <div class="w3-content"> <div class="w3-third w3-center"> <i class="fa fa-coffee w3-padding-64 w3-text-red w3-margin-right"></i> </div><div class="w3-twothird"> <h1>Lorem Ipsum</h1> <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5> <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div></div></div><div class="w3-container w3-black w3-center w3-opacity w3-padding-64"> <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1></div><footer class="w3-container w3-padding-64 w3-center w3-opacity" style="color: red"> <div class="w3-xlarge w3-padding-32"> <i class="fa fa-facebook-official w3-hover-opacity"></i> <i class="fa fa-instagram w3-hover-opacity"></i> <i class="fa fa-snapchat w3-hover-opacity"></i> <i class="fa fa-pinterest-p w3-hover-opacity"></i> <i class="fa fa-twitter w3-hover-opacity"></i> <i class="fa fa-linkedin w3-hover-opacity"></i> </div><p>Powered by <a href="#" target="_blank">Flowz</a></p></footer></body></html>',
-    attributes: {
-        class: 'fa fa-home',
-        title: 'Template-2'
-    },
-    category: 'Template'
-  });
+  // bm.add('Template-Coming-Soon', {
+  //   label: 'Template',
+  //   content: '<!DOCTYPE html><html><title>W3.CSS Template</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway"><style>body,h1{font-family: "Raleway", sans-serif}body, html{height: 100%}.bgimg{background-image: url(\'https:\/\/wallpapercave.com/wp/Fj4g4zO.jpg\'); min-height: 100%; background-position: center; background-size: cover;}</style><body><div class="bgimg w3-display-container w3-animate-opacity w3-text-white"> <div class="w3-display-topleft w3-padding-large w3-xlarge"> Logo </div><div class="w3-display-middle"> <h1 class="w3-jumbo w3-animate-top">COMING SOON</h1> <hr class="w3-border-grey" style="margin:auto;width:40%"> <p class="w3-large w3-center">35 days left</p></div><div class="w3-display-bottomleft w3-padding-large"> Powered by <a href="#" target="_blank">Flowz</a> </div></div></body></html>',
+  //   attributes: {
+  //       class: 'fa fa-home',
+  //       title: 'Template'
+  //   },
+  //   category: 'Template'
+  // });
+  // // Portfolio
+  // bm.add('Template-Portfolio', {
+  //   label: 'Template',
+  //   content: '<!DOCTYPE html><html><title>W3.CSS Template</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel=\'stylesheet\' href=\'https://fonts.googleapis.com/css?family=Roboto\'><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>html,body,h1,h2,h3,h4,h5,h6{font-family: "Roboto", sans-serif}</style><body class="w3-light-grey"><div class="w3-content w3-margin-top" style="max-width:1400px;"> <div class="w3-row-padding"> <div class="w3-third"> <div class="w3-white w3-text-grey w3-card-4"> <div class="w3-display-container"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9WeLZdFD62GEKO_wITiHKZ8pC43XS6Nakaoq5PfjIqJ6MNx6zHw" style="width:100%" alt="Avatar"> <div class="w3-display-bottomleft w3-container w3-text-black"> <h2 style="color: #009688!important">Jane Doe</h2> </div></div><div class="w3-container"> <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Designer</p><p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>London, UK</p><p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>ex@mail.com</p><p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>1224435534</p><hr> <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Skills</b></p><p>Adobe Photoshop</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div></div><p>Photography</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:80%"> <div class="w3-center w3-text-white">80%</div></div></div><p>Illustrator</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:75%">75%</div></div><p>Media</p><div class="w3-light-grey w3-round-xlarge w3-small"> <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:50%">50%</div></div><br><p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Languages</b></p><p>English</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div></div><p>Spanish</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:55%"></div></div><p>German</p><div class="w3-light-grey w3-round-xlarge"> <div class="w3-round-xlarge w3-teal" style="height:24px;width:25%"></div></div><br></div></div><br></div><div class="w3-twothird"> <div class="w3-container w3-card-2 w3-white w3-margin-bottom"> <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Work Experience</h2> <div class="w3-container"> <h5 class="w3-opacity"><b>Front End Developer / w3schools.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2015 - <span class="w3-tag w3-teal w3-round">Current</span></h6> <p>Lorem ipsum dolor sit amet. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>Web Developer / something.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2012 - Dec 2014</h6> <p>Consectetur adipisicing elit. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>Graphic Designer / designsomething.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun 2010 - Mar 2012</h6> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p><br></div></div><div class="w3-container w3-card-2 w3-white"> <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Education</h2> <div class="w3-container"> <h5 class="w3-opacity"><b>W3Schools.com</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Forever</h6> <p>Web Development! All I need to know in one place</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>London Business School</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2013 - 2015</h6> <p>Master Degree</p><hr> </div><div class="w3-container"> <h5 class="w3-opacity"><b>School of Coding</b></h5> <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2010 - 2013</h6> <p>Bachelor Degree</p><br></div></div></div></div></div><footer class="w3-container w3-teal w3-center w3-margin-top"> <p>Find me on social media.</p><i class="fa fa-facebook-official w3-hover-opacity"></i> <i class="fa fa-instagram w3-hover-opacity"></i> <i class="fa fa-snapchat w3-hover-opacity"></i> <i class="fa fa-pinterest-p w3-hover-opacity"></i> <i class="fa fa-twitter w3-hover-opacity"></i> <i class="fa fa-linkedin w3-hover-opacity"></i> <p>Powered by <a href="#" target="_blank">Flowz</a></p></footer></body></html>',
+  //   attributes: {
+  //       class: 'fa fa-home',
+  //       title: 'Template-2'
+  //   },
+  //   category: 'Template'
+  // });
+  // // Basic Site
+  // bm.add('Template-Basic-Site', {
+  //   label: 'Template',
+  //   content: '<!DOCTYPE html><html><title>W3.CSS Template</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>body,h1,h2,h3,h4,h5,h6{font-family: "Lato", sans-serif}.w3-bar,h1,button{font-family: "Montserrat", sans-serif}.fa-anchor,.fa-coffee{font-size:200px}</style><body><div class="w3-top"> <div class="w3-bar w3-red w3-card-2 w3-left-align w3-large"> <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a> <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 1</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 2</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 3</a> <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 4</a> </div><div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large"> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 1</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 2</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 3</a> <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 4</a> </div></div><header class="w3-container w3-red w3-center" style="padding:128px 16px"> <h1 class="w3-margin w3-jumbo">START PAGE</h1> <p class="w3-xlarge">Template by w3.css</p><button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Get Started</button></header><div class="w3-row-padding w3-padding-64 w3-container"> <div class="w3-content"> <div class="w3-twothird"> <h1>Lorem Ipsum</h1> <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5> <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div><div class="w3-third w3-center"> <i class="fa fa-anchor w3-padding-64 w3-text-red"></i> </div></div></div><div class="w3-row-padding w3-light-grey w3-padding-64 w3-container"> <div class="w3-content"> <div class="w3-third w3-center"> <i class="fa fa-coffee w3-padding-64 w3-text-red w3-margin-right"></i> </div><div class="w3-twothird"> <h1>Lorem Ipsum</h1> <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5> <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div></div></div><div class="w3-container w3-black w3-center w3-opacity w3-padding-64"> <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1></div><footer class="w3-container w3-padding-64 w3-center w3-opacity" style="color: red"> <div class="w3-xlarge w3-padding-32"> <i class="fa fa-facebook-official w3-hover-opacity"></i> <i class="fa fa-instagram w3-hover-opacity"></i> <i class="fa fa-snapchat w3-hover-opacity"></i> <i class="fa fa-pinterest-p w3-hover-opacity"></i> <i class="fa fa-twitter w3-hover-opacity"></i> <i class="fa fa-linkedin w3-hover-opacity"></i> </div><p>Powered by <a href="#" target="_blank">Flowz</a></p></footer></body></html>',
+  //   attributes: {
+  //       class: 'fa fa-home',
+  //       title: 'Template-2'
+  //   },
+  //   category: 'Template'
+  // });
 
 
 
@@ -608,26 +715,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
   // Sweda like components
-  // Copyright
-  bm.add('Copyright', {
-    label: 'Copyright',
-    content: '<style type="text/css">.footerCopyright{background-color:#292929; color:#fff; text-align:center; min-height:25px;padding:5px;}</style><div class="footerCopyright"><p>©2017 <a href="#">Flowz</a> | All rights reserved.</p></div>',
-    attributes: {
-        class: 'fa fa-copyright',
-        title: 'Copyright'
-    },
-    category: 'Static Components'
-  });
-  // Subscribe
-  bm.add('Subscribe', {
-    label: 'Subscribe',
-    content: '<p class="newsletter">Sign up and Save!</p><input type="email" value="" name="EMAIL" class="required email" id="" aria-required="true"><input type="submit" value="Subscribe" name="subscribe" id="" class="btn btn-default">',
-    attributes: {
-        class: 'fa fa-rss',
-        title: 'Subscribe'
-    },
-    category: 'Static Components'
-  });
+  
   bm.add('Slider', {
     label: 'Slider',
     content: '<Slider style="display: block; min-height: 50px"> <style>#slider{margin: 0 auto; width: 1146px; position: relative;}#slides{background: #fff; padding: 5px; -webkit-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -moz-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -o-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -ms-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}.inner{width: 500%;}.inner:after{display: block; height: 0; clear: both;}.page{float: left; width: 20%;}.page img{width: 100%; height: 466px;}#overflow{overflow: hidden;}#slider input{display: none;}#controls{position: absolute; width: 100%; top: 216px; left: 0; height: 50px;}#controls label{display: none; opacity: 0.3; cursor: pointer;}#controls label:hover{opacity: 0.8;}#slide1:checked ~ #controls label:nth-child(2), #slide2:checked ~ #controls label:nth-child(3), #slide3:checked ~ #controls label:nth-child(4), #slide4:checked ~ #controls label:nth-child(5), #slide5:checked ~ #controls label:nth-child(1){width: 0; height: 0; border-top: 20px solid transparent; border-left: 20px solid #333; border-bottom: 20px solid transparent; float: right; margin-right: -30px; display: block;}#slide1:checked ~ #controls label:nth-child(5), #slide2:checked ~ #controls label:nth-child(1), #slide3:checked ~ #controls label:nth-child(2), #slide4:checked ~ #controls label:nth-child(3), #slide5:checked ~ #controls label:nth-child(4){width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent; border-right: 20px solid rgb(51, 51, 51); float: left; display: block; margin-left: -27px;}#slide1:checked ~ #slides .inner{margin-left: 0;}#slide2:checked ~ #slides .inner{margin-left: -100%;}#slide3:checked ~ #slides .inner{margin-left: -200%;}#slide4:checked ~ #slides .inner{margin-left: -300%;}#slide5:checked ~ #slides .inner{margin-left: -400%;}#active{text-align: center; margin-top: 10px; text-align: center; vertical-align: middle; padding-right: 3px;}#active label{padding: 6px; width: 230px; height: 53px; background: #f1f1f1; display: table-cell; cursor: pointer; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; line-height: 19px; font-family: sans-serif; font-size: small;}#active label:hover{background: #c4bebe;}#slide1:checked ~ #active label:nth-child(1), #slide2:checked ~ #active label:nth-child(2), #slide3:checked ~ #active label:nth-child(3), #slide4:checked ~ #active label:nth-child(4), #slide5:checked ~ #active label:nth-child(5){background: #dddddd;}#slides .inner{-webkit-transition: all 0.8s ease-in-out; -moz-transition: all 0.8s ease-in-out; -ms-transition: all 0.8s ease-in-out; -o-transition: all 0.8s ease-in-out; transition: all 0.8s ease-in-out;}</style> <div id="slider"> <input type="radio" id="slide1" name="slider" checked/> <input type="radio" id="slide2" name="slider"/> <input type="radio" id="slide3" name="slider"/> <input type="radio" id="slide4" name="slider"/> <input type="radio" id="slide5" name="slider"/> <div id="slides"> <div id="overflow"> <div class="inner"> <div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div></div></div></div><div id="controls"> <label for="slide1"></label> <label for="slide2"></label> <label for="slide3"></label> <label for="slide4"></label> <label for="slide5"></label> </div><div id="active"> <label for="slide1"> <p>IT\'S A WRAP</p></label> <label for="slide2"> <p>CHECK OUT OUR <br>Autumn Savings</p></label> <label for="slide3"> <p>New! <br>Light Up Pen!</p></label> <label for="slide4"> <p>INTRODUCING... <br>Sweda Outlet</p></label> <label for="slide5"> <p>Take 40% Off</p></label> </div></div></Slider>',
@@ -2765,7 +2853,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   // Style 2
   bm.add('froala-forms-style-2', {
       label: 'Style 2',
-      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(./imgs/bg_2.svg)"> <div class="container"> <div class="fdb-box"> <div class="row justify-content-center align-items-center"> <div class="col-12 col-lg-6"> <h2>Join us!</h2> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. </p></div><div class="col-12 col-lg-5 text-center"> <div class="input-group mt-4"> <input type="text" class="form-control" placeholder="Enter your email address"> <span class="input-group-btn"> <button class="btn" type="button">Submit</button> </span> </div></div></div></div></div></section>',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder//imgs/bg_2.svg)"> <div class="container"> <div class="fdb-box"> <div class="row justify-content-center align-items-center"> <div class="col-12 col-lg-6"> <h2>Join us!</h2> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. </p></div><div class="col-12 col-lg-5 text-center"> <div class="input-group mt-4"> <input type="text" class="form-control" placeholder="Enter your email address"> <span class="input-group-btn"> <button class="btn" type="button">Submit</button> </span> </div></div></div></div></div></section>',
       attributes: {
           class: 'custom-icon froala-forms-style-2',
           title: 'Style 2'
@@ -2788,7 +2876,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
    // Style 4
   bm.add('froala-forms-style-4', {
       label: 'Style 4',
-      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(./imgs/alt_wide_1.svg)"> <div class="container"> <div class="row"> <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-left"> <div class="row"> <div class="col"> <h1>Sign Up</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. </p></div></div><div class="row"> <div class="col mt-4"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control" placeholder="Password"> </div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></section>',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder//imgs/alt_wide_1.svg)"> <div class="container"> <div class="row"> <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-left"> <div class="row"> <div class="col"> <h1>Sign Up</h1> <p class="text-h3">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. </p></div></div><div class="row"> <div class="col mt-4"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control" placeholder="Password"> </div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></section>',
       attributes: {
           class: 'custom-icon froala-forms-style-4',
           title: 'Style 4'
@@ -2799,7 +2887,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
    // Style 5
   bm.add('froala-forms-style-5', {
       label: 'Style 5',
-      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(./imgs/bg_4.svg)"> <div class="container"> <div class="row justify-content-end"> <div class="col-12 col-md-8 col-lg-6 col-xl-5 text-left"> <div class="fdb-box"> <div class="row"> <div class="col"> <h1>Log In</h1> <p class="text-h3">Right at the coast of the Semantics, a large language ocean. A small river named Duden.</p></div></div><div class="row"> <div class="col mt-4"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control" placeholder="Password"> </div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></div></section>',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <section class="fdb-block" style="background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/bg_4.svg)"> <div class="container"> <div class="row justify-content-end"> <div class="col-12 col-md-8 col-lg-6 col-xl-5 text-left"> <div class="fdb-box"> <div class="row"> <div class="col"> <h1>Log In</h1> <p class="text-h3">Right at the coast of the Semantics, a large language ocean. A small river named Duden.</p></div></div><div class="row"> <div class="col mt-4"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control" placeholder="Password"> </div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></div></section>',
       attributes: {
           class: 'custom-icon froala-forms-style-5',
           title: 'Style 5'
@@ -2821,7 +2909,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
    // Style 7
   bm.add('froala-forms-style-7', {
       label: 'Style 7',
-      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block" style="background-image: url(./imgs/bg_0.svg)"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Log In</h1> </div></div><div class="row mt-4"> <div class="col"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control mb-1" placeholder="Password"> <p class="text-right"><a href="https://www.froala.com">Recover Password</a></p></div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></div></section>',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block" style="background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder//imgs/bg_0.svg)"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Log In</h1> </div></div><div class="row mt-4"> <div class="col"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control mb-1" placeholder="Password"> <p class="text-right"><a href="https://www.froala.com">Recover Password</a></p></div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></div></section>',
       attributes: {
           class: 'custom-icon froala-forms-style-7',
           title: 'Style 7'
@@ -3847,7 +3935,118 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
+    // ReUse Component
+    var comps = editor.DomComponents;
+    var defaultType = comps.getType('default');
+    var defaultModel = defaultType.model;
+    var defaultView = defaultType.view;
+    var traits;
+    var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+    for (var i = 0; i < storedTemplates.length; i++) {
+      console.log("value...", storedTemplates[i])
+      if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'layout') {
+        storedTemplates.splice(i, 1)
+      }
+    }
+    console.log("++++++++++Hello", storedTemplates)
 
+    let arr = [{
+      "value": "Select_Partial",
+      "name": "Select Partial"
+    }]
+
+    let arr_to_print = []
+    var folderUrl = localStorage.getItem("folderUrl");
+    for (var i = 0 ; i <= storedTemplates.length -1 ; i++) {
+      var request = new XMLHttpRequest(); 
+      console.log("folderUrl", folderUrl)
+      request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + storedTemplates[i], false);
+      request.setRequestHeader("Content-type", "application/json");
+      request.send();
+      resp = JSON.parse(request.responseText);
+      console.log("resp..............",resp)
+      console.log("resp..............",resp.length)
+      if (resp.length != 0) {
+        if (resp.length >= 2) {
+        for(let j = 0 ; j < resp.length ; j++){
+        arr_to_print.push(storedTemplates[i]+'-'+ resp[j])
+        }
+      } else{
+      arr_to_print.push(storedTemplates[i]+'-'+ resp)
+      }
+      }
+      
+
+    }
+    console.log("arr_to_print", arr_to_print)
+    for (var i = arr_to_print.length - 1; i >= 0; i--) {
+      arr.push({
+        "value": arr_to_print[i],
+        "name": arr_to_print[i]
+      })
+    }
+    console.log(arr)
+
+    comps.addType('ReUseComponent', {
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:selectPartial', this.doStuff);
+        },
+        doStuff() {
+          let foldername;
+          let filename;
+          this.get('traits').each(function(trait) {
+            let value_selct = trait.get('value')
+            let split = value_selct.split('-')
+            foldername =split[0];
+            filename = split[1];
+          });
+
+          var folderUrl = localStorage.getItem("folderUrl");
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + foldername + '/' + filename + '.html', false);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send();
+          var response = JSON.parse(xhttp.responseText);
+          //editor.setComponents(response); // Replace whole page to new component
+          editor.addComponents(response);
+        },
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+
+            {
+              label: 'PartialName',
+              name: 'selectPartial',
+              type: 'select',
+              changeProp: 1,
+              options: arr
+            }
+          ],
+        }),
+      }, {
+        isComponent: function(el) {
+          if (el.tagName == 'REUSECOMPONENT') {
+            return {
+              type: 'ReUseComponent'
+            };
+          }
+        },
+      }),
+      view: defaultType.view,
+      render: function() {
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here';
+        return this;
+      },
+    });
+
+
+
+
+
+    
   	// ReUse Component
     // var comps = editor.DomComponents;
     // var defaultType = comps.getType('default');

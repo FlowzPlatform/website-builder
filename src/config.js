@@ -3,18 +3,18 @@ module.exports = {
     // baseURL : 'http://172.16.230.84:3030',
 
     // WiFi ipAddress
-    baseURL : 'http://172.16.230.134:3030',
+    // baseURL : 'http://172.16.230.152:3030',
 
     // Local IpAddress
-    // baseURL : 'http://localhost:3030'
+    baseURL : 'http://localhost:3030',
 
     // Local ipaddress
     // Wifi
-    ipAddress : 'http://172.16.230.134',
+    // ipAddress : 'http://172.16.230.152',
     // LAN
     // ipAddress : 'http://172.16.230.84',
     // Local
-    // ipAddress : 'http://localhost',
+    ipAddress : 'http://localhost',
     
     pluginsPath : '/home/software/AllProjects/FlowzBuilder/src/assets/plugins'
 }

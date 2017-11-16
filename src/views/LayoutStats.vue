@@ -1,129 +1,34 @@
 <template>
-  <div class="ProjectStats">
-    <div class="page-buttons">
-      <el-button type="info" size="small" @click="previewWebsite">Preview Website</el-button>
-    </div>
+  <div class="LayoutStats">
   	<div class="container-fluid">
-    	<div class="row" style="margin-top: 20px;">
-       <!-- <div class="col-md-12">
-         <div class="card">
-            <h3>Project Name: <span class="project-name">{{repoName}}<small title="Project Id"><i> ({{newRepoId}})</i></small></span></h3>
-            <hr>
-            <el-form ref="form" :model="form" label-width="180px">
-
-              <el-form-item label="Project SEO Title">
-                <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
-              </el-form-item>
-
-              <el-form-item label="Project SEO Keywords">
-                <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
-              </el-form-item>
-              
-              <el-form-item label="Project SEO Description">
-                <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
-              </el-form-item>    
-
-            </el-form> 
-         </div>
-       </div>  --> 
-       <div class="col-md-3">
-          <div class="color-div block-4">
-            <h1 class="title counter" v-bind:data-count="counts.layouts">{{counts.layouts}}</h1>
-            <h3 class="pull-right subtitle">Layouts</h3>
-          </div>  
-       </div>
-
-       <div class="col-md-3">
-          <div class="color-div block-6">
-            <h1 class="title counter" v-bind:data-count="counts.pages">{{counts.pages}}</h1>
-            <h3 class="pull-right subtitle">Pages</h3>
-          </div>  
-       </div>
-
-       <div class="col-md-3">
-          <div class="color-div block-2">
-            <h1 class="title counter" v-bind:data-count="counts.variables">{{counts.variables}}</h1>
-            <h3 class="pull-right subtitle">Variables</h3>
-          </div>  
-       </div>
-
-       <div class="col-md-3">
-          <div class="color-div block-7">
-            <h1 class="title counter" v-bind:data-count="counts.partials">{{counts.partials}}</h1>
-            <h3 class="pull-right subtitle">Partials</h3>
-          </div>  
-       </div>
-       
-
-      </div>
-
-      <div class="row" style="margin-top: 40px;">
-        <div class="col-md-12">
-          <div class="creative-table">
-            <div class="table-title title-style-1">
-              <h4>{{repoName}}</h4>
-              <p>Repository Id: {{newRepoId}}</p>
-            </div>
-            <div class="table-body">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <td width="100px">Sr. No.</td>
-                    <td width="40%">Page Name</td>
-                    <td>Layout</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- {{tablePagesData}} -->
-                  <tr v-for="item in tablePagesData">
-                    <td>{{item.number}}</td>
-                    <td>{{item.pageName}}</td>
-                    <td>{{item.layoutName}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top: 40px;">
-        <div class="col-md-12">
-          <div class="creative-table">
-            <div class="table-title ">
-              <h4>Project Details</h4>
-              <p>Other important Project Details</p>
-            </div>
-            <div class="table-body">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <td width="20%">Title.</td>
-                    <td>Description</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- {{tablePagesData}} -->
-                  <tr>
-                    <td>Project SEO Title:</td>
-                    <td>{{seoTitle}}</td>
-                  </tr>
-                  <tr>
-                    <td>Project SEO Keywords:</td>
-                    <td>{{seoKeywords}}</td>
-                  </tr>
-                  <tr>
-                    <td>Project SEO Description:</td>
-                    <td>{{seoDesc}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
+  		<div class="row" style="margin-top: 40px;">
+	      <div class="col-md-12">
+	        <div class="creative-table">
+	          <div class="table-title title-style-3">
+	            <h4>Layout List</h4>
+	            <p>Project Name: {{repoName}}</p>
+	          </div>
+	          <div class="table-body">
+	            <table class="table table-hover">
+	              <thead>
+	                <tr>
+	                  <td width="100px">Sr. No.</td>
+	                  <td width="40%">Layout Name</td>
+	                  <td>Partials Used</td>
+	                </tr>
+	              </thead>
+	              <tbody>
+	                <tr v-for="item in tablePagesData">
+	                  <td>{{item.number}}</td>
+	                  <td>{{item.layoutName}}.layout</td>
+	                  <td v-html="item.partialsName"></td>
+	                </tr>
+	              </tbody>
+	            </table>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
   	</div>
   </div>
 </template>
@@ -139,7 +44,7 @@ import axios from 'axios'
 const config = require('../config');
 
 export default {
-  name: 'ProjectStats',
+  name: 'LayoutStats',
   props: {
     options: {
       type: Object
@@ -147,19 +52,8 @@ export default {
   },
   data () {
     return {
-      newRepoId: '',
       repoName: '',
-      seoTitle: '',
-      seoKeywords: '',
-      seoDesc: '',
       tablePagesData: [],
-      counts: {
-        layouts: 0,
-        pages: 0,
-        variables: 0,
-        partials: 0
-      },
-      
     }
   },
   component: {
@@ -167,79 +61,43 @@ export default {
   methods: {
   	async init () {
 
-      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+      let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let urlparts = configFileUrl.split("/");
+      let fileNameOrginal = urlparts[urlparts.length - 1];
+      let fileName = '/' + urlparts[urlparts.length - 1];
+      
+      let folderUrl = configFileUrl.replace(fileName, '');
+
+      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       if(this.configData.status == 200 || this.configData.status == 204){
         console.log('Config file found! Updating fields..');
 
         this.settings = JSON.parse(this.configData.data);
 
-        this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
-
-        this.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
-        this.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
-        this.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
-
-        this.counts.layouts = 0;
-        this.counts.pages = 0;
-        this.counts.variables = 0;
-        this.counts.partials = 0;
-
-        this.counts.layouts = (this.settings[2].layoutOptions[0].Layout.length - 1);
-        this.counts.pages = this.settings[1].pageSettings.length;
-        this.counts.variables = this.settings[1].projectSettings[1].GlobalVariables.length + this.settings[1].projectSettings[1].GlobalCssVariables.length;
-
-        let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
-        this.counts.partials = (partialItems.length - 2);
 
         this.tablePagesData = [];
 
-        for(var i = 0; i < Object.keys(this.settings[1].pageSettings).length; i++){
+        for(var i = 1; i <= Object.keys(this.settings[2].layoutOptions[0].Layout).length; i++){
+          let partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
+          let partialsListString = '';
+          for(let j = 0; j < partialsList.length; j++){
+            partialsListString += '<span class="label label-info" style="padding: 0.7em .6em .6em; margin-right: 5px; ">' + partialsList[j] + '</span>';
+          }
           this.tablePagesData.push({
-            number: i + 1,
-            pageName: this.settings[1].pageSettings[i].PageName,
-            layoutName: this.settings[1].pageSettings[i].PageLayout
+            number: i,
+            layoutName: this.settings[2].layoutOptions[0].Layout[i].value,
+            partialsName: partialsListString
           });
         }
 
       } else {
         console.log('Cannot get config file!');
       } 
-  	},
-
-    previewWebsite () {
-      var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
-    }
+  	}
   },
   async mounted () {
   	let response = await this.init();
-
-    // // Count Up animation
-    // $('.counter').each(function() {
-    //   var $this = $(this),
-    //       countTo = $this.attr('data-count');
-      
-    //   $({ countNum: $this.text()}).animate({
-    //     countNum: countTo
-    //   },
-
-    //   {
-
-    //     duration: 1000,
-    //     easing:'linear',
-    //     step: function() {
-    //       $this.text(Math.floor(this.countNum));
-    //     },
-    //     complete: function() {
-    //       $this.text(this.countNum);
-    //       //alert('finished');
-    //     }
-
-    //   });  
-      
-    // });
   },
   watch: {
   	'$store.state.fileUrl': function(newvalue) {
@@ -251,9 +109,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/*@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');*/
-
-.ProjectStats {
+.PartialStats {
   font-family: 'Lato', sans-serif;
 }
 
@@ -477,6 +333,10 @@ h3.subtitle{
   background: linear-gradient(to right, #AB64F6 0%, #61DBF7 100%);
 }
 
+.title-style-3{
+  background: linear-gradient(to right, #CF396F 0%, #F7E28B 100%);
+}
+
 .table-body{
   background-color: #fff;
   padding: 20px;
@@ -491,22 +351,5 @@ h3.subtitle{
 
 .table thead{
   color: #00A092;
-}
-
-
-.page-buttons{
-  position: fixed;
-  bottom: 7px;
-  right: 50px;
-  margin-top: 17.5px;
-  z-index: 10
-}
-
-@media(max-width: 680px){
-  .page-buttons{
-    position: relative;
-    left: auto;
-    right: auto;
-  }
 }
 </style>

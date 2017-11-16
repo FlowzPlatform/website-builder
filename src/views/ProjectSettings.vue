@@ -250,6 +250,57 @@
       </div>
       <!-- Global Variable section ends -->
 
+      <!-- Ecommerce Global Variable section -->
+      <!-- <div class="well">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4">
+                <h3>Ecommerce Variables</h3>
+              </div>
+            </div>
+            <hr>
+            <el-form ref="form" :model="form">
+              <div v-for="(n, index) in ecommerceVariables">
+                <el-form-item>
+                  <div class="row">
+
+                    <!-- Enter Variable ID --
+                    <div class="col-md-2">
+                      <el-input placeholder="Variable Class" v-model="n.variableClass"></el-input>
+                    </div>
+
+                    <!-- If type is Text or HTML --
+                    <div class="col-md-9" style="margin: 0; padding-left: 10px">
+                      <!-- <el-input type="textarea" :rows="5" placeholder="Variable Value" v-model="n.variableValue"></el-input> --
+                      <el-select v-model="n.variableValue" placeholder="Select">
+                        <el-option
+                          v-for="item in partialsList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    
+                    <!-- Delete Variable --
+                    <div class="col-md-1">
+                      <el-button class="pull-right" type="danger" @click="deleteEcommerceVariable(index)" icon="delete"></el-button>      
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+              <!-- Ends V-FOR looping -->
+              
+              <!-- Create new variable --
+              <el-button type="primary" @click="addNewEcommerceVariable">New Variable</el-button>
+
+            </el-form>
+          </div>
+        </div>
+      </div> -->
+      <!-- Global Variable section ends -->
+
       <!-- List of Commits Section -->
       <div class="well">
         <div class="row">
@@ -369,11 +420,13 @@ export default {
 
       globalVariables: [],
       globalCssVariables: [],
+      ecommerceVariables: [],
       imageInputIsDisabled: false,
-      uploadedVariableJsonData: ''
-      // fileData:{
-      //   url: 'urlHere'
-      // }
+      uploadedVariableJsonData: '',
+      layoutOptions: [],
+      partialsList: [],
+      selectedPartial: '',
+
     }
   },
   component: {
@@ -398,7 +451,7 @@ export default {
           // browser completed reading file - display it
           globalFileData = e.target.result;
           
-          axios.post( scope.baseURL + '/image-upload', {
+          axios.post( config.baseURL + '/image-upload', {
               filename : scope.folderUrl + '/assets/' + imageName,
               text : globalFileData,
               type : 'file'
@@ -427,12 +480,21 @@ export default {
       this.globalCssVariables.push(newVariable);
     },
 
+    addNewEcommerceVariable() {
+      let newVariable = { variableClass: '', variableValue: ''};
+      this.ecommerceVariables.push(newVariable);
+    },
+
     deleteVariable(deleteIndex) {
       this.globalVariables.splice(deleteIndex, 1);
     },
 
     deleteCssVariable(deleteIndex) {
       this.globalCssVariables.splice(deleteIndex, 1);
+    },
+
+    deleteEcommerceVariable(deleteIndex) {
+      this.ecommerceVariables.splice(deleteIndex, 1);
     },
 
     downloadGlobalVariables() {
@@ -477,7 +539,7 @@ export default {
 
     saveProjectSettings() {
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoKeywords,"ProjectSEODescription":this.form.seoDesc}, { "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables }];
+      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoKeywords,"ProjectSEODescription":this.form.seoDesc}, { "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables, "EcommerceVariables": this.ecommerceVariables, }];
 
       this.settings[1].projectSettings = ProjectSettings;
 
@@ -576,12 +638,12 @@ export default {
           key = key.trim();
           if (value[key2].match('html')) {
             key = key.split('.')[0]
-            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + "').toString())\n"
           } else if (value[key2].match('hbs')) {
             key = key.split('.')[0]
-            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + "').toString())\n"
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + "').toString())\n"
           } else {
-            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/" + key + "/" + value[key2] + ".html').toString())\n"
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + ".html').toString())\n"
           }
 
           partials = partials + temp;
@@ -603,7 +665,8 @@ export default {
                 type: 'folder'
               })
               .then(async(res) => {
-                console.log(res)
+                console.log(res);
+                console.log('Current URL:', this.$store.state.fileUrl.replace(/\\/g, "\/"));
                 var rawContent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Pages/' + nameF + '.html');
 
                 // newContent = newContent.data;
@@ -642,7 +705,7 @@ export default {
                   '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                   '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
                   "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
-                  rawContent +
+                  rawContent.data +
                   '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
                   '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
@@ -657,7 +720,7 @@ export default {
                   '<script src="./../main-files/main.js"><\/script>\n'+
                   '</body>\n</html>';
 
-                  if (this.form.Layout == 'Blank') {
+                  if (Layout == 'Blank') {
                     if (newContent.match('---')) {
                       let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
                       console.log("substr:" + substr)
@@ -676,7 +739,7 @@ export default {
                       '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
                       "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
-                      rawContent +
+                      rawContent.data +
                       '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
@@ -693,7 +756,7 @@ export default {
                     }
 
                   } else {
-                    let tempValueLayout = '---\nlayout: ' + this.form.Layout + '.layout\n---\n';
+                    let tempValueLayout = '---\nlayout: ' + Layout + '.layout\n---\n';
 
                     if (newContent.match('---')) {
                       let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
@@ -712,7 +775,7 @@ export default {
                       '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n'+
                       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n'+
                       "<link rel='stylesheet' href='./../main-files/main.css'/>\n"+
-                      rawContent +
+                      rawContent.data +
                       '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n'+
                       '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n'+
@@ -794,7 +857,7 @@ export default {
 
       }
 
-      window.open('http://localhost' + folderUrl.replace('var/www/html/', '') + '/public/');
+      window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
 
     },
 
@@ -869,7 +932,7 @@ export default {
     },
 
     exportWebsite(){
-      window.open('http://162.209.122.250/' + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
+      window.open(config.ipAddress + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
     },
 
     cancelSettings(){
@@ -892,6 +955,11 @@ export default {
         this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
+        this.ecommerceVariables = this.settings[1].projectSettings[1].EcommerceVariables;
+
+
+
+        console.log(this.ecommerceVariables);
 
         if(this.globalVariables == undefined){
           this.globalVariables = []
@@ -899,9 +967,27 @@ export default {
         if(this.globalCssVariables == undefined){
           this.globalCssVariables = []
         }
+        if(this.ecommerceVariables == undefined){
+          this.ecommerceVariables = []
+        }
+
+        console.log(this.ecommerceVariables);
 
         this.form.Header = this.settings[2].layoutOptions[0].headers;
         this.form.Footer = this.settings[2].layoutOptions[0].footers;
+
+
+        // Get all partials
+        this.layoutOptions = this.settings[2].layoutOptions[0];
+        this.layoutOptions = Object.keys(_.omit(this.layoutOptions, ['Layout', 'Header', 'Footer', 'Sidebar', 'Menu']));
+
+        for (var i = 0; i <= this.layoutOptions.length; i++) {
+          let value = {
+            'value' : this.layoutOptions[i].toLowerCase(),
+            'label' : this.layoutOptions[i]
+          }
+          this.partialsList.push(value);
+        }
 
         // Set Brand Logo Name
         if(this.form.brandLogoName != ''){

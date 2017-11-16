@@ -8,8 +8,10 @@
 
 const beautify = require('beautify');
 import axios from 'axios';
+import _ from 'lodash';
 
 const config = require('../config');
+import Emitter from '../mixins/emitter'
 
 let editor = null;
 
@@ -17,25 +19,50 @@ let css = '!import url(\'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/cs
 
 export default {
     name: 'GrapesComponent',
+    mixins: [Emitter],
     data () {
     return {
       baseURL: 'http://172.16.230.84:3030',
       brandName: '',
       imageBlob: '',
       globalVariables: [],
-      globalCssVariables: []
+      globalCssVariables: [],
+      savedFile: false,
+      fileUrl: ''
     }
   },
     async mounted () {
 
+        this.fileSaved = false;
 
+        this.fileUrl = this.$store.state.fileUrl;
 
+        // // get bootstrap css
+        // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
 
+        // // get bootstrap v4 css
+        // let bootstrapv4css = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css');
+
+        // // get froala css
+        // let froalacss = await axios.get('https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css');
+
+        // // get fontawesome css
+        // let fontawesomecss = await axios.get('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
+
+        
         // Get Config File
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
         let fileNameOrginal = urlparts[urlparts.length - 1];
-        let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        let fileName = '';
+        // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+
+        if(_.includes(configFileUrl, 'Partials')){
+            fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        } else {
+            fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        }
+
         var folderUrl = configFileUrl.replace(fileName, '');
 
         let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
@@ -76,9 +103,9 @@ export default {
 		var lp = './static/img/';
         var plp = 'http://placehold.it/350x250/';
         var images = [
-            lp+'TransparentBG1.png', lp+'team1.jpg', lp+'team2.jpg', lp+'team3.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
+            'https://imgur.com/XQuOMKc.png', 'https://imgur.com/fBuNwuy.jpg', 'https://imgur.com/GgCaYku.jpg', 'https://imgur.com/AGMTzXe.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
             plp+'c5d647/fff/image4.jpg', plp+'f28c33/fff/image5.jpg', plp+'e868a2/fff/image6.jpg', plp+'cc4360/fff/image7.jpg',
-            lp+'work-desk.jpg', lp+'phone-app.png', lp+'bg-gr-v.png'
+            'https://imgur.com/IbSijwv.jpg', 'https://imgur.com/181uTO9.png', 'https://i.imgur.com/XTo3DiU.png'
         ];
 
         // 'gjs-plugin-ckeditor'
@@ -87,6 +114,7 @@ export default {
 			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin' ],
       		container : '#gjs',
       		components: this.$store.state.content,
+            allowScripts: true,
       		storageManager: {
                 id: 'gjs-',                 // Prefix identifier that will be used inside storing and loading
                 type: 'local',              // Type of the storage
@@ -443,25 +471,33 @@ export default {
 
             this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
                 "\n\n\n\n" + grapesHtml;
+
+            this.savedFile = true;
         }
 	},
 
     // beforeDestroy() {
-    //     this.$swal({
-    //         title: 'You are Leaving..',
-    //         text: 'You want you save this file?',
-    //         type: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Yes, save it!',
-    //         cancelButtonText: 'No, discard changes'
-    //     }).then(() => {
-    //             this.getHtml();
-    //             // this.$parent.$options.methods.saveFile();
-    //             this.$dispatch('saveFileFromChild');  
-    //             console.log('File Saved');
-    //     }).catch((dismiss) => {
-    //         console.log('error', dismiss);
-    //     })
+    //     if(this.savedFile == false){
+    //        this.$swal({
+    //             title: 'You Left..',
+    //             text: 'You want you save the file?',
+    //             type: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonText: 'Yes, save it!',
+    //             cancelButtonText: 'No, discard changes'
+    //         }).then(() => {
+    //                 this.getHtml();
+    //                 // this.$parent.$options.methods.saveFile();
+    //                 // this.$dispatch('saveFileFromChild');  
+    //                 this.dispatch('Index', 'saveFileFromChild', this.fileUrl);
+    //                 console.log('File Saved');
+    //         }).catch((dismiss) => {
+    //             console.log('error', dismiss);
+    //         }) 
+    //     } else {
+    //         console.log('File not saved');
+    //     }
+        
     // }
 }
 </script>
