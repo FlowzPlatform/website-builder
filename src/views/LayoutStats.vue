@@ -20,7 +20,7 @@
 	              <tbody>
 	                <tr v-for="item in tablePagesData">
 	                  <td>{{item.number}}</td>
-	                  <td>{{item.layoutName}}</td>
+	                  <td>{{item.layoutName}}.layout</td>
 	                  <td v-html="item.partialsName"></td>
 	                </tr>
 	              </tbody>

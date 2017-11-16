@@ -11,6 +11,7 @@ import axios from 'axios';
 import _ from 'lodash';
 
 const config = require('../config');
+import Emitter from '../mixins/emitter'
 
 let editor = null;
 
@@ -18,18 +19,23 @@ let css = '!import url(\'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/cs
 
 export default {
     name: 'GrapesComponent',
+    mixins: [Emitter],
     data () {
     return {
       baseURL: 'http://172.16.230.84:3030',
       brandName: '',
       imageBlob: '',
       globalVariables: [],
-      globalCssVariables: []
+      globalCssVariables: [],
+      savedFile: false,
+      fileUrl: ''
     }
   },
     async mounted () {
 
+        this.fileSaved = false;
 
+        this.fileUrl = this.$store.state.fileUrl;
 
         // // get bootstrap css
         // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
@@ -108,6 +114,7 @@ export default {
 			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin' ],
       		container : '#gjs',
       		components: this.$store.state.content,
+            allowScripts: true,
       		storageManager: {
                 id: 'gjs-',                 // Prefix identifier that will be used inside storing and loading
                 type: 'local',              // Type of the storage
@@ -464,25 +471,33 @@ export default {
 
             this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
                 "\n\n\n\n" + grapesHtml;
+
+            this.savedFile = true;
         }
 	},
 
     // beforeDestroy() {
-    //     this.$swal({
-    //         title: 'You are Leaving..',
-    //         text: 'You want you save this file?',
-    //         type: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Yes, save it!',
-    //         cancelButtonText: 'No, discard changes'
-    //     }).then(() => {
-    //             this.getHtml();
-    //             // this.$parent.$options.methods.saveFile();
-    //             this.$dispatch('saveFileFromChild');  
-    //             console.log('File Saved');
-    //     }).catch((dismiss) => {
-    //         console.log('error', dismiss);
-    //     })
+    //     if(this.savedFile == false){
+    //        this.$swal({
+    //             title: 'You Left..',
+    //             text: 'You want you save the file?',
+    //             type: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonText: 'Yes, save it!',
+    //             cancelButtonText: 'No, discard changes'
+    //         }).then(() => {
+    //                 this.getHtml();
+    //                 // this.$parent.$options.methods.saveFile();
+    //                 // this.$dispatch('saveFileFromChild');  
+    //                 this.dispatch('Index', 'saveFileFromChild', this.fileUrl);
+    //                 console.log('File Saved');
+    //         }).catch((dismiss) => {
+    //             console.log('error', dismiss);
+    //         }) 
+    //     } else {
+    //         console.log('File not saved');
+    //     }
+        
     // }
 }
 </script>

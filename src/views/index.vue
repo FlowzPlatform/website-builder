@@ -257,6 +257,7 @@ import io from 'socket.io-client';
 var daex = require('json-daex');
 
 const config = require('../config');
+import Emitter from '../mixins/emitter';
 
 // Custom Components
 
@@ -315,6 +316,7 @@ let checkFileName = (rule, value, callback) => {
 
 export default {
   name: 'Index',
+  mixins: [Emitter],
   props: {
   },
   data () {
@@ -412,6 +414,8 @@ export default {
       this.isLoggedInUser = true;
       this.getData()
     }
+
+    this.$on('saveFileFromChild', this.autoSaveFromGrapes);
   },
   mounted () {
     // Sidemenu Toggle
@@ -794,53 +798,56 @@ export default {
       // let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
       // let rawSettings = JSON.parse(responseConfig.data);
 
-      for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
-        if (this.globalConfigData[1].pageSettings[i].PageName == (nameF + '.html')) {
-          this.form.Layout = this.globalConfigData[1].pageSettings[i].PageLayout
-          this.form.partials = this.globalConfigData[1].pageSettings[i].partials
-        }
-      }
+      let self = this;
 
-      let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
-      var index = responseMetal.data.search('.source')
-
-      responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
-
-      var indexPartial = responseMetal.data.search("('handlebars')");
-
-      var partials = '';
-      for (var i = 0; i < this.form.partials.length; i++) {
-        let key = Object.keys(this.form.partials[i])[0];
-        let value = this.form.partials[i]
-        let key2 = key;
-        key = key.trim();
-
-        console.log('Folder URL: ', folderUrl);
-
-        if (value[key2].match('html')) {
-          key = key.split('.')[0]
-          var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + "').toString())\n"
-        } else if (value[key2].match('hbs')) {
-          key = key.split('.')[0]
-          var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + "').toString())\n"
-        } else {
-          var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + ".html').toString())\n"
+      setTimeout(async function(){
+        for (let i = 0; i < self.globalConfigData[1].pageSettings.length; i++) {
+          if (self.globalConfigData[1].pageSettings[i].PageName == (nameF + '.html')) {
+            self.form.Layout = self.globalConfigData[1].pageSettings[i].PageLayout
+            self.form.partials = self.globalConfigData[1].pageSettings[i].partials
+          }
         }
 
-        partials = partials + temp;
+        let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
+        var index = responseMetal.data.search('.source')
 
-      }
+        responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
 
-      responseMetal.data = responseMetal.data.substr(0, indexPartial + 15) + partials + responseMetal.data.substr(indexPartial + 15);
+        var indexPartial = responseMetal.data.search("('handlebars')");
 
-      let mainMetal = folderUrl + '/assets/metalsmith.js'
+        var partials = '';
+        for (var i = 0; i < self.form.partials.length; i++) {
+          let key = Object.keys(self.form.partials[i])[0];
+          let value = self.form.partials[i]
+          let key2 = key;
+          key = key.trim();
 
-      axios.post(config.baseURL + '/flows-dir-listing', {
+          console.log('Folder URL: ', folderUrl);
+
+          if (value[key2].match('html')) {
+            key = key.split('.')[0]
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + "').toString())\n"
+          } else if (value[key2].match('hbs')) {
+            key = key.split('.')[0]
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + "').toString())\n"
+          } else {
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + key + "/" + value[key2] + ".html').toString())\n"
+          }
+
+          partials = partials + temp;
+
+        }
+
+        responseMetal.data = responseMetal.data.substr(0, indexPartial + 15) + partials + responseMetal.data.substr(indexPartial + 15);
+
+        let mainMetal = folderUrl + '/assets/metalsmith.js'
+
+        axios.post(config.baseURL + '/flows-dir-listing', {
           filename: mainMetal,
           text: responseMetal.data,
           type: 'file'
         }).then((response) => {
-          this.$message({
+          self.$message({
             showClose: true,
             message: 'Config Saved!',
             type: 'success'
@@ -856,7 +863,7 @@ export default {
               console.log(res)
                 // Create preview file
 
-              let rawContent = this.$store.state.content;
+              let rawContent = self.$store.state.content;
 
               let newContent = "<html>\n<head>\n" +
                 "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
@@ -886,7 +893,7 @@ export default {
                 '<script src="./../main-files/main.js"><\/script>\n' +
                 '</body>\n</html>';
 
-              if (this.form.Layout == 'Blank') {
+              if (self.form.Layout == 'Blank') {
                 if (newContent.match('---')) {
                   let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
                   newContent = newContent.replace(substr, '')
@@ -921,7 +928,7 @@ export default {
                 }
 
               } else {
-                let tempValueLayout = '---\nlayout: ' + this.form.Layout + '.layout\n---\n';
+                let tempValueLayout = '---\nlayout: ' + self.form.Layout + '.layout\n---\n';
 
                 if (newContent.match('---')) {
                   let substr = newContent.substr(newContent.search('---'), newContent.search('<'))
@@ -958,11 +965,11 @@ export default {
 
               }
 
-              this.PageLayout = '';
-              this.form.Header = '';
-              this.form.Footers = '';
-              this.form.Sidebar = '';
-              this.form.Menu = '';
+              self.PageLayout = '';
+              self.form.Header = '';
+              self.form.Footers = '';
+              self.form.Sidebar = '';
+              self.form.Menu = '';
 
               let previewFileName = folderUrl + '/Preview/' + nameF + '.html';
 
@@ -972,7 +979,7 @@ export default {
                   type: 'file'
                 })
                 .then((res) => {
-                  this.saveFileLoading = false;
+                  self.saveFileLoading = false;
 
                   axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                       // revert changes in metalsmith 
@@ -985,7 +992,7 @@ export default {
                           type: 'file'
                         })
                         .then((res) => {
-                          let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                          let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
                           previewFile = folderUrl.replace('/var/www/html', '');
 
                           window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
@@ -1006,7 +1013,7 @@ export default {
 
                     })
                     .catch((err) => {
-                      this.$message({
+                      self.$message({
                         showClose: true,
                         message: 'File not saved! Please try again.',
                         type: 'error'
@@ -1014,15 +1021,15 @@ export default {
                       console.log('Error while creating MetalSmith JS file' + err)
                     })
 
-                  this.$message({
+                  self.$message({
                     showClose: true,
                     message: 'File Saved!',
                     type: 'success'
                   });
                 })
                 .catch((e) => {
-                  this.saveFileLoading = false
-                  this.$message({
+                  self.saveFileLoading = false
+                  self.$message({
                     showClose: true,
                     message: 'File not saved! Please try again.',
                     type: 'error'
@@ -1038,12 +1045,13 @@ export default {
         })
         .catch((e) => {
           console.log('Error while creating MetalSmith JS file' + e)
-          this.$message({
+          self.$message({
             showClose: true,
             message: 'Cannot save file! Some error occured, try again.',
             type: 'danger'
           });
         })
+      },2000);
     },
 
     // Create new Folder
@@ -1090,7 +1098,11 @@ export default {
         })
         .then((res) => {
           this.newProjectFolderDialog = false
-          this.addNewProjectFolderLoading = false
+          this.addNewProjectFolderLoading = false;
+
+          console.log('ProjectName: ', this.formAddProjectFolder.projectName);
+          console.log('Private Token of user: ', this.$session.get('privateToken'));
+          console.log('Username: ', this.$session.get('username'));
 
           // Create repositoroty on GitLab
           axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&privateToken=' + this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {})
@@ -1297,21 +1309,71 @@ export default {
       // Create Config.json file
       let newfilename = newFolderName + '/assets/config.json';
 
-      let repoSettings = [ { "repoSettings" : [ { "RepositoryId" : this.newRepoId, "RepositoryName" : this.repoName }] }, {"projectSettings":[{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": '', "BrandLogoName": '', "ProjectLayout": '',"ProjectHeader":'',"ProjectFooter":'',"ProjectSEOTitle":'',"ProjectSEOKeywords": '',"ProjectSEODescription":''}, { "GlobalVariables": [], "GlobalCssVariables": [] } ],"pageSettings":[{
-        "PageName": "index.html",
-        "PageSEOTitle": "",
-        "PageSEOKeywords": "",
-        "PageSEODescription": "",
-        "PageLayout": "default",
-        "partials": [
-          {
-            "Header": "default"
-          },
-          {
-            "Footer": "default"
-          }
-        ]
-        }] }, { "layoutOptions": [ { "Header": [{ value: 'default', label: 'default' }], "Footer": [{ value: 'default', label: 'default' }],"Sidebar": [{ value: 'default', label: 'default' }],"Menu": [{ value: 'default', label: 'default' }], "Layout": [{ value: 'Blank', label: 'Blank',partialsList:[], defaultList:[] }, { value: 'default', label: 'default',partialsList:['Header','Footer'], defaultList:[] }] } ] } ];
+      let repoSettings = [{
+                            "repoSettings": [{
+                              "RepositoryId": this.newRepoId,
+                              "RepositoryName": this.repoName
+                            }]
+                          }, {
+                            "projectSettings": [{
+                              "RepositoryId": this.newRepoId,
+                              "ProjectName": this.repoName,
+                              "BrandName": '',
+                              "BrandLogoName": '',
+                              "ProjectLayout": '',
+                              "ProjectHeader": '',
+                              "ProjectFooter": '',
+                              "ProjectSEOTitle": '',
+                              "ProjectSEOKeywords": '',
+                              "ProjectSEODescription": ''
+                            }, {
+                              "GlobalVariables": [],
+                              "GlobalCssVariables": [],
+                              "EcommerceVariables": []
+                            }],
+                            "pageSettings": [{
+                              "PageName": "index.html",
+                              "PageSEOTitle": "",
+                              "PageSEOKeywords": "",
+                              "PageSEODescription": "",
+                              "PageLayout": "default",
+                              "partials": [{
+                                "Header": "default"
+                              }, {
+                                "Footer": "default"
+                              }]
+                            }]
+                          }, {
+                            "layoutOptions": [{
+                              "Header": [{
+                                value: 'default',
+                                label: 'default'
+                              }],
+                              "Footer": [{
+                                value: 'default',
+                                label: 'default'
+                              }],
+                              "Sidebar": [{
+                                value: 'default',
+                                label: 'default'
+                              }],
+                              "Menu": [{
+                                value: 'default',
+                                label: 'default'
+                              }],
+                              "Layout": [{
+                                value: 'Blank',
+                                label: 'Blank',
+                                partialsList: [],
+                                defaultList: []
+                              }, {
+                                value: 'default',
+                                label: 'default',
+                                partialsList: ['Header', 'Footer'],
+                                defaultList: []
+                              }]
+                            }]
+                          }];
 
       axios.post(config.baseURL + '/flows-dir-listing', {
           filename : newfilename,
@@ -2064,6 +2126,7 @@ export default {
 
     // Save file with autometalsmith folders from layout and hbs file
     async saveFile() {
+      console.log('Saving File');
       this.saveFileLoading = true
       let newContent = this.$store.state.content;
       switch (this.componentId) {
@@ -2095,6 +2158,8 @@ export default {
           fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
       } else if(_.includes(configFileUrl, 'Pages')){
           fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      } else if(_.includes(configFileUrl, 'client-plugins')){
+          fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
       } else {
           fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
       }
@@ -2277,7 +2342,7 @@ export default {
                   })
               }
             }
-          } else {
+          } else if (this.currentFile.path.replace(/\\/g, "\/").match('Partials')) {
 
             let checkValue = false;
             if (fileName.search('hbs') != -1) {
@@ -2461,6 +2526,60 @@ export default {
               }
             }
           }
+        })
+        .catch((e) => {
+          this.saveFileLoading = false
+          this.$message({
+            showClose: true,
+            message: 'File not saved! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
+      this.form.checked = [];
+      this.form.namearray = [];
+    },
+
+    // Triggered when confirmed for autoSave from grapes component
+    async autoSaveFromGrapes(self) {
+      let fileUrl = self;
+      console.log('Autosave File URL:', fileUrl);
+      let configFileUrl = fileUrl.replace(/\\/g, "\/");
+      let urlparts = configFileUrl.split("/");
+      let fileNameOrginal = urlparts[urlparts.length - 1];
+      let foldername = urlparts[urlparts.length - 2];
+      // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      // var folderUrl = configFileUrl.replace(fileName, '');
+
+      let fileName = '';
+      if(_.includes(configFileUrl, 'Partials')){
+          fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      } else if(_.includes(configFileUrl, 'Pages')){
+          fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      } else {
+          fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      }
+
+      let folderUrl = configFileUrl.replace(fileName, '');
+
+      let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let rawConfigs = JSON.parse(responseConfig.data);
+      this.globalConfigData = rawConfigs;
+
+      // this.getConfigFileData(folderUrl);
+
+      axios.post(config.baseURL + '/flows-dir-listing', {
+          filename: this.currentFile.path.replace(/\\/g, "\/"),
+          text: newContent,
+          type: 'file'
+        })
+        .then((res) => {
+          this.saveFileLoading = false
+          this.$message({
+            showClose: true,
+            message: 'File Saved!',
+            type: 'success'
+          });
         })
         .catch((e) => {
           this.saveFileLoading = false
@@ -3252,12 +3371,12 @@ export default {
 
   },
 
-  events: {
-    saveFileFromChild: function (){
-      console.log('File save from child');
-      this.saveFile();
-    },
-  }
+  // events: {
+  //   saveFileFromChild: function (){
+  //     console.log('File save from child');
+  //     // this.saveFile();
+  //   },
+  // }
 }
 </script>
 
