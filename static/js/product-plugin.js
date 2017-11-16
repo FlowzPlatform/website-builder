@@ -485,6 +485,17 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     },
     category: 'Ecommerce Components'
   });
+// <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  bm.add('productSearchFilter', {
+    label: 'Product Search Filter',
+    content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"><productSearchFilter  style="display: block; width: 100%;padding:15px; vertical-align: middle;"><div class="reomve-texts"> <i class="fa fa-search"></i> <label style="margin: inherit;">Product Search Filter</label></div></productSearchFilter>',
+    attributes: { 
+        class: 'fa fa-search',
+        title: 'Product search Filter'
+    },
+    category: 'Ecommerce Components'
+  });
+
 
   bm.add('productCompare', {
       label: 'Compare Products',
@@ -3592,6 +3603,95 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       isComponent: function(el) {
         if(el.tagName == 'PRODUCTREACTIVESEARCH'){
           return {type: 'productReactiveSearch'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
+
+  comps.addType('productSearchFilter', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+        
+          {
+            label: 'API URL',
+            name: 'apiurl'
+          },
+          {
+            label: 'Username',
+            name: 'apiusername',
+            type: 'text'
+          },
+          {
+            label: 'Password',
+            name: 'apipassword',
+            type: 'password'
+          },
+          {
+            label: 'Search',
+            name: 'selectadvance_search_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'category',
+            name: 'selectcategory_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Prices',
+            name: 'selectprices_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Colours',
+            name: 'selectcolours_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Brands',
+            name: 'selectbrands_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Themes',
+            name: 'selecttheme_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'portrait', name:'Portrait'},{value: 'landscape', name:'Landscape'}]
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'PRODUCTSEARCHFILTER'){
+          return {type: 'productSearchFilter'};
         }
       },
     }),
