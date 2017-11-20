@@ -588,61 +588,104 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
     // E-comm WishList
-     bm.add('WishList_Button', {
-        label: 'WishList Button',
-        content: {
-          script: "",
-          content: '<div><a href=""><i class="fa fa-heart"></i> Add to Wishlist</a></div>'
-        },
-        attributes: {
-            class: 'fa fa-list-alt',
-            title: 'WishList Button',
-        },
-        category: 'Ecommerce Component'
-    });
+    //  bm.add('WishList_Button', {
+    //     label: 'WishList Button',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-wishlist"><a href="" class="btn btn-default"><i class="fa fa-heart"></i> Add to Wishlist</a></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-list-alt',
+    //         title: 'WishList Button',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
 
-     // E-comm Add to cart
-     bm.add('cartButton', {
-        label: 'Cart Button',
-        content: {
-          script: "",
-          content: '<div><a href=""><i class="fa fa-shopping-cart"></i> Add to cart</a></div>'
-        },
-        attributes: {
-            class: 'fa fa-list-alt',
-            title: 'Cart Button',
-        },
-        category: 'Ecommerce Component'
-    });
+    //  // E-comm Add to cart
+    //  bm.add('cartButton', {
+    //     label: 'Cart Button',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-cart"><a href="" class="btn btn-default"><i class="fa fa-shopping-cart"></i> Add to cart</a></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-list-alt',
+    //         title: 'Cart Button',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
 
 
-     // E-comm Add to cart
-     bm.add('CompareButton', {
-        label: 'Compare Button',
-        content: {
-          script: "",
-          content: '<div><a href=""><i class="fa fa-retweet"></i> Add to Compare</a></div>'
-        },
-        attributes: {
-            class: 'fa fa-list-alt',
-            title: 'Compare Button',
-        },
-        category: 'Ecommerce Component'
-    });
+    //  // E-comm Add to cart
+    //  bm.add('CompareButton', {
+    //     label: 'Compare Button',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-compare"><a href="" class="btn btn-default"><i class="fa fa-retweet"></i> Add to Compare</a></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-list-alt',
+    //         title: 'Compare Button',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
 
-    // E-comm Add to cart
-     bm.add('More_Details', {
-        label: 'More Details',
-        content: {
-          script: "",
-          content: '<div><a href=""><i class="fa fa-list-alt"></i> More details</a></div>'
-        },
-        attributes: {
-            class: 'fa fa-list-alt',
-            title: 'More Details',
-        },
-        category: 'Ecommerce Component'
-    });
+    // // E-comm Add to cart
+    //  bm.add('More_Details', {
+    //     label: 'More Details',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-more-details"><a href="" class="btn btn-default"><i class="fa fa-list-alt"></i> More details</a></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-list-alt',
+    //         title: 'More Details',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
+
+    //  // E-comm Image
+    //  bm.add('image_ecomm', {
+    //     label: 'image_ecomm',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-product-image"><img src="http://placehold.it/200x150" class="img-responsive center-block" alt=""></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-picture-o',
+    //         title: 'Image',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
+
+
+    // E-comm Image
+    //  bm.add('Button_ecomm', {
+    //     label: 'Button_ecomm',
+    //     content: {
+    //       script: "",
+    //       content: '<div><button>Product Name</button></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-picture-o',
+    //         title: 'Button_ecomm',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
+
+    // // E-comm Product Name
+    //  bm.add('Product Name', {
+    //     label: 'Product Name',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-product-name"><p>Product Title</p></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-title',
+    //         title: 'Product Name',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
 
 	
 
@@ -3935,118 +3978,260 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
-    // ReUse Component
-    var comps = editor.DomComponents;
-    var defaultType = comps.getType('default');
-    var defaultModel = defaultType.model;
-    var defaultView = defaultType.view;
-    var traits;
-    var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-    for (var i = 0; i < storedTemplates.length; i++) {
-      console.log("value...", storedTemplates[i])
-      if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'layout') {
-        storedTemplates.splice(i, 1)
-      }
-    }
-    console.log("++++++++++Hello", storedTemplates)
 
-    let arr = [{
+
+
+  // ReUse Component
+  var comps = editor.DomComponents;
+  var defaultType = comps.getType('default');
+  var defaultModel = defaultType.model;
+  var defaultView = defaultType.view;
+  var traits;
+  var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+  for (var i = 0; i < storedTemplates.length; i++) {
+      console.log("value...", storedTemplates[i])
+      if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == 'Menu' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+          storedTemplates.splice(i, 1)
+      }
+  }
+  console.log("++++++++++Hello", storedTemplates)
+
+  let arr = [{
       "value": "Select_Partial",
       "name": "Select Partial"
-    }]
+  }]
 
-    let arr_to_print = []
-    var folderUrl = localStorage.getItem("folderUrl");
-    for (var i = 0 ; i <= storedTemplates.length -1 ; i++) {
-      var request = new XMLHttpRequest(); 
+  let arr_to_print = []
+  var folderUrl = localStorage.getItem("folderUrl");
+  for (var i = 0; i <= storedTemplates.length - 1; i++) {
+      var request = new XMLHttpRequest();
       console.log("folderUrl", folderUrl)
-      request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + storedTemplates[i], false);
+      request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
       request.setRequestHeader("Content-type", "application/json");
       request.send();
       resp = JSON.parse(request.responseText);
-      console.log("resp..............",resp)
-      console.log("resp..............",resp.length)
-      if (resp.length != 0) {
-        if (resp.length >= 2) {
-        for(let j = 0 ; j < resp.length ; j++){
-        arr_to_print.push(storedTemplates[i]+'-'+ resp[j])
-        }
-      } else{
-      arr_to_print.push(storedTemplates[i]+'-'+ resp)
-      }
+      console.log("resp..............", resp)
+      console.log("resp..............", resp.length)
+
+      for (let index = 0; index < resp.length; index++) {
+          request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
+          request.setRequestHeader("Content-type", "application/json");
+          request.send();
+          resp2 = JSON.parse(request.responseText);
+          console.log("resp2....", resp2)
+
+          
       }
       
-
-    }
-    console.log("arr_to_print", arr_to_print)
-    for (var i = arr_to_print.length - 1; i >= 0; i--) {
-      arr.push({
-        "value": arr_to_print[i],
-        "name": arr_to_print[i]
-      })
-    }
-    console.log(arr)
-
-    comps.addType('ReUseComponent', {
-      model: defaultModel.extend({
-        init() {
-          this.listenTo(this, 'change:selectPartial', this.doStuff);
-        },
-        doStuff() {
-          let foldername;
-          let filename;
-          this.get('traits').each(function(trait) {
-            let value_selct = trait.get('value')
-            let split = value_selct.split('-')
-            foldername =split[0];
-            filename = split[1];
-          });
-
-          var folderUrl = localStorage.getItem("folderUrl");
-          var xhttp = new XMLHttpRequest();
-          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + foldername + '/' + filename + '.html', false);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send();
-          var response = JSON.parse(xhttp.responseText);
-          //editor.setComponents(response); // Replace whole page to new component
-          editor.addComponents(response);
-        },
-        defaults: Object.assign({}, defaultModel.prototype.defaults, {
-          editable: true,
-          droppable: true,
-          traits: [
-
-            {
-              label: 'PartialName',
-              name: 'selectPartial',
-              type: 'select',
-              changeProp: 1,
-              options: arr
-            }
-          ],
-        }),
-      }, {
-        isComponent: function(el) {
-          if (el.tagName == 'REUSECOMPONENT') {
-            return {
-              type: 'ReUseComponent'
-            };
+      if (resp.length != 0) {
+          if (resp2.length >= 2) {
+              for (let j = 0; j < resp2.length; j++) {
+                  arr_to_print.push(resp[i] + '-' + resp2[j])
+              }
+          } else {
+              arr_to_print.push(resp[i] + '-' + resp2)
           }
-        },
-      }),
+      } 
+
+      // if (resp.length != 0) {
+      //     if (resp.length >= 2) {
+      //         for (let j = 0; j < resp.length; j++) {
+      //             arr_to_print.push(storedTemplates[i] + '-' + resp[j])
+      //         }
+      //     } else {
+      //         arr_to_print.push(storedTemplates[i] + '-' + resp)
+      //     }
+      // }
+
+
+  }
+  console.log("arr_to_print", arr_to_print)
+  for (var i = arr_to_print.length - 1; i >= 0; i--) {
+      arr.push({
+          "value": arr_to_print[i],
+          "name": arr_to_print[i]
+      })
+  }
+  console.log(arr)
+
+  comps.addType('ReUseComponent', {
+      model: defaultModel.extend({
+          init() {
+              this.listenTo(this, 'change:selectPartial', this.doStuff);
+          },
+          doStuff() {
+              let foldername;
+              let filename;
+              this.get('traits').each(function (trait) {
+                  let value_selct = trait.get('value')
+                  let split = value_selct.split('-')
+                  foldername = split[0];
+                  filename = split[1];
+              });
+
+              var folderUrl = localStorage.getItem("folderUrl");
+              var xhttp = new XMLHttpRequest();
+              xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + foldername + '/' + filename + '.html', false);
+              xhttp.setRequestHeader("Content-type", "application/json");
+              xhttp.send();
+              var response = JSON.parse(xhttp.responseText);
+              let model = editor.getSelected();
+              model.components("{{> " + foldername + " id='" + filename + ".html' }}"  );
+              // FINAL_RES =  {{> Template id='creative.html' }}
+              //editor.setComponents(response); // Replace whole page to new component
+              //editor.addComponents(response);
+          },
+          defaults: Object.assign({}, defaultModel.prototype.defaults, {
+              editable: true,
+              droppable: true,
+              traits: [
+
+                  {
+                      label: 'PartialName',
+                      name: 'selectPartial',
+                      type: 'select',
+                      changeProp: 1,
+                      options: arr
+                  }
+              ],
+          }),
+      }, {
+              isComponent: function (el) {
+                  if (el.tagName == 'REUSECOMPONENT') {
+                      return {
+                          type: 'ReUseComponent'
+                      };
+                  }
+              },
+          }),
       view: defaultType.view,
-      render: function() {
-        defaultType.view.prototype.render.apply(this, arguments);
-        this.el.placeholder = 'Text here';
-        return this;
+      render: function () {
+          defaultType.view.prototype.render.apply(this, arguments);
+          this.el.placeholder = 'Text here';
+          return this;
       },
-    });
+  });
 
 
 
 
 
-    
+
+
+    // ReUse Component
+    // var comps = editor.DomComponents;
+    // var defaultType = comps.getType('default');
+    // var defaultModel = defaultType.model;
+    // var defaultView = defaultType.view;
+    // var traits;
+    // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+    // for (var i = 0; i < storedTemplates.length; i++) {
+    //   console.log("value...", storedTemplates[i])
+    //   if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'layout') {
+    //     storedTemplates.splice(i, 1)
+    //   }
+    // }
+    // console.log("++++++++++Hello", storedTemplates)
+
+    // let arr = [{
+    //   "value": "Select_Partial",
+    //   "name": "Select Partial"
+    // }]
+
+    // let arr_to_print = []
+    // var folderUrl = localStorage.getItem("folderUrl");
+    // for (var i = 0 ; i <= storedTemplates.length -1 ; i++) {
+    //   var request = new XMLHttpRequest(); 
+    //   console.log("folderUrl", folderUrl)
+    //   request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + storedTemplates[i], false);
+    //   request.setRequestHeader("Content-type", "application/json");
+    //   request.send();
+    //   resp = JSON.parse(request.responseText);
+    //   console.log("resp..............",resp)
+    //   console.log("resp..............",resp.length)
+    //   if (resp.length != 0) {
+    //     if (resp.length >= 2) {
+    //     for(let j = 0 ; j < resp.length ; j++){
+    //     arr_to_print.push(storedTemplates[i]+'-'+ resp[j])
+    //     }
+    //   } else{
+    //   arr_to_print.push(storedTemplates[i]+'-'+ resp)
+    //   }
+    //   }
+      
+
+    // }
+    // console.log("arr_to_print", arr_to_print)
+    // for (var i = arr_to_print.length - 1; i >= 0; i--) {
+    //   arr.push({
+    //     "value": arr_to_print[i],
+    //     "name": arr_to_print[i]
+    //   })
+    // }
+    // console.log(arr)
+
+    // comps.addType('ReUseComponent', {
+    //   model: defaultModel.extend({
+    //     init() {
+    //       this.listenTo(this, 'change:selectPartial', this.doStuff);
+    //     },
+    //     doStuff() {
+    //       let foldername;
+    //       let filename;
+    //       this.get('traits').each(function(trait) {
+    //         let value_selct = trait.get('value')
+    //         let split = value_selct.split('-')
+    //         foldername =split[0];
+    //         filename = split[1];
+    //       });
+
+    //       var folderUrl = localStorage.getItem("folderUrl");
+    //       var xhttp = new XMLHttpRequest();
+    //       xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + foldername + '/' + filename + '.html', false);
+    //       xhttp.setRequestHeader("Content-type", "application/json");
+    //       xhttp.send();
+    //       var response = JSON.parse(xhttp.responseText);
+    //       //editor.setComponents(response); // Replace whole page to new component
+    //       // editor.addComponents(response);
+    //       let model = editor.getSelected();
+    //       model.components(response);
+    //     },
+    //     defaults: Object.assign({}, defaultModel.prototype.defaults, {
+    //       editable: true,
+    //       droppable: true,
+    //       traits: [
+
+    //         {
+    //           label: 'PartialName',
+    //           name: 'selectPartial',
+    //           type: 'select',
+    //           changeProp: 1,
+    //           options: arr
+    //         }
+    //       ],
+    //     }),
+    //   }, {
+    //     isComponent: function(el) {
+    //       if (el.tagName == 'REUSECOMPONENT') {
+    //         return {
+    //           type: 'ReUseComponent'
+    //         };
+    //       }
+    //     },
+    //   }),
+    //   view: defaultType.view,
+    //   render: function() {
+    //     defaultType.view.prototype.render.apply(this, arguments);
+    //     this.el.placeholder = 'Text here';
+    //     return this;
+    //   },
+    // });
+
+
+
+
+
+
   	// ReUse Component
     // var comps = editor.DomComponents;
     // var defaultType = comps.getType('default');
