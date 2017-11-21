@@ -899,6 +899,63 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Invoice Filters
+    bm.add('InvoiceDetail', {
+        label: 'Invoice',
+        // '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <body> <div class="container-fluid"><InvoiceDetail> <div class="row" style=""> <div clss="col-sm-3 col-md-2"> </div><div class="col-sm-8 col-md-8" style="margin-top:51px;margin-left:auto !important;margin-right:auto !important;"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> InvoiceID </td><td> ContactName </td><td> Date </td><td> AmountPaid </td><td> AmountDue </td> <td> Total Amount</td> </tr></tbody> </table> </div><div clss="col-sm-3 col-md-2"> </div></div></InvoiceDetail></div>',  
+        //  content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <body> <div class="container-fluid"><InvoiceDetail>  <div class="col-sm-8 col-md-8" style="margin-top:51px;margin-left:auto !important;margin-right:auto !important;"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> InvoiceID </td><td> ContactName </td><td> Date </td><td> AmountPaid </td><td> AmountDue </td> <td> Total Amount</td> </tr></tbody> </table> </div><div clss="col-sm-3 col-md-2"> </div></InvoiceDetail></div>', 
+        content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><InvoiceDetail style="display: block; width: 100%;padding:15px"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th><div class="invoiceTableBody"></div></table> </InvoiceDetail>',
+        // content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><InvoiceDetail><div class="container-fluid"></InvoiceDetail><InvoiceDetail>   <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> 1  </td> <td> krishna </td> <td> 04/01/2017 </td> <td> 1000</td> <td>500 </td> <td> 1500 </td> </tr> <tr> <td> 2  </td> <td> dweep </td> <td> 04/05/2017 </td> <td> 2500</td> <td>500 </td> <td> 3000 </td> </tr> <td> 3  </td> <td> ekta </td> <td> 12/05/2017 </td> <td> 3500</td> <td>500 </td> <td> 4000 </td> </tr> <td> 4  </td> <td> ashwini </td> <td> 10/05/2017 </td> <td> 4500</td> <td>500 </td> <td> 5000 </td> </tr></tbody>  </table> </InvoiceDetail></div>',
+ 
+        attributes: {
+            class: 'fa fa-file-text-o',
+            title: 'Invoice Page',
+        },
+        category: 'Accounting Components'
+    });
+
+
+
+    bm.add('InvoiceCustomer', {
+        label: 'Customers',
+        // content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><InvoiceCustomer style="display: block; width: 100%;padding:15px"><h3> Customer </h3> <table class="table table-bordered table-striped table-collapsed"> <th>Customer Name</th> <div class="invoiceTableBody"> </div> </table></InvoiceCustomer></div>',
+        content: '<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"></head> <InvoiceFilter style="display: block; width: 100%;padding:15px"><div class="container"><div class="form-group"> <label>status</label> <select class="form-control" id="Select1" style="width: 100px !important; min-width: 100px; max-width: 100px;"><option>Select</option><option>Paid</option><option>Unpaid</option> </select></div><div class="form-group"><div class="form-group row"><div class="col-xs-2"> <label>Amount</label> <select class="form-control" id="Select2" style="width: 150px !important; min-width: 150px; max-width: 150px;"><option>Select</option><option>Paid</option><option>Unpaid</option><option>Total</option> </select></div><div class="col-xs-2"> <label> choice</label> <select class="form-control" id="Select3" style="width: 150px !important; min-width: 150px; max-width: 150px;"><option>Select</option><option>Greater Than</option><option>less Than</option> </select></div></div></div></div> </InvoiceFilter></html>',
+        attributes: {
+            class: 'fa fa-users',
+            title: 'Invoice Page',
+        },
+        category: 'Accounting Components'
+    });
+
+
+    bm.add('InvoicePayment', {
+        label: 'Payment',
+        content:'<InvoicePayment style="display: block; width: 100%;padding:15px"><div class="container"><div class="form-group"> <input type="submit" class="btn btn-success pull-right" value="Pay Now" style="width: 150px !important; min-width: 160px; max-width: 160px; margin-right: 2px;"></div></div></InvoicePayment>',
+        attributes: {
+            class:'fa fa-cc-paypal',
+            title: 'Invoice Payment',
+        },
+        category: 'Accounting Components'
+    });
+
+
+
+
+
   
 
   
@@ -3259,6 +3316,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       return this;
     },
   });
+
+  
 
   // The `input` will be the Component type ID
   comps.addType('popularProducts', {
