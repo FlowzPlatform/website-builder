@@ -15,6 +15,6 @@ module.exports = {
     // ipAddress : 'http://172.16.230.84',
     // Local
     ipAddress : 'http://localhost',
-    
     pluginsPath : '/home/software/node/FlowzBuilder/src/assets'
+
 }

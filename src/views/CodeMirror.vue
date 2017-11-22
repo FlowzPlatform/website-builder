@@ -23,7 +23,7 @@
 
 <style >
     .CodeMirror{
-        min-height: 80vh;
+        min-height: 90vh;
         margin-top: 2%;
     }
 </style>

@@ -2,17 +2,18 @@
 grapesjs.plugins.add('product-plugin', function(editor, options){
   var bm = editor.BlockManager;
 
-    bm.add('scriptingTag', {
-        label: 'Scriptiing',
-        category: 'Scripting',
-        content: {
-            script : '$(".addToCart").on())',
-            content : '<a href="" class="addoCart" >Add to cart</a>'
-        },
-        attributes: {
-            class: 'gjs-fonts gjs-f-hero'
-        }
-    });
+    // bm.add('scriptingTag', {
+    //     label: 'Scriptiing',
+    //     category: 'Scripting',
+    //     content: {
+    //         script : 'alert("Hi")',
+    //         content : '<a href="" class="addoCart" >Add to cart</a>'
+    //     },
+    //     attributes: {
+    //         class: 'gjs-fonts gjs-f-hero'
+    //     }
+    // });
+
 
   	// Sections
 	bm.add('hero', {
@@ -586,61 +587,104 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
     // E-comm WishList
-     bm.add('WishList_Button', {
-        label: 'WishList Button',
-        content: {
-          script: "",
-          content: '<div><a href=""><i class="fa fa-heart"></i> Add to Wishlist</a></div>'
-        },
-        attributes: {
-            class: 'fa fa-list-alt',
-            title: 'WishList Button',
-        },
-        category: 'Ecommerce Component'
-    });
+    //  bm.add('WishList_Button', {
+    //     label: 'WishList Button',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-wishlist"><a href="" class="btn btn-default"><i class="fa fa-heart"></i> Add to Wishlist</a></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-list-alt',
+    //         title: 'WishList Button',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
 
-     // E-comm Add to cart
-     bm.add('cartButton', {
-        label: 'Cart Button',
-        content: {
-          script: "",
-          content: '<div><a href=""><i class="fa fa-shopping-cart"></i> Add to cart</a></div>'
-        },
-        attributes: {
-            class: 'fa fa-list-alt',
-            title: 'Cart Button',
-        },
-        category: 'Ecommerce Component'
-    });
+    //  // E-comm Add to cart
+    //  bm.add('cartButton', {
+    //     label: 'Cart Button',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-cart"><a href="" class="btn btn-default"><i class="fa fa-shopping-cart"></i> Add to cart</a></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-list-alt',
+    //         title: 'Cart Button',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
 
 
-     // E-comm Add to cart
-     bm.add('CompareButton', {
-        label: 'Compare Button',
-        content: {
-          script: "",
-          content: '<div><a href=""><i class="fa fa-retweet"></i> Add to Compare</a></div>'
-        },
-        attributes: {
-            class: 'fa fa-list-alt',
-            title: 'Compare Button',
-        },
-        category: 'Ecommerce Component'
-    });
+    //  // E-comm Add to cart
+    //  bm.add('CompareButton', {
+    //     label: 'Compare Button',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-compare"><a href="" class="btn btn-default"><i class="fa fa-retweet"></i> Add to Compare</a></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-list-alt',
+    //         title: 'Compare Button',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
 
-    // E-comm Add to cart
-     bm.add('More_Details', {
-        label: 'More Details',
-        content: {
-          script: "",
-          content: '<div><a href=""><i class="fa fa-list-alt"></i> More details</a></div>'
-        },
-        attributes: {
-            class: 'fa fa-list-alt',
-            title: 'More Details',
-        },
-        category: 'Ecommerce Component'
-    });
+    // // E-comm Add to cart
+    //  bm.add('More_Details', {
+    //     label: 'More Details',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-more-details"><a href="" class="btn btn-default"><i class="fa fa-list-alt"></i> More details</a></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-list-alt',
+    //         title: 'More Details',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
+
+    //  // E-comm Image
+    //  bm.add('image_ecomm', {
+    //     label: 'image_ecomm',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-product-image"><img src="http://placehold.it/200x150" class="img-responsive center-block" alt=""></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-picture-o',
+    //         title: 'Image',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
+
+
+    // E-comm Image
+    //  bm.add('Button_ecomm', {
+    //     label: 'Button_ecomm',
+    //     content: {
+    //       script: "",
+    //       content: '<div><button>Product Name</button></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-picture-o',
+    //         title: 'Button_ecomm',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
+
+    // // E-comm Product Name
+    //  bm.add('Product Name', {
+    //     label: 'Product Name',
+    //     content: {
+    //       script: "",
+    //       content: '<div class="ecomm-component ecomm-product-name"><p>Product Title</p></div>'
+    //     },
+    //     attributes: {
+    //         class: 'fa fa-title',
+    //         title: 'Product Name',
+    //     },
+    //     category: 'Ecommerce Component'
+    // });
 
 	
 
@@ -3933,354 +3977,411 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
-    // ReUse Component
-    var comps = editor.DomComponents;
-    var defaultType = comps.getType('default');
-    var defaultModel = defaultType.model;
-    var defaultView = defaultType.view;
-    var traits;
-    var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-    for (var i = 0; i < storedTemplates.length; i++) {
-      console.log("value...", storedTemplates[i])
-      if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'layout') {
-        storedTemplates.splice(i, 1)
-      }
-    }
-    console.log("++++++++++Hello", storedTemplates)
 
-    let arr = [{
-      "value": "Select_Partial",
-      "name": "Select Partial"
-    }]
 
-    let arr_to_print = []
-    var folderUrl = localStorage.getItem("folderUrl");
-    for (var i = 0 ; i <= storedTemplates.length -1 ; i++) {
-      var request = new XMLHttpRequest(); 
-      console.log("folderUrl", folderUrl)
-      request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + storedTemplates[i], false);
-      request.setRequestHeader("Content-type", "application/json");
-      request.send();
-      resp = JSON.parse(request.responseText);
-      console.log("resp..............",resp)
-      console.log("resp..............",resp.length)
-      if (resp.length != 0) {
-        if (resp.length >= 2) {
-        for(let j = 0 ; j < resp.length ; j++){
-        arr_to_print.push(storedTemplates[i]+'-'+ resp[j])
-        }
-      } else{
-      arr_to_print.push(storedTemplates[i]+'-'+ resp)
+  // // ReUse Component
+  // var comps = editor.DomComponents;
+  // var defaultType = comps.getType('default');
+  // var defaultModel = defaultType.model;
+  // var defaultView = defaultType.view;
+  // var traits;
+
+  // var folderUrl = localStorage.getItem("folderUrl");
+  // var storedTemplates;
+  // // Get Config Data
+  // let configFileUrl = 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json';
+  // $.getJSON( configFileUrl, function( data ) {  
+  //     var configData = JSON.parse(data);
+  //     console.log('Config Data:', configData);
+  //     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+  // });
+
+  // let arr = [{
+  //     "value": "Select_Partial",
+  //     "name": "Select Partial"
+  // }]
+
+  // let arr_to_print = []
+
+  // setTimeout(function(){
+  //   console.log('List of Partials: ', storedTemplates);  
+
+  //   for (var i = 0; i < storedTemplates.length; i++) {
+  //       if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+  //           storedTemplates.splice(i, 1)
+  //       }
+  //   }
+
+    
+
+  //   for (var i = 0; i <= storedTemplates.length - 1; i++) {
+  //       var request = new XMLHttpRequest();
+  //       request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
+  //       request.setRequestHeader("Content-type", "application/json");
+  //       request.send();
+  //       resp = JSON.parse(request.responseText);
+
+  //       for (let index = 0; index < resp.length; index++) {
+  //           request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
+  //           request.setRequestHeader("Content-type", "application/json");
+  //           request.send();
+  //           resp2 = JSON.parse(request.responseText);          
+  //       }
+        
+  //       if (resp.length != 0) {
+  //           if (resp2.length >= 2) {
+  //               for (let j = 0; j < resp2.length; j++) {
+  //                   arr_to_print.push(resp[i] + '-' + resp2[j])
+  //               }
+  //           } else {
+  //               arr_to_print.push(resp[i] + '-' + resp2)
+  //           }
+  //       } 
+  //   }
+  //   for (var i = arr_to_print.length - 1; i >= 0; i--) {
+  //       arr.push({
+  //           "value": arr_to_print[i],
+  //           "name": arr_to_print[i]
+  //       })
+  //   }
+  // },1000);
+  
+  // // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+
+  // // console.log('Stored Templates: ', storedTemplates);
+  
+
+  // comps.addType('ReUseComponent', {
+  //     model: defaultModel.extend({
+  //         init() {
+  //             this.listenTo(this, 'change:selectPartial', this.doStuff);
+  //         },
+  //         doStuff() {
+  //             let foldername;
+  //             let filename;
+  //             this.get('traits').each(function (trait) {
+  //                 let value_selct = trait.get('value')
+  //                 let split = value_selct.split('-')
+  //                 foldername = split[0];
+  //                 filename = split[1];
+  //             });
+
+  //             var folderUrl = localStorage.getItem("folderUrl");
+  //             var xhttp = new XMLHttpRequest();
+  //             xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + foldername + '/' + filename + '.html', false);
+  //             xhttp.setRequestHeader("Content-type", "application/json");
+  //             xhttp.send();
+  //             var response = JSON.parse(xhttp.responseText);
+  //             let model = editor.getSelected();
+  //             model.components("{{> " + foldername + " id='" + filename + ".html' }}");
+  //             // FINAL_RES =  {{> Template id='creative.html' }}
+  //             //editor.setComponents(response); // Replace whole page to new component
+  //             //editor.addComponents(response);
+  //         },
+  //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //             editable: true,
+  //             droppable: true,
+  //             traits: [
+
+  //                 {
+  //                     label: 'PartialName',
+  //                     name: 'selectPartial',
+  //                     type: 'select',
+  //                     changeProp: 1,
+  //                     options: arr
+  //                 }
+  //             ],
+  //         }),
+  //     }, {
+  //             isComponent: function (el) {
+  //                 if (el.tagName == 'REUSECOMPONENT') {
+  //                     return {
+  //                         type: 'ReUseComponent'
+  //                     };
+  //                 }
+  //             },
+  //         }),
+  //     view: defaultType.view,
+  //     render: function () {
+  //         defaultType.view.prototype.render.apply(this, arguments);
+  //         this.el.placeholder = 'Text here';
+  //         return this;
+  //     },
+  // });
+
+
+
+
+
+
+
+
+
+
+
+  // ReUse Component
+    // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+     var folderUrl = localStorage.getItem("folderUrl");
+
+    let configFileUrl = 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json';
+    $.getJSON( configFileUrl, function( data ) {  
+        var configData = JSON.parse(data);
+        console.log('Config Data:', configData);
+        storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+    });
+
+    var partialOptions = {};
+
+    setTimeout(function(){
+      for (var i = 0; i < storedTemplates.length; i++) {
+          console.log("value...", storedTemplates[i])
+          if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+              storedTemplates.splice(i, 1)
+          }
       }
-      }
+
       
+      // let arr_to_print = []
+      // var folderUrl = localStorage.getItem("folderUrl");
+      for (var i = 0; i <= storedTemplates.length - 1; i++) {
+          var request = new XMLHttpRequest();
+          console.log("folderUrl", folderUrl)
+          request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
+          request.setRequestHeader("Content-type", "application/json");
+          request.send();
+          resp = JSON.parse(request.responseText);
 
-    }
-    console.log("arr_to_print", arr_to_print)
-    for (var i = arr_to_print.length - 1; i >= 0; i--) {
-      arr.push({
-        "value": arr_to_print[i],
-        "name": arr_to_print[i]
-      })
-    }
-    console.log(arr)
+          for (let index = 0; index < resp.length; index++) {
+              request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
+              request.setRequestHeader("Content-type", "application/json");
+              request.send();
+              resp2 = JSON.parse(request.responseText);
+          }
+
+          if (resp.length != 0 && resp[i] != "Menu") {
+              if (resp2.length >= 2) {
+                  for (let j = 0; j < resp2.length; j++) {
+                      if (j == 0) {
+                          partialOptions[resp[i]] = [{ 'name': resp2[j] }]
+                      } else{
+                          partialOptions[resp[i]].push({ 'name': resp2[j] })
+                      }
+                  }
+              } else {
+                  partialOptions[resp[i]] = [{ 'name' : resp2  }]
+              }
+          }
+      }
+    },1000);
+    
+
+    editor.TraitManager.addType('customConent1', {
+
+        /**
+         * Returns the input element
+         * @return {HTMLElement}
+         */
+        getInputEl: function () {
+            if (!this.inputEl) {
+                var input = document.createElement('select');
+                input.setAttribute("id", "Div1");
+                input.setAttribute("name", "Div1");
+                input.setAttribute("style", "background:#363636");
+                $.each(partialOptions, function (key, value) {
+                    console.log('================' + key);
+                    var group = $('<optgroup label="' + key + '" />');
+                    $.each(value, function () {
+                        $('<option />').html(this.name).appendTo(group);
+                    });
+                    group.appendTo(input);
+                });
+                input.value = this.target.get('customConent1');
+                this.inputEl = input;
+            }
+            return this.inputEl;
+        },
+
+    });
 
     comps.addType('ReUseComponent', {
-      model: defaultModel.extend({
-        init() {
-          this.listenTo(this, 'change:selectPartial', this.doStuff);
+        model: defaultModel.extend({
+            init() {
+                this.listenTo(this, 'change:selectPartial', this.doStuff);
+            },
+            doStuff() {
+                var label, selected_value;
+                var folderUrl = localStorage.getItem("folderUrl");
+                $('#Div1').on('click', function () {
+                    label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+                    selected_value =  $("#Div1 option:selected").text();
+                    let model = editor.getSelected();
+                    model.components("{{> " + label + " id='" + selected_value + ".html' }}");
+                });
+            },
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [{
+                        label: 'PartialName',
+                        name: 'selectPartial',
+                        type: 'customConent1',
+                        changeProp: 1,
+                    }
+                ],
+            }),
+        }, {
+                isComponent: function (el) {
+                    if (el.tagName == 'REUSECOMPONENT') {
+                        return {
+                            type: 'ReUseComponent'
+                        };
+                    }
+                },
+            }),
+        view: defaultType.view,
+        render: function () {
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here';
+            return this;
         },
-        doStuff() {
-          let foldername;
-          let filename;
-          this.get('traits').each(function(trait) {
-            let value_selct = trait.get('value')
-            let split = value_selct.split('-')
-            foldername =split[0];
-            filename = split[1];
-          });
-
-          var folderUrl = localStorage.getItem("folderUrl");
-          var xhttp = new XMLHttpRequest();
-          xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + foldername + '/' + filename + '.html', false);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send();
-          var response = JSON.parse(xhttp.responseText);
-          //editor.setComponents(response); // Replace whole page to new component
-          editor.addComponents(response);
-        },
-        defaults: Object.assign({}, defaultModel.prototype.defaults, {
-          editable: true,
-          droppable: true,
-          traits: [
-
-            {
-              label: 'PartialName',
-              name: 'selectPartial',
-              type: 'select',
-              changeProp: 1,
-              options: arr
-            }
-          ],
-        }),
-      }, {
-        isComponent: function(el) {
-          if (el.tagName == 'REUSECOMPONENT') {
-            return {
-              type: 'ReUseComponent'
-            };
-          }
-        },
-      }),
-      view: defaultType.view,
-      render: function() {
-        defaultType.view.prototype.render.apply(this, arguments);
-        this.el.placeholder = 'Text here';
-        return this;
-      },
     });
 
 
 
 
 
-    
-  	// ReUse Component
-    // var comps = editor.DomComponents;
-    // var defaultType = comps.getType('default');
-    // var defaultModel = defaultType.model;
-    // var defaultView = defaultType.view;
-    // var traits;
-    // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-    // for (var i = 0; i < storedTemplates.length; i++) {
-    //   console.log("value...", storedTemplates[i])
-    //   if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets') {
-    //     storedTemplates.splice(i, 1)
-    //   }
-    // }
-    // console.log("++++++++++", storedTemplates)
-    // let arr = [{
-    //   "value": "Select_Partial",
-    //   "name": "Select Partial"
-    // }]
-    // let traits_arr = []
-    // let partials_arr = [{
-    //   "value": "SelectID",
-    //   "name": "selectID"
-    // }]
-    // for (var i = storedTemplates.length - 1; i >= 0; i--) {
-    //   arr.push({
-    //     "value": storedTemplates[i],
-    //     "name": storedTemplates[i]
-    //   })
-    // }
-    // console.log(arr)
-    // comps.addType('ReUseComponent', {
-    //   model: defaultModel.extend({
-    //     init() {
-    //       this.listenTo(this, 'change:selectPartial', this.doStuff);
-    //       this.listenTo(this, 'change:selectID', this.doStuff_second);
-    //     },
-    //     doStuff() {
-    //       console.log("getPartials called")
-    //       this.get('traits').each(function(trait) {
-    //         console.log(trait.get('value'));
-    //         traits_arr.push(trait.get('value'))
-    //       });
-    //       traits_arr_val = traits_arr[0]
-    //       var folderUrl = localStorage.getItem("folderUrl");
-    //       console.log("&&&&&&&&&&", folderUrl)
-    //       var request = new XMLHttpRequest();
-    //       request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + traits_arr_val, false);
-    //       request.setRequestHeader("Content-type", "application/json");
-    //       request.send();
-    //       resp = JSON.parse(request.responseText);
-    //       console.log("files", resp)
-    //       arr.splice(0, 1);
-    //       console.log("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", arr)
-    //       for (var i = resp.length - 1; i >= 0; i--) {
-    //         partials_arr.push({
-    //           "value": resp[i],
-    //           "name": resp[i]
-    //         })
-    //       }
-    //       console.log("**********", partials_arr)
-    //       var categsTrait = this.get('traits').where({
-    //         name: 'selectID'
-    //       })[0];
-    //       categsTrait.set('options', partials_arr)
-    //       editor.trigger('change:ReUseComponent');
-    //       console.log(this.get('traits').where({
-    //         name: 'selectID'
-    //       })[0].get('options'));
-    //       console.log("folderUrl", folderUrl);
-    //       console.log("traits_arr[6]", traits_arr[1])
-    //       var folderUrl = localStorage.getItem("folderUrl");
-    //       var xhttp = new XMLHttpRequest();
-    //       xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
-    //       xhttp.setRequestHeader("Content-type", "application/json");
-    //       xhttp.send();
-    //       var response = JSON.parse(xhttp.responseText);
-    //       var counter = JSON.parse(localStorage.getItem("counter"));
-    //       console.log("counter", counter)
-    //       console.log("counter", counter)
-    //       traits_arr = []
-    //       partials_arr = []
-    //     },
-    //     doStuff_second() {
-    //       this.get('traits').each(function(trait) {
-    //         console.log(trait.get('value'));
-    //         traits_arr.push(trait.get('value'))
-    //       });
-    //       console.log("traits_arr[1]", traits_arr[1])
-    //       console.log("doStuff_second");
-    //       var folderUrl = localStorage.getItem("folderUrl");
-    //       var xhttp = new XMLHttpRequest();
-    //       xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + traits_arr_val + '/' + traits_arr[1] + '.html', false);
-    //       xhttp.setRequestHeader("Content-type", "application/json");
-    //       xhttp.send();
-    //       partials_arr.splice(0, 1);
-    //       var response = JSON.parse(xhttp.responseText);
-    //       editor.addComponents(response);
-    //       traits_arr = []
-    //     },
-    //     defaults: Object.assign({}, defaultModel.prototype.defaults, {
-    //       editable: true,
-    //       droppable: true,
-    //       traits: [
 
-    //         {
-    //           label: 'PartialName',
-    //           name: 'selectPartial',
-    //           type: 'select',
-    //           changeProp: 1,
-    //           options: arr
-    //         }, {
-    //           label: 'PartialID',
-    //           name: 'selectID',
-    //           type: 'select',
-    //           changeProp: 1,
-    //           options: ''
-    //         }
-    //       ],
-    //     }),
-    //   }, {
-    //     isComponent: function(el) {
-    //       if (el.tagName == 'REUSECOMPONENT') {
-    //         return {
-    //           type: 'ReUseComponent'
-    //         };
-    //       }
-    //     },
-    //   }),
-    //   view: defaultType.view,
-    //   render: function() {
-    //     defaultType.view.prototype.render.apply(this, arguments);
-    //     this.el.placeholder = 'Text here';
-    //     return this;
-    //   },
-    // });
 
-    // ReUse Component
-    // var comps = editor.DomComponents;
-    // var defaultType = comps.getType('default');
-    // var defaultModel = defaultType.model;
-    // var defaultView = defaultType.view;
-    // var traits;
-    // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-    // for (var i = 0; i < storedTemplates.length; i++) {
-    //   console.log("value...", storedTemplates[i])
-    //   if (storedTemplates[i] == 'Layouts' || storedTemplates[i] == 'assets' || storedTemplates[i] == '.git') {
-    //     storedTemplates.splice(i, 1)
-    //   }
-    // }
-    // console.log("++++++++++Hello", storedTemplates)
+  // ReUse Component
+  // var comps = editor.DomComponents;
+  // var defaultType = comps.getType('default');
+  // var defaultModel = defaultType.model;
+  // var defaultView = defaultType.view;
+  // var traits;
+  // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+  // for (var i = 0; i < storedTemplates.length; i++) {
+  //     console.log("value...", storedTemplates[i])
+  //     if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == 'Menu' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+  //         storedTemplates.splice(i, 1)
+  //     }
+  // }
+  // console.log("++++++++++Hello", storedTemplates)
 
-    // let arr = [{
-    //   "value": "Select_Partial",
-    //   "name": "Select Partial"
-    // }]
+  // let arr = [{
+  //     "value": "Select_Partial",
+  //     "name": "Select Partial"
+  // }]
 
-    // let arr_to_print = []
-    // var folderUrl = localStorage.getItem("folderUrl");
-    // for (var i = 0; i <= storedTemplates.length - 1; i++) {
-    //   var request = new XMLHttpRequest();
-    //   request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + storedTemplates[i], false);
-    //   request.setRequestHeader("Content-type", "application/json");
-    //   request.send();
-    //   resp = JSON.parse(request.responseText);
-    //   if (resp.length != 0) {
-    //     if (resp.length > 2) {
-    //         for (let j = 0; j < resp.length; j++) {
-    //             arr_to_print.push(storedTemplates[i] + '-' + resp[j])
-    //         }
-    //     } else {
-    //         arr_to_print.push(storedTemplates[i] + '-' + resp)
-    //     }
-    //   }
-    // }
-    // console.log("arr_to_print", arr_to_print)
-    // for (var i = arr_to_print.length - 1; i >= 0; i--) {
-    //   arr.push({
-    //     "value": arr_to_print[i],
-    //     "name": arr_to_print[i]
-    //   })
-    // }
-    // console.log(arr)
+  // let arr_to_print = []
+  // var folderUrl = localStorage.getItem("folderUrl");
+  // for (var i = 0; i <= storedTemplates.length - 1; i++) {
+  //     var request = new XMLHttpRequest();
+  //     console.log("folderUrl", folderUrl)
+  //     request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
+  //     request.setRequestHeader("Content-type", "application/json");
+  //     request.send();
+  //     resp = JSON.parse(request.responseText);
+  //     console.log("resp..............", resp)
+  //     console.log("resp..............", resp.length)
 
-    // comps.addType('ReUseComponent', {
-    //   model: defaultModel.extend({
-    //     init() {
-    //       this.listenTo(this, 'change:selectPartial', this.doStuff);
-    //     },
-    //     doStuff() {
-    //       let foldername;
-    //       let filename;
-    //       this.get('traits').each(function(trait) {
-    //         let value_selct = trait.get('value')
-    //         let split = value_selct.split('-')
-    //         foldername = split[0];
-    //         filename = split[1];
-    //       });
+  //     for (let index = 0; index < resp.length; index++) {
+  //         request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
+  //         request.setRequestHeader("Content-type", "application/json");
+  //         request.send();
+  //         resp2 = JSON.parse(request.responseText);
+  //         console.log("resp2....", resp2)
 
-    //       var folderUrl = localStorage.getItem("folderUrl");
-    //       var xhttp = new XMLHttpRequest();
-    //       xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/' + foldername + '/' + filename + '.html', false);
-    //       xhttp.setRequestHeader("Content-type", "application/json");
-    //       xhttp.send();
-    //       var response = JSON.parse(xhttp.responseText);
-    //       editor.addComponents(response);
-    //     },
-    //     defaults: Object.assign({}, defaultModel.prototype.defaults, {
-    //       editable: true,
-    //       droppable: true,
-    //       traits: [
+          
+  //     }
+      
+  //     if (resp.length != 0) {
+  //         if (resp2.length >= 2) {
+  //             for (let j = 0; j < resp2.length; j++) {
+  //                 arr_to_print.push(resp[i] + '-' + resp2[j])
+  //             }
+  //         } else {
+  //             arr_to_print.push(resp[i] + '-' + resp2)
+  //         }
+  //     } 
 
-    //         {
-    //           label: 'PartialName',
-    //           name: 'selectPartial',
-    //           type: 'select',
-    //           changeProp: 1,
-    //           options: arr
-    //         }
-    //       ],
-    //     }),
-    //   }, {
-    //     isComponent: function(el) {
-    //       if (el.tagName == 'REUSECOMPONENT') {
-    //         return {
-    //           type: 'ReUseComponent'
-    //         };
-    //       }
-    //     },
-    //   }),
-    //   view: defaultType.view,
-    //   render: function() {
-    //     defaultType.view.prototype.render.apply(this, arguments);
-    //     this.el.placeholder = 'Text here';
-    //     return this;
-    //   },
-    // });
+  //     // if (resp.length != 0) {
+  //     //     if (resp.length >= 2) {
+  //     //         for (let j = 0; j < resp.length; j++) {
+  //     //             arr_to_print.push(storedTemplates[i] + '-' + resp[j])
+  //     //         }
+  //     //     } else {
+  //     //         arr_to_print.push(storedTemplates[i] + '-' + resp)
+  //     //     }
+  //     // }
+
+
+  // }
+  // console.log("arr_to_print", arr_to_print)
+  // for (var i = arr_to_print.length - 1; i >= 0; i--) {
+  //     arr.push({
+  //         "value": arr_to_print[i],
+  //         "name": arr_to_print[i]
+  //     })
+  // }
+  // console.log(arr)
+
+  // comps.addType('ReUseComponent', {
+  //     model: defaultModel.extend({
+  //         init() {
+  //             this.listenTo(this, 'change:selectPartial', this.doStuff);
+  //         },
+  //         doStuff() {
+  //             let foldername;
+  //             let filename;
+  //             this.get('traits').each(function (trait) {
+  //                 let value_selct = trait.get('value')
+  //                 let split = value_selct.split('-')
+  //                 foldername = split[0];
+  //                 filename = split[1];
+  //             });
+
+  //             var folderUrl = localStorage.getItem("folderUrl");
+  //             var xhttp = new XMLHttpRequest();
+  //             xhttp.open("GET", 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + foldername + '/' + filename + '.html', false);
+  //             xhttp.setRequestHeader("Content-type", "application/json");
+  //             xhttp.send();
+  //             var response = JSON.parse(xhttp.responseText);
+  //             let model = editor.getSelected();
+  //             model.components("{{> " + foldername + " id='" + filename + ".html' }}"  );
+  //             // FINAL_RES =  {{> Template id='creative.html' }}
+  //             //editor.setComponents(response); // Replace whole page to new component
+  //             //editor.addComponents(response);
+  //         },
+  //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //             editable: true,
+  //             droppable: true,
+  //             traits: [
+
+  //                 {
+  //                     label: 'PartialName',
+  //                     name: 'selectPartial',
+  //                     type: 'select',
+  //                     changeProp: 1,
+  //                     options: arr
+  //                 }
+  //             ],
+  //         }),
+  //     }, {
+  //             isComponent: function (el) {
+  //                 if (el.tagName == 'REUSECOMPONENT') {
+  //                     return {
+  //                         type: 'ReUseComponent'
+  //                     };
+  //                 }
+  //             },
+  //         }),
+  //     view: defaultType.view,
+  //     render: function () {
+  //         defaultType.view.prototype.render.apply(this, arguments);
+  //         this.el.placeholder = 'Text here';
+  //         return this;
+  //     },
+  // });
 
 
 
