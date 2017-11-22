@@ -266,7 +266,7 @@
               </div>
               <div class="col-md-2">
                 <el-switch
-                  v-model="ecommerceSettings[0].wishlistStatus"
+                  v-model="ecommerceSettings[0].wishlist"
                   on-text="Enabled"
                   off-text="Disabled"
                   on-color="#13ce66"
@@ -281,7 +281,7 @@
               </div>
               <div class="col-md-2">
                 <el-switch
-                  v-model="ecommerceSettings[0].cartStatus"
+                  v-model="ecommerceSettings[0].cart"
                   on-text="Enabled"
                   off-text="Disabled"
                   on-color="#13ce66"
@@ -296,7 +296,7 @@
               </div>
               <div class="col-md-2">
                 <el-switch
-                  v-model="ecommerceSettings[0].compareStatus"
+                  v-model="ecommerceSettings[0].compare"
                   on-text="Enabled"
                   off-text="Disabled"
                   on-color="#13ce66"
