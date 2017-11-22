@@ -21,7 +21,7 @@
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
           </div>
           <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="commitProject()">Commit Project</el-button>
+            <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
           </div>
           <div class="col-md-1">
             <el-tooltip content="Download .zip" placement="top">
@@ -54,7 +54,7 @@
 
               <!-- <el-form-item label="Brand Logo">
                 <div class="col6 valid"> 
-                  <label for="upload-validation">
+                  <label for="upload-validation" class="brandLogoUploadLabel">
                     <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                   </label> 
                   <input type="file" name="" id="upload-validation">
@@ -170,7 +170,7 @@
                     
                     <!-- Delete Variable -->
                     <div class="col-md-1">
-                      <el-button class="pull-right" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>      
+                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>      
                     </div>
                   </div>
                 </el-form-item>
@@ -251,16 +251,61 @@
       <!-- Global Variable section ends -->
 
       <!-- Ecommerce Global Variable section -->
-      <!-- <div class="well">
+      <div class="well">
         <div class="row">
           <div class="col-md-12">
             <div class="row">
               <div class="col-md-4">
-                <h3>Ecommerce Variables</h3>
+                <h3>Ecommerce Settings</h3>
               </div>
             </div>
             <hr>
-            <el-form ref="form" :model="form">
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Wishlist</strong>
+              </div>
+              <div class="col-md-2">
+                <el-switch
+                  v-model="ecommerceSettings[0].wishlist"
+                  on-text="Enabled"
+                  off-text="Disabled"
+                  on-color="#13ce66"
+                  off-color="#ff4949"
+                  :width="90">
+                </el-switch>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Add To Cart</strong>
+              </div>
+              <div class="col-md-2">
+                <el-switch
+                  v-model="ecommerceSettings[0].cart"
+                  on-text="Enabled"
+                  off-text="Disabled"
+                  on-color="#13ce66"
+                  off-color="#ff4949"
+                  :width="90">
+                </el-switch>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Add To Compare</strong>
+              </div>
+              <div class="col-md-2">
+                <el-switch
+                  v-model="ecommerceSettings[0].compare"
+                  on-text="Enabled"
+                  off-text="Disabled"
+                  on-color="#13ce66"
+                  off-color="#ff4949"
+                  :width="90">
+                </el-switch>
+              </div>
+            </div>
+            <!-- <el-form ref="form" :model="form">
               <div v-for="(n, index) in ecommerceVariables">
                 <el-form-item>
                   <div class="row">
@@ -271,11 +316,22 @@
                     </div>
 
                     <!-- If type is Text or HTML --
-                    <div class="col-md-9" style="margin: 0; padding-left: 10px">
-                      <!-- <el-input type="textarea" :rows="5" placeholder="Variable Value" v-model="n.variableValue"></el-input> --
-                      <el-select v-model="n.variableValue" placeholder="Select">
+                    <div class="col-md-5" style="margin: 0; padding-left: 10px;">
+                      <el-select v-model="n.variableValue" placeholder="Select" style="display: block; width: 100%;">
                         <el-option
                           v-for="item in partialsList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+
+                    <!-- If type is Text or HTML --
+                    <div class="col-md-4" style="margin: 0; padding-left: 10px;">
+                      <el-select v-model="n.variableStatus" placeholder="Select" style="display: block; width: 100%;">
+                        <el-option
+                          v-for="item in componentStatus"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">
@@ -285,7 +341,7 @@
                     
                     <!-- Delete Variable --
                     <div class="col-md-1">
-                      <el-button class="pull-right" type="danger" @click="deleteEcommerceVariable(index)" icon="delete"></el-button>      
+                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteEcommerceVariable(index)" icon="delete"></el-button>      
                     </div>
                   </div>
                 </el-form-item>
@@ -295,10 +351,10 @@
               <!-- Create new variable --
               <el-button type="primary" @click="addNewEcommerceVariable">New Variable</el-button>
 
-            </el-form>
+            </el-form> -->
           </div>
         </div>
-      </div> -->
+      </div>
       <!-- Global Variable section ends -->
 
       <!-- List of Commits Section -->
@@ -383,6 +439,7 @@ export default {
       commitMessage: '',
       newRepoId: '',
       repoName: '',
+      isCommitLoading: false,
       configData: [],
       currentFileIndex: '',
       settings: [],
@@ -424,9 +481,21 @@ export default {
       imageInputIsDisabled: false,
       uploadedVariableJsonData: '',
       layoutOptions: [],
-      partialsList: [],
-      selectedPartial: '',
-
+      // partialsList: [],
+      // selectedPartial: '',
+      // componentStatus: [{
+      //   value: false,
+      //   label: 'Disabled'
+      // },{
+      //   value: true,
+      //   label: 'Enabled'
+      // }],
+      // variableStatus: '',
+      ecommerceSettings: [{
+        "wishlist": false,
+        "cart": false,
+        "compare": false
+      }]
     }
   },
   component: {
@@ -480,10 +549,10 @@ export default {
       this.globalCssVariables.push(newVariable);
     },
 
-    addNewEcommerceVariable() {
-      let newVariable = { variableClass: '', variableValue: ''};
-      this.ecommerceVariables.push(newVariable);
-    },
+    // addNewEcommerceVariable() {
+    //   let newVariable = { variableClass: '', variableValue: '', variableStatus: ''};
+    //   this.ecommerceVariables.push(newVariable);
+    // },
 
     deleteVariable(deleteIndex) {
       this.globalVariables.splice(deleteIndex, 1);
@@ -539,7 +608,19 @@ export default {
 
     saveProjectSettings() {
       
-      let ProjectSettings = [{ "RepositoryId" : this.newRepoId, "ProjectName": this.repoName, "BrandName": this.form.brandName, "BrandLogoName": this.form.brandLogoName, "ProjectLayout": '',"ProjectHeader":this.form.selectedHeader,"ProjectFooter":this.form.selectedFooter,"ProjectSEOTitle":this.form.seoTitle,"ProjectSEOKeywords": this.form.seoKeywords,"ProjectSEODescription":this.form.seoDesc}, { "GlobalVariables": this.globalVariables, "GlobalCssVariables": this.globalCssVariables, "EcommerceVariables": this.ecommerceVariables, }];
+      let ProjectSettings = [{
+                              "RepositoryId": this.newRepoId,
+                              "ProjectName": this.repoName,
+                              "BrandName": this.form.brandName,
+                              "BrandLogoName": this.form.brandLogoName,
+                              "ProjectSEOTitle": this.form.seoTitle,
+                              "ProjectSEOKeywords": this.form.seoKeywords,
+                              "ProjectSEODescription": this.form.seoDesc
+                            }, {
+                              "GlobalVariables": this.globalVariables,
+                              "GlobalCssVariables": this.globalCssVariables,
+                              "EcommerceSettings": this.ecommerceSettings
+                            }];
 
       this.settings[1].projectSettings = ProjectSettings;
 
@@ -586,6 +667,7 @@ export default {
     },
 
     commitProject() {
+      this.isCommitLoading = true;
       this.$store.state.currentIndex = 0;
 
       // Push repository changes
@@ -595,11 +677,14 @@ export default {
       }).then(response => {
         console.log(response);
         if(response.status == 200 || response.status == 201){
+          this.commitMessage = '';
           console.log(response.data);
           this.$message({
             message: 'Successfully published the website.',
             type: 'success'
           });
+          this.isCommitLoading = false;
+          this.init();
         }
       }).catch(error => {
         console.log("Some error occured: ", error);
@@ -858,8 +943,134 @@ export default {
       }
 
       window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
-
     },
+
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    
+    handlePreview(file) {
+      console.log(file);
+    },
+    
+    globalImagePreview(file) {
+      console.log(file);
+    },
+
+    tableRowClassName(row, index) {
+      if (index === this.$store.state.currentIndex) {
+        return 'positive-row';
+      }
+      return '';
+    },
+
+    exportWebsite(){
+      window.open(config.ipAddress + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
+    },
+
+    async init () {
+      this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+      if(this.configData.status == 200 || this.configData.status == 204){
+        console.log('Config file found! Updating fields..');
+        this.settings = JSON.parse(this.configData.data);
+        this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
+        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.form.brandName = this.settings[1].projectSettings[0].BrandName;
+        this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
+        this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
+        this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
+        this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+        this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
+        this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
+        this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
+
+        // if(this.globalVariables == undefined){
+        //   this.globalVariables = []
+        // }
+        // if(this.globalCssVariables == undefined){
+        //   this.globalCssVariables = []
+        // }
+        // if(this.ecommerceVariables == undefined){
+        //   this.ecommerceVariables = []
+        // }
+        // if(this.ecommerceSettings == undefined){
+        //   this.ecommerceSettings = [{
+        //     wishlistStatus: false,
+        //     cartStatus: false,
+        //     compareStatus: false
+        //   }];
+        // }
+
+        // Get all partials
+        // this.layoutOptions = this.settings[2].layoutOptions[0];
+        // this.layoutOptions = Object.keys(_.omit(this.layoutOptions, ['Layout', 'Header', 'Footer', 'Sidebar', 'Menu']));
+
+        // for (var i = 0; i <= this.layoutOptions.length; i++) {
+        //   let value = {
+        //     'value' : this.layoutOptions[i].toLowerCase(),
+        //     'label' : this.layoutOptions[i]
+        //   }
+        //   this.partialsList.push(value);
+        // }
+
+        // Set Brand Logo Name
+        // if(this.form.brandLogoName != ''){
+        //   if (this.form.brandLogoName.length > 18) {
+        //       $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
+        //       $('.valid').removeClass('error').addClass('correct');
+        //       $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+        //    }else{
+        //       $('#text2').text(this.form.brandLogoName);
+        //       $('.valid').removeClass('error').addClass('correct');
+        //       $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
+        //   }  
+        // } else {
+        //   console.log('BrandLogoName not found!');
+        // }
+        
+
+      } else {
+        console.log('Cannot get config file!');
+      } 
+
+
+      // replace all image tag source with index as name attribute to get the image file preview
+      
+      for (var i = 0; i < this.globalVariables.length; i++){
+        if(this.globalVariables[i].variableType == 'image'){
+          let _imageIndex = i;
+          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
+          }).then(response => {
+            $('[name = ' + _imageIndex + ']').attr('src', response.data);
+          }).catch(error => {
+            console.log("Some error occured while fetching image: ", error);
+          });
+
+        }
+      }
+
+      // Get all commits list
+      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
+      }).then(response => {
+        this.commitsData = [];
+        for(var i in response.data){
+          this.commitsData.push({
+            commitDate: response.data[i].created_at,
+            commitSHA: response.data[i].id,
+            commitsMessage: response.data[i].title, 
+          });
+        }
+      }).catch(error => {
+        console.log("Some error occured: ", error);
+      });
+      
+
+      if(this.commitsData[0]){
+        return 'positive-row';
+      } 
+    }
 
     // Code before Full Publish of project
     // publishMetalsmith(){
@@ -911,140 +1122,6 @@ export default {
     //       });
     //   })
     // },
-
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    
-    handlePreview(file) {
-      console.log(file);
-    },
-    
-    globalImagePreview(file) {
-      console.log(file);
-    },
-
-    tableRowClassName(row, index) {
-      if (index === this.$store.state.currentIndex) {
-        return 'positive-row';
-      }
-      return '';
-    },
-
-    exportWebsite(){
-      window.open(config.ipAddress + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
-    },
-
-    cancelSettings(){
-      location.reload();
-    },
-
-    async init () {
-      this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
-      if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
-        this.settings = JSON.parse(this.configData.data);
-        this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
-        this.form.brandName = this.settings[1].projectSettings[0].BrandName;
-        this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
-        this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
-        this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
-        this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
-        this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
-        this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
-        this.ecommerceVariables = this.settings[1].projectSettings[1].EcommerceVariables;
-
-
-
-        console.log(this.ecommerceVariables);
-
-        if(this.globalVariables == undefined){
-          this.globalVariables = []
-        }
-        if(this.globalCssVariables == undefined){
-          this.globalCssVariables = []
-        }
-        if(this.ecommerceVariables == undefined){
-          this.ecommerceVariables = []
-        }
-
-        console.log(this.ecommerceVariables);
-
-        this.form.Header = this.settings[2].layoutOptions[0].headers;
-        this.form.Footer = this.settings[2].layoutOptions[0].footers;
-
-
-        // Get all partials
-        this.layoutOptions = this.settings[2].layoutOptions[0];
-        this.layoutOptions = Object.keys(_.omit(this.layoutOptions, ['Layout', 'Header', 'Footer', 'Sidebar', 'Menu']));
-
-        for (var i = 0; i <= this.layoutOptions.length; i++) {
-          let value = {
-            'value' : this.layoutOptions[i].toLowerCase(),
-            'label' : this.layoutOptions[i]
-          }
-          this.partialsList.push(value);
-        }
-
-        // Set Brand Logo Name
-        if(this.form.brandLogoName != ''){
-          if (this.form.brandLogoName.length > 18) {
-              $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
-              $('.valid').removeClass('error').addClass('correct');
-              $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-           }else{
-              $('#text2').text(this.form.brandLogoName);
-              $('.valid').removeClass('error').addClass('correct');
-              $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-          }  
-        } else {
-          console.log('BrandLogoName not found!');
-        }
-        
-
-      } else {
-        console.log('Cannot get config file!');
-      } 
-
-
-      // replace all image tag source with index as name attribute to get the image file preview
-      
-      for (var i = 0; i < this.globalVariables.length; i++){
-        if(this.globalVariables[i].variableType == 'image'){
-          let _imageIndex = i;
-          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
-          }).then(response => {
-            $('[name = ' + _imageIndex + ']').attr('src', response.data);
-          }).catch(error => {
-            console.log("Some error occured while fetching image: ", error);
-          });
-
-        }
-      }
-
-      // Get all commits list
-      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
-      }).then(response => {
-        this.commitsData = [];
-        for(var i in response.data){
-          this.commitsData.push({
-            commitDate: response.data[i].created_at,
-            commitSHA: response.data[i].id,
-            commitsMessage: response.data[i].title, 
-          });
-        }
-      }).catch(error => {
-        console.log("Some error occured: ", error);
-      });
-      
-
-      if(this.commitsData[0]){
-        return 'positive-row';
-      } 
-    }
   },
   created () {
     this.init(); 
@@ -1176,7 +1253,7 @@ export default {
 input[type="file"]{
   display: none;
 }
-label{
+.brandLogoUploadLabel label{
   display: inline-block;
   border: 1px dashed #1a1a1a;
   background: #f1f1f1;
@@ -1188,11 +1265,11 @@ label{
   cursor: pointer;
   transition:300ms;
 }
-label i{
+.brandLogoUploadLabel label i{
   vertical-align: middle;
   margin-right:10px;
 }
-label:hover{
+.brandLogoUploadLabel label:hover{
   border-style: solid;
 }
 
@@ -1205,12 +1282,12 @@ h1{
   margin-top:6px;
   color:#a9a9a9;
 }
-.error label{
+.error .brandLogoUploadLabel label{
   color:red;
   border-color:red;
   background:#fcd0d0;
 }
-.correct label{
+.correct .brandLogoUploadLabel label{
   background:#cff5c5;
 }
 

@@ -106,18 +106,62 @@
                   <!-- {{tablePagesData}} -->
                   <tr>
                     <td>Project SEO Title:</td>
-                    <td>{{seoTitle}}</td>
+                    <td><a id="seoTitle" data-title="Project SEO Title">{{seoTitle}}</a></td>
                   </tr>
                   <tr>
                     <td>Project SEO Keywords:</td>
-                    <td>{{seoKeywords}}</td>
+                    <td><a id="seoKeywords" data-title="Project SEO Keywords">{{seoKeywords}}</a></td>
                   </tr>
                   <tr>
                     <td>Project SEO Description:</td>
-                    <td>{{seoDesc}}</td>
+                    <td><a id="seoDesc" data-type="textarea" data-pk="1">{{seoDesc}}</a></td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- List of Commits -->
+      <div class="row" style="margin-top: 40px; margin-bottom: 50px;">
+        <div class="col-md-12">
+          <div class="creative-table">
+            <div class="table-title title-style-2">
+              <h4>Project Commits</h4>
+              <p>List of your project revisions</p>
+            </div>
+            <div class="table-body">
+              <el-table
+                :data="commitsData"
+                :row-class-name="tableRowClassName"
+                border
+                style="width: 100%">
+                <el-table-column
+                  prop="commitDate"
+                  label="Commit Date"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="commitsMessage"
+                  label="Commit Message"
+                  >
+                </el-table-column>
+
+                <el-table-column
+                  prop="commitSHA"
+                  label="Commit SHA"
+                  >
+                </el-table-column>
+                
+                <el-table-column
+                  label="Revert To Commit"
+                  width="180">
+                  <template scope="scope">
+                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Revert Commit</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
             </div>
           </div>
         </div>
@@ -159,12 +203,64 @@ export default {
         variables: 0,
         partials: 0
       },
-      
+      commitsData: [],
+      commitMessage: '',
     }
   },
   component: {
   },
   methods: {
+    revertCommit(index) {
+      this.$store.state.currentIndex = index;
+      $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
+      $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
+
+      // console.log(this.commitsData[index].commitSHA);
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
+      }).then(response => {
+        console.log(response.data);
+        this.$message({
+          message: 'Successfully reverted to selected commit.',
+          type: 'success'
+        });
+      }).catch(error => {
+        console.log("Some error occured: ", error);
+      })
+    },
+
+    tableRowClassName(row, index) {
+      if (index === this.$store.state.currentIndex) {
+        return 'positive-row';
+      }
+      return '';
+    },
+
+    saveProjectSettings() {
+      
+      let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
+      axios.post( config.baseURL + '/flows-dir-listing', {
+          filename : newfilename,
+          text : JSON.stringify(this.settings),
+          type : 'file'
+      })
+      .then((res) => {
+          console.log('Config File saved: ', res);
+          this.$message({
+              showClose: true,
+              message: 'Config Saved!',
+              type: 'success'
+          });
+      })
+      .catch((e) => {
+          console.log('Some error occured while saving config file. Here is full log: ', e);
+          this.$message({
+              showClose: true,
+              message: 'Cannot save file! Some error occured, try again.',
+              type: 'danger'
+          });
+      })
+    },
+
   	async init () {
 
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -206,6 +302,26 @@ export default {
       } else {
         console.log('Cannot get config file!');
       } 
+
+      // Get all commits list
+      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
+      }).then(response => {
+        this.commitsData = [];
+        for(var i in response.data){
+          this.commitsData.push({
+            commitDate: response.data[i].created_at,
+            commitSHA: response.data[i].id,
+            commitsMessage: response.data[i].title, 
+          });
+        }
+      }).catch(error => {
+        console.log("Some error occured: ", error);
+      });
+      
+
+      if(this.commitsData[0]){
+        return 'positive-row';
+      } 
   	},
 
     previewWebsite () {
@@ -215,6 +331,35 @@ export default {
   },
   async mounted () {
   	let response = await this.init();
+
+    let self = this;
+
+    $.fn.editable.defaults.mode = 'inline';
+
+    $(document).ready(function() {
+      $('#seoTitle').editable();
+      $('#seoKeywords').editable();
+      $('#seoDesc').editable({
+        title: 'Enter Description',
+        rows: 10
+      });
+
+      $('#seoTitle').on('save', function(e, params) {
+         // alert('Saved value: ' + params.newValue);
+        self.settings[1].projectSettings[0].ProjectSEOTitle = params.newValue;
+        self.saveProjectSettings();
+      });
+
+      $('#seoKeywords').on('save', function(e, params) {
+        self.settings[1].projectSettings[0].ProjectSEOKeywords = params.newValue;
+        self.saveProjectSettings();
+      });
+
+      $('#seoDesc').on('save', function(e, params) {
+        self.settings[1].projectSettings[0].ProjectSEODescription = params.newValue;
+        self.saveProjectSettings();
+      });
+    });
 
     // // Count Up animation
     // $('.counter').each(function() {
@@ -475,6 +620,10 @@ h3.subtitle{
 
 .title-style-1{
   background: linear-gradient(to right, #AB64F6 0%, #61DBF7 100%);
+}
+
+.title-style-2{
+  background: linear-gradient(to right, #D20B54 0%, #FFB894 100%);
 }
 
 .table-body{

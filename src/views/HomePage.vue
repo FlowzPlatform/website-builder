@@ -21,6 +21,7 @@
         <div class="number">274</div>
         <div class="string">requests</div>
       </div>
+
     </div>
   </div>
 </template>
@@ -42,6 +43,14 @@ export default {
   component: {
   },
   methods: {
+  },
+  mounted () {
+
+    $.fn.editable.defaults.mode = 'inline';
+
+    $(document).ready(function() {
+      $('#xeditable').editable();
+    });
   }
 }
 </script>
