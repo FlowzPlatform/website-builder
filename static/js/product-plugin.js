@@ -2,19 +2,17 @@
 grapesjs.plugins.add('product-plugin', function(editor, options){
   var bm = editor.BlockManager;
 
-    // bm.add('scriptingTag', {
-    //     label: 'Scriptiing',
-    //     category: 'Scripting',
-    //     content: {
-    //         script : '$(".addToCart").on())',
-    //         content : '<a href="" class="addoCart" >Add to cart</a>'
-    //     },
-    //     attributes: {
-    //         class: 'gjs-fonts gjs-f-hero'
-    //     }
-    // });
-
-
+    bm.add('scriptingTag', {
+        label: 'Scriptiing',
+        category: 'Scripting',
+        content: {
+            script : '$(".addToCart").on())',
+            content : '<a href="" class="addoCart" >Add to cart</a>'
+        },
+        attributes: {
+            class: 'gjs-fonts gjs-f-hero'
+        }
+    });
 
   	// Sections
 	bm.add('hero', {
@@ -2909,7 +2907,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
    // Style 7
   bm.add('froala-forms-style-7', {
       label: 'Style 7',
-      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block" style="background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder//imgs/bg_0.svg)"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Log In</h1> </div></div><div class="row mt-4"> <div class="col"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control mb-1" placeholder="Password"> <p class="text-right"><a href="https://www.froala.com">Recover Password</a></p></div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></div></div></div></section>',
+      content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <section class="fdb-block" style="background-image: url(https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder//imgs/bg_0.svg)"> <div class="container"> <div class="row justify-content-center"> <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-center"><form id="designed_forms_7"><div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Log In</h1> </div></div><div class="row mt-4"> <div class="col"> <input type="text" class="form-control" placeholder="Email"> </div></div><div class="row mt-4"> <div class="col"> <input type="password" class="form-control mb-1" placeholder="Password"> <p class="text-right"><a href="https://www.froala.com">Recover Password</a></p></div></div><div class="row mt-4"> <div class="col"> <button class="btn" type="button">Submit</button> </div></div></div></form></div></div></div></section>',
       attributes: {
           class: 'custom-icon froala-forms-style-7',
           title: 'Style 7'
