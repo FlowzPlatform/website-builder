@@ -77,9 +77,9 @@ export default {
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
 
         let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
-        partialItems.splice(partialItems.indexOf('Pages'), 1);
         partialItems.splice(partialItems.indexOf('Layout'), 1);
 
+        console.log('All Parts:', this.settings[2].layoutOptions[0]);
         this.tablePagesData = [];
 
         for(var i = 0; i < partialItems.length; i++){
@@ -93,6 +93,8 @@ export default {
             partialFiles: eachPartialFileList
           });
         }
+
+        console.log('Partials List:', this.tablePagesData)
 
       } else {
         console.log('Cannot get config file!');

@@ -2577,43 +2577,44 @@ export default {
                   this.addNewFileLoading = false
                   this.formAddFile.filename = null
                   
-                    let temp = {
-                        value: name.split('.')[0],
-                        label: name.split('.')[0]
-                    }
-                      let checkValue = false;
-                      var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                      namefolder=namefolder[namefolder.length - 1 ];
-                      console.log(this.globalConfigData);
-                      if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
-                          for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
-                              var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
-                              if ((obj.label) == name) {
-                                  checkValue = true;
-                              }
-                          }
-                          if (checkValue == true) {
-                          } else {
-                              this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+                  let temp = {
+                      value: name.split('.')[0],
+                      label: name.split('.')[0]
+                  }
 
-                              // saveConfigFile
-                              this.saveConfigFile(folderUrl);
+                  let checkValue = false;
+                  var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                  namefolder=namefolder[namefolder.length - 1 ];
+                  console.log(this.globalConfigData);
+                  
+                  if(namefolder != 'Pages'){
+                    if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
+                      for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
+                          var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
+                          if ((obj.label) == name) {
+                              checkValue = true;
                           }
-
+                      }
+                      if (checkValue == true) {
                       } else {
-                          this.globalConfigData[2].layoutOptions[0][namefolder] = [];
-                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
+                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+
+                          // saveConfigFile
                           this.saveConfigFile(folderUrl);
                       }
-                      if(namefolder=='Pages'){
-                        var PageSettings = {"PageName":name,"PageSEOTitle": "", "PageSEOKeywords": "", "PageSEODescription": "","PageLayout":"default","partials":[{"Header": "default"},{"Footer": "default" }]};
-                        this.globalConfigData[1].pageSettings.push((PageSettings))
+
+                    } else {
+                        this.globalConfigData[2].layoutOptions[0][namefolder] = [];
+                        this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
                         this.saveConfigFile(folderUrl);
-
-
-                      }
-
-
+                    }
+                  }
+                  
+                  if(namefolder=='Pages'){
+                    var PageSettings = {"PageName":name,"PageSEOTitle": "", "PageSEOKeywords": "", "PageSEODescription": "","PageLayout":"default","partials":[{"Header": "default"},{"Footer": "default" }]};
+                    this.globalConfigData[1].pageSettings.push((PageSettings))
+                    this.saveConfigFile(folderUrl);
+                  }
               })
               .catch((e) => {
                   console.log(e)
@@ -4692,7 +4693,7 @@ export default {
       .catch((e)=>{
             console.log(e)
           })
-      
+    
     },
     // Remove Project Folder and Delete GitLab Repository
     async removeProject(store, data) {
