@@ -15,6 +15,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     // });
 
 
+    // bm.add('TableData', {
+    //  label: 'Table Data`',
+    //  content: '<table><thead><th>Sr. No</th></thead><tbody><tr><td>1.</td></tr></tbody></table>',
+    //  attributes: {
+    //      class: 'fa fa-user-o',
+    //      title: 'Table'
+    //  },
+    //  category: 'Table'
+    // });
+
 
   	// Sections
 	bm.add('hero', {

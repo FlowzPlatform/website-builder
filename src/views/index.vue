@@ -3523,7 +3523,7 @@ export default {
                     <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
                 </el-tooltip>
               </span>
-          </span>)
+          </span>);
         }
           
       } else if(data.type=='file'){
