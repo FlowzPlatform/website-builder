@@ -94,7 +94,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 	});
 
 
-	
+
 	// // Header Layout
 	// bm.add('Header-1', {
 	// 	label: 'Header-1',
@@ -396,7 +396,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //     category: 'Static Components'
   // });
 
-  
+
 
 	// bm.add('bootstrapSlider',{
 	// 	label: 'Bootstrap Slider',
@@ -489,14 +489,14 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
             '<productListing style="display: block; width: 100%;"><figure class="product-card portrait placeholderCard"> <img class="product-card-img" src="http://placehold.it/400x300"/> <figcaption> <h3 class="product-card-title">Product Title</h3> <div class="product-description">Product Description</div><p class="product-card-address"> <i class="fa fa-map-marker"></i> US</p><div class="product-card-price"> <span class="price-savings">Save 25%</span> <s class="original-price">$ 10.99</s> <p class="amount-price"> <span class="from">starting at</span> $ 10.99<!-- <span class="from">/night</span>--> </p></div><button class="btn btn-info btn-block" style="margin-bottom: 10px" id="addToCartBtn">Add To Cart</button></figcaption></figure>'+
             '<div class="product_grid landscape" style="visibility: hidden;"> <ul class="product_list list"> <li class="product_item"> <div class="product_sale"> <p>On Sale</p></div><div class="product_image"> <a href="#"><img src="http://placehold.it/400x300" alt="Product images"></a> <div class="product_buttons"> <button class="product_heart"><i class="fa fa-heart"></i></button> <button class="product_compare"><i class="fa fa-random"></i></button> <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button> <div class="quick_view"> <a href="#"> <h6>Quick View</h6> </a> </div></div></div><div class="product_values"> <div class="product_title"> <h5>Product Title</h5> </div><div class="product_price"> <a href="#"><span class="price_old">$79.99</span> <span class="price_new">$11.11</span></a> <span class="product_rating"></span> </div><div class="product_desc"> <p class="truncate">Product Descriptions</p></div><div class="product_buttons"> <button class="product_heart"><i class="fa fa-heart"></i></button> <button class="product_compare"><i class="fa fa-random"></i></button> <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button> </div></div></li></ul> </div>'+
             '<div class="listing creative" style="visibility: hidden"> <!DOCTYPE html><div> <link rel=\'stylesheet prefetch\' href=\'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\'> <style type="text/css"> @import url(https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css); .wrp-product-2{color: #000000; font-size: 16px; margin: 20px;}.wrp-product-2:hover{box-shadow: 0px 10px 25px -2px rgba(0,0,0,0.36); transition: 0.2s all linear;}.wrp-product-2 *{-webkit-box-sizing: border-box; box-sizing: border-box; -webkit-transition: all 0.3s ease-out; transition: all 0.3s ease-out;}.wrp-product-2 img{max-width: 100%; vertical-align: top; position: relative;}.wrp-product-2 .add-to-cart{position: absolute; top: 0; padding-right: 10px; color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 0.9em; opacity: 0; background-color: #409ad5; -webkit-transform: rotateX(-90deg); transform: rotateX(-90deg); -webkit-transform-origin: 100% 0; -ms-transform-origin: 100% 0; transform-origin: 100% 0; padding: 5px}.wrp-product-2 .add-to-cart i{display: inline-block; margin-right: 10px; width: 40px; line-height: 40px; text-align: center; background-color: #164666; color: #ffffff; font-size: 1.4em;}.wrp-product-2 .wrp-row{padding: 20px; background-color: #eee;}.wrp-product-2 h3, .wrp-product-2 p{margin: 0;}.wrp-product-2 h3{font-size: 1.5em; font-weight: 700; margin-bottom: 10px; text-transform: uppercase;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}.wrp-product-2 p{font-size: 0.9em; letter-spacing: 1px; font-weight: 400;}.wrp-product-2 .price{font-weight: 500; font-size: 1.5em; line-height: 48px; letter-spacing: 1px;}.wrp-product-2 .price s{margin-right: 5px; opacity: 0.5; font-size: 0.9em;}.wrp-product-2 a{position: absolute; top: 0; bottom: 0; left: 0; right: 0;}.wrp-product-2:hover .add-to-cart{opacity: 1; -webkit-transform: rotateX(0deg); transform: rotateX(0deg);}.wrp-product-2:hover .add-to-cart i{background-color: #2980b9;} .descriptionText{max-height: 70px;overflow-y: auto;}</style> <div class=""> <div class=""> <div class="col-md-3"> <div class="wrp-product-2"> <img src="http://cdn2-www.craveonline.com/assets/uploads/2015/01/Watch-business-man.png" alt="Lorem Ipsum"/> <div class="add-to-cart"><i class="ion-android-add"></i><span>Add to Cart</span></div><div class="wrp-row"> <h3>Pudol Doux</h3> <p>A small description of the product goes here.</p><div class="price"> <s>$24.00</s>$19.00 </div><p><small>Special Offer: <b>10% off</b></small></p></div><a href="#"></a> </div></div></div></div></div></productListing>',
-    attributes: { 
+    attributes: {
         class: 'fa fa-tags',
         title: 'Product Block'
     },
     category: 'Ecommerce Blocks'
   });
 
-  
+
   // Product Detail
   bm.add('productDetail', {
     label: 'Detail Page',
@@ -516,7 +516,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
             '<productReactiveSearch style="display: block;margin-top: 0px;"><figure class="product-card portrait"> <img class="product-card-img" src="http://placehold.it/400x300"/> <figcaption> <h3 class="product-card-title">Product Title</h3> <div class="product-description">Product Sescription</div><p class="product-card-address"> <i class="fa fa-map-marker"></i> US</p><div class="product-card-price"> <span class="price-savings">Save 25%</span> <s class="original-price">$ 10.99</s> <p class="amount-price"> <span class="from">starting at</span> $ 10.99<!-- <span class="from">/night</span>--> </p></div></figcaption></figure>'+
             '<div class="product_grid landscape" style="visibility: hidden;"> <ul class="product_list list"> <li class="product_item"> <div class="product_sale"> <p>On Sale</p></div><div class="product_image"> <a href="#"><img src="http://placehold.it/400x300" alt="Product images"></a> <div class="product_buttons"> <button class="product_heart"><i class="fa fa-heart"></i></button> <button class="product_compare"><i class="fa fa-random"></i></button> <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button> <div class="quick_view"> <a href="#"> <h6>Quick View</h6> </a> </div></div></div><div class="product_values"> <div class="product_title"> <h5>Product Title</h5> </div><div class="product_price"> <a href="#"><span class="price_old">$79.99</span> <span class="price_new">$11.11</span></a> <span class="product_rating"></span> </div><div class="product_desc"> <p class="truncate">Product Descriptions</p></div><div class="product_buttons"> <button class="product_heart"><i class="fa fa-heart"></i></button> <button class="product_compare"><i class="fa fa-random"></i></button> <button class="add_to_cart"><i class="fa fa-shopping-cart"></i></button> </div></div></li></ul> </div>'+
             '<div class="listing creative" style="visibility: hidden"> <div class="product"> <a class="img-wrapper" href="#"> <img src="https://hussein-alhammad.com/images/codepen/product-card/running-shoe_pink.jpg" alt="Pink running shoe"/> </a> <div class="note on-sale" style="position: absolute;top: 0;left: 0;padding: 4px 8px;font-size: 0.9em;background: #00ba2f;color: #fff;">On sale</div><div class="info"> <div class="slide-title"><a href="#">Some Product</a></div><div class="price sale">$20.50</div><div class="price old">$34.99</div></div><div class="actions-wrapper"> <a href="#" class="add-btn wishlist"><i class="fa fa-heart-o"> Wishlist</a> <a href="#" class="add-btn cart"><i class="fa fa-shopping-cart"> Cart</a> </div></div></div></productReactiveSearch>',
-    attributes: { 
+    attributes: {
         class: 'fa fa-search',
         title: 'Product Block'
     },
@@ -564,7 +564,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Ecommerce Blocks'
   });
 
-  
+
 
 
 
@@ -687,9 +687,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     //     category: 'Ecommerce Component'
     // });
 
-	
 
-  
+
+
 
 	// Social media icons(Mine, not rendering)
 	// bm.add('socialIcons',{
@@ -702,7 +702,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 	// 	category: 'Dynamic Components'
 	// })
 
-	
+
 
 
 
@@ -758,7 +758,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
   // Sweda like components
-  
+
   bm.add('Slider', {
     label: 'Slider',
     content: '<Slider style="display: block; min-height: 50px"> <style>#slider{margin: 0 auto; width: 1146px; position: relative;}#slides{background: #fff; padding: 5px; -webkit-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -moz-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -o-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -ms-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}.inner{width: 500%;}.inner:after{display: block; height: 0; clear: both;}.page{float: left; width: 20%;}.page img{width: 100%; height: 466px;}#overflow{overflow: hidden;}#slider input{display: none;}#controls{position: absolute; width: 100%; top: 216px; left: 0; height: 50px;}#controls label{display: none; opacity: 0.3; cursor: pointer;}#controls label:hover{opacity: 0.8;}#slide1:checked ~ #controls label:nth-child(2), #slide2:checked ~ #controls label:nth-child(3), #slide3:checked ~ #controls label:nth-child(4), #slide4:checked ~ #controls label:nth-child(5), #slide5:checked ~ #controls label:nth-child(1){width: 0; height: 0; border-top: 20px solid transparent; border-left: 20px solid #333; border-bottom: 20px solid transparent; float: right; margin-right: -30px; display: block;}#slide1:checked ~ #controls label:nth-child(5), #slide2:checked ~ #controls label:nth-child(1), #slide3:checked ~ #controls label:nth-child(2), #slide4:checked ~ #controls label:nth-child(3), #slide5:checked ~ #controls label:nth-child(4){width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent; border-right: 20px solid rgb(51, 51, 51); float: left; display: block; margin-left: -27px;}#slide1:checked ~ #slides .inner{margin-left: 0;}#slide2:checked ~ #slides .inner{margin-left: -100%;}#slide3:checked ~ #slides .inner{margin-left: -200%;}#slide4:checked ~ #slides .inner{margin-left: -300%;}#slide5:checked ~ #slides .inner{margin-left: -400%;}#active{text-align: center; margin-top: 10px; text-align: center; vertical-align: middle; padding-right: 3px;}#active label{padding: 6px; width: 230px; height: 53px; background: #f1f1f1; display: table-cell; cursor: pointer; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; line-height: 19px; font-family: sans-serif; font-size: small;}#active label:hover{background: #c4bebe;}#slide1:checked ~ #active label:nth-child(1), #slide2:checked ~ #active label:nth-child(2), #slide3:checked ~ #active label:nth-child(3), #slide4:checked ~ #active label:nth-child(4), #slide5:checked ~ #active label:nth-child(5){background: #dddddd;}#slides .inner{-webkit-transition: all 0.8s ease-in-out; -moz-transition: all 0.8s ease-in-out; -ms-transition: all 0.8s ease-in-out; -o-transition: all 0.8s ease-in-out; transition: all 0.8s ease-in-out;}</style> <div id="slider"> <input type="radio" id="slide1" name="slider" checked/> <input type="radio" id="slide2" name="slider"/> <input type="radio" id="slide3" name="slider"/> <input type="radio" id="slide4" name="slider"/> <input type="radio" id="slide5" name="slider"/> <div id="slides"> <div id="overflow"> <div class="inner"> <div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div></div></div></div><div id="controls"> <label for="slide1"></label> <label for="slide2"></label> <label for="slide3"></label> <label for="slide4"></label> <label for="slide5"></label> </div><div id="active"> <label for="slide1"> <p>IT\'S A WRAP</p></label> <label for="slide2"> <p>CHECK OUT OUR <br>Autumn Savings</p></label> <label for="slide3"> <p>New! <br>Light Up Pen!</p></label> <label for="slide4"> <p>INTRODUCING... <br>Sweda Outlet</p></label> <label for="slide5"> <p>Take 40% Off</p></label> </div></div></Slider>',
@@ -885,7 +885,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
   // Filter Components
-  
+
 
   // Categories Filter Dynamic
   // bm.add('productCategory', {
@@ -898,7 +898,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //   category: 'Filter Components'
   // });
 
-  // // Filter Price 
+  // // Filter Price
   // bm.add('productPrice', {
   //   label: 'Price',
   //   content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" ><productPrice style="display: block; width: 100%;padding:15px"><style type="text/css"></style><div class="filters"><div class="categories-filter"><div class="panel-group" id="accordion"><div class="panel panel-default"><div class="panel-heading filter-heading"><h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" href="#collapse2"> Price<span class="pull-right">+</span></a></h4></div><div id="collapse2" class="panel-collapse collapse in"><div class="panel-body"><div data-role="main" class="ui-content"><div data-role="rangeslider"> <label for="price-min">Price:</label> <input type="range" name="price-min" id="price-min" value="200" min="0" max="1000"> <label for="price-max">Price:</label> <input type="range" name="price-max" id="price-max" value="800" min="0" max="1000"></div> <input type="submit" data-inline="true" value="Filter"></div></div></div></div></div></div></div></productPrice>',
@@ -931,7 +931,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //   category: 'Filter Components'
   // });
 
-  
+
 
 
 
@@ -988,7 +988,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
   // Global Variables
 
-  // Global Image Variable 
+  // Global Image Variable
   bm.add('globalImageVariable', {
     label: 'Image Variable',
     category: 'Global Variables',
@@ -998,7 +998,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     content: '<globalImage style="padding: 5px; display: inline-block;"><img src="http://placehold.it/250x100" alt="Global Image" /></globalImage>'
   });
 
-  // Global Link Variable 
+  // Global Link Variable
   bm.add('globalLinkVariable', {
     label: 'Link Variable',
     category: 'Global Variables',
@@ -1008,7 +1008,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     content: '<globalLink style="padding: 5px; display: inline-block;"><a href="#">Hyperlink</a></globalLink>'
   });
 
-  // Global HTML Variable 
+  // Global HTML Variable
   bm.add('globalHtmlVariable', {
     label: 'HTML Variable',
     category: 'Global Variables',
@@ -1018,7 +1018,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     content: '<globalHtmlVariable style="padding: 2px; display: inline-block;">HTML Code</globalHtmlVariable>',
   });
 
-  // Global Text Variable 
+  // Global Text Variable
   bm.add('globalTextVariable', {
     label: 'Text Variable',
     category: 'Global Variables',
@@ -1058,11 +1058,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     // Invoice Filters
     bm.add('InvoiceDetail', {
         label: 'Invoice',
-        // '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <body> <div class="container-fluid"><InvoiceDetail> <div class="row" style=""> <div clss="col-sm-3 col-md-2"> </div><div class="col-sm-8 col-md-8" style="margin-top:51px;margin-left:auto !important;margin-right:auto !important;"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> InvoiceID </td><td> ContactName </td><td> Date </td><td> AmountPaid </td><td> AmountDue </td> <td> Total Amount</td> </tr></tbody> </table> </div><div clss="col-sm-3 col-md-2"> </div></div></InvoiceDetail></div>',  
-        //  content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <body> <div class="container-fluid"><InvoiceDetail>  <div class="col-sm-8 col-md-8" style="margin-top:51px;margin-left:auto !important;margin-right:auto !important;"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> InvoiceID </td><td> ContactName </td><td> Date </td><td> AmountPaid </td><td> AmountDue </td> <td> Total Amount</td> </tr></tbody> </table> </div><div clss="col-sm-3 col-md-2"> </div></InvoiceDetail></div>', 
+        // '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <body> <div class="container-fluid"><InvoiceDetail> <div class="row" style=""> <div clss="col-sm-3 col-md-2"> </div><div class="col-sm-8 col-md-8" style="margin-top:51px;margin-left:auto !important;margin-right:auto !important;"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> InvoiceID </td><td> ContactName </td><td> Date </td><td> AmountPaid </td><td> AmountDue </td> <td> Total Amount</td> </tr></tbody> </table> </div><div clss="col-sm-3 col-md-2"> </div></div></InvoiceDetail></div>',
+        //  content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <body> <div class="container-fluid"><InvoiceDetail>  <div class="col-sm-8 col-md-8" style="margin-top:51px;margin-left:auto !important;margin-right:auto !important;"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> InvoiceID </td><td> ContactName </td><td> Date </td><td> AmountPaid </td><td> AmountDue </td> <td> Total Amount</td> </tr></tbody> </table> </div><div clss="col-sm-3 col-md-2"> </div></InvoiceDetail></div>',
         content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><InvoiceDetail style="display: block; width: 100%;padding:15px"> <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th><div class="invoiceTableBody"></div></table> </InvoiceDetail>',
         // content:'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><InvoiceDetail><div class="container-fluid"></InvoiceDetail><InvoiceDetail>   <h3> Invoices </h3> <table class="table table-bordered table-striped table-collapsed"> <thead> <th>Id</th> <th>Name</th> <th>Date</th> <th>Amount Paid</th> <th>Amount Due</th> <th> Total Amount </th> </thead> <tbody> <tr> <td> 1  </td> <td> krishna </td> <td> 04/01/2017 </td> <td> 1000</td> <td>500 </td> <td> 1500 </td> </tr> <tr> <td> 2  </td> <td> dweep </td> <td> 04/05/2017 </td> <td> 2500</td> <td>500 </td> <td> 3000 </td> </tr> <td> 3  </td> <td> ekta </td> <td> 12/05/2017 </td> <td> 3500</td> <td>500 </td> <td> 4000 </td> </tr> <td> 4  </td> <td> ashwini </td> <td> 10/05/2017 </td> <td> 4500</td> <td>500 </td> <td> 5000 </td> </tr></tbody>  </table> </InvoiceDetail></div>',
- 
+
         attributes: {
             class: 'fa fa-file-text-o',
             title: 'Invoice Page',
@@ -1104,11 +1104,19 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         category: 'Accounting Components'
     });
 
+    bm.add('ShoppingCart', {
+        label: 'Shopping Cart',
+        content:'<ShoppingCart  style="display: block; width: 100%;padding:15px; vertical-align: middle;"><div id="ShoppingCart_append"><i class="fa fa-shopping-cart"></i> <label style="margin: inherit;">Shopping Cart</label></div></ShoppingCart>',
+        attributes: {
+            class:'fa fa-shopping-cart',
+            title: 'Shopping cart',
+        },
+    category: 'Accounting Components'
+    });
 
 
-  
 
-  
+
 
 
 
@@ -2478,7 +2486,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
   // Headers
-  //Style 1 
+  //Style 1
   bm.add('froala-header-style-1', {
       label: 'Style 1',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><header> <div class="container text-center"> <nav class="navbar"> <a class="ml-auto mr-auto" href="https://www.froala.com"> <img src="https://github.com/froala/design-blocks/blob/master/dist/imgs/img_logo.png?raw=true" height="30" alt="image"> </a> </nav> </div></header>',
@@ -2489,7 +2497,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 2 
+  //Style 2
   bm.add('froala-header-style-2', {
       label: 'Style 2',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><header> <div class="container"> <nav class="navbar navbar-expand-md"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav0" aria-controls="navbarNav0" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav0"> <ul class="navbar-nav mr-auto ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div></nav> </div></header>',
@@ -2500,7 +2508,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 3 
+  //Style 3
   bm.add('froala-header-style-3', {
       label: 'Style 3',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'http://linerpro.ml/extra/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style><header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-3 text-left"> <a href="https://www.froala.com"> <img src="https://github.com/froala/design-blocks/blob/master/dist/imgs/img_logo.png?raw=true" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-4" aria-controls="navbarNav7" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse navbar-collapse-4 justify-content-center col-md-6" id="navbarNav7"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li></ul> </div><div class="collapse navbar-collapse navbar-collapse-4"> <ul class="navbar-nav ml-auto justify-content-end"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> <a class="btn ml-md-3" href="https://www.froala.com">Register</a> </div></nav> </div></header>',
@@ -2512,7 +2520,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   });
 
 
-  //Style 4 
+  //Style 4
   bm.add('froala-header-style-4', {
       label: 'Style 4',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style><header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-2 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-3" aria-controls="navbarNav6" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse justify-content-center col-md-8 navbar-collapse-3"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li></ul> </div><div class="collapse navbar-collapse justify-content-end col-md-2 navbar-collapse-3"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> </div></nav> </div></header>',
@@ -2523,7 +2531,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 5 
+  //Style 5
   bm.add('froala-header-style-5', {
       label: 'Style 5',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-lg"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav13" aria-controls="navbarNav13" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav13"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end ml-auto"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Docs</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> <a class="btn btn-white ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
@@ -2534,8 +2542,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  
-  //Style 6 
+
+  //Style 6
   bm.add('froala-header-style-6', {
       label: 'Style 6',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-2 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav12" aria-controls="navbarNav12" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse justify-content-center col-md-8" id="navbarNav12"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div><ul class="navbar-nav col-2 justify-content-end d-none d-md-flex"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-facebook"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-google"></i></a> </li></ul> </nav> </div></header>',
@@ -2547,7 +2555,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   });
 
 
-  //Style 7 
+  //Style 7
   bm.add('froala-header-style-7', {
       label: 'Style 7',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav10" aria-controls="navbarNav10" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="col-4 col-sm-2 text-center order-lg-6"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><div class="collapse navbar-collapse col-12 col-md-5 order-lg-1" id="navbarNav10"> <ul class="navbar-nav col-5"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div><ul class="navbar-nav justify-content-end col-sm-5 order-lg-12 d-none d-md-flex"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li></ul> </nav> </div></header>',
@@ -2558,7 +2566,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 8 
+  //Style 8
   bm.add('froala-header-style-8', {
       label: 'Style 8',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>   <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav11" aria-controls="navbarNav11" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav11"> <ul class="navbar-nav ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> <a class="btn btn-white btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
@@ -2569,7 +2577,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 9 
+  //Style 9
   bm.add('froala-header-style-9', {
       label: 'Style 9',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav9" aria-controls="navbarNav9" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav9"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end d-none d-lg-flex ml-md-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li></ul> <a class="btn btn-white btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
@@ -2580,7 +2588,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 10 
+  //Style 10
   bm.add('froala-header-style-10', {
       label: 'Style 10',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav8" aria-controls="navbarNav8" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav8"> <ul class="navbar-nav mr-auto ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div></nav> </div></header>',
@@ -2592,7 +2600,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   });
 
 
-  //Style 11 
+  //Style 11
   bm.add('froala-header-style-11', {
       label: 'Style 11',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"><div class="container text-center"><nav class="navbar"><a class="ml-auto mr-auto" href="https://www.froala.com"><img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"></a></nav></div></header>',
@@ -2603,7 +2611,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 12 
+  //Style 12
   bm.add('froala-header-style-12', {
       label: 'Style 12',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <header class="bg-dark"> <div class="container"> <nav class="navbar"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </nav> </div></header>',
@@ -2615,7 +2623,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   });
 
 
- //Style 13 
+ //Style 13
   bm.add('froala-header-style-13', {
       label: 'Style 13',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>   <header> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-3 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-2" aria-controls="navbarNav7" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse navbar-collapse-2 justify-content-center col-md-6" id="navbarNav7"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li></ul> </div><div class="collapse navbar-collapse navbar-collapse-2"> <ul class="navbar-nav ml-auto justify-content-end"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> <a class="btn ml-md-3" href="https://www.froala.com">Register</a> </div></nav> </div></header>',
@@ -2626,7 +2634,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 14 
+  //Style 14
   bm.add('froala-header-style-14', {
       label: 'Style 14',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>    <header> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-2 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-1" aria-controls="navbarNav6" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse justify-content-center col-md-8 navbar-collapse-1"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li></ul> </div><div class="collapse navbar-collapse justify-content-end col-md-2 navbar-collapse-1"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In &rarr;</a> </li></ul> </div></nav> </div></header>',
@@ -2638,7 +2646,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   });
 
 
-  //Style 15 
+  //Style 15
   bm.add('froala-header-style-15', {
       label: 'Style 15',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>    <header> <div class="container"> <nav class="navbar navbar-expand-lg"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav5" aria-controls="navbarNav5" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav5"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end ml-auto"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Docs</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Contact</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Log In</a> </li></ul> <a class="btn ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
@@ -2649,7 +2657,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 16 
+  //Style 16
   bm.add('froala-header-style-16', {
       label: 'Style 16',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>    <header> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <div class="col-2 text-left"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav4" aria-controls="navbarNav4" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse justify-content-center col-md-8" id="navbarNav4"> <ul class="navbar-nav justify-content-center"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div><ul class="navbar-nav col-2 justify-content-end d-none d-md-flex"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-facebook"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-google"></i></a> </li></ul> </nav> </div></header>',
@@ -2660,7 +2668,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-   //Style 17 
+   //Style 17
   bm.add('froala-header-style-17', {
       label: 'Style 17',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>     <header> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav3" aria-controls="navbarNav3" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav3"> <ul class="navbar-nav ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">About</a> </li></ul> <a class="btn btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
@@ -2671,7 +2679,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 18 
+  //Style 18
   bm.add('froala-header-style-18', {
       label: 'Style 18',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>      <header> <div class="container"> <nav class="navbar navbar-expand-md no-gutters"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="col-4 col-md-2 text-right text-md-center order-lg-6"> <a href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </div><div class="collapse navbar-collapse col-12 col-md-5 order-lg-1" id="navbarNav2"> <ul class="navbar-nav col-5"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div><ul class="navbar-nav justify-content-end col-sm-5 order-lg-12 d-none d-md-flex"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li></ul> </nav> </div></header>',
@@ -2682,7 +2690,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 19 
+  //Style 19
   bm.add('froala-header-style-19', {
       label: 'Style 19',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>      <header> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav1" aria-controls="navbarNav1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav1"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end d-none d-lg-flex ml-md-auto"> <li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-slack"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com"><i class="fa fa-github"></i></a> </li></ul> <a class="btn btn-empty ml-md-3" href="https://www.froala.com">Button</a> </div></nav> </div></header>',
@@ -2693,7 +2701,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 20 
+  //Style 20
   bm.add('froala-header-style-20', {
       label: 'Style 20',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>      <header> <div class="container"> <nav class="navbar navbar-expand-md"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav0" aria-controls="navbarNav0" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav0"> <ul class="navbar-nav mr-auto ml-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.froala.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.froala.com">Team</a> </li></ul> </div></nav> </div></header>',
@@ -2704,7 +2712,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Headers'
   });
 
-  //Style 21 
+  //Style 21
   bm.add('froala-header-style-21', {
       label: 'Style 21',
       content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel=\'stylesheet\' href=\'https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css\'/><style>.fdb-block{border-bottom: solid 1px #EEE;}</style>   <header> <div class="container text-center"> <nav class="navbar"> <a class="ml-auto mr-auto" href="https://www.froala.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> </nav> </div></header>',
@@ -3148,7 +3156,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
           title: 'Style 10',
       },
       category: 'Pricing Tables'
-  }); 
+  });
 
 
 
@@ -3734,7 +3742,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         editable: true,
         droppable: true,
         traits: [
-        
+
           {
             label: 'API URL',
             name: 'apiurl'
@@ -3991,7 +3999,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   // var storedTemplates;
   // // Get Config Data
   // let configFileUrl = 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json';
-  // $.getJSON( configFileUrl, function( data ) {  
+  // $.getJSON( configFileUrl, function( data ) {
   //     var configData = JSON.parse(data);
   //     console.log('Config Data:', configData);
   //     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
@@ -4005,7 +4013,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   // let arr_to_print = []
 
   // setTimeout(function(){
-  //   console.log('List of Partials: ', storedTemplates);  
+  //   console.log('List of Partials: ', storedTemplates);
 
   //   for (var i = 0; i < storedTemplates.length; i++) {
   //       if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
@@ -4013,7 +4021,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //       }
   //   }
 
-    
+
 
   //   for (var i = 0; i <= storedTemplates.length - 1; i++) {
   //       var request = new XMLHttpRequest();
@@ -4026,9 +4034,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //           request.open("POST", 'http://localhost:3030/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
   //           request.setRequestHeader("Content-type", "application/json");
   //           request.send();
-  //           resp2 = JSON.parse(request.responseText);          
+  //           resp2 = JSON.parse(request.responseText);
   //       }
-        
+
   //       if (resp.length != 0) {
   //           if (resp2.length >= 2) {
   //               for (let j = 0; j < resp2.length; j++) {
@@ -4037,7 +4045,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //           } else {
   //               arr_to_print.push(resp[i] + '-' + resp2)
   //           }
-  //       } 
+  //       }
   //   }
   //   for (var i = arr_to_print.length - 1; i >= 0; i--) {
   //       arr.push({
@@ -4046,11 +4054,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //       })
   //   }
   // },1000);
-  
+
   // // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
 
   // // console.log('Stored Templates: ', storedTemplates);
-  
+
 
   // comps.addType('ReUseComponent', {
   //     model: defaultModel.extend({
@@ -4125,7 +4133,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
      var folderUrl = localStorage.getItem("folderUrl");
 
     let configFileUrl = 'http://localhost:3030/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json';
-    $.getJSON( configFileUrl, function( data ) {  
+    $.getJSON( configFileUrl, function( data ) {
         var configData = JSON.parse(data);
         console.log('Config Data:', configData);
         storedTemplates = Object.keys(configData[2].layoutOptions[0]);
@@ -4141,7 +4149,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
           }
       }
 
-      
+
       // let arr_to_print = []
       // var folderUrl = localStorage.getItem("folderUrl");
       for (var i = 0; i <= storedTemplates.length - 1; i++) {
@@ -4174,7 +4182,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
           }
       }
     },1000);
-    
+
 
     editor.TraitManager.addType('customConent1', {
 
@@ -4292,9 +4300,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //         resp2 = JSON.parse(request.responseText);
   //         console.log("resp2....", resp2)
 
-          
+
   //     }
-      
+
   //     if (resp.length != 0) {
   //         if (resp2.length >= 2) {
   //             for (let j = 0; j < resp2.length; j++) {
@@ -4303,7 +4311,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
   //         } else {
   //             arr_to_print.push(resp[i] + '-' + resp2)
   //         }
-  //     } 
+  //     }
 
   //     // if (resp.length != 0) {
   //     //     if (resp.length >= 2) {
@@ -4811,7 +4819,77 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         },
       });
 
+      comps.addType('ShoppingCart', {
+          model: defaultModel.extend({
 
+              init() {
+                  this.listenTo(this, 'change:Paypal', this.paypalcheck);
+                  this.listenTo(this, 'change:Stripe', this.stripecheck);
+                  this.listenTo(this, 'change:AuthorizeDotNet', this.authcheck);
+              },
+
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+              editable: true,
+              droppable: true,
+              traits: [
+                 {
+                  type: 'checkbox',
+                  label: 'Paypal',
+                  name: 'Paypal',
+                },
+                {
+                  label: 'Token',
+                  name: 'x_api_token_paypal',
+                },
+                {
+                  label: 'Login',
+                  name: 'x_api_login_paypal',
+                },
+                {
+                  type: 'checkbox',
+                  label: 'Stripe',
+                  name: 'Stripe',
+                },
+                {
+                  label: 'Token',
+                  name: 'x_api_token_stripe',
+                },
+                {
+                  label: 'Authorize DotNet',
+                  name: 'AuthorizeDotNet',
+                  type: 'checkbox',
+                },
+                {
+                  label: 'Token',
+                  name: 'x_api_token_authdotnet',
+                },
+                {
+                  label: 'Login',
+                  name: 'x_api_login_authdotnet',
+                }
+              ],
+            }),
+
+          },
+          {
+            isComponent: function(el) {
+              if(el.tagName == 'SHOPPINGCART'){
+                return {type: 'ShoppingCart'};
+              }
+            },
+          }),
+
+          view: defaultType.view,
+
+          // The render() should return 'this'
+          render: function () {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+          },
+        });
 
 
 
