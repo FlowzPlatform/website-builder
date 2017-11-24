@@ -81,6 +81,22 @@
       </div> 
       <!-- Project Settings section ends -->
 
+      <!-- Plugins Section -->
+      <div class="well">
+        <div class="row">
+          <div class="col-md-12">
+            
+            <h3>Import Plugin</h3>
+            <hr>
+
+            <!-- Add new Plugin -->
+            <el-button type="primary" :loading="addPluginLoading" @click="addNewPlugin">Upload Plugin JSON</el-button>
+          </div>
+        
+        </div>
+      </div> 
+      <!-- Plugins section ends -->
+
       <!-- Global Variable section -->
       <div class="well">
         <div class="row">
@@ -495,7 +511,8 @@ export default {
         "wishlist": false,
         "cart": false,
         "compare": false
-      }]
+      }],
+      addPluginLoading: false
     }
   },
   component: {
@@ -547,6 +564,123 @@ export default {
     addNewCssVariable() {
       let newVariable = { variableName: '', variableType: '', variableValue: ''};
       this.globalCssVariables.push(newVariable);
+    },
+
+    async addNewPlugin() {
+      this.addPluginLoading = true;
+
+      let response = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/pluginSchema.json');
+      if(response.status == 200 || response.status == 204){
+        let pluginFileData = JSON.parse(response.data);
+
+        // Validate Schema (pending)
+
+        // If Schema Valid, upload this file to /assets/client-plugins folder
+        let uploadNewPluginUrl = this.folderUrl + '/assets/client-plugins/pluginSchema.json';
+
+        // Create this file under this particular project
+        axios.post(config.baseURL + '/flows-dir-listing', {
+            filename : uploadNewPluginUrl ,
+            text : response.data,
+            type : 'file'
+        })
+        .then((res) => {
+          this.$message({
+                showClose: true,
+                message: 'Successfully done.',
+                type: 'success'
+            });
+            console.log(res.data);
+        })
+        .catch((e) => {
+            this.$message({
+                showClose: true,
+                message: 'Failed! Please try again.',
+                type: 'error'
+            });
+            console.log(e)
+        });
+
+        // Create Plugin Folder and its variants
+        let pluginName = pluginFileData.name;
+
+        // Create this plugin Folder
+        axios.post(config.baseURL+'/flows-dir-listing' , {
+          foldername : this.folderUrl + '/Partials/' + pluginName,
+          type : 'folder'
+        })
+        .then(async (res) => {
+          console.log('New Plugin Folder created!');
+
+          // Loop through all partial variants
+          for(let i = 0; i < pluginFileData.partials.length; i++){
+
+            // Create variant files
+            let variantName = this.folderUrl + '/Partials/' + pluginName + '/' + pluginFileData.partials[i].title + '.html';
+
+            let generatedCss, generatedJs;
+
+            // Generate Css Style Tag
+            let styleTag = '';
+            for(let j = 0; j < pluginFileData.partials[i].css.style.length; j++){
+              let key = Object.keys(pluginFileData.partials[i].css.style[j]);
+              let value = Object.values(pluginFileData.partials[i].css.style[j]);
+
+              let keyvalue = '.' + pluginFileData.partials[i].title + ' ' + key[0] + value[0] +'\n';
+
+              styleTag += keyvalue;
+            }
+
+            // Generate Css Link tags
+            let styleHref = '';
+            for(let j = 0; j < pluginFileData.partials[i].css.href.length; j++){
+              styleHref += '<link rel="stylesheet" type="text/css" href="' + pluginFileData.partials[i].css.href[j] + '">\n';
+            }
+
+            // Combine all Css code
+            generatedCss = styleHref + '<style type="text/css">' + styleTag + '</style>';
+
+            // Generate Js Script Tag
+            let scriptTag = '';
+            scriptTag = '<script type="text/javascript">' + pluginFileData.partials[i].js.script + '<\/script>'
+
+            // Generate Js Link tags
+            let scriptSrc = '';
+            for(let j = 0; j < pluginFileData.partials[i].js.src.length; j++){
+              scriptSrc += '<script src="' + pluginFileData.partials[i].js.src[j] + '">\n';
+            }
+
+            // Combine all Js Code
+            generatedJs = scriptTag + '\n' + scriptSrc;
+
+            // Final Code for variant file
+            let pluginContents = generatedCss + '\n' + '<div class="' + pluginFileData.partials[i].title + '">' + pluginFileData.partials[i].renderHtml + '</div>\n' + generatedJs;
+
+            let pluginVariantCreation = await axios.post(config.baseURL + '/flows-dir-listing', {
+                filename : variantName,
+                text : pluginContents,
+                type : 'file'
+            })
+            .then((res) => {
+              // console.log(variantName + ', Partial Variant Created!');
+            })
+            .catch((e) => {
+                console.log(e)
+            });
+
+          }
+
+
+        })
+        .catch((e)=>{
+          console.log("Error"+e)
+        });
+
+        this.addPluginLoading = false;
+      } else {
+        console.log('Cannot get config file!');
+        this.addPluginLoading = false;
+      } 
     },
 
     // addNewEcommerceVariable() {
