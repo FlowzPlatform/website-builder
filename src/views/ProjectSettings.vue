@@ -558,7 +558,6 @@ export default {
 
       this.globalVariables[currentImageVariableIndex].variableValue = imageName;
       this.globalVariables[currentImageVariableIndex].isImageUrl = false;
-      
     },
 
     addNewVariable() {

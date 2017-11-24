@@ -17,5 +17,6 @@ module.exports = {
     ipAddress : 'http://localhost',
     
     pluginsPath : '/home/software/AllProjects/FlowzBuilder/src/assets/plugins',
-    websitesPath : '/var/www/html/websites'
+    websitesPath : '/var/www/html/websites',
+    metalpath: '/home/software/AllProjects/FlowzServiceApi/node_modules/'
 }

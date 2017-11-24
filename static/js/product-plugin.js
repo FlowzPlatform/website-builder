@@ -4226,7 +4226,14 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
                     label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
                     selected_value =  $("#Div1 option:selected").text();
                     let model = editor.getSelected();
+
+                    model.components("");
+                    if(selected_value.match('.hbs')){
+                        model.components("{{> " + label + " id='" + selected_value + "' }}");
+                    }else{
+
                     model.components("{{> " + label + " id='" + selected_value + ".html' }}");
+                    }
                 });
             },
             defaults: Object.assign({}, defaultModel.prototype.defaults, {
