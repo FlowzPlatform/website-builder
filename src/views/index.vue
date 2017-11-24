@@ -2532,24 +2532,26 @@ export default {
                 label: name
               }
               let checkValue = false;
-              if (this.globalConfigData[2].layoutOptions[0][foldername]) {
-                for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][foldername].length; i++) {
-                  var obj = this.globalConfigData[2].layoutOptions[0][foldername][i];
-                  if ((obj.label) == name) {
-                    checkValue = true;
+              if(foldername != 'Pages'){
+                if (this.globalConfigData[2].layoutOptions[0][foldername]) {
+                  for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][foldername].length; i++) {
+                    var obj = this.globalConfigData[2].layoutOptions[0][foldername][i];
+                    if ((obj.label) == name) {
+                      checkValue = true;
+                    }
                   }
-                }
-                if (checkValue == true) {
-                  console.log("file already exists")
+                  if (checkValue == true) {
+                    console.log("file already exists")
+                  } else {
+                    this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
+                    // saveConfigFile
+                    this.saveConfigFile(folderUrl);
+                  }
                 } else {
-                  this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
-                  // saveConfigFile
+                  this.globalConfigData[2].layoutOptions[0][foldername] = [];
+                  this.globalConfigData[2].layoutOptions[0][foldername].push(temp)
                   this.saveConfigFile(folderUrl);
                 }
-              } else {
-                this.globalConfigData[2].layoutOptions[0][foldername] = [];
-                this.globalConfigData[2].layoutOptions[0][foldername].push(temp)
-                this.saveConfigFile(folderUrl);
               }
             }
           }
@@ -3507,23 +3509,52 @@ export default {
             </span>)  
         } else {
           // If it's a simple directory
-          return(<span>
+          if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
+            return(<span>
               <span class="nodelabel">
                   <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
                   <span>{node.label}</span>
               </span>
               <span class="action-button" style="float: right; padding-right: 5px;">
-                <el-tooltip content="Add folder" placement="top" >
+                <el-tooltip content="Create New Partial" placement="top" >
                     <i class="fa fa-folder-open-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
-                </el-tooltip>
-                <el-tooltip content="Add file" placement="top" >
-                    <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
                 </el-tooltip>
                 <el-tooltip content="Remove" placement="top" >
                     <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
                 </el-tooltip>
               </span>
           </span>);
+          } else if(_.includes(data.path, '/Partials/')){
+            return(<span>
+              <span class="nodelabel">
+                  <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+                  <span>{node.label}</span>
+              </span>
+              <span class="action-button" style="float: right; padding-right: 5px;">
+                <el-tooltip content="Create New Variant" placement="top" >
+                  <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
+                </el-tooltip>
+                <el-tooltip content="Remove" placement="top" >
+                    <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
+                </el-tooltip>
+              </span>
+          </span>);
+          } else {
+            return(<span>
+                <span class="nodelabel">
+                    <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+                    <span>{node.label}</span>
+                </span>
+                <span class="action-button" style="float: right; padding-right: 5px;">
+                  <el-tooltip content="Add file" placement="top" >
+                      <i class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
+                  </el-tooltip>
+                  <el-tooltip content="Remove" placement="top" >
+                      <i class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
+                  </el-tooltip>
+                </span>
+            </span>);
+          }
         }
           
       } else if(data.type=='file'){

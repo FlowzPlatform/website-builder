@@ -420,6 +420,8 @@
 
 <script>
 
+const beautify = require('beautify');
+
 import Vue from 'vue'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
@@ -512,7 +514,7 @@ export default {
         "cart": false,
         "compare": false
       }],
-      addPluginLoading: false
+      addPluginLoading: false,
     }
   },
   component: {
@@ -612,10 +614,21 @@ export default {
         .then(async (res) => {
           console.log('New Plugin Folder created!');
 
+          this.settings[2].layoutOptions[0][pluginName] = [];
+
           // Loop through all partial variants
           for(let i = 0; i < pluginFileData.partials.length; i++){
 
-            // Create variant files
+            // Create Array Object for variant used to save in config.json file
+            let variantEntry = {
+              value: pluginFileData.partials[i].title,
+              label: pluginFileData.partials[i].title
+            };
+
+            // Push variantEntry in settings.layoutoptions
+            this.settings[2].layoutOptions[0][pluginName].push(variantEntry);
+
+            // Start Creating variant files
             let variantName = this.folderUrl + '/Partials/' + pluginName + '/' + pluginFileData.partials[i].title + '.html';
 
             let generatedCss, generatedJs;
@@ -638,31 +651,32 @@ export default {
             }
 
             // Combine all Css code
-            generatedCss = styleHref + '<style type="text/css">' + styleTag + '</style>';
+            generatedCss = styleHref + '<style type="text/css">\n' + beautify(styleTag, { format: 'css'}) + '\n</style>';
 
             // Generate Js Script Tag
             let scriptTag = '';
-            scriptTag = '<script type="text/javascript">' + pluginFileData.partials[i].js.script + '<\/script>'
+            scriptTag = '<script type="text/javascript">\n' + beautify(pluginFileData.partials[i].js.script, { format: 'js'}) + '\n<\/script>'
 
             // Generate Js Link tags
             let scriptSrc = '';
             for(let j = 0; j < pluginFileData.partials[i].js.src.length; j++){
-              scriptSrc += '<script src="' + pluginFileData.partials[i].js.src[j] + '">\n';
+              scriptSrc += '<script src="' + pluginFileData.partials[i].js.src[j] + '"><\/script>\n';
             }
 
             // Combine all Js Code
             generatedJs = scriptTag + '\n' + scriptSrc;
 
             // Final Code for variant file
-            let pluginContents = generatedCss + '\n' + '<div class="' + pluginFileData.partials[i].title + '">' + pluginFileData.partials[i].renderHtml + '</div>\n' + generatedJs;
+            let pluginContents = generatedCss + '\n' + '<div class="' + pluginFileData.partials[i].title + '">\n' + beautify(pluginFileData.partials[i].renderHtml, { format: 'html'}) + '\n</div>\n' + generatedJs;
 
+            // Create variant files
             let pluginVariantCreation = await axios.post(config.baseURL + '/flows-dir-listing', {
                 filename : variantName,
                 text : pluginContents,
                 type : 'file'
             })
             .then((res) => {
-              // console.log(variantName + ', Partial Variant Created!');
+              console.log(variantName + ', Partial Variant Created!');
             })
             .catch((e) => {
                 console.log(e)
@@ -670,6 +684,8 @@ export default {
 
           }
 
+          // Save Config File
+          this.saveProjectSettings();
 
         })
         .catch((e)=>{
