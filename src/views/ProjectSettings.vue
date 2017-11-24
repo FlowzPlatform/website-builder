@@ -89,8 +89,12 @@
             <h3>Import Plugin</h3>
             <hr>
 
-            <!-- Add new Plugin -->
-            <el-button type="primary" :loading="addPluginLoading" @click="addNewPlugin">Upload Plugin JSON</el-button>
+            <!-- Upload new Plugin Button -->
+            <!-- <el-button type="primary" :loading="addPluginLoading" @click="addNewPlugin">Upload Plugin JSON</el-button> -->
+
+            <button class="btn btn-primary" id="pluginJsonUploaderBtn"><i class="fa fa-upload"></i> Upload Plugin</button>
+            <input type="file" name="uploaderPluginJson">
+
           </div>
         
         </div>
@@ -568,135 +572,128 @@ export default {
       this.globalCssVariables.push(newVariable);
     },
 
-    async addNewPlugin() {
+    async addNewPlugin(pluginFileData) {
       this.addPluginLoading = true;
 
-      let response = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/pluginSchema.json');
-      if(response.status == 200 || response.status == 204){
-        let pluginFileData = JSON.parse(response.data);
+      // Validate Schema (pending)
 
-        // Validate Schema (pending)
+      // If Schema Valid, upload this file to /assets/client-plugins folder
+      let uploadNewPluginUrl = this.folderUrl + '/assets/client-plugins/' + pluginFileData.name + '.json';
 
-        // If Schema Valid, upload this file to /assets/client-plugins folder
-        let uploadNewPluginUrl = this.folderUrl + '/assets/client-plugins/pluginSchema.json';
-
-        // Create this file under this particular project
-        axios.post(config.baseURL + '/flows-dir-listing', {
-            filename : uploadNewPluginUrl ,
-            text : response.data,
-            type : 'file'
-        })
-        .then((res) => {
+      // Create this file under this particular project
+      axios.post(config.baseURL + '/flows-dir-listing', {
+          filename : uploadNewPluginUrl ,
+          text : pluginFileData,
+          type : 'file'
+      })
+      .then((res) => {
+        this.$message({
+              showClose: true,
+              message: 'Successfully done.',
+              type: 'success'
+          });
+          console.log(res.data);
+      })
+      .catch((e) => {
           this.$message({
-                showClose: true,
-                message: 'Successfully done.',
-                type: 'success'
-            });
-            console.log(res.data);
-        })
-        .catch((e) => {
-            this.$message({
-                showClose: true,
-                message: 'Failed! Please try again.',
-                type: 'error'
-            });
-            console.log(e)
-        });
+              showClose: true,
+              message: 'Failed! Please try again.',
+              type: 'error'
+          });
+          console.log(e)
+      });
 
-        // Create Plugin Folder and its variants
-        let pluginName = pluginFileData.name;
+      // Create Plugin Folder and its variants
+      let pluginName = pluginFileData.name;
 
-        // Create this plugin Folder
-        axios.post(config.baseURL+'/flows-dir-listing' , {
-          foldername : this.folderUrl + '/Partials/' + pluginName,
-          type : 'folder'
-        })
-        .then(async (res) => {
-          console.log('New Plugin Folder created!');
+      // Create this plugin Folder
+      axios.post(config.baseURL+'/flows-dir-listing' , {
+        foldername : this.folderUrl + '/Partials/' + pluginName,
+        type : 'folder'
+      })
+      .then(async (res) => {
+        console.log('New Plugin Folder created!');
 
-          this.settings[2].layoutOptions[0][pluginName] = [];
+        this.settings[2].layoutOptions[0][pluginName] = [];
 
-          // Loop through all partial variants
-          for(let i = 0; i < pluginFileData.partials.length; i++){
+        // Loop through all partial variants
+        for(let i = 0; i < pluginFileData.partials.length; i++){
 
-            // Create Array Object for variant used to save in config.json file
-            let variantEntry = {
-              value: pluginFileData.partials[i].title,
-              label: pluginFileData.partials[i].title
-            };
+          // Create Array Object for variant used to save in config.json file
+          let variantEntry = {
+            value: pluginFileData.partials[i].title,
+            label: pluginFileData.partials[i].title
+          };
 
-            // Push variantEntry in settings.layoutoptions
-            this.settings[2].layoutOptions[0][pluginName].push(variantEntry);
+          // Push variantEntry in settings.layoutoptions
+          this.settings[2].layoutOptions[0][pluginName].push(variantEntry);
 
-            // Start Creating variant files
-            let variantName = this.folderUrl + '/Partials/' + pluginName + '/' + pluginFileData.partials[i].title + '.html';
+          // Start Creating variant files
+          let variantName = this.folderUrl + '/Partials/' + pluginName + '/' + pluginFileData.partials[i].title + '.html';
 
-            let generatedCss, generatedJs;
+          let generatedCss, generatedJs;
 
-            // Generate Css Style Tag
-            let styleTag = '';
-            for(let j = 0; j < pluginFileData.partials[i].css.style.length; j++){
-              let key = Object.keys(pluginFileData.partials[i].css.style[j]);
-              let value = Object.values(pluginFileData.partials[i].css.style[j]);
+          // Generate Css Style Tag
+          let styleTag = '';
+          for(let j = 0; j < pluginFileData.partials[i].css.style.length; j++){
+            let key = Object.keys(pluginFileData.partials[i].css.style[j]);
+            let value = Object.values(pluginFileData.partials[i].css.style[j]);
 
-              let keyvalue = '.' + pluginFileData.partials[i].title + ' ' + key[0] + value[0] +'\n';
+            let keyvalue = '.' + pluginFileData.partials[i].title + ' ' + key[0] + value[0] +'\n';
 
-              styleTag += keyvalue;
-            }
-
-            // Generate Css Link tags
-            let styleHref = '';
-            for(let j = 0; j < pluginFileData.partials[i].css.href.length; j++){
-              styleHref += '<link rel="stylesheet" type="text/css" href="' + pluginFileData.partials[i].css.href[j] + '">\n';
-            }
-
-            // Combine all Css code
-            generatedCss = styleHref + '<style type="text/css">\n' + beautify(styleTag, { format: 'css'}) + '\n</style>';
-
-            // Generate Js Script Tag
-            let scriptTag = '';
-            scriptTag = '<script type="text/javascript">\n' + beautify(pluginFileData.partials[i].js.script, { format: 'js'}) + '\n<\/script>'
-
-            // Generate Js Link tags
-            let scriptSrc = '';
-            for(let j = 0; j < pluginFileData.partials[i].js.src.length; j++){
-              scriptSrc += '<script src="' + pluginFileData.partials[i].js.src[j] + '"><\/script>\n';
-            }
-
-            // Combine all Js Code
-            generatedJs = scriptTag + '\n' + scriptSrc;
-
-            // Final Code for variant file
-            let pluginContents = generatedCss + '\n' + '<div class="' + pluginFileData.partials[i].title + '">\n' + beautify(pluginFileData.partials[i].renderHtml, { format: 'html'}) + '\n</div>\n' + generatedJs;
-
-            // Create variant files
-            let pluginVariantCreation = await axios.post(config.baseURL + '/flows-dir-listing', {
-                filename : variantName,
-                text : pluginContents,
-                type : 'file'
-            })
-            .then((res) => {
-              console.log(variantName + ', Partial Variant Created!');
-            })
-            .catch((e) => {
-                console.log(e)
-            });
-
+            styleTag += keyvalue;
           }
 
-          // Save Config File
-          this.saveProjectSettings();
+          // Generate Css Link tags
+          let styleHref = '';
+          for(let j = 0; j < pluginFileData.partials[i].css.href.length; j++){
+            styleHref += '<link rel="stylesheet" type="text/css" href="' + pluginFileData.partials[i].css.href[j] + '">\n';
+          }
 
-        })
-        .catch((e)=>{
-          console.log("Error"+e)
-        });
+          // Combine all Css code
+          generatedCss = styleHref + '<style type="text/css">\n' + beautify(styleTag, { format: 'css'}) + '\n</style>';
 
-        this.addPluginLoading = false;
-      } else {
-        console.log('Cannot get config file!');
-        this.addPluginLoading = false;
-      } 
+          // Generate Js Script Tag
+          let scriptTag = '';
+          scriptTag = '<script type="text/javascript">\n' + beautify(pluginFileData.partials[i].js.script, { format: 'js'}) + '\n<\/script>'
+
+          // Generate Js Link tags
+          let scriptSrc = '';
+          for(let j = 0; j < pluginFileData.partials[i].js.src.length; j++){
+            scriptSrc += '<script src="' + pluginFileData.partials[i].js.src[j] + '"><\/script>\n';
+          }
+
+          // Combine all Js Code
+          generatedJs = scriptTag + '\n' + scriptSrc;
+
+          // Final Code for variant file
+          let pluginContents = generatedCss + '\n' + '<div class="' + pluginFileData.partials[i].title + '">\n' + beautify(pluginFileData.partials[i].renderHtml, { format: 'html'}) + '\n</div>\n' + generatedJs;
+
+          // Create variant files
+          let pluginVariantCreation = await axios.post(config.baseURL + '/flows-dir-listing', {
+              filename : variantName,
+              text : pluginContents,
+              type : 'file'
+          })
+          .then((res) => {
+            console.log(variantName + ', Partial Variant Created!');
+          })
+          .catch((e) => {
+              console.log(e)
+          });
+
+        }
+
+        // Save Config File
+        this.saveProjectSettings();
+
+      })
+      .catch((e)=>{
+        console.log("Error"+e)
+      });
+
+      this.addPluginLoading = false;
+
     },
 
     // addNewEcommerceVariable() {
@@ -1379,6 +1376,46 @@ export default {
             });
             console.log('Not a Proper variables file');
           }
+        }, 1000);
+      }
+
+    });
+
+
+
+
+    // Plugin Json Uploader
+    $('#pluginJsonUploaderBtn').on('click', function(){
+      $('[name=uploaderPluginJson]').trigger('click');
+    });
+
+    $('[name=uploaderPluginJson]').on('change', function(e){
+      var file = $(this)[0].files[0];
+
+      var fileName = e.target.files[0].name;
+      var ext = $(this).val().split('.').pop().toLowerCase();
+
+      if(ext != 'json'){
+        scope.$message({
+            showClose: true,
+            message: 'File must be of "JSON" type.',
+            type: 'error'
+        });
+        console.log('File must be of "JSON" type.');
+      } else {
+
+        var fileData = '';
+
+        // readFile
+        var reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = async function(e) {
+            fileData = await e.target.result;
+        };
+
+        setTimeout(function(){
+          var pluginJsonFileData = JSON.parse(fileData);
+          scope.addNewPlugin(pluginJsonFileData);
         }, 1000);
       }
 
