@@ -25,6 +25,66 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
     //  category: 'Table'
     // });
 
+    bm.add('g-form-template',{
+        label: 'Form Full',
+        content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
+        attributes: {
+            class: 'fa fa-html5',
+            title: 'G-Form Full'
+        },
+        category: 'Custom Form Controls'
+    });
+
+    bm.add('g-form',{
+        label: 'G-Form',
+        content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
+        attributes: {
+            class: 'fa fa-html5',
+            title: 'G-Form'
+        },
+        category: 'Custom Form Controls'
+    });
+
+    bm.add('gformpanel',{
+        label: 'G-Form Panel',
+        content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
+        attributes: {
+            class: 'fa fa-html5',
+            title: 'G-Form Panel'
+        },
+        category: 'Custom Form Controls'
+    });
+
+    bm.add('g-form-add-btn',{
+        label: 'G-Form Add Button',
+        content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
+        attributes: {
+            class: 'fa fa-html5',
+            title: 'G-Form Add Button'
+        },
+        category: 'Custom Form Controls'
+    });
+
+    bm.add('g-form-delete-btn',{
+        label: 'G-Form Delete Button',
+        content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
+        attributes: {
+            class: 'fa fa-html5',
+            title: 'G-Form Delete Button'
+        },
+        category: 'Custom Form Controls'
+    });
+
+    bm.add('formpartial',{
+        label: 'G-Form-Partial',
+        content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
+        attributes: {
+            class: 'fa fa-html5',
+            title: 'G-Form-Partial'
+        },
+        category: 'Custom Form Controls'
+    });
+
 
   	// Sections
 	bm.add('hero', {
@@ -4270,6 +4330,118 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Form Partial
+    editor.TraitManager.addType('customConent2', {
+
+        /**
+         * Returns the input element
+         * @return {HTMLElement}
+         */
+        getInputEl: function () {
+            if (!this.inputEl) {
+                var input = document.createElement('select');
+                input.setAttribute("id", "Div1");
+                input.setAttribute("name", "Div1");
+                input.setAttribute("style", "background:#363636");
+                $.each(partialOptions, function (key, value) {
+                    console.log('================' + key);
+                    var group = $('<optgroup label="' + key + '" />');
+                    $.each(value, function () {
+                        $('<option />').html(this.name).appendTo(group);
+                    });
+                    group.appendTo(input);
+                });
+                input.value = this.target.get('customConent2');
+                this.inputEl = input;
+            }
+            return this.inputEl;
+        },
+
+    });
+
+    comps.addType('formpartial', {
+        model: defaultModel.extend({
+            init() {
+                this.listenTo(this, 'change:selectPartial', this.doStuff);
+            },
+            doStuff() {
+                var label, selected_value;
+                var folderUrl = localStorage.getItem("folderUrl");
+                $('#Div1').on('click', function () {
+                    label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+                    selected_value =  $("#Div1 option:selected").text();
+                    let model = editor.getSelected();
+
+                    model.components("");
+                    if(selected_value.match('.hbs')){
+                        model.components("{{> " + label + " id='" + selected_value + "' }}");
+                    }else{
+
+                    model.components("{{> " + label + " id='" + selected_value + ".html' }}");
+                    }
+                });
+            },
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [{
+                        label: 'Select Partial',
+                        name: 'selectPartial',
+                        type: 'customConent2',
+                        changeProp: 1,
+                    },
+                    {
+                      label: 'Attribute ID:',
+                      name: 'attr_id'
+                    }
+                ],
+            }),
+        }, {
+                isComponent: function (el) {
+                    if (el.tagName == 'FORMPARTIAL') {
+                        return {
+                            type: 'formpartial'
+                        };
+                    }
+                },
+            }),
+        view: defaultType.view,
+        render: function () {
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here';
+            return this;
+        },
+    });
+
+
+
+
+
+
+
   // ReUse Component
   // var comps = editor.DomComponents;
   // var defaultType = comps.getType('default');
@@ -4828,6 +5000,39 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         },
       });
 
+
+
+
+     comps.addType('gformpanel', {
+        // Define the Model
+        model: defaultModel.extend({
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                draggable: 'gform, gform *'
+            }),
+
+        }, {
+            isComponent: function(el) {
+                if (el.tagName == 'GFORMPANEL') {
+                    return {
+                        type: 'gformpanel'
+                    };
+                }
+            },
+        }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function() {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+        },
+    });
 
 
 

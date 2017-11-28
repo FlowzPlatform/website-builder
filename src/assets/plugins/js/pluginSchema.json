@@ -57,10 +57,10 @@
             ],
             "dynamic":[
                {
-                  "access_key":"var1"
+                  "access_key_1":"var3"
                },
                {
-                  "token":"var2"
+                  "token_1":"var4"
                }
             ]
          },

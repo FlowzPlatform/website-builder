@@ -89,7 +89,44 @@
             <h3>Import Plugin</h3>
             <hr>
 
-            <!-- Upload new Plugin Button -->
+            <el-table
+              :data="pluginsData"
+              border
+              style="width: 100%">
+              <el-table-column
+                prop="pluginName"
+                label="Plugin Name"
+                >
+              </el-table-column>
+              
+              <el-table-column
+                label="Plugin Status"
+                width="180"
+                >
+                <template scope="scope">
+                  <el-switch
+                    v-model="pluginsData[scope.$index].pluginStatus"
+                    on-text="Enabled"
+                    off-text="Disabled"
+                    on-color="#13ce66"
+                    off-color="#ff4949"
+                    :width="90">
+                  </el-switch>
+                </template>
+              </el-table-column>
+
+              <el-table-column
+                label="Delete Plugin"
+                width="180">
+                <template scope="scope">
+                  <el-button @click.native.prevent="deletePlugin(scope.$index, pluginsData)" type="danger" size="small" icon="delete">Delete</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <br>
+
+            <!-- Static Upload new Plugin Button -->
             <!-- <el-button type="primary" :loading="addPluginLoading" @click="addNewPlugin">Upload Plugin JSON</el-button> -->
 
             <button class="btn btn-primary" id="pluginJsonUploaderBtn"><i class="fa fa-upload"></i> Upload Plugin</button>
@@ -271,7 +308,7 @@
       <!-- Global Variable section ends -->
 
       <!-- Ecommerce Global Variable section -->
-      <div class="well">
+      <!-- <div class="well">
         <div class="row">
           <div class="col-md-12">
             <div class="row">
@@ -371,11 +408,11 @@
               <!-- Create new variable --
               <el-button type="primary" @click="addNewEcommerceVariable">New Variable</el-button>
 
-            </el-form> -->
+            </el-form> --
           </div>
         </div>
-      </div>
-      <!-- Global Variable section ends -->
+      </div> -->
+      <!-- Ecommerce Global Variable section ends -->
 
       <!-- List of Commits Section -->
       <div class="well">
@@ -458,6 +495,7 @@ export default {
         selectedFooter: ''
       },
       commitsData: [],
+      pluginsData: [],
       commitMessage: '',
       newRepoId: '',
       repoName: '',
@@ -513,11 +551,11 @@ export default {
       //   label: 'Enabled'
       // }],
       // variableStatus: '',
-      ecommerceSettings: [{
-        "wishlist": false,
-        "cart": false,
-        "compare": false
-      }],
+      // ecommerceSettings: [{
+      //   "wishlist": false,
+      //   "cart": false,
+      //   "compare": false
+      // }],
       addPluginLoading: false,
     }
   },
@@ -572,6 +610,8 @@ export default {
     },
 
     async addNewPlugin(pluginFileData) {
+
+      // Turn on Loader
       this.addPluginLoading = true;
 
       // Validate Schema (pending)
@@ -652,9 +692,32 @@ export default {
           // Combine all Css code
           generatedCss = styleHref + '<style type="text/css">\n' + beautify(styleTag, { format: 'css'}) + '\n</style>';
 
+          let addOnScript = 'let configData = [];\n$(function($) { $.getJSON( "../../assets/config.json", function(data){\n var configDataRaw = data;\n configData = configDataRaw[1].projectSettings[1].GlobalVariables;\n }); ';
+
+          let dynamicVariables = '';
+
+          // Get all Dynamic Properties to be include in user's js code
+          for(let k = 0; k < pluginFileData.partials[i].properties.dynamic.length; k++){
+            let key = Object.keys(pluginFileData.partials[i].properties.dynamic[k]);
+            let value = Object.values(pluginFileData.partials[i].properties.dynamic[k]);
+
+            dynamicVariables += 'let ' + key + ' = configData.filter(function(obj){ return (obj.variableId=="' + key + '"); })[0].variableValue;\n';
+
+            let newVariable = {
+              variableId: key[0],
+              variableType: 'text',
+              variableTitle: '',
+              variableValue: value[0],
+              isImageUrl: true
+            }
+
+            this.globalVariables.push(newVariable);
+
+          } 
+
           // Generate Js Script Tag
           let scriptTag = '';
-          scriptTag = '<script type="text/javascript">\n' + beautify(pluginFileData.partials[i].js.script, { format: 'js'}) + '\n<\/script>'
+          scriptTag = '<script type="text/javascript">\n' + addOnScript + '\nsetTimeout(function(){' + dynamicVariables + '\n' + beautify(pluginFileData.partials[i].js.script, { format: 'js'}) + '\n},2000); });<\/script>';
 
           // Generate Js Link tags
           let scriptSrc = '';
@@ -666,7 +729,7 @@ export default {
           generatedJs = scriptTag + '\n' + scriptSrc;
 
           // Final Code for variant file
-          let pluginContents = generatedCss + '\n' + '<div class="' + pluginFileData.partials[i].title + '">\n' + beautify(pluginFileData.partials[i].renderHtml, { format: 'html'}) + '\n</div>\n' + generatedJs;
+          let pluginContents = '<script src="https://code.jquery.com/jquery-3.2.1.js"><\/script>\n' + generatedCss + '\n' + '<div class="' + pluginFileData.partials[i].title + '">\n' + beautify(pluginFileData.partials[i].renderHtml, { format: 'html'}) + '\n</div>\n' + generatedJs;
 
           // Create variant files
           let pluginVariantCreation = await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -692,7 +755,6 @@ export default {
       });
 
       this.addPluginLoading = false;
-
     },
 
     // addNewEcommerceVariable() {
@@ -710,6 +772,22 @@ export default {
 
     deleteEcommerceVariable(deleteIndex) {
       this.ecommerceVariables.splice(deleteIndex, 1);
+    },
+
+    deletePlugin(deleteIndex){
+      this.$confirm('This plugin will be permanently deleted. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: 'Delete completed'
+        });
+      }).catch(() => {
+        
+      });
+
     },
 
     downloadGlobalVariables() {
@@ -1131,6 +1209,19 @@ export default {
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
+
+        this.pluginsData = [];
+
+        let pluginsList = Object.keys(this.settings[2].layoutOptions[0]);
+        pluginsList.splice(pluginsList.indexOf('Layout'), 1);
+
+        for(let i = 0; i < pluginsList.length; i++){
+          let data = {
+            pluginName: pluginsList[i],
+            pluginStatus: false
+          }
+          this.pluginsData.push(data);
+        }
 
         // if(this.globalVariables == undefined){
         //   this.globalVariables = []
