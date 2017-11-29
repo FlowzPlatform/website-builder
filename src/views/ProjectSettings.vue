@@ -36,7 +36,15 @@
       <div class="well">
         <div class="row">
 
-          <div class="col-md-12" style="margin-top: 4%;">
+          <div class="col-md-12">
+
+            <div class="row">
+              <div class="col-md-4">
+                <h3>Project Settings</h3>
+              </div>
+            </div>
+
+            <hr>
           
             <el-form ref="form" :model="form" label-width="180px">
 
@@ -85,8 +93,19 @@
       <div class="well">
         <div class="row">
           <div class="col-md-12">
+
+            <div class="row">
+              <div class="col-md-4">
+                <h3>Import Plugin</h3>
+              </div>
+
+              <div class="col-md-8" align="right">
+                <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
+                  <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
+                </el-tooltip>
+              </div>
+            </div>
             
-            <h3>Import Plugin</h3>
             <hr>
 
             <el-table
@@ -463,15 +482,17 @@
 
 const beautify = require('beautify');
 
-import Vue from 'vue'
-import VueSession from 'vue-session'
-Vue.use(VueSession)
+import Vue from 'vue';
+import VueSession from 'vue-session';
+Vue.use(VueSession);
 
-import axios from 'axios'
+import axios from 'axios';
+
+import _ from 'lodash';
 
 const config = require('../config');
 
-import fileSaver from 'file-saver'
+import fileSaver from 'file-saver';
 
 export default {
   name: 'ProjectSettings',
@@ -557,6 +578,8 @@ export default {
       //   "compare": false
       // }],
       addPluginLoading: false,
+      refreshPluginsLoading: false,
+      refreshFolderTree: []
     }
   },
   component: {
@@ -755,6 +778,117 @@ export default {
       });
 
       this.addPluginLoading = false;
+    },
+
+    async refreshPlugins() {
+      this.refreshPluginsLoading = true;
+
+      // Call Listings API and get Tree
+      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.repoName, {
+      })
+      .then((res) => {
+        this.refreshPluginsLoading = false;
+
+        let directoryListing = res.data.children;
+
+        let partialsFolderIndex = _.findIndex(directoryListing, function(o) { return o.name == 'Partials'; });
+
+        for(var i = 0; i < directoryListing[partialsFolderIndex].children.length; i++){
+          console.log(directoryListing[partialsFolderIndex].children);
+          if((_.indexOf(Object.keys(this.settings[2].layoutOptions[0]), directoryListing[partialsFolderIndex].children[i].name)) > -1){
+            // console.log('Partial already registered: ', directoryListing[partialsFolderIndex].children[i].name);
+
+            let updates = false;
+
+            this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name] = [];
+
+            // Create Partial Files Entry
+            for(let j = 0; j < directoryListing[partialsFolderIndex].children[i].children.length ; j++){
+
+              let fileName = directoryListing[partialsFolderIndex].children[i].children[j].name;
+              fileName = fileName.split('.');
+              fileName = fileName[0];
+
+              if(_.find(this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex]], function(o) { return o.value = fileName; })){
+                console.log('already there');
+              } else {
+                  console.log('Not there');
+
+                  updates = true;
+
+                  let newFtpPartial = {
+                      value: fileName,
+                      label: fileName
+                  }  
+                  this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
+              }
+              // console.log('Partial File Name: ', this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name][j].value);
+
+              // for(let k = 0; k < this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].length; k++){
+              //   if(fileName == this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name][j].value ){
+              //     console.log('already there');
+              //   } else {
+              //     console.log('Not there');
+
+              //     updates = true;
+
+              //     let newFtpPartial = {
+              //         value: fileName,
+              //         label: fileName
+              //     }  
+              //     this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
+              //   }
+              // }
+              
+            }
+
+            // Only Save file when there are any new files found in already registered partials
+            if(updates){
+              this.saveProjectSettings();  
+            }
+
+          } else {
+            // console.log('Partial not registered: ', directoryListing[partialsFolderIndex].children[i].name);
+
+            // Create Partial Entry
+            this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name] = [];
+
+            // Create Partial Files Entry
+            for(let j = 0; j < directoryListing[partialsFolderIndex].children[i].children.length ; j++){
+
+              // console.log('File Name: ', directoryListing[partialsFolderIndex].children[i].children[j].name);
+              let fileName = directoryListing[partialsFolderIndex].children[i].children[j].name;
+              fileName = fileName.split('.');
+              fileName = fileName[0];
+              
+              let newFtpPartial = {
+                  value: fileName,
+                  label: fileName
+              }  
+
+              this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
+            }
+            
+            // console.log('Layout Options:', this.settings[2].layoutOptions[0]);
+            this.saveProjectSettings();
+
+            let self = this;
+            setTimeout(function(){
+              self.init();
+            }, 2000);
+
+          }
+        }
+      })
+      .catch((e) => {
+          this.$message({
+              showClose: true,
+              message: 'Failed to refresh! Please try again.',
+              type: 'error'
+          });
+          this.refreshPluginsLoading = false;
+          console.log(e)
+      });
     },
 
     // addNewEcommerceVariable() {
@@ -1522,110 +1656,110 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.publishBtn{
-  width: 100%;
-}
-
-/*Brand Image upload button*/
-input[type="file"]{
-  display: none;
-}
-.brandLogoUploadLabel label{
-  display: inline-block;
-  border: 1px dashed #1a1a1a;
-  background: #f1f1f1;
-  padding:10px 15px;
-  min-width:250px;
-  color: #5c5c5c;
-  font-size:20px;
-  text-align: center;
-  cursor: pointer;
-  transition:300ms;
-}
-.brandLogoUploadLabel label i{
-  vertical-align: middle;
-  margin-right:10px;
-}
-.brandLogoUploadLabel label:hover{
-  border-style: solid;
-}
-
-h1{
-  font-size:15px;
-  margin: 0 0 20px;
-}
-.dis{
-  display: block;
-  margin-top:6px;
-  color:#a9a9a9;
-}
-.error .brandLogoUploadLabel label{
-  color:red;
-  border-color:red;
-  background:#fcd0d0;
-}
-.correct .brandLogoUploadLabel label{
-  background:#cff5c5;
-}
-
-.well{
-  background-color: rgba(245,245,245,0.5);
-}
-
-
-
-
-
-
-
-
-
-/*Global Image Upload Buttons*/
-.file-upload {
-  position: relative;
-  display: inline-block;
-}
-
-.file-upload__label {
-  display: inline;
-  padding: 5px;
-  padding-left: 7px;
-  color: #fff;
-  background: #555;
-  transition: background .3s;
-}
-.file-upload__label:hover {
-  cursor: pointer;
-  background: #000;
-}
-
-.file-upload__input {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  font-size: 1;
-  width: 0;
-  height: 100%;
-  opacity: 0;
-}
-
-.page-buttons{
-  position: fixed;
-  bottom: 7px;
-  right: 50px;
-  margin-top: 17.5px;
-  z-index: 10
-}
-
-@media(max-width: 680px){
-  .page-buttons{
-    position: relative;
-    left: auto;
-    right: auto;
+  .publishBtn{
+    width: 100%;
   }
-}
+
+  /*Brand Image upload button*/
+  input[type="file"]{
+    display: none;
+  }
+  .brandLogoUploadLabel label{
+    display: inline-block;
+    border: 1px dashed #1a1a1a;
+    background: #f1f1f1;
+    padding:10px 15px;
+    min-width:250px;
+    color: #5c5c5c;
+    font-size:20px;
+    text-align: center;
+    cursor: pointer;
+    transition:300ms;
+  }
+  .brandLogoUploadLabel label i{
+    vertical-align: middle;
+    margin-right:10px;
+  }
+  .brandLogoUploadLabel label:hover{
+    border-style: solid;
+  }
+
+  h1{
+    font-size:15px;
+    margin: 0 0 20px;
+  }
+  .dis{
+    display: block;
+    margin-top:6px;
+    color:#a9a9a9;
+  }
+  .error .brandLogoUploadLabel label{
+    color:red;
+    border-color:red;
+    background:#fcd0d0;
+  }
+  .correct .brandLogoUploadLabel label{
+    background:#cff5c5;
+  }
+
+  .well{
+    background-color: rgba(245,245,245,0.5);
+  }
+
+
+
+
+
+
+
+
+
+  /*Global Image Upload Buttons*/
+  .file-upload {
+    position: relative;
+    display: inline-block;
+  }
+
+  .file-upload__label {
+    display: inline;
+    padding: 5px;
+    padding-left: 7px;
+    color: #fff;
+    background: #555;
+    transition: background .3s;
+  }
+  .file-upload__label:hover {
+    cursor: pointer;
+    background: #000;
+  }
+
+  .file-upload__input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 1;
+    width: 0;
+    height: 100%;
+    opacity: 0;
+  }
+
+  .page-buttons{
+    position: fixed;
+    bottom: 7px;
+    right: 50px;
+    margin-top: 17.5px;
+    z-index: 10
+  }
+
+  @media(max-width: 680px){
+    .page-buttons{
+      position: relative;
+      left: auto;
+      right: auto;
+    }
+  }
 
 
 

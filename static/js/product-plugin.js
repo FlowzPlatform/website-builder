@@ -4415,7 +4415,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
                     },
                     {
                       label: 'Attribute ID:',
-                      name: 'attr_id'
+                      name: 'attr-id'
                     }
                 ],
             }),

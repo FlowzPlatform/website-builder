@@ -83,7 +83,7 @@
                   </div>
               </div>
 
-              <el-dialog title="File name" :visible.sync="newFileDialog">
+              <el-dialog title="File name" :visible.sync="newFileDialog" size="tiny">
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
@@ -96,7 +96,7 @@
                   </span>
               </el-dialog>
 
-              <el-dialog title="Folder name" :visible.sync="newFolderDialog">
+              <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
                   <el-form :model="formAddFolder">
                       <el-form-item>
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
@@ -152,7 +152,7 @@
             </div>
 
             <div v-if="isHomePage === true">
-              <el-dialog title="File name" :visible.sync="newFileDialog">
+              <el-dialog title="File name" :visible.sync="newFileDialog" size="tiny">
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
@@ -165,7 +165,7 @@
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
                   </span>
               </el-dialog>
-              <el-dialog title="Folder name" :visible.sync="newFolderDialog">
+              <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
                   <el-form :model="formAddFolder">
                       <el-form-item>
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
@@ -3682,7 +3682,23 @@ export default {
 
         // If it's a HTML file
         if(data.extension == '.html'){
-          return (<span>
+          if(_.includes(data.path, '/Partials/')){
+            return (<span>
+              <span class="filelabel">
+                  <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
+                  <span>{node.label}</span>
+              </span>
+              <span class="action-button">
+                  <el-tooltip content="Remove" placement="top" >
+                      <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                  </el-tooltip>
+                  <el-tooltip content="Edit" placement="top" >
+                    <i class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
+                  </el-tooltip>
+              </span>
+          </span>)
+          } else {
+            return (<span>
               <span class="filelabel">
                   <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
                   <span>{node.label}</span>
@@ -3696,6 +3712,23 @@ export default {
                   </el-tooltip>
                   <el-tooltip content="Edit" placement="top" >
                     <i class="fa fa-pencil" style="position:absolute; right: 35px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
+                  </el-tooltip>
+              </span>
+          </span>)
+          }
+        } else if(data.extension == '.hbs'){
+          // If HBS file
+          return (<span>
+              <span class="filelabel">
+                  <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
+                  <span>{node.label}</span>
+              </span>
+              <span class="action-button">
+                  <el-tooltip content="Remove" placement="top" >
+                      <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                  </el-tooltip>
+                  <el-tooltip content="Edit" placement="top" >
+                    <i class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
                   </el-tooltip>
               </span>
           </span>)
@@ -3723,9 +3756,9 @@ export default {
                     <span>{node.label}</span>
                 </span>
                 <span class="action-button">
-                    <el-tooltip content="Remove" placement="top" >
-                        <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                    </el-tooltip>
+                  <el-tooltip content="Remove" placement="top" >
+                      <i class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                  </el-tooltip>
                 </span>
             </span>)
         }
