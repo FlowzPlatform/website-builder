@@ -159,8 +159,17 @@
             <!-- Static Upload new Plugin Button -->
             <!-- <el-button type="primary" :loading="addPluginLoading" @click="addNewPlugin">Upload Plugin JSON</el-button> -->
 
-            <button class="btn btn-primary" id="pluginJsonUploaderBtn"><i class="fa fa-upload"></i> Upload Plugin</button>
-            <input type="file" name="uploaderPluginJson">
+            <div class="row">
+              <div class="col-md-6">
+                <button class="btn btn-primary" id="pluginJsonUploaderBtn"><i class="fa fa-upload"></i> Upload Plugin</button>
+                <input type="file" name="uploaderPluginJson">
+              </div>
+              <div class="col-md-6" align="right">
+                
+              </div>
+            </div>
+
+            
 
           </div>
         
@@ -447,41 +456,41 @@
       <!-- List of Commits Section -->
       <div class="well">
         <div class="row">
-        <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
-          <h3>List of Commits</h3>
-          <hr>
-           <el-table
-              :data="commitsData"
-              :row-class-name="tableRowClassName"
-              border
-              style="width: 100%">
-              <el-table-column
-                prop="commitDate"
-                label="Commit Date"
-                width="180">
-              </el-table-column>
-              <el-table-column
-                prop="commitsMessage"
-                label="Commit Message"
-                >
-              </el-table-column>
+          <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
+            <h3>List of Commits</h3>
+            <hr>
+             <el-table
+                :data="commitsData"
+                :row-class-name="tableRowClassName"
+                border
+                style="width: 100%">
+                <el-table-column
+                  prop="commitDate"
+                  label="Commit Date"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="commitsMessage"
+                  label="Commit Message"
+                  >
+                </el-table-column>
 
-              <el-table-column
-                prop="commitSHA"
-                label="Commit SHA"
-                >
-              </el-table-column>
-              
-              <el-table-column
-                label="Revert To Commit"
-                width="180">
-                <template scope="scope">
-                  <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Revert Commit</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+                <el-table-column
+                  prop="commitSHA"
+                  label="Commit SHA"
+                  >
+                </el-table-column>
+                
+                <el-table-column
+                  label="Revert To Commit"
+                  width="180">
+                  <template scope="scope">
+                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Revert Commit</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+          </div>
         </div>
-      </div>
       </div>
       
     </div>
@@ -958,12 +967,32 @@ export default {
           text : JSON.stringify(this.settings),
           type : 'file'
       })
-      .then((res) => {
+      .then( async (res) => {
           console.log('Config File saved: ', res);
-          this.$message({
-              showClose: true,
-              message: 'Config Saved!',
-              type: 'success'
+
+          // Save plugin-settings.json file
+          let pluginSettingsFileName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/plugin-settings.json';
+          await axios.post( config.baseURL + '/flows-dir-listing', {
+              filename : pluginSettingsFileName,
+              text : JSON.stringify(this.pluginsTreedata),
+              type : 'file'
+          })
+          .then((res) => {
+              console.log('Plugin-settings.json File saved: ', res);
+
+              this.$message({
+                  showClose: true,
+                  message: 'Config Saved!',
+                  type: 'success'
+              });
+          })
+          .catch((e) => {
+              console.log('Some error occured while saving Plugin-settings.json file. Here is full log: ', e);
+              this.$message({
+                  showClose: true,
+                  message: 'Cannot save file! Some error occured, try again.',
+                  type: 'danger'
+              });
           });
       })
       .catch((e) => {
@@ -1334,7 +1363,8 @@ export default {
           let temp1 = {
             id: count,
             children: [],
-            label: partialName
+            label: partialName,
+            isActive: true
           }
 
           treeData.push(temp1);
@@ -1347,7 +1377,8 @@ export default {
             let temp2 = {
               id: count,
               children: [],
-              label: this.settings[2].layoutOptions[0][partialName][j].label
+              label: this.settings[2].layoutOptions[0][partialName][j].label,
+              isActive: true
             }
 
             treeData[i].children.push(temp2);

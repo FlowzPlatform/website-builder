@@ -304,6 +304,8 @@ import LayoutStats from './LayoutStats'
 // Layout Stats
 import PageStats from './PageStats'
 
+
+
 // New File creation validator
 let checkFileName = (rule, value, callback) => {
     console.log('value',/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))
@@ -412,11 +414,12 @@ export default {
     PageStats
   },
   created () {
-    if(!this.$session.exists()){
-      this.isLoggedInUser = false
-    }else{
+    // console.log(process.env.baseURL);
+    if(this.$cookie.get('auth_token')){
       this.isLoggedInUser = true;
-      this.getData()
+      this.getData();
+    } else {
+      this.isLoggedInUser = false
     }
 
     this.$on('saveFileFromChild', this.autoSaveFromGrapes);
@@ -453,6 +456,7 @@ export default {
 
     // Project Directory Listing
     let self = this
+    
     const app = feathers().configure(socketio(io(config.baseURL)))
     app.service("flows-dir-listing").on("created", (response) => {
         response.path = response.path.replace(/\//g, "\\")
@@ -1252,6 +1256,83 @@ export default {
       axios.post(config.baseURL + '/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(repoSettings),
+          type : 'file'
+      })
+      .then((res) => {
+       console.log('Config.json file created!'); 
+      })
+      .catch((e) => {
+          console.log(e)
+      });
+
+      // Create plugin-settings.json file
+      let pluginSettingsfileName = newFolderName + '/assets/plugin-settings.json';
+
+      let pluginSettingsData = [{
+                                  "id":1,
+                                  "children":[
+                                     {
+                                        "id":2,
+                                        "children":[
+
+                                        ],
+                                        "label":"default",
+                                        "isActive": true
+                                     }
+                                  ],
+                                  "label":"Header",
+                                  "isActive": true
+                               },
+                               {
+                                  "id":3,
+                                  "children":[
+                                     {
+                                        "id":4,
+                                        "children":[
+
+                                        ],
+                                        "label":"default",
+                                        "isActive": true
+                                     }
+                                  ],
+                                  "label":"Footer",
+                                  "isActive": true
+                               },
+                               {
+                                  "id":5,
+                                  "children":[
+                                     {
+                                        "id":6,
+                                        "children":[
+
+                                        ],
+                                        "label":"default",
+                                        "isActive": true
+                                     }
+                                  ],
+                                  "label":"Sidebar",
+                                  "isActive": true
+                               },
+                               {
+                                  "id":7,
+                                  "children":[
+                                     {
+                                        "id":8,
+                                        "children":[
+
+                                        ],
+                                        "label":"default",
+                                        "isActive": true
+                                     }
+                                  ],
+                                  "label":"Menu",
+                                  "isActive": true
+                               }
+                            ];
+
+      axios.post(config.baseURL + '/flows-dir-listing', {
+          filename : pluginSettingsfileName,
+          text : JSON.stringify(pluginSettingsData),
           type : 'file'
       })
       .then((res) => {

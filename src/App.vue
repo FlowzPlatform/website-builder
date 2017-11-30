@@ -32,6 +32,9 @@
 </template>
 
 <script>
+
+import psl from 'psl';
+
 import SiteFooter from './views/footer'
 export default {
   name: 'app',
@@ -45,15 +48,17 @@ export default {
     SiteFooter
   },
   updated: function () {
-    if (this.$session.exists()) {
-      this.username  =  this.$session.get('username')
+    if(this.$cookie.get('auth_token')){
       this.isLoggedIn = 'yes';
+    } else {
+
     }
   },
   mounted: function () {
-    if (this.$session.exists()) {
-      this.username  =  this.$session.get('username')
+    if(this.$cookie.get('auth_token')){
       this.isLoggedIn = 'yes';
+    } else {
+
     }
   },
   methods: {
@@ -66,7 +71,12 @@ export default {
       this.$router.push('/');
     },
     doLogout() {
-      this.$session.destroy();
+      // localStorage.removeItem("auth_token");
+      let location = psl.parse(window.location.hostname)
+      location = location.domain === null ? location.input : location.domain
+      this.$cookie.delete('authUser', {domain: location});
+      this.$cookie.delete('auth_token', {domain: location});
+
       this.isLoggedIn = 'no';
       this.$router.push('/login');
     }

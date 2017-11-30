@@ -25,6 +25,9 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI, { locale });
 
+var VueCookie = require('vue-cookie')
+Vue.use(VueCookie);
+
 
 /* eslint-disable no-new */
 new Vue({
