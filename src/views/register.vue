@@ -118,7 +118,7 @@ export default {
         this.$refs[formName].validate((valid) => {
             if (valid) {
               this.form.isLoading = true;
-              axios.post('http://ec2-54-88-11-110.compute-1.amazonaws.com/api/setup', {
+              axios.post(config.registerUrl, {
                 username: this.form.Uname,
                 password: this.form.pass,
                 email: this.form.email,

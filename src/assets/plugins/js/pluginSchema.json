@@ -1,0 +1,91 @@
+{
+   "name":"wishlist",
+   "partials":[
+      {
+         "title":"wishlist_add",
+         "properties":{
+            "static":[
+               {
+                  "key1":"var1"
+               },
+               {
+                  "key2":"var2"
+               }
+            ],
+            "dynamic":[
+               {
+                  "access_key":"var1"
+               },
+               {
+                  "token":"var2"
+               }
+            ]
+         },
+         "renderHtml":"<a class='btn'>Add to wishlist</a>",
+         "css":{
+            "style":[
+               {
+                  ".btn":"{color: #fff; padding: 10px 20 px;}"
+               },
+               {
+                  "#btn1":"{color: #ccc; padding: 10px 20 px;}"
+               }
+            ],
+            "href":[
+               "http://css.cdn.url/abc.css",
+               "http://css.cdn.url/abc2.css"
+            ]
+         },
+         "js":{
+            "script":"console.log('this is text 1');",
+            "src":[
+               "http://js.cdn.url/abc.js",
+               "http://js.cdn.url/abc2.js"
+            ]
+         }
+      },
+      {
+         "title":"wishlist_counter",
+         "properties":{
+            "static":[
+               {
+                  "key1":"var1"
+               },
+               {
+                  "key2":"var2"
+               }
+            ],
+            "dynamic":[
+               {
+                  "access_key_1":"var3"
+               },
+               {
+                  "token_1":"var4"
+               }
+            ]
+         },
+         "renderHtml":"<a class='btn'>Wishlist Counter</a>",
+         "css":{
+            "style":[
+               {
+                  ".btn3":"{color: #fff; padding: 10px 20 px;}"
+               },
+               {
+                  "#btn4":"{color: #ccc; padding: 10px 20 px;}"
+               }
+            ],
+            "href":[
+               "http://css.cdn.url/abc3.css",
+               "http://css.cdn.url/abc4.css"
+            ]
+         },
+         "js":{
+            "script":"console.log('this is text 2');",
+            "src":[
+               "http://js.cdn.url/abc3.js",
+               "http://js.cdn.url/abc4.js"
+            ]
+         }
+      }
+   ]
+}

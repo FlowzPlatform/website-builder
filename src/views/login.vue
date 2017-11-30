@@ -38,7 +38,8 @@ import VueSession from 'vue-session'
 
 Vue.use(VueSession)
 
-import axios from 'axios'
+import axios from 'axios';
+import psl from 'psl';
 
 const config = require('../config');
 
@@ -88,7 +89,7 @@ export default {
         if (valid) {
           this.form.isLoading = true;
             // http://162.242.223.167:3001/api/login
-            axios.post('http://ec2-54-88-11-110.compute-1.amazonaws.com/api/login', {
+            axios.post(config.loginUrl, {
               password: this.form.pass,
               email: this.form.user
             }, {
@@ -98,7 +99,13 @@ export default {
             }).then(response => {
               if (response.data) {
                 this.$session.start()
-                this.$session.set('token', response.data.token)
+                this.$session.set('token', response.data.token);
+                localStorage.setItem("auth_token", response.data.logintoken);
+
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+                this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
+
                 this.$session.set('username', this.form.user)
                 // Vue.http.headers.common['Authorization'] = 'Bearer ' + response.data.token
                 this.form.isLoading = false;
@@ -143,6 +150,13 @@ export default {
     },
     registerPage() {
       this.$router.push('/register');
+    }
+  },
+  mounted () {
+    if(this.$cookie.get('auth_token')){
+      this.$router.push('/');
+    } else {
+
     }
   }
 }
