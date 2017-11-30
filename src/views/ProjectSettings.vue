@@ -108,7 +108,7 @@
             
             <hr>
 
-            <el-table
+            <!-- <el-table
               :data="pluginsData"
               border
               style="width: 100%">
@@ -141,7 +141,18 @@
                   <el-button @click.native.prevent="deletePlugin(scope.$index, pluginsData)" type="danger" size="small" icon="delete">Delete</el-button>
                 </template>
               </el-table-column>
-            </el-table>
+            </el-table> -->
+
+            <el-tree
+              :data="pluginsTreedata"
+              show-checkbox
+              node-key="id"
+              :default-expand-all="true"
+              :props="defaultProps"
+              :render-content="renderContent">
+            </el-tree>
+
+            <!-- :default-checked-keys="[5]" -->
 
             <br>
 
@@ -562,24 +573,16 @@ export default {
       imageInputIsDisabled: false,
       uploadedVariableJsonData: '',
       layoutOptions: [],
-      // partialsList: [],
-      // selectedPartial: '',
-      // componentStatus: [{
-      //   value: false,
-      //   label: 'Disabled'
-      // },{
-      //   value: true,
-      //   label: 'Enabled'
-      // }],
-      // variableStatus: '',
-      // ecommerceSettings: [{
-      //   "wishlist": false,
-      //   "cart": false,
-      //   "compare": false
-      // }],
+
       addPluginLoading: false,
       refreshPluginsLoading: false,
-      refreshFolderTree: []
+      refreshFolderTree: [],
+
+      pluginsTreedata: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
     }
   },
   component: {
@@ -786,7 +789,7 @@ export default {
       // Call Listings API and get Tree
       await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.repoName, {
       })
-      .then((res) => {
+      .then(async (res) => {
         this.refreshPluginsLoading = false;
 
         let directoryListing = res.data.children;
@@ -796,7 +799,7 @@ export default {
         for(var i = 0; i < directoryListing[partialsFolderIndex].children.length; i++){
           console.log(directoryListing[partialsFolderIndex].children);
           if((_.indexOf(Object.keys(this.settings[2].layoutOptions[0]), directoryListing[partialsFolderIndex].children[i].name)) > -1){
-            // console.log('Partial already registered: ', directoryListing[partialsFolderIndex].children[i].name);
+            // Partial is registered but check for new partial variants
 
             let updates = false;
 
@@ -810,36 +813,15 @@ export default {
               fileName = fileName[0];
 
               if(_.find(this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex]], function(o) { return o.value = fileName; })){
-                console.log('already there');
               } else {
-                  console.log('Not there');
+                updates = true;
 
-                  updates = true;
-
-                  let newFtpPartial = {
-                      value: fileName,
-                      label: fileName
-                  }  
-                  this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
+                let newFtpPartial = {
+                    value: fileName,
+                    label: fileName
+                }  
+                this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
               }
-              // console.log('Partial File Name: ', this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name][j].value);
-
-              // for(let k = 0; k < this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].length; k++){
-              //   if(fileName == this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name][j].value ){
-              //     console.log('already there');
-              //   } else {
-              //     console.log('Not there');
-
-              //     updates = true;
-
-              //     let newFtpPartial = {
-              //         value: fileName,
-              //         label: fileName
-              //     }  
-              //     this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
-              //   }
-              // }
-              
             }
 
             // Only Save file when there are any new files found in already registered partials
@@ -848,7 +830,7 @@ export default {
             }
 
           } else {
-            // console.log('Partial not registered: ', directoryListing[partialsFolderIndex].children[i].name);
+            // Partial not Registered
 
             // Create Partial Entry
             this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name] = [];
@@ -856,7 +838,6 @@ export default {
             // Create Partial Files Entry
             for(let j = 0; j < directoryListing[partialsFolderIndex].children[i].children.length ; j++){
 
-              // console.log('File Name: ', directoryListing[partialsFolderIndex].children[i].children[j].name);
               let fileName = directoryListing[partialsFolderIndex].children[i].children[j].name;
               fileName = fileName.split('.');
               fileName = fileName[0];
@@ -869,13 +850,9 @@ export default {
               this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
             }
             
-            // console.log('Layout Options:', this.settings[2].layoutOptions[0]);
-            this.saveProjectSettings();
+            await this.saveProjectSettings();
 
-            let self = this;
-            setTimeout(function(){
-              self.init();
-            }, 2000);
+            this.init();
 
           }
         }
@@ -890,11 +867,6 @@ export default {
           console.log(e)
       });
     },
-
-    // addNewEcommerceVariable() {
-    //   let newVariable = { variableClass: '', variableValue: '', variableStatus: ''};
-    //   this.ecommerceVariables.push(newVariable);
-    // },
 
     deleteVariable(deleteIndex) {
       this.globalVariables.splice(deleteIndex, 1);
@@ -921,7 +893,6 @@ export default {
       }).catch(() => {
         
       });
-
     },
 
     downloadGlobalVariables() {
@@ -945,7 +916,6 @@ export default {
     
       fileSaver.saveAs(jsonData, saveFileName);
     },
-
 
     uploadImage(fileData, fileBlob) {
       
@@ -1329,9 +1299,11 @@ export default {
     async init () {
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
       this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
+
         this.settings = JSON.parse(this.configData.data);
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
@@ -1344,47 +1316,48 @@ export default {
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
 
-        this.pluginsData = [];
+        // Getting tree data structure from partials listings
+        let pluginNames = [];
 
-        let pluginsList = Object.keys(this.settings[2].layoutOptions[0]);
-        pluginsList.splice(pluginsList.indexOf('Layout'), 1);
+        pluginNames = Object.keys(this.settings[2].layoutOptions[0]);
+        pluginNames.splice(pluginNames.indexOf('Layout'), 1);
 
-        for(let i = 0; i < pluginsList.length; i++){
-          let data = {
-            pluginName: pluginsList[i],
-            pluginStatus: false
+        let treeData = [];
+        let count = 0;
+
+        // Loop thru all plugins found
+        for(let i = 0; i < pluginNames.length; i++){
+          count++;
+
+          let partialName = pluginNames[i];
+
+          let temp1 = {
+            id: count,
+            children: [],
+            label: partialName
           }
-          this.pluginsData.push(data);
+
+          treeData.push(temp1);
+
+          // Loop thru all plugin variants
+          for(let j = 0; j < this.settings[2].layoutOptions[0][partialName].length; j++){
+            
+            count++;
+
+            let temp2 = {
+              id: count,
+              children: [],
+              label: this.settings[2].layoutOptions[0][partialName][j].label
+            }
+
+            treeData[i].children.push(temp2);
+          }
+
         }
 
-        // if(this.globalVariables == undefined){
-        //   this.globalVariables = []
-        // }
-        // if(this.globalCssVariables == undefined){
-        //   this.globalCssVariables = []
-        // }
-        // if(this.ecommerceVariables == undefined){
-        //   this.ecommerceVariables = []
-        // }
-        // if(this.ecommerceSettings == undefined){
-        //   this.ecommerceSettings = [{
-        //     wishlistStatus: false,
-        //     cartStatus: false,
-        //     compareStatus: false
-        //   }];
-        // }
+        this.pluginsTreedata = treeData;
 
-        // Get all partials
-        // this.layoutOptions = this.settings[2].layoutOptions[0];
-        // this.layoutOptions = Object.keys(_.omit(this.layoutOptions, ['Layout', 'Header', 'Footer', 'Sidebar', 'Menu']));
-
-        // for (var i = 0; i <= this.layoutOptions.length; i++) {
-        //   let value = {
-        //     'value' : this.layoutOptions[i].toLowerCase(),
-        //     'label' : this.layoutOptions[i]
-        //   }
-        //   this.partialsList.push(value);
-        // }
+        console.log('Tree Data:', this.pluginsTreedata);
 
         // Set Brand Logo Name
         // if(this.form.brandLogoName != ''){
@@ -1441,59 +1414,27 @@ export default {
       if(this.commitsData[0]){
         return 'positive-row';
       } 
-    }
+    },
 
-    // Code before Full Publish of project
-    // publishMetalsmith(){
-    //   var partials = '';
-    //   if (this.form.Header != '') {
-    //       var partialHeader = "Handlebars.registerPartial('Header', fs.readFileSync('" + this.$store.state.fileUrl + "/Headers/" + this.form.Header + ".html').toString());\n";
-    //       partials = partials + partialHeader;
-    //   }
-    //   if (this.form.Footer != '') {
-    //       var partialFooter = "Handlebars.registerPartial('Footer', fs.readFileSync('" + this.$store.state.fileUrl + "/Footers/" + this.form.Footer + ".html').toString());\n"
-    //       partials = partials + partialFooter;
-    //   }
+    removePluginFromTree(store, data) {
+      store.remove(data);
+    },
 
-    //   var metalsmithJSON = "var Metalsmith=require('metalsmith');\nvar markdown=require('metalsmith-markdown');\nvar layouts=require('metalsmith-layouts');\nvar permalinks=require('metalsmith-permalinks');\nvar fs=require('fs');\nvar Handlebars=require('handlebars');\n" + partials + " Metalsmith(__dirname)\n.metadata({title:'" + this.form.seoTitle + "',description:'" + this.form.seoDesc + "'})\n.source('" + this.$store.state.fileUrl + "/Pages')\n.destination('" + this.$store.state.fileUrl + "/MetalsmithOutput')\n.clean(false)\n.use(markdown())\n.use(permalinks())\n.use(layouts({engine:'handlebars',directory:'" + this.$store.state.fileUrl + "/Layouts'}))\n.build(function(err,files)\n{if(err){console.log(err)}});"
+    renderContent(h, { node, data, store }) {
+      return (
+        <span>
+          <span>
+            <span>{node.label}</span>
+          </span>
+          <span style="float: right; margin-right: 20px">
+            <el-button size="mini" on-click={ () => this.removePluginFromTree(store, data) } type="danger" icon="delete"></el-button>
+          </span>
+        </span>
+      );
+    },
 
-    //   // console.log(this.$store.state.fileUrl);
-    //   axios.post('http://localhost:3030/flows-dir-listing', {
-    //       filename: this.$store.state.fileUrl + '/assets/metalsmith.js',
-    //       text: (metalsmithJSON),
-    //       type: 'file'
-    //   }).then((response) => {
-    //       // console.log('Axios call 1');
-    //       console.log('successfully created metalsmith file :', (response.data))
-    //       this.$message({
-    //           showClose: true,
-    //           message: 'MetalSmith Config Saved!',
-    //           type: 'success'
-    //       });
-
-    //       axios.get('http://localhost:3030/metalsmith?path=' + this.$store.state.fileUrl, {
-    //       }).then((response) => {
-    //           // console.log('Axios call 2');
-    //           console.log('successfully  :' + (response))
-    //       })
-    //       .catch((err) => {
-    //           this.$message({
-    //               showClose: true,
-    //               message: 'Cannot get Metalsmith file! Some error occured, try again.',
-    //               type: 'error'
-    //           });
-    //       })
-    //   })
-    //   .catch((e) => {
-    //       console.log('Mrror while creating MetalSmith JSON file' + e)
-    //       this.$message({
-    //           showClose: true,
-    //           message: 'Cannot save file! Some error occured, try again.',
-    //           type: 'error'
-    //       });
-    //   })
-    // },
   },
+
   created () {
     this.init(); 
   },
