@@ -15,7 +15,7 @@
     <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
 
       <!-- Commit Section -->
-      <div class="well">
+      <div class="well" id="new-commit-section">
         <div class="row">
           <div class="col-md-9">
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
@@ -33,7 +33,7 @@
       <!-- Commit Section Ends -->
 
       <!-- Project Settings Section -->
-      <div class="well">
+      <div class="well" id="project-settings">
         <div class="row">
 
           <div class="col-md-12">
@@ -90,7 +90,7 @@
       <!-- Project Settings section ends -->
 
       <!-- Plugins Section -->
-      <div class="well">
+      <div class="well" id="plugins-section">
         <div class="row">
           <div class="col-md-12">
 
@@ -145,14 +145,17 @@
 
             <el-tree
               :data="pluginsTreedata"
-              show-checkbox
               node-key="id"
               :default-expand-all="true"
               :props="defaultProps"
-              :render-content="renderContent">
+              :default-checked-keys=checkedList
+              :render-content="renderContent"
+              >
             </el-tree>
 
-            <!-- :default-checked-keys="[5]" -->
+            <!-- :default-checked-keys="[5]"
+            :render-content="renderContent"
+             -->
 
             <br>
 
@@ -178,7 +181,7 @@
       <!-- Plugins section ends -->
 
       <!-- Global Variable section -->
-      <div class="well">
+      <div class="well" id="global-variables-section">
         <div class="row">
           <div class="col-md-12">
             <div class="row">
@@ -454,7 +457,7 @@
       <!-- Ecommerce Global Variable section ends -->
 
       <!-- List of Commits Section -->
-      <div class="well">
+      <div class="well" id="list-of-commits">
         <div class="row">
           <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
             <h3>List of Commits</h3>
@@ -507,11 +510,8 @@ import VueSession from 'vue-session';
 Vue.use(VueSession);
 
 import axios from 'axios';
-
 import _ from 'lodash';
-
 const config = require('../config');
-
 import fileSaver from 'file-saver';
 
 export default {
@@ -591,7 +591,8 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'label'
-      }
+      },
+      checkedList: []
     }
   },
   component: {
@@ -782,7 +783,9 @@ export default {
         }
 
         // Save Config File
-        this.saveProjectSettings();
+        await this.saveProjectSettings();
+
+        this.init();
 
       })
       .catch((e)=>{
@@ -806,7 +809,6 @@ export default {
         let partialsFolderIndex = _.findIndex(directoryListing, function(o) { return o.name == 'Partials'; });
 
         for(var i = 0; i < directoryListing[partialsFolderIndex].children.length; i++){
-          console.log(directoryListing[partialsFolderIndex].children);
           if((_.indexOf(Object.keys(this.settings[2].layoutOptions[0]), directoryListing[partialsFolderIndex].children[i].name)) > -1){
             // Partial is registered but check for new partial variants
 
@@ -859,9 +861,9 @@ export default {
               this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
             }
             
-            await this.saveProjectSettings();
-
-            this.init();
+            await this.saveProjectSettings()
+            this.init();  
+            
 
           }
         }
@@ -962,7 +964,7 @@ export default {
       this.settings[1].projectSettings = ProjectSettings;
 
       let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
-      axios.post( config.baseURL + '/flows-dir-listing', {
+      return axios.post( config.baseURL + '/flows-dir-listing', {
           filename : newfilename,
           text : JSON.stringify(this.settings),
           type : 'file'
@@ -1348,6 +1350,8 @@ export default {
         // Getting tree data structure from partials listings
         let pluginNames = [];
 
+
+
         pluginNames = Object.keys(this.settings[2].layoutOptions[0]);
         pluginNames.splice(pluginNames.indexOf('Layout'), 1);
 
@@ -1388,7 +1392,28 @@ export default {
 
         this.pluginsTreedata = treeData;
 
-        console.log('Tree Data:', this.pluginsTreedata);
+        console.log('Plugins data: ', this.pluginsTreedata);
+
+        // Get checked items
+        this.checkedList = getIds(this.pluginsTreedata);
+
+        function getIds(ma) {       
+          let ida = []
+
+          if (ma instanceof Array) {               
+            for (let i in ma) {                       
+              let ii = getIds(ma[i])                        
+              ida = ida.concat(ii)               
+            }       
+          } else if (typeof ma == 'object') {               
+            if (ma.isActive) { 
+              ida.push(ma.id) 
+            }
+            let ii = getIds(ma.children)                
+            ida = ida.concat(ii)       
+          }       
+          return ida
+        }
 
         // Set Brand Logo Name
         // if(this.form.brandLogoName != ''){
@@ -1447,8 +1472,30 @@ export default {
       } 
     },
 
+    changePluginStatus(index, value){
+      console.log('Change index: ', index);
+      console.log('Change value: ', value);  
+    },
+
     removePluginFromTree(store, data) {
       store.remove(data);
+
+      var ids = getRemove(this.pluginsTreedata, data.id) 
+
+      function getRemove (ma, idm) { 
+        if (ma instanceof Array) { 
+          let k = _.findIndex(ma, {id:idm}) 
+          if (k >= 0) { 
+            ma.splice(k,1) 
+            return true 
+          } 
+          for (let i in ma) { 
+            let ii = getRemove(ma[i].children, idm) 
+            if (ii) return true 
+          } 
+        } 
+        return false 
+      }
     },
 
     renderContent(h, { node, data, store }) {
@@ -1459,6 +1506,12 @@ export default {
           </span>
           <span style="float: right; margin-right: 20px">
             <el-button size="mini" on-click={ () => this.removePluginFromTree(store, data) } type="danger" icon="delete"></el-button>
+          </span>
+          <span style="float: right; margin-right: 35px">
+            <el-switch size="mini"  value={data.isActive} on-change={ (value) => {
+              data.isActive = value;
+              this.changePluginStatus(data.id, value);
+            } } on-text="" off-text=""></el-switch>
           </span>
         </span>
       );
@@ -1732,7 +1785,4 @@ export default {
       right: auto;
     }
   }
-
-
-
 </style>

@@ -1,7 +1,5 @@
-let url;
-
 if(process.env.baseURL == undefined){
-    url = 'http://162.242.223.167:3034/'
+    url = 'http://159.203.142.21:3032'
 } else {
     url = process.env.baseURL;
 }
@@ -9,25 +7,10 @@ if(process.env.baseURL == undefined){
 module.exports = {
     loginUrl: 'http://ec2-54-88-11-110.compute-1.amazonaws.com/api/login',
     registerUrl: 'http://ec2-54-88-11-110.compute-1.amazonaws.com/api/setup',
-    pluginsPath : '/home/software/AllProjects/FlowzBuilder/src/assets/plugins',
+    userDetail: 'http://ec2-54-88-11-110.compute-1.amazonaws.com/api/userdetails',
+    pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
-    metalpath: '/home/software/AllProjects/FlowzServiceApi/node_modules/',
-
-	// LAN IpAddress
-    // baseURL : 'http://172.16.230.84:3030',
-
-    // WiFi ipAddress
-    // baseURL : 'http://172.16.230.152:3030',
-
-    // Local IpAddress
+    metalpath: '/var/www/html/node_modules/',
     baseURL : url,
-
-    // Local ipaddress
-    // Wifi
-    // ipAddress : 'http://172.16.230.152',
-    // LAN
-    // ipAddress : 'http://172.16.230.84',
-    // Local
-    ipAddress : 'http://localhost'    
-    
+    ipAddress: 'http://159.203.142.21'
 }

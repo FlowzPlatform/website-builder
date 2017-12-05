@@ -96,42 +96,58 @@ export default {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
               }
-            }).then(response => {
+            }).then(async response => {
               if (response.data) {
                 this.$session.start()
                 this.$session.set('token', response.data.token);
-                localStorage.setItem("auth_token", response.data.logintoken);
+                // localStorage.setItem("auth_token", response.data.logintoken);
 
                 let location = psl.parse(window.location.hostname)
                 location = location.domain === null ? location.input : location.domain
                 this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
 
-                this.$session.set('username', this.form.user)
+                this.$session.set('email', this.form.user)
                 // Vue.http.headers.common['Authorization'] = 'Bearer ' + response.data.token
                 this.form.isLoading = false;
-                this.$router.push('/');
+                // this.$router.push('/');
+
+                await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
+                }).then(response => {
+                  if (response.data) {
+                      console.log(response.data.private_token);
+                      console.log(response.data.id);
+                      this.$session.set('privateToken', response.data.private_token);
+                      this.$session.set('userId', response.data.id);
+                      this.$session.set('username', response.data.username);
+                      console.log("Username:", this.$session.get('username'));
+
+                      // axios.post(config.baseURL+'/flows-dir-listing' , {
+                      //   foldername :'/var/www/html/websites/'+ this.$session.get('username'),
+                      //   type : 'folder'
+                      // })
+                      // .then((res) => {
+                      //   console.log('user Folder created!');
+                      // })
+                      // .catch((e)=>{
+                      //   console.log("Error from pages"+res)
+                      // });
+                      
+                      this.$router.push('/');
+
+
+                  }
+                }).catch(error => {
+                  console.log(error);
+                  this.$notify.error({
+                    title: 'Error',
+                    message: error.response.data,
+                    offset: 100
+                  });
+                  this.form.isLoading = false;
+                })
               }
 
-              axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
-              }).then(response => {
-                if (response.data) {
-                    console.log(response.data.private_token);
-                    console.log(response.data.id);
-                    this.$session.set('privateToken', response.data.private_token);
-                    this.$session.set('userId', response.data.id);
-                    this.$session.set('username', response.data.username);
-                    console.log("Username:", this.$session.get('username'));
-                    this.$router.push('/');
-                }
-              }).catch(error => {
-                console.log(error);
-                this.$notify.error({
-                  title: 'Error',
-                  message: error.response.data,
-                  offset: 100
-                });
-                this.form.isLoading = false;
-              })
+              
 
             }).catch(error => {
               this.$notify.error({
@@ -153,11 +169,11 @@ export default {
     }
   },
   mounted () {
-    if(this.$cookie.get('auth_token')){
-      this.$router.push('/');
-    } else {
+    // if(this.$cookie.get('auth_token')){
+    //   this.$router.push('/');
+    // } else {
 
-    }
+    // }
   }
 }
 </script>

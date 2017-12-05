@@ -13,7 +13,8 @@ export default new Router({
     {
       path: '/',
       name: 'Index',
-      component: Index
+      component: Index,
+      meta: { description: 'Main Page of the project', requiresAuth: true },
     },
     {
       path: '/login',

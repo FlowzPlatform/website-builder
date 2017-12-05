@@ -271,6 +271,9 @@ import VueCodeMirror from 'vue-codemirror'
 import CodeMirror from './CodeMirror'
 Vue.use(VueCodeMirror)
 
+// MonacoEditor
+import MonacoEditor from './MonacoEditor'
+
 // GrapesJS Editor
 import GrapesComponent from './GrapesComponent'
 
@@ -411,16 +414,17 @@ export default {
     ProjectStats,
     PartialStats,
     LayoutStats,
-    PageStats
+    PageStats,
+    MonacoEditor
   },
   created () {
     // console.log(process.env.baseURL);
-    if(this.$cookie.get('auth_token')){
-      this.isLoggedInUser = true;
-      this.getData();
-    } else {
-      this.isLoggedInUser = false
-    }
+    // if(this.$cookie.get('auth_token')){
+    this.isLoggedInUser = true;
+    this.getData();
+    // } else {
+    //   this.isLoggedInUser = false
+    // }
 
     this.$on('saveFileFromChild', this.autoSaveFromGrapes);
   },
@@ -554,6 +558,8 @@ export default {
 
     // Get directory listing data
     getData() {
+      let username = this.$session.get('username');
+      console.log('This use name: ', username);
       axios.get(config.baseURL + '/flows-dir-listing')
         .then(response => {
           response.data.children = this.getTreeData(response.data);
@@ -750,7 +756,7 @@ export default {
             this.isPageCodeEditor = false;
 
             if (this.isEditOption == true) {
-              this.componentId = 'code-mirror'
+              this.componentId = 'MonacoEditor'
               this.isEditOption = false
             } else {
               this.componentId = 'GridManager'
@@ -773,7 +779,7 @@ export default {
                 this.isPageCodeEditor = false;
               }
 
-              this.componentId = 'code-mirror'
+              this.componentId = 'MonacoEditor'
               this.isEditOption = false;
             } else {
               this.isPageCodeEditor = false;
@@ -808,7 +814,7 @@ export default {
                 this.isPageCodeEditor = false;
               }
 
-              this.componentId = 'code-mirror'
+              this.componentId = 'MonacoEditor'
               this.isEditOption = false;
             } else {
               this.isPageCodeEditor = false;
@@ -839,7 +845,7 @@ export default {
             this.isMenuBuilder = false;
             this.isHomePage = false;
             this.isPageCodeEditor = false;
-            this.componentId = 'code-mirror';
+            this.componentId = 'MonacoEditor';
 
             break;
         }
@@ -965,6 +971,8 @@ export default {
 
       this.fullscreenLoading = true;
 
+      let username = this.$session.get('username');
+
       let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
       return axios.post(config.baseURL + '/flows-dir-listing', {
           foldername: newFolderName,
@@ -1022,10 +1030,10 @@ export default {
                 return;
               }
 
-            })
-            .catch((e) => {
-              console.log(e)
-            });
+          })
+          .catch((e) => {
+            console.log(e)
+          });
 
         })
         .catch((e) => {
@@ -1425,7 +1433,12 @@ export default {
       });
 
       // Create metalsmith file
-      let mainMetal = newFolderName + '/assets/metalsmith.js'
+      let mainMetal = newFolderName + '/assets/metalsmith.js';
+
+      let projectName = newFolderName.split('/');
+      projectName = projectName[(projectName.length-1)];
+
+      let projectUrl = config.ipAddress + '/websites/' + projectName;
 
       var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(true)\n.use(markdown())\n.use(permalinks({pattern: ':date'}))\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
@@ -2753,6 +2766,11 @@ export default {
         }
         let folderUrl = configFileUrl.replace(fileName, '');
         this.getConfigFileData(folderUrl);
+
+        let projectName = folderUrl.split('/');
+        projectName = projectName[(projectName.length-1)];
+
+        let projectUrl = config.ipAddress + '/websites/' + projectName;
    
           
         let self = this;
@@ -3013,12 +3031,12 @@ export default {
                                                                       })
                                                                       .then((res) => {
                                                                           console.log("layout file reset")
-                                                                          if(self.form.Layout=='Blank'){
-                                                                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
-                                                                            .catch((e)=>{
-                                                                              console.log("error while deleting blank.layout file")
-                                                                            })
-                                                                          }
+                                                                          // if(self.form.Layout=='Blank'){
+                                                                          //   axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                                                          //   .catch((e)=>{
+                                                                          //     console.log("error while deleting blank.layout file")
+                                                                          //   })
+                                                                          // }
 
                                                                       })
                                                                       .catch((e) => {

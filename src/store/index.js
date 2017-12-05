@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createPersistedState from 'vuex-persistedstate'
+import createPersistedState from 'vuex-persistedstate';
+import axios from 'axios';
+import config from '@/config'
 
 Vue.use(Vuex)
 export const store = new Vuex.Store({
@@ -33,6 +35,27 @@ export const store = new Vuex.Store({
         updateContent({ commit }, { text }) {
             commit('ADD_TODO', text)
         },
+
+        authenticate ({ commit }, authToken) {
+          return axios({
+            method: 'get',
+            url: config.userDetail,
+            headers: {
+              'authorization': authToken
+            }
+          })
+          .then(response => {
+            console.log('response', response)
+            if (response) {
+              return response.data.data
+            } else {
+              return
+            }
+          }).catch (e => {
+            console.log('e', e)
+            throw e
+          })
+        }
     },
     plugins: [createPersistedState()]
     // getters: {},
