@@ -1,5 +1,5 @@
 if(process.env.baseURL == undefined){
-    url = 'http://159.203.142.21:3032'
+    url = 'http://api.flowz.com/serverapi'
 } else {
     url = process.env.baseURL;
 }
@@ -12,5 +12,5 @@ module.exports = {
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     baseURL : url,
-    ipAddress: 'http://159.203.142.21'
+    ipAddress: 'http://api.flowz.com/storage'
 }
