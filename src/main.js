@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueRouter from 'vue-router'
+import { sync } from 'vuex-router-sync'
 
 import $ from 'jquery'
 
@@ -27,6 +29,48 @@ Vue.use(ElementUI, { locale });
 
 var VueCookie = require('vue-cookie')
 Vue.use(VueCookie);
+
+// Routing logic
+Vue.use(VueRouter)
+
+// Some middleware to help us ensure the user is authenticated.
+router.beforeEach((to, from, next) => {
+    // window.console.log('Transition', transition)
+    // router.app.$store.state.token
+  const token = router.app.$cookie.get('auth_token')
+  if (to.matched.some(record => record.meta.requiresAuth) && (!token || token === 'null')) {
+    window.console.log('Not authenticated')
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      store.dispatch('authenticate', token).then(response => {
+        next()
+      }).catch(error => {
+        console.log(error)
+        // window.console.log('Not authenticated')
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+      })
+    } else {
+      next()
+    }
+      // if (store.state.user == null) {
+      //   // store.dispatch('')
+      // }
+      // router.app.$store.commit('SET_TOKEN', token)
+      // const authUser = JSON.parse(window.localStorage.getItem('authUser'))
+      // router.app.$store.commit('SET_USER', authUser)
+      // window.console.log('authenticated')
+      // next()
+  }
+})
+
+sync(store, router)
 
 
 /* eslint-disable no-new */

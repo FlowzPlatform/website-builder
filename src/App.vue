@@ -72,6 +72,7 @@ export default {
     },
     doLogout() {
       // localStorage.removeItem("auth_token");
+      this.$session.remove('username');
       let location = psl.parse(window.location.hostname)
       location = location.domain === null ? location.input : location.domain
       this.$cookie.delete('authUser', {domain: location});

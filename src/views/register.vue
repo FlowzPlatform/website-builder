@@ -137,7 +137,22 @@ export default {
                 }).then(response => {
                   this.form.isLoading = false;
                   console.log(response);
-                  window.location = '/login'
+                  window.location = '/login';
+
+                  // Create user Folder
+                  //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+                  // axios.post(config.baseURL+'/flows-dir-listing' , {
+                  //   foldername :'/var/www/html/websites/'+ this.form.Uname,
+                  //   type : 'folder'
+                  // })
+                  // .then((res) => {
+                  //   console.log('user Folder created!');
+                  // })
+                  // .catch((e)=>{
+                  //   console.log("Error from pages"+res)
+                  // });
+
+                  
                 }).catch(error => {
                   this.$notify.error({
                     title: 'Error',
