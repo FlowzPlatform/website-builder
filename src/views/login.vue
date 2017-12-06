@@ -11,24 +11,30 @@
       </el-row>
     </el-menu>
 
-    <el-card class="box-card">
-      <el-form style="padding:17px" ref="form" :model="form" :rules="loginRules" label-width="100px">
-        <el-form-item label="Email Id" prop="user">
-          <el-input icon="edit" type="text" v-model="form.user"placeholder="john23"></el-input>
-        </el-form-item>
-        <el-form-item label="Password" prop="pass">
-          <el-input icon="more" type="password" v-model="form.pass"></el-input>
-          
-        </el-form-item>
-        <a href="/forgot_password" class="forgotPassword">Forgot Password?</a>
-        <el-form-item>
-          <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;" :loading="form.isLoading">Login</el-button>
-        </el-form-item>
+    <div class="container">
+      <div class="row" style="padding: 15px;">
+        <el-card class="box-card col-md-6 col-xs-12 col-md-offset-3">
+          <el-form style="padding:17px" ref="form" :model="form" :rules="loginRules" label-width="100px">
+            <el-form-item label="Email Id" prop="user">
+              <el-input icon="edit" type="text" v-model="form.user"placeholder="john23"></el-input>
+            </el-form-item>
+            <el-form-item label="Password" prop="pass">
+              <el-input icon="more" type="password" v-model="form.pass"></el-input>
+              
+            </el-form-item>
+            <a href="/forgot_password" class="forgotPassword">Forgot Password?</a>
+            <el-form-item>
+              <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;" :loading="form.isLoading">Login</el-button>
+            </el-form-item>
 
-        <p class="newUser">Still New here? <a href="/register" class="registerNow">Register Now</a></p>
-        
-      </el-form>
-    </el-card>
+            <p class="newUser">Still New here? <a href="/register" class="registerNow">Register Now</a></p>
+            
+          </el-form>
+        </el-card>
+      </div>
+      
+    </div>
+    
   </div>
 </template>
 
@@ -249,14 +255,14 @@ export default {
 
 
 .box-card{
-  width: 450px;
-  margin:auto;
+  /*width: 450px;*/
   margin-top: 15%;
   margin-bottom: 25px;
   background-color: rgba(80,80,80,0.07);
   box-shadow: 0px 0px 2px #999999;
   transition: 0.2s linear all;
 }
+
 .box-card:hover, .box-card:focus{
  box-shadow: 0px 0px 25px #999999; 
  transition: 0.2s linear all;

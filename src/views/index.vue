@@ -463,6 +463,7 @@ export default {
     
     const app = feathers().configure(socketio(io(config.baseURL)))
     app.service("flows-dir-listing").on("created", (response) => {
+      console.log('Created Function called');
         response.path = response.path.replace(/\//g, "\\")
         var s = response.path.replace(this.rootpath, '').split('\\');
         let objCopy = self.directoryTree
@@ -485,6 +486,7 @@ export default {
         }
     })
     app.service("flows-dir-listing").on("removed", (response) => {
+      console.log('Remove Function called');
         if (response['errno'] == undefined) {
             var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
             console.log(s);
