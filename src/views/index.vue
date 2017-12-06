@@ -272,7 +272,7 @@ import CodeMirror from './CodeMirror'
 Vue.use(VueCodeMirror)
 
 // MonacoEditor
-import MonacoEditor from './MonacoEditor'
+import MonacoEditorChild from './MonacoEditor'
 
 // GrapesJS Editor
 import GrapesComponent from './GrapesComponent'
@@ -415,7 +415,7 @@ export default {
     PartialStats,
     LayoutStats,
     PageStats,
-    MonacoEditor
+    MonacoEditorChild
   },
   created () {
     // console.log(process.env.baseURL);
@@ -758,7 +758,7 @@ export default {
             this.isPageCodeEditor = false;
 
             if (this.isEditOption == true) {
-              this.componentId = 'MonacoEditor'
+              this.componentId = 'CodeMirror'
               this.isEditOption = false
             } else {
               this.componentId = 'GridManager'
@@ -781,7 +781,7 @@ export default {
                 this.isPageCodeEditor = false;
               }
 
-              this.componentId = 'MonacoEditor'
+              this.componentId = 'MonacoEditorChild'
               this.isEditOption = false;
             } else {
               this.isPageCodeEditor = false;
@@ -816,7 +816,7 @@ export default {
                 this.isPageCodeEditor = false;
               }
 
-              this.componentId = 'MonacoEditor'
+              this.componentId = 'MonacoEditorChild'
               this.isEditOption = false;
             } else {
               this.isPageCodeEditor = false;
@@ -847,7 +847,7 @@ export default {
             this.isMenuBuilder = false;
             this.isHomePage = false;
             this.isPageCodeEditor = false;
-            this.componentId = 'MonacoEditor';
+            this.componentId = 'MonacoEditorChild';
 
             break;
         }
