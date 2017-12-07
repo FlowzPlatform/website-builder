@@ -437,7 +437,6 @@ export default {
 
 
     //PAUL START
-    alert(1)
     const app1 = feathers().configure(socketio(io('http://localhost:3032')))
       app1.service("shoppingCart").on("created" , (message) =>{
         alert("CREATED ON SOCKET")
