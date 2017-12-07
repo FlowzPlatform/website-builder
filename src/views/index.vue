@@ -252,9 +252,9 @@ import _ from 'lodash'
 import HTML from 'vue-html'
 Vue.use(HTML)
 
-import feathers from 'feathers/client';
-import socketio from 'feathers-socketio/client';
-import io from 'socket.io-client';
+// import feathers from 'feathers/client';
+// import socketio from 'feathers-socketio/client';
+// import io from 'socket.io-client';
 
 var daex = require('json-daex');
 
@@ -306,6 +306,11 @@ import LayoutStats from './LayoutStats'
 
 // Layout Stats
 import PageStats from './PageStats'
+
+//PAUL
+import feathers from 'feathers/client';
+import socketio from 'feathers-socketio/client';
+import io from 'socket.io-client';
 
 
 
@@ -429,6 +434,24 @@ export default {
     this.$on('saveFileFromChild', this.autoSaveFromGrapes);
   },
   mounted () {
+
+
+    //PAUL START
+    alert(1)
+    const app1 = feathers().configure(socketio(io('http://localhost:3032')))
+      app1.service("shoppingCart").on("created" , (message) =>{
+        alert("CREATED ON SOCKET")
+        console.log(message);
+        
+      })
+      app1.service("flows-dir-listing").on("updated" , (message) =>{
+        console.log("UPDATED ON SOCKET")
+        console.log(message);
+        
+      })
+      //PAUL END
+
+
     // Sidemenu Toggle
     $(document).ready(function() {
       var trigger = $('.hamburger'),
@@ -460,69 +483,71 @@ export default {
 
     // Project Directory Listing
     let self = this
+
+
     
-    const app = feathers().configure(socketio(io(config.baseURL)))
-    app.service("flows-dir-listing").on("created", (response) => {
-      console.log('Created Function called');
-        response.path = response.path.replace(/\//g, "\\")
-        var s = response.path.replace(this.rootpath, '').split('\\');
-        let objCopy = self.directoryTree
-        let evalStr = 'self.directoryTree'
-        let $eval = eval(evalStr)
-        for (var i = 0; i < s.length; i++) {
-            let inx = _.findIndex($eval, function(d) {
-                return d.name == s[i]
-            })
-            if (inx >= 0 && $eval[inx]["children"] != undefined) {
-                evalStr += '[' + inx + ']["children"]'
-                $eval = eval(evalStr)
-            }
-        }
-        let inx = _.findIndex($eval, function(d) {
-            return d.name == response.name
-        })
-        if (inx < 0) {
-            $eval.push(response)
-        }
-    })
-    app.service("flows-dir-listing").on("removed", (response) => {
-      console.log('Remove Function called');
-        if (response['errno'] == undefined) {
-            var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
-            console.log(s);
-            let objCopy = self.directoryTree
-            let evalStr = 'self.directoryTree'
-            let $eval = eval(evalStr)
-            for (var i = 0; i < s.length; i++) {
-                let inx = _.findIndex($eval, function(d) {
-                    return d.name == s[i]
-                })
-                if (inx >= 0 && $eval[inx]["children"] != undefined && $eval[inx].path != response) {
-                    if ($eval[inx].children.length > 0) {
-                        evalStr += '[' + inx + ']["children"]'
-                        $eval = eval(evalStr)
-                    }
-                }
-            }
-            let inx = _.findIndex($eval, function(d) {
-                return d.path == response
-            })
-            if (inx >= 0) {
-                $eval.splice(inx, 1)
-                if (self.currentFile != null) {
-                    if (self.currentFile.path == response) {
-                        self.$message({
-                            showClose: true,
-                            message: 'Successfully Deleted!',
-                            type: 'error'
-                        });
-                        self.currentFile = null
-                        self.componentId = null
-                    }
-                }
-            }
-        }
-    });
+    // const app = feathers().configure(socketio(io(config.baseURL)))
+    // app.service("flows-dir-listing").on("created", (response) => {
+    //   console.log('Created Function called');
+    //     response.path = response.path.replace(/\//g, "\\")
+    //     var s = response.path.replace(this.rootpath, '').split('\\');
+    //     let objCopy = self.directoryTree
+    //     let evalStr = 'self.directoryTree'
+    //     let $eval = eval(evalStr)
+    //     for (var i = 0; i < s.length; i++) {
+    //         let inx = _.findIndex($eval, function(d) {
+    //             return d.name == s[i]
+    //         })
+    //         if (inx >= 0 && $eval[inx]["children"] != undefined) {
+    //             evalStr += '[' + inx + ']["children"]'
+    //             $eval = eval(evalStr)
+    //         }
+    //     }
+    //     let inx = _.findIndex($eval, function(d) {
+    //         return d.name == response.name
+    //     })
+    //     if (inx < 0) {
+    //         $eval.push(response)
+    //     }
+    // })
+    // app.service("flows-dir-listing").on("removed", (response) => {
+    //   console.log('Remove Function called');
+    //     if (response['errno'] == undefined) {
+    //         var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
+    //         console.log(s);
+    //         let objCopy = self.directoryTree
+    //         let evalStr = 'self.directoryTree'
+    //         let $eval = eval(evalStr)
+    //         for (var i = 0; i < s.length; i++) {
+    //             let inx = _.findIndex($eval, function(d) {
+    //                 return d.name == s[i]
+    //             })
+    //             if (inx >= 0 && $eval[inx]["children"] != undefined && $eval[inx].path != response) {
+    //                 if ($eval[inx].children.length > 0) {
+    //                     evalStr += '[' + inx + ']["children"]'
+    //                     $eval = eval(evalStr)
+    //                 }
+    //             }
+    //         }
+    //         let inx = _.findIndex($eval, function(d) {
+    //             return d.path == response
+    //         })
+    //         if (inx >= 0) {
+    //             $eval.splice(inx, 1)
+    //             if (self.currentFile != null) {
+    //                 if (self.currentFile.path == response) {
+    //                     self.$message({
+    //                         showClose: true,
+    //                         message: 'Successfully Deleted!',
+    //                         type: 'error'
+    //                     });
+    //                     self.currentFile = null
+    //                     self.componentId = null
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
   },
 
   methods: {
@@ -3880,8 +3905,20 @@ export default {
       }
     },
 
-  }
+  },
   // Methods End
+
+  // feathers: { // here is our section 
+  //   'flows-dir-listing': { // here is the subsection for the 'messages' service 
+  //     created(data) {
+  //       console.log('New Feathers Created...');
+  //     },
+ 
+  //     removed(data) {
+  //       console.log('New Feathers Removed...');
+  //     }
+  //   }
+  // }
 }
 </script>
 
