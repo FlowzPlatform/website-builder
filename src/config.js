@@ -2,6 +2,7 @@ if(process.env.baseURL == undefined){
     url = 'http://api.flowz.com/serverapi'
 } else {
     url = process.env.baseURL;
+    console.log('Custom BaseURL set: ', url);
 }
 
 module.exports = {
@@ -12,5 +13,6 @@ module.exports = {
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     baseURL : url,
+    // ipAddress: 'http://localhost'
     ipAddress: 'http://api.flowz.com/storage'
 }

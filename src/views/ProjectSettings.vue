@@ -1785,4 +1785,9 @@ export default {
       right: auto;
     }
   }
+
+  .el-tree{
+    max-height: 500px;
+    overflow-x: auto;
+  }
 </style>

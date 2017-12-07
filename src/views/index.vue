@@ -272,7 +272,7 @@ import CodeMirror from './CodeMirror'
 Vue.use(VueCodeMirror)
 
 // MonacoEditor
-import MonacoEditor from './MonacoEditor'
+import MonacoEditorChild from './MonacoEditor'
 
 // GrapesJS Editor
 import GrapesComponent from './GrapesComponent'
@@ -415,7 +415,7 @@ export default {
     PartialStats,
     LayoutStats,
     PageStats,
-    MonacoEditor
+    MonacoEditorChild
   },
   created () {
     // console.log(process.env.baseURL);
@@ -463,6 +463,7 @@ export default {
     
     const app = feathers().configure(socketio(io(config.baseURL)))
     app.service("flows-dir-listing").on("created", (response) => {
+      console.log('Created Function called');
         response.path = response.path.replace(/\//g, "\\")
         var s = response.path.replace(this.rootpath, '').split('\\');
         let objCopy = self.directoryTree
@@ -485,6 +486,7 @@ export default {
         }
     })
     app.service("flows-dir-listing").on("removed", (response) => {
+      console.log('Remove Function called');
         if (response['errno'] == undefined) {
             var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
             console.log(s);
@@ -756,7 +758,7 @@ export default {
             this.isPageCodeEditor = false;
 
             if (this.isEditOption == true) {
-              this.componentId = 'MonacoEditor'
+              this.componentId = 'CodeMirror'
               this.isEditOption = false
             } else {
               this.componentId = 'GridManager'
@@ -779,7 +781,7 @@ export default {
                 this.isPageCodeEditor = false;
               }
 
-              this.componentId = 'MonacoEditor'
+              this.componentId = 'MonacoEditorChild'
               this.isEditOption = false;
             } else {
               this.isPageCodeEditor = false;
@@ -814,7 +816,7 @@ export default {
                 this.isPageCodeEditor = false;
               }
 
-              this.componentId = 'MonacoEditor'
+              this.componentId = 'MonacoEditorChild'
               this.isEditOption = false;
             } else {
               this.isPageCodeEditor = false;
@@ -845,7 +847,7 @@ export default {
             this.isMenuBuilder = false;
             this.isHomePage = false;
             this.isPageCodeEditor = false;
-            this.componentId = 'MonacoEditor';
+            this.componentId = 'MonacoEditorChild';
 
             break;
         }

@@ -1,31 +1,47 @@
-<template id="MonacoEditor">
-    <div>
-        <monaco-editor
-          class="MonacoEditor"
-          v-model="$store.state.content"
-          language="javascript">
-        </monaco-editor>
+<template id="MonacoEditorChild">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <MonacoEditor style="height: 98vh;" :code=this.$store.state.content :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange">
+          </MonacoEditor>    
+        </div>
+      </div>
+      
     </div> 
 </template>
 
 <script>
-    import MonacoEditor from 'vue-monaco'
+
+  import MonacoEditor from 'vue-monaco-editor'
     
-    export default {
-        name: 'MonacoEditor',
-        component: {
-          MonacoEditor
-        },
-        data () {
-          return {
+  export default {
+      name: 'MonacoEditorChild',
+      data () {
+        return {
+          options: {
+            selectOnLineNumbers: true,
+            roundedSelection: false,
+            readOnly: false,
+            cursorStyle: 'line',
+            automaticLayout: false,
+            glyphMargin: true
           }
         }
-    }
+      },
+      components: {
+        MonacoEditor
+      },
+      methods: {
+        onMounted (editor) {
+          this.editor = editor
+        },
+        onCodeChange (editor) {
+          console.log(editor.getValue());
+          this.$store.state.content = editor.getValue();
+        }
+      }
+  }
 </script>
 
-<style >
-    .MonacoEditor {
-      width: 600px;
-      height: 800px;
-    }
+<style scoped>
 </style>
