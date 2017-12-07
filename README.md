@@ -44,3 +44,6 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 #Before starting the project
 Start rethinkdb: rethinkdb --http-port 8081
 Start the FlowzServiceApi by npm start
+
+#Changelog
+coming soon
