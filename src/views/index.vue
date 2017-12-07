@@ -874,7 +874,6 @@ export default {
                 "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                 "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                 "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                 '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
                 '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
                 "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
@@ -890,6 +889,13 @@ export default {
                 '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/demosite.js"><\/script>\n' +
+                '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"> \n' +
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"><\/script> \n'+
+                '<link rel="stylesheet" href=" https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"> \n' +
+                '<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"><\/script>\n' +
+                '<script src="https://cdn.datatables.net/1.10.16/js/dataTables.jqueryui.min.js"><\/script>\n' +
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"><\/script>\n' +
+                '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"><\/script>\n' +
                 // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
                 '<script src="./../main-files/main.js"><\/script>\n' +
                 '</body>\n</html>';
@@ -908,7 +914,6 @@ export default {
                     "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                     "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                     '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
                     '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
                     "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
@@ -924,6 +929,14 @@ export default {
                     '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
                     '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
                     '<script src="./../assets/client-plugins/demosite.js"><\/script>\n' +
+                    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"> \n' +
+                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"><\/script> \n'+
+                    '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"><\/script>\n' +
+                    '<link rel="stylesheet" href=" https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"> \n' +
+                    '<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"><\/script>\n' +
+                    '<script src="https://cdn.datatables.net/1.10.16/js/dataTables.jqueryui.min.js"><\/script>\n' +
+                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"><\/script>\n' +
+                    '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"><\/script>\n' +
                     // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
                     '<script src="./../main-files/main.js"><\/script>\n' +
                     '</body>\n</html>';
@@ -945,7 +958,6 @@ export default {
                     "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                     "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                     '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
                     '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
                     "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
@@ -961,6 +973,15 @@ export default {
                     '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
                     '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
                     '<script src="./../assets/client-plugins/demosite.js"><\/script>\n' +
+                    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"> \n' +
+                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"><\/script> \n'+
+                    '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"><\/script>\n' +
+                     '<link rel="stylesheet" href=" https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"> \n' +
+                    '<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"><\/script>\n' +
+                    '<script src="https://cdn.datatables.net/1.10.16/js/dataTables.jqueryui.min.js"><\/script>\n' +
+                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"><\/script>\n' +
+                    '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"><\/script>\n' +
+
                     // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
                     '<script src="./../main-files/main.js"><\/script>\n' +
                     '</body>\n</html>';
