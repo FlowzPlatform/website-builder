@@ -1,8 +1,8 @@
 <template>
   <div class="Register">
     <div class='brand'>
-        <a href='/' target='_blank'>
-            <img src='../assets/images/Flowz-Logo.png' class="flowz-logo">
+        <a href='/'>
+            <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
         </a>
     </div>
     <div class='login signup-form'>
@@ -61,7 +61,9 @@
           <div class='login_fields__submit'>
               <input type='submit' value='Sign Up'>
               <div class='forgot'>
+                <el-tooltip class="item" effect="dark" content="Login" placement="bottom">
                   <a href='/login'>Already Registered?</a>
+                </el-tooltip>
               </div>
           </div>
           <!-- <div class="signup">
@@ -234,9 +236,6 @@ export default {
 
 @import url(https://fonts.googleapis.com/css?family=Gudea:400,700);
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
-  .flowz-logo{
-    border-radius: 50%;
-  }
   p {
     color: #606479;
     text-align: left;
@@ -501,7 +500,7 @@ export default {
     bottom: 14px;
   }
   .brand img {
-    width: 30px;
+    width: 60px;
   }
 
   .signup{

@@ -1,8 +1,8 @@
 <template>
   <div class="Login">
     <div class='brand'>
-      <a href='/' target='_blank'>
-          <img src='../assets/images/Flowz-Logo.png' class="flowz-logo">
+      <a href='/'>
+          <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
       </a>
     </div>
     <div class='login'>
@@ -14,7 +14,7 @@
               <div class='icon'>
                   <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Username' type='text' v-model="form.user" required>
+              <input placeholder='Email Id' type='text' v-model="form.user" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -32,11 +32,13 @@
           <div class='login_fields__submit'>
               <input type='submit' value='Log In'>
               <div class='forgot'>
-                  <a href='#'>Forgotten password?</a>
+                  <a href='/forgot_password'>Forgotten password?</a>
               </div>
           </div>
           <div class="signup">
+            <el-tooltip class="item" effect="dark" content="Signup Now" placement="bottom">
               <a href="/register" class="signup-link">New Here?</a>
+            </el-tooltip>
           </div>
       </div>
       <div class='success'>
@@ -116,7 +118,7 @@ export default {
               this.authen.status = true;
               let self = this;
               setTimeout(function () {
-                self.$router.push('/');
+                self.$router.push('/dashboard');
               }, 2000);
               
           }
@@ -480,7 +482,7 @@ export default {
     bottom: 14px;
   }
   .brand img {
-    width: 30px;
+    width: 60px;
   }
 
   .signup{
