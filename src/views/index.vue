@@ -252,9 +252,11 @@
   import HTML from 'vue-html'
   Vue.use(HTML)
 
-  import feathers from 'feathers/client';
-  import socketio from 'feathers-socketio/client';
-  import io from 'socket.io-client';
+
+// import feathers from 'feathers/client';
+// import socketio from 'feathers-socketio/client';
+// import io from 'socket.io-client';
+
 
   var daex = require('json-daex');
 
@@ -314,7 +316,7 @@
       console.log('value',/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))
       if (!value) {
           return callback(new Error('Please enter filename.'));
-      }else if(!(/^[a-z0-9_.@()-/\s]+\.[^.]+$/i.test(value))){
+      }else if(!(/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))){
           return callback(new Error('Please enter valid filename.'));
       }else{
           return callback();
@@ -4067,9 +4069,10 @@
         }
       },
 
-    }
-    // Methods End
-  }
+  },
+  // Methods End
+
+  
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

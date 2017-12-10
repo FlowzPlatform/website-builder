@@ -26,7 +26,7 @@
         <div class="layout-content">
             <router-view></router-view>
         </div>
-        <SiteFooter></SiteFooter>
+        <!-- <SiteFooter></SiteFooter> -->
     </div>
   </div>
 </template>

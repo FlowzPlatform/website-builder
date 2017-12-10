@@ -81,7 +81,7 @@ export default {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  width: 100vw;
+  width: 99vw;
   height: 90vh;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
