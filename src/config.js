@@ -13,6 +13,6 @@ module.exports = {
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     baseURL : url,
-    // ipAddress: 'http://localhost'
-    ipAddress: 'http://auth.flowz.com:8080'
+    ipAddress: 'http://localhost'
+    // ipAddress: 'http://auth.flowz.com:8080'
 }

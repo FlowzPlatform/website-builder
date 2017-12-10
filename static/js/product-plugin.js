@@ -3910,7 +3910,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         traits: [
           {
             label: 'Data Id',
-            name: 'data-id',
+            name: 'data-global-id',
             type: 'text'
           }
         ],
@@ -3949,7 +3949,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         traits: [
           {
             label: 'Data Id',
-            name: 'data-id',
+            name: 'data-global-id',
             type: 'text'
           }
         ],
@@ -3989,7 +3989,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         traits: [
           {
             label: 'Data Id',
-            name: 'data-id',
+            name: 'data-global-id',
             type: 'text'
           }
         ],
@@ -4028,7 +4028,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         traits: [
           {
             label: 'Data Id',
-            name: 'data-id',
+            name: 'data-global-id',
             type: 'text'
           }
         ],

@@ -314,7 +314,7 @@
       console.log('value',/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))
       if (!value) {
           return callback(new Error('Please enter filename.'));
-      }else if(!(/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))){
+      }else if(!(/^[a-z0-9_.@()-/\s]+\.[^.]+$/i.test(value))){
           return callback(new Error('Please enter valid filename.'));
       }else{
           return callback();
@@ -460,8 +460,17 @@
 
       // Project Directory Listing
       let self = this
+
+      let socket
+      if (process.env.NODE_ENV !== 'development') {
+        socket = io(config.baseURL, {path: '/serverapi/socket.io'})
+      } else {
+        socket = config.baseURL
+      }
+
+      console.log('Socket url:', socket);
       
-      const app = feathers().configure(socketio(io(config.baseURL)))
+      const app = feathers().configure(socketio(io(socket)))
       app.service("flows-dir-listing").on("created", (response) => {
         console.log('Created Function called');
           response.path = response.path.replace(/\//g, "\\")
