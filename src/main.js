@@ -20,6 +20,9 @@ Vue.use(BootstrapVue);
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles);
+
 // // Include and set up feathers client 
 // const Feathers = require('feathers/client')
 // const hooks = require('feathers-hooks')

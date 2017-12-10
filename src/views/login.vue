@@ -1,5 +1,6 @@
 <template>
   <div class="Login">
+    <vue-particles color="#dedede"></vue-particles>
     <div class='brand'>
       <a href='/'>
           <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
@@ -65,6 +66,8 @@ Vue.use(VueSession)
 
 import axios from 'axios';
 import psl from 'psl';
+
+
 
 const config = require('../config');
 

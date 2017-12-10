@@ -1,5 +1,6 @@
 <template>
   <div class="Register">
+    <vue-particles color="#dedede"></vue-particles>
     <div class='brand'>
         <a href='/'>
             <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
