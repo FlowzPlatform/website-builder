@@ -1021,6 +1021,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       },
       category: 'Special Component'
   });
+  
   // Full Home Page Layout
   bm.add('ReUseComponent', {
       label: 'ReUse Component',
@@ -1031,6 +1032,17 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       },
       category: 'Special Component'
   });
+
+  // ReUseVueComponent
+    bm.add('VueComponent', {
+        label: 'Vue Component',
+        content: '<VueComponent style="display: block; width: 100%; min-height:20px"><div style="border:solid black 2px"></div></VueComponent>',
+        attributes: {
+            class: 'fa fa-home',
+            title: 'Vue Component'
+        },
+        category: 'Special Component'
+    });
 
   bm.add('progressBar', {
       label: 'Progress Bar',
@@ -3898,7 +3910,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         traits: [
           {
             label: 'Data Id',
-            name: 'data-id',
+            name: 'data-global-id',
             type: 'text'
           }
         ],
@@ -3937,7 +3949,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         traits: [
           {
             label: 'Data Id',
-            name: 'data-id',
+            name: 'data-global-id',
             type: 'text'
           }
         ],
@@ -3977,7 +3989,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         traits: [
           {
             label: 'Data Id',
-            name: 'data-id',
+            name: 'data-global-id',
             type: 'text'
           }
         ],
@@ -4016,7 +4028,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
         traits: [
           {
             label: 'Data Id',
-            name: 'data-id',
+            name: 'data-global-id',
             type: 'text'
           }
         ],
@@ -4284,15 +4296,17 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
                 var folderUrl = localStorage.getItem("folderUrl");
                 $('#Div1').on('click', function () {
                     label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-                    selected_value =  $("#Div1 option:selected").text();
+                    selected_value = $("#Div1 option:selected").text();
                     let model = editor.getSelected();
-
-                    model.components("");
-                    if(selected_value.match('.hbs')){
+                    var split_selected_value = selected_value.split(".");
+                    if (split_selected_value[1] == "html") {
+                        model.components("");
                         model.components("{{> " + label + " id='" + selected_value + "' }}");
-                    }else{
-
-                    model.components("{{> " + label + " id='" + selected_value + ".html' }}");
+                    } else if (split_selected_value[1] == "vue"){
+                        // let string = "component"
+                        //let string = '{component :is="' + split_selected_value[0] + '"}' + selected_value + '{/component}'
+                        //model.components('{component :is="' + split_selected_value[0] + '"}' + selected_value + '{/component}');
+                        model.components('<component :is="' + split_selected_value[0] + '">' + selected_value + '</component>');
                     }
                 });
             },
@@ -4300,11 +4314,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
                 editable: true,
                 droppable: true,
                 traits: [{
-                        label: 'PartialName',
-                        name: 'selectPartial',
-                        type: 'customConent1',
-                        changeProp: 1,
-                    }
+                    label: 'PartialName',
+                    name: 'selectPartial',
+                    type: 'customConent1',
+                    changeProp: 1,
+                }
                 ],
             }),
         }, {
@@ -4323,6 +4337,92 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
             return this;
         },
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    comps.addType('VueComponent', {
+        model: defaultModel.extend({
+            init() {
+                this.listenTo(this, 'change:selectPartial', this.doStuff);
+            },
+            doStuff() {
+                var label, selected_value;
+                var folderUrl = localStorage.getItem("folderUrl");
+                $('#Div1').on('click', function () {
+                    label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+                    selected_value = $("#Div1 option:selected").text();
+                    console.log('$("#Div1 option:selected"):',label)
+                    let model = editor.getSelected();
+                    var split_selected_value = selected_value.split(".");
+                    if (split_selected_value[1] == "vue") {
+                        // let string = "component"
+                        //let string = '{component :is="' + split_selected_value[0] + '"}' + selected_value + '{/component}'
+                        //model.components('{component :is="' + split_selected_value[0] + '"}' + selected_value + '{/component}');
+                        model.components('<div id="'+split_selected_value[0]+'"><component :pathname="'+label+'" :is="' + split_selected_value[0] + '">' + selected_value + '</component></div>');
+                    }
+                });
+            },
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [{
+                    label: 'PartialName',
+                    name: 'selectPartial',
+                    type: 'customConent2',
+                    changeProp: 1,
+                }
+                ],
+            }),
+        }, {
+                isComponent: function (el) {
+                    if (el.tagName == 'VUECOMPONENT') {
+                        return {
+                            type: 'VueComponent'
+                        };
+                    }
+                },
+            }),
+        view: defaultType.view,
+        render: function () {
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here';
+            return this;
+        },
+    });
+
+
 
 
 
