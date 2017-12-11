@@ -1,7 +1,7 @@
 <template>
   <div class="ProjectStats">
     <div class="page-buttons">
-      <el-button type="info" size="small" @click="previewWebsite">Preview Website</el-button>
+      <el-button type="info" size="small" @click="previewWebsite" :loading="previewLoader">Preview Website</el-button>
     </div>
   	<div class="container-fluid">
     	<div class="row" style="margin-top: 20px;">
@@ -205,6 +205,7 @@ export default {
       },
       commitsData: [],
       commitMessage: '',
+      previewLoader: false
     }
   },
   component: {
@@ -264,6 +265,8 @@ export default {
   	async init () {
 
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      localStorage.setItem('folderUrl', url);
+      
       this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
       if(this.configData.status == 200 || this.configData.status == 204){
         console.log('Config file found! Updating fields..');
@@ -324,12 +327,383 @@ export default {
       } 
   	},
 
-    previewWebsite () {
-      var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    async previewWebsite () {
+        this.previewLoader = true;
+        var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        var responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+        var rawConfigs = JSON.parse(responseConfig.data);
+        var partialstotal = []
+        console.log("rawConfigs[1].pageSettings.length:",rawConfigs[1].pageSettings.length)
+        for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+
+            var partials = ''
+
+            let responseConfigLoop = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+
+            var rawSettings = JSON.parse(responseConfigLoop.data);
+            var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
+            console.log('nameF:',nameF)
+            var Layout = ''
+            var partialsPage = [];
+            var vuepartials = [];
+            Layout = rawSettings[1].pageSettings[i].PageLayout
+            partialsPage = rawSettings[1].pageSettings[i].partials
+            var back_partials = JSON.parse(JSON.stringify(partialsPage));
+            vuepartials = rawSettings[1].pageSettings[i].VueComponents
+            if (vuepartials != undefined && vuepartials.length > 0) {
+                // console.log("VueComponents found:")
+                var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+                mainVuefile = mainVuefile.data
+
+                for (let x = 0; x < vuepartials.length; x++) {
+                    let temp = mainVuefile.replace(/@@vuecomponent@@/g, vuepartials[x].value.split('.')[0])
+                    temp = temp.replace('./' + vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + vuepartials[x].partialsName + '/' + vuepartials[x].value.split('.')[0])
+
+                    await axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename: config.webpackpublic + vuepartials[x].value.split('.')[0] + '.js',
+                            text: temp,
+                            type: 'file'
+                        }).then(async (res) => {
+                            // console.log("successfully created vuecomponent file") 
+                            contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+
+                            axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
+                                .then((response) => {
+                                    console.log("called webpack_file api successfully:")
+                                })
+                                .catch((e) => {
+                                    console.log(e)
+                                })
+                        })
+                        .catch((e) => {
+                            console.log(e)
+                        })
+
+                }
+                for (let x = 0; x < vuepartials.length; x++) {
+
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + '/home/software/workspace/faizan/FlowzServiceApi/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                            console.log(res)
+                        })
+                        .catch((e) => {
+                            console.log(e)
+                        })
+                }
+            }
+
+            var responseMetal = ''
+            let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
+            contentpartials = contentpartials.data
+
+            responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(permalinks({pattern: ':date'}))\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+            var index = responseMetal.search('.source')
+
+            responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
+            var indexPartial = responseMetal.search("handlebars");
+
+            for (var j = 0; j < partialsPage.length; j++) {
+                var temp1, temp2;
+                if (partialsPage[j][Object.keys(partialsPage[j])[0]].match('.hbs')) {
+                    temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + "' }}"
+                    temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]].split('.')[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + "' }}"
+                } else {
+
+                    temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".html' }}"
+
+                    temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".html' }}"
+                }
+
+                if (contentpartials.match(temp1)) {
+
+                    contentpartials = contentpartials.split(temp1).join(temp2)
+                    // let partialsinherit = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/'+Object.keys(partialsPage[j])[0]+'/'+partialsPage[j][Object.keys(partialsPage[j])[0]]);
+
+                    var obj = {}
+                    var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
+                    obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
+                    partialsPage[j] = []
+                    partialsPage[j] = obj
+                    // console.log("new partialsPage[",j,']:',partialsPage[j])
+
+
+
+                } else {
+                    console.log('partials not found in page')
+                    console.log('partialsPage[j]:', partialsPage[j])
+
+                }
+            }
+            console.log("back_partials:",back_partials)
+            for (var z = 0; z < partialsPage.length; z++) {
+              let key = Object.keys(partialsPage[z])[0];
+              let value = partialsPage[z]
+              let key2 = key;
+              key = key.trim();
+              if (value[key2].match('html')) {
+                  key = key.split('.')[0]
+                  var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + "').toString())\n"
+              } else if (value[key2].match('hbs')) {
+                  key = key.split('.')[0]
+                  var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + "').toString())\n"
+              } else {
+                  var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + ".html').toString())\n"
+              }
+              partials = partials + temp;
+          }
+
+            responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
+            console.log('final responseMetal:', responseMetal)
+            var mainMetal = folderUrl + '/assets/metalsmith.js'
+            var value = true;
+            await axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename: mainMetal,
+                    text: responseMetal,
+                    type: 'file'
+                }).then(async (response) => {
+                    var newFolderName = folderUrl + '/Preview';
+                    await axios.post(config.baseURL + '/flows-dir-listing', {
+                            foldername: newFolderName,
+                            type: 'folder'
+                        })
+                        .then(async (res) => {
+                            console.log(res);
+                            // console.log('Current URL:', this.$store.state.fileUrl.replace(/\\/g, "\/"));
+
+                            console.log("this.form.Layout:", Layout)
+                            if (Layout == 'Blank') {
+                                // console.log("inside blank layout condition:")
+                                await axios.post(config.baseURL + '/flows-dir-listing', {
+                                        filename: folderUrl + '/Layout/Blank.layout',
+                                        text: '{{{ contents }}}',
+                                        type: 'file'
+                                    })
+                                    .catch((e) => {
+                                        console.log("error while blank file creation")
+                                    })
+                            }
+                            let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
+
+                            let newContent = "<html>\n<head>\n" +
+                                "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+                                "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
+                                "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+                                "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                                "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                                "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                                "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+                                "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                                '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                                '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
+                                "<link rel='stylesheet' href='./../main-files/main.css'/>\n</head><body>\n" +
+                                layoutdata.data +
+                                '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
+                                '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
+                                // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+                                '<script src="./../main-files/main.js"><\/script>\n' +
+                                '</body>\n</html>';
+
+                            await axios.post(config.baseURL + '/flows-dir-listing', {
+                                filename: folderUrl + '/Layout/' + Layout + '.layout',
+                                text: newContent,
+                                type: 'file'
+                            })
+
+                            var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
+
+                            if (Layout == 'Blank') {
+                                
+                                rawContent = '---\nlayout: ' + Layout + '.layout\n---\n' + rawContent
+                                // }
+                            } else {
+                                let tempValueLayout = '---\nlayout: ' + Layout + '.layout\n---\n';
+                                rawContent = tempValueLayout + rawContent
+
+                                // }
+                            }
+
+                            var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
+
+                            await axios.post(config.baseURL + '/flows-dir-listing', {
+                                    filename: previewFileName,
+                                    text: rawContent,
+                                    type: 'file'
+                                })
+                                .then(async (res) => {
+                                    this.saveFileLoading = false;
+
+                                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
+
+                                            await axios.post(config.baseURL + '/flows-dir-listing', {
+                                                    filename: mainMetal,
+                                                    text: responseMetal,
+                                                    type: 'file'
+                                                })
+                                                .then(async (res) => {
+                                                    let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                                                    previewFile = folderUrl.replace('/var/www/html', '');
+
+                                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                                                        .then(async (res) => {
+                                                            console.log(res);
+                                                            // value = false;
+                                                            // return value
+                                                            await axios.post(config.baseURL + '/flows-dir-listing', {
+                                                                    filename: folderUrl + '/Layout/' + Layout + '.layout',
+                                                                    text: layoutdata.data,
+                                                                    type: 'file'
+                                                                })
+                                                                .then(async (res) => {
+                                                                    // location.reload();
+                                                                    if (vuepartials != undefined && vuepartials.length > 0) {
+                                                                        for (let x = 0; x < vuepartials.length; x++) {
+
+                                                                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.webpackpublic + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                                                                    console.log(res)
+                                                                                })
+                                                                                .catch((e) => {
+                                                                                    console.log(e)
+                                                                                })
+                                                                        }
+                                                                        // location.reload();
+                                                                    }
+                                                                    console.log("layout file reset")
+                                                                    if (Layout == 'Blank') {
+                                                                       await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                                                            .catch((e) => {
+                                                                                console.log("error while deleting blank.layout file")
+                                                                            })
+                                                                    }
+
+                                                                })
+
+                                                        })
+                                                        .catch((e) => {
+                                                            console.log(e)
+                                                        })
+                                                })
+
+                                        })
+                                        .catch((err) => {
+                                            console.log('error while creating metalsmithJSON file' + err)
+                                        })
+                                })
+                                .catch((e) => {
+                                    this.saveFileLoading = false
+                                    this.$message({
+                                        showClose: true,
+                                        message: 'File not saved! Please try again.',
+                                        type: 'error'
+                                    });
+                                    console.log(e)
+                                })
+
+                        })
+                        .catch((e) => {
+                            console.log(e)
+                        })
+
+                })
+                .catch((e) => {
+                    console.log('error while creating metalsmithJSON file' + e)
+                    this.$message({
+                        showClose: true,
+                        message: 'Cannot save file! Some error occured, try again.',
+                        type: 'danger'
+                    });
+                })
+
+        }
+
+        // window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
+        // Publish with Zeit Now
+        axios.post(config.baseURL + '/publish-now', {
+            projectName : this.repoName
+        })
+        .then((res) => {
+          let serverUrl = res.data;
+          window.open( serverUrl + '/public/');
+          this.$message({
+            showClose: true,
+            message: 'Successfully Published.',
+            type: 'success'
+          });
+          console.log(res.data);
+          this.previewLoader = false;
+        })
+        .catch((e) => {
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e);
+          this.previewLoader = false;
+        });
+        // location.reload();
     }
   },
+
+    // previewWebsite () {
+
+    //   this.previewLoader = true;
+    //   // var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //   // window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
+
+    //   // Publish with Zeit Now
+    //   axios.post(config.baseURL + '/publish-now', {
+    //       projectName : this.repoName
+    //   })
+    //   .then((res) => {
+    //     let serverUrl = res.data;
+    //     window.open( serverUrl + '/public/');
+    //     this.$message({
+    //       showClose: true,
+    //       message: 'Successfully Published.',
+    //       type: 'success'
+    //     });
+    //     console.log(res.data);
+    //     this.previewLoader = false;
+    //   })
+    //   .catch((e) => {
+    //     this.$message({
+    //       showClose: true,
+    //       message: 'Failed! Please try again.',
+    //       type: 'error'
+    //     });
+    //     console.log(e);
+    //     this.previewLoader = false;
+    //   });
+
+    // }
+  // },
   async mounted () {
+
+    // console.log('Folder Url: ', localStorage.getItem('folderUrl'));
+
   	let response = await this.init();
 
     let self = this;

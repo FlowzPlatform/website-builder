@@ -109,6 +109,68 @@
                   </span>
               </el-dialog>
 
+              <el-dialog title="SORRY! You have created Enough sites for choosen package. Want to Upgrade?" :visible.sync="buyNowDialog">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                <link rel='stylesheet' href='https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css'/>
+
+                  <div class="container">
+                    <div class="row mt-5 align-items-center">
+                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center">
+                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 br">
+                          <h2 class="font-weight-light">Personal</h2>
+                          <p class="text-h2">
+                            <strong>$9 / month</strong>
+                          </p>
+                          <p class="text-h3">Offers you'll get for this package</p>
+                          <ul class="text-left mt-5 mb-5">
+                            <li>Website - 5</li>
+                            <li>Unlimited Storage</li>
+                          </ul>
+                          <p>
+                            <a href="#" class="btn mt-4">Buy</a>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0">
+                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 fdb-touch br">
+                          <h2 class="font-weight-light">Professional</h2>
+                          <p class="text-h2">
+                            <strong>$19 / month</strong>
+                          </p>
+                          <p class="text-h3">Offers you'll get for this package</p>
+                          <ul class="text-left mt-5 mb-5">
+                            <li>Website - 8</li>
+                            <li>Unlimited Storage</li>
+                          </ul>
+                          <p>
+                            <a href="#" class="btn mt-4">Buy</a>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0">
+                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 br">
+                          <h2 class="font-weight-light">Business</h2>
+                          <p class="text-h2">
+                            <strong>$49 / month</strong>
+                          </p>
+                          <p class="text-h3">Offers you'll get for this package</p>
+                          <ul class="text-left mt-5 mb-5">
+                            <li>Website - 13</li>
+                            <li>Unlimited Storage</li>
+                          </ul>
+                          <p>
+                            <a href="#" class="btn mt-4">Buy</a>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              <span slot="footer" class="dialog-footer">
+                  <el-button @click="buyNowDialog = false">Cancel</el-button>
+              </span>
+            </el-dialog>
+
               <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
                 <el-form :model="formAddProjectFolder">
                   <el-form-item>
@@ -178,6 +240,68 @@
                   </span>
               </el-dialog>
 
+              <el-dialog title="SORRY! You have created Enough sites for choosen package. Want to Upgrade?" :visible.sync="buyNowDialog">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                <link rel='stylesheet' href='https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css'/>
+
+                  <div class="container">
+                    <div class="row mt-5 align-items-center">
+                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center">
+                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 br">
+                          <h2 class="font-weight-light">Personal</h2>
+                          <p class="text-h2">
+                            <strong>$9 / month</strong>
+                          </p>
+                          <p class="text-h3">Offers you'll get for this package</p>
+                          <ul class="text-left mt-5 mb-5">
+                            <li>Website - 5</li>
+                            <li>Unlimited Storage</li>
+                          </ul>
+                          <p>
+                            <a href="#" class="btn mt-4">Buy</a>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0">
+                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 fdb-touch br">
+                          <h2 class="font-weight-light">Professional</h2>
+                          <p class="text-h2">
+                            <strong>$19 / month</strong>
+                          </p>
+                          <p class="text-h3">Offers you'll get for this package</p>
+                          <ul class="text-left mt-5 mb-5">
+                            <li>Website - 8</li>
+                            <li>Unlimited Storage</li>
+                          </ul>
+                          <p>
+                            <a href="#" class="btn mt-4">Buy</a>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0">
+                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 br">
+                          <h2 class="font-weight-light">Business</h2>
+                          <p class="text-h2">
+                            <strong>$49 / month</strong>
+                          </p>
+                          <p class="text-h3">Offers you'll get for this package</p>
+                          <ul class="text-left mt-5 mb-5">
+                            <li>Website - 13</li>
+                            <li>Unlimited Storage</li>
+                          </ul>
+                          <p>
+                            <a href="#" class="btn mt-4">Buy</a>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              <span slot="footer" class="dialog-footer">
+                  <el-button @click="buyNowDialog = false">Cancel</el-button>
+              </span>
+            </el-dialog>
+
               <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
                 <el-form :model="formAddProjectFolder">
                   <el-form-item>
@@ -220,10 +344,6 @@
               </el-dialog>
             </div>
 
-            <div v-if="previewGrid" style="width:100%;">
-                <PreviewGrid></PreviewGrid>
-            </div>
-
             <div v-if="!previewGrid" style="margin-left: 10px;">
               <component :is="componentId" ref="contentComponent"></component>
             </div>
@@ -235,6 +355,7 @@
       </div>
       <!-- /#wrapper -->
     </div>
+    <SiteFooter></SiteFooter>
   </div>
 </template>
 
@@ -253,9 +374,9 @@
   Vue.use(HTML)
 
 
-// import feathers from 'feathers/client';
-// import socketio from 'feathers-socketio/client';
-// import io from 'socket.io-client';
+  import feathers from 'feathers/client';
+  import socketio from 'feathers-socketio/client';
+  import io from 'socket.io-client';
 
 
   var daex = require('json-daex');
@@ -266,7 +387,7 @@
   // Custom Components
 
   // Home page
-  import HomePage from './HomePage'
+  import Dashboard from './Dashboard'
 
   // Code Mirror
   import VueCodeMirror from 'vue-codemirror'
@@ -288,9 +409,6 @@
   // GridManager
   import GridManager from './GridManager'
 
-  // Grid Preview
-  import PreviewGrid from './PreviewGrid'
-
   // Page Settings
   import PageSettings from './PageSettings'
 
@@ -308,6 +426,9 @@
 
   // Layout Stats
   import PageStats from './PageStats'
+
+  // Footer Bar
+  import SiteFooter from './footer'
 
 
 
@@ -339,7 +460,7 @@
           label: 'name'
         },
         rootpath : '',
-        componentId: HomePage,
+        componentId: Dashboard,
         addNewFileLoading : false,
         addNewFolderLoading : false,
         addNewProjectFolderLoading : false,
@@ -400,7 +521,8 @@
         },
         dialogFormVisible: false,
         previewLoading: false,
-        dialogvalue: true
+        dialogvalue: true,
+        buyNowDialog: false
       }
     },
     components: {
@@ -408,16 +530,16 @@
       GrapesComponent,
       JsonViewer,
       MenuBuilder,
-      HomePage,
+      Dashboard,
       GridManager,
-      PreviewGrid,
       PageSettings,
       ProjectSettings,
       ProjectStats,
       PartialStats,
       LayoutStats,
       PageStats,
-      MonacoEditorChild
+      MonacoEditorChild,
+      SiteFooter
     },
     created () {
       // console.log(process.env.baseURL);
@@ -566,14 +688,15 @@
       
       // If clicked the root folder
       goToHomePage () {
-        this.componentId = 'HomePage';
+        this.componentId = 'Dashboard';
       },
 
       // Get directory listing data
       getData() {
-        let username = this.$session.get('username');
-        console.log('This use name: ', username);
-        axios.get(config.baseURL + '/flows-dir-listing')
+        let username_session = this.$session.get('username');
+        console.log("username_session", username_session)
+        // axios.get(config.baseURL + '/flows-dir-listing')
+        axios.get(config.baseURL + '/flows-dir-listing?website='+ username_session)
           .then(response => {
             response.data.children = this.getTreeData(response.data);
 
@@ -985,11 +1108,17 @@
         this.fullscreenLoading = true;
 
         let username = this.$session.get('username');
+        let token = this.$session.get('token');
+        console.log('Login Token: ', token);
 
         let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
         return axios.post(config.baseURL + '/flows-dir-listing', {
             foldername: newFolderName,
             type: 'folder'
+          },{
+          headers: {
+            'authorization': token
+          }
           })
           .then((res) => {
             this.newProjectFolderDialog = false
@@ -1045,11 +1174,18 @@
 
             })
             .catch((e) => {
-              console.log(e)
+              console.log(e);
+              this.newProjectFolderDialog = false;
+              this.fullscreenLoading = false;
             });
 
           })
           .catch((e) => {
+            console.log(e);
+            // this.componentId = 'buyPage';
+            this.newProjectFolderDialog = false;
+            this.fullscreenLoading = false;
+            this.buyNowDialog = true;
             console.log(e)
           });
       },
@@ -3672,7 +3808,7 @@
           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
             .then((res) => {
               this.currentFile = null
-              this.componentId = 'HomePage';
+              this.componentId = 'Dashboard';
 
               let file_path_ = data.path.replace(/\\/g, "/")
               let arr_file = file_path_.split('/')
@@ -3763,7 +3899,7 @@
             .catch((e) => {
               console.log(e)
             })
-          this.componentId = 'HomePage';
+          this.componentId = 'Dashboard';
           this.isHomePage = true;
         }).catch((dismiss) => {
           console.log('error', dismiss)
@@ -3809,7 +3945,7 @@
           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
             .then((res) => {
               this.currentFile = null
-              this.componentId = 'HomePage';
+              this.componentId = 'Dashboard';
               let file_path_ = data.path.replace(/\\/g, "/")
               
               let arr_file = file_path_.split('/')  
@@ -3876,13 +4012,13 @@
                 });
 
               this.currentFile = null
-              this.componentId = 'HomePage';
+              this.componentId = 'Dashboard';
               console.log(res);
             })
             .catch((e) => {
               console.log(e)
             })
-          this.componentId = 'HomePage';
+          this.componentId = 'Dashboard';
           this.isHomePage = true;
         }).catch((dismiss) => {
           console.log('error', dismiss)
@@ -3915,7 +4051,19 @@
                     
                   </span>
               </span>)  
-          } else {
+          }  else if(node.level == 1){
+          return (<span>
+              <span class="nodelabel" on-click={ () => this.goToHomePage() }>
+                  <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
+                  <span>Websites</span>
+              </span>
+              <span class="">
+                  <el-tooltip content="Create New Website" placement="top">
+                      <i class="fa fa-globe" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px; color: #4A8AF4;"  on-click={ () => this.newProjectFolderDialog = true }></i>
+                  </el-tooltip>
+              </span>
+          </span>)
+        } else {
             // If it's a simple directory
             if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
               return(<span>
@@ -4055,22 +4203,13 @@
           
         }else{
           // Root Folder
-          return (<span>
-                    <span class="nodelabel" on-click={ () => this.goToHomePage() }>
-                        <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
-                        <span>{node.label}</span>
-                    </span>
-                    <span class="">
-                        
-                            <i title="Create New Website" class="fa fa-globe" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px; color: #4A8AF4;"  on-click={ () => this.newProjectFolderDialog = true }></i>
-                        
-                    </span>
-                </span>)
+          return;
         }
       },
 
   },
   // Methods End
+}
 
   
 </script>

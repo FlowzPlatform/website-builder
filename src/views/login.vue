@@ -102,7 +102,7 @@ export default {
     }).then(async response => {
       if (response.data) {
         this.$session.start()
-        this.$session.set('token', response.data.token);
+        this.$session.set('token', response.data.logintoken);
         // localStorage.setItem("auth_token", response.data.logintoken);
         let location = psl.parse(window.location.hostname)
         location = location.domain === null ? location.input : location.domain
@@ -119,6 +119,15 @@ export default {
               this.$session.set('username', response.data.username);
               console.log("Username:", this.$session.get('username'));
               this.authen.status = true;
+
+              axios.post(config.baseURL+'/flows-dir-listing' , {
+                foldername :'/var/www/html/websites/'+ this.$session.get('username'),
+                type : 'folder'
+              })
+              .then((res) => {
+                console.log('user Folder created!');
+              })
+
               let self = this;
               setTimeout(function () {
                 self.$router.push('/dashboard');

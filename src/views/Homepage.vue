@@ -398,6 +398,7 @@
                     <div class="col-md-12" align="center" style="margin-top: 50px">
                       <img src="../../static/img/Flowz-logo.png" class="footer-logo">
                       <h4 class="subtitle">The next generation open-source website builder</h4>
+                      <a href="https://github.com/FlowzPlatform/website-builder" class="btn btn-default btn-github" target="_blank"><i class="fa fa-github"></i> View on GitHub</a>
                     </div>
                   </div>
                   <div class="row text-center" style="margin: 2% 0;">
@@ -537,7 +538,7 @@ export default {
   h1 {
     left: 6vw;
     top: 8vw;
-    font-size: 7vw;
+    font-size: 4vw;
     line-height: 6vw;
     font-weight: 100;
     font-family: 'Comfortaa', sans-serif;
@@ -546,7 +547,7 @@ export default {
   h3 {
     left: 6vw;
     top: 21vw;
-    font-size: 2vw;
+    font-size: 1.5vw;
   }
   h3 span {
     opacity: .5;
@@ -567,9 +568,9 @@ export default {
     position: absolute;
     bottom: 0vw;
     left: 6vw;
-    width: 30vw;
-    height: 8vw;
-    font-size: 3vw;
+    width: 20vw;
+    height: 6vw;
+    font-size: 2vw;
     letter-spacing: .3vw;
     text-transform: uppercase;
     background-color: #B80A37;
@@ -666,7 +667,7 @@ export default {
   }
   p highlight {
     font-weight: 600;
-    color: #907dda;
+    color: #2297f1;
   }
   p:last-child {
     margin-bottom: 0;
@@ -839,9 +840,9 @@ export default {
   }
   @media (min-width: 768px) {
     ul.navbar-nav > li.active {
-      color: #907dda;
+      color: #2297f1;
       background: rgba(255, 255, 255, 0.15);
-      box-shadow: inset 0 -3px 0 0 #907dda;
+      box-shadow: inset 0 -3px 0 0 #2297f1;
     }
   }
   ul.navbar-nav > li.active > a:hover, ul.navbar-nav > li.active > a:focus {
@@ -857,7 +858,7 @@ export default {
     min-height: 20vh;
   }
   section.focus .page-header {
-    color: #907dda;
+    color: #2297f1;
   }
   section.focus .page-header:after {
     visibility: visible;
@@ -882,7 +883,7 @@ export default {
     bottom: 0;
     width: 70px;
     height: 2px;
-    background: #907dda;
+    background: #2297f1;
     -webkit-transform: translate(-50%, 0);
     -webkit-transform: translate3d(-50%, 0, 0);
     transform: translate(-50%, 0);
@@ -905,7 +906,7 @@ export default {
   }
   .banner .bc-left {
     color: #e7e6f1;
-    background: #907dda;
+    background: #2297f1;
   }
   .banner .bc-right {
     color: #333;
@@ -957,14 +958,14 @@ export default {
     text-transform: uppercase;
     text-decoration: none;
     letter-spacing: 2px;
-    color: #907dda;
-    border: 2px solid #907dda;
+    color: #2297f1;
+    border: 2px solid #2297f1;
     -webkit-transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   }
   a.tutorials-link:hover {
     color: #e7e6f1;
-    background: #907dda;
+    background: #2297f1;
     box-shadow: 0 6px 12px -4px rgba(0, 0, 0, 0.3);
   }
 
@@ -990,7 +991,7 @@ export default {
     text-decoration: none;
     padding: 0;
     color: #e7e6f1;
-    background: #907dda;
+    background: #2297f1;
     border: none;
     border-radius: 100%;
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
@@ -1147,7 +1148,7 @@ export default {
     text-transform: uppercase;
     text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
     letter-spacing: 2px;
-    color: #907dda;
+    color: #2297f1;
   }
   #home p {
     margin: 0;
@@ -1420,7 +1421,7 @@ export default {
     text-transform: uppercase;
     line-height: 24px;
     letter-spacing: 2px;
-    color: #907dda;
+    color: #2297f1;
   }
   #features .feature p {
     font-size: 14px;
@@ -1441,7 +1442,7 @@ export default {
     max-width: 450px;
     height: 315px;
     margin: 0 auto;
-    border: 4px solid #826dd5;
+    border: 4px solid #2671ab;
     border-bottom-color: transparent;
     border-radius: 6px;
     overflow: hidden;
@@ -1467,7 +1468,7 @@ export default {
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center;
-    background: #826dd5;
+    background: #2671ab;
   }
   #features .animated-scroll .scroll-header .scroll-nav {
     width: 15%;
@@ -1877,7 +1878,7 @@ export default {
       background: rgba(255, 255, 255, 0.7);
     }
     40%, to {
-      background: #907dda;
+      background: #2297f1;
     }
   }
   @keyframes scrollColor-1 {
@@ -1885,75 +1886,75 @@ export default {
       background: rgba(255, 255, 255, 0.7);
     }
     40%, to {
-      background: #907dda;
+      background: #2297f1;
     }
   }
   @-webkit-keyframes scrollColor-2 {
     from, 24% {
-      background: #907dda;
+      background: #2297f1;
     }
     24.2%, 28% {
       background: #b2a5e5;
     }
     28.2%, 39.9% {
-      background: #907dda;
+      background: #2297f1;
     }
     40%, 69.9% {
       background: rgba(255, 255, 255, 0.7);
     }
     70%, to {
-      background: #907dda;
+      background: #2297f1;
     }
   }
   @keyframes scrollColor-2 {
     from, 24% {
-      background: #907dda;
+      background: #2297f1;
     }
     24.2%, 28% {
       background: #b2a5e5;
     }
     28.2%, 39.9% {
-      background: #907dda;
+      background: #2297f1;
     }
     40%, 69.9% {
       background: rgba(255, 255, 255, 0.7);
     }
     70%, to {
-      background: #907dda;
+      background: #2297f1;
     }
   }
   @-webkit-keyframes scrollColor-3 {
     from, 53.8% {
-      background: #907dda;
+      background: #2297f1;
     }
     54%, 57.8% {
       background: #b2a5e5;
     }
     58%, 69.9% {
-      background: #907dda;
+      background: #2297f1;
     }
     70%, 99.9% {
       background: rgba(255, 255, 255, 0.7);
     }
     to {
-      background: #907dda;
+      background: #2297f1;
     }
   }
   @keyframes scrollColor-3 {
     from, 53.8% {
-      background: #907dda;
+      background: #2297f1;
     }
     54%, 57.8% {
       background: #b2a5e5;
     }
     58%, 69.9% {
-      background: #907dda;
+      background: #2297f1;
     }
     70%, 99.9% {
       background: rgba(255, 255, 255, 0.7);
     }
     to {
-      background: #907dda;
+      background: #2297f1;
     }
   }
   @-webkit-keyframes scrollBackToTop {
@@ -2159,7 +2160,7 @@ export default {
       background: #dcdfeb;
     }
     40.2%, 70% {
-      background: #907dda;
+      background: #2297f1;
     }
     75%, to {
       background: #dcdfeb;
@@ -2170,7 +2171,7 @@ export default {
       background: #dcdfeb;
     }
     40.2%, 70% {
-      background: #907dda;
+      background: #2297f1;
     }
     75%, to {
       background: #dcdfeb;
@@ -2389,6 +2390,12 @@ footer .fa-google-plus:hover {
   text-transform: uppercase;
   font-size: 18px;
   color: #777;
+}
+
+.btn-github{
+    background-color: #292929;
+    padding: 15px;
+    text-transform: uppercase;
 }
 
 </style>
