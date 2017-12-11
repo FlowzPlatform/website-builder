@@ -1,47 +1,88 @@
 <template>
   <div class="Register">
-
-    <el-menu class="el-menu-demo" mode="horizontal">
-      <el-row style="margin-bottom: 0">
-        <el-col :span="4">
-          <div class="logo">
-            <a href="/"><img src="./../../static/img/Flowz-logo.png" height="40px" style="margin-top: 5px;"></a>
+    <vue-particles color="#dedede"></vue-particles>
+    <div class='brand'>
+        <a href='/'>
+            <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
+        </a>
+    </div>
+    <div class='login signup-form'>
+      <div class='login_title'>
+          <span>Signup with Flowz Builder</span>
+      </div>
+      <div class='login_fields'>
+          <div class='login_fields__user'>
+              <div class='icon'>
+                  <i class="fa fa-address-book-o"></i>
+              </div>
+              <input placeholder='Full Name' type='text' v-model="form.name" required>
+              <div class='validation'>
+                  <img src='../assets/images/tick.png'>
+              </div>
+              </input>
           </div>
-        </el-col>        
-      </el-row>
-    </el-menu>
-
-    <div class="container">
-      <div class="row" style="padding: 15px;">
-        <el-card class="box-card col-md-6 col-xs-12 col-md-offset-3">
-          <el-form style="padding:17px" ref="form" :model="form" :rules="registerRules" label-width="100px">
-            <el-form-item label="Full Name" prop="name">
-              <el-input icon="star-off" v-model="form.name" placeholder="John Doe" required></el-input>
-            </el-form-item>
-            <el-form-item label="Username" prop="Uname">
-              <el-input  icon="edit"v-model="form.Uname" placeholder="JDoe23" required></el-input>
-            </el-form-item>
-            <el-form-item prop="email" label="Email" >
-                <el-input v-model="form.email"></el-input>
-            </el-form-item>
-            <el-form-item label="Password" prop="pass">
-              <el-input icon="more" type="password" v-model="form.pass" required></el-input>
-            </el-form-item>
-            <el-form-item label="Confirm Password" prop="checkPass">
-              <el-input icon="more" type="password" v-model="form.checkPass" auto-complete="off required"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button id="doLogin" type="primary" @click="validate('form')" style="float: left;" :loading="form.isLoading">Register</el-button>
-            </el-form-item>
-
-            <p class="newUser">Already Registered? <a href="/login" class="registerNow">Login Now</a></p>
-            
-          </el-form>
-        </el-card>
+          <div class='login_fields__user'>
+              <div class='icon'>
+                  <img src='../assets/images/user_icon_copy.png'>
+              </div>
+              <input placeholder='Username' type='text' v-model="form.Uname" required>
+              <div class='validation'>
+                  <img src='../assets/images/tick.png'>
+              </div>
+              </input>
+          </div>
+          <div class='login_fields__user'>
+              <div class='icon'>
+                  <i class="fa fa-envelope-o"></i>
+              </div>
+              <input placeholder='Email Address' type='text' v-model="form.email" required>
+              <div class='validation'>
+                  <img src='../assets/images/tick.png'>
+              </div>
+              </input>
+          </div>
+          <div class='login_fields__password'>
+              <div class='icon'>
+                  <img src='../assets/images/lock_icon_copy.png'>
+              </div>
+              <input placeholder='Password' type='password' v-model="form.pass" required>
+              <div class='validation'>
+                  <img src='../assets/images/tick.png'>
+              </div>
+          </div>
+          <div class='login_fields__password'>
+              <div class='icon'>
+                  <img src='../assets/images/lock_icon_copy.png'>
+              </div>
+              <input placeholder='Password' type='password' v-model="form.checkPass" required>
+              <div class='validation'>
+                  <img src='../assets/images/tick.png'>
+              </div>
+          </div>
+          <div class='login_fields__submit'>
+              <input type='submit' value='Sign Up'>
+              <div class='forgot'>
+                <el-tooltip class="item" effect="dark" content="Login" placement="bottom">
+                  <a href='/login'>Already Registered?</a>
+                </el-tooltip>
+              </div>
+          </div>
+          <!-- <div class="signup">
+              <a href="/register" class="signup-link">New Here?</a>
+          </div> -->
+      </div>
+      <div class='success'>
+          <h2 v-if="authen.status === true">{{authen.success}}</h2>
+          <p v-if="authen.status === true">You will be redirected soon...</p>
+      </div>
+      <div class='disclaimer'>
+          <p>Signup with Flowz Web Builder and experience the Next Generation Web Application Building.</p>
       </div>
     </div>
-
-    
+    <div class='authent'>
+        <img src='../assets/images/puff.svg'>
+        <p>Registering...</p>
+    </div>
   </div>
 </template>
 
@@ -56,47 +97,6 @@ const config = require('../config');
 export default {
   name: 'Register',
   data () {
-    var validaePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input the password'))
-      } else {
-        if (this.form.checkPass !== '') {
-          this.$refs.form.validateField('checkPass')
-        }
-        callback()
-      }
-    }
-    var validaePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input the password again'))
-      } else if (value !== this.form.pass) {
-        callback(new Error('Two Passwords don\'t match!'))
-      } else {
-        callback()
-      }
-    }
-    var validaeUname = (rule, value, callback) => {
-        if (!value) {
-            callback(new Error('Please input the Username'));
-        }else {
-          callback();
-        }
-
-      };
-    var validaeFname = (rule, value, callback) => {
-        if (!value) {
-            callback(new Error('Please input the Full Name'));
-        }else {
-          callback();
-        }
-      };
-    var validaeemail = (rule, value, callback) => {
-        if (!value) {
-            callback(new Error('Please input the Email'));
-        } else{
-            callback();
-        }
-      };
     return {
       form: {
         name: '',
@@ -106,93 +106,128 @@ export default {
         pass: '',
         isLoading: false
       },
-      registerRules: {
-        pass: [
-          { required: true, validator: validaePass, trigger: 'blur' }
-        ],
-        checkPass: [
-          { required: true, validator: validaePass2, trigger: 'blur' }
-        ],
-        Uname: [{
-            required: true,
-            validator: validaeUname,
-            trigger: 'blur'
-        }],
-        email: [
-          { required: true, message: 'Please input email address', trigger: 'blur' },
-          { type: 'email', message: 'Please input correct email address', trigger: 'blur,change' }
-        ],
-        name: [{
-            required: true,
-            validator: validaeFname,
-            trigger: 'blur'
-        }]
+      authen: {
+        status: false,
+        success: 'Authentication Success',
+        error: 'Authentication Failed'
       }
     }
   },
   methods: {
-      validate (formName) {
-        this.$refs[formName].validate((valid) => {
-            if (valid) {
-              this.form.isLoading = true;
-              axios.post(config.registerUrl, {
-                username: this.form.Uname,
-                password: this.form.pass,
-                email: this.form.email,
-                fullname: this.form.Name
-              }, {
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-                }
-              }).then(response => {
-                window.location = '/login'
-                axios.post( config.baseURL + '/user-service', {
-                    username : this.form.Uname,
-                    password : this.form.pass,
-                    email : this.form.email,
-                    name : this.form.name                  
-                }).then(response => {
-                  this.form.isLoading = false;
-                  console.log(response);
-                  window.location = '/login';
-
-                  // Create user Folder
-                  //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-                  // axios.post(config.baseURL+'/flows-dir-listing' , {
-                  //   foldername :'/var/www/html/websites/'+ this.form.Uname,
-                  //   type : 'folder'
-                  // })
-                  // .then((res) => {
-                  //   console.log('user Folder created!');
-                  // })
-                  // .catch((e)=>{
-                  //   console.log("Error from pages"+res)
-                  // });
-
-                  
-                }).catch(error => {
-                  this.$notify.error({
-                    title: 'Error',
-                    message: error.response.data,
-                    offset: 100
-                  });
-                  this.form.isLoading = false;
-                })
-              }).catch(error => {
-                this.$notify.error({
-                  title: 'Error',
-                  message: error.response.data,
-                  offset: 100
-                });
-                this.form.isLoading = false;
-              })
-            } else {
-              console.log('error submit!!');
-              this.form.isLoading = false;
-              return false;
-            }
-          });
+    registerUser () {
+      axios.post(config.registerUrl, {
+        username: this.form.Uname,
+        password: this.form.pass,
+        email: this.form.email,
+        fullname: this.form.Name
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+      }).then(response => {
+        // window.location = '/login'
+        axios.post( config.baseURL + '/user-service', {
+            username : this.form.Uname,
+            password : this.form.pass,
+            email : this.form.email,
+            name : this.form.name                  
+        }).then(response => {
+          // window.location = '/login';
+          // Create user Folder
+          //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+          // axios.post(config.baseURL+'/flows-dir-listing' , {
+          //   foldername :'/var/www/html/websites/'+ this.form.Uname,
+          //   type : 'folder'
+          // })
+          // .then((res) => {
+          //   console.log('user Folder created!');
+          // })
+          // .catch((e)=>{
+          //   console.log("Error from pages"+res)
+          // });
+          this.authen.status = true;
+          let self = this;
+          setTimeout(function () {
+            self.$router.push('/login');
+          }, 2000);
+        }).catch(error => {
+          this.authen.status = false;
+          this.authen.error = response.data;
+        })
+      }).catch(error => {
+        this.authen.status = false;
+        this.authen.error = response.data;
+      })
     }
+  },
+  mounted () {
+    let self = this;
+
+    $('input[type="submit"]').click(function(){
+      if(self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != ''){
+        if(self.form.pass == self.form.checkPass){
+          self.registerUser();
+          $('.login').addClass('test')
+          setTimeout(function(){
+            $('.login').addClass('testtwo')
+          },300);
+          setTimeout(function(){
+            $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+          },500);
+          setTimeout(function(){
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
+          },2500);
+          setTimeout(function(){
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
+          },2800);
+          setTimeout(function(){
+            if(self.authen.status == true){
+              $('.success').fadeIn();  
+            } else {
+              $(".authent").fadeOut();
+              $('.login div').fadeIn();
+              self.$message({
+                  showClose: true,
+                  message: self.authen.error,
+                  type: 'error'
+              });
+            }
+            
+          },3200);
+        } else{
+          self.$message({
+              showClose: true,
+              message: 'Password and Confirm password didn\'t matched...',
+              type: 'error'
+          });
+        }
+      } else {
+        self.$message({
+            showClose: true,
+            message: 'Please Enter all Fields',
+            type: 'error'
+        });
+      }
+    });
+
+    $('input[type="text"],input[type="password"]').focus(function(){
+      $(this).prev().animate({'opacity':'1'},200)
+    });
+    $('input[type="text"],input[type="password"]').blur(function(){
+      $(this).prev().animate({'opacity':'.5'},200)
+    });
+
+    $('input[type="text"],input[type="password"]').keyup(function(){
+      if(!$(this).val() == ''){
+        $(this).next().animate({'opacity':'1','right' : '30'},200)
+      } else {
+        $(this).next().animate({'opacity':'0','right' : '20'},200)
+      }
+    });
   }
 }
 </script>
@@ -200,100 +235,290 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.layout-logo{
-      width: 140px;
-      height: 40px;
-      top: 10px;
-      text-align: center;
-      padding: 2px;
-    }
-    .layout-logo h4{
-      color: #fff !important;
-    }
-
-    .loginLink{
-      color: #fff;
-    }
-
-  .logo{
-    padding: 8px 70px;
-    cursor: pointer; 
+@import url(https://fonts.googleapis.com/css?family=Gudea:400,700);
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
+  p {
+    color: #606479;
+    text-align: left;
+    font-size: 10px;
   }
-  .loginBtn{
-    float: right;
-    right: 0;
+  .Register {
+    -webkit-perspective: 800px;
+            perspective: 800px;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    
+    background: #66F9FF;
+    /* Old browsers */
+    /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #66F9FF), color-stop(100%, #708EFF));
+    /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg, #66F9FF 0%, #708EFF 100%);
+    /* Chrome10+,Safari5.1+ */
+    /* Opera 11.10+ */
+    /* IE10+ */
+    background: -webkit-linear-gradient(315deg, #66F9FF 0%, #708EFF 100%);
+    background: linear-gradient(135deg, #66F9FF 0%, #708EFF 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66F9FF ', endColorstr='#708EFF',GradientType=1 );
+    /* IE6-9 fallback on horizontal gradient */
   }
-
-
-  .el-menu{
-    background-color: #292929;
-    /*background-color: rgba(41,41,41,0.6);*/
-    box-shadow: 0px 0px 25px;
-    border-radius: 0;
-    /*opacity: 0.6;*/
-    transition: 0.2s all linear;
-    /*position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 0;*/
+  .authent {
+    display: none;
+    background: #35394a;
+    /* Old browsers */
+    /* FF3.6+ */
+    background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #35394a), color-stop(100%, #1f222e));
+    /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(45deg, #35394a 0%, #1f222e 100%);
+    /* Chrome10+,Safari5.1+ */
+    /* Opera 11.10+ */
+    /* IE10+ */
+    background: linear-gradient(45deg, #35394a 0%, #1f222e 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35394a', endColorstr='#1f222e',GradientType=1 );
+    /* IE6-9 fallback on horizontal gradient */
+    position: absolute;
+    left: 0;
+    right: 90px;
+    margin: auto;
+    width: 200px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 20px 70px;
+    top: 200px;
+    bottom: 0;
+    height: 120px;
+    opacity: 0;
   }
-
-  .el-menu:hover{
-    opacity: 1;
-    transition: 0.2s all linear;
+  .authent p {
+    color: white;
+    position: absolute;
+    left: 50px;
+    top: 80px;
   }
-
-  .el-menu--horizontal .el-menu-item:hover, .el-menu--horizontal .el-submenu__title:hover{
-    background-color: transparent;
+  .success {
+    display: none;
+    color: #d5d8e2;
   }
-
-  .welcomeUser{
-    color: #eee;
-    margin-right: 15px;
+  .success p {
+    font-size: 14px;
+  }
+  .testtwo {
+    left: -320px !important;
+  }
+  .test {
+    box-shadow: 0px 20px 30px 3px rgba(0, 0, 0, 0.55);
     pointer-events: none;
+    top: -100px !important;
+    -webkit-transform: rotateX(70deg) scale(0.8) !important;
+            transform: rotateX(70deg) scale(0.8) !important;
+    opacity: .6 !important;
+    -webkit-filter: blur(1px);
+            filter: blur(1px);
+  }
+  .login {
+    font-family: 'Gudea', sans-serif;
+    opacity: 1;
+    top: 20px;
+    -webkit-transition-timing-function: cubic-bezier(0.68, -0.25, 0.265, 0.85);
+    -webkit-transition-property: opacity,box-shadow,top,left,-webkit-transform;
+    transition-property: opacity,box-shadow,top,left,-webkit-transform;
+    transition-property: transform,opacity,box-shadow,top,left;
+    transition-property: transform,opacity,box-shadow,top,left,-webkit-transform;
+    -webkit-transition-duration: .5s;
+            transition-duration: .5s;
+    -webkit-transform-origin: 161px 100%;
+            transform-origin: 161px 100%;
+    -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg);
+    position: relative;
+    width: 300px;
+    border-top: 2px solid #4BEBE3;
+    height: 420px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    padding: 100px 40px 40px 40px;
+    background: #35394a;
+    /* Old browsers */
+    /* FF3.6+ */
+    background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #35394a), color-stop(100%, #1f222e));
+    /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(45deg, #35394a 0%, #1f222e 100%);
+    /* Chrome10+,Safari5.1+ */
+    /* Opera 11.10+ */
+    /* IE10+ */
+    background: linear-gradient(45deg, #35394a 0%, #1f222e 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35394a', endColorstr='#1f222e',GradientType=1 );
+    /* IE6-9 fallback on horizontal gradient */
   }
 
-  .btn-dark{
-    background-color: #444;
-    color: #eee;
-    border: 1px solid #333;
+  .login.signup-form{
+    height: 530px;
+  }
+  .login .validation {
+    position: absolute;
+    z-index: 1;
+    right: 10px;
+    top: 6px;
+    opacity: 0;
+  }
+  .login .disclaimer {
+    position: absolute;
+    bottom: 20px;
+    left: 35px;
+    width: 250px;
+  }
+  .login_title {
+    color: #afb1be;
+    height: 60px;
+    text-align: left;
+    font-size: 16px;
+  }
+  .login_fields {
+    height: 208px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+  }
+  .login_fields .icon {
+    position: absolute;
+    z-index: 1;
+    left: 36px;
+    top: 8px;
+    opacity: .5;
+    color: #fff;
+  }
+  .login_fields input[type='password'] {
+    color: #2297F1 !important;
+  }
+  .login_fields input[type='text'], .login_fields input[type='email'], .login_fields input[type='password'] {
+    color: #afb1be;
+    width: 100%;
+    margin-top: -2px;
+    background: #32364a;
+    left: 0;
+    padding: 10px 65px;
+    border-top: 2px solid #393d52;
+    border-bottom: 2px solid #393d52;
+    border-right: none;
+    border-left: none;
+    outline: none;
+    font-family: 'Gudea', sans-serif;
+    box-shadow: none;
+    font-size: 12px;
+  }
+  .login_fields__user, .login_fields__password {
+    position: relative;
+  }
+  .login_fields__submit {
+    position: relative;
+    top: 35px;
+    left: 0;
+    width: 80%;
+    right: 0;
+    margin: auto;
+  }
+  .login_fields__submit .forgot {
+    float: right;
+    font-size: 10px;
+    margin-top: 11px;
+    /*text-decoration: underline;*/
+  }
+  .login_fields__submit .forgot a {
+    color: #606479;
+    text-decoration: none;
+    transition: 0.2s all linear;
+  }
+  .login_fields__submit .forgot a:hover {
+    color: #fff;
+    text-decoration: none;
+    transition: 0.2s all linear;
+  }
+  .login_fields__submit input {
+    border-radius: 50px;
+    background: transparent;
+    padding: 10px 50px;
+    border: 2px solid #2297F1;
+    color: #2297F1;
+    text-transform: uppercase;
+    font-size: 11px;
+    -webkit-transition-property: background,color;
+    transition-property: background,color;
+    -webkit-transition-duration: .2s;
+            transition-duration: .2s;
+  }
+  .login_fields__submit input:focus {
+    box-shadow: none;
+    outline: none;
+  }
+  .login_fields__submit input:hover {
+    color: white;
+    background: #2297F1;
+    cursor: pointer;
+    -webkit-transition-property: background,color;
+    transition-property: background,color;
+    -webkit-transition-duration: .2s;
+            transition-duration: .2s;
+  }
+
+  /* Color Schemes */
+  .love {
+    position: absolute;
+    right: 20px;
+    bottom: 0px;
+    font-size: 11px;
+    font-weight: normal;
+  }
+  .love p {
+    color: white;
+    font-weight: normal;
+    font-family: 'Open Sans', sans-serif;
+  }
+  .love a {
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .love img {
+    position: relative;
+    top: 3px;
+    margin: 0px 4px;
+    width: 10px;
+  }
+
+  .brand {
+    position: absolute;
+    left: 20px;
+    bottom: 14px;
+  }
+  .brand img {
+    width: 60px;
+  }
+
+  .signup{
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+  }
+  .signup-link{
+    color: #606479;
+    font-size: 14px;
+    text-decoration: none;
     transition: 0.2s all linear;
   }
 
-  .btn-dark:hover{
-    background-color: #222;
+  .signup-link:hover{
+    color: #fff;
     transition: 0.2s all linear;
   }
-
-  
-.box-card{
-  /*width: 450px;*/
-  /*margin:auto;*/
-  margin-top: 9%;
-  margin-bottom: 25px;
-  background-color: rgba(80,80,80,0.07);
-  box-shadow: 0px 0px 2px #999999;
-  transition: 0.2s linear all;
-}
-.box-card:hover, .box-card:focus{
- box-shadow: 0px 0px 25px #999999; 
- transition: 0.2s linear all;
-}
-.el-card__header{
-  border: none;
-}
-.forgotPassword{
-  text-decoration: none;
-  float: right;
-  font-size: 12px;
-  margin-top: -10px;
-  color: #4db3ff;
-}
-.registerNow{
-  text-decoration: none;
-  color: #4db3ff;
-}
-.newUser{
-  text-align: center;
-}
 </style>

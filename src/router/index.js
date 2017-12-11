@@ -4,6 +4,7 @@ import Index from '@/views/index'
 import Login from '@/views/login'
 import Register from '@/views/register'
 import ForgotPassword from '@/views/ForgotPassword'
+import Homepage from '@/views/Homepage'
 
 Vue.use(Router)
 
@@ -12,9 +13,14 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'Homepage',
+      component: Homepage
+    },
+    {
+      path: '/dashboard',
       name: 'Index',
       component: Index,
-      meta: { description: 'Main Page of the project', requiresAuth: true },
+      meta: { description: 'User Dashboard', requiresAuth: true },
     },
     {
       path: '/login',
