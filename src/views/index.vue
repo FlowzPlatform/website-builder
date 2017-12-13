@@ -1313,7 +1313,7 @@
       createEssentialFiles(newFolderName) {
 
         // Create Config.json file
-        let newfilename = newFolderName + '/assets/config.json';
+        // let newfilename = newFolderName + '/assets/config.json';
 
         let repoSettings = [{
                               "repoSettings": [{
@@ -1385,17 +1385,40 @@
                               }]
                             }];
 
-        axios.post(config.baseURL + '/flows-dir-listing', {
-            filename : newfilename,
-            text : JSON.stringify(repoSettings),
-            type : 'file'
+        // axios.post(config.baseURL + '/flows-dir-listing', {
+        //     filename : newfilename,
+        //     text : JSON.stringify(repoSettings),
+        //     type : 'file'
+        // })
+        // .then((res) => {
+        //  console.log('Config.json file created!'); 
+        // })
+        // .catch((e) => {
+        //     console.log(e)
+        // });
+
+        axios.post(config.baseURL + '/project-configuration', {
+          userEmail: this.$session.get('email'),
+          websiteName: this.repoName,
+          configData : repoSettings
         })
         .then((res) => {
-         console.log('Config.json file created!'); 
+          this.$message({
+            showClose: true,
+            message: 'Successfully Saved in database.',
+            type: 'success'
+          });
+          console.log(res.data);
         })
         .catch((e) => {
-            console.log(e)
-        });
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          return;
+          console.log(e)
+        })
 
         // Create plugin-settings.json file
         let pluginSettingsfileName = newFolderName + '/assets/plugin-settings.json';

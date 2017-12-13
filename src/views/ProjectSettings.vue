@@ -988,33 +988,75 @@ export default {
           .then(async (res) => {
               console.log('Plugin-settings.json File saved: ', res);
 
-              // save to rethinkdb
-              await axios.post(config.baseURL + '/project-configuration', {
-                websiteName: this.repoName,
-                data : this.settings
-              })
-              .then((res) => {
-                this.$message({
-                      showClose: true,
-                      message: 'Successfully Saved in database.',
-                      type: 'success'
-                  });
-                  console.log(res.data);
-              })
-              .catch((e) => {
-                  this.$message({
-                      showClose: true,
-                      message: 'Failed! Please try again.',
-                      type: 'error'
-                  });
-                  console.log(e)
-              })
+              let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
 
-              this.$message({
-                  showClose: true,
-                  message: 'Config Saved!',
-                  type: 'success'
-              });
+              if(rethinkdbCheck.data.data){
+                console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);  
+
+                // update existing data
+                await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+                  configData : this.settings
+                })
+                .then((res) => {
+                  this.$message({
+                        showClose: true,
+                        message: 'Successfully updated.',
+                        type: 'success'
+                    });
+                    console.log(res.data);
+                })
+                .catch((e) => {
+                    this.$message({
+                        showClose: true,
+                        message: 'Failed! Please try again.',
+                        type: 'error'
+                    });
+                    console.log(e)
+                });
+
+                this.$message({
+                    showClose: true,
+                    message: 'Config Saved!',
+                    type: 'success'
+                });
+
+              } else {
+                this.$message({
+                    showClose: true,
+                    message: 'Data Not found in DB..',
+                    type: 'error'
+                });
+              }
+              
+
+              // save to rethinkdb
+              // await axios.post(config.baseURL + '/project-configuration', {
+              //   userEmail: this.$session.get('email'),
+              //   websiteName: this.repoName,
+              //   configData : this.settings
+              // })
+              // .then((res) => {
+              //   this.$message({
+              //         showClose: true,
+              //         message: 'Successfully Saved in database.',
+              //         type: 'success'
+              //     });
+              //     console.log(res.data);
+              // })
+              // .catch((e) => {
+              //     this.$message({
+              //         showClose: true,
+              //         message: 'Failed! Please try again.',
+              //         type: 'error'
+              //     });
+              //     console.log(e)
+              // })
+
+              // this.$message({
+              //     showClose: true,
+              //     message: 'Config Saved!',
+              //     type: 'success'
+              // });
           })
           .catch((e) => {
               console.log('Some error occured while saving Plugin-settings.json file. Here is full log: ', e);
@@ -1430,11 +1472,19 @@ export default {
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
-      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+      url = url.split('/');
+
+      let websiteName = url[(url.length -1)];
+
+      // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
+
+      console.log(this.configData.data);
 
       if(this.configData.status == 200 || this.configData.status == 204){
 
-        this.settings = JSON.parse(this.configData.data);
+        this.settings = JSON.parse(this.configData.data.data[0].configData);
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
