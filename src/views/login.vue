@@ -8,14 +8,25 @@
     </div>
     <div class='login'>
       <div class='login_title'>
-          <span>Login to Flowz Builder</span>
+        <span>Login to Flowz Builder</span>
+      </div>
+      <div class="social-buttons" align="center">
+        <div>
+          <a href="#" class="social-button-facebook"><i class="fa fa-facebook"></i></a>
+          <a href="#" class="social-button-google-plus"><i class="fa fa-google-plus"></i></a>
+          <a href="#" class="social-button-twitter"><i class="fa fa-twitter"></i></a>
+          <a href="#" class="social-button-github"><i class="fa fa-github"></i></a>
+        </div>
+      </div>
+      <div>
+        <p style="text-align: center">OR</p>
       </div>
       <div class='login_fields'>
           <div class='login_fields__user'>
               <div class='icon'>
                   <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Email Id' type='text' v-model="form.user" required>
+              <input placeholder='Email Id' class="input-fields" type='text' v-model="form.user" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -25,7 +36,7 @@
               <div class='icon'>
                   <img src='../assets/images/lock_icon_copy.png'>
               </div>
-              <input placeholder='Password' type='password' v-model="form.pass" required>
+              <input placeholder='Password' class="input-fields" type='password' v-model="form.pass" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -155,8 +166,62 @@ export default {
     })
    }
   },
+  created () {
+    // Check if login token in cookie exist or not
+    if(this.$cookie.get('auth_token')){
+      this.$router.push('/dashboard');
+    }
+  },
   mounted () {
+
     let self = this;
+
+    $('.input-fields').keyup(function(e){ 
+        var code = e.which; // recommended to use e.which, it's normalized across browsers
+        if(code==13)e.preventDefault();
+        if(code==32||code==13||code==188||code==186){
+            if(self.form.user != '' && self.form.pass != ''){
+              self.authenticate();
+              $('.login').addClass('test')
+              setTimeout(function(){
+                $('.login').addClass('testtwo')
+              },300);
+              setTimeout(function(){
+                $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+                $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+              },500);
+              setTimeout(function(){
+                $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+                $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+                $('.login').removeClass('testtwo')
+              },2500);
+              setTimeout(function(){
+                $('.login').removeClass('test')
+                $('.login div').fadeOut(123);
+              },2800);
+              setTimeout(function(){
+                if(self.authen.status == true){
+                  $('.success').fadeIn();  
+                } else {
+                  $(".authent").fadeOut();
+                  $('.login div').fadeIn();
+                  self.$message({
+                      showClose: true,
+                      message: 'Username Password did not matched..',
+                      type: 'error'
+                  });
+                }
+                
+              },3200);
+            } else {
+              self.$message({
+                  showClose: true,
+                  message: 'Please Enter all Fields',
+                  type: 'error'
+              });
+            }
+        } // missing closing if brace
+    });
 
     $('input[type="submit"]').click(function(){
       if(self.form.user != '' && self.form.pass != ''){
@@ -186,7 +251,7 @@ export default {
             $('.login div').fadeIn();
             self.$message({
                 showClose: true,
-                message: 'Username Password not matched..',
+                message: 'Username Password did not matched..',
                 type: 'error'
             });
           }
@@ -331,7 +396,7 @@ export default {
     position: relative;
     width: 300px;
     border-top: 2px solid #4BEBE3;
-    height: 420px;
+    height: 480px;
     position: absolute;
     left: 0;
     right: 0;
@@ -372,7 +437,6 @@ export default {
   }
   .login_title {
     color: #afb1be;
-    height: 60px;
     text-align: left;
     font-size: 16px;
   }
@@ -512,6 +576,41 @@ export default {
 
   .signup-link:hover{
     color: #fff;
+    transition: 0.2s all linear;
+  }
+
+  .social-buttons{
+    margin: 15px 0px;
+  }
+
+  .social-buttons a{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 500%;
+    padding: 6px 0px 0px 0px; 
+    background-color: #444;
+    transition: 0.2s all linear;
+    color: #fff;
+  }
+
+  .social-button-facebook:hover {
+    background-color: #474899;
+    transition: 0.2s all linear;
+  }
+
+  .social-button-google-plus:hover {
+    background-color: #EB313B;
+    transition: 0.2s all linear;
+  }
+
+  .social-button-twitter:hover {
+    background-color: #0FA1E4;
+    transition: 0.2s all linear;
+  }
+
+  .social-button-github:hover {
+    background-color: #1E1B1C;
     transition: 0.2s all linear;
   }
 </style>

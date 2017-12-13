@@ -6,9 +6,9 @@ if(process.env.baseURL == undefined){
 }
 
 module.exports = {
-    loginUrl: 'http://ec2-54-88-11-110.compute-1.amazonaws.com/api/login',
-    registerUrl: 'http://ec2-54-88-11-110.compute-1.amazonaws.com/api/setup',
-    userDetail: 'http://ec2-54-88-11-110.compute-1.amazonaws.com/api/userdetails',
+    loginUrl: 'http://auth.flowz.com/api/login',
+    registerUrl: 'http://auth.flowz.com/api/setup',
+    userDetail: 'http://auth.flowz.com/api/userdetails',
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',

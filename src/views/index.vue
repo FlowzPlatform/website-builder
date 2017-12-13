@@ -15,36 +15,7 @@
       </span>
     </el-dialog>
 
-    <div class="isNotLoggedIn" v-if="isLoggedInUser === false">
-
-      <el-menu class="el-menu-demo" mode="horizontal">
-        <el-row style="margin-bottom: 0">
-          <el-col :span="4">
-            <div class="logo">
-              <img src="./../../static/img/Flowz-logo.png" height="40px" style="margin-top: 5px;">
-            </div>
-          </el-col>
-          <el-menu-item index="1" style="float: right; margin-top: 5px;">
-              <el-button type="info" @click="loginPage">Login</el-button>
-          </el-menu-item>
-        </el-row>
-      </el-menu>
-
-      <header class="header-banner"> 
-        <div class="container-width">
-          <nav class="navbar">
-          </nav>
-          <div class="clearfix">
-          </div>
-          <div class="lead-title">Welcome to Flowz Builder
-          </div>
-          <div class="lead-btn" @click="loginPage">Try it now
-          </div>
-        </div>
-      </header>
-    </div>
-
-    <div class="isLoggedIn" v-else>
+    <div class="main-contents">
       <div id="wrapper" class="toggled">
 
         <!-- Overlay when sidebar is opened. Currently disabled in CSS -->
@@ -52,8 +23,8 @@
     
         <!-- Sidebar Wrapper -->
         <nav id="sidebar-wrapper" role="navigation">
-          <div class="treeViewBlock">
-            <el-tree :data="directoryTree" :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
+          <div class="treeViewBlock" style="transform: scaleX(-1);">
+            <el-tree style="transform: scaleX(-1);" :data="directoryTree" :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
         </nav>
         <!-- /#sidebar-wrapper -->
@@ -83,6 +54,7 @@
                   </div>
               </div>
 
+              <!-- New File Dialog if it's not dashboard page -->
               <el-dialog title="File name" :visible.sync="newFileDialog" size="tiny">
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
@@ -96,6 +68,7 @@
                   </span>
               </el-dialog>
 
+              <!-- New Folder Dialog if it's not dashboard page -->
               <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
                   <el-form :model="formAddFolder">
                       <el-form-item>
@@ -109,6 +82,7 @@
                   </span>
               </el-dialog>
 
+              <!-- Buy Now Modal if it's not dashboard page -->
               <el-dialog title="SORRY! You have created Enough sites for choosen package. Want to Upgrade?" :visible.sync="buyNowDialog">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -171,47 +145,48 @@
               </span>
             </el-dialog>
 
-              <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
-                <el-form :model="formAddProjectFolder">
-                  <el-form-item>
-                    <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                    <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder()" auto-complete="off" placeholder="Project Name"></el-input>
-                  </el-form-item>
+            <!-- New Website Project Dialog if it's not dashboard page -->
+            <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
+              <el-form :model="formAddProjectFolder">
+                <el-form-item>
+                  <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
+                  <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder()" auto-complete="off" placeholder="Project Name"></el-input>
+                </el-form-item>
 
-                  <el-form-item>
-                    <div class="templateSelection">
-                      <strong>Select Template</strong>
-                      <ul>
-                        <li>
-                            <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
-                            <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
-                            <img src="http://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
-                        </li>
-                        <li>
-                            <input type="radio" name="layout" value="template1" id="myCheckbox1" />
-                            <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                            <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
-                        </li>
-                        <li>
-                            <input type="radio" name="layout" value="template2" id="myCheckbox2" />
-                            <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                            <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
-                        </li>
-                        <li>
-                            <input type="radio" name="layout" value="template3" id="myCheckbox3" />
-                            <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                            <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
-                        </li>
-                      </ul>
-                    </div>
-                  </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                    <el-button type="primary" @click="addProjectFolder()" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
-                </span>
-              </el-dialog>
-            </div>
+                <el-form-item>
+                  <div class="templateSelection">
+                    <strong>Select Template</strong>
+                    <ul>
+                      <li>
+                          <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
+                          <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
+                          <img src="http://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
+                      </li>
+                      <li>
+                          <input type="radio" name="layout" value="template1" id="myCheckbox1" />
+                          <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
+                          <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
+                      </li>
+                      <li>
+                          <input type="radio" name="layout" value="template2" id="myCheckbox2" />
+                          <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
+                          <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
+                      </li>
+                      <li>
+                          <input type="radio" name="layout" value="template3" id="myCheckbox3" />
+                          <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
+                          <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
+                      </li>
+                    </ul>
+                  </div>
+                </el-form-item>
+              </el-form>
+              <span slot="footer" class="dialog-footer">
+                  <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
+                  <el-button type="primary" @click="addProjectFolder()" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
+              </span>
+            </el-dialog>
+          </div>
 
             <div v-if="isHomePage === true">
               <el-dialog title="File name" :visible.sync="newFileDialog" size="tiny">
@@ -226,8 +201,8 @@
                       <el-button @click="newFileDialog = false">Cancel</el-button>
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
                   </span>
-              </el-dialog>
-              <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
+                </el-dialog>
+                <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
                   <el-form :model="formAddFolder">
                       <el-form-item>
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
@@ -452,7 +427,6 @@
     data () {
       return {
         autoFolders: true,
-        isLoggedInUser: false,
         directoryTree: [],
         currentFile : null,
         defaultProps: {
@@ -543,12 +517,11 @@
     },
     created () {
       // console.log(process.env.baseURL);
-      // if(this.$cookie.get('auth_token')){
-      this.isLoggedInUser = true;
-      this.getData();
-      // } else {
-      //   this.isLoggedInUser = false
-      // }
+      if(this.$cookie.get('auth_token')){
+        this.getData();
+      } else {
+        this.$router.push('/login');
+      }
 
       this.$on('saveFileFromChild', this.autoSaveFromGrapes);
     },
@@ -1131,7 +1104,8 @@
             // Create repositoroty on GitLab
             axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&privateToken=' + this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {})
               .then((response) => {
-                if (response.status == 200 || response.status == 201) {
+                console.log('Gitlab Response: ', response);
+                if (!(response.data.statusCode)) {
 
                   localStorage.setItem("folderUrl", newFolderName);
                   var folder = localStorage.getItem("folderUrl");
@@ -1164,9 +1138,10 @@
                   this.formAddProjectFolder.projectName = null;
                 } else {
                   console.log(response);
+                  this.fullscreenLoading = false;
                   this.$message({
                     showClose: true,
-                    message: 'Some error occured. Please refresh and try again.',
+                    message: 'Error from server: ' + response.data.error.message.name,
                     type: 'error'
                   });
                   return;
@@ -3116,7 +3091,38 @@
           }
           let folderUrl = configFileUrl.replace(fileName, '');
           this.getConfigFileData(folderUrl);
-
+          var getFromBetween = {
+              results: [],
+              string: "",
+              getFromBetween: function(sub1, sub2) {
+                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+                var SP = this.string.indexOf(sub1) + sub1.length;
+                var string1 = this.string.substr(0, SP);
+                var string2 = this.string.substr(SP);
+                var TP = string1.length + string2.indexOf(sub2);
+                return this.string.substring(SP, TP);
+              },
+              removeFromBetween: function(sub1, sub2) {
+                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+                var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+                this.string = this.string.replace(removal, "");
+              },
+              getAllResults: function(sub1, sub2) {
+                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+                var result = this.getFromBetween(sub1, sub2);
+                this.results.push(result);
+                this.removeFromBetween(sub1, sub2);
+                if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+                  this.getAllResults(sub1, sub2);
+                } else return;
+              },
+              get: function(string, sub1, sub2) {
+                this.results = [];
+                this.string = string;
+                this.getAllResults(sub1, sub2);
+                return this.results;
+              }
+            };
           let self = this;
 
           setTimeout(async function() {
@@ -3164,6 +3170,145 @@
                           })
                   }
               }
+              console.log("this.form.Layout:", self.form.Layout)
+                if (self.form.Layout == 'Blank') {
+                    // console.log("inside blank layout condition:")
+                    await axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename: folderUrl + '/Layout/Blank.layout',
+                            text: '{{{ contents }}}',
+                            type: 'file'
+                        })
+                        .catch((e) => {
+                            console.log("error while blank file creation")
+                        })
+                }
+              let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
+              var backlayoutdata=JSON.parse(JSON.stringify(layoutdata));
+              let newFolderName = folderUrl + '/Preview';
+               await axios.post(config.baseURL + '/flows-dir-listing', {
+                      foldername: newFolderName,
+                      type: 'folder'
+                  }).then(async(res)=>{
+                    for (let i = 0; i<back_partials.length; i++) {
+                      console.log('partials[i]:',back_partials[i])
+                      let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/'+Object.keys(back_partials[i])+'/'+back_partials[i][Object.keys(back_partials[i])]+'.html');
+                      responsepartials=responsepartials.data
+                      let result=(getFromBetween.get(responsepartials, "{{>", "}}"));
+                      var DefaultParams = [];
+                      // console.log('result:',result)
+                      if (result.length > 0) {
+                        var resultParam = result
+                        for (let i = 0; i < resultParam.length; i++) {
+                          var temp;
+                          temp = resultParam[i].trim()
+                          result[i] = result[i].trim()
+                          temp = temp.replace(/&nbsp;/g, ' ')
+                          temp = temp.replace(/\s+/g, ' ');
+                          temp = temp.trim();
+                          temp = temp.split(' ')
+                          for (let j = 0; j < temp.length; j++) {
+                            if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                              if (temp[j + 1] != undefined) {
+                                result[i] = temp[0];
+                                if (temp[j + 1].indexOf('.') > -1) {
+                                  let x = temp[j + 1]
+                                  x = temp[j + 1].split(/'/)[1];
+                                  let obj = {}
+                                  obj[temp[0]] = x
+                                  DefaultParams.push(obj)
+                                  break;
+                                }
+                              } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                                result[i] = temp[0];
+                                if (temp[j]) {
+                                  let x = temp[j]
+                                  x = temp[j].split(/'/)[1];
+                                  let obj = {}
+                                  obj[temp[0]] = x
+                                  DefaultParams.push(obj)
+                                  break;
+                                }
+                              }
+                            }
+                          }
+                        }
+                        for(let j=0;j<result.length;j++){
+                          temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+
+                          temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+                          // console.log('temp1:',temp1)
+                          // console.log('temp2:',temp2)
+                          responsepartials=responsepartials.split(temp1).join(temp2)
+                        }
+                      }
+                       await axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: folderUrl + '/Preview/'+Object.keys(back_partials[i])+'_'+back_partials[i][Object.keys(back_partials[i])]+'.html' ,
+                      text: responsepartials,
+                      type: 'file'
+                      }).catch((e)=>{
+                        console.log(e)
+                      }) 
+                    }
+                     let result=(getFromBetween.get(layoutdata.data, "{{>", "}}"));
+                     DefaultParams = [];
+                     if (result.length > 0) {
+                        var resultParam = result
+                        for (let i = 0; i < resultParam.length; i++) {
+                          var temp;
+                          temp = resultParam[i].trim()
+                          result[i] = result[i].trim()
+                          temp = temp.replace(/&nbsp;/g, ' ')
+                          temp = temp.replace(/\s+/g, ' ');
+                          temp = temp.trim();
+                          temp = temp.split(' ')
+                          for (let j = 0; j < temp.length; j++) {
+                            if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                              if (temp[j + 1] != undefined) {
+                                result[i] = temp[0];
+                                if (temp[j + 1].indexOf('.') > -1) {
+                                  let x = temp[j + 1]
+                                  x = temp[j + 1].split(/'/)[1];
+                                  let obj = {}
+                                  obj[temp[0]] = x
+                                  DefaultParams.push(obj)
+                                  break;
+                                }
+                              } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                                result[i] = temp[0];
+                                if (temp[j]) {
+                                  let x = temp[j]
+                                  x = temp[j].split(/'/)[1];
+                                  let obj = {}
+                                  obj[temp[0]] = x
+                                  DefaultParams.push(obj)
+                                  break;
+                                }
+                              }
+                            }
+                          }
+                        }
+                        for(let j=0;j<result.length;j++){
+                          for (let i = 0; i<back_partials.length; i++) {
+                            if(Object.keys(back_partials[i])[0]==result[j]){
+
+                          temp1 = '{{> ' + Object.keys(back_partials[i])[0] +' }}'
+
+                          temp2 = '{{> '+ Object.keys(back_partials[i])[0] +'_'+back_partials[i][Object.keys(back_partials[i])[0]] +' }}'
+                          // console.log('temp1:',temp1)
+                          // console.log('temp2:',temp2)
+                          layoutdata.data=layoutdata.data.split(temp1).join(temp2)
+                            }
+                          }
+                          
+                        }
+                      }
+                      // console.log('layoutdata:',layoutdata.data)
+
+                  })
+                  .catch((e)=>{
+                    console.log(e)
+                  })
+
 
               let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
 
@@ -3190,7 +3335,7 @@
 
                       contentpartials = contentpartials.split(temp1).join(temp2)
                           // let partialsinherit = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/'+Object.keys(self.form.partials[j])[0]+'/'+self.form.partials[j][Object.keys(self.form.partials[j])[0]]);
-
+                        }
                       var obj = {}
                       var key = Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]]
                       obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
@@ -3198,11 +3343,11 @@
                       self.form.partials[j] = obj
                           // console.log("new self.form.partials[",j,']:',self.form.partials[j])
 
-                  } else {
-                      console.log('partials not found in page')
-                      console.log('self.form.partials[j]:', self.form.partials[j])
+                  // } else {
+                  //     console.log('partials not found in page')
+                  //     console.log('self.form.partials[j]:', self.form.partials[j])
 
-                  }
+                  // }
               }
               self.$store.state.content = contentpartials;
               var partials = '';
@@ -3213,12 +3358,12 @@
                   key = key.trim();
                   if (value[key2].match('html')) {
                       key = key.split('.')[0]
-                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[i])[0] + "/" + value[key2] + "').toString())\n"
+                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Preview/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + "').toString())\n"
                   } else if (value[key2].match('hbs')) {
                       key = key.split('.')[0]
-                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[i])[0] + "/" + value[key2] + "').toString())\n"
+                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Preview/" + Object.keys(back_partials[i])[0] + "/" + value[key2] + "').toString())\n"
                   } else {
-                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[i])[0] + "/" + value[key2] + ".html').toString())\n"
+                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Preview/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + ".html').toString())\n"
                   }
                   partials = partials + temp;
               }
@@ -3236,25 +3381,25 @@
                           message: 'Config Saved!',
                           type: 'success'
                       });
-                      let newFolderName = folderUrl + '/Preview';
-                      return axios.post(config.baseURL + '/flows-dir-listing', {
-                              foldername: newFolderName,
-                              type: 'folder'
-                          })
-                          .then(async(res) => {
-                              console.log("this.form.Layout:", self.form.Layout)
-                              if (self.form.Layout == 'Blank') {
-                                  // console.log("inside blank layout condition:")
-                                  await axios.post(config.baseURL + '/flows-dir-listing', {
-                                          filename: folderUrl + '/Layout/Blank.layout',
-                                          text: '{{{ contents }}}',
-                                          type: 'file'
-                                      })
-                                      .catch((e) => {
-                                          console.log("error while blank file creation")
-                                      })
-                              }
-                              let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
+                      // let newFolderName = folderUrl + '/Preview';
+                      // return axios.post(config.baseURL + '/flows-dir-listing', {
+                      //         foldername: newFolderName,
+                      //         type: 'folder'
+                      //     })
+                          // .then(async(res) => {
+                              // console.log("this.form.Layout:", self.form.Layout)
+                              // if (self.form.Layout == 'Blank') {
+                              //     // console.log("inside blank layout condition:")
+                              //     await axios.post(config.baseURL + '/flows-dir-listing', {
+                              //             filename: folderUrl + '/Layout/Blank.layout',
+                              //             text: '{{{ contents }}}',
+                              //             type: 'file'
+                              //         })
+                              //         .catch((e) => {
+                              //             console.log("error while blank file creation")
+                              //         })
+                              // }
+                              // let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
                               let newContent = "<html>\n<head>\n" +
                                   "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                                   "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
@@ -3282,6 +3427,8 @@
                                   // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
                                   '<script src="./../main-files/main.js"><\/script>\n' +
                                   '</body>\n</html>';
+
+                                  console.log('newContent:',newContent)
                               axios.post(config.baseURL + '/flows-dir-listing', {
                                       filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
                                       text: newContent,
@@ -3354,7 +3501,7 @@
 
                                                                       return axios.post(config.baseURL + '/flows-dir-listing', {
                                                                               filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                                                                              text: layoutdata.data,
+                                                                              text: backlayoutdata.data,
                                                                               type: 'file'
                                                                           })
                                                                           .then((res) => {
@@ -3410,10 +3557,10 @@
                                   .catch((e) => {
                                       console.log(e);
                                   })
-                          })
-                          .catch((e) => {
-                              console.log(e)
-                          })
+                          // })
+                          // .catch((e) => {
+                          //     console.log(e)
+                          // })
                   })
                   .catch((e) => {
                       console.log('Error while creating MetalSmith JS file' + e)
@@ -4025,6 +4172,11 @@
         })
       },
 
+      quickPreview (filePath) {
+        this.$store.state.fileUrl = filePath;
+        this.generatePreview();
+      },
+
       // Displaying icons in tree nodes  
       renderContent(h, { node, data, store }) {
 
@@ -4150,6 +4302,8 @@
                     
                     
                       <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 35px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
+
+                      <i title="Preview File" class="fa fa-eye" style="position:absolute; right: 55px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #00C04F" on-click={ () => this.quickPreview(data.path) }></i>
                     
                 </span>
             </span>)
@@ -4366,7 +4520,29 @@
       background-color: #fff;
   }
 
-  .treeViewBlock {}
+  .treeViewBlock {
+    max-height: 100%;
+    overflow-y: auto;
+    max-width: 320px;
+    overflow-x: auto !important;
+  }
+
+  .treeViewBlock::-webkit-scrollbar-track
+  {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+  }
+
+  .treeViewBlock::-webkit-scrollbar
+  {
+    width: 6px;
+    background-color: #F5F5F5;
+  }
+
+  .treeViewBlock::-webkit-scrollbar-thumb
+  {
+    background-color: #444;
+  }
 
   .el-tree {
       border: none;
@@ -4410,8 +4586,8 @@
       width: 0;
       height: 100%;
       left: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow-y: hidden;
+      overflow-x: auto;
       background: #fff;
       -webkit-transition: all 0.5s ease;
       -moz-transition: all 0.5s ease;
@@ -4897,6 +5073,8 @@
 
   .el-tree-node:hover > .el-tree-node__content .action-button i {
       display: block;
+      position: absolute;
+      top: 0;
   }
 
   .action-button i {
