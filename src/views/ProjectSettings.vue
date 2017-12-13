@@ -841,8 +841,10 @@ export default {
 
             // Only Save file when there are any new files found in already registered partials
             if(updates){
-              this.saveProjectSettings();  
+              await this.saveProjectSettings();  
             }
+
+            this.init();
 
           } else {
             // Partial not Registered
@@ -983,8 +985,30 @@ export default {
               text : JSON.stringify(this.pluginsTreedata),
               type : 'file'
           })
-          .then((res) => {
+          .then(async (res) => {
               console.log('Plugin-settings.json File saved: ', res);
+
+              // save to rethinkdb
+              await axios.post(config.baseURL + '/project-configuration', {
+                websiteName: this.repoName,
+                data : this.settings
+              })
+              .then((res) => {
+                this.$message({
+                      showClose: true,
+                      message: 'Successfully Saved in database.',
+                      type: 'success'
+                  });
+                  console.log(res.data);
+              })
+              .catch((e) => {
+                  this.$message({
+                      showClose: true,
+                      message: 'Failed! Please try again.',
+                      type: 'error'
+                  });
+                  console.log(e)
+              })
 
               this.$message({
                   showClose: true,
@@ -1008,7 +1032,7 @@ export default {
               message: 'Cannot save file! Some error occured, try again.',
               type: 'danger'
           });
-      })
+      });
     },
 
     revertCommit(index) {
@@ -1422,73 +1446,71 @@ export default {
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
 
-        // Getting tree data structure from partials listings
-        let pluginNames = [];
 
+        // Old Code for tree data
+        // // Getting tree data structure from partials listings
+        // let pluginNames = [];
 
+        // pluginNames = Object.keys(this.settings[2].layoutOptions[0]);
+        // pluginNames.splice(pluginNames.indexOf('Layout'), 1);
 
-        pluginNames = Object.keys(this.settings[2].layoutOptions[0]);
-        pluginNames.splice(pluginNames.indexOf('Layout'), 1);
+        // let treeData = [];
+        // let count = 0;
 
-        let treeData = [];
-        let count = 0;
+        // // Loop thru all plugins found
+        // for(let i = 0; i < pluginNames.length; i++){
+        //   count++;
 
-        // Loop thru all plugins found
-        for(let i = 0; i < pluginNames.length; i++){
-          count++;
+        //   let partialName = pluginNames[i];
 
-          let partialName = pluginNames[i];
+        //   let temp1 = {
+        //     id: count,
+        //     children: [],
+        //     label: partialName,
+        //     isActive: true
+        //   }
 
-          let temp1 = {
-            id: count,
-            children: [],
-            label: partialName,
-            isActive: true
-          }
+        //   treeData.push(temp1);
 
-          treeData.push(temp1);
-
-          // Loop thru all plugin variants
-          for(let j = 0; j < this.settings[2].layoutOptions[0][partialName].length; j++){
+        //   // Loop thru all plugin variants
+        //   for(let j = 0; j < this.settings[2].layoutOptions[0][partialName].length; j++){
             
-            count++;
+        //     count++;
 
-            let temp2 = {
-              id: count,
-              children: [],
-              label: this.settings[2].layoutOptions[0][partialName][j].label,
-              isActive: true
-            }
+        //     let temp2 = {
+        //       id: count,
+        //       children: [],
+        //       label: this.settings[2].layoutOptions[0][partialName][j].label,
+        //       isActive: true
+        //     }
 
-            treeData[i].children.push(temp2);
-          }
+        //     treeData[i].children.push(temp2);
+        //   }
 
-        }
+        // }
 
-        this.pluginsTreedata = treeData;
+        // this.pluginsTreedata = treeData;
 
-        console.log('Plugins data: ', this.pluginsTreedata);
+        // // Get checked items
+        // this.checkedList = getIds(this.pluginsTreedata);
 
-        // Get checked items
-        this.checkedList = getIds(this.pluginsTreedata);
+        // function getIds(ma) {       
+        //   let ida = []
 
-        function getIds(ma) {       
-          let ida = []
-
-          if (ma instanceof Array) {               
-            for (let i in ma) {                       
-              let ii = getIds(ma[i])                        
-              ida = ida.concat(ii)               
-            }       
-          } else if (typeof ma == 'object') {               
-            if (ma.isActive) { 
-              ida.push(ma.id) 
-            }
-            let ii = getIds(ma.children)                
-            ida = ida.concat(ii)       
-          }       
-          return ida
-        }
+        //   if (ma instanceof Array) {               
+        //     for (let i in ma) {                       
+        //       let ii = getIds(ma[i])                        
+        //       ida = ida.concat(ii)               
+        //     }       
+        //   } else if (typeof ma == 'object') {               
+        //     if (ma.isActive) { 
+        //       ida.push(ma.id) 
+        //     }
+        //     let ii = getIds(ma.children)                
+        //     ida = ida.concat(ii)       
+        //   }       
+        //   return ida
+        // }
 
         // Set Brand Logo Name
         // if(this.form.brandLogoName != ''){
@@ -1509,6 +1531,10 @@ export default {
       } else {
         console.log('Cannot get config file!');
       } 
+
+      let treeFileResponse = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/plugin-settings.json');
+
+      this.pluginsTreedata = JSON.parse(treeFileResponse.data);
 
 
       // replace all image tag source with index as name attribute to get the image file preview

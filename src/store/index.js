@@ -45,7 +45,6 @@ export const store = new Vuex.Store({
             }
           })
           .then(response => {
-            console.log('response', response)
             if (response) {
               return response.data.data
             } else {
