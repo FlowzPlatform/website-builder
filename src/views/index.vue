@@ -965,36 +965,53 @@
 
       // Get particular project's config.json file
       async getConfigFileData(folderUrl) {
-        let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        let rawConfigs = JSON.parse(responseConfig.data);
+        let foldername = folderUrl.split('/');
+        foldername = foldername[(foldername.length - 1)];
+
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
       },
 
       // Save config File
-      saveConfigFile(folderUrl){
+      async saveConfigFile(folderUrl){
 
-        let newJsonName = folderUrl + '/assets/config.json';
+        let foldername = folderUrl.split('/');
+        foldername = foldername[(foldername.length-1)];
 
-        axios.post(config.baseURL + '/flows-dir-listing', {
-            filename : newJsonName ,
-            text : JSON.stringify(this.globalConfigData),
-            type : 'file'
-        })
-        .then((res) => {
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
+        if(rethinkdbCheck.data.data){
+
+          // update existing data
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+            configData: this.globalConfigData
+          })
+          .then(async (res) => {
+            this.$message({
+                showClose: true,
+                message: 'Successfully updated.',
+                type: 'success'
+            });
+            console.log(res.data);
+          })
+          .catch((e) => {
+              this.$message({
+                  showClose: true,
+                  message: 'Failed! Please try again.',
+                  type: 'error'
+              });
+              console.log(e)
+          });
+
+          } else {
           this.$message({
               showClose: true,
-              message: 'File saved!',
-              type: 'success'
+              message: 'Data Error.',
+              type: 'error'
           });
-        })
-        .catch((e) => {
-            // this.$message({
-            //     showClose: true,
-            //     message: 'File not saved! Please try again.',
-            //     type: 'error'
-            // });
-            console.log('Config file not saved. See full log here: ', e)
-        })
+        }   
+
       },
 
       // Create new Folder
@@ -1017,9 +1034,11 @@
                 fileName = '/' + urlparts[urlparts.length - 1];
             }
             let folderUrl = configFileUrl.replace(fileName, '');
+            let foldername = folderUrl.split('/');
+            foldername = foldername[(foldername.length - 1)];
             // this.getConfigFileData(folderUrl);
-            let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-            let rawConfigs = JSON.parse(responseConfig.data);
+            let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+            let rawConfigs = responseConfig.data.data[0].configData;
             this.globalConfigData = rawConfigs;
 
             this.newFolderDialog = false;
@@ -1313,7 +1332,7 @@
       createEssentialFiles(newFolderName) {
 
         // Create Config.json file
-        let newfilename = newFolderName + '/assets/config.json';
+        // let newfilename = newFolderName + '/assets/config.json';
 
         let repoSettings = [{
                               "repoSettings": [{
@@ -1385,21 +1404,6 @@
                               }]
                             }];
 
-        axios.post(config.baseURL + '/flows-dir-listing', {
-            filename : newfilename,
-            text : JSON.stringify(repoSettings),
-            type : 'file'
-        })
-        .then((res) => {
-         console.log('Config.json file created!'); 
-        })
-        .catch((e) => {
-            console.log(e)
-        });
-
-        // Create plugin-settings.json file
-        let pluginSettingsfileName = newFolderName + '/assets/plugin-settings.json';
-
         let pluginSettingsData = [{
                                     "id":1,
                                     "children":[
@@ -1462,13 +1466,42 @@
                                  }
                               ];
 
-        axios.post(config.baseURL + '/flows-dir-listing', {
-            filename : pluginSettingsfileName,
-            text : JSON.stringify(pluginSettingsData),
-            type : 'file'
+        axios.post(config.baseURL + '/project-configuration', {
+          userEmail: this.$session.get('email'),
+          websiteName: this.repoName,
+          configData: repoSettings,
+          pluginsData: pluginSettingsData
         })
         .then((res) => {
-         console.log('Config.json file created!'); 
+          this.$message({
+            showClose: true,
+            message: 'Successfully Saved in database.',
+            type: 'success'
+          });
+          console.log(res.data);
+        })
+        .catch((e) => {
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          return;
+          console.log(e)
+        })
+
+        // Create project-details.json file
+        let projectDetails = newFolderName + '/assets/project-details.json';
+        let projectDetailsData = [{
+                                  "projectOwner" : this.$session.get('email'),
+                                  "projectName" : this.repoName
+                                  }];
+        axios.post(config.baseURL + '/flows-dir-listing', {
+            filename : projectDetails,
+            text : JSON.stringify(projectDetailsData)
+        })
+        .then((res) => {
+          console.log('project-details.json file created!');
         })
         .catch((e) => {
             console.log(e)
@@ -2203,8 +2236,8 @@
 
         // this.getConfigFileData(folderUrl);
 
-        let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        let rawConfigs = JSON.parse(responseConfig.data);
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
         
         this.$refs[formName].validate((valid) => {
@@ -2323,8 +2356,10 @@
           fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
         }
         let folderUrl = configFileUrl.replace(fileName, '');
-        let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        let rawConfigs = JSON.parse(responseConfig.data);
+        let projectName = folderUrl.split('/');
+        projectName = projectName[(projectName.length-1)];
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
         axios.post(config.baseURL + '/flows-dir-listing', {
             filename: this.currentFile.path.replace(/\\/g, "\/"),
@@ -3071,11 +3106,11 @@
 
       // Generate Preview of Page
       async generatePreview() {
-        this.previewLoading = true;
+          this.previewLoading = true;
           // Save File first
           this.saveFile();
           console.log("done with saveFile")
-             
+
           let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
 
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -3095,34 +3130,34 @@
               results: [],
               string: "",
               getFromBetween: function(sub1, sub2) {
-                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-                var SP = this.string.indexOf(sub1) + sub1.length;
-                var string1 = this.string.substr(0, SP);
-                var string2 = this.string.substr(SP);
-                var TP = string1.length + string2.indexOf(sub2);
-                return this.string.substring(SP, TP);
+                  if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+                  var SP = this.string.indexOf(sub1) + sub1.length;
+                  var string1 = this.string.substr(0, SP);
+                  var string2 = this.string.substr(SP);
+                  var TP = string1.length + string2.indexOf(sub2);
+                  return this.string.substring(SP, TP);
               },
               removeFromBetween: function(sub1, sub2) {
-                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-                var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
-                this.string = this.string.replace(removal, "");
+                  if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+                  var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+                  this.string = this.string.replace(removal, "");
               },
               getAllResults: function(sub1, sub2) {
-                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
-                var result = this.getFromBetween(sub1, sub2);
-                this.results.push(result);
-                this.removeFromBetween(sub1, sub2);
-                if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
-                  this.getAllResults(sub1, sub2);
-                } else return;
+                  if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+                  var result = this.getFromBetween(sub1, sub2);
+                  this.results.push(result);
+                  this.removeFromBetween(sub1, sub2);
+                  if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+                      this.getAllResults(sub1, sub2);
+                  } else return;
               },
               get: function(string, sub1, sub2) {
-                this.results = [];
-                this.string = string;
-                this.getAllResults(sub1, sub2);
-                return this.results;
+                  this.results = [];
+                  this.string = string;
+                  this.getAllResults(sub1, sub2);
+                  return this.results;
               }
-            };
+          };
           let self = this;
 
           setTimeout(async function() {
@@ -3150,10 +3185,10 @@
                       temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
 
                       await axios.post(config.baseURL + '/flows-dir-listing', {
-                              filename: config.ipAddress + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
+                              filename: config.webpackpath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
                               text: temp,
                               type: 'file'
-                          }).then(async(res) => {
+                          }).then(async (res) => {
                               // console.log("successfully created vuecomponent file") 
                               contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
@@ -3170,143 +3205,143 @@
                           })
                   }
               }
-              console.log("this.form.Layout:", self.form.Layout)
-                if (self.form.Layout == 'Blank') {
-                    // console.log("inside blank layout condition:")
-                    await axios.post(config.baseURL + '/flows-dir-listing', {
-                            filename: folderUrl + '/Layout/Blank.layout',
-                            text: '{{{ contents }}}',
-                            type: 'file'
-                        })
-                        .catch((e) => {
-                            console.log("error while blank file creation")
-                        })
-                }
+              // console.log("this.form.Layout:", self.form.Layout)
+              if (self.form.Layout == 'Blank') {
+                  // console.log("inside blank layout condition:")
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename: folderUrl + '/Layout/Blank.layout',
+                          text: '{{{ contents }}}',
+                          type: 'file'
+                      })
+                      .catch((e) => {
+                          console.log("error while blank file creation")
+                      })
+              }
               let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
-              var backlayoutdata=JSON.parse(JSON.stringify(layoutdata));
-              let newFolderName = folderUrl + '/Preview';
-               await axios.post(config.baseURL + '/flows-dir-listing', {
+              var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
+              let newFolderName = folderUrl + '/temp';
+              await axios.post(config.baseURL + '/flows-dir-listing', {
                       foldername: newFolderName,
                       type: 'folder'
-                  }).then(async(res)=>{
-                    for (let i = 0; i<back_partials.length; i++) {
-                      console.log('partials[i]:',back_partials[i])
-                      let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/'+Object.keys(back_partials[i])+'/'+back_partials[i][Object.keys(back_partials[i])]+'.html');
-                      responsepartials=responsepartials.data
-                      let result=(getFromBetween.get(responsepartials, "{{>", "}}"));
-                      var DefaultParams = [];
-                      // console.log('result:',result)
-                      if (result.length > 0) {
-                        var resultParam = result
-                        for (let i = 0; i < resultParam.length; i++) {
-                          var temp;
-                          temp = resultParam[i].trim()
-                          result[i] = result[i].trim()
-                          temp = temp.replace(/&nbsp;/g, ' ')
-                          temp = temp.replace(/\s+/g, ' ');
-                          temp = temp.trim();
-                          temp = temp.split(' ')
-                          for (let j = 0; j < temp.length; j++) {
-                            if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                              if (temp[j + 1] != undefined) {
-                                result[i] = temp[0];
-                                if (temp[j + 1].indexOf('.') > -1) {
-                                  let x = temp[j + 1]
-                                  x = temp[j + 1].split(/'/)[1];
-                                  let obj = {}
-                                  obj[temp[0]] = x
-                                  DefaultParams.push(obj)
-                                  break;
-                                }
-                              } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                                result[i] = temp[0];
-                                if (temp[j]) {
-                                  let x = temp[j]
-                                  x = temp[j].split(/'/)[1];
-                                  let obj = {}
-                                  obj[temp[0]] = x
-                                  DefaultParams.push(obj)
-                                  break;
-                                }
+                  }).then(async (res) => {
+                      for (let i = 0; i < back_partials.length; i++) {
+                          // console.log('partials[i]:', back_partials[i])
+                          let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.html');
+                          responsepartials = responsepartials.data
+                          let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
+                          var DefaultParams = [];
+                          // console.log('result:',result)
+                          if (result.length > 0) {
+                              var resultParam = result
+                              for (let i = 0; i < resultParam.length; i++) {
+                                  var temp;
+                                  temp = resultParam[i].trim()
+                                  result[i] = result[i].trim()
+                                  temp = temp.replace(/&nbsp;/g, ' ')
+                                  temp = temp.replace(/\s+/g, ' ');
+                                  temp = temp.trim();
+                                  temp = temp.split(' ')
+                                  for (let j = 0; j < temp.length; j++) {
+                                      if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                                          if (temp[j + 1] != undefined) {
+                                              result[i] = temp[0];
+                                              if (temp[j + 1].indexOf('.') > -1) {
+                                                  let x = temp[j + 1]
+                                                  x = temp[j + 1].split(/'/)[1];
+                                                  let obj = {}
+                                                  obj[temp[0]] = x
+                                                  DefaultParams.push(obj)
+                                                  break;
+                                              }
+                                          } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                                              result[i] = temp[0];
+                                              if (temp[j]) {
+                                                  let x = temp[j]
+                                                  x = temp[j].split(/'/)[1];
+                                                  let obj = {}
+                                                  obj[temp[0]] = x
+                                                  DefaultParams.push(obj)
+                                                  break;
+                                              }
+                                          }
+                                      }
+                                  }
                               }
-                            }
-                          }
-                        }
-                        for(let j=0;j<result.length;j++){
-                          temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+                              for (let j = 0; j < result.length; j++) {
+                                  temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
 
-                          temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
-                          // console.log('temp1:',temp1)
-                          // console.log('temp2:',temp2)
-                          responsepartials=responsepartials.split(temp1).join(temp2)
-                        }
+                                  temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+                                  // console.log('temp1:',temp1)
+                                  // console.log('temp2:',temp2)
+                                  responsepartials = responsepartials.split(temp1).join(temp2)
+                              }
+                          }
+                          await axios.post(config.baseURL + '/flows-dir-listing', {
+                              filename: folderUrl + '/temp/' + Object.keys(back_partials[i]) + '_' + back_partials[i][Object.keys(back_partials[i])] + '.html',
+                              text: responsepartials,
+                              type: 'file'
+                          }).catch((e) => {
+                              console.log(e)
+                          })
                       }
-                       await axios.post(config.baseURL + '/flows-dir-listing', {
-                      filename: folderUrl + '/Preview/'+Object.keys(back_partials[i])+'_'+back_partials[i][Object.keys(back_partials[i])]+'.html' ,
-                      text: responsepartials,
-                      type: 'file'
-                      }).catch((e)=>{
-                        console.log(e)
-                      }) 
-                    }
-                     let result=(getFromBetween.get(layoutdata.data, "{{>", "}}"));
-                     DefaultParams = [];
-                     if (result.length > 0) {
-                        var resultParam = result
-                        for (let i = 0; i < resultParam.length; i++) {
-                          var temp;
-                          temp = resultParam[i].trim()
-                          result[i] = result[i].trim()
-                          temp = temp.replace(/&nbsp;/g, ' ')
-                          temp = temp.replace(/\s+/g, ' ');
-                          temp = temp.trim();
-                          temp = temp.split(' ')
-                          for (let j = 0; j < temp.length; j++) {
-                            if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                              if (temp[j + 1] != undefined) {
-                                result[i] = temp[0];
-                                if (temp[j + 1].indexOf('.') > -1) {
-                                  let x = temp[j + 1]
-                                  x = temp[j + 1].split(/'/)[1];
-                                  let obj = {}
-                                  obj[temp[0]] = x
-                                  DefaultParams.push(obj)
-                                  break;
-                                }
-                              } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                                result[i] = temp[0];
-                                if (temp[j]) {
-                                  let x = temp[j]
-                                  x = temp[j].split(/'/)[1];
-                                  let obj = {}
-                                  obj[temp[0]] = x
-                                  DefaultParams.push(obj)
-                                  break;
-                                }
+                      let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
+                      DefaultParams = [];
+                      if (result.length > 0) {
+                          var resultParam = result
+                          for (let i = 0; i < resultParam.length; i++) {
+                              var temp;
+                              temp = resultParam[i].trim()
+                              result[i] = result[i].trim()
+                              temp = temp.replace(/&nbsp;/g, ' ')
+                              temp = temp.replace(/\s+/g, ' ');
+                              temp = temp.trim();
+                              temp = temp.split(' ')
+                              for (let j = 0; j < temp.length; j++) {
+                                  if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                                      if (temp[j + 1] != undefined) {
+                                          result[i] = temp[0];
+                                          if (temp[j + 1].indexOf('.') > -1) {
+                                              let x = temp[j + 1]
+                                              x = temp[j + 1].split(/'/)[1];
+                                              let obj = {}
+                                              obj[temp[0]] = x
+                                              DefaultParams.push(obj)
+                                              break;
+                                          }
+                                      } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                                          result[i] = temp[0];
+                                          if (temp[j]) {
+                                              let x = temp[j]
+                                              x = temp[j].split(/'/)[1];
+                                              let obj = {}
+                                              obj[temp[0]] = x
+                                              DefaultParams.push(obj)
+                                              break;
+                                          }
+                                      }
+                                  }
                               }
-                            }
                           }
-                        }
-                        for(let j=0;j<result.length;j++){
-                          for (let i = 0; i<back_partials.length; i++) {
-                            if(Object.keys(back_partials[i])[0]==result[j]){
+                          for (let j = 0; j < result.length; j++) {
+                              for (let i = 0; i < back_partials.length; i++) {
+                                  if (Object.keys(back_partials[i])[0] == result[j]) {
 
-                          temp1 = '{{> ' + Object.keys(back_partials[i])[0] +' }}'
+                                      temp1 = '{{> ' + Object.keys(back_partials[i])[0] + ' }}'
 
-                          temp2 = '{{> '+ Object.keys(back_partials[i])[0] +'_'+back_partials[i][Object.keys(back_partials[i])[0]] +' }}'
-                          // console.log('temp1:',temp1)
-                          // console.log('temp2:',temp2)
-                          layoutdata.data=layoutdata.data.split(temp1).join(temp2)
-                            }
+                                      temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + ' }}'
+                                      // console.log('temp1:',temp1)
+                                      // console.log('temp2:',temp2)
+                                      layoutdata.data = layoutdata.data.split(temp1).join(temp2)
+                                  }
+                              }
+
                           }
-                          
-                        }
                       }
                       // console.log('layoutdata:',layoutdata.data)
 
                   })
-                  .catch((e)=>{
-                    console.log(e)
+                  .catch((e) => {
+                      console.log(e)
                   })
 
 
@@ -3331,17 +3366,15 @@
 
                   if (contentpartials.match(temp1)) {
 
-                             
-
                       contentpartials = contentpartials.split(temp1).join(temp2)
-                          // let partialsinherit = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/'+Object.keys(self.form.partials[j])[0]+'/'+self.form.partials[j][Object.keys(self.form.partials[j])[0]]);
-                        }
-                      var obj = {}
-                      var key = Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]]
-                      obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
-                      self.form.partials[j] = []
-                      self.form.partials[j] = obj
-                          // console.log("new self.form.partials[",j,']:',self.form.partials[j])
+                      // let partialsinherit = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/'+Object.keys(self.form.partials[j])[0]+'/'+self.form.partials[j][Object.keys(self.form.partials[j])[0]]);
+                  }
+                  var obj = {}
+                  var key = Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]]
+                  obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
+                  self.form.partials[j] = []
+                  self.form.partials[j] = obj
+                  // console.log("new self.form.partials[",j,']:',self.form.partials[j])
 
                   // } else {
                   //     console.log('partials not found in page')
@@ -3358,12 +3391,12 @@
                   key = key.trim();
                   if (value[key2].match('html')) {
                       key = key.split('.')[0]
-                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Preview/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + "').toString())\n"
+                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + "').toString())\n"
                   } else if (value[key2].match('hbs')) {
                       key = key.split('.')[0]
-                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Preview/" + Object.keys(back_partials[i])[0] + "/" + value[key2] + "').toString())\n"
+                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "/" + value[key2] + "').toString())\n"
                   } else {
-                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Preview/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + ".html').toString())\n"
+                      var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + ".html').toString())\n"
                   }
                   partials = partials + temp;
               }
@@ -3375,192 +3408,175 @@
                       text: responseMetal.data,
                       type: 'file'
                   })
-                  .then(async(response) => {
+                  .then(async (response) => {
                       self.$message({
                           showClose: true,
                           message: 'Config Saved!',
                           type: 'success'
                       });
-                      // let newFolderName = folderUrl + '/Preview';
-                      // return axios.post(config.baseURL + '/flows-dir-listing', {
-                      //         foldername: newFolderName,
-                      //         type: 'folder'
-                      //     })
-                          // .then(async(res) => {
-                              // console.log("this.form.Layout:", self.form.Layout)
-                              // if (self.form.Layout == 'Blank') {
-                              //     // console.log("inside blank layout condition:")
-                              //     await axios.post(config.baseURL + '/flows-dir-listing', {
-                              //             filename: folderUrl + '/Layout/Blank.layout',
-                              //             text: '{{{ contents }}}',
-                              //             type: 'file'
-                              //         })
-                              //         .catch((e) => {
-                              //             console.log("error while blank file creation")
-                              //         })
-                              // }
-                              // let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
-                              let newContent = "<html>\n<head>\n" +
-                                  "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                                  "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
-                                  "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                                  "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                                  "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
-                                  "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                                  "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                                  "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                                  "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                                  '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
-                                  '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
-                                  "<link rel='stylesheet' href='./../main-files/main.css'/>\n</head><body>\n" +
-                                  layoutdata.data +
-                                  '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
-                                  '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
-                                  // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-                                  '<script src="./../main-files/main.js"><\/script>\n' +
-                                  '</body>\n</html>';
+                      let newFolderName1 = folderUrl + '/Preview';
+                      await axios.post(config.baseURL + '/flows-dir-listing', {
+                          foldername: newFolderName1,
+                          type: 'folder'
+                      }).then((res) => {
+                          console.log(res)
 
-                                  console.log('newContent:',newContent)
-                              axios.post(config.baseURL + '/flows-dir-listing', {
-                                      filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                                      text: newContent,
+                      }).catch((e) => {
+                          console.log(e)
+                      })
+                      let newContent = "<html>\n<head>\n" +
+                          "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+                          "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
+                          "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+                          "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                          "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                          "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                          "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                          "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+                          "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                          '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                          '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
+                          "<link rel='stylesheet' href='./../main-files/main.css'/>\n</head><body>\n" +
+                          layoutdata.data +
+                          '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
+                          // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+                          '<script src="./../main-files/main.js"><\/script>\n' +
+                          '</body>\n</html>';
+
+                      console.log('newContent:', newContent)
+                      axios.post(config.baseURL + '/flows-dir-listing', {
+                              filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                              text: newContent,
+                              type: 'file'
+                          })
+                          .then(async (res) => {
+                              
+                              let rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
+                              
+                              if (self.form.Layout == 'Blank') {
+                                 rawContent = '---\nlayout: ' + self.form.Layout + '.layout\n---\n' + rawContent
+                                 
+                              } else {
+                                  let tempValueLayout = '---\nlayout: ' + self.form.Layout + '.layout\n---\n';
+                                      rawContent = tempValueLayout + rawContent
+                              }
+                              self.PageLayout = '';
+                              self.form.Header = '';
+                              self.form.Footers = '';
+                              self.form.Sidebar = '';
+                              self.form.Menu = '';
+                              self.form.url = ''
+                              let previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
+                              await axios.post(config.baseURL + '/flows-dir-listing', {
+                                      filename: previewFileName,
+                                      text: rawContent,
                                       type: 'file'
                                   })
-                                  .then(async(res) => {
-                                      // console.log("successfully layout file edited:")
-                                      let rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
-                                      // console.log("Before rawContent:",rawContent)
-                                      if (self.form.Layout == 'Blank') {
-                                          // console.log("in blank and url==''")
-                                          // let substr = rawContent.substr(rawContent.search('---'), rawContent.search('<'))
-                                          if (self.form.url != undefined) {
-                                              // console.log("in blank and url !=''")
-                                              // console.log("here")
-                                              rawContent = '---\ndate: ' + self.form.url + '\nlayout: ' + self.form.Layout + '.layout\n---\n' + rawContent
-                                          } else {
-                                              // console.log("in blank and url==''")
-                                              rawContent = '---\nlayout: ' + self.form.Layout + '.layout\n---\n' + rawContent
-                                          }
-                                      } else {
-                                          if (self.form.url != undefined) {
-                                              // console.log("in not blank and url=!''")
-                                              let tempValueLayout = '---\ndate: ' + self.form.url + '\nlayout: ' + self.form.Layout + '.layout\n---\n';
-                                              rawContent = tempValueLayout + rawContent
-                                          } else {
-                                              // console.log("in not blank and url==''")
-                                              let tempValueLayout = '---\nlayout: ' + self.form.Layout + '.layout\n---\n';
-                                              rawContent = tempValueLayout + rawContent
+                                  .then(async (res) => {
+                                      self.saveFileLoading = false;
+                                      await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
+                                              // revert changes in metalsmith 
+                                              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(permalinks({pattern: ':date'}))\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                                          }
-                                      }
-                                      self.PageLayout = '';
-                                      self.form.Header = '';
-                                      self.form.Footers = '';
-                                      self.form.Sidebar = '';
-                                      self.form.Menu = '';
-                                      self.form.url = ''
-                                          // console.log("@@@@@@@@@@@@\n AfterrawContent:",rawContent)
-                                      let previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
-                                      await axios.post(config.baseURL + '/flows-dir-listing', {
-                                              filename: previewFileName,
-                                              text: rawContent,
-                                              type: 'file'
-                                          })
-                                          .then(async(res) => {
-                                              self.saveFileLoading = false;
-                                              await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
-                                                      // revert changes in metalsmith 
-                                                      var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(permalinks({pattern: ':date'}))\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                                               axios.post(config.baseURL + '/flows-dir-listing', {
+                                                      filename: mainMetal,
+                                                      text: metalsmithJSON,
+                                                      type: 'file'
+                                                  })
+                                                  .then((res) => {
 
-                                                      return axios.post(config.baseURL + '/flows-dir-listing', {
-                                                              filename: mainMetal,
-                                                              text: metalsmithJSON,
-                                                              type: 'file'
-                                                          })
-                                                          .then((res) => {
+                                                      self.previewLoading = false;
 
-                                                              self.previewLoading = false;
+                                                      let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
+                                                      previewFile = folderUrl.replace('/var/www/html', '');
 
-                                                              let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
-                                                              previewFile = folderUrl.replace('/var/www/html', '');
+                                                      window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
 
-                                                              window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+                                                      // Delete Preview Folder
+                                                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                                                          .then(async (res) => {
+                                                              console.log(res);
+                                                              await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
 
-                                                              // Delete Preview Folder
-                                                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                                                              return axios.post(config.baseURL + '/flows-dir-listing', {
+                                                                      filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                                                                      text: backlayoutdata.data,
+                                                                      type: 'file'
+                                                                  })
                                                                   .then((res) => {
-                                                                      console.log(res);
-
-                                                                      return axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                              filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                                                                              text: backlayoutdata.data,
-                                                                              type: 'file'
-                                                                          })
-                                                                          .then((res) => {
-                                                                              console.log("layout file reset")
-                                                                              if (self.form.Layout == 'Blank') {
-                                                                                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
-                                                                                      .catch((e) => {
-                                                                                          console.log("error while deleting blank.layout file")
-                                                                                      })
-                                                                              }
-
-                                                                          })
-                                                                          .catch((e) => {
-                                                                              console.log(e)
-                                                                          })
+                                                                      if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
+                                                                          for (let x = 0; x < self.form.vuepartials.length; x++) {
+                                                                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.webpackpublic + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                                                                      console.log(res)
+                                                                                  })
+                                                                                  .catch((e) => {
+                                                                                      console.log(e)
+                                                                                  })
+                                                                          }
+                                                                          // location.reload();
+                                                                      }
+                                                                      console.log("layout file reset")
+                                                                      if (self.form.Layout == 'Blank') {
+                                                                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                                                              .catch((e) => {
+                                                                                  console.log("error while deleting blank.layout file")
+                                                                              })
+                                                                      }
 
                                                                   })
                                                                   .catch((e) => {
+                                                                      // window.open(config.webpackpath  + '/public/error.html' );
                                                                       console.log(e)
                                                                   })
 
                                                           })
                                                           .catch((e) => {
+                                                          
                                                               console.log(e)
                                                           })
 
                                                   })
-                                                  .catch((err) => {
-                                                      self.$message({
-                                                          showClose: true,
-                                                          message: 'File not saved! Please try again.',
-                                                          type: 'error'
-                                                      });
-                                                      console.log('Error while creating MetalSmith JS file' + err)
+                                                  .catch((e) => {
+                                                  
+                                                      console.log(e)
                                                   })
 
-                                              self.$message({
-                                                  showClose: true,
-                                                  message: 'File Saved!',
-                                                  type: 'success'
-                                              });
                                           })
-                                          .catch((e) => {
-                                              self.saveFileLoading = false
-                                              self.$message({
-                                                  showClose: true,
-                                                  message: 'File not saved! Please try again.',
-                                                  type: 'error'
-                                              });
-                                              console.log(e)
+                                          .catch((err) => {
+                                              window.open(config.webpackpath + '/public/error.html');
+                                              console.log('Error while creating MetalSmith JS file' + err)
                                           })
+
+                                      self.$message({
+                                          showClose: true,
+                                          message: 'File Saved!',
+                                          type: 'success'
+                                      });
                                   })
                                   .catch((e) => {
-                                      console.log(e);
+                                      window.open(config.webpackpath + '/public/error.html');
+                                      self.saveFileLoading = false
+                                      self.$message({
+                                          showClose: true,
+                                          message: 'File not saved! Please try again.',
+                                          type: 'error'
+                                      });
+                                      console.log(e)
                                   })
-                          // })
-                          // .catch((e) => {
-                          //     console.log(e)
-                          // })
+                          })
+                          .catch((e) => {
+                              window.open(config.webpackpath + '/public/error.html');
+                              console.log(e);
+                          })
                   })
                   .catch((e) => {
                       console.log('Error while creating MetalSmith JS file' + e)
@@ -3595,8 +3611,9 @@
 
         let folderUrl = configFileUrl.replace(fileName, '');
 
-        let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        let rawConfigs = JSON.parse(responseConfig.data);
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
+        let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
 
         // this.getConfigFileData(folderUrl);
@@ -3940,8 +3957,9 @@
    
         let folderUrl = configFileUrl.replace(fileName, '');
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        let rawConfigs = JSON.parse(responseConfig.data);
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
+        let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
 
         this.$swal({
@@ -4076,8 +4094,9 @@
    
         let folderUrl = configFileUrl.replace(fileName, '');
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        let rawConfigs = JSON.parse(responseConfig.data);
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
+        let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
 
         console.log("this.globalConfigData:",this.globalConfigData)
@@ -4126,9 +4145,11 @@
 
         // Get Config File
         let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        let foldername = folderUrl.split('/');
+        foldername = foldername[(foldername.length - 1)];
 
-        let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        let rawConfigs = JSON.parse(responseConfig.data);
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let rawConfigs = responseConfig.data.data[0].configData;
         let repositoryId = rawConfigs[0].repoSettings[0].RepositoryId;
 
         this.$swal({
@@ -4145,11 +4166,27 @@
               // Delete Repository from GitLab Server
               let response = await axios.get(config.baseURL + '/gitlab-add-repo/' + repositoryId + '?privateToken=' + this.$session.get('privateToken'), {})
                 .then((response) => {
-                  this.$message({
-                    showClose: true,
-                    message: 'Project successfully deleted..!!',
-                    type: 'success'
-                  });
+
+                  // delete project configuration from RethinkDB
+                  axios.delete(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername , {
+                  })
+                  .then((res) => {
+                    this.$message({
+                      showClose: true,
+                      message: 'Project successfully deleted..!!',
+                      type: 'success'
+                    });
+                    console.log(res.data);
+                  })
+                  .catch((e) => {
+                      this.$message({
+                          showClose: true,
+                          message: 'Failed! Please try again.',
+                          type: 'error'
+                      });
+                      console.log(e)
+                  })
+
                   setTimeout(function() {
                     location.reload();
                   }, 500);

@@ -12,10 +12,10 @@
       </div>
       <div class="social-buttons" align="center">
         <div>
-          <a href="#" class="social-button-facebook"><i class="fa fa-facebook"></i></a>
-          <a href="#" class="social-button-google-plus"><i class="fa fa-google-plus"></i></a>
-          <a href="#" class="social-button-twitter"><i class="fa fa-twitter"></i></a>
-          <a href="#" class="social-button-github"><i class="fa fa-github"></i></a>
+          <a href="javascript:void(0)" class="social-button-facebook" v-on:click="doFacebookLogin()"><i class="fa fa-facebook"></i></a>
+          <a href="javascript:void(0)" class="social-button-google-plus" v-on:click="doGooglePlusLogin()"><i class="fa fa-google-plus"></i></a>
+          <a href="javascript:void(0)" class="social-button-twitter" v-on:click="doTwitterLogin()"><i class="fa fa-twitter"></i></a>
+          <a href="javascript:void(0)" class="social-button-github" v-on:click="doGithubLogin()"><i class="fa fa-github"></i></a>
         </div>
       </div>
       <div>
@@ -100,71 +100,156 @@ export default {
   component: {
   },
   methods: {
-	 authenticate () {
-    console.log('Authenticating User');
+    authenticate () {
+      console.log('Authenticating User');
 
-    axios.post(config.loginUrl, {
-      password: this.form.pass,
-      email: this.form.user
-    }, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-      }
-    }).then(async response => {
-      if (response.data) {
-        this.$session.start()
-        this.$session.set('token', response.data.logintoken);
-        // localStorage.setItem("auth_token", response.data.logintoken);
-        let location = psl.parse(window.location.hostname)
-        location = location.domain === null ? location.input : location.domain
-        this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
-        this.$session.set('email', this.form.user)
-        // this.$router.push('/');
-        await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
-        }).then(response => {
-          if (response.data) {
-              console.log(response.data.private_token);
-              console.log(response.data.id);
-              this.$session.set('privateToken', response.data.private_token);
-              this.$session.set('userId', response.data.id);
-              this.$session.set('username', response.data.username);
-              console.log("Username:", this.$session.get('username'));
-              this.authen.status = true;
+      axios.post(config.loginUrl, {
+        password: this.form.pass,
+        email: this.form.user
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+      }).then(async response => {
+        if (response.data) {
+          this.$session.start()
+          this.$session.set('token', response.data.logintoken);
+          // localStorage.setItem("auth_token", response.data.logintoken);
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
+          this.$session.set('email', this.form.user);
+          localStorage.setItem('email', this.form.user);
+          // this.$router.push('/');
+          await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
+          }).then(response => {
+            if (response.data) {
+                console.log(response.data.private_token);
+                console.log(response.data.id);
+                this.$session.set('privateToken', response.data.private_token);
+                this.$session.set('userId', response.data.id);
+                this.$session.set('username', response.data.username);
+                console.log("Username:", this.$session.get('username'));
+                this.authen.status = true;
 
-              axios.post(config.baseURL+'/flows-dir-listing' , {
-                foldername :'/var/www/html/websites/'+ this.$session.get('username'),
-                type : 'folder'
-              })
-              .then((res) => {
-                console.log('user Folder created!');
-              })
+                axios.post(config.baseURL+'/flows-dir-listing' , {
+                  foldername :'/var/www/html/websites/'+ this.$session.get('username'),
+                  type : 'folder'
+                })
+                .then((res) => {
+                  console.log('user Folder created!');
+                })
 
-              let self = this;
-              setTimeout(function () {
-                self.$router.push('/dashboard');
-              }, 2000);
-              
-          }
-        }).catch(error => {
-          console.log(error);
-          this.authen.status = false;
-          // this.$notify.error({
-          //   title: 'Error',
-          //   message: error.response.data,
-          //   offset: 100
-          // });
-        })
-      }
-      
-    }).catch(error => {
-      this.authen.status = false;
-      // this.$notify.error({
-      //   title: 'Error',
-      //   message: error.response.data,
-      //   offset: 100
-      // });
-    })
-   }
+                let self = this;
+                setTimeout(function () {
+                  self.$router.push('/dashboard');
+                }, 2000);
+                
+            }
+          }).catch(error => {
+            console.log(error);
+            this.authen.status = false;
+            // this.$notify.error({
+            //   title: 'Error',
+            //   message: error.response.data,
+            //   offset: 100
+            // });
+          })
+        }
+        
+      }).catch(error => {
+        this.authen.status = false;
+        // this.$notify.error({
+        //   title: 'Error',
+        //   message: error.response.data,
+        //   offset: 100
+        // });
+      })
+    },
+
+    doFacebookLogin () {
+      axios.post(config.authFacebookUrl, {
+      })
+      .then((res) => {
+        this.$message({
+          showClose: true,
+          message: 'Successfully done.',
+          type: 'success'
+        });
+        console.log(res.data);
+      })
+      .catch((e) => {
+        this.$message({
+          showClose: true,
+          message: 'Failed! Please try again.',
+          type: 'error'
+        });
+        console.log(e)
+      })
+    },
+
+    doGooglePlusLogin () {
+      axios.post(config.authGooglePlusUrl, {
+      })
+      .then((res) => {
+        this.$message({
+          showClose: true,
+          message: 'Successfully done.',
+          type: 'success'
+        });
+        console.log(res.data);
+      })
+      .catch((e) => {
+        this.$message({
+          showClose: true,
+          message: 'Failed! Please try again.',
+          type: 'error'
+        });
+        console.log(e)
+      })
+    },
+
+    doTwitterLogin () {
+      axios.post(config.authTwitterUrl, {
+      })
+      .then((res) => {
+        this.$message({
+          showClose: true,
+          message: 'Successfully done.',
+          type: 'success'
+        });
+        console.log(res.data);
+      })
+      .catch((e) => {
+        this.$message({
+          showClose: true,
+          message: 'Failed! Please try again.',
+          type: 'error'
+        });
+        console.log(e)
+      })
+    },
+
+    doGithubLogin () {
+      axios.post(config.authGithubUrl, {
+      })
+      .then((res) => {
+        this.$message({
+          showClose: true,
+          message: 'Successfully done.',
+          type: 'success'
+        });
+        console.log(res.data);
+      })
+      .catch((e) => {
+        this.$message({
+          showClose: true,
+          message: 'Failed! Please try again.',
+          type: 'error'
+        });
+        console.log(e)
+      })
+    }
   },
   created () {
     // Check if login token in cookie exist or not

@@ -181,12 +181,16 @@ export default {
            }
        }
 
-       this.configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+      let foldername = this.folderUrl.split('/');
+      foldername = foldername[(foldername.length-1)];
+
+       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
        this.AllData=[];
        // console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
        if (this.configData.status == 200 || this.configData.status == 204) {
            
-           this.settings = JSON.parse(this.configData.data);
+           this.settings = this.configData.data.data[0].configData;
            
            for (var i = 0; i <this.partialsList.length; i++) {
 
@@ -339,9 +343,14 @@ export default {
       let fileNameOrginal = urlparts[urlparts.length - 1];
       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
       this.folderUrl = url.replace(fileName, '');
-      this.Data = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+
+      let foldername = this.folderUrl.split('/');
+      foldername = foldername[(foldername.length-1)];
+
+      this.Data = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
       if (this.Data.status == 200 || this.Data.status == 204) {
-          this.settingsData = JSON.parse(this.Data.data);
+          this.settingsData = this.Data.data.data[0].configData;
           this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
               'PageName': fileNameOrginal
           });
@@ -430,27 +439,41 @@ export default {
               }
               this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
           }
-          let newfilename = this.folderUrl + '/assets/config.json';
-          axios.post(config.baseURL + '/flows-dir-listing', {
-                  filename: newfilename,
-                  text: JSON.stringify(this.settings),
-                  type: 'file'
-              })
-              .then((res) => {
-                  this.$message({
-                      showClose: true,
-                      message: 'Config Saved!',
-                      type: 'success'
+
+          let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+
+          if (rethinkdbCheck.data.data) {
+
+              // update existing data
+              await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+                      configData: this.settings
+                  })
+                  .then(async(res) => {
+                      this.$message({
+                          showClose: true,
+                          message: 'Successfully updated.',
+                          type: 'success'
+                      });
+                      console.log(res.data);
+                  })
+                  .catch((e) => {
+                      this.$message({
+                          showClose: true,
+                          message: 'Failed! Please try again.',
+                          type: 'error'
+                      });
+                      console.log(e)
                   });
-              })
-              .catch((e) => {
-                  console.log(e);
-                  this.$message({
-                      showClose: true,
-                      message: 'Cannot save config file! Some error occured, try again.',
-                      type: 'error'
-                  });
-              })
+
+          } else {
+              this.$message({
+                  showClose: true,
+                  message: 'Data Error.',
+                  type: 'error'
+              });
+          }
+
+
 
         } else {
           for (var i = 0; i < this.partialsListSelection.length; i++) {
@@ -459,29 +482,41 @@ export default {
             obj[temp] = this.form.parent_id[temp];
             PageSettings.partials.push(obj)
           }
+
           this.settings[1].pageSettings.push(PageSettings);
-          let newfilename = this.folderUrl + '/assets/config.json';
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename: newfilename,
-              text: JSON.stringify(this.settings),
-              type: 'file'
-          })
-          .then((res) => {
-              console.log(res);
+
+          let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+
+          if (rethinkdbCheck.data.data) {
+
+              // update existing data
+              await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+                      configData: this.settings
+                  })
+                  .then(async(res) => {
+                      this.$message({
+                          showClose: true,
+                          message: 'Successfully updated.',
+                          type: 'success'
+                      });
+                      console.log(res.data);
+                  })
+                  .catch((e) => {
+                      this.$message({
+                          showClose: true,
+                          message: 'Failed! Please try again.',
+                          type: 'error'
+                      });
+                      console.log(e)
+                  });
+
+          } else {
               this.$message({
                   showClose: true,
-                  message: 'Config Saved!',
-                  type: 'success'
-              });
-          })
-          .catch((e) => {
-              console.log(e);
-              this.$message({
-                  showClose: true,
-                  message: 'Cannot save file! Some error occured, try again.',
+                  message: 'Data Error.',
                   type: 'error'
               });
-          })
+          }
         }
     }
 
@@ -613,9 +648,13 @@ export default {
     let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
     this.folderUrl = url.replace(fileName, '');
 
-    this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+    let foldername = this.folderUrl.split('/');
+    foldername = foldername[(foldername.length-1)];
+
+    this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
     if(this.configData.status == 200 || this.configData.status == 204){
-      this.settings = JSON.parse(this.configData.data);
+      this.settings = this.configData.data.data[0].configData;
       
       // Get Current file index
       this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});

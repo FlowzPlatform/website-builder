@@ -236,42 +236,55 @@ export default {
       return '';
     },
 
-    saveProjectSettings() {
+    async saveProjectSettings() {
       
-      let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
-      axios.post( config.baseURL + '/flows-dir-listing', {
-          filename : newfilename,
-          text : JSON.stringify(this.settings),
-          type : 'file'
-      })
-      .then((res) => {
-          console.log('Config File saved: ', res);
-          this.$message({
-              showClose: true,
-              message: 'Config Saved!',
-              type: 'success'
-          });
-      })
-      .catch((e) => {
-          console.log('Some error occured while saving config file. Here is full log: ', e);
-          this.$message({
-              showClose: true,
-              message: 'Cannot save file! Some error occured, try again.',
-              type: 'danger'
-          });
-      })
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+
+      if (rethinkdbCheck.data.data) {
+        // update existing data
+        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+            configData: this.settings
+        })
+        .then(async(res) => {
+            this.$message({
+                showClose: true,
+                message: 'Successfully updated.',
+                type: 'success'
+            });
+            console.log(res.data);
+        })
+        .catch((e) => {
+            this.$message({
+                showClose: true,
+                message: 'Failed! Please try again.',
+                type: 'error'
+            });
+            console.log(e)
+        });
+
+      } else {
+        this.$message({
+          showClose: true,
+          message: 'Data Error.',
+          type: 'error'
+        });
+      } 
     },
 
   	async init () {
 
-      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      localStorage.setItem('folderUrl', url);
+      let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      localStorage.setItem('folderUrl', folderUrl);
+
+      let foldername = folderUrl.split('/');
+      foldername = foldername[(foldername.length-1)];
       
-      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
       if(this.configData.status == 200 || this.configData.status == 204){
         console.log('Config file found! Updating fields..');
 
-        this.settings = JSON.parse(this.configData.data);
+        this.settings = this.configData.data.data[0].configData;
 
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
@@ -344,17 +357,22 @@ export default {
     async previewWebsite () {
         this.previewLoader = true;
         var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        var rawConfigs = JSON.parse(responseConfig.data);
+
+        let foldername = folderUrl.split('/');
+        foldername = foldername[(foldername.length-1)];
+
+        var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
+        var rawConfigs = responseConfig.data.data[0].configData;
         var partialstotal = []
         console.log("rawConfigs[1].pageSettings.length:",rawConfigs[1].pageSettings.length)
         for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
 
             var partials = ''
 
-            let responseConfigLoop = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+            let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
 
-            var rawSettings = JSON.parse(responseConfigLoop.data);
+            var rawSettings = responseConfigLoop.data.data[0].configData;
             var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
             console.log('nameF:',nameF)
             var Layout = ''
