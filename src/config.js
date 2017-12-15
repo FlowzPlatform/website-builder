@@ -16,6 +16,7 @@ module.exports = {
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
+    webpackPath: '/var/www/html/node_modules/',
     baseURL : url,
     ipAddress: 'http://localhost'
     // ipAddress: 'http://auth.flowz.com:8080'
