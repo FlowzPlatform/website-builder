@@ -65,8 +65,11 @@ export default {
 
         var folderUrl = configFileUrl.replace(fileName, '');
 
-        let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        let rawConfigs = JSON.parse(responseConfig.data);
+        let foldername = folderUrl.split('/');
+        foldername = foldername[(foldername.length -1)];
+
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let rawConfigs = responseConfig.data.data[0].configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
         this.globalCssVariables = rawConfigs[1].projectSettings[1].GlobalCssVariables;

@@ -5,7 +5,7 @@
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
       <el-button type="info" size="small" @click="publishMetalsmith" :loading="previewLoader">Publish Website</el-button>
-      <el-tooltip class="item" effect="dark" content="Download Config.json" placement="top-start">
+      <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
       </el-tooltip>
       
@@ -951,8 +951,8 @@ export default {
       });
     },
 
-    saveProjectSettings() {
-      
+    async saveProjectSettings() {
+
       let ProjectSettings = [{
                               "RepositoryId": this.newRepoId,
                               "ProjectName": this.repoName,
@@ -969,112 +969,40 @@ export default {
 
       this.settings[1].projectSettings = ProjectSettings;
 
-      let newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/config.json';
-      return axios.post( config.baseURL + '/flows-dir-listing', {
-          filename : newfilename,
-          text : JSON.stringify(this.settings),
-          type : 'file'
-      })
-      .then( async (res) => {
-          console.log('Config File saved: ', res);
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
 
-          // Save plugin-settings.json file
-          let pluginSettingsFileName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/assets/plugin-settings.json';
-          await axios.post( config.baseURL + '/flows-dir-listing', {
-              filename : pluginSettingsFileName,
-              text : JSON.stringify(this.pluginsTreedata),
-              type : 'file'
-          })
-          .then(async (res) => {
-              console.log('Plugin-settings.json File saved: ', res);
+      if(rethinkdbCheck.data.data){
+        console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);  
 
-              let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
-
-              if(rethinkdbCheck.data.data){
-                console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);  
-
-                // update existing data
-                await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
-                  configData : this.settings
-                })
-                .then((res) => {
-                  this.$message({
-                        showClose: true,
-                        message: 'Successfully updated.',
-                        type: 'success'
-                    });
-                    console.log(res.data);
-                })
-                .catch((e) => {
-                    this.$message({
-                        showClose: true,
-                        message: 'Failed! Please try again.',
-                        type: 'error'
-                    });
-                    console.log(e)
-                });
-
-                this.$message({
-                    showClose: true,
-                    message: 'Config Saved!',
-                    type: 'success'
-                });
-
-              } else {
-                this.$message({
-                    showClose: true,
-                    message: 'Data Not found in DB..',
-                    type: 'error'
-                });
-              }
-              
-
-              // save to rethinkdb
-              // await axios.post(config.baseURL + '/project-configuration', {
-              //   userEmail: this.$session.get('email'),
-              //   websiteName: this.repoName,
-              //   configData : this.settings
-              // })
-              // .then((res) => {
-              //   this.$message({
-              //         showClose: true,
-              //         message: 'Successfully Saved in database.',
-              //         type: 'success'
-              //     });
-              //     console.log(res.data);
-              // })
-              // .catch((e) => {
-              //     this.$message({
-              //         showClose: true,
-              //         message: 'Failed! Please try again.',
-              //         type: 'error'
-              //     });
-              //     console.log(e)
-              // })
-
-              // this.$message({
-              //     showClose: true,
-              //     message: 'Config Saved!',
-              //     type: 'success'
-              // });
-          })
-          .catch((e) => {
-              console.log('Some error occured while saving Plugin-settings.json file. Here is full log: ', e);
-              this.$message({
-                  showClose: true,
-                  message: 'Cannot save file! Some error occured, try again.',
-                  type: 'danger'
-              });
-          });
-      })
-      .catch((e) => {
-          console.log('Some error occured while saving config file. Here is full log: ', e);
+        // update existing data
+        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+          configData: this.settings,
+          pluginsData: this.pluginsTreedata
+        })
+        .then(async (res) => {
           this.$message({
               showClose: true,
-              message: 'Cannot save file! Some error occured, try again.',
-              type: 'danger'
+              message: 'Successfully updated.',
+              type: 'success'
           });
-      });
+          console.log(res.data);
+        })
+        .catch((e) => {
+            this.$message({
+                showClose: true,
+                message: 'Failed! Please try again.',
+                type: 'error'
+            });
+            console.log(e)
+        });
+
+      } else {
+        this.$message({
+            showClose: true,
+            message: 'Data Error.',
+            type: 'error'
+        });
+      }    
     },
 
     revertCommit(index) {
@@ -1123,17 +1051,17 @@ export default {
     async publishMetalsmith () {
         this.previewLoader = true;
         var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
-        var rawConfigs = JSON.parse(responseConfig.data);
+        var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
+        var rawConfigs = responseConfig.data.data[0].configData;
         var partialstotal = []
         console.log("rawConfigs[1].pageSettings.length:",rawConfigs[1].pageSettings.length)
         for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
 
             var partials = ''
 
-            let responseConfigLoop = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+            let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
 
-            var rawSettings = JSON.parse(responseConfigLoop.data);
+            var rawSettings = responseConfigLoop.data.data[0].configData;
             var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
             console.log('nameF:',nameF)
             var Layout = ''
@@ -1472,19 +1400,19 @@ export default {
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
-      url = url.split('/');
+      let splitUrl = url.split('/');
 
-      let websiteName = url[(url.length -1)];
+      let websiteName = splitUrl[(splitUrl.length -1)];
+
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
 
-      console.log(this.configData.data);
-
       if(this.configData.status == 200 || this.configData.status == 204){
 
-        this.settings = JSON.parse(this.configData.data.data[0].configData);
+        this.settings = this.configData.data.data[0].configData;
+        this.pluginsTreedata = this.configData.data.data[0].pluginsData;
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
@@ -1579,13 +1507,8 @@ export default {
         
 
       } else {
-        console.log('Cannot get config file!');
+        console.log('Cannot get configurations!');
       } 
-
-      let treeFileResponse = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/plugin-settings.json');
-
-      this.pluginsTreedata = JSON.parse(treeFileResponse.data);
-
 
       // replace all image tag source with index as name attribute to get the image file preview
       

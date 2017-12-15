@@ -4080,11 +4080,15 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
     // ReUse Component
     // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-     var folderUrl = localStorage.getItem("folderUrl");
+    var folderUrl = localStorage.getItem("folderUrl");
+    var useremail = localStorage.getItem("email");
 
-    let configFileUrl = 'http://localhost:3032/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json';
+    let foldername = folderUrl.split('/');
+    foldername = foldername[(foldername.length-1)];
+
+    let configFileUrl = 'http://localhost:3032/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
     $.getJSON( configFileUrl, function( data ) {  
-        var configData = JSON.parse(data);
+        var configData = data.data[0].configData;
         console.log('Config Data:', configData);
         storedTemplates = Object.keys(configData[2].layoutOptions[0]);
     });
