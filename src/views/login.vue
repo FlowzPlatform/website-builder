@@ -10,12 +10,28 @@
       <div class='login_title'>
         <span>Login to Flowz Builder</span>
       </div>
+      <form id="form-facebook" name="form-facebook" :action="loginWithFacebookUrl" method="post">
+        <input type="hidden" name="success_url" :value="facebookSuccessCallbackUrl">
+      </form>
+      <form id="form-google" name="form-google" :action ="loginWithGoogleUrl" method="post">
+        <input type="hidden" name="success_url" :value="googleSuccessCallbackUrl">
+      </form>
+      <form id="form-twitter" name="form-twitter" :action ="loginWithTwitterUrl" method="post">
+        <input type="hidden" name="success_url" :value="twitterSuccessCallbackUrl">
+      </form>
+      <form id="form-github" name="form-github" :action ="loginWithGithubUrl" method="post">
+        <input type="hidden" name="success_url" :value="githubSuccessCallbackUrl">
+      </form>
+      <form id="form-linkedIn" name="form-linkedIn" :action ="loginWithLinkedInUrl" method="post">
+        <input type="hidden" name="success_url" :value="linkedInSuccessCallbackUrl">
+      </form>
       <div class="social-buttons" align="center">
         <div>
           <a href="javascript:void(0)" class="social-button-facebook" v-on:click="doFacebookLogin()"><i class="fa fa-facebook"></i></a>
           <a href="javascript:void(0)" class="social-button-google-plus" v-on:click="doGooglePlusLogin()"><i class="fa fa-google-plus"></i></a>
           <a href="javascript:void(0)" class="social-button-twitter" v-on:click="doTwitterLogin()"><i class="fa fa-twitter"></i></a>
           <a href="javascript:void(0)" class="social-button-github" v-on:click="doGithubLogin()"><i class="fa fa-github"></i></a>
+          <a href="javascript:void(0)" class="social-button-linked-in" v-on:click="doLinkedInLogin()"><i class="fa fa-linkedin"></i></a>
         </div>
       </div>
       <div>
@@ -94,7 +110,17 @@ export default {
         status: false,
         success: 'Authentication Success',
         error: 'Authentication Failed'
-      }
+      },
+      facebookSuccessCallbackUrl : config.facebookSuccessCallbackUrl,
+      googleSuccessCallbackUrl : config.googleSuccessCallbackUrl,
+      twitterSuccessCallbackUrl: config.twitterSuccessCallbackUrl,
+      githubSuccessCallbackUrl: config.githubSuccessCallbackUrl,
+      linkedInSuccessCallbackUrl: config.linkedInSuccessCallbackUrl,
+      loginWithFacebookUrl : config.loginWithFacebookUrl,
+      loginWithGoogleUrl : config.loginWithGoogleUrl,
+      loginWithTwitterUrl: config.loginWithTwitterUrl,
+      loginWithGithubUrl: config.loginWithGithubUrl,
+      loginWithLinkedInUrl: config.loginWithLinkedInUrl
     }
   },
   component: {
@@ -168,87 +194,28 @@ export default {
     },
 
     doFacebookLogin () {
-      axios.post(config.authFacebookUrl, {
-      })
-      .then((res) => {
-        this.$message({
-          showClose: true,
-          message: 'Successfully done.',
-          type: 'success'
-        });
-        console.log(res.data);
-      })
-      .catch((e) => {
-        this.$message({
-          showClose: true,
-          message: 'Failed! Please try again.',
-          type: 'error'
-        });
-        console.log(e)
-      })
+      console.log('Facebook Login');
+      document.getElementById('form-facebook').submit();
     },
 
     doGooglePlusLogin () {
-      axios.post(config.authGooglePlusUrl, {
-      })
-      .then((res) => {
-        this.$message({
-          showClose: true,
-          message: 'Successfully done.',
-          type: 'success'
-        });
-        console.log(res.data);
-      })
-      .catch((e) => {
-        this.$message({
-          showClose: true,
-          message: 'Failed! Please try again.',
-          type: 'error'
-        });
-        console.log(e)
-      })
+      console.log('Google Login');
+      document.getElementById('form-google').submit();
     },
 
     doTwitterLogin () {
-      axios.post(config.authTwitterUrl, {
-      })
-      .then((res) => {
-        this.$message({
-          showClose: true,
-          message: 'Successfully done.',
-          type: 'success'
-        });
-        console.log(res.data);
-      })
-      .catch((e) => {
-        this.$message({
-          showClose: true,
-          message: 'Failed! Please try again.',
-          type: 'error'
-        });
-        console.log(e)
-      })
+      console.log('Twitter Login');
+      document.getElementById('form-twitter').submit();
     },
 
     doGithubLogin () {
-      axios.post(config.authGithubUrl, {
-      })
-      .then((res) => {
-        this.$message({
-          showClose: true,
-          message: 'Successfully done.',
-          type: 'success'
-        });
-        console.log(res.data);
-      })
-      .catch((e) => {
-        this.$message({
-          showClose: true,
-          message: 'Failed! Please try again.',
-          type: 'error'
-        });
-        console.log(e)
-      })
+      console.log('Github Login');
+      document.getElementById('form-github').submit();
+    },
+
+    doLinkedInLogin () {
+      console.log('Github Login');
+      document.getElementById('form-linkedIn').submit();
     }
   },
   created () {
@@ -696,6 +663,11 @@ export default {
 
   .social-button-github:hover {
     background-color: #1E1B1C;
+    transition: 0.2s all linear;
+  }
+
+  .social-button-linked-in:hover {
+    background-color: #006FB7;
     transition: 0.2s all linear;
   }
 </style>

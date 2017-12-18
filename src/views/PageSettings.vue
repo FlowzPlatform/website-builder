@@ -96,10 +96,19 @@
             <el-form-item label="Page SEO Description">
               <el-input type="textarea" :rows="5" v-model="form.seoDesc"></el-input>
             </el-form-item>
+            <hr>
+            <el-form-item label="Following CSS have been included:">
+              <el-checkbox v-model="checked2" class="cssChecks">Bootstrap</el-checkbox><br>
+              <el-checkbox v-model="checked2" class="cssChecks">Font-awesome</el-checkbox><br>
+              <el-checkbox v-model="checked2" class="cssChecks">Froala Blocks</el-checkbox><br>
+              <el-checkbox v-model="checked2" class="cssChecks">fonts.googleapis.com</el-checkbox>
+            </el-form-item>
+
             <el-form-item>
               <el-button type="primary" @click="savePageSettings">Save</el-button>
               <!-- <el-button>Cancel</el-button> -->
             </el-form-item>
+
           </el-form> 
         </div>
       </div> 
@@ -160,7 +169,8 @@ export default {
       folderUrl: '',
       partialsList: [],
       partialsListSelection: [],
-      defaultParams: []
+      defaultParams: [],
+      checked2:''
     }
   },
   component: {
@@ -699,5 +709,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.cssChecks{
+  width: 180px;
+}
 </style>

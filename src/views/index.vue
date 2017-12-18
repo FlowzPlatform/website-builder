@@ -669,7 +669,7 @@
         let username_session = this.$session.get('username');
         console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
-        axios.get(config.baseURL + '/flows-dir-listing?website='+ username_session)
+        axios.get(config.baseURL + '/flows-dir-listing')
           .then(response => {
             response.data.children = this.getTreeData(response.data);
 
@@ -746,6 +746,7 @@
         return _.sortBy(newData, [function(o) {
           return o.type;
         }]);
+        
       },
 
       // Sort directory tree
@@ -778,6 +779,8 @@
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'ProjectStats';
+
+          localStorage.setItem("folderUrl", data.path);
         }
         // If Clicked in Partials Folder 
         else if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))) {
@@ -1116,10 +1119,6 @@
             this.newProjectFolderDialog = false
             this.addNewProjectFolderLoading = false;
 
-            console.log('ProjectName: ', this.formAddProjectFolder.projectName);
-            console.log('Private Token of user: ', this.$session.get('privateToken'));
-            console.log('Username: ', this.$session.get('username'));
-
             // Create repositoroty on GitLab
             axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&privateToken=' + this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {})
               .then((response) => {
@@ -1137,16 +1136,6 @@
                   .catch((e) => {
                     console.log(e)
                   })
-
-                  // axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName + '/Templates', {
-
-                  // }).then((res) => {
-                  //   localStorage.setItem("Templates", JSON.stringify(res.data));
-                  //   let temp_list = localStorage.getItem("Templates");
-                  // })
-                  // .catch((e) => {
-                  //   console.log(e)
-                  // })
 
                   this.newRepoId = response.data.id;
                   this.repoName = response.data.name;
@@ -1737,20 +1726,43 @@
         //     console.log(e)
         // });
 
-        // Dynamic menu Navbar Plugin 
-        let navbarPlugin = newFolderName + '/assets/client-plugins/client-navbar-plugin.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-navbar-plugin.js', {
+        // // Dynamic menu Navbar Plugin 
+        // let navbarPlugin = newFolderName + '/assets/client-plugins/client-navbar-plugin.js';
+        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-navbar-plugin.js', {
+            
+        // })
+        // .then((res) => {
+        //   let navbarPluginData = res.data;
+        //   axios.post(config.baseURL + '/flows-dir-listing', {
+        //       filename : navbarPlugin,
+        //       text : navbarPluginData,
+        //       type : 'file'
+        //   })
+        //   .then((res) => {
+        //     console.log(navbarPlugin + ' file created');    
+        //   })
+        //   .catch((e) => {
+        //       console.log(e)
+        //   })
+        // })
+        // .catch((e) => {
+        //     console.log(e)
+        // });
+
+        // Flowz Engine JS
+        let flowzBuilderEngine = newFolderName + '/assets/client-plugins/flowz-builder-engine.js';
+        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/flowz-builder-engine.js', {
             
         })
         .then((res) => {
-          let navbarPluginData = res.data;
+          let flowzEngineData = res.data;
           axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : navbarPlugin,
-              text : navbarPluginData,
+              filename : flowzBuilderEngine,
+              text : flowzEngineData,
               type : 'file'
           })
           .then((res) => {
-            console.log(navbarPlugin + ' file created');    
+            console.log(flowzBuilderEngine + ' file created');    
           })
           .catch((e) => {
               console.log(e)
@@ -2702,6 +2714,7 @@
 
       // Generate Preview of Page
       async generatePreview() {
+          this.fullscreenLoading = true;
           this.previewLoading = true;
           // Save File first
           this.saveFile();
@@ -3081,6 +3094,7 @@
                                                   .then((res) => {
 
                                                       self.previewLoading = false;
+                                                      self.fullscreenLoading = false;
 
                                                       let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
                                                       previewFile = folderUrl.replace('/var/www/html', '');
@@ -3102,7 +3116,8 @@
                                                                       if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                                                           for (let x = 0; x < self.form.vuepartials.length; x++) {
                                                                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                                                                      console.log(res)
+                                                                                      console.log(res);
+
                                                                                   })
                                                                                   .catch((e) => {
                                                                                       console.log(e)
@@ -3695,31 +3710,29 @@
           cancelButtonText: 'No, keep it'
         }).then(() => {
           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
-            .then((res) => {
+          .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
               let file_path_ = data.path.replace(/\\/g, "/")
-              
-              let arr_file = file_path_.split('/')  
 
-              
-              if(_.includes(data.path, 'Partials')){
-              var foldername=arr_file[arr_file.length-1]
-              console.log("foldername:",foldername)
-              if(this.globalConfigData[2].layoutOptions[0][foldername]!=undefined){
+              let arr_file = file_path_.split('/')
 
-              delete this.globalConfigData[2].layoutOptions[0][foldername];
-              this.saveConfigFile(folderUrl);
-              }
-              else{
-                console.log("folder not found in config file.")
-              }
+              if (_.includes(data.path, 'Partials')) {
+                  var foldername = arr_file[arr_file.length - 1]
+                  console.log("foldername:", foldername)
+                  if (this.globalConfigData[2].layoutOptions[0][foldername] != undefined) {
+
+                      delete this.globalConfigData[2].layoutOptions[0][foldername];
+                      this.saveConfigFile(folderUrl);
+                  } else {
+                      console.log("folder not found in config file.")
+                  }
               }
 
-              })
-            .catch((e)=>{
+          })
+          .catch((e) => {
               console.log(e)
-            })
+          })
         })
         .catch((e)=>{
               console.log(e)
@@ -3800,6 +3813,11 @@
         this.generatePreview();
       },
 
+      quickDelete (store, data) {
+        this.$store.state.fileUrl = data.path;
+        this.removeProject(store, data);
+      },
+
       // Displaying icons in tree nodes  
       renderContent(h, { node, data, store }) {
 
@@ -3822,23 +3840,11 @@
                       <i title="Project Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
                     
                     
-                        <i title="Delete Project" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removeProject(store, data) }></i>
+                        <i title="Delete Project" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
                     
                   </span>
               </span>)  
-          }  else if(node.level == 1){
-          return (<span>
-              <span class="nodelabel" on-click={ () => this.goToHomePage() }>
-                  <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
-                  <span>Websites</span>
-              </span>
-              <span class="">
-                  <el-tooltip content="Create New Website" placement="top">
-                      <i class="fa fa-globe" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px; color: #4A8AF4;"  on-click={ () => this.newProjectFolderDialog = true }></i>
-                  </el-tooltip>
-              </span>
-          </span>)
-        } else {
+          } else {
             // If it's a simple directory
             if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
               return(<span>
@@ -3980,7 +3986,17 @@
           
         }else{
           // Root Folder
-          return;
+          return(<span>
+                  <span class="nodelabel" on-click={ () => this.goToHomePage() }>
+                      <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
+                      <span>{node.label}</span>
+                  </span>
+                  <span class="">
+                      <el-tooltip content="Create New Website" placement="top">
+                          <i class="fa fa-globe" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px; color: #4A8AF4;"  on-click={ () => this.newProjectFolderDialog = true }></i>
+                      </el-tooltip>
+                  </span>
+              </span>);
         }
       },
 

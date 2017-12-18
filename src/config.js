@@ -9,15 +9,24 @@ module.exports = {
     loginUrl: 'http://auth.flowz.com/api/login',
     registerUrl: 'http://auth.flowz.com/api/setup',
     userDetail: 'http://auth.flowz.com/api/userdetails',
-    authFacebookUrl: 'http://auth.flowz.com/auth/facebook',
-    authGooglePlusUrl: 'http://auth.flowz.com/auth/Gplus',
-    authTwitterUrl: 'http://auth.flowz.com/auth/twitter',
-    authGithubUrl: 'http://auth.flowz.com/auth/github',
+    socialUrl: 'http://auth.flowz.com/api',
+
+    facebookSuccessCallbackUrl: 'http://localhost:8080/dashboard',
+    loginWithFacebookUrl: 'http://auth.flowz.com/auth/facebook',
+    googleSuccessCallbackUrl: 'http://localhost:8080/dashboard',
+    loginWithGoogleUrl: 'http://auth.flowz.com/auth/Gplus',
+    twitterSuccessCallbackUrl: 'http://localhost:8080/dashboard',
+    loginWithTwitterUrl: 'http://auth.flowz.com/auth/twitter',
+    githubSuccessCallbackUrl: 'http://localhost:8080/dashboard',
+    loginWithGithubUrl: 'http://auth.flowz.com/auth/github',
+    linkedInSuccessCallbackUrl: 'http://localhost:8080/dashboard',
+    loginWithLinkedInUrl: 'http://auth.flowz.com/auth/linkedin',
+
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     webpackPath: '/var/www/html/node_modules/',
     baseURL : url,
-    ipAddress: 'http://localhost'
-    // ipAddress: 'http://auth.flowz.com:8080'
+    // ipAddress: 'http://localhost'
+    ipAddress: 'http://auth.flowz.com:8080'
 }

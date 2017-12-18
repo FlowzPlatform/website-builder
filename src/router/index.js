@@ -5,6 +5,7 @@ import Login from '@/views/login'
 import Register from '@/views/register'
 import ForgotPassword from '@/views/ForgotPassword'
 import Homepage from '@/views/Homepage'
+import EmailVerification from '@/views/EmailVerification'
 
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/email-verification',
+      name: 'email-verification',
+      component: EmailVerification
     },
     {
       path: '/register',
