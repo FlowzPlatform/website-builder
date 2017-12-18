@@ -158,13 +158,13 @@ export default {
                 console.log("Username:", this.$session.get('username'));
                 this.authen.status = true;
 
-                axios.post(config.baseURL+'/flows-dir-listing' , {
-                  foldername :'/var/www/html/websites/'+ this.$session.get('username'),
-                  type : 'folder'
-                })
-                .then((res) => {
-                  console.log('user Folder created!');
-                })
+                // axios.post(config.baseURL+'/flows-dir-listing' , {
+                //   foldername :'/var/www/html/websites/'+ this.$session.get('username'),
+                //   type : 'folder'
+                // })
+                // .then((res) => {
+                //   console.log('user Folder created!');
+                // })
 
                 let self = this;
                 setTimeout(function () {
