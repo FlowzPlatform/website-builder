@@ -669,7 +669,7 @@
         let username_session = this.$session.get('username');
         console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
-        axios.get(config.baseURL + '/flows-dir-listing?website='+ username_session)
+        axios.get(config.baseURL + '/flows-dir-listing')
           .then(response => {
             response.data.children = this.getTreeData(response.data);
 
@@ -746,6 +746,7 @@
         return _.sortBy(newData, [function(o) {
           return o.type;
         }]);
+        
       },
 
       // Sort directory tree
@@ -778,6 +779,8 @@
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'ProjectStats';
+
+          localStorage.setItem("folderUrl", data.path);
         }
         // If Clicked in Partials Folder 
         else if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))) {
@@ -1116,10 +1119,6 @@
             this.newProjectFolderDialog = false
             this.addNewProjectFolderLoading = false;
 
-            console.log('ProjectName: ', this.formAddProjectFolder.projectName);
-            console.log('Private Token of user: ', this.$session.get('privateToken'));
-            console.log('Username: ', this.$session.get('username'));
-
             // Create repositoroty on GitLab
             axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&privateToken=' + this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {})
               .then((response) => {
@@ -1137,16 +1136,6 @@
                   .catch((e) => {
                     console.log(e)
                   })
-
-                  // axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName + '/Templates', {
-
-                  // }).then((res) => {
-                  //   localStorage.setItem("Templates", JSON.stringify(res.data));
-                  //   let temp_list = localStorage.getItem("Templates");
-                  // })
-                  // .catch((e) => {
-                  //   console.log(e)
-                  // })
 
                   this.newRepoId = response.data.id;
                   this.repoName = response.data.name;
@@ -1710,406 +1699,70 @@
             console.log(e)
         });
 
-        // // Template
-        // let template1 = newFolderName + '/Partials/Templates/template1.html';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/Templates/template1.html', {
+        // // Product Listing Plugin
+        // let listingPlugin = newFolderName + '/assets/client-plugins/client-product-listing-plugin.js';
+        // let pluginJsData = '';
+        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/product-listing-plugin-cleaned.js', {
             
         // })
-        // .then((res) => {
-        //   let template1Data = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : template1,
-        //       text : template1Data,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(template1 + ' file created');    
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // // Template
-        // let templateListing2 = newFolderName + '/Partials/Templates/template2.html';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/Templates/template2.html', {
-            
-        // })
-        // .then((res) => {
-        //   let template2Data = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : templateListing2,
-        //       text : template2Data,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(templateListing2 + ' file created');    
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // // Template
-        // let template3 = newFolderName + '/Partials/Templates/template3.html';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/Templates/template3.html', {
-            
-        // })
-        // .then((res) => {
-        //   let template3Data = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : template3,
-        //       text : template3Data,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(template3 + ' file created');    
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // // Template
-        // let template4 = newFolderName + '/Partials/Templates/template4.html';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/Templates/template4.html', {
-            
-        // })
-        // .then((res) => {
-        //   let template4Data = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : template4,
-        //       text : template4Data,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(template4 + ' file created');    
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // // Template
-        // let template5 = newFolderName + '/Partials/Templates/template5.html';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/Templates/template5.html', {
-            
-        // })
-        // .then((res) => {
-        //   let template5Data = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : template5,
-        //       text : template5Data,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(template5 + ' file created');    
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // // Template
-        // let productList = newFolderName + '/Partials/Templates/productList.html';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/Templates/productlist.html', {
-            
-        // })
-        // .then((res) => {
-        //   let productListData = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : productList,
-        //       text : productListData,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(productList + ' file created');    
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // // Template
-        // let landscape = newFolderName + '/Partials/Templates/landscape.html';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/Templates/landscape.html', {
-            
-        // })
-        // .then((res) => {
-        //   let landscapeData = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : landscape,
-        //       text : landscapeData,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(landscape + ' file created');    
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // // Template
-        // let creative = newFolderName + '/Partials/Templates/creative.html';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/Templates/creative.html', {
-            
-        // })
-        // .then((res) => {
-        //   let creativeData = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : creative,
-        //       text : creativeData,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(creative + ' file created');    
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // Product Listing Plugin
-        let listingPlugin = newFolderName + '/assets/client-plugins/client-product-listing-plugin.js';
-        let pluginJsData = '';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/product-listing-plugin-cleaned.js', {
-            
-        })
-        .then((response) => {
-          pluginJsData = response.data;
-          let ProjectName = newFolderName.replace('/var/www/html/websites/', '')
-          pluginJsData = pluginJsData.replace('setNameHere', ProjectName);
+        // .then((response) => {
+        //   pluginJsData = response.data;
+        //   let ProjectName = newFolderName.replace('/var/www/html/websites/', '')
+        //   pluginJsData = pluginJsData.replace('setNameHere', ProjectName);
           
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : listingPlugin,
-              text : pluginJsData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(listingPlugin + ' file created');
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        });
+        //   axios.post(config.baseURL + '/flows-dir-listing', {
+        //       filename : listingPlugin,
+        //       text : pluginJsData,
+        //       type : 'file'
+        //   })
+        //   .then((res) => {
+        //     console.log(listingPlugin + ' file created');
+        //   })
+        //   .catch((e) => {
+        //       console.log(e)
+        //   })
+        // })
+        // .catch((e) => {
+        //     console.log(e)
+        // });
 
-
-
-
-        // Ecommerce Website config js
-        let ecommWebsiteConfig = newFolderName + '/assets/client-plugins/ecommerce-website-config.js';
-        let ecommWebsiteConfigJsData = '';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/ecommerce-website-config.js', {
+        // // Dynamic menu Navbar Plugin 
+        // let navbarPlugin = newFolderName + '/assets/client-plugins/client-navbar-plugin.js';
+        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-navbar-plugin.js', {
             
-        })
-        .then((response) => {
-          ecommWebsiteConfigJsData = response.data;        
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : ecommWebsiteConfig,
-              text : ecommWebsiteConfigJsData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(ecommWebsiteConfig + ' file created');
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        });
+        // })
+        // .then((res) => {
+        //   let navbarPluginData = res.data;
+        //   axios.post(config.baseURL + '/flows-dir-listing', {
+        //       filename : navbarPlugin,
+        //       text : navbarPluginData,
+        //       type : 'file'
+        //   })
+        //   .then((res) => {
+        //     console.log(navbarPlugin + ' file created');    
+        //   })
+        //   .catch((e) => {
+        //       console.log(e)
+        //   })
+        // })
+        // .catch((e) => {
+        //     console.log(e)
+        // });
 
-
-        // Ecommerce Website config js
-        let ecommShoppingCart = newFolderName + '/assets/client-plugins/ecomm-shopping-cart.js';
-        let ecommShoppingCartJsData = '';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/ecomm-shopping-cart.js', {
-            
-        })
-        .then((response) => {
-          ecommShoppingCartJsData = response.data;        
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : ecommWebsiteConfig,
-              text : ecommShoppingCartJsData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(ecommShoppingCart + ' file created');
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        });
-          
-
-        // Product Detail Plugin
-        let productDetailPlugin = newFolderName + '/assets/client-plugins/client-product-detail-plugin.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/product-detail-plugin-cleaned.js', {
+        // Flowz Engine JS
+        let flowzBuilderEngine = newFolderName + '/assets/client-plugins/flowz-builder-engine.js';
+        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/flowz-builder-engine.js', {
             
         })
         .then((res) => {
-          let pluginDetailJsData = res.data;
+          let flowzEngineData = res.data;
           axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : productDetailPlugin,
-              text : pluginDetailJsData,
+              filename : flowzBuilderEngine,
+              text : flowzEngineData,
               type : 'file'
           })
           .then((res) => {
-            console.log(productDetailPlugin + ' file created');
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        })
-
-
-        // Carousel Slider Plugin
-        let sliderPlugin = newFolderName + '/assets/client-plugins/client-slider-plugin.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-slider-plugin.js', {
-            
-        })
-        .then((res) => {
-          let sliderPluginData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : sliderPlugin,
-              text : sliderPluginData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(sliderPlugin + ' file created');
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        })
-
-
-        // Popular Product Slider 
-        let popularSliderPlugin = newFolderName + '/assets/client-plugins/client-popular-product-slider-plugin.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/popular-product-slider-plugin.js', {
-            
-        })
-        .then((res) => {
-          let popularSliderPluginData = res.data;
-          let ProjectName = newFolderName.replace('/var/www/html/websites/', '')
-          popularSliderPluginData = popularSliderPluginData.replace('setNameHere', ProjectName);
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : popularSliderPlugin,
-              text : popularSliderPluginData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(popularSliderPlugin + ' file created');    
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        })
-
-
-        // Pagination Plugin 
-        let paginationPlugin = newFolderName + '/assets/client-plugins/client-pagination-plugin.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-pagination-plugin.js', {
-            
-        })
-        .then((res) => {
-          let paginationPluginData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : paginationPlugin,
-              text : paginationPluginData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(paginationPlugin + ' file created');    
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        });
-
-
-        // Pagination Plugin 
-        let gradientAnimationPlugin = newFolderName + '/assets/client-plugins/image-gradient-animation.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/image-gradient-animation.js', {
-            
-        })
-        .then((res) => {
-          let gradientAnimationPluginData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : gradientAnimationPlugin,
-              text : gradientAnimationPluginData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(gradientAnimationPlugin + ' file created');    
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        });
-
-
-        // Dynamic menu Navbar Plugin 
-        let navbarPlugin = newFolderName + '/assets/client-plugins/client-navbar-plugin.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-navbar-plugin.js', {
-            
-        })
-        .then((res) => {
-          let navbarPluginData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : navbarPlugin,
-              text : navbarPluginData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(navbarPlugin + ' file created');    
+            console.log(flowzBuilderEngine + ' file created');    
           })
           .catch((e) => {
               console.log(e)
@@ -2132,55 +1785,7 @@
               type : 'file'
           })
           .then((res) => {
-            console.log(globalVariablesPlugin + ' file created');    
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        });
-
-        // Progress bars plugin
-        let progressBarsPlugin = newFolderName + '/assets/client-plugins/progress-bars.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/progress-bars.js', {
-            
-        })
-        .then((res) => {
-          let progressBarsPluginData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : progressBarsPlugin,
-              text : progressBarsPluginData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(progressBarsPlugin + ' file created');    
-          })
-          .catch((e) => {
-              console.log(e)
-          })
-        })
-        .catch((e) => {
-            console.log(e)
-        });
-
-
-        // My Cart Plugin
-        let myCartPlugin = newFolderName + '/assets/client-plugins/client-my-cart-plugin.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-my-cart-plugin.js', {
-            
-        })
-        .then((res) => {
-          let myCartPluginData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : myCartPlugin,
-              text : myCartPluginData,
-              type : 'file'
-          })
-          .then((res) => {
-            console.log(myCartPlugin + ' file created');
-
+            console.log(globalVariablesPlugin + ' file created');  
             this.fullscreenLoading = false;
 
             let self = this;
@@ -2190,8 +1795,7 @@
                 message: 'Project Created!',
                 type: 'success'
               });
-            },500);
-
+            },500);  
           })
           .catch((e) => {
               console.log(e)
@@ -2199,7 +1803,8 @@
         })
         .catch((e) => {
             console.log(e)
-        })
+        });
+
       },
 
       // Create new File
@@ -2234,9 +1839,12 @@
 
         var folderUrl = configFileUrl.replace(fileName, '');
 
+        let projectName = folderUrl.split('/');
+        projectName = projectName[(projectName.length-1)];
+
         // this.getConfigFileData(folderUrl);
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
         
@@ -3106,6 +2714,7 @@
 
       // Generate Preview of Page
       async generatePreview() {
+          this.fullscreenLoading = true;
           this.previewLoading = true;
           // Save File first
           this.saveFile();
@@ -3185,13 +2794,13 @@
                       temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
 
                       await axios.post(config.baseURL + '/flows-dir-listing', {
-                              filename: config.webpackpath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
+                              filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
                               text: temp,
                               type: 'file'
                           }).then(async (res) => {
                               // console.log("successfully created vuecomponent file") 
                               contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
-
+                              // alert(self.form.vuepartials[x].value.split('.')[0] + '.js');
                               axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
                                   .then((response) => {
                                       console.log("called webpack_file api successfully:")
@@ -3427,28 +3036,18 @@
                       let newContent = "<html>\n<head>\n" +
                           "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                           "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
-                          "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                          "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
                           "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                          "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+                          '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                          "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                          "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
                           "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                           "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                          "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
                           "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                          '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
-                          '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
                           "<link rel='stylesheet' href='./../main-files/main.css'/>\n</head><body>\n" +
                           layoutdata.data +
-                          '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
-                          '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
-                          // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
+                          '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                           '<script src="./../main-files/main.js"><\/script>\n' +
                           '</body>\n</html>';
 
@@ -3495,6 +3094,7 @@
                                                   .then((res) => {
 
                                                       self.previewLoading = false;
+                                                      self.fullscreenLoading = false;
 
                                                       let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
                                                       previewFile = folderUrl.replace('/var/www/html', '');
@@ -3515,8 +3115,9 @@
                                                                   .then((res) => {
                                                                       if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                                                           for (let x = 0; x < self.form.vuepartials.length; x++) {
-                                                                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.webpackpublic + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                                                                      console.log(res)
+                                                                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                                                                      console.log(res);
+
                                                                                   })
                                                                                   .catch((e) => {
                                                                                       console.log(e)
@@ -4109,31 +3710,29 @@
           cancelButtonText: 'No, keep it'
         }).then(() => {
           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
-            .then((res) => {
+          .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
               let file_path_ = data.path.replace(/\\/g, "/")
-              
-              let arr_file = file_path_.split('/')  
 
-              
-              if(_.includes(data.path, 'Partials')){
-              var foldername=arr_file[arr_file.length-1]
-              console.log("foldername:",foldername)
-              if(this.globalConfigData[2].layoutOptions[0][foldername]!=undefined){
+              let arr_file = file_path_.split('/')
 
-              delete this.globalConfigData[2].layoutOptions[0][foldername];
-              this.saveConfigFile(folderUrl);
-              }
-              else{
-                console.log("folder not found in config file.")
-              }
+              if (_.includes(data.path, 'Partials')) {
+                  var foldername = arr_file[arr_file.length - 1]
+                  console.log("foldername:", foldername)
+                  if (this.globalConfigData[2].layoutOptions[0][foldername] != undefined) {
+
+                      delete this.globalConfigData[2].layoutOptions[0][foldername];
+                      this.saveConfigFile(folderUrl);
+                  } else {
+                      console.log("folder not found in config file.")
+                  }
               }
 
-              })
-            .catch((e)=>{
+          })
+          .catch((e) => {
               console.log(e)
-            })
+          })
         })
         .catch((e)=>{
               console.log(e)
@@ -4214,6 +3813,11 @@
         this.generatePreview();
       },
 
+      quickDelete (store, data) {
+        this.$store.state.fileUrl = data.path;
+        this.removeProject(store, data);
+      },
+
       // Displaying icons in tree nodes  
       renderContent(h, { node, data, store }) {
 
@@ -4236,23 +3840,11 @@
                       <i title="Project Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
                     
                     
-                        <i title="Delete Project" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removeProject(store, data) }></i>
+                        <i title="Delete Project" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
                     
                   </span>
               </span>)  
-          }  else if(node.level == 1){
-          return (<span>
-              <span class="nodelabel" on-click={ () => this.goToHomePage() }>
-                  <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
-                  <span>Websites</span>
-              </span>
-              <span class="">
-                  <el-tooltip content="Create New Website" placement="top">
-                      <i class="fa fa-globe" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px; color: #4A8AF4;"  on-click={ () => this.newProjectFolderDialog = true }></i>
-                  </el-tooltip>
-              </span>
-          </span>)
-        } else {
+          } else {
             // If it's a simple directory
             if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
               return(<span>
@@ -4394,7 +3986,17 @@
           
         }else{
           // Root Folder
-          return;
+          return(<span>
+                  <span class="nodelabel" on-click={ () => this.goToHomePage() }>
+                      <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
+                      <span>{node.label}</span>
+                  </span>
+                  <span class="">
+                      <el-tooltip content="Create New Website" placement="top">
+                          <i class="fa fa-globe" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px; color: #4A8AF4;"  on-click={ () => this.newProjectFolderDialog = true }></i>
+                      </el-tooltip>
+                  </span>
+              </span>);
         }
       },
 

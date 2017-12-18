@@ -1578,10 +1578,10 @@ export default {
           <span>
             <span>{node.label}</span>
           </span>
-          <span style="float: right; margin-right: 20px">
+          <span class="tree-action-button" style="float: right; margin-right: 20px">
             <el-button size="mini" on-click={ () => this.removePluginFromTree(store, data) } type="danger" icon="delete"></el-button>
           </span>
-          <span style="float: right; margin-right: 35px">
+          <span class="tree-action-button" style="float: right; margin-right: 35px">
             <el-switch size="mini"  value={data.isActive} on-change={ (value) => {
               data.isActive = value;
               this.changePluginStatus(data.id, value);
@@ -1863,5 +1863,17 @@ export default {
   .el-tree{
     max-height: 500px;
     overflow-x: auto;
+  }
+
+  /*Show icons on hover in directory tree */
+
+  .el-tree-node:hover > .el-tree-node__content .tree-action-button {
+      display: block;
+      position: absolute;
+      top: 0;
+  }
+
+  .tree-action-button {
+      display: none;
   }
 </style>
