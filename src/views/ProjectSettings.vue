@@ -802,7 +802,7 @@ export default {
       // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
       // Call Listings API and get Tree
-      await axios.get(config.baseURL + '/flows-dir-listing?website=harshp/' + this.repoName, {
+      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.repoName, {
       })
       .then(async (res) => {
         console.log(res);
