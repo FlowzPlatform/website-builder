@@ -68,11 +68,15 @@ export default {
       
       let folderUrl = configFileUrl.replace(fileName, '');
 
-      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let foldername = folderUrl.split('/');
+      foldername = foldername[(foldername.length-1)];
+
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
       if(this.configData.status == 200 || this.configData.status == 204){
         console.log('Config file found! Updating fields..');
 
-        this.settings = JSON.parse(this.configData.data);
+        this.settings = this.configData.data.data[0].configData;
 
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
 

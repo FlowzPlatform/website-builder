@@ -1,210 +1,137 @@
 <template>
-  <div class="Register">
+  <div class="EmailVerification">
     <vue-particles color="#dedede"></vue-particles>
     <div class='brand'>
-        <a href='/'>
-            <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
-        </a>
+      <a href='/'>
+          <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
+      </a>
     </div>
-    <div class='login signup-form'>
+    <div class='login'>
       <div class='login_title'>
-          <span>Signup with Flowz Builder</span>
+          <span>Verify Email</span>
       </div>
       <div class='login_fields'>
           <div class='login_fields__user'>
               <div class='icon'>
-                  <i class="fa fa-address-book-o"></i>
-              </div>
-              <input placeholder='Full Name' type='text' v-model="form.name" required>
-              <div class='validation'>
-                  <img src='../assets/images/tick.png'>
-              </div>
-              </input>
-          </div>
-          <div class='login_fields__user'>
-              <div class='icon'>
                   <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Username' type='text' v-model="form.Uname" required>
+              <input placeholder='Registered Email' type='text' v-model="formLogin.email" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
               </input>
-          </div>
-          <div class='login_fields__user'>
-              <div class='icon'>
-                  <i class="fa fa-envelope-o"></i>
-              </div>
-              <input placeholder='Email Address' type='text' v-model="form.email" required>
-              <div class='validation'>
-                  <img src='../assets/images/tick.png'>
-              </div>
-              </input>
-          </div>
-          <div class='login_fields__password'>
-              <div class='icon'>
-                  <img src='../assets/images/lock_icon_copy.png'>
-              </div>
-              <input placeholder='Password' type='password' v-model="form.pass" required>
-              <div class='validation'>
-                  <img src='../assets/images/tick.png'>
-              </div>
-          </div>
-          <div class='login_fields__password'>
-              <div class='icon'>
-                  <img src='../assets/images/lock_icon_copy.png'>
-              </div>
-              <input placeholder='Password' type='password' v-model="form.checkPass" required>
-              <div class='validation'>
-                  <img src='../assets/images/tick.png'>
-              </div>
           </div>
           <div class='login_fields__submit'>
-              <input type='submit' value='Sign Up'>
+              <input type='submit' value='Verify'>
               <div class='forgot'>
-                <el-tooltip class="item" effect="dark" content="Login" placement="bottom">
-                  <a href='/login'>Already Registered?</a>
-                </el-tooltip>
+                  <a href='/login'>Cancel</a>
               </div>
           </div>
-          <!-- <div class="signup">
-              <a href="/register" class="signup-link">New Here?</a>
-          </div> -->
       </div>
       <div class='success'>
-          <h2 v-if="authen.status === true">{{authen.success}}</h2>
-          <p v-if="authen.status === true">You will be redirected soon...</p>
+          <h2 v-if="authen.status === true">Email Verified</h2>
+          <p v-if="authen.status === true">{{authen.message}}. <br><strong><a href="/login" class="login-link">Login Now</a></strong></p>
       </div>
       <div class='disclaimer'>
-          <p>Signup with Flowz Web Builder and experience the Next Generation Web Application Building.</p>
+          <p>Enter email address you used to register with social media. We'll verify your email address.</p>
       </div>
     </div>
     <div class='authent'>
         <img src='../assets/images/puff.svg'>
-        <p>Registering...</p>
+        <p>Verifying...</p>
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import VueSession from 'vue-session'
-Vue.use(VueSession)
-
+/*eslint-disable*/
 import axios from 'axios'
-const config = require('../config');
-
+import config from '@/config'
+import psl from 'psl'
 export default {
-  name: 'Register',
+  name: 'email-verification',
   data () {
     return {
-      form: {
-        name: '',
-        checkPass: '',
-        Uname: '',
+      loading: false,
+      formLogin: {
         email: '',
-        pass: '',
-        isLoading: false
+        id: null
+      },
+      ruleLogin: {
+        email: [
+          { required: true, message: 'Please fill in the email id', trigger: 'blur' },
+          { type: 'email', message: 'Please input correct email address', trigger: 'blur,change' }
+        ]
       },
       authen: {
         status: false,
-        success: 'Authentication Success',
-        error: 'Authentication Failed'
-      }
+        success: 'Verification Completed',
+        error: 'Verification Failed'
+      },
+      error: []
     }
   },
   methods: {
-    registerUser () {
-      axios.post(config.registerUrl, {
-        username: this.form.Uname,
-        password: this.form.pass,
-        email: this.form.email,
-        fullname: this.form.Name
-      }, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        }
-      }).then(response => {
-        // window.location = '/login'
-        axios.post( config.baseURL + '/user-service', {
-            username : this.form.Uname,
-            password : this.form.pass,
-            email : this.form.email,
-            name : this.form.name                  
-        }).then(response => {
-          // window.location = '/login';
-          // Create user Folder
-          //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-          // axios.post(config.baseURL+'/flows-dir-listing' , {
-          //   foldername :'/var/www/html/websites/'+ this.form.Uname,
-          //   type : 'folder'
-          // })
-          // .then((res) => {
-          //   console.log('user Folder created!');
-          // })
-          // .catch((e)=>{
-          //   console.log("Error from pages"+res)
-          // });
-          this.authen.status = true;
-          let self = this;
-          setTimeout(function () {
-            self.$router.push('/login');
-          }, 2000);
-        }).catch(error => {
-          this.authen.status = false;
-          this.authen.error = response.data;
-        })
+    async handleSubmit (name) {
+      this.loading = true
+      console.log(this.formLogin)
+      var auth = await axios({
+        method: 'post',
+        url: config.socialUrl + '/googleauthprocess',
+        data: this.formLogin
       }).catch(error => {
         this.authen.status = false;
-        this.authen.error = response.data;
+        this.error = error;
+        return
       })
+      if (auth) {
+        // Token Store in cookie
+        this.$router.push({path: '/dashboard'}) // Redirect to dashbord
+        this.authen.status = true;
+      }
+      this.loading = false
     }
   },
   mounted () {
+    let params = new URLSearchParams(window.location.search);
+    this.formLogin.id = params.get('ob_id');
+
     let self = this;
 
     $('input[type="submit"]').click(function(){
-      if(self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != ''){
-        if(self.form.pass == self.form.checkPass){
-          self.registerUser();
-          $('.login').addClass('test')
-          setTimeout(function(){
-            $('.login').addClass('testtwo')
-          },300);
-          setTimeout(function(){
-            $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-            $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-          },500);
-          setTimeout(function(){
-            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-            $('.login').removeClass('testtwo')
-          },2500);
-          setTimeout(function(){
-            $('.login').removeClass('test')
-            $('.login div').fadeOut(123);
-          },2800);
-          setTimeout(function(){
-            if(self.authen.status == true){
-              $('.success').fadeIn();  
-            } else {
-              $(".authent").fadeOut();
-              $('.login div').fadeIn();
-              self.$message({
-                  showClose: true,
-                  message: self.authen.error,
-                  type: 'error'
-              });
-            }
-            
-          },3200);
-        } else{
-          self.$message({
+      if(self.formLogin.email != ''){
+        self.handleSubmit();
+        $('.login').addClass('test')
+        setTimeout(function(){
+          $('.login').addClass('testtwo')
+        },300);
+        setTimeout(function(){
+          $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+        },500);
+        setTimeout(function(){
+          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+          $('.login').removeClass('testtwo')
+        },2500);
+        setTimeout(function(){
+          $('.login').removeClass('test')
+          $('.login div').fadeOut(123);
+        },2800);
+        setTimeout(function(){
+          if(self.authen.status == true){
+            $('.success').fadeIn();  
+          } else {
+            $(".authent").fadeOut();
+            $('.login div').fadeIn();
+            self.$message({
               showClose: true,
-              message: 'Password and Confirm password didn\'t matched...',
+              message: 'Error: ' + self.error.response.data,
               type: 'error'
           });
-        }
+          }
+          
+        },3200);
       } else {
         self.$message({
             showClose: true,
@@ -231,18 +158,15 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-@import url(https://fonts.googleapis.com/css?family=Gudea:400,700);
-@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
+<style>
+  @import url(https://fonts.googleapis.com/css?family=Gudea:400,700);
+  
   p {
     color: #606479;
     text-align: left;
     font-size: 10px;
   }
-  .Register {
+  .EmailVerification {
     -webkit-perspective: 800px;
             perspective: 800px;
     height: 100vh;
@@ -297,7 +221,7 @@ export default {
   .authent p {
     color: white;
     position: absolute;
-    left: 50px;
+    left: 70px;
     top: 80px;
   }
   .success {
@@ -362,7 +286,7 @@ export default {
   }
 
   .login.signup-form{
-    height: 530px;
+    height: 400px;
   }
   .login .validation {
     position: absolute;
@@ -510,14 +434,14 @@ export default {
     text-align: center;
     margin-top: 50px;
   }
-  .signup-link{
-    color: #606479;
+  .login-link{
+    color: #aaa;
     font-size: 14px;
     text-decoration: none;
     transition: 0.2s all linear;
   }
 
-  .signup-link:hover{
+  .login-link:hover{
     color: #fff;
     transition: 0.2s all linear;
   }
