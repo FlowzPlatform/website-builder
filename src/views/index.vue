@@ -556,7 +556,7 @@
 
       let socket
       if (process.env.NODE_ENV !== 'development') {
-        socket = io(config.socketURL, {path: '/serverapi/socket.io'})
+        socket = io(config.socketURL)
       } else {
         socket = config.socketURL
       }
