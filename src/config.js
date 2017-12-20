@@ -27,6 +27,6 @@ module.exports = {
     metalpath: '/var/www/html/node_modules/',
     webpackPath: '/var/www/html/node_modules/',
     baseURL : url,
-    // ipAddress: 'http://localhost'
-    ipAddress: 'http://auth.flowz.com:8080'
+    ipAddress: 'http://localhost'
+    // ipAddress: 'http://auth.flowz.com:8080'
 }
