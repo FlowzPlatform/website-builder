@@ -7,17 +7,17 @@ services:
 
 branches:
   only:
-  - master
+  - demo
 
 jobs:
   include:
     - stage: Web-Builder-Fronted-Flowz
       script:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-      - docker build -t web_builder_fronted_flowz:"$DOCKER_IMAGE_TAG" .
+      - docker build -t web_builder_fronted_flowz:demo .
       - docker images
-      - docker tag web_builder_fronted_flowz:"$DOCKER_IMAGE_TAG" $DOCKER_USERNAME/web_builder_fronted_flowz:"$DOCKER_IMAGE_TAG"
-      - docker push $DOCKER_USERNAME/web_builder_fronted_flowz:"$DOCKER_IMAGE_TAG"
+      - docker tag web_builder_fronted_flowz:demo $DOCKER_USERNAME/web_builder_fronted_flowz:demo
+      - docker push $DOCKER_USERNAME/web_builder_fronted_flowz:demo
     - stage: Upgrade Rancher Service
       script:
       - bash ./upgrade.sh
