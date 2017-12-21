@@ -68,18 +68,22 @@ export default {
       
       let folderUrl = configFileUrl.replace(fileName, '');
 
-      this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/config.json');
+      let foldername = folderUrl.split('/');
+      foldername = foldername[(foldername.length-1)];
+
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
       if(this.configData.status == 200 || this.configData.status == 204){
         console.log('Config file found! Updating fields..');
 
-        this.settings = JSON.parse(this.configData.data);
+        this.settings = this.configData.data.data[0].configData;
 
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
 
         let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
-        partialItems.splice(partialItems.indexOf('Pages'), 1);
         partialItems.splice(partialItems.indexOf('Layout'), 1);
 
+        console.log('All Parts:', this.settings[2].layoutOptions[0]);
         this.tablePagesData = [];
 
         for(var i = 0; i < partialItems.length; i++){
@@ -93,6 +97,8 @@ export default {
             partialFiles: eachPartialFileList
           });
         }
+
+        console.log('Partials List:', this.tablePagesData)
 
       } else {
         console.log('Cannot get config file!');

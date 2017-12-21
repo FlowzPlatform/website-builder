@@ -1,106 +1,197 @@
 <template>
   <div class="PageSettings">
+    <!-- Save/Publish/Cancel Buttons -->
+    <div class="page-buttons">
+      <el-button type="primary" size="small" @click="savePageSettings">Save</el-button>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-md-12" style="margin-top: 4%;">
-          <el-form ref="form" :model="form" label-width="160px">
-            <el-form-item label="Page name">
-              <el-input v-model="form.name" :disabled="true"></el-input>
-            </el-form-item>
+          <div class="well">
+            <el-form ref="form" :model="form" label-width="160px">
+              <el-form-item label="Page name">
+                <el-input v-model="form.name" :disabled="true"></el-input>
+              </el-form-item>
 
-            <el-form-item label="Page Layout">
-              <el-select v-model="form.Layout" @change="layoutChange()" placeholder="Please select Layout">
-                <el-option
-                  v-for="item in form.layouts"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
+              <el-form-item label="Page Layout">
+                <el-select v-model="form.Layout" @change="layoutChange()" placeholder="Please select Layout">
+                  <el-option
+                    v-for="item in form.layouts"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
 
-            <!-- <el-form-item label="Page Header">
-              <el-row>
-                <el-col :span="10">
-                  <el-select v-model="form.Header" placeholder="Please select Header">
-                    <el-option
-                      v-for="item in form.headers"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-col>
-                <el-col :span="14">
-                  <el-form-item label="Page Footer">
-                    <el-select v-model="form.Footer" placeholder="Please select Footer">
-                      <el-option
-                        v-for="item in form.footers"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form-item>
-
-            <el-form-item label="Page Sidebar">
-              <el-select v-model="form.Sidebar" placeholder="Please select Sidebar">
-                <el-option
-                  v-for="item in form.sidebars"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-                
-            </el-form-item>
-
-            <el-form-item label="Page Menu">
-              <el-select v-model="form.Menu" placeholder="Please select Menu">
-                <el-option
-                  v-for="item in form.menus"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-                
-            </el-form-item> -->
-
-            <div id="demo">
-              <div v-for='(n,index) in partialsList'>
-                 <el-form-item :label="n ">
-                    <el-select  v-model="form.parent_id[n]" placeholder="Please select " >
-                       <el-option v-for="item in AllData[index]" 
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item"
-                          :disabled="item.disabled">
-                       </el-option>
-                    </el-select>
-                 </el-form-item>
+              <div id="demo">
+                <div v-for='(n,index) in partialsList'>
+                   <el-form-item :label="n ">
+                      <el-select  v-model="form.parent_id[n]" placeholder="Please select " >
+                         <el-option v-for="item in AllData[index]" 
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item"
+                            :disabled="item.disabled">
+                         </el-option>
+                      </el-select>
+                   </el-form-item>
+                </div>
               </div>
-            </div>
 
-            <el-form-item label="Page SEO Title">
-              <el-input v-model="form.seoTitle"></el-input>
-            </el-form-item>
+              <el-form-item label="Page SEO Title">
+                <el-input v-model="form.seoTitle"></el-input>
+              </el-form-item>
+              <hr>
+              <el-form-item label="Following CSS have been included:">
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
+                <div style="margin: 15px 0;"></div>
+                <el-checkbox-group v-model="checkedCss" @change="handleCheckedCssChange">
+                  <el-checkbox v-for="css in csses" :label="css" :key="css">{{css}}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
 
-            <el-form-item label="Page SEO Keywords">
-              <el-input v-model="form.seoKeywords"></el-input>
-            </el-form-item>
-            
-            <el-form-item label="Page SEO Description">
-              <el-input type="textarea" :rows="5" v-model="form.seoDesc"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="savePageSettings">Save</el-button>
-              <!-- <el-button>Cancel</el-button> -->
-            </el-form-item>
-          </el-form> 
+            </el-form> 
+          </div>          
+        </div>
+      </div> 
+
+      <div class="row">
+        <div class="col-md-12" style="margin-top: 4%;">
+          <div class='well' id='add-js-css'>
+             <div class="row">
+                <div class="col-md-12">
+                   <div class="row">
+                      <div class="col-md-4">
+                         <h3> JS Links </h3>
+                      </div>
+                   </div>
+                   <hr>
+                   <el-form ref="form" :model="form">
+                  <!--  <draggable @start="drag=true" @end="drag=false"> -->
+                      <div v-for="(n, index) in externallinksJS">
+                         <el-form-item>
+                            <div class="row">
+                               <!-- position  -->
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-7" style="margin: 0; padding: 0px">
+                                  <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete"></el-button>
+                               </div>
+                            </div>
+                         </el-form-item>
+                      </div>
+                      <!-- </draggable> -->
+                      <!-- Create new variable -->
+                      <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
+                   </el-form>
+                </div>
+                <div class="col-md-12" style="margin-top: 4%;">
+                   <div class="row">
+                      <div class="col-md-4">
+                         <h3> CSS Links </h3>
+                      </div>
+                   </div>
+                   <hr>
+                   <el-form ref="form" :model="form">
+                      <div v-for="(n, index) in externallinksCSS">
+                         <el-form-item>
+                            <div class="row">
+                               <!-- Enter link type  -->
+                               <!-- <div class="col-md-2" style="margin-left: 0; padding-left: 12px">
+                                  <el-select v-model="n.linktype" placeholder="JS/CSS">
+                                    <el-option
+                                    v-for="item in typelinks"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    > 
+                                    </el-option>
+                                  </el-select>
+                                  </div> -->
+                               <!-- position  -->
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-7" style="margin: 0; padding-left: 0px">
+                                  <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete"></el-button>
+                               </div>
+                            </div>
+                         </el-form-item>
+                      </div>
+                      <!-- Create new variable -->
+                      <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
+                   </el-form>
+                </div>
+             </div>
+          </div>
+
+          <div class="well" id='add-meta-tag'>
+             <div class="row">
+               <div class="col-md-12" >
+                  <div class="row">
+                        <div class="col-md-4">
+                           <h3>Add External meta tags </h3>
+                        </div>
+                     </div>
+                     <hr>
+                   <el-form :inline="true">
+                     <el-form-item label="Meta Charset">
+                        <el-input placeholder="charset value" v-model="Metacharset"></el-input>
+                      </el-form-item>
+                    </el-form>
+               </div>
+                <div class="col-md-12" style="margin-top: 2%">
+                    <table class="table table-hover  table-bordered">
+                        <thead class="thead">
+                          <tr>
+                            <th>Name</th>
+                            <th>Content</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        
+                          <tr v-for="(n, index) in externallinksMeta" >
+                            <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                            <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                            <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete"></el-button></td>
+                          </tr>
+                          <tr><td colspan="3"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                        </tbody>
+                      </table>
+                      <!-- Create new variable -->
+                      <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+                   <!-- </el-form> -->
+                </div>
+             </div>
+          </div>        
         </div>
       </div> 
     </div>
@@ -117,7 +208,9 @@ Vue.use(VueSession)
 var daex = require('json-daex')
 const config = require('../config');
 
-import axios from 'axios'
+import axios from 'axios';
+
+ const cssOptions = ['Bootstrap 3', 'Bootstrap 4', 'Font Awesome', 'Flowz Blocks', 'Google Fonts'];
 
 export default {
   name: 'PageSettings',
@@ -132,8 +225,6 @@ export default {
         name: '',
         nameSecond:'',
         seoTitle: '',
-        seoKeywords: '',
-        seoDesc: '',
         Header: '',
         Footer: '',
         Layout: '',
@@ -160,178 +251,131 @@ export default {
       folderUrl: '',
       partialsList: [],
       partialsListSelection: [],
-      defaultParams: []
+      defaultParams: [],
+      checked2:'',
+
+      checkAll: true,
+      checkedCss: [],
+      csses: cssOptions,
+      isIndeterminate: true,
+      externallinksJS:[],
+      externallinksCSS:[],
+      externallinksMeta:[{
+        name: 'Edit Me',
+        content: 'Update Me'
+      }],
+      Allposition:[
+      {label:'Start of <head> Tag',value:'starthead'},
+       {label:'End of <head> tag',value:'endhead'},
+      {label:'Start of <body> Tag',value:'startbody'},
+      {label:'End of <body> tag',value:'endbody'}
+      ],
+      Metacharset:''
     }
   },
   component: {
   },
   methods: {
 
-    async layoutChange(){
-       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-       let urlparts = url.split("/");
-       let fileNameOrginal = urlparts[urlparts.length - 1];
-       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-       this.folderUrl = url.replace(fileName, '');
-       for (var i = 0; i < this.form.layouts.length; i++) {
-           if (this.form.layouts[i].label === this.form.Layout) {
-               let variable = this.form.layouts[i].partialsList;
-               this.partialsList=variable;
-               this.defaultParams=this.form.layouts[i].defaultList;
-           }
-       }
-
-       this.configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
-       this.AllData=[];
-       // console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
-       if (this.configData.status == 200 || this.configData.status == 204) {
-           
-           this.settings = JSON.parse(this.configData.data);
-           
-           for (var i = 0; i <this.partialsList.length; i++) {
-
-               var nameP = this.partialsList[i];
-               if ( this.settings[2].layoutOptions[0][nameP]) {
-                   
-                   let change=false;
-                   for(var j=0;j<this.defaultParams.length;j++){
-                      if (Object.keys(this.defaultParams[j])[0]==nameP) {
-                      this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-                      let tp=this.defaultParams[j][nameP].split('.')
-                      if(tp[1]=='hbs'){
-                        for(let k=0;k<(this.AllData[i]).length;k++)
-                         {
-                          if((this.AllData[i][k].value).split('.')[0]==tp[0])
-                            this.form.parent_id[nameP]=this.AllData[i][k]
-                         }
-                      }else{
-
-                      this.form.parent_id[nameP]=tp[0];
-                      }
-
-                     for(let k=0;k<Object.keys(this.AllData[i]).length;k++)
-                     {
-                      this.AllData[i][k]['disabled']=true;
-                     }
-
-                      change=true 
-                     }
-                   }
-                   if (change!=true) {
-                    this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-                    if(this.AllData[i].length==1)
-                    {
-                      this.form.parent_id[nameP]=this.AllData[i][0]
-                    }
-                     change=false;
-                   }     
-               } 
-               else {
-                   console.log("Partials not found in config file.")
-               }
-           }
-       }
-
-       // for(let x=0;x<this.AllData.length;x++){
-       //  var checkingValue=false
-       //  for(let y=0;y<this.defaultParams.length;y++){
-
-       //    if(Object.keys(this.defaultParams[y])[0]==this.partialsList[x]){
-       //      checkingValue=true
-            
-       //  }
-
-       //  }
-       //  if(checkingValue!=true){
-
-       //  this.form.parent_id[this.partialsList[x]]=this.AllData[x][0]
-       //  }
-
-       // }
-       
-
+    handleCheckAllChange(event) {
+      this.checkedCss = event.target.checked ? cssOptions : [];
+      this.isIndeterminate = false;
+      console.log('Checked items:', this.checkedCss);
+    },
+    handleCheckedCssChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.csses.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.csses.length;
+      console.log('Checked items:', this.checkedCss);
     },
 
-    // async layoutChange(){
-    //   let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    //   let urlparts = url.split("/");
-    //   let fileNameOrginal = urlparts[urlparts.length - 1];
-    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-    //   this.folderUrl = url.replace(fileName, '');
-    //   console.log("change layout triggered");
-    //   for (var i = 0; i < this.form.layouts.length; i++) {
-    //     if (this.form.layouts[i].label === this.form.Layout) {
-    //       let variable = this.form.layouts[i].partialsList;
-    //       this.partialsList = variable;
-    //       this.defaultParams = this.form.layouts[i].defaultList;
-    //     }
-    //   }
-    //   console.log("partials:", this.partialsList)
+    addNewexternallinkJS() {
+      let newVariable = { linktype: 'JS', linkposition: '', linkurl: ''};
+      this.externallinksJS.push(newVariable);
+    },
+    addNewexternallinkCSS() {
+      let newVariable = { linktype: 'CSS', linkposition: '', linkurl: ''};
+      this.externallinksCSS.push(newVariable);
+    },
+    addNewexternallinkMeta() {
+      let newVariable = { name:'EditMe',content:'EditMe'};
+      this.externallinksMeta.push(newVariable);
+    },
+    deletelinkJS(deleteIndex) {
+      this.externallinksJS.splice(deleteIndex, 1);
+    },
+    deletelinkCSS(deleteIndex) {
+      this.externallinksCSS.splice(deleteIndex, 1);
+    },
+    deletelinkMeta(deleteIndex) {
+      this.externallinksMeta.splice(deleteIndex, 1);
+    },
 
-    //   console.log("defaultList:", this.defaultParams)
+    async layoutChange() {
+      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let urlparts = url.split("/");
+      let fileNameOrginal = urlparts[urlparts.length - 1];
+      let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      this.folderUrl = url.replace(fileName, '');
+      for (var i = 0; i < this.form.layouts.length; i++) {
+        if (this.form.layouts[i].label === this.form.Layout) {
+          let variable = this.form.layouts[i].partialsList;
+          this.partialsList = variable;
+          this.defaultParams = this.form.layouts[i].defaultList;
+        }
+      }
 
-    //   for (i = 0; i < this.partialsList.length; i++) {
-    //     console.log("i:", this.partialsList[i])
-    //   }
+      let foldername = this.folderUrl.split('/');
+      foldername = foldername[(foldername.length - 1)];
 
-    //   this.configData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
-    //   this.AllData = [];
-    //   if (this.configData.status == 200 || this.configData.status == 204) {
-    //     console.log("@@@@@@@@@@@@@")
-    //     this.settings = JSON.parse(this.configData.data);
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
 
-    //     for (var i = 0; i < this.partialsList.length; i++) {
+      this.AllData = [];
+      // console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
+      if (this.configData.status == 200 || this.configData.status == 204) {
 
-    //       var nameP = this.partialsList[i];
-    //       console.log("nameP:", nameP)
-    //       if (this.settings[2].layoutOptions[0][nameP]) {
+        this.settings = this.configData.data.data[0].configData;
 
-    //         let change = false;
-    //         for (var j = 0; j < this.defaultParams.length; j++) {
-    //           if (Object.keys(this.defaultParams[j])[0] == nameP) {
-    //             console.log("default value found ");
-    //             this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-    //             let tp = this.defaultParams[j][nameP].split('.')
-    //             console.log("tp:", tp)
-    //             if (tp[1] == 'hbs') {
-    //               for (let k = 0; k < (this.AllData[i]).length; k++) {
-    //                 console.log("this.AllData[i][k].value:", (this.AllData[i][k].value).split('.')[0])
+        for (var i = 0; i < this.partialsList.length; i++) {
 
-    //                 if ((this.AllData[i][k].value).split('.')[0] == tp[0])
-    //                   this.form.parent_id[nameP] = this.AllData[i][k]
-    //               }
-    //             } else {
+          var nameP = this.partialsList[i];
+          if (this.settings[2].layoutOptions[0][nameP]) {
 
-    //               this.form.parent_id[nameP] = tp[0]
-    //             }
-    //             console.log("parent_id:", this.form.parent_id)
+            let change = false;
+            for (var j = 0; j < this.defaultParams.length; j++) {
+              if (Object.keys(this.defaultParams[j])[0] == nameP) {
+                this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
+                let tp = this.defaultParams[j][nameP].split('.')
+                if (tp[1] == 'hbs') {
+                  for (let k = 0; k < (this.AllData[i]).length; k++) {
+                    if ((this.AllData[i][k].value).split('.')[0] == tp[0])
+                      this.form.parent_id[nameP] = this.AllData[i][k]
+                  }
+                } else {
 
-    //             for (let k = 0; k < Object.keys(this.AllData[i]).length; k++) {
-    //               console.log("i of AllData:", this.AllData[i][k])
-    //               this.AllData[i][k]['disabled'] = true;
-    //             }
+                  this.form.parent_id[nameP] = tp[0];
+                }
 
-    //             change = true
-    //           }
-    //         }
-    //         if (change != true) {
-    //           this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-    //           if (this.AllData[i].length == 1) {
-    //             this.form.parent_id[nameP] = this.AllData[i][0]
-    //           }
-    //           console.log("not found default , data of ", nameP, ":", this.AllData[i]);
-    //           change = false;
-    //         }
-    //       } else {
-    //         console.log("partials not found in config file.")
-    //       }
-    //     }
-    //   }
-    //   console.log("AllData:", this.AllData)
-    //   console.log("partials:", this.partialsList);
-    // },
+                for (let k = 0; k < Object.keys(this.AllData[i]).length; k++) {
+                  this.AllData[i][k]['disabled'] = true;
+                }
 
-
+                change = true
+              }
+            }
+            if (change != true) {
+              this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
+              if (this.AllData[i].length == 1) {
+                this.form.parent_id[nameP] = this.AllData[i][0]
+              }
+              change = false;
+            }
+          } else {
+            console.log("Partials not found in config file.")
+          }
+        }
+      }
+    },
 
     async savePageSettings() {
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -339,271 +383,187 @@ export default {
       let fileNameOrginal = urlparts[urlparts.length - 1];
       let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
       this.folderUrl = url.replace(fileName, '');
-      this.Data = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+
+      let foldername = this.folderUrl.split('/');
+      foldername = foldername[(foldername.length - 1)];
+
+      this.Data = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+
       if (this.Data.status == 200 || this.Data.status == 204) {
-          this.settingsData = JSON.parse(this.Data.data);
-          this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
-              'PageName': fileNameOrginal
-          });
-          this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout;
+        this.settingsData = this.Data.data.data[0].configData;
+        this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
+          'PageName': fileNameOrginal
+        });
+        this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout;
 
       } else {
-          console.log('Cannot get config file!');
+        console.log('Cannot get config file!');
       }
       for (var i = 0; i < this.form.secondlayouts.length; i++) {
         if (this.form.secondlayouts[i].label === this.form.Layout) {
-            this.partialsListSelection = this.form.secondlayouts[i].partialsList;
+          this.partialsListSelection = this.form.secondlayouts[i].partialsList;
         }
       }
       var PageSettings = {
-          "PageName": this.form.name,
-          "PageSEOTitle": this.form.seoTitle,
-          "PageSEOKeywords": this.form.seoKeywords,
-          "PageSEODescription": this.form.seoDesc,
-          "PageLayout": this.form.Layout,
-          "partials": []
+        "PageName": this.form.name,
+        "PageSEOTitle": this.form.seoTitle,
+        "PageLayout": this.form.Layout,
+        "partials": [],
+        "PageCss": this.checkedCss
       };
       if (this.currentFileIndex != null) {
-          this.settings[1].pageSettings[this.currentFileIndex].partials = [];
-          this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
+        this.settings[1].pageSettings[this.currentFileIndex].partials = [];
+        this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
+        this.settings[1].pageSettings[this.currentFileIndex].PageCss = this.checkedCss;
 
-          for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
-            if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
-              var extraPartial = [];
-              var hbsvalue;
-              hbsvalue = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value
+        this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs=this.externallinksJS;
+        this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss=this.externallinksCSS;
+        this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo=this.externallinksMeta;
+        this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle=this.form.seoTitle;
 
-              if (hbsvalue.indexOf('hbs') <= -1) {
-                  this.form.parent_id[Object.keys(this.form.parent_id)[j]].value = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value + '.hbs'
-              }
-              extraPartial.push(Object.keys(this.form.parent_id)[j])
-              var temp1 = (this.form.parent_id[Object.keys(this.form.parent_id)[j]].defaultList)
-              for (let x = 0; x < temp1.length; x++) {
-                  var obj1 = {};
-                  obj1[Object.keys(temp1[x])] = temp1[x][Object.keys(temp1[x])]
-                  this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj1)
-              }
+        for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
+          if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
+            var extraPartial = [];
+            var hbsvalue;
+            hbsvalue = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value
+
+            if (hbsvalue.indexOf('hbs') <= -1) {
+              this.form.parent_id[Object.keys(this.form.parent_id)[j]].value = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value + '.hbs'
+            }
+            extraPartial.push(Object.keys(this.form.parent_id)[j])
+            var temp1 = (this.form.parent_id[Object.keys(this.form.parent_id)[j]].defaultList)
+            for (let x = 0; x < temp1.length; x++) {
+              var obj1 = {};
+              obj1[Object.keys(temp1[x])] = temp1[x][Object.keys(temp1[x])]
+              this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj1)
+            }
 
           }
+        }
+        for (var i = 0; i < this.partialsListSelection.length; i++) {
+          for (let z = 0; z < this.AllData[i].length; z++) {
+            if (this.AllData[i][z]['disabled'] == true)
+              this.AllData[i][z]['disabled'] = false
           }
-          for (var i = 0; i < this.partialsListSelection.length; i++) {
-              for (let z = 0; z < this.AllData[i].length; z++) {
-                  if (this.AllData[i][z]['disabled'] == true)
-                      this.AllData[i][z]['disabled'] = false
-              }
-              let temp = this.partialsListSelection[i]
-              var obj = {};
-              let change = false;
-              for (var j = 0; j < this.defaultParams.length; j++) {
-                  if (Object.keys(this.defaultParams[j])[0] == temp.trim()) {
-                      let x = Object.keys(this.defaultParams[j])[0];
-                      let y = this.defaultParams[j][x]
-                      obj[temp] = y;
-                      change = true;
-                  }
-              }
-              if (change != true) {
-
-                  // obj[temp] = this.form.parent_id[temp].value;
-
-                  if(this.form.parent_id[temp] != undefined){
-                    
-                    // console.log("no value defined, hence DEFAULT set:")
-                    obj[temp] = this.form.parent_id[temp].value;
-                      change = false;
-                  }else{
-                    let self = this;
-                    
-                    setTimeout(function(){
-                      self.$notify.info({
-                          title: 'AutoSet',
-                          message: temp+': Default ',
-                          type: 'warning'
-                        });  
-                    },100);
-                    
-                    obj[temp]='default'
-                    change = false;
-                  }
-
-                  // change = false;
-              }
-              this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
+          let temp = this.partialsListSelection[i]
+          var obj = {};
+          let change = false;
+          for (var j = 0; j < this.defaultParams.length; j++) {
+            if (Object.keys(this.defaultParams[j])[0] == temp.trim()) {
+              let x = Object.keys(this.defaultParams[j])[0];
+              let y = this.defaultParams[j][x]
+              obj[temp] = y;
+              change = true;
+            }
           }
-          let newfilename = this.folderUrl + '/assets/config.json';
-          axios.post(config.baseURL + '/flows-dir-listing', {
-                  filename: newfilename,
-                  text: JSON.stringify(this.settings),
-                  type: 'file'
-              })
-              .then((res) => {
-                  this.$message({
-                      showClose: true,
-                      message: 'Config Saved!',
-                      type: 'success'
-                  });
-              })
-              .catch((e) => {
-                  console.log(e);
-                  this.$message({
-                      showClose: true,
-                      message: 'Cannot save config file! Some error occured, try again.',
-                      type: 'error'
-                  });
-              })
+          if (change != true) {
+
+            // obj[temp] = this.form.parent_id[temp].value;
+
+            if (this.form.parent_id[temp] != undefined) {
+
+              // console.log("no value defined, hence DEFAULT set:")
+              obj[temp] = this.form.parent_id[temp].value;
+              change = false;
+            } else {
+              let self = this;
+
+              setTimeout(function() {
+                self.$notify.info({
+                  title: 'AutoSet',
+                  message: temp + ': Default ',
+                  type: 'warning'
+                });
+              }, 100);
+
+              obj[temp] = 'default'
+              change = false;
+            }
+
+            // change = false;
+          }
+          this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
+        }
+
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+
+        if (rethinkdbCheck.data.data) {
+
+          // update existing data
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+              configData: this.settings
+            })
+            .then(async(res) => {
+              this.$message({
+                showClose: true,
+                message: 'Successfully updated.',
+                type: 'success'
+              });
+              console.log(res.data);
+            })
+            .catch((e) => {
+              this.$message({
+                showClose: true,
+                message: 'Failed! Please try again.',
+                type: 'error'
+              });
+              console.log(e)
+            });
 
         } else {
-          for (var i = 0; i < this.partialsListSelection.length; i++) {
-            let temp = this.partialsListSelection[i]
-            var obj = {};
-            obj[temp] = this.form.parent_id[temp];
-            PageSettings.partials.push(obj)
-          }
-          this.settings[1].pageSettings.push(PageSettings);
-          let newfilename = this.folderUrl + '/assets/config.json';
-          axios.post(config.baseURL + '/flows-dir-listing', {
-              filename: newfilename,
-              text: JSON.stringify(this.settings),
-              type: 'file'
-          })
-          .then((res) => {
-              console.log(res);
-              this.$message({
-                  showClose: true,
-                  message: 'Config Saved!',
-                  type: 'success'
-              });
-          })
-          .catch((e) => {
-              console.log(e);
-              this.$message({
-                  showClose: true,
-                  message: 'Cannot save file! Some error occured, try again.',
-                  type: 'error'
-              });
-          })
+          this.$message({
+            showClose: true,
+            message: 'Data Error.',
+            type: 'error'
+          });
         }
+
+
+
+      } else {
+        for (var i = 0; i < this.partialsListSelection.length; i++) {
+          let temp = this.partialsListSelection[i]
+          var obj = {};
+          obj[temp] = this.form.parent_id[temp];
+          PageSettings.partials.push(obj)
+        }
+
+        this.settings[1].pageSettings.push(PageSettings);
+
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+
+        if (rethinkdbCheck.data.data) {
+
+          // update existing data
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+              configData: this.settings
+            })
+            .then(async(res) => {
+              this.$message({
+                showClose: true,
+                message: 'Successfully updated.',
+                type: 'success'
+              });
+              console.log(res.data);
+            })
+            .catch((e) => {
+              this.$message({
+                showClose: true,
+                message: 'Failed! Please try again.',
+                type: 'error'
+              });
+              console.log(e)
+            });
+
+        } else {
+          this.$message({
+            showClose: true,
+            message: 'Data Error.',
+            type: 'error'
+          });
+        }
+      }
     }
-
-    // Befor auto Folder metal smith 26-Oct Before Demo
-    // async savePageSettings() {
-
-    //   let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    //   let urlparts = url.split("/");
-    //   let fileNameOrginal = urlparts[urlparts.length - 1];
-    //   let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-    //   this.folderUrl = url.replace(fileName, '');
-
-    //   this.Data = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
-    //   if (this.Data.status == 200 || this.Data.status == 204) {
-          
-    //     this.settingsData = JSON.parse(this.Data.data);
-    //     this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
-    //         'PageName': fileNameOrginal
-    //     });
-    //     this.form.nameSecond = fileNameOrginal;
-    //     this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout;
-          
-    //   } else {
-    //       console.log('Cannot get config file!');
-    //   }
-
-    //   for (var i = 0; i < this.form.secondlayouts.length; i++) {
-    //     if (this.form.secondlayouts[i].label === this.form.Layout) {
-    //         this.partialsListSelection = this.form.secondlayouts[i].partialsList;
-    //     }
-    //   }
-
-    //   var PageSettings = {
-    //     "PageName": this.form.name,
-    //     "PageSEOTitle": this.form.seoTitle,
-    //     "PageSEOKeywords": this.form.seoKeywords,
-    //     "PageSEODescription": this.form.seoDesc,
-    //     "PageLayout": this.form.Layout,
-    //     "partials": []
-    //   };
-
-    //   if (this.currentFileIndex != null) {
-
-    //     this.settings[1].pageSettings[this.currentFileIndex].partials = [];
-    //     this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
-
-    //     for (var i = 0; i < this.partialsListSelection.length; i++) {
-    //         let temp = this.partialsListSelection[i]
-    //         var obj = {};
-
-    //         let change = false;
-    //         if (change != true) {
-    //             obj[temp] = this.form.parent_id[temp];
-    //             change = false;
-    //         }
-
-    //         this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj);
-    //     }
-
-
-    //     let newfilename = this.folderUrl + '/assets/config.json';
-    //     axios.post(config.baseURL + '/flows-dir-listing', {
-    //         filename: newfilename,
-    //         text: JSON.stringify(this.settings),
-    //         type: 'file'
-    //     })
-    //     .then((res) => {
-
-    //         this.$message({
-    //             showClose: true,
-    //             message: 'Config Saved!',
-    //             type: 'success'
-    //         });
-
-    //     })
-    //     .catch((e) => {
-    //         console.log(e);
-    //         this.$message({
-    //             showClose: true,
-    //             message: 'Cannot save config file! Some error occured, try again.',
-    //             type: 'error'
-    //         });
-    //     })
-
-    //   } else {
-    //     for (var i = 0; i < this.partialsListSelection.length; i++) {
-    //         let temp = this.partialsListSelection[i]
-    //         var obj = {};
-
-    //         obj[temp] = this.form.parent_id[temp];
-    //         PageSettings.partials.push(obj)
-
-    //     }
-
-    //     this.settings[1].pageSettings.push(PageSettings);
-
-    //     let newfilename = this.folderUrl + '/assets/config.json';
-    //     axios.post(config.baseURL + '/flows-dir-listing', {
-    //         filename: newfilename,
-    //         text: JSON.stringify(this.settings),
-    //         type: 'file'
-    //     })
-    //     .then((res) => {
-
-    //         this.$message({
-    //             showClose: true,
-    //             message: 'Config Saved!',
-    //             type: 'success'
-    //         });
-
-    //     })
-    //     .catch((e) => {
-    //         console.log(e);
-    //         this.$message({
-    //             showClose: true,
-    //             message: 'Cannot save file! Some error occured, try again.',
-    //             type: 'error'
-    //         });
-    //     })
-    //   }
-    // }
-
   },
   async created () {
 
@@ -613,9 +573,13 @@ export default {
     let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
     this.folderUrl = url.replace(fileName, '');
 
-    this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/config.json');
+    let foldername = this.folderUrl.split('/');
+    foldername = foldername[(foldername.length-1)];
+
+    this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
     if(this.configData.status == 200 || this.configData.status == 204){
-      this.settings = JSON.parse(this.configData.data);
+      this.settings = this.configData.data.data[0].configData;
       
       // Get Current file index
       this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});
@@ -629,23 +593,35 @@ export default {
         this.form.seoTitle = '';
       }
 
-      if('PageSEOKeywords' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.form.seoKeywords = this.settings[1].pageSettings[this.currentFileIndex].PageSEOKeywords;
-      } else {
-        this.form.seoKeywords = '';
-      }
-
-      if('PageSEODescription' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.form.seoDesc = this.settings[1].pageSettings[this.currentFileIndex].PageSEODescription;
-      } else {
-        this.form.seoDesc = '';
-      }
-
       if('PageLayout' in this.settings[1].pageSettings[this.currentFileIndex]){
         console.log('Layout Found in config', this.settings[1].pageSettings[this.currentFileIndex].PageLayout)
         this.form.Layout = this.settings[1].pageSettings[this.currentFileIndex].PageLayout;
       } else {
         this.form.Layout = '';
+      }
+
+      if('PageCss' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.checkedCss = this.settings[1].pageSettings[this.currentFileIndex].PageCss;
+      } else {
+        this.checkedCss = [];
+      }
+
+      if('PageMetaInfo' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.externallinksMeta = this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo;
+      } else {
+        this.externallinksMeta = [];
+      }
+
+      if('PageExternalCss' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.externallinksCSS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss;
+      } else {
+        this.externallinksCSS = [];
+      }
+
+      if('PageExternalJs' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.externallinksJS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs;
+      } else {
+        this.externallinksJS = [];
       }
 
     } else {
@@ -660,5 +636,23 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .cssChecks{
+    width: 180px;
+  }
 
+  .page-buttons{
+    position: fixed;
+    bottom: 7px;
+    right: 50px;
+    margin-top: 17.5px;
+    z-index: 10
+  }
+
+  @media(max-width: 680px){
+    .page-buttons{
+      position: relative;
+      left: auto;
+      right: auto;
+    }
+  }
 </style>

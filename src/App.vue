@@ -20,24 +20,27 @@
 		        
 		      </el-row>
 		    </el-menu> -->
-        <el-tooltip class="item" effect="dark" content="Logout" placement="bottom" v-if="isLoggedIn === 'yes'">
+        <el-tooltip class="item" effect="dark" content="Logout" placement="bottom" v-if="isLoggedIn === true">
           <el-button type="danger" class="logout-btn" @click="doLogout"><i class="fa fa-sign-out"></i></el-button>
         </el-tooltip>
         <div class="layout-content">
             <router-view></router-view>
         </div>
-        <SiteFooter></SiteFooter>
+        <!-- <SiteFooter></SiteFooter> -->
     </div>
   </div>
 </template>
 
 <script>
+
+import psl from 'psl';
+
 import SiteFooter from './views/footer'
 export default {
   name: 'app',
   data () {
     return {
-      isLoggedIn: 'no',
+      isLoggedIn: false,
       username : ''
     }
 	},
@@ -45,18 +48,23 @@ export default {
     SiteFooter
   },
   updated: function () {
-    if (this.$session.exists()) {
-      this.username  =  this.$session.get('username')
-      this.isLoggedIn = 'yes';
+    if(this.$cookie.get('auth_token')){
+      this.isLoggedIn = true;
+    } else {
+
     }
   },
   mounted: function () {
-    if (this.$session.exists()) {
-      this.username  =  this.$session.get('username')
-      this.isLoggedIn = 'yes';
-    }
+    this.init();
   },
   methods: {
+    init () {
+      if(this.$cookie.get('auth_token')){
+        this.isLoggedIn = true;
+      } else {
+
+      }
+    },
   	handleSelect() {
     },
     loginPage() {
@@ -66,8 +74,14 @@ export default {
       this.$router.push('/');
     },
     doLogout() {
-      this.$session.destroy();
-      this.isLoggedIn = 'no';
+      // localStorage.removeItem("auth_token");
+      this.$session.remove('username');
+      let location = psl.parse(window.location.hostname)
+      location = location.domain === null ? location.input : location.domain
+      this.$cookie.delete('authUser', {domain: location});
+      this.$cookie.delete('auth_token', {domain: location});
+
+      this.isLoggedIn = false;
       this.$router.push('/login');
     }
   }

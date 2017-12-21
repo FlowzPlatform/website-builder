@@ -1,8 +1,28 @@
-# Flows Website Builder
+# Flowz Website Builder [![Build Status](https://travis-ci.org/FlowzPlatform/website-builder.svg?branch=master)](https://travis-ci.org/FlowzPlatform/website-builder)
 
-> A Vue.js project
+> A Vue.js project using [GrapesJS](https://github.com/artf/grapesjs)
 
 ## Build Setup
+
+FlowzBuilder website Guide:
+
+1. Clone FlowzServiceApi project: https://github.com/FlowzPlatform/FlowzServiceApi
+
+2. In terminal: 1)cd FlowzServiceApi 2) npm install 3) npm start
+
+3. Clone FlowzBuilder project: https://github.com/FlowzPlatform/FlowzBuilder and update `src/config.json` with your credentials
+
+4. In terminal: 1)cd FlowzBuilder 2) npm install 3) baseURL=(FlowzServiceApi hosst and port) npm start
+
+5. In /var/www/html/ create "websites" folder (without quotes)
+
+6. Create new user and Login.   
+
+7. Create new Project(Projectname without spaces)
+
+8. Create header files(.partials) in Header Folder, footer files(.partials) in Footer folder, layout file(.layout) in Layout folder and pages file(.html) in Pages folder.
+
+9. Project Settings and Page settings are in Settings icon to their respective names.
 
 ``` bash
 # install dependencies
@@ -24,3 +44,6 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 #Before starting the project
 Start rethinkdb: rethinkdb --http-port 8081
 Start the FlowzServiceApi by npm start
+
+#Changelog
+coming soon

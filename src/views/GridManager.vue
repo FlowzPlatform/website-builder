@@ -29,7 +29,7 @@
 
     const beautify = require('beautify');
 
-    import './GridManager/jquery.gridmanager.min.js';
+    // import './GridManager/jquery.gridmanager.min.js';
     
     export default {         
         name:'GridManager',    

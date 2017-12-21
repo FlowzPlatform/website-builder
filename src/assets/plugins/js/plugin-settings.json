@@ -1,0 +1,62 @@
+[
+   {
+      "id":1,
+      "children":[
+         {
+            "id":2,
+            "children":[
+
+            ],
+            "label":"default",
+            "isActive": true
+         }
+      ],
+      "label":"Header",
+      "isActive": true
+   },
+   {
+      "id":3,
+      "children":[
+         {
+            "id":4,
+            "children":[
+
+            ],
+            "label":"default",
+            "isActive": true
+         }
+      ],
+      "label":"Footer",
+      "isActive": true
+   },
+   {
+      "id":5,
+      "children":[
+         {
+            "id":6,
+            "children":[
+
+            ],
+            "label":"default",
+            "isActive": true
+         }
+      ],
+      "label":"Sidebar",
+      "isActive": true
+   },
+   {
+      "id":7,
+      "children":[
+         {
+            "id":8,
+            "children":[
+
+            ],
+            "label":"default",
+            "isActive": true
+         }
+      ],
+      "label":"Menu",
+      "isActive": true
+   }
+]
