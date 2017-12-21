@@ -33,116 +33,70 @@
       <!-- Commit Section Ends -->
 
       <!-- Project Settings Section -->
-      <div class="well" id="project-settings">
-        <div class="row">
-
+      <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-
-            <div class="row">
-              <div class="col-md-4">
-                <h3>Project Settings</h3>
-              </div>
-            </div>
-
-            <hr>
-          
+              <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Project Settings</a>
+          </div>
+      </div>
+      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12">
             <el-form ref="form" :model="form" label-width="180px">
 
-            <el-form-item label="Repository Id:">
-                <el-input v-model="newRepoId" :disabled="true"></el-input>
-              </el-form-item>
+              <el-form-item label="Repository Id:">
+                  <el-input v-model="newRepoId" :disabled="true"></el-input>
+                </el-form-item>
 
-              <el-form-item label="Project name">
-                <el-input v-model="repoName" :disabled="true"></el-input>
-              </el-form-item>
+                <el-form-item label="Project name">
+                  <el-input v-model="repoName" :disabled="true"></el-input>
+                </el-form-item>
 
-              <!-- <el-form-item label="Brand name">
-                <el-input v-model="form.brandName" placeholder="My Company"></el-input>
-              </el-form-item> -->
+                <!-- <el-form-item label="Brand name">
+                  <el-input v-model="form.brandName" placeholder="My Company"></el-input>
+                </el-form-item> -->
 
-              <!-- <el-form-item label="Brand Logo">
-                <div class="col6 valid"> 
-                  <label for="upload-validation" class="brandLogoUploadLabel">
-                    <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
-                  </label> 
-                  <input type="file" name="" id="upload-validation">
-                  <span class="dis">(max 1 MB. .jpg or .png only)</span>
-                </div>
-              </el-form-item> -->
+                <!-- <el-form-item label="Brand Logo">
+                  <div class="col6 valid"> 
+                    <label for="upload-validation" class="brandLogoUploadLabel">
+                      <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
+                    </label> 
+                    <input type="file" name="" id="upload-validation">
+                    <span class="dis">(max 1 MB. .jpg or .png only)</span>
+                  </div>
+                </el-form-item> -->
 
-              <el-form-item label="Project SEO Title">
-                <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
-              </el-form-item>
+                <el-form-item label="Project SEO Title">
+                  <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
+                </el-form-item>
 
-              <el-form-item label="Project SEO Keywords">
-                <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
-              </el-form-item>
-              
-              <el-form-item label="Project SEO Description">
-                <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
-              </el-form-item>    
+                <el-form-item label="Project SEO Keywords">
+                  <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
+                </el-form-item>
+                
+                <el-form-item label="Project SEO Description">
+                  <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
+                </el-form-item>    
 
             </el-form> 
           </div>
-        
         </div>
-      </div> 
+      </div>
       <!-- Project Settings section ends -->
 
       <!-- Plugins Section -->
-      <div class="well" id="plugins-section">
-        <div class="row">
+      <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-
-            <div class="row">
-              <div class="col-md-4">
-                <h3>Import Plugin</h3>
-              </div>
-
-              <div class="col-md-8" align="right">
-                <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
-                  <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
-                </el-tooltip>
-              </div>
-            </div>
-            
-            <hr>
-
-            <!-- <el-table
-              :data="pluginsData"
-              border
-              style="width: 100%">
-              <el-table-column
-                prop="pluginName"
-                label="Plugin Name"
-                >
-              </el-table-column>
-              
-              <el-table-column
-                label="Plugin Status"
-                width="180"
-                >
-                <template scope="scope">
-                  <el-switch
-                    v-model="pluginsData[scope.$index].pluginStatus"
-                    on-text="Enabled"
-                    off-text="Disabled"
-                    on-color="#13ce66"
-                    off-color="#ff4949"
-                    :width="90">
-                  </el-switch>
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                label="Delete Plugin"
-                width="180">
-                <template scope="scope">
-                  <el-button @click.native.prevent="deletePlugin(scope.$index, pluginsData)" type="danger" size="small" icon="delete">Delete</el-button>
-                </template>
-              </el-table-column>
-            </el-table> -->
-
+              <a href="javascript:void(0)" id="toggleImportPlugin" class="card color-div toggleableDivHeader">Import Plugin</a>
+          </div>
+      </div>
+      <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12" align="right">
+            <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
+              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
+            </el-tooltip>
+          </div>
+          <div class="col-md-12">
             <el-tree
               :data="pluginsTreedata"
               node-key="id"
@@ -153,14 +107,7 @@
               >
             </el-tree>
 
-            <!-- :default-checked-keys="[5]"
-            :render-content="renderContent"
-             -->
-
             <br>
-
-            <!-- Static Upload new Plugin Button -->
-            <!-- <el-button type="primary" :loading="addPluginLoading" @click="addNewPlugin">Upload Plugin JSON</el-button> -->
 
             <div class="row">
               <div class="col-md-6">
@@ -171,34 +118,32 @@
                 
               </div>
             </div>
-
-            
-
           </div>
-        
         </div>
-      </div> 
+      </div>
       <!-- Plugins section ends -->
 
-      <!-- Global Variable section -->
-      <div class="well" id="global-variables-section">
-        <div class="row">
+      <!-- Global Variables Section -->
+      <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-            <div class="row">
-              <div class="col-md-4">
-                <h3>Dynamic Values</h3>
-              </div>
-              <div class="col-md-8" align="right">
-                <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
-                  <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
-                  <input type="file" name="uploaderVariableJson">
-                <!-- </el-tooltip> -->
-                <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
-                  <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
-                <!-- </el-tooltip> -->
-              </div>
-            </div>
-            <hr>
+              <a href="javascript:void(0)" id="toggleGlobalVariables" class="card color-div toggleableDivHeader">Global Variables</a>
+          </div>
+      </div>
+      <div id="toggleGlobalVariablesContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-4">
+            <h3>Dynamic Values</h3>
+          </div>
+          <div class="col-md-8" align="right">
+            <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
+              <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
+              <input type="file" name="uploaderVariableJson">
+            <!-- </el-tooltip> -->
+            <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
+              <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
+            <!-- </el-tooltip> -->
+          </div>
+          <div class="col-md-12">
             <el-form ref="form" :model="form">
               <div v-for="(n, index) in globalVariables">
                 <el-form-item>
@@ -278,9 +223,11 @@
               
               <!-- Create new variable -->
               <el-button type="primary" @click="addNewVariable">New Variable</el-button>
-
             </el-form>
           </div>
+        </div>
+
+        <div class="row">
           <div class="col-md-12" style="margin-top: 4%;">
             <h3>Dynamic Styles</h3>
             <hr>
@@ -347,12 +294,17 @@
           </div>
         </div>
       </div>
-      <!-- Global Variable section ends -->
+      <!-- Global Variables section ends -->
 
-      <!-- External JS CSS -->
-      <div class='well' id='add-js-css'>
-         <div class="row">
-            <div class="col-md-12">
+      <!-- External Links Section -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleExternalLinks" class="card color-div toggleableDivHeader">External Links</a>
+          </div>
+      </div>
+      <div id="toggleExternalLinksContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12">
                <div class="row">
                   <div class="col-md-4">
                      <h3> JS Links </h3>
@@ -360,33 +312,40 @@
                </div>
                <hr>
                <el-form ref="form" :model="form">
-              <!--  <draggable @start="drag=true" @end="drag=false"> -->
-                  <div v-for="(n, index) in externallinksJS">
+               
+                  <div >
                      <el-form-item>
-                        <div class="row">
-                           <!-- position  -->
-                           <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                              <el-select v-model="n.linkposition" placeholder="Position">
-                                 <el-option
-                                    v-for="item in Allposition"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                 </el-option>
-                              </el-select>
-                           </div>
-                           <!-- link url -->
-                           <div class="col-md-7" style="margin: 0; padding: 0px">
-                              <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
-                           </div>
-                           <!-- Delete Variable -->
-                           <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete"></el-button>
-                           </div>
-                        </div>
+                        <draggable @start="drag=true" @end="drag=false">
+                          <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
+                             <!-- position  -->
+                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                <el-select v-model="n.linkposition" placeholder="Position">
+                                   <el-option
+                                      v-for="item in Allposition"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                   </el-option>
+                                </el-select>
+                             </div>
+                             <!-- link url -->
+                             <div class="col-md-6" style="margin: 0; padding: 0px">
+                                <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                             </div>
+                             <!-- Delete Variable -->
+                             <div class="col-md-1">
+                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete2"></el-button>
+                             </div>
+                             <div class="col-md-1">
+                                <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                              
+                             </div>
+
+                          </div>
+                        </draggable>
                      </el-form-item>
                   </div>
-                  <!-- </draggable> -->
+                 
                   <!-- Create new variable -->
                   <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
                </el-form>
@@ -399,6 +358,8 @@
                </div>
                <hr>
                <el-form ref="form" :model="form">
+               <draggable @start="drag=true" @end="drag=false">
+
                   <div v-for="(n, index) in externallinksCSS">
                      <el-form-item>
                         <div class="row">
@@ -413,28 +374,37 @@
                               </el-select>
                            </div>
                            <!-- link url -->
-                           <div class="col-md-7" style="margin: 0; padding-left: 0px">
+                           <div class="col-md-6" style="margin: 0; padding-left: 0px">
                               <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
                            </div>
                            <!-- Delete Variable -->
                            <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete"></el-button>
+                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete2"></el-button>
+                           </div>
+                           <div class="col-md-1">
+                              <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                            
                            </div>
                         </div>
                      </el-form-item>
                   </div>
                   <!-- Create new variable -->
+               </draggable></el-form>
                   <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
-               </el-form>
             </div>
-         </div>
+        </div>
       </div>
-      <!-- External JS CSS Ends -->
+      <!-- External Links section ends -->
 
       <!-- Meta Tags -->
-      <div class="well" id='add-meta-tag'>
-         <div class="row">
-           <div class="col-md-12" >
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleMetaTags" class="card color-div toggleableDivHeader">Meta Tags</a>
+          </div>
+      </div>
+      <div id="toggleMetaTagsContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12" >
               <div class="row">
                     <div class="col-md-4">
                        <h3>Add External meta tags </h3>
@@ -449,30 +419,36 @@
            </div>
             <div class="col-md-12" style="margin-top: 2%">
                 <table class="table table-hover  table-bordered">
+                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
                     <thead class="thead">
                       <tr>
                         <th>Name</th>
                         <th>Content</th>
                         <th></th>
+                        <!-- <th></th> -->
                       </tr>
                     </thead>
                     <tbody>
-                    
                       <tr v-for="(n, index) in externallinksMeta" >
-                        <td><input type='text' class="form-control" placeholder="Meta Name" value="n.name" v-model="n.name"></td>
-                        <td><textarea class="form-control" rows="1" placeholder="Meta Content" v-model="n.content">{{n.content}}</textarea></td>
-                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete"></el-button></td>
+                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
+                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
                       </tr>
-                      <tr><td colspan="3"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
                     </tbody>
+                      <!-- </draggable> -->
                   </table>
+                  <!-- Create new variable -->
+                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+               <!-- </el-form> -->
             </div>
-         </div>
+        </div>
       </div>
       <!-- Meta Tags Ends -->
 
       <!-- List of Commits Section -->
-      <div class="well" id="list-of-commits">
+      <!-- <div class="well" id="list-of-commits">
         <div class="row">
           <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
             <h3>List of Commits</h3>
@@ -509,7 +485,7 @@
               </el-table>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- List of Commits Ends -->
       
     </div>
@@ -529,6 +505,8 @@ import axios from 'axios';
 import _ from 'lodash';
 const config = require('../config');
 import fileSaver from 'file-saver';
+
+import draggable from 'vuedraggable';
 
 export default {
   name: 'ProjectSettings',
@@ -631,7 +609,8 @@ export default {
       Metacharset: ''
     }
   },
-  component: {
+  components: {
+    draggable
   },
   methods: {
 
@@ -1753,6 +1732,58 @@ export default {
 
   async mounted () {
 
+    // Collapsing Divs
+    $(document).ready(function($) {
+        
+        $("#toogleProjectSettings").click(function() {
+            $("#toogleProjectSettingsContent").slideToggle("slow");
+            if ($("#toogleProjectSettings").text() == "Project Settings") {
+                $("#toogleProjectSettings").html("Project Settings")
+            } else {
+                $("#toogleProjectSettings").text("Project Settings")
+            }
+        });
+
+        $("#toggleImportPlugin").click(function() {
+            $("#toggleImportPluginContent").slideToggle("slow");
+            if ($("#toggleImportPlugin").text() == "Import Plugin") {
+                $("#toggleImportPlugin").html("Import Plugin")
+            } else {
+                $("#toggleImportPlugin").text("Import Plugin")
+            }
+        });
+
+        $("#toggleGlobalVariables").click(function() {
+            $("#toggleGlobalVariablesContent").slideToggle("slow");
+            if ($("#toggleGlobalVariables").text() == "Global Variables") {
+                $("#toggleGlobalVariables").html("Global Variables")
+            } else {
+                $("#toggleGlobalVariables").text("Global Variables")
+            }
+        });
+
+        $("#toggleExternalLinks").click(function() {
+            $("#toggleExternalLinksContent").slideToggle("slow");
+            if ($("#toggleExternalLinks").text() == "External Links") {
+                $("#toggleExternalLinks").html("External Links")
+            } else {
+                $("#toggleExternalLinks").text("External Links")
+            }
+        });
+
+        $("#toggleMetaTags").click(function() {
+            $("#toggleMetaTagsContent").slideToggle("slow");
+            if ($("#toggleMetaTags").text() == "Meta Tags") {
+                $("#toggleMetaTags").html("Meta Tags")
+            } else {
+                $("#toggleMetaTags").text("Meta Tags")
+            }
+        });
+
+
+
+    });
+
     // Brand Image uploader
     let scope = this;
 
@@ -2029,5 +2060,64 @@ export default {
 
   .tree-action-button {
       display: none;
+  }
+
+
+
+
+  /*For Collapsing Divs*/
+  .toggleableDivHeaderContent {
+      margin-top: 0px;
+      margin-bottom: 30px;
+      background: #eee;
+      width: auto;
+      height: auto;
+      margin: 0px 5px;
+      padding: 15px;
+  }
+  
+  .toggleableDivHeader {
+      height: 35px;
+      line-height: 15px;
+      text-align: center;
+      color: black;
+      font-weight: bold;
+      text-decoration: none;
+  }
+  
+  .card {
+      padding: 15px;
+      box-shadow: 0px 0px 10px #999;
+      transition: 0.2s all linear;
+      margin: 20px;
+  }
+  
+  .card:hover {
+      box-shadow: 2px 2px 20px #999;
+      transition: 0.2s all linear;
+  }
+  
+  .color-div {
+      height: 45px;
+      display: block;
+      padding: 10px 25px;
+      line-height: 25px;
+      color: #292929;
+      text-transform: uppercase;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px #aaa;
+      transition: 0.2s all linear;
+      margin: 5px 5px;
+      background: #8e9eab;
+      /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #eef2f3, #8e9eab);
+      /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #eef2f3, #8e9eab);
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+  
+  .color-div:hover {
+      box-shadow: 2px 2px 10px #aaa;
+      transition: 0.2s all linear;
   }
 </style>
