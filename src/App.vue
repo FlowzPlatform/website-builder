@@ -20,7 +20,7 @@
 		        
 		      </el-row>
 		    </el-menu> -->
-        <el-tooltip class="item" effect="dark" content="Logout" placement="bottom" v-if="isLoggedIn === 'yes'">
+        <el-tooltip class="item" effect="dark" content="Logout" placement="bottom" v-if="isLoggedIn === true">
           <el-button type="danger" class="logout-btn" @click="doLogout"><i class="fa fa-sign-out"></i></el-button>
         </el-tooltip>
         <div class="layout-content">
@@ -40,7 +40,7 @@ export default {
   name: 'app',
   data () {
     return {
-      isLoggedIn: 'no',
+      isLoggedIn: false,
       username : ''
     }
 	},
@@ -49,19 +49,22 @@ export default {
   },
   updated: function () {
     if(this.$cookie.get('auth_token')){
-      this.isLoggedIn = 'yes';
+      this.isLoggedIn = true;
     } else {
 
     }
   },
   mounted: function () {
-    if(this.$cookie.get('auth_token')){
-      this.isLoggedIn = 'yes';
-    } else {
-
-    }
+    this.init();
   },
   methods: {
+    init () {
+      if(this.$cookie.get('auth_token')){
+        this.isLoggedIn = true;
+      } else {
+
+      }
+    },
   	handleSelect() {
     },
     loginPage() {
@@ -78,7 +81,7 @@ export default {
       this.$cookie.delete('authUser', {domain: location});
       this.$cookie.delete('auth_token', {domain: location});
 
-      this.isLoggedIn = 'no';
+      this.isLoggedIn = false;
       this.$router.push('/login');
     }
   }
