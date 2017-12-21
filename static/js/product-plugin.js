@@ -634,6 +634,19 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
       category: 'Ecommerce Blocks'
   });
 
+  bm.add('productSearchFilter', {
+    label: 'Product Search Filter',
+    content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"><productSearchFilter  style="display: block; width: 100%;padding:15px; vertical-align: middle;"><div class="reomve-texts"> <i class="fa fa-search"></i> <label style="margin: inherit;">Product Search Filter</label></div></productSearchFilter>',
+    attributes: { 
+        class: 'fa fa-filter',
+        title: 'Product search Filter'
+    },
+    category: 'Ecommerce Blocks'
+  });
+
+
+
+
   
 
 
@@ -827,122 +840,122 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
-  // Sweda like components
+  // // Sweda like components
   
-  bm.add('Slider', {
-    label: 'Slider',
-    content: '<Slider style="display: block; min-height: 50px"> <style>#slider{margin: 0 auto; width: 1146px; position: relative;}#slides{background: #fff; padding: 5px; -webkit-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -moz-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -o-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -ms-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}.inner{width: 500%;}.inner:after{display: block; height: 0; clear: both;}.page{float: left; width: 20%;}.page img{width: 100%; height: 466px;}#overflow{overflow: hidden;}#slider input{display: none;}#controls{position: absolute; width: 100%; top: 216px; left: 0; height: 50px;}#controls label{display: none; opacity: 0.3; cursor: pointer;}#controls label:hover{opacity: 0.8;}#slide1:checked ~ #controls label:nth-child(2), #slide2:checked ~ #controls label:nth-child(3), #slide3:checked ~ #controls label:nth-child(4), #slide4:checked ~ #controls label:nth-child(5), #slide5:checked ~ #controls label:nth-child(1){width: 0; height: 0; border-top: 20px solid transparent; border-left: 20px solid #333; border-bottom: 20px solid transparent; float: right; margin-right: -30px; display: block;}#slide1:checked ~ #controls label:nth-child(5), #slide2:checked ~ #controls label:nth-child(1), #slide3:checked ~ #controls label:nth-child(2), #slide4:checked ~ #controls label:nth-child(3), #slide5:checked ~ #controls label:nth-child(4){width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent; border-right: 20px solid rgb(51, 51, 51); float: left; display: block; margin-left: -27px;}#slide1:checked ~ #slides .inner{margin-left: 0;}#slide2:checked ~ #slides .inner{margin-left: -100%;}#slide3:checked ~ #slides .inner{margin-left: -200%;}#slide4:checked ~ #slides .inner{margin-left: -300%;}#slide5:checked ~ #slides .inner{margin-left: -400%;}#active{text-align: center; margin-top: 10px; text-align: center; vertical-align: middle; padding-right: 3px;}#active label{padding: 6px; width: 230px; height: 53px; background: #f1f1f1; display: table-cell; cursor: pointer; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; line-height: 19px; font-family: sans-serif; font-size: small;}#active label:hover{background: #c4bebe;}#slide1:checked ~ #active label:nth-child(1), #slide2:checked ~ #active label:nth-child(2), #slide3:checked ~ #active label:nth-child(3), #slide4:checked ~ #active label:nth-child(4), #slide5:checked ~ #active label:nth-child(5){background: #dddddd;}#slides .inner{-webkit-transition: all 0.8s ease-in-out; -moz-transition: all 0.8s ease-in-out; -ms-transition: all 0.8s ease-in-out; -o-transition: all 0.8s ease-in-out; transition: all 0.8s ease-in-out;}</style> <div id="slider"> <input type="radio" id="slide1" name="slider" checked/> <input type="radio" id="slide2" name="slider"/> <input type="radio" id="slide3" name="slider"/> <input type="radio" id="slide4" name="slider"/> <input type="radio" id="slide5" name="slider"/> <div id="slides"> <div id="overflow"> <div class="inner"> <div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div></div></div></div><div id="controls"> <label for="slide1"></label> <label for="slide2"></label> <label for="slide3"></label> <label for="slide4"></label> <label for="slide5"></label> </div><div id="active"> <label for="slide1"> <p>IT\'S A WRAP</p></label> <label for="slide2"> <p>CHECK OUT OUR <br>Autumn Savings</p></label> <label for="slide3"> <p>New! <br>Light Up Pen!</p></label> <label for="slide4"> <p>INTRODUCING... <br>Sweda Outlet</p></label> <label for="slide5"> <p>Take 40% Off</p></label> </div></div></Slider>',
-    attributes: {
-        class: 'fa fa-code',
-        title: 'Slider'
-    },
-    category: 'Sweda Components'
-  });
-  bm.add('popularProducts', {
-    label: 'Popular Products',
-    content: '<popularProducts style="display: block; min-height: 50px; padding: 50px;"> <div class="popularProducts"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><style type="text/css">.col-item{border: 1px solid #E1E1E1; border-radius: 5px; background: #FFF;}.col-item .photo img{margin: 0 auto; width: 100%;}.col-item .info{padding: 10px; border-radius: 0 0 5px 5px; margin-top: 1px;}.col-item:hover .info{background-color: #eee;}.col-item .price{/*width: 50%;*/ float: left; margin-top: 5px;}.col-item .price h5{line-height: 20px; margin: 0;}.price-text-color{color: #219FD1;}.col-item .info .rating{color: #777;}.col-item .rating{/*width: 50%;*/ float: left; font-size: 17px; text-align: right; line-height: 52px; margin-bottom: 10px; height: 52px;}.col-item .separator{border-top: 1px solid #E1E1E1;}.clear-left{clear: left;}.col-item .separator p{line-height: 20px; margin-bottom: 0; margin-top: 10px; text-align: center;}.col-item .separator p i{margin-right: 5px;}.col-item .btn-add{width: 50%; float: left;}.col-item .btn-add{border-right: 1px solid #E1E1E1;}.col-item .btn-details{width: 50%; float: left; padding-left: 10px;}.controls{margin-top: 20px;}[data-slide="prev"]{margin-right: 10px;}</style><div class="container-fluid"> <div class="row"> <div class="row"> <div class="col-md-9"> <h3> Popular Products</h3> </div><div class="col-md-3"> <div class="controls pull-right hidden-xs"> <a class="left btn btn-success" href="#carousel-example" data-slide="prev"><i class="fa fa-angle-left"></i></a><a class="right btn btn-success" href="#carousel-example" data-slide="next"><i class="fa fa-angle-right"></i></a> </div></div></div><div id="carousel-example" class="carousel slide hidden-xs" data-ride="carousel"> <div class="carousel-inner"> <div class="item active"> <div class="row" id="sliderListItems"> <div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Sample Product</h5> <h5 class="price-text-color"> $199.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Product Example</h5> <h5 class="price-text-color"> $249.99</h5> </div><div class="rating hidden-sm col-md-6"> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Next Sample Product</h5> <h5 class="price-text-color"> $149.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Sample Product</h5> <h5 class="price-text-color"> $199.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div></div></div><div class="item"> <div class="row"> <div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Product with Variants</h5> <h5 class="price-text-color"> $199.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Grouped Product</h5> <h5 class="price-text-color"> $249.99</h5> </div><div class="rating hidden-sm col-md-6"> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Product with Variants</h5> <h5 class="price-text-color"> $149.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Product with Variants</h5> <h5 class="price-text-color"> $199.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div></div></div></div></div></div></div></div></popularProducts>',
-    attributes: {
-        class: 'fa fa-code',
-        title: 'Popular Products'
-    },
-    category: 'Sweda Components'
-  });
-  bm.add('siteHeaderNew3', {
-    label: 'Sweda Navbar',
-    content: '<style type="text/css">#flipkart-navbar{background-color: #232F3E; color: #FFFFFF;}.row1{padding-top: 10px;}.row2{padding-bottom: 20px;}.flipkart-navbar-input{padding: 11px 16px; border-radius: 2px 0 0 2px; border: 0 none; outline: 0 none; font-size: 15px; color: #000;}.flipkart-navbar-button{background-color: rgb(254, 189, 105); border: 1px solid #ffe11b; border-radius: 0 2px 2px 0; color: #565656; padding: 10px 0; height: 43px; cursor: pointer; padding-left: 18px;}.cart-button{background-color: rgb(254, 189, 105); box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .23), inset 1px 1px 0 0 hsla(0, 0%, 100%, .2); padding: 10px 0; text-align: center; height: 41px; border-radius: 2px; font-weight: 500; width: 120px; display: inline-block; color: #333; text-decoration: none; color: inherit; border: none; outline: none;}.cart-button:hover{text-decoration: none; color: #fff; cursor: pointer;}.cart-svg{display: inline-block; width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;}.item-number{border-radius: 3px; background-color: rgba(0, 0, 0, .1); height: 20px; padding: 3px 6px; font-weight: 500; display: inline-block; color: #fff; line-height: 12px; margin-left: 10px;}.upper-links{display: inline-block; padding: 0 11px; line-height: 23px; font-family: \'Roboto\', sans-serif; letter-spacing: 0; color: inherit; border: none; outline: none; font-size: 12px;}.dropdown{position: relative; display: inline-block; margin-bottom: 0px;}.dropdown .dropdown-menu{position: absolute; top: 100%; display: none; background-color: #fff; color: #333; left: 0px; border: 0; border-radius: 0; box-shadow: 0 4px 8px -3px #555454; margin: 0; padding: 0px;}.links{color: #fff; text-decoration: none;}.links:hover{color: #fff; text-decoration: none;}.profile-links{font-size: 12px; font-family: \'Roboto\', sans-serif; border-bottom: 1px solid #e9e9e9; box-sizing: border-box; display: block; padding: 0 11px; line-height: 23px;}.profile-li{padding-top: 2px;}.largenav{display: none;}.smallnav{display: block;}.smallsearch{margin-left: 15px; margin-top: 15px;}.menu{cursor: pointer;}@media screen and (min-width: 768px){.largenav{display: block;}.smallnav{display: none;}.smallsearch{margin: 0px;}}/*Sidenav*/.sidenav{height: 100%; width: 0; position: fixed; z-index: 1; top: 0; left: 0; background-color: #fff; overflow-x: hidden; transition: 0.5s; box-shadow: 0 4px 8px -3px #555454; padding-top: 0px;}.sidenav a{padding: 8px 8px 8px 32px; text-decoration: none; font-size: 25px; color: #818181; display: block; transition: 0.3s}.sidenav .closebtn{position: absolute; top: 0; right: 25px; font-size: 36px; margin-left: 50px; color: #fff;}@media screen and (max-height: 450px){.sidenav a{font-size: 18px;}}.sidenav-heading{font-size: 36px; color: #fff;}.footer-top-layout{background: #232F3E none repeat scroll 0 0; color: #ffffff; padding: 40px 0;}.OurBlog{margin-bottom: 32px; text-align: center;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.OurBlog > p{color: #ffffff;}.post-blog-date::after{background: #ffffff none repeat scroll 0 0; bottom: 0; content: ""; height: 4px; left: 0; margin: auto; position: absolute; right: 0; width: 50px;}.post-blog-date{padding-bottom: 25px; position: relative;}body{color: #fff; font-family: "Open Sans", sans-serif; line-height: 24px;}.footer-top-layout [class*="col-sm-"]:first-child{padding: 0;}.footer-top-layout [class*="col-sm-"]{border-right: 2px solid #333333; padding: 0 0 0 28px;}.footer-top-layout{color: #ffffff;}.footer-col-item{min-height: 140px;}address{color: #eee;}.footer-top-layout [class*="col-sm-"]:last-child{border-right: medium none;}.footer-top-layout{color: #ffffff;}body{color: #666666; font-family: "Open Sans", sans-serif;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{color: #eee; font-family: "Roboto", sans-serif; font-weight: 500; line-height: 1.1; margin-top: 0;}body{color: #eee; font-family: "Open Sans", sans-serif; line-height: 24px;}.footer-col-item .item-contact a{color: #eee; display: inline-block; margin-bottom: 7px; width: 100%;}.footer-col-item .item-contact a .link-id{color: #ffffff; margin-left: 0; margin-right: 6px;}.footer-col-item span{margin-left: 7px;}.footer-col-item .item-contact a{color: #eee;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.signUpNewsletter{position: relative;}.signUpNewsletter .gt-email{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border: 1px solid #eee; border-radius: 0; color: #ffffff; height: 52px;}.signUpNewsletter .btn-go{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-color: #eee; border-style: solid; border-width: 0 0 0 1px; bottom: 0; color: #ffffff; font-size: 16px; position: absolute; right: 0; text-transform: uppercase; top: 0; width: 52px;}.footer-bottom-layout{background: #292929 none repeat scroll 0 0; padding: 20px 0; text-align: center; color: #eee;}.socialMedia-footer{margin-bottom: 20px;}.socialMedia-footer > a{display: inline-block; margin: 0 8px;}.footer-bottom-layout{text-align: center;}@import url(\'https://fonts.googleapis.com/css?family=Roboto:400,500,700\');.modal__background{position: fixed; top: 0; right: 0; bottom: 0; left: 0; -webkit-transition: 0.35s; transition: 0.35s; background: rgba(0, 0, 0, 0.8); opacity: 0; pointer-events: none; z-index: 2;}.modal__background:target{opacity: 1; pointer-events: auto;}.button:hover{color: red;}.modal__content{background: #fff; padding: 1rem; position: relative; z-index: 4;}@media screen and (max-width: 699px){.modal__content{margin: 2rem;}}@media screen and (min-width: 700px){.modal__content{margin: 4rem auto; max-width: 400px; min-height: 256px;}}.modal__content svg,.modal__content path{position: absolute; top: 1rem; right: 1rem; height: 25px; width: 25px; -webkit-transition: all 0.15s ease-out 0s; transition: all 0.15s ease-out 0s; fill: #bfbfbf;}.modal__content svg:hover,.modal__content path:hover{fill: #0c0c0c;}h2{color: #223f5d; font-family: \'Roboto\', sans-serif; font-size: 40px; margin: 0rem 0 1rem; text-align: center;}.close img{float: right; width: 20px;}.success{width: 100%;}.form_11{color: #283593;}input{color: #283593}#menu{color: #eee; height: 35px;margin-top:70px}#menu ul, #menu li{margin: 0; padding: 0; list-style: none}#menu ul{height: 35px}#menu li{float: left; display: inline; position: relative; font: bold 13px Arial;}#menu li a{color: #ccc}#menu a{display: block; line-height: 35px; padding: 0 14px; text-decoration: none; color: #333;}#menu li:hover > a, #menu li a:hover{color: #fff}#menu input{display: none; margin: 0 0; padding: 0 0; width: 80px; height: 35px; opacity: 0; cursor: pointer}#menu label{font: bold 30px Arial; display: none; width: 35px; height: 36px; line-height: 36px; text-align: center}#menu label span{font-size: 13px; position: absolute; left: 35px}#menu ul.menus{height: auto; overflow: hidden; width: 180px; background: #fff; position: absolute; z-index: 99; display: none; border: 1px solid #ccc; border-top: none; color: #333}#menu ul.menus a{color: #333}#menu ul.menus li{display: block; width: 100%; font: 12px Arial; text-transform: none;}#menu li:hover ul.menus{display: block}#menu a.prett, #menu a.trigger2{padding: 0 27px 0 14px}#menu li:hover > a.prett, #menu a.prett:hover{background: #fff; color: #333}#menu a.prett::after{content: ""; width: 0; height: 0; border-width: 6px 5px; border-style: solid; border-color: #eee transparent transparent transparent; position: absolute; top: 15px; right: 9px}#menu ul.menus a:hover{background: #BABABA;}#menu a.trigger2::after{content: ""; width: 0; height: 0; border-width: 5px 6px; border-style: solid; border-color: transparent transparent transparent #eee; position: absolute; top: 13px; right: 9px}@media screen and (max-width: 600px){#menu{position: relative}#menu ul{background: #838383; position: absolute; top: 100%; right: 0; left: 0; z-index: 3; height: auto; display: none;}#menu ul.menus{width: 100%; position: static; border: none}#menu li{display: block; float: none; width: auto; text-align: left}#menu li a{color: #fff}#menu li a:hover{color: #333}#menu li:hover{background: #BABABA; color: #333;}#menu li:hover > a.prett, #menu a.prett:hover{background: #BABABA; color: #333;}#menu ul.menus a{background: #BABABA;}#menu ul.menus a:hover{background: #fff;}#menu input, #menu label{position: absolute; top: 0; left: 0; display: block}#menu input{z-index: 4}#menu input:checked + label{color: white}#menu input:checked ~ ul{display: block}}#regbar{height: 67px; color: black;}fieldset{border: none;}.login{position: absolute; width: 350px; z-index: 1; background-color: #eee; display: none;}.arrow-up{width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 15px solid #ECF0F1; left: 10%; position: absolute; top: -10px;}.formholder{width: 350px; border-radius: 5px; padding-top: 5px;}.formholder input[type="email"],.formholder input[type="password"]{padding: 7px 5px; margin: 10px 0; width: 96%; display: block; font-size: 18px; border-radius: 5px; border: none; -webkit-transition: 0.3s linear; -moz-transition: 0.3s linear; -o-transition: 0.3s linear; transition: 0.3s linear;}.formholder input[type="email"]:focus,.formholder input[type="password"]:focus{outline: none; box-shadow: 0 0 1px 1px #1abc9c;}.formholder input[type="submit"]{padding: 10px; font-size: 20px; display: block; width: 100%; border: none; color: #fff; background-color: #232f3e; border-radius: 5px;}.formholder input[type="submit"]:hover{background: #506c90;}.randompad{padding: 10px;}.green{color: #1abc9c;}a{color: #ecf0f1; text-decoration: none;}#RegisterButton{color:black; font-size: 20px;}</style>'+
-        '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><commonLayout> <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> <div id="flipkart-navbar"> <div class="container"> <div class="row row1"> <ul class="largenav pull-right"> <li class="upper-links"><a class="links" href="#">Link 1</a></li><li class="upper-links"><a class="links" href="#">Link 2</a></li><li class="upper-links"><a class="links" href="#">Link 3</a></li><li class="upper-links"><a class="links" href="#">Link 4</a></li><li class="upper-links"><a class="links" href="#">Link 5</a></li><li class="upper-links"><a class="links" href="#">Link 6</a></li><li class="upper-links"> <a class="links" href="#"> <svg class="" width="16px" height="12px" style="overflow: visible;"> <path d="M8.037 17.546c1.487 0 2.417-.93 2.417-2.417H5.62c0 1.486.93 2.415 2.417 2.415m5.315-6.463v-2.97h-.005c-.044-3.266-1.67-5.46-4.337-5.98v-.81C9.01.622 8.436.05 7.735.05 7.033.05 6.46.624 6.46 1.325v.808c-2.667.52-4.294 2.716-4.338 5.98h-.005v2.972l-1.843 1.42v1.376h14.92v-1.375l-1.842-1.42z" fill="#fff"></path> </svg> </a> </li><li class="upper-links dropdown"> <div id="wrap"> <div id="regbar"> <div id="navthing"> <h4><a href="#" id="loginform">Login</a> </h4> <div class="login"> <div class="arrow-up"></div><div class="formholder"> <div class="randompad"> <fieldset> <label name="email">Email</label> <input type="email" placeholder="example@example.com"/> <label name="password">Password</label> <input type="password"/> <input type="submit" value="Login" id="loginbutton"/> <br>Create an account <a href="#"><span id="RegisterButton">Register</span></a> </fieldset> </div></div></div></div></div></div></li></ul> </div><div class="row row2"> <div class="col-sm-2"><a href="#" style="color: #fff"><h1 style="margin:0px;"><span class="largenav"><img src="http://www.swedausa.com/bundles/officebraincustombundletheme/SwedaTheme/images/logo.jpg?v=1.2.1" width="100%" style="margin-top: -88px"></span></h1></a> </div><div class="flipkart-navbar-search smallsearch col-sm-8 col-xs-11"> <div class="row" style="padding-top:0;"> <input class="flipkart-navbar-input col-xs-11" type="" placeholder="Search for Products, Brands and more" id=search_query name=search_query> <a style="cursor:pointer"> <a class="flipkart-navbar-button col-xs-1 searchButton"> <i class="fa fa-search"></i> </a> </div></div><div class="cart largenav col-sm-2"> <a href="#open-modal" class="button cart-button" style="color: black">Advance Search</a><br><br><div id="open-modal" class="modal__background"> <div class="modal__content"> <a href="#close" title="Close" class="close"> <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-close-128.png"> </a> <div class="form_11"> keyword <input type="text" name="keyword"> <br><br>category <input type="text" name="category"> <br><br>Item #/Sku number <input type="text" name="sku"><br><br>Min. Price <input type="text" name="mip"> <br><br>Max. Price <input type="text" name="map"> <br><br>Select Color <input type="text" name="color"> <br><br>Tags <input type="text" name="tag"> </div></div></div></div><nav id=\'menu\'> <ul> <li><a class=\'prett\'>PRODUCTS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>BRANDS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>CATLOG</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>SERVICE</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>TOOLS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> </li><li><a class=\'prett\'>PROMOTIONS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a>OUTLET</a></li><li><a class=\'prett\'>ABOUT</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> </li></ul> </nav> </div></div></div><div id="mySidenav" class="sidenav"> <div class="container" style="background-color: #2874f0; padding-top: 10px;"> <span class="sidenav-heading">Home</span> <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a> </div><a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a></div><div class="blk1" style="min-height: 50px; display: block; width:100%"></div><footer id="footer-Section"> <div class="footer-top-layout"> <div class="container"> <div class="row"> <div class="OurBlog"> <h4>Our Blog</h4> <p>BCM wins mandate for Avendus Wealth Management portal revamp</p><div class="post-blog-date">20th Oct 2016</div></div><div class=" col-lg-8 col-lg-offset-2"> <div class="col-sm-4"> <div class="footer-col-item"> <h4>Go Travel Cloud</h4> <address> 501,507 your company address<br>400015 Maharashtra,UK </address> </div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Reach Us</h4> <div class="item-contact"> <a href="tel:630-885-9200"><span class="link-id">P</span>:<span>630-885-9200</span></a> <a href="tel:630-839.2006"><span class="link-id">F</span>:<span>630-839.2006</span></a> <a href="mailto:info@brandcatmedia.com"><span class="link-id">E</span>:<span>info@brandcatmedia.com</span></a> </div></div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Sign up for Newsletter</h4> <form class="signUpNewsletter" action="" method="get"> <input name="" class="gt-email form-control" placeholder="You@youremail.com" type="text"> <input name="" class="btn-go" value="Go" type="button"> </form> </div></div></div></div></div></div><div class="footer-bottom-layout"> <div class="socialMedia-footer"> <i class="fa fa-facebook fa-fw fa-2x"></i> <i class="fa fa-google-plus fa-fw fa-2x"></i> <i class="fa fa-twitter fa-fw fa-2x"></i> <i class="fa fa-youtube fa-fw fa-2x"></i> </div><div class="copyright-tag">Copyright © 2017 company name. All Rights Reserved.</div><script type="text/javascript">$(\'#loginform\').click(function(){$(\'.login\').fadeToggle(\'slow\');}); </script> </div></footer></commonLayout>',
-    attributes: {
-      class: 'fa fa-file-code-o',
-      title: 'Sweda Navbar'
-    },
-    category: 'Sweda Components'
-  });
-  bm.add('swedaHeader', {
-    label: 'Sweda Navbar 1',
-    content: '<style type="text/css">#flipkart-navbar{background-color: #232F3E; color: #FFFFFF;}.row1{padding-top: 10px;}.row2{padding-bottom: 20px;}.flipkart-navbar-input{padding: 11px 16px; border-radius: 2px 0 0 2px; border: 0 none; outline: 0 none; font-size: 15px; color: #000;}.flipkart-navbar-button{background-color: rgb(254, 189, 105); border: 1px solid #ffe11b; border-radius: 0 2px 2px 0; color: #565656; padding: 10px 0; height: 43px; cursor: pointer; padding-left: 18px;}.cart-button{background-color: rgb(254, 189, 105); box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .23), inset 1px 1px 0 0 hsla(0, 0%, 100%, .2); padding: 10px 0; text-align: center; height: 41px; border-radius: 2px; font-weight: 500; width: 120px; display: inline-block; color: #333; text-decoration: none; color: inherit; border: none; outline: none;}.cart-button:hover{text-decoration: none; color: #fff; cursor: pointer;}.cart-svg{display: inline-block; width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;}.item-number{border-radius: 3px; background-color: rgba(0, 0, 0, .1); height: 20px; padding: 3px 6px; font-weight: 500; display: inline-block; color: #fff; line-height: 12px; margin-left: 10px;}.upper-links{display: inline-block; padding: 0 11px; line-height: 23px; font-family: \'Roboto\', sans-serif; letter-spacing: 0; color: inherit; border: none; outline: none; font-size: 12px;}.dropdown{position: relative; display: inline-block; margin-bottom: 0px;}.dropdown .dropdown-menu{position: absolute; top: 100%; display: none; background-color: #fff; color: #333; left: 0px; border: 0; border-radius: 0; box-shadow: 0 4px 8px -3px #555454; margin: 0; padding: 0px;}.links{color: #fff; text-decoration: none;}.links:hover{color: #fff; text-decoration: none;}.profile-links{font-size: 12px; font-family: \'Roboto\', sans-serif; border-bottom: 1px solid #e9e9e9; box-sizing: border-box; display: block; padding: 0 11px; line-height: 23px;}.profile-li{padding-top: 2px;}.largenav{display: none;}.smallnav{display: block;}.smallsearch{margin-left: 15px; margin-top: 15px;}.menu{cursor: pointer;}@media screen and (min-width: 768px){.largenav{display: block;}.smallnav{display: none;}.smallsearch{margin: 0px;}}/*Sidenav*/.sidenav{height: 100%; width: 0; position: fixed; z-index: 1; top: 0; left: 0; background-color: #fff; overflow-x: hidden; transition: 0.5s; box-shadow: 0 4px 8px -3px #555454; padding-top: 0px;}.sidenav a{padding: 8px 8px 8px 32px; text-decoration: none; font-size: 25px; color: #818181; display: block; transition: 0.3s}.sidenav .closebtn{position: absolute; top: 0; right: 25px; font-size: 36px; margin-left: 50px; color: #fff;}@media screen and (max-height: 450px){.sidenav a{font-size: 18px;}}.sidenav-heading{font-size: 36px; color: #fff;}.footer-top-layout{background: #232F3E none repeat scroll 0 0; color: #ffffff; padding: 40px 0;}.OurBlog{margin-bottom: 32px; text-align: center;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.OurBlog > p{color: #ffffff;}.post-blog-date::after{background: #ffffff none repeat scroll 0 0; bottom: 0; content: ""; height: 4px; left: 0; margin: auto; position: absolute; right: 0; width: 50px;}.post-blog-date{padding-bottom: 25px; position: relative;}body{color: #fff; font-family: "Open Sans", sans-serif; line-height: 24px;}.footer-top-layout [class*="col-sm-"]:first-child{padding: 0;}.footer-top-layout [class*="col-sm-"]{border-right: 2px solid #333333; padding: 0 0 0 28px;}.footer-top-layout{color: #ffffff;}.footer-col-item{min-height: 140px;}address{color: #eee;}.footer-top-layout [class*="col-sm-"]:last-child{border-right: medium none;}.footer-top-layout{color: #ffffff;}body{color: #666666; font-family: "Open Sans", sans-serif;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{color: #eee; font-family: "Roboto", sans-serif; font-weight: 500; line-height: 1.1; margin-top: 0;}body{color: #eee; font-family: "Open Sans", sans-serif; line-height: 24px;}.footer-col-item .item-contact a{color: #eee; display: inline-block; margin-bottom: 7px; width: 100%;}.footer-col-item .item-contact a .link-id{color: #ffffff; margin-left: 0; margin-right: 6px;}.footer-col-item span{margin-left: 7px;}.footer-col-item .item-contact a{color: #eee;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.signUpNewsletter{position: relative;}.signUpNewsletter .gt-email{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border: 1px solid #eee; border-radius: 0; color: #ffffff; height: 52px;}.signUpNewsletter .btn-go{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-color: #eee; border-style: solid; border-width: 0 0 0 1px; bottom: 0; color: #ffffff; font-size: 16px; position: absolute; right: 0; text-transform: uppercase; top: 0; width: 52px;}.footer-bottom-layout{background: #292929 none repeat scroll 0 0; padding: 20px 0; text-align: center; color: #eee;}.socialMedia-footer{margin-bottom: 20px;}.socialMedia-footer > a{display: inline-block; margin: 0 8px;}.footer-bottom-layout{text-align: center;}@import url(\'https://fonts.googleapis.com/css?family=Roboto:400,500,700\');.modal__background{position: fixed; top: 0; right: 0; bottom: 0; left: 0; -webkit-transition: 0.35s; transition: 0.35s; background: rgba(0, 0, 0, 0.8); opacity: 0; pointer-events: none; z-index: 2;}.modal__background:target{opacity: 1; pointer-events: auto;}input{width: 100%; padding: 12px 20px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;}.button:hover{color: red;}.modal__content{background: #fff; padding: 1rem; position: relative; z-index: 4;}@media screen and (max-width: 699px){.modal__content{margin: 2rem;}}@media screen and (min-width: 700px){.modal__content{margin: 4rem auto; background-color: #eee; max-width: 874px; min-height: 256px;}}.modal__content svg,.modal__content path{position: absolute; top: 1rem; right: 1rem; height: 25px; width: 25px; -webkit-transition: all 0.15s ease-out 0s; transition: all 0.15s ease-out 0s; fill: #bfbfbf;}.modal__content svg:hover,.modal__content path:hover{fill: #0c0c0c;}h2{color: #223f5d; font-family: \'Roboto\', sans-serif; font-size: 40px; margin: 0rem 0 1rem; text-align: center;}.close img{float: right; width: 20px;}.success{width: 100%;}.form_11{color: #283593;}input{color: #283593}#menu{color: #eee; height: 35px;}#menu ul, #menu li{margin: 0; padding: 0; list-style: none}#menu ul{height: 35px}#menu li{float: left; display: inline; position: relative; font: bold 13px Arial;}#menu li a{color: #ccc}#menu a{display: block; line-height: 35px; padding: 0 14px; text-decoration: none; color: #333;}#menu li:hover > a, #menu li a:hover{color: #fff}#menu input{display: none; margin: 0 0; padding: 0 0; width: 80px; height: 35px; opacity: 0; cursor: pointer}#menu label{font: bold 30px Arial; display: none; width: 35px; height: 36px; line-height: 36px; text-align: center}#menu label span{font-size: 13px; position: absolute; left: 35px}#menu ul.menus{height: auto; overflow: hidden; width: 180px; background: #fff; position: absolute; z-index: 99; display: none; border: 1px solid #ccc; border-top: none; color: #333}#menu ul.menus a{color: #333}#menu ul.menus li{display: block; width: 100%; font: 12px Arial; text-transform: none;}#menu li:hover ul.menus{display: block}#menu a.prett, #menu a.trigger2{padding: 0 27px 0 14px}#menu li:hover > a.prett, #menu a.prett:hover{background: #fff; color: #333}#menu a.prett::after{content: ""; width: 0; height: 0; border-width: 6px 5px; border-style: solid; border-color: #eee transparent transparent transparent; position: absolute; top: 15px; right: 9px}#menu ul.menus a:hover{background: #BABABA;}#menu a.trigger2::after{content: ""; width: 0; height: 0; border-width: 5px 6px; border-style: solid; border-color: transparent transparent transparent #eee; position: absolute; top: 13px; right: 9px}@media screen and (max-width: 600px){#menu{position: relative}#menu ul{background: #838383; position: absolute; top: 100%; right: 0; left: 0; z-index: 3; height: auto; display: none;}#menu ul.menus{width: 100%; position: static; border: none}#menu li{display: block; float: none; width: auto; text-align: left}#menu li a{color: #fff}#menu li a:hover{color: #333}#menu li:hover{background: #BABABA; color: #333;}#menu li:hover > a.prett, #menu a.prett:hover{background: #BABABA; color: #333;}#menu ul.menus a{background: #BABABA;}#menu ul.menus a:hover{background: #fff;}#menu input, #menu label{position: absolute; top: 0; left: 0; display: block}#menu input{z-index: 4}#menu input:checked + label{color: white}#menu input:checked ~ ul{display: block}}#regbar{height: 67px; color: black;}fieldset{border: none;}.login{position: absolute; width: 350px; z-index: 1; background-color: #eee; display: none;}.arrow-up{width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 15px solid #ECF0F1; left: 10%; position: absolute; top: -10px;}.formholder{width: 350px; border-radius: 5px; padding-top: 5px;}.formholder input[type="email"],.formholder input[type="password"]{padding: 7px 5px; margin: 10px 0; width: 96%; display: block; font-size: 18px; border-radius: 5px; border: none; -webkit-transition: 0.3s linear; -moz-transition: 0.3s linear; -o-transition: 0.3s linear; transition: 0.3s linear;}.formholder input[type="email"]:focus,.formholder input[type="password"]:focus{outline: none; box-shadow: 0 0 1px 1px #1abc9c;}.formholder input[type="submit"]{padding: 10px; font-size: 20px; display: block; width: 100%; border: none; color: #fff; background-color: #232f3e; border-radius: 5px;}.formholder input[type="submit"]:hover{background: #506c90;}.randompad{padding: 10px;}.green{color: #1abc9c;}a{color: #ecf0f1; text-decoration: none;}#RegisterButton{color:black; font-size: 20px;}</style>'+
-        '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><commonLayout> <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> <div id="flipkart-navbar"> <div class="container"> <div class="row row1"> <ul class="largenav pull-right"> <li class="upper-links"><a class="links" href="#">Link 1</a></li><li class="upper-links"><a class="links" href="#">Link 2</a></li><li class="upper-links"><a class="links" href="#">Link 3</a></li><li class="upper-links"><a class="links" href="#">Link 4</a></li><li class="upper-links"><a class="links" href="#">Link 5</a></li><li class="upper-links"><a class="links" href="#">Link 6</a></li><li class="upper-links"> <a class="links" href="#"> <svg class="" width="16px" height="12px" style="overflow: visible;"> <path d="M8.037 17.546c1.487 0 2.417-.93 2.417-2.417H5.62c0 1.486.93 2.415 2.417 2.415m5.315-6.463v-2.97h-.005c-.044-3.266-1.67-5.46-4.337-5.98v-.81C9.01.622 8.436.05 7.735.05 7.033.05 6.46.624 6.46 1.325v.808c-2.667.52-4.294 2.716-4.338 5.98h-.005v2.972l-1.843 1.42v1.376h14.92v-1.375l-1.842-1.42z" fill="#fff"></path> </svg> </a> </li><li class="upper-links dropdown"> <div id="wrap"> <div id="regbar"> <div id="navthing"> <h4><a href="#" id="loginform">Login</a> </h4> <div class="login"> <div class="arrow-up"></div><div class="formholder"> <div class="randompad"> <fieldset> <label name="email">Email</label> <input type="email" placeholder="example@example.com"/> <label name="password">Password</label> <input type="password"/> <input type="submit" value="Login" id="loginbutton"/> <br>Create an account <a href="#"><span id="RegisterButton">Register</span></a> </fieldset> </div></div></div></div></div></div></li></ul> </div><div class="row row2"> <div class="col-sm-2"><a href="http://localhost/exported/index.html" style="color: #fff"><h1 style="margin:0px;"><span class="largenav"><img src="http://www.swedausa.com/bundles/officebraincustombundletheme/SwedaTheme/images/logo.jpg?v=1.2.1" width="100%"></span></h1></a> </div><div class="flipkart-navbar-search smallsearch col-sm-8 col-xs-11"> <div class="row"> <input class="flipkart-navbar-input col-xs-11" type="" placeholder="Search for Products, Brands and more" id=search_query name=search_query> <a style="cursor:pointer"> <a class="flipkart-navbar-button col-xs-1 searchButton"> <i class="fa fa-search"></i> </a> </div></div><div class="cart largenav col-sm-2"> <a href="#open-modal" class="button cart-button" style="color: black">Advance Search</a><br><br><br><br><div id="open-modal" class="modal__background"> <div class="modal__content"> <a href="#close" title="Close" class="close"> <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-close-128.png"> </a> <div class="form_11"> <div class="col-md-12"> <div class="col-md-3"> keyword <input type="text" name="keyword"> <br><br></div><div class="col-md-3"> category <input type="text" name="category"> <br><br></div><div class="col-md-3"> Item #/Sku number <input type="text" name="sku"><br><br></div><div class="col-md-3"> Min. Price <input type="text" name="mip"> <br><br></div></div><div class="col-md-12"> <div class="col-md-12"> <div class="col-md-3"> Max. Price <input type="text" name="map"> <br><br></div><div class="col-md-3"> Select Color <input type="text" name="color"> <br><br></div><div class="col-md-3"> Tags <input type="text" name="tag"> </div><div class="col-md-3" style="padding-top: 2.5%"> <button class="btn btn-primary fa fa-search">Search</button> <button class="btn">Clear</button> </div></div></div></div></div></div></div><nav id=\'menu\'> <ul> <li><a class=\'prett\'>PRODUCTS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>BRANDS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>CATLOG</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>SERVICE</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>TOOLS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> </li><li><a class=\'prett\'>PROMOTIONS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a>OUTLET</a></li><li><a class=\'prett\'>ABOUT</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> </li></ul> </nav> </div></div></div><div id="mySidenav" class="sidenav"> <div class="container" style="background-color: #2874f0; padding-top: 10px;"> <span class="sidenav-heading">Home</span> <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a> </div><a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a></div><div class="blk1" style="min-height: 50px; display: block; width:100%"></div><footer id="footer-Section"> <div class="footer-top-layout"> <div class="container"> <div class="row"> <div class="OurBlog"> <h4>Our Blog</h4> <p>BCM wins mandate for Avendus Wealth Management portal revamp</p><div class="post-blog-date">20th Oct 2016</div></div><div class=" col-lg-8 col-lg-offset-2"> <div class="col-sm-4"> <div class="footer-col-item"> <h4>Go Travel Cloud</h4> <address> 501,507 your company address<br>400015 Maharashtra,UK </address> </div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Reach Us</h4> <div class="item-contact"> <a href="tel:630-885-9200"><span class="link-id">P</span>:<span>630-885-9200</span></a> <a href="tel:630-839.2006"><span class="link-id">F</span>:<span>630-839.2006</span></a> <a href="mailto:info@brandcatmedia.com"><span class="link-id">E</span>:<span>info@brandcatmedia.com</span></a> </div></div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Sign up for Newsletter</h4> <form class="signUpNewsletter" action="" method="get"> <input name="" class="gt-email form-control" placeholder="You@youremail.com" type="text"> <input name="" class="btn-go" value="Go" type="button"> </form> </div></div></div></div></div></div><div class="footer-bottom-layout"> <div class="socialMedia-footer"> <i class="fa fa-facebook fa-fw fa-2x"></i> <i class="fa fa-google-plus fa-fw fa-2x"></i> <i class="fa fa-twitter fa-fw fa-2x"></i> <i class="fa fa-youtube fa-fw fa-2x"></i> </div><div class="copyright-tag">Copyright © 2017 company name. All Rights Reserved.</div><script src=\'http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js\'></script> <script type="text/javascript">$(\'#loginform\').click(function(){$(\'.login\').fadeToggle(\'slow\');}); </script> </div></footer></commonLayout>',
-    attributes: {
-      class: 'fa fa-file-code-o',
-      title: 'Sweda Navbar 1'
-    },
-    category: 'Sweda Components'
-  });
-  // Menu
-  bm.add('Tmenu', {
-    label: 'Tmenu',
-    content: '<div style="display: block; min-height: 20px;background-color:#292929; color: #fff"><style type="text/css"> fieldset{border: none; background-color: #eee}.login{position: absolute; z-index:999; right:170px; width: 350px; display: none;}.arrow-up{width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 15px solid #ECF0F1; left: 10%; position: absolute; top: 0px;}fieldset>label{color:#000}fieldset{padding:15px}.formholder{width: 350px; border-radius: 5px; padding-top: 5px;}.formholder input[type="email"], .formholder input[type="password"]{padding: 7px 5px; margin: 10px 0; width: 96%; display: block; font-size: 18px; border-radius: 5px; border: none; -webkit-transition: 0.3s linear; -moz-transition: 0.3s linear; -o-transition: 0.3s linear; transition: 0.3s linear;}.formholder input[type="email"]:focus, .formholder input[type="password"]:focus{outline: none; box-shadow: 0 0 1px 1px #1abc9c;}.formholder input[type="submit"]{padding: 10px; font-size: 20px; display: block; width: 100%; border: none; color: #fff; border-radius: 5px;}.formholder input:hover{background: #eee;}.randompad{padding: 10px;}.green{color: #1abc9c;}a{text-decoration: none;}a:hover{color: #1abc9c;}#loginform{}</style><a href="#" style="margin-left:60%;color:#fff">Compare(0)</a> | <a href="#" style="color:#fff">wish List(0)</a> | <a href="#" style="color:#fff">Smart Cart(0)</a> | <a href="#" id="loginform" style="color:#fff">iStore login</a> <div class="login"> <div class="arrow-up"></div><div class="formholder"> <div class="randompad"> <fieldset style="padding:15px;"> <label name="email">Email</label> <input type="email" value="example@example.com"/> <label name="password">Password</label> <input type="password"/> <input type="submit" value="Login" style="color:#292929"/> </fieldset> </div></div></div></div></div></div>',
-    attributes: {
-        class: 'fa fa-home',
-        title: 'Tmenu'
-    },
-    category: 'Sweda Components'
-  });
-  // menu
-  bm.add('menu', {
-    label: 'menu',
-    content: '<menuComponent><style type="text/css"> #menu{color:#eee;height:35px;}#menu ul,#menu li{margin:0;padding:0;list-style:none}#menu ul{height:35px}#menu li{float:left;display:inline;position:relative;font:bold 13px Arial;}#menu li a{color:#ccc}#menu a{display:block;line-height:35px;padding:0 14px;text-decoration:none;color:#333;}#menu li:hover > a,#menu li a:hover{color:#fff}#menu input{display:none;margin:0 0;padding:0 0;width:80px;height:35px;opacity:0;cursor:pointer}#menu label{font:bold 30px Arial;display:none;width:35px;height:36px;line-height:36px;text-align:center}#menu label span{font-size:13px;position:absolute;left:35px}#menu ul.menus{height:auto;overflow:hidden;width:180px;background:#fff;position:absolute;z-index:99;display:none;border:1px solid #ccc;border-top:none;color:#333}#menu ul.menus a{color:#333}#menu ul.menus li{display:block;width:100%;font:12px Arial;text-transform:none;}#menu li:hover ul.menus{display:block}#menu a.prett,#menu a.trigger2{padding:0 27px 0 14px}#menu li:hover > a.prett,#menu a.prett:hover{background:#fff;color:#333}#menu a.prett::after{content:"";width:0;height:0;border-width:6px 5px;border-style:solid;border-color:#eee transparent transparent transparent;position:absolute;top:15px;right:9px}#menu ul.menus a:hover{background:#BABABA;}#menu a.trigger2::after{content:"";width:0;height:0;border-width:5px 6px;border-style:solid;border-color:transparent transparent transparent #eee ;position:absolute;top:13px;right:9px}@media screen and (max-width: 600px){#menu{position:relative}#menu ul{background:#838383;position:absolute;top:100%;right:0;left:0;z-index:3;height:auto;display:none;}#menu ul.menus{width:100%;position:static;border:none}#menu li{display:block;float:none;width:auto;text-align:left}#menu li a{color:#fff}#menu li a:hover{color:#333}#menu li:hover{background:#BABABA;color:#333;}#menu li:hover > a.prett,#menu a.prett:hover{background:#BABABA;color:#333;}#menu ul.menus a{background:#BABABA;}#menu ul.menus a:hover{background:#fff;}#menu input,#menu label{position:absolute;top:0;left:0;display:block}#menu input{z-index:4}#menu input:checked + label{color:white}#menu input:checked ~ ul{display:block}}</style><nav id=\'menu\'><ul><li><a class=\'prett\'>PRODUCTS</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a class=\'prett\'>BRANDS</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a class=\'prett\'>CATLOG</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a class=\'prett\'>SERVICE</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a class=\'prett\'>TOOLS</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul></li><li><a class=\'prett\'>PROMOTIONS</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a>OUTLET</a></li><li><a class=\'prett\'>ABOUT</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul></li></ul></nav></menuComponent>',
-    attributes: {
-        class: 'fa fa-bars',
-        title: 'menu'
-    },
-    category: 'Sweda Components'
-  });
-  bm.add('Pagination', {
-    label: 'Pagination',
-    content: '<Pagination style="display:block; min-height: 20px; padding: 20px;"><head><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><style>.fa{margin-top:24px;float: left;font-size: x-large;} select{margin-top:18px; height: 30px;float:left; width:auto;/* display:table-cell; */}a{color: #0088cc; text-decoration: none;}a:hover{color: #005580; text-decoration: underline;}h2{padding-top: 20px;}h2:first-of-type{padding-top: 0;}ul{padding: 0;}.pagination{height: 30px;/* margin: 18px 0; */ float:right;}.pagination ul{/* display: table-cell; */ /* IE7 inline-block hack */ *zoom: 1; margin-left: 0; margin-bottom: 0; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);}.pagination li{display: inline;}.pagination a{float: left; padding: 0 14px; line-height: 34px; text-decoration: none; border: 1px solid #ddd; border-left-width: 0;}.pagination a:hover,.pagination .active a{background-color: #f5f5f5;}.pagination .active a{color: #999999; cursor: default;}.pagination .disabled span,.pagination .disabled a,.pagination .disabled a:hover{color: #999999; background-color: transparent; cursor: default;}.pagination li:first-child a{border-left-width: 1px; -webkit-border-radius: 3px 0 0 3px; -moz-border-radius: 3px 0 0 3px; border-radius: 3px 0 0 3px;}.pagination li:last-child a{-webkit-border-radius: 0 3px 3px 0; -moz-border-radius: 0 3px 3px 0; border-radius: 0 3px 3px 0;}.pagination-centered{text-align: center;}.pagination-right{text-align: right;}.button{background-color: #e7e7e7; /* Green */ border: none; color: black; padding: 10px 32px; text-align: center; text-decoration: none;/* display: table-cell; */ font-size: 16px; margin: 14px 2px; cursor: pointer; float:right;}.paginationtext{margin-top:20px; font-size:medium; color:black; float:left;}</style></head><div class="container"> <div class="row" style="background-color:rgba(208, 208, 208, 0.33); border:groove; margin:5px;"> <div class="col-sm-3"><i style="margin-top:24px;float: left;font-size: x-large;" aria-hidden=true class="fa fa-list fa-2x"><span style=display:inline-block;width:10px></span> </i><i style="margin-top:24px;float: left;" aria-hidden=true class="fa fa-table fa-2x"><span style=display:inline-block;width:15px></span></i> <select style="margin-top:20px;"> <option value="nameAZ">options</option> </select> </div><div class="col-sm-4"> <p class="paginationtext"> Showing 130 Products</p><button class="button">Show All</button> </div><div class="col-sm-5"> <div class="pagination"> <ul> <li><a href="#">Prev</a></li><li class="active"> <a href="#">1</a> </li><li><a href="#">2</a></li><li><a href="#">3</a></li><li><a href="#">4</a></li><li><a href="#">Next</a></li></ul> </div></div></div></div></Pagination>',
-    attributes: {
-      class: 'fa fa-home',
-      title: 'Pagination'
-    },
-    category: 'Sweda Components'
-  });
-  // Prev Next
-  bm.add('PaginationPager',{
-    label: 'PaginationPager',
-    content: '<link href=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css rel=stylesheet><script src=https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js></script><script src=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js></script><div class=container style="background-color:rgba(208, 208, 208, 0.33);border:groove"><ul class=pager><li class=previous><a href=#>Previous</a><li class=next><a href=#>Next</a></ul></div>',
-    attributes: {
-      class: 'fa fa-home',
-      title: 'Pager'
-    },
-    category: 'Sweda Components'
-  });
-  // Ecatlog card
-  bm.add('RegPage', {
-    label: 'Registration Page',
-    content: '<div style="display: block; min-height: 20px;"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"> <link rel=\'stylesheet prefetch\' href=\'http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css\'> <style type="text/css"> *,*:before,*:after{box-sizing: border-box;}body{padding: 1em; font-family: \'Open Sans\', \'Helvetica Neue\', Helvetica, Arial, sans-serif; font-size: 15px; color: #b9b9b9; background-color: #fff;}h4{color: #232f3e;}input,select option,select{width: 100%; padding: 1em; line-height: 1.4; background-color: #f9f9f9; border: 1px solid #e5e5e5; border-radius: 3px; -webkit-transition: 0.35s ease-in-out; -moz-transition: 0.35s ease-in-out; -o-transition: 0.35s ease-in-out; transition: 0.35s ease-in-out; transition: all 0.35s ease-in-out;}input:focus{outline: 0; border-color: #64ac15;}input:focus + .input-icon i{color: #7ed321;}input:focus + .input-icon:after{border-right-color: #7ed321;}input:checked + label:after{opacity: 1;}select{height: 3.4em; line-height: 2;}select:first-of-type{border-top-left-radius: 3px; border-bottom-left-radius: 3px;}select:last-of-type{border-top-right-radius: 3px; border-bottom-right-radius: 3px;}select:focus,select:active{outline: 0;}select option{background-color: #7ed321; color: #fff;}.input-group{margin-bottom: 1em; zoom: 1;}.input-group:before,.input-group:after{content: ""; display: table;}.input-group:after{clear: both;}.input-group-icon{position: relative;}.input-group-icon input{padding-left: 4.4em;}.input-group-icon .input-icon{position: absolute; top: 0; left: 0; width: 3.4em; height: 3.4em; line-height: 3.4em; text-align: center; pointer-events: none;}.input-group-icon .input-icon:after{position: absolute; top: 0.6em; bottom: 0.6em; left: 3.4em; display: block; border-right: 1px solid #e5e5e5; content: ""; -webkit-transition: 0.35s ease-in-out; -moz-transition: 0.35s ease-in-out; -o-transition: 0.35s ease-in-out; transition: 0.35s ease-in-out; transition: all 0.35s ease-in-out;}.input-group-icon .input-icon i{-webkit-transition: 0.35s ease-in-out; -moz-transition: 0.35s ease-in-out; -o-transition: 0.35s ease-in-out; transition: 0.35s ease-in-out; transition: all 0.35s ease-in-out;}.container{max-width: 38em; padding: 1em 3em 2em 3em; margin: 0em auto; background-color: #eee; border-radius: 4.2px; box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.2);}.row{zoom: 1;}.row:before,.row:after{content: ""; display: table;}.row:after{clear: both;}.col-half{padding-right: 10px; float: left; width: 50%;}.col-half:last-of-type{padding-right: 0;}.col-third{padding-right: 10px; float: left; width: 33.33333333%;}.col-third:last-of-type{padding-right: 0;}@media only screen and (max-width: 540px){.col-half{width: 100%; padding-right: 0;}}#register{background-color: #232f3e; color: #fff; border-color: #232f3f;}.animate{transition: all 0.1s; -webkit-transition: all 0.1s;}.action-button{position: relative; margin: 10px 10px 10px 10px; border-radius: 10px; font-family: \'Pacifico\', cursive; font-size: 25px; color: #FFF; text-decoration: none;}.blue{background-color: #232f3e; border-bottom: 5px solid #232f3e; text-shadow: 0px -2px #232f3e;}.action-button:active{transform: translate(0px,5px); -webkit-transform: translate(0px,5px); border-bottom: 1px solid;}</style> <div class="container"> <form> <div class="row"> <h4>Personal Information</h4> <div class="input-group input-group-icon"> <input type="text" placeholder="First Name"/> <div class="input-icon"><i class="fa fa-user"></i></div></div><div class="input-group input-group-icon"> <input type="text" placeholder="Last Name"/> <div class="input-icon"><i class="fa fa-user"></i></div></div><div class="input-group input-group-icon"> <input type="text" placeholder="Middle Name"/> <div class="input-icon"><i class="fa fa-user"></i></div></div><div class="input-group input-group-icon"> <input type="text" placeholder="Company Name"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="row"> <div class="col-md-12"> <h4>Login Information</h4> <div class="input-group"> <div class="input-group input-group-icon"> <input type="email" placeholder="Email Adress"/> <div class="input-icon"><i class="fa fa-envelope"></i></div></div><div class="input-group input-group-icon"> <input type="password" placeholder="Password"/> <div class="input-icon"><i class="fa fa-key"></i></div></div><div class="input-group input-group-icon"> <input type="password" placeholder="Confirm Password"/> <div class="input-icon"><i class="fa fa-key"></i></div></div></div></div></div><div class="row"> <div class="col-md-12"> <h4>Contact Information</h4> <div class="input-group input-group-icon"> <input type="text" placeholder="Address 1"/> <div class="input-icon"><i class="fa fa-user"></i></div></div><div class="input-group input-group-icon"> <input type="text" placeholder="Address 2"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="country"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="state"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="City"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="Zip Code"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="Phone"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="Fax"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div></div><h4>Terms and Conditions</h4> <div class="input-group"> <input type="checkbox" id="terms"/> <label for="terms">I accept the terms and conditions for signing up to this service, and hereby confirm I have read the privacy policy.</label> <br></div><button class="action-button shadow animate blue">Register</button> </div></form></div></div>',
-    attributes: {
-        class: 'fa fa-home',
-        title: 'Registration Page'
-    },
-    category: 'Sweda Components'
-  });
-  bm.add('CartPage', {
-    label: 'Cart Page',
-    content: '<div style="display: block; min-height: 20px;"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"><style type="text/css">.myCartListings{background-color: #eee;transition: 0.2s all linear; margin: 20px; padding:20px;}.myCartListings:hover {box-shadow: 0px 0px 10px #999;transition: 0.2s all linear;}#productImage{padding: 0px 0px 0px 5px;}h4{padding-top: 1%}.colorofproduct{border: solid 2px black;margin: 2px;}#comment{margin-top: 5%;}button.remove{float: right;margin-top: 1%} }</style><div class="container" id="myCartListings"><div class="col-md-12 myCartListings"><div id="productImage" class="col-md-4"><img src="http://placehold.it/500x500" width="100%" height="50%"></div><div id="Productdetails" class="col-md-8"><button class="btn btn-danger remove"><i class="fa fa-trash-o danger" aria-hidden="true"></i></button><h2>Product Title</h2><h4>Item # : CODE</h4><h4>USD ($) 99.99 (R) Qty. 0-100</h4><h4>Product Description</h4><hr><h6>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h6><br><div id="colorofproductdiv"><img src="http://www.swedausa.com/product/color/137.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/329.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/573.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/329.jpg" height="27px" width="27px" class="colorofproduct"></div><div id="comment"><h6>Comments:</h6><textarea rows="5" class="form-control"></textarea></div></div></div></div><div class="container" style="margin-bottom: 40px;"><div class="row"><div class="col-md-12"><button class="btn btn-primary btn-lg"><i class="fa fa-cart-arrow-down fa-fw"></i> Proceed to Checkout</button><button class="btn btn-info btn-lg"><i class="fa fa-cart-plus fa-fw"></i> Add More Items</button></div></div></div></div>',
-    attributes: {
-        class: 'fa fa-shopping-bag',
-        title: 'Cart Page'
-    },
-    category: 'Sweda Components'
-  });
-  bm.add('CatalogBlocks', {
-    label: 'Catalog Blocks',
-    content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><style type="text/css">body{color: white}a{color: #93a1b9}.catalogBG{background-color: #253a5c;min-height: 300px;padding: 40px;}</style><div class=" container"><div class="col-md-12"><div class="col-md-6 catalogBG"><div class="col-md-4"><h3>E-catlog</h3><ul><li><a href="new">One</a></li><li><a href="two">Two</a></li></ul></div><div class="col-md-8 image"><img src="http://www.swedausa.com/images/uploads/home_page_images/1501553209.png" width="100%"/></div></div><div class="col-md-6"> <div class="row"> <div class="col-xs-12"><img src="http://www.swedausa.com/images/uploads/home_page_images/1489144791.png" width="100%"></div><div class="col-xs-12"> <div class="row"> <div class="col-xs-6"><img src="http://www.swedausa.com/images/uploads/home_page_images/1502835654.png" width="100%"></div><div class="col-xs-6"><img src="http://www.swedausa.com/images/uploads/home_page_images/1489144934.png" width="100%"></div></div></div></div></div></div></div>',
-    attributes: {
-        class: 'fa fa-shopping-bag',
-        title: 'Catalog Blocks'
-    },
-    category: 'Sweda Components'
-  });
-  bm.add('AdvancedSearch', {
-    label: 'Advanced Search',
-    content: '<!DOCTYPE html><html> <head> <title></title> <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"> <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> <style type="text/css"> input{width: 100%; padding: 12px 20px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;}</style> </head> <body> <div class="container" style="background-color: #eee; margin-top: 2% "> <div class="form_11" style="margin-top: 2%"> <div class="col-md-12"> <div class="col-md-3"> keyword <input type="text" name="keyword"> <br><br></div><div class="col-md-3"> category <input type="text" name="category"> <br><br></div><div class="col-md-3"> Item/Sku <input type="text" name="sku"> <br><br></div><div class="col-md-3"> Min. Price <input type="text" name="mip"> <br><br></div></div><div class="col-md-12"> <div class="col-md-12"> <div class="col-md-3"> Price <input type="text" name="map"> <br><br></div><div class="col-md-3"> Color <input type="text" name="color"> <br><br></div><div class="col-md-3"> Tags <input type="text" name="tag"> <br><br></div><div class="col-md-3" style="margin-top: 3%"> <button class="btn btn-primary"><i class="fa fa-search" aria-hidden="true">Search</i></button> <button>Clear</button> </div></div></div></div></div></body></html>',
-    attributes: {
-        class: 'fa fa-shopping-bag',
-        title: 'Advanced Search'
-    },
-    category: 'Sweda Components'
-  });
+  // bm.add('Slider', {
+  //   label: 'Slider',
+  //   content: '<Slider style="display: block; min-height: 50px"> <style>#slider{margin: 0 auto; width: 1146px; position: relative;}#slides{background: #fff; padding: 5px; -webkit-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -moz-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -o-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -ms-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}.inner{width: 500%;}.inner:after{display: block; height: 0; clear: both;}.page{float: left; width: 20%;}.page img{width: 100%; height: 466px;}#overflow{overflow: hidden;}#slider input{display: none;}#controls{position: absolute; width: 100%; top: 216px; left: 0; height: 50px;}#controls label{display: none; opacity: 0.3; cursor: pointer;}#controls label:hover{opacity: 0.8;}#slide1:checked ~ #controls label:nth-child(2), #slide2:checked ~ #controls label:nth-child(3), #slide3:checked ~ #controls label:nth-child(4), #slide4:checked ~ #controls label:nth-child(5), #slide5:checked ~ #controls label:nth-child(1){width: 0; height: 0; border-top: 20px solid transparent; border-left: 20px solid #333; border-bottom: 20px solid transparent; float: right; margin-right: -30px; display: block;}#slide1:checked ~ #controls label:nth-child(5), #slide2:checked ~ #controls label:nth-child(1), #slide3:checked ~ #controls label:nth-child(2), #slide4:checked ~ #controls label:nth-child(3), #slide5:checked ~ #controls label:nth-child(4){width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent; border-right: 20px solid rgb(51, 51, 51); float: left; display: block; margin-left: -27px;}#slide1:checked ~ #slides .inner{margin-left: 0;}#slide2:checked ~ #slides .inner{margin-left: -100%;}#slide3:checked ~ #slides .inner{margin-left: -200%;}#slide4:checked ~ #slides .inner{margin-left: -300%;}#slide5:checked ~ #slides .inner{margin-left: -400%;}#active{text-align: center; margin-top: 10px; text-align: center; vertical-align: middle; padding-right: 3px;}#active label{padding: 6px; width: 230px; height: 53px; background: #f1f1f1; display: table-cell; cursor: pointer; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; line-height: 19px; font-family: sans-serif; font-size: small;}#active label:hover{background: #c4bebe;}#slide1:checked ~ #active label:nth-child(1), #slide2:checked ~ #active label:nth-child(2), #slide3:checked ~ #active label:nth-child(3), #slide4:checked ~ #active label:nth-child(4), #slide5:checked ~ #active label:nth-child(5){background: #dddddd;}#slides .inner{-webkit-transition: all 0.8s ease-in-out; -moz-transition: all 0.8s ease-in-out; -ms-transition: all 0.8s ease-in-out; -o-transition: all 0.8s ease-in-out; transition: all 0.8s ease-in-out;}</style> <div id="slider"> <input type="radio" id="slide1" name="slider" checked/> <input type="radio" id="slide2" name="slider"/> <input type="radio" id="slide3" name="slider"/> <input type="radio" id="slide4" name="slider"/> <input type="radio" id="slide5" name="slider"/> <div id="slides"> <div id="overflow"> <div class="inner"> <div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div></div></div></div><div id="controls"> <label for="slide1"></label> <label for="slide2"></label> <label for="slide3"></label> <label for="slide4"></label> <label for="slide5"></label> </div><div id="active"> <label for="slide1"> <p>IT\'S A WRAP</p></label> <label for="slide2"> <p>CHECK OUT OUR <br>Autumn Savings</p></label> <label for="slide3"> <p>New! <br>Light Up Pen!</p></label> <label for="slide4"> <p>INTRODUCING... <br>Sweda Outlet</p></label> <label for="slide5"> <p>Take 40% Off</p></label> </div></div></Slider>',
+  //   attributes: {
+  //       class: 'fa fa-code',
+  //       title: 'Slider'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // bm.add('popularProducts', {
+  //   label: 'Popular Products',
+  //   content: '<popularProducts style="display: block; min-height: 50px; padding: 50px;"> <div class="popularProducts"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><style type="text/css">.col-item{border: 1px solid #E1E1E1; border-radius: 5px; background: #FFF;}.col-item .photo img{margin: 0 auto; width: 100%;}.col-item .info{padding: 10px; border-radius: 0 0 5px 5px; margin-top: 1px;}.col-item:hover .info{background-color: #eee;}.col-item .price{/*width: 50%;*/ float: left; margin-top: 5px;}.col-item .price h5{line-height: 20px; margin: 0;}.price-text-color{color: #219FD1;}.col-item .info .rating{color: #777;}.col-item .rating{/*width: 50%;*/ float: left; font-size: 17px; text-align: right; line-height: 52px; margin-bottom: 10px; height: 52px;}.col-item .separator{border-top: 1px solid #E1E1E1;}.clear-left{clear: left;}.col-item .separator p{line-height: 20px; margin-bottom: 0; margin-top: 10px; text-align: center;}.col-item .separator p i{margin-right: 5px;}.col-item .btn-add{width: 50%; float: left;}.col-item .btn-add{border-right: 1px solid #E1E1E1;}.col-item .btn-details{width: 50%; float: left; padding-left: 10px;}.controls{margin-top: 20px;}[data-slide="prev"]{margin-right: 10px;}</style><div class="container-fluid"> <div class="row"> <div class="row"> <div class="col-md-9"> <h3> Popular Products</h3> </div><div class="col-md-3"> <div class="controls pull-right hidden-xs"> <a class="left btn btn-success" href="#carousel-example" data-slide="prev"><i class="fa fa-angle-left"></i></a><a class="right btn btn-success" href="#carousel-example" data-slide="next"><i class="fa fa-angle-right"></i></a> </div></div></div><div id="carousel-example" class="carousel slide hidden-xs" data-ride="carousel"> <div class="carousel-inner"> <div class="item active"> <div class="row" id="sliderListItems"> <div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Sample Product</h5> <h5 class="price-text-color"> $199.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Product Example</h5> <h5 class="price-text-color"> $249.99</h5> </div><div class="rating hidden-sm col-md-6"> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Next Sample Product</h5> <h5 class="price-text-color"> $149.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Sample Product</h5> <h5 class="price-text-color"> $199.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div></div></div><div class="item"> <div class="row"> <div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Product with Variants</h5> <h5 class="price-text-color"> $199.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Grouped Product</h5> <h5 class="price-text-color"> $249.99</h5> </div><div class="rating hidden-sm col-md-6"> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Product with Variants</h5> <h5 class="price-text-color"> $149.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div><div class="col-sm-3"> <div class="col-item"> <div class="photo"> <img src="http://placehold.it/350x260" class="img-responsive" alt="a"/> </div><div class="info"> <div class="row"> <div class="price col-md-6"> <h5> Product with Variants</h5> <h5 class="price-text-color"> $199.99</h5> </div><div class="rating hidden-sm col-md-6"> <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star"> </i><i class="fa fa-star"></i> </div></div><div class="separator clear-left"> <p class="btn-add"> <i class="fa fa-shopping-cart"></i><a href="#" class="hidden-sm">Add to cart</a></p><p class="btn-details"> <i class="fa fa-list"></i><a href="#" class="hidden-sm">More details</a></p></div><div class="clearfix"> </div></div></div></div></div></div></div></div></div></div></div></popularProducts>',
+  //   attributes: {
+  //       class: 'fa fa-code',
+  //       title: 'Popular Products'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // bm.add('siteHeaderNew3', {
+  //   label: 'Sweda Navbar',
+  //   content: '<style type="text/css">#flipkart-navbar{background-color: #232F3E; color: #FFFFFF;}.row1{padding-top: 10px;}.row2{padding-bottom: 20px;}.flipkart-navbar-input{padding: 11px 16px; border-radius: 2px 0 0 2px; border: 0 none; outline: 0 none; font-size: 15px; color: #000;}.flipkart-navbar-button{background-color: rgb(254, 189, 105); border: 1px solid #ffe11b; border-radius: 0 2px 2px 0; color: #565656; padding: 10px 0; height: 43px; cursor: pointer; padding-left: 18px;}.cart-button{background-color: rgb(254, 189, 105); box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .23), inset 1px 1px 0 0 hsla(0, 0%, 100%, .2); padding: 10px 0; text-align: center; height: 41px; border-radius: 2px; font-weight: 500; width: 120px; display: inline-block; color: #333; text-decoration: none; color: inherit; border: none; outline: none;}.cart-button:hover{text-decoration: none; color: #fff; cursor: pointer;}.cart-svg{display: inline-block; width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;}.item-number{border-radius: 3px; background-color: rgba(0, 0, 0, .1); height: 20px; padding: 3px 6px; font-weight: 500; display: inline-block; color: #fff; line-height: 12px; margin-left: 10px;}.upper-links{display: inline-block; padding: 0 11px; line-height: 23px; font-family: \'Roboto\', sans-serif; letter-spacing: 0; color: inherit; border: none; outline: none; font-size: 12px;}.dropdown{position: relative; display: inline-block; margin-bottom: 0px;}.dropdown .dropdown-menu{position: absolute; top: 100%; display: none; background-color: #fff; color: #333; left: 0px; border: 0; border-radius: 0; box-shadow: 0 4px 8px -3px #555454; margin: 0; padding: 0px;}.links{color: #fff; text-decoration: none;}.links:hover{color: #fff; text-decoration: none;}.profile-links{font-size: 12px; font-family: \'Roboto\', sans-serif; border-bottom: 1px solid #e9e9e9; box-sizing: border-box; display: block; padding: 0 11px; line-height: 23px;}.profile-li{padding-top: 2px;}.largenav{display: none;}.smallnav{display: block;}.smallsearch{margin-left: 15px; margin-top: 15px;}.menu{cursor: pointer;}@media screen and (min-width: 768px){.largenav{display: block;}.smallnav{display: none;}.smallsearch{margin: 0px;}}/*Sidenav*/.sidenav{height: 100%; width: 0; position: fixed; z-index: 1; top: 0; left: 0; background-color: #fff; overflow-x: hidden; transition: 0.5s; box-shadow: 0 4px 8px -3px #555454; padding-top: 0px;}.sidenav a{padding: 8px 8px 8px 32px; text-decoration: none; font-size: 25px; color: #818181; display: block; transition: 0.3s}.sidenav .closebtn{position: absolute; top: 0; right: 25px; font-size: 36px; margin-left: 50px; color: #fff;}@media screen and (max-height: 450px){.sidenav a{font-size: 18px;}}.sidenav-heading{font-size: 36px; color: #fff;}.footer-top-layout{background: #232F3E none repeat scroll 0 0; color: #ffffff; padding: 40px 0;}.OurBlog{margin-bottom: 32px; text-align: center;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.OurBlog > p{color: #ffffff;}.post-blog-date::after{background: #ffffff none repeat scroll 0 0; bottom: 0; content: ""; height: 4px; left: 0; margin: auto; position: absolute; right: 0; width: 50px;}.post-blog-date{padding-bottom: 25px; position: relative;}body{color: #fff; font-family: "Open Sans", sans-serif; line-height: 24px;}.footer-top-layout [class*="col-sm-"]:first-child{padding: 0;}.footer-top-layout [class*="col-sm-"]{border-right: 2px solid #333333; padding: 0 0 0 28px;}.footer-top-layout{color: #ffffff;}.footer-col-item{min-height: 140px;}address{color: #eee;}.footer-top-layout [class*="col-sm-"]:last-child{border-right: medium none;}.footer-top-layout{color: #ffffff;}body{color: #666666; font-family: "Open Sans", sans-serif;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{color: #eee; font-family: "Roboto", sans-serif; font-weight: 500; line-height: 1.1; margin-top: 0;}body{color: #eee; font-family: "Open Sans", sans-serif; line-height: 24px;}.footer-col-item .item-contact a{color: #eee; display: inline-block; margin-bottom: 7px; width: 100%;}.footer-col-item .item-contact a .link-id{color: #ffffff; margin-left: 0; margin-right: 6px;}.footer-col-item span{margin-left: 7px;}.footer-col-item .item-contact a{color: #eee;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.signUpNewsletter{position: relative;}.signUpNewsletter .gt-email{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border: 1px solid #eee; border-radius: 0; color: #ffffff; height: 52px;}.signUpNewsletter .btn-go{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-color: #eee; border-style: solid; border-width: 0 0 0 1px; bottom: 0; color: #ffffff; font-size: 16px; position: absolute; right: 0; text-transform: uppercase; top: 0; width: 52px;}.footer-bottom-layout{background: #292929 none repeat scroll 0 0; padding: 20px 0; text-align: center; color: #eee;}.socialMedia-footer{margin-bottom: 20px;}.socialMedia-footer > a{display: inline-block; margin: 0 8px;}.footer-bottom-layout{text-align: center;}@import url(\'https://fonts.googleapis.com/css?family=Roboto:400,500,700\');.modal__background{position: fixed; top: 0; right: 0; bottom: 0; left: 0; -webkit-transition: 0.35s; transition: 0.35s; background: rgba(0, 0, 0, 0.8); opacity: 0; pointer-events: none; z-index: 2;}.modal__background:target{opacity: 1; pointer-events: auto;}.button:hover{color: red;}.modal__content{background: #fff; padding: 1rem; position: relative; z-index: 4;}@media screen and (max-width: 699px){.modal__content{margin: 2rem;}}@media screen and (min-width: 700px){.modal__content{margin: 4rem auto; max-width: 400px; min-height: 256px;}}.modal__content svg,.modal__content path{position: absolute; top: 1rem; right: 1rem; height: 25px; width: 25px; -webkit-transition: all 0.15s ease-out 0s; transition: all 0.15s ease-out 0s; fill: #bfbfbf;}.modal__content svg:hover,.modal__content path:hover{fill: #0c0c0c;}h2{color: #223f5d; font-family: \'Roboto\', sans-serif; font-size: 40px; margin: 0rem 0 1rem; text-align: center;}.close img{float: right; width: 20px;}.success{width: 100%;}.form_11{color: #283593;}input{color: #283593}#menu{color: #eee; height: 35px;margin-top:70px}#menu ul, #menu li{margin: 0; padding: 0; list-style: none}#menu ul{height: 35px}#menu li{float: left; display: inline; position: relative; font: bold 13px Arial;}#menu li a{color: #ccc}#menu a{display: block; line-height: 35px; padding: 0 14px; text-decoration: none; color: #333;}#menu li:hover > a, #menu li a:hover{color: #fff}#menu input{display: none; margin: 0 0; padding: 0 0; width: 80px; height: 35px; opacity: 0; cursor: pointer}#menu label{font: bold 30px Arial; display: none; width: 35px; height: 36px; line-height: 36px; text-align: center}#menu label span{font-size: 13px; position: absolute; left: 35px}#menu ul.menus{height: auto; overflow: hidden; width: 180px; background: #fff; position: absolute; z-index: 99; display: none; border: 1px solid #ccc; border-top: none; color: #333}#menu ul.menus a{color: #333}#menu ul.menus li{display: block; width: 100%; font: 12px Arial; text-transform: none;}#menu li:hover ul.menus{display: block}#menu a.prett, #menu a.trigger2{padding: 0 27px 0 14px}#menu li:hover > a.prett, #menu a.prett:hover{background: #fff; color: #333}#menu a.prett::after{content: ""; width: 0; height: 0; border-width: 6px 5px; border-style: solid; border-color: #eee transparent transparent transparent; position: absolute; top: 15px; right: 9px}#menu ul.menus a:hover{background: #BABABA;}#menu a.trigger2::after{content: ""; width: 0; height: 0; border-width: 5px 6px; border-style: solid; border-color: transparent transparent transparent #eee; position: absolute; top: 13px; right: 9px}@media screen and (max-width: 600px){#menu{position: relative}#menu ul{background: #838383; position: absolute; top: 100%; right: 0; left: 0; z-index: 3; height: auto; display: none;}#menu ul.menus{width: 100%; position: static; border: none}#menu li{display: block; float: none; width: auto; text-align: left}#menu li a{color: #fff}#menu li a:hover{color: #333}#menu li:hover{background: #BABABA; color: #333;}#menu li:hover > a.prett, #menu a.prett:hover{background: #BABABA; color: #333;}#menu ul.menus a{background: #BABABA;}#menu ul.menus a:hover{background: #fff;}#menu input, #menu label{position: absolute; top: 0; left: 0; display: block}#menu input{z-index: 4}#menu input:checked + label{color: white}#menu input:checked ~ ul{display: block}}#regbar{height: 67px; color: black;}fieldset{border: none;}.login{position: absolute; width: 350px; z-index: 1; background-color: #eee; display: none;}.arrow-up{width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 15px solid #ECF0F1; left: 10%; position: absolute; top: -10px;}.formholder{width: 350px; border-radius: 5px; padding-top: 5px;}.formholder input[type="email"],.formholder input[type="password"]{padding: 7px 5px; margin: 10px 0; width: 96%; display: block; font-size: 18px; border-radius: 5px; border: none; -webkit-transition: 0.3s linear; -moz-transition: 0.3s linear; -o-transition: 0.3s linear; transition: 0.3s linear;}.formholder input[type="email"]:focus,.formholder input[type="password"]:focus{outline: none; box-shadow: 0 0 1px 1px #1abc9c;}.formholder input[type="submit"]{padding: 10px; font-size: 20px; display: block; width: 100%; border: none; color: #fff; background-color: #232f3e; border-radius: 5px;}.formholder input[type="submit"]:hover{background: #506c90;}.randompad{padding: 10px;}.green{color: #1abc9c;}a{color: #ecf0f1; text-decoration: none;}#RegisterButton{color:black; font-size: 20px;}</style>'+
+  //       '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><commonLayout> <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> <div id="flipkart-navbar"> <div class="container"> <div class="row row1"> <ul class="largenav pull-right"> <li class="upper-links"><a class="links" href="#">Link 1</a></li><li class="upper-links"><a class="links" href="#">Link 2</a></li><li class="upper-links"><a class="links" href="#">Link 3</a></li><li class="upper-links"><a class="links" href="#">Link 4</a></li><li class="upper-links"><a class="links" href="#">Link 5</a></li><li class="upper-links"><a class="links" href="#">Link 6</a></li><li class="upper-links"> <a class="links" href="#"> <svg class="" width="16px" height="12px" style="overflow: visible;"> <path d="M8.037 17.546c1.487 0 2.417-.93 2.417-2.417H5.62c0 1.486.93 2.415 2.417 2.415m5.315-6.463v-2.97h-.005c-.044-3.266-1.67-5.46-4.337-5.98v-.81C9.01.622 8.436.05 7.735.05 7.033.05 6.46.624 6.46 1.325v.808c-2.667.52-4.294 2.716-4.338 5.98h-.005v2.972l-1.843 1.42v1.376h14.92v-1.375l-1.842-1.42z" fill="#fff"></path> </svg> </a> </li><li class="upper-links dropdown"> <div id="wrap"> <div id="regbar"> <div id="navthing"> <h4><a href="#" id="loginform">Login</a> </h4> <div class="login"> <div class="arrow-up"></div><div class="formholder"> <div class="randompad"> <fieldset> <label name="email">Email</label> <input type="email" placeholder="example@example.com"/> <label name="password">Password</label> <input type="password"/> <input type="submit" value="Login" id="loginbutton"/> <br>Create an account <a href="#"><span id="RegisterButton">Register</span></a> </fieldset> </div></div></div></div></div></div></li></ul> </div><div class="row row2"> <div class="col-sm-2"><a href="#" style="color: #fff"><h1 style="margin:0px;"><span class="largenav"><img src="http://www.swedausa.com/bundles/officebraincustombundletheme/SwedaTheme/images/logo.jpg?v=1.2.1" width="100%" style="margin-top: -88px"></span></h1></a> </div><div class="flipkart-navbar-search smallsearch col-sm-8 col-xs-11"> <div class="row" style="padding-top:0;"> <input class="flipkart-navbar-input col-xs-11" type="" placeholder="Search for Products, Brands and more" id=search_query name=search_query> <a style="cursor:pointer"> <a class="flipkart-navbar-button col-xs-1 searchButton"> <i class="fa fa-search"></i> </a> </div></div><div class="cart largenav col-sm-2"> <a href="#open-modal" class="button cart-button" style="color: black">Advance Search</a><br><br><div id="open-modal" class="modal__background"> <div class="modal__content"> <a href="#close" title="Close" class="close"> <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-close-128.png"> </a> <div class="form_11"> keyword <input type="text" name="keyword"> <br><br>category <input type="text" name="category"> <br><br>Item #/Sku number <input type="text" name="sku"><br><br>Min. Price <input type="text" name="mip"> <br><br>Max. Price <input type="text" name="map"> <br><br>Select Color <input type="text" name="color"> <br><br>Tags <input type="text" name="tag"> </div></div></div></div><nav id=\'menu\'> <ul> <li><a class=\'prett\'>PRODUCTS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>BRANDS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>CATLOG</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>SERVICE</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>TOOLS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> </li><li><a class=\'prett\'>PROMOTIONS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a>OUTLET</a></li><li><a class=\'prett\'>ABOUT</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> </li></ul> </nav> </div></div></div><div id="mySidenav" class="sidenav"> <div class="container" style="background-color: #2874f0; padding-top: 10px;"> <span class="sidenav-heading">Home</span> <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a> </div><a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a></div><div class="blk1" style="min-height: 50px; display: block; width:100%"></div><footer id="footer-Section"> <div class="footer-top-layout"> <div class="container"> <div class="row"> <div class="OurBlog"> <h4>Our Blog</h4> <p>BCM wins mandate for Avendus Wealth Management portal revamp</p><div class="post-blog-date">20th Oct 2016</div></div><div class=" col-lg-8 col-lg-offset-2"> <div class="col-sm-4"> <div class="footer-col-item"> <h4>Go Travel Cloud</h4> <address> 501,507 your company address<br>400015 Maharashtra,UK </address> </div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Reach Us</h4> <div class="item-contact"> <a href="tel:630-885-9200"><span class="link-id">P</span>:<span>630-885-9200</span></a> <a href="tel:630-839.2006"><span class="link-id">F</span>:<span>630-839.2006</span></a> <a href="mailto:info@brandcatmedia.com"><span class="link-id">E</span>:<span>info@brandcatmedia.com</span></a> </div></div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Sign up for Newsletter</h4> <form class="signUpNewsletter" action="" method="get"> <input name="" class="gt-email form-control" placeholder="You@youremail.com" type="text"> <input name="" class="btn-go" value="Go" type="button"> </form> </div></div></div></div></div></div><div class="footer-bottom-layout"> <div class="socialMedia-footer"> <i class="fa fa-facebook fa-fw fa-2x"></i> <i class="fa fa-google-plus fa-fw fa-2x"></i> <i class="fa fa-twitter fa-fw fa-2x"></i> <i class="fa fa-youtube fa-fw fa-2x"></i> </div><div class="copyright-tag">Copyright © 2017 company name. All Rights Reserved.</div><script type="text/javascript">$(\'#loginform\').click(function(){$(\'.login\').fadeToggle(\'slow\');}); </script> </div></footer></commonLayout>',
+  //   attributes: {
+  //     class: 'fa fa-file-code-o',
+  //     title: 'Sweda Navbar'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // bm.add('swedaHeader', {
+  //   label: 'Sweda Navbar 1',
+  //   content: '<style type="text/css">#flipkart-navbar{background-color: #232F3E; color: #FFFFFF;}.row1{padding-top: 10px;}.row2{padding-bottom: 20px;}.flipkart-navbar-input{padding: 11px 16px; border-radius: 2px 0 0 2px; border: 0 none; outline: 0 none; font-size: 15px; color: #000;}.flipkart-navbar-button{background-color: rgb(254, 189, 105); border: 1px solid #ffe11b; border-radius: 0 2px 2px 0; color: #565656; padding: 10px 0; height: 43px; cursor: pointer; padding-left: 18px;}.cart-button{background-color: rgb(254, 189, 105); box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .23), inset 1px 1px 0 0 hsla(0, 0%, 100%, .2); padding: 10px 0; text-align: center; height: 41px; border-radius: 2px; font-weight: 500; width: 120px; display: inline-block; color: #333; text-decoration: none; color: inherit; border: none; outline: none;}.cart-button:hover{text-decoration: none; color: #fff; cursor: pointer;}.cart-svg{display: inline-block; width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;}.item-number{border-radius: 3px; background-color: rgba(0, 0, 0, .1); height: 20px; padding: 3px 6px; font-weight: 500; display: inline-block; color: #fff; line-height: 12px; margin-left: 10px;}.upper-links{display: inline-block; padding: 0 11px; line-height: 23px; font-family: \'Roboto\', sans-serif; letter-spacing: 0; color: inherit; border: none; outline: none; font-size: 12px;}.dropdown{position: relative; display: inline-block; margin-bottom: 0px;}.dropdown .dropdown-menu{position: absolute; top: 100%; display: none; background-color: #fff; color: #333; left: 0px; border: 0; border-radius: 0; box-shadow: 0 4px 8px -3px #555454; margin: 0; padding: 0px;}.links{color: #fff; text-decoration: none;}.links:hover{color: #fff; text-decoration: none;}.profile-links{font-size: 12px; font-family: \'Roboto\', sans-serif; border-bottom: 1px solid #e9e9e9; box-sizing: border-box; display: block; padding: 0 11px; line-height: 23px;}.profile-li{padding-top: 2px;}.largenav{display: none;}.smallnav{display: block;}.smallsearch{margin-left: 15px; margin-top: 15px;}.menu{cursor: pointer;}@media screen and (min-width: 768px){.largenav{display: block;}.smallnav{display: none;}.smallsearch{margin: 0px;}}/*Sidenav*/.sidenav{height: 100%; width: 0; position: fixed; z-index: 1; top: 0; left: 0; background-color: #fff; overflow-x: hidden; transition: 0.5s; box-shadow: 0 4px 8px -3px #555454; padding-top: 0px;}.sidenav a{padding: 8px 8px 8px 32px; text-decoration: none; font-size: 25px; color: #818181; display: block; transition: 0.3s}.sidenav .closebtn{position: absolute; top: 0; right: 25px; font-size: 36px; margin-left: 50px; color: #fff;}@media screen and (max-height: 450px){.sidenav a{font-size: 18px;}}.sidenav-heading{font-size: 36px; color: #fff;}.footer-top-layout{background: #232F3E none repeat scroll 0 0; color: #ffffff; padding: 40px 0;}.OurBlog{margin-bottom: 32px; text-align: center;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.OurBlog > p{color: #ffffff;}.post-blog-date::after{background: #ffffff none repeat scroll 0 0; bottom: 0; content: ""; height: 4px; left: 0; margin: auto; position: absolute; right: 0; width: 50px;}.post-blog-date{padding-bottom: 25px; position: relative;}body{color: #fff; font-family: "Open Sans", sans-serif; line-height: 24px;}.footer-top-layout [class*="col-sm-"]:first-child{padding: 0;}.footer-top-layout [class*="col-sm-"]{border-right: 2px solid #333333; padding: 0 0 0 28px;}.footer-top-layout{color: #ffffff;}.footer-col-item{min-height: 140px;}address{color: #eee;}.footer-top-layout [class*="col-sm-"]:last-child{border-right: medium none;}.footer-top-layout{color: #ffffff;}body{color: #666666; font-family: "Open Sans", sans-serif;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{color: #eee; font-family: "Roboto", sans-serif; font-weight: 500; line-height: 1.1; margin-top: 0;}body{color: #eee; font-family: "Open Sans", sans-serif; line-height: 24px;}.footer-col-item .item-contact a{color: #eee; display: inline-block; margin-bottom: 7px; width: 100%;}.footer-col-item .item-contact a .link-id{color: #ffffff; margin-left: 0; margin-right: 6px;}.footer-col-item span{margin-left: 7px;}.footer-col-item .item-contact a{color: #eee;}.footer-top-layout h4{color: #ffffff; font-size: 18px; margin-bottom: 21px;}.signUpNewsletter{position: relative;}.signUpNewsletter .gt-email{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border: 1px solid #eee; border-radius: 0; color: #ffffff; height: 52px;}.signUpNewsletter .btn-go{background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-color: #eee; border-style: solid; border-width: 0 0 0 1px; bottom: 0; color: #ffffff; font-size: 16px; position: absolute; right: 0; text-transform: uppercase; top: 0; width: 52px;}.footer-bottom-layout{background: #292929 none repeat scroll 0 0; padding: 20px 0; text-align: center; color: #eee;}.socialMedia-footer{margin-bottom: 20px;}.socialMedia-footer > a{display: inline-block; margin: 0 8px;}.footer-bottom-layout{text-align: center;}@import url(\'https://fonts.googleapis.com/css?family=Roboto:400,500,700\');.modal__background{position: fixed; top: 0; right: 0; bottom: 0; left: 0; -webkit-transition: 0.35s; transition: 0.35s; background: rgba(0, 0, 0, 0.8); opacity: 0; pointer-events: none; z-index: 2;}.modal__background:target{opacity: 1; pointer-events: auto;}input{width: 100%; padding: 12px 20px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;}.button:hover{color: red;}.modal__content{background: #fff; padding: 1rem; position: relative; z-index: 4;}@media screen and (max-width: 699px){.modal__content{margin: 2rem;}}@media screen and (min-width: 700px){.modal__content{margin: 4rem auto; background-color: #eee; max-width: 874px; min-height: 256px;}}.modal__content svg,.modal__content path{position: absolute; top: 1rem; right: 1rem; height: 25px; width: 25px; -webkit-transition: all 0.15s ease-out 0s; transition: all 0.15s ease-out 0s; fill: #bfbfbf;}.modal__content svg:hover,.modal__content path:hover{fill: #0c0c0c;}h2{color: #223f5d; font-family: \'Roboto\', sans-serif; font-size: 40px; margin: 0rem 0 1rem; text-align: center;}.close img{float: right; width: 20px;}.success{width: 100%;}.form_11{color: #283593;}input{color: #283593}#menu{color: #eee; height: 35px;}#menu ul, #menu li{margin: 0; padding: 0; list-style: none}#menu ul{height: 35px}#menu li{float: left; display: inline; position: relative; font: bold 13px Arial;}#menu li a{color: #ccc}#menu a{display: block; line-height: 35px; padding: 0 14px; text-decoration: none; color: #333;}#menu li:hover > a, #menu li a:hover{color: #fff}#menu input{display: none; margin: 0 0; padding: 0 0; width: 80px; height: 35px; opacity: 0; cursor: pointer}#menu label{font: bold 30px Arial; display: none; width: 35px; height: 36px; line-height: 36px; text-align: center}#menu label span{font-size: 13px; position: absolute; left: 35px}#menu ul.menus{height: auto; overflow: hidden; width: 180px; background: #fff; position: absolute; z-index: 99; display: none; border: 1px solid #ccc; border-top: none; color: #333}#menu ul.menus a{color: #333}#menu ul.menus li{display: block; width: 100%; font: 12px Arial; text-transform: none;}#menu li:hover ul.menus{display: block}#menu a.prett, #menu a.trigger2{padding: 0 27px 0 14px}#menu li:hover > a.prett, #menu a.prett:hover{background: #fff; color: #333}#menu a.prett::after{content: ""; width: 0; height: 0; border-width: 6px 5px; border-style: solid; border-color: #eee transparent transparent transparent; position: absolute; top: 15px; right: 9px}#menu ul.menus a:hover{background: #BABABA;}#menu a.trigger2::after{content: ""; width: 0; height: 0; border-width: 5px 6px; border-style: solid; border-color: transparent transparent transparent #eee; position: absolute; top: 13px; right: 9px}@media screen and (max-width: 600px){#menu{position: relative}#menu ul{background: #838383; position: absolute; top: 100%; right: 0; left: 0; z-index: 3; height: auto; display: none;}#menu ul.menus{width: 100%; position: static; border: none}#menu li{display: block; float: none; width: auto; text-align: left}#menu li a{color: #fff}#menu li a:hover{color: #333}#menu li:hover{background: #BABABA; color: #333;}#menu li:hover > a.prett, #menu a.prett:hover{background: #BABABA; color: #333;}#menu ul.menus a{background: #BABABA;}#menu ul.menus a:hover{background: #fff;}#menu input, #menu label{position: absolute; top: 0; left: 0; display: block}#menu input{z-index: 4}#menu input:checked + label{color: white}#menu input:checked ~ ul{display: block}}#regbar{height: 67px; color: black;}fieldset{border: none;}.login{position: absolute; width: 350px; z-index: 1; background-color: #eee; display: none;}.arrow-up{width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 15px solid #ECF0F1; left: 10%; position: absolute; top: -10px;}.formholder{width: 350px; border-radius: 5px; padding-top: 5px;}.formholder input[type="email"],.formholder input[type="password"]{padding: 7px 5px; margin: 10px 0; width: 96%; display: block; font-size: 18px; border-radius: 5px; border: none; -webkit-transition: 0.3s linear; -moz-transition: 0.3s linear; -o-transition: 0.3s linear; transition: 0.3s linear;}.formholder input[type="email"]:focus,.formholder input[type="password"]:focus{outline: none; box-shadow: 0 0 1px 1px #1abc9c;}.formholder input[type="submit"]{padding: 10px; font-size: 20px; display: block; width: 100%; border: none; color: #fff; background-color: #232f3e; border-radius: 5px;}.formholder input[type="submit"]:hover{background: #506c90;}.randompad{padding: 10px;}.green{color: #1abc9c;}a{color: #ecf0f1; text-decoration: none;}#RegisterButton{color:black; font-size: 20px;}</style>'+
+  //       '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><commonLayout> <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> <div id="flipkart-navbar"> <div class="container"> <div class="row row1"> <ul class="largenav pull-right"> <li class="upper-links"><a class="links" href="#">Link 1</a></li><li class="upper-links"><a class="links" href="#">Link 2</a></li><li class="upper-links"><a class="links" href="#">Link 3</a></li><li class="upper-links"><a class="links" href="#">Link 4</a></li><li class="upper-links"><a class="links" href="#">Link 5</a></li><li class="upper-links"><a class="links" href="#">Link 6</a></li><li class="upper-links"> <a class="links" href="#"> <svg class="" width="16px" height="12px" style="overflow: visible;"> <path d="M8.037 17.546c1.487 0 2.417-.93 2.417-2.417H5.62c0 1.486.93 2.415 2.417 2.415m5.315-6.463v-2.97h-.005c-.044-3.266-1.67-5.46-4.337-5.98v-.81C9.01.622 8.436.05 7.735.05 7.033.05 6.46.624 6.46 1.325v.808c-2.667.52-4.294 2.716-4.338 5.98h-.005v2.972l-1.843 1.42v1.376h14.92v-1.375l-1.842-1.42z" fill="#fff"></path> </svg> </a> </li><li class="upper-links dropdown"> <div id="wrap"> <div id="regbar"> <div id="navthing"> <h4><a href="#" id="loginform">Login</a> </h4> <div class="login"> <div class="arrow-up"></div><div class="formholder"> <div class="randompad"> <fieldset> <label name="email">Email</label> <input type="email" placeholder="example@example.com"/> <label name="password">Password</label> <input type="password"/> <input type="submit" value="Login" id="loginbutton"/> <br>Create an account <a href="#"><span id="RegisterButton">Register</span></a> </fieldset> </div></div></div></div></div></div></li></ul> </div><div class="row row2"> <div class="col-sm-2"><a href="http://localhost/exported/index.html" style="color: #fff"><h1 style="margin:0px;"><span class="largenav"><img src="http://www.swedausa.com/bundles/officebraincustombundletheme/SwedaTheme/images/logo.jpg?v=1.2.1" width="100%"></span></h1></a> </div><div class="flipkart-navbar-search smallsearch col-sm-8 col-xs-11"> <div class="row"> <input class="flipkart-navbar-input col-xs-11" type="" placeholder="Search for Products, Brands and more" id=search_query name=search_query> <a style="cursor:pointer"> <a class="flipkart-navbar-button col-xs-1 searchButton"> <i class="fa fa-search"></i> </a> </div></div><div class="cart largenav col-sm-2"> <a href="#open-modal" class="button cart-button" style="color: black">Advance Search</a><br><br><br><br><div id="open-modal" class="modal__background"> <div class="modal__content"> <a href="#close" title="Close" class="close"> <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-close-128.png"> </a> <div class="form_11"> <div class="col-md-12"> <div class="col-md-3"> keyword <input type="text" name="keyword"> <br><br></div><div class="col-md-3"> category <input type="text" name="category"> <br><br></div><div class="col-md-3"> Item #/Sku number <input type="text" name="sku"><br><br></div><div class="col-md-3"> Min. Price <input type="text" name="mip"> <br><br></div></div><div class="col-md-12"> <div class="col-md-12"> <div class="col-md-3"> Max. Price <input type="text" name="map"> <br><br></div><div class="col-md-3"> Select Color <input type="text" name="color"> <br><br></div><div class="col-md-3"> Tags <input type="text" name="tag"> </div><div class="col-md-3" style="padding-top: 2.5%"> <button class="btn btn-primary fa fa-search">Search</button> <button class="btn">Clear</button> </div></div></div></div></div></div></div><nav id=\'menu\'> <ul> <li><a class=\'prett\'>PRODUCTS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>BRANDS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>CATLOG</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>SERVICE</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a class=\'prett\'>TOOLS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> </li><li><a class=\'prett\'>PROMOTIONS</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> <li><a>OUTLET</a></li><li><a class=\'prett\'>ABOUT</a> <ul class=\'menus\'> <li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul> </li></ul> </nav> </div></div></div><div id="mySidenav" class="sidenav"> <div class="container" style="background-color: #2874f0; padding-top: 10px;"> <span class="sidenav-heading">Home</span> <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a> </div><a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a> <a href="#">Link</a></div><div class="blk1" style="min-height: 50px; display: block; width:100%"></div><footer id="footer-Section"> <div class="footer-top-layout"> <div class="container"> <div class="row"> <div class="OurBlog"> <h4>Our Blog</h4> <p>BCM wins mandate for Avendus Wealth Management portal revamp</p><div class="post-blog-date">20th Oct 2016</div></div><div class=" col-lg-8 col-lg-offset-2"> <div class="col-sm-4"> <div class="footer-col-item"> <h4>Go Travel Cloud</h4> <address> 501,507 your company address<br>400015 Maharashtra,UK </address> </div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Reach Us</h4> <div class="item-contact"> <a href="tel:630-885-9200"><span class="link-id">P</span>:<span>630-885-9200</span></a> <a href="tel:630-839.2006"><span class="link-id">F</span>:<span>630-839.2006</span></a> <a href="mailto:info@brandcatmedia.com"><span class="link-id">E</span>:<span>info@brandcatmedia.com</span></a> </div></div></div><div class="col-sm-4"> <div class="footer-col-item"> <h4>Sign up for Newsletter</h4> <form class="signUpNewsletter" action="" method="get"> <input name="" class="gt-email form-control" placeholder="You@youremail.com" type="text"> <input name="" class="btn-go" value="Go" type="button"> </form> </div></div></div></div></div></div><div class="footer-bottom-layout"> <div class="socialMedia-footer"> <i class="fa fa-facebook fa-fw fa-2x"></i> <i class="fa fa-google-plus fa-fw fa-2x"></i> <i class="fa fa-twitter fa-fw fa-2x"></i> <i class="fa fa-youtube fa-fw fa-2x"></i> </div><div class="copyright-tag">Copyright © 2017 company name. All Rights Reserved.</div><script src=\'http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js\'></script> <script type="text/javascript">$(\'#loginform\').click(function(){$(\'.login\').fadeToggle(\'slow\');}); </script> </div></footer></commonLayout>',
+  //   attributes: {
+  //     class: 'fa fa-file-code-o',
+  //     title: 'Sweda Navbar 1'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // // Menu
+  // bm.add('Tmenu', {
+  //   label: 'Tmenu',
+  //   content: '<div style="display: block; min-height: 20px;background-color:#292929; color: #fff"><style type="text/css"> fieldset{border: none; background-color: #eee}.login{position: absolute; z-index:999; right:170px; width: 350px; display: none;}.arrow-up{width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 15px solid #ECF0F1; left: 10%; position: absolute; top: 0px;}fieldset>label{color:#000}fieldset{padding:15px}.formholder{width: 350px; border-radius: 5px; padding-top: 5px;}.formholder input[type="email"], .formholder input[type="password"]{padding: 7px 5px; margin: 10px 0; width: 96%; display: block; font-size: 18px; border-radius: 5px; border: none; -webkit-transition: 0.3s linear; -moz-transition: 0.3s linear; -o-transition: 0.3s linear; transition: 0.3s linear;}.formholder input[type="email"]:focus, .formholder input[type="password"]:focus{outline: none; box-shadow: 0 0 1px 1px #1abc9c;}.formholder input[type="submit"]{padding: 10px; font-size: 20px; display: block; width: 100%; border: none; color: #fff; border-radius: 5px;}.formholder input:hover{background: #eee;}.randompad{padding: 10px;}.green{color: #1abc9c;}a{text-decoration: none;}a:hover{color: #1abc9c;}#loginform{}</style><a href="#" style="margin-left:60%;color:#fff">Compare(0)</a> | <a href="#" style="color:#fff">wish List(0)</a> | <a href="#" style="color:#fff">Smart Cart(0)</a> | <a href="#" id="loginform" style="color:#fff">iStore login</a> <div class="login"> <div class="arrow-up"></div><div class="formholder"> <div class="randompad"> <fieldset style="padding:15px;"> <label name="email">Email</label> <input type="email" value="example@example.com"/> <label name="password">Password</label> <input type="password"/> <input type="submit" value="Login" style="color:#292929"/> </fieldset> </div></div></div></div></div></div>',
+  //   attributes: {
+  //       class: 'fa fa-home',
+  //       title: 'Tmenu'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // // menu
+  // bm.add('menu', {
+  //   label: 'menu',
+  //   content: '<menuComponent><style type="text/css"> #menu{color:#eee;height:35px;}#menu ul,#menu li{margin:0;padding:0;list-style:none}#menu ul{height:35px}#menu li{float:left;display:inline;position:relative;font:bold 13px Arial;}#menu li a{color:#ccc}#menu a{display:block;line-height:35px;padding:0 14px;text-decoration:none;color:#333;}#menu li:hover > a,#menu li a:hover{color:#fff}#menu input{display:none;margin:0 0;padding:0 0;width:80px;height:35px;opacity:0;cursor:pointer}#menu label{font:bold 30px Arial;display:none;width:35px;height:36px;line-height:36px;text-align:center}#menu label span{font-size:13px;position:absolute;left:35px}#menu ul.menus{height:auto;overflow:hidden;width:180px;background:#fff;position:absolute;z-index:99;display:none;border:1px solid #ccc;border-top:none;color:#333}#menu ul.menus a{color:#333}#menu ul.menus li{display:block;width:100%;font:12px Arial;text-transform:none;}#menu li:hover ul.menus{display:block}#menu a.prett,#menu a.trigger2{padding:0 27px 0 14px}#menu li:hover > a.prett,#menu a.prett:hover{background:#fff;color:#333}#menu a.prett::after{content:"";width:0;height:0;border-width:6px 5px;border-style:solid;border-color:#eee transparent transparent transparent;position:absolute;top:15px;right:9px}#menu ul.menus a:hover{background:#BABABA;}#menu a.trigger2::after{content:"";width:0;height:0;border-width:5px 6px;border-style:solid;border-color:transparent transparent transparent #eee ;position:absolute;top:13px;right:9px}@media screen and (max-width: 600px){#menu{position:relative}#menu ul{background:#838383;position:absolute;top:100%;right:0;left:0;z-index:3;height:auto;display:none;}#menu ul.menus{width:100%;position:static;border:none}#menu li{display:block;float:none;width:auto;text-align:left}#menu li a{color:#fff}#menu li a:hover{color:#333}#menu li:hover{background:#BABABA;color:#333;}#menu li:hover > a.prett,#menu a.prett:hover{background:#BABABA;color:#333;}#menu ul.menus a{background:#BABABA;}#menu ul.menus a:hover{background:#fff;}#menu input,#menu label{position:absolute;top:0;left:0;display:block}#menu input{z-index:4}#menu input:checked + label{color:white}#menu input:checked ~ ul{display:block}}</style><nav id=\'menu\'><ul><li><a class=\'prett\'>PRODUCTS</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a class=\'prett\'>BRANDS</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a class=\'prett\'>CATLOG</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a class=\'prett\'>SERVICE</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a class=\'prett\'>TOOLS</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul></li><li><a class=\'prett\'>PROMOTIONS</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul><li><a>OUTLET</a></li><li><a class=\'prett\'>ABOUT</a><ul class=\'menus\'><li><a href=\'#\'>Drop Menu 1</a></li><li><a href=\'#\'>Drop Menu 2</a></li><li><a href=\'#\'>Drop Menu 3</a></li></ul></li></ul></nav></menuComponent>',
+  //   attributes: {
+  //       class: 'fa fa-bars',
+  //       title: 'menu'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // bm.add('Pagination', {
+  //   label: 'Pagination',
+  //   content: '<Pagination style="display:block; min-height: 20px; padding: 20px;"><head><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><style>.fa{margin-top:24px;float: left;font-size: x-large;} select{margin-top:18px; height: 30px;float:left; width:auto;/* display:table-cell; */}a{color: #0088cc; text-decoration: none;}a:hover{color: #005580; text-decoration: underline;}h2{padding-top: 20px;}h2:first-of-type{padding-top: 0;}ul{padding: 0;}.pagination{height: 30px;/* margin: 18px 0; */ float:right;}.pagination ul{/* display: table-cell; */ /* IE7 inline-block hack */ *zoom: 1; margin-left: 0; margin-bottom: 0; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);}.pagination li{display: inline;}.pagination a{float: left; padding: 0 14px; line-height: 34px; text-decoration: none; border: 1px solid #ddd; border-left-width: 0;}.pagination a:hover,.pagination .active a{background-color: #f5f5f5;}.pagination .active a{color: #999999; cursor: default;}.pagination .disabled span,.pagination .disabled a,.pagination .disabled a:hover{color: #999999; background-color: transparent; cursor: default;}.pagination li:first-child a{border-left-width: 1px; -webkit-border-radius: 3px 0 0 3px; -moz-border-radius: 3px 0 0 3px; border-radius: 3px 0 0 3px;}.pagination li:last-child a{-webkit-border-radius: 0 3px 3px 0; -moz-border-radius: 0 3px 3px 0; border-radius: 0 3px 3px 0;}.pagination-centered{text-align: center;}.pagination-right{text-align: right;}.button{background-color: #e7e7e7; /* Green */ border: none; color: black; padding: 10px 32px; text-align: center; text-decoration: none;/* display: table-cell; */ font-size: 16px; margin: 14px 2px; cursor: pointer; float:right;}.paginationtext{margin-top:20px; font-size:medium; color:black; float:left;}</style></head><div class="container"> <div class="row" style="background-color:rgba(208, 208, 208, 0.33); border:groove; margin:5px;"> <div class="col-sm-3"><i style="margin-top:24px;float: left;font-size: x-large;" aria-hidden=true class="fa fa-list fa-2x"><span style=display:inline-block;width:10px></span> </i><i style="margin-top:24px;float: left;" aria-hidden=true class="fa fa-table fa-2x"><span style=display:inline-block;width:15px></span></i> <select style="margin-top:20px;"> <option value="nameAZ">options</option> </select> </div><div class="col-sm-4"> <p class="paginationtext"> Showing 130 Products</p><button class="button">Show All</button> </div><div class="col-sm-5"> <div class="pagination"> <ul> <li><a href="#">Prev</a></li><li class="active"> <a href="#">1</a> </li><li><a href="#">2</a></li><li><a href="#">3</a></li><li><a href="#">4</a></li><li><a href="#">Next</a></li></ul> </div></div></div></div></Pagination>',
+  //   attributes: {
+  //     class: 'fa fa-home',
+  //     title: 'Pagination'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // // Prev Next
+  // bm.add('PaginationPager',{
+  //   label: 'PaginationPager',
+  //   content: '<link href=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css rel=stylesheet><script src=https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js></script><script src=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js></script><div class=container style="background-color:rgba(208, 208, 208, 0.33);border:groove"><ul class=pager><li class=previous><a href=#>Previous</a><li class=next><a href=#>Next</a></ul></div>',
+  //   attributes: {
+  //     class: 'fa fa-home',
+  //     title: 'Pager'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // // Ecatlog card
+  // bm.add('RegPage', {
+  //   label: 'Registration Page',
+  //   content: '<div style="display: block; min-height: 20px;"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"> <link rel=\'stylesheet prefetch\' href=\'http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css\'> <style type="text/css"> *,*:before,*:after{box-sizing: border-box;}body{padding: 1em; font-family: \'Open Sans\', \'Helvetica Neue\', Helvetica, Arial, sans-serif; font-size: 15px; color: #b9b9b9; background-color: #fff;}h4{color: #232f3e;}input,select option,select{width: 100%; padding: 1em; line-height: 1.4; background-color: #f9f9f9; border: 1px solid #e5e5e5; border-radius: 3px; -webkit-transition: 0.35s ease-in-out; -moz-transition: 0.35s ease-in-out; -o-transition: 0.35s ease-in-out; transition: 0.35s ease-in-out; transition: all 0.35s ease-in-out;}input:focus{outline: 0; border-color: #64ac15;}input:focus + .input-icon i{color: #7ed321;}input:focus + .input-icon:after{border-right-color: #7ed321;}input:checked + label:after{opacity: 1;}select{height: 3.4em; line-height: 2;}select:first-of-type{border-top-left-radius: 3px; border-bottom-left-radius: 3px;}select:last-of-type{border-top-right-radius: 3px; border-bottom-right-radius: 3px;}select:focus,select:active{outline: 0;}select option{background-color: #7ed321; color: #fff;}.input-group{margin-bottom: 1em; zoom: 1;}.input-group:before,.input-group:after{content: ""; display: table;}.input-group:after{clear: both;}.input-group-icon{position: relative;}.input-group-icon input{padding-left: 4.4em;}.input-group-icon .input-icon{position: absolute; top: 0; left: 0; width: 3.4em; height: 3.4em; line-height: 3.4em; text-align: center; pointer-events: none;}.input-group-icon .input-icon:after{position: absolute; top: 0.6em; bottom: 0.6em; left: 3.4em; display: block; border-right: 1px solid #e5e5e5; content: ""; -webkit-transition: 0.35s ease-in-out; -moz-transition: 0.35s ease-in-out; -o-transition: 0.35s ease-in-out; transition: 0.35s ease-in-out; transition: all 0.35s ease-in-out;}.input-group-icon .input-icon i{-webkit-transition: 0.35s ease-in-out; -moz-transition: 0.35s ease-in-out; -o-transition: 0.35s ease-in-out; transition: 0.35s ease-in-out; transition: all 0.35s ease-in-out;}.container{max-width: 38em; padding: 1em 3em 2em 3em; margin: 0em auto; background-color: #eee; border-radius: 4.2px; box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.2);}.row{zoom: 1;}.row:before,.row:after{content: ""; display: table;}.row:after{clear: both;}.col-half{padding-right: 10px; float: left; width: 50%;}.col-half:last-of-type{padding-right: 0;}.col-third{padding-right: 10px; float: left; width: 33.33333333%;}.col-third:last-of-type{padding-right: 0;}@media only screen and (max-width: 540px){.col-half{width: 100%; padding-right: 0;}}#register{background-color: #232f3e; color: #fff; border-color: #232f3f;}.animate{transition: all 0.1s; -webkit-transition: all 0.1s;}.action-button{position: relative; margin: 10px 10px 10px 10px; border-radius: 10px; font-family: \'Pacifico\', cursive; font-size: 25px; color: #FFF; text-decoration: none;}.blue{background-color: #232f3e; border-bottom: 5px solid #232f3e; text-shadow: 0px -2px #232f3e;}.action-button:active{transform: translate(0px,5px); -webkit-transform: translate(0px,5px); border-bottom: 1px solid;}</style> <div class="container"> <form> <div class="row"> <h4>Personal Information</h4> <div class="input-group input-group-icon"> <input type="text" placeholder="First Name"/> <div class="input-icon"><i class="fa fa-user"></i></div></div><div class="input-group input-group-icon"> <input type="text" placeholder="Last Name"/> <div class="input-icon"><i class="fa fa-user"></i></div></div><div class="input-group input-group-icon"> <input type="text" placeholder="Middle Name"/> <div class="input-icon"><i class="fa fa-user"></i></div></div><div class="input-group input-group-icon"> <input type="text" placeholder="Company Name"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="row"> <div class="col-md-12"> <h4>Login Information</h4> <div class="input-group"> <div class="input-group input-group-icon"> <input type="email" placeholder="Email Adress"/> <div class="input-icon"><i class="fa fa-envelope"></i></div></div><div class="input-group input-group-icon"> <input type="password" placeholder="Password"/> <div class="input-icon"><i class="fa fa-key"></i></div></div><div class="input-group input-group-icon"> <input type="password" placeholder="Confirm Password"/> <div class="input-icon"><i class="fa fa-key"></i></div></div></div></div></div><div class="row"> <div class="col-md-12"> <h4>Contact Information</h4> <div class="input-group input-group-icon"> <input type="text" placeholder="Address 1"/> <div class="input-icon"><i class="fa fa-user"></i></div></div><div class="input-group input-group-icon"> <input type="text" placeholder="Address 2"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="country"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="state"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="City"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="Zip Code"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="Phone"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div><div class="col-half"> <div class="input-group input-group-icon"> <input type="text" placeholder="Fax"/> <div class="input-icon"><i class="fa fa-user"></i></div></div></div></div><h4>Terms and Conditions</h4> <div class="input-group"> <input type="checkbox" id="terms"/> <label for="terms">I accept the terms and conditions for signing up to this service, and hereby confirm I have read the privacy policy.</label> <br></div><button class="action-button shadow animate blue">Register</button> </div></form></div></div>',
+  //   attributes: {
+  //       class: 'fa fa-home',
+  //       title: 'Registration Page'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // bm.add('CartPage', {
+  //   label: 'Cart Page',
+  //   content: '<div style="display: block; min-height: 20px;"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"><style type="text/css">.myCartListings{background-color: #eee;transition: 0.2s all linear; margin: 20px; padding:20px;}.myCartListings:hover {box-shadow: 0px 0px 10px #999;transition: 0.2s all linear;}#productImage{padding: 0px 0px 0px 5px;}h4{padding-top: 1%}.colorofproduct{border: solid 2px black;margin: 2px;}#comment{margin-top: 5%;}button.remove{float: right;margin-top: 1%} }</style><div class="container" id="myCartListings"><div class="col-md-12 myCartListings"><div id="productImage" class="col-md-4"><img src="http://placehold.it/500x500" width="100%" height="50%"></div><div id="Productdetails" class="col-md-8"><button class="btn btn-danger remove"><i class="fa fa-trash-o danger" aria-hidden="true"></i></button><h2>Product Title</h2><h4>Item # : CODE</h4><h4>USD ($) 99.99 (R) Qty. 0-100</h4><h4>Product Description</h4><hr><h6>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h6><br><div id="colorofproductdiv"><img src="http://www.swedausa.com/product/color/137.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/329.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/573.jpg" height="27px" width="27px" class="colorofproduct"><img src="http://www.swedausa.com/product/color/329.jpg" height="27px" width="27px" class="colorofproduct"></div><div id="comment"><h6>Comments:</h6><textarea rows="5" class="form-control"></textarea></div></div></div></div><div class="container" style="margin-bottom: 40px;"><div class="row"><div class="col-md-12"><button class="btn btn-primary btn-lg"><i class="fa fa-cart-arrow-down fa-fw"></i> Proceed to Checkout</button><button class="btn btn-info btn-lg"><i class="fa fa-cart-plus fa-fw"></i> Add More Items</button></div></div></div></div>',
+  //   attributes: {
+  //       class: 'fa fa-shopping-bag',
+  //       title: 'Cart Page'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // bm.add('CatalogBlocks', {
+  //   label: 'Catalog Blocks',
+  //   content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"><style type="text/css">body{color: white}a{color: #93a1b9}.catalogBG{background-color: #253a5c;min-height: 300px;padding: 40px;}</style><div class=" container"><div class="col-md-12"><div class="col-md-6 catalogBG"><div class="col-md-4"><h3>E-catlog</h3><ul><li><a href="new">One</a></li><li><a href="two">Two</a></li></ul></div><div class="col-md-8 image"><img src="http://www.swedausa.com/images/uploads/home_page_images/1501553209.png" width="100%"/></div></div><div class="col-md-6"> <div class="row"> <div class="col-xs-12"><img src="http://www.swedausa.com/images/uploads/home_page_images/1489144791.png" width="100%"></div><div class="col-xs-12"> <div class="row"> <div class="col-xs-6"><img src="http://www.swedausa.com/images/uploads/home_page_images/1502835654.png" width="100%"></div><div class="col-xs-6"><img src="http://www.swedausa.com/images/uploads/home_page_images/1489144934.png" width="100%"></div></div></div></div></div></div></div>',
+  //   attributes: {
+  //       class: 'fa fa-shopping-bag',
+  //       title: 'Catalog Blocks'
+  //   },
+  //   category: 'Sweda Components'
+  // });
+  // bm.add('AdvancedSearch', {
+  //   label: 'Advanced Search',
+  //   content: '<!DOCTYPE html><html> <head> <title></title> <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"> <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> <style type="text/css"> input{width: 100%; padding: 12px 20px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;}</style> </head> <body> <div class="container" style="background-color: #eee; margin-top: 2% "> <div class="form_11" style="margin-top: 2%"> <div class="col-md-12"> <div class="col-md-3"> keyword <input type="text" name="keyword"> <br><br></div><div class="col-md-3"> category <input type="text" name="category"> <br><br></div><div class="col-md-3"> Item/Sku <input type="text" name="sku"> <br><br></div><div class="col-md-3"> Min. Price <input type="text" name="mip"> <br><br></div></div><div class="col-md-12"> <div class="col-md-12"> <div class="col-md-3"> Price <input type="text" name="map"> <br><br></div><div class="col-md-3"> Color <input type="text" name="color"> <br><br></div><div class="col-md-3"> Tags <input type="text" name="tag"> <br><br></div><div class="col-md-3" style="margin-top: 3%"> <button class="btn btn-primary"><i class="fa fa-search" aria-hidden="true">Search</i></button> <button>Clear</button> </div></div></div></div></div></body></html>',
+  //   attributes: {
+  //       class: 'fa fa-shopping-bag',
+  //       title: 'Advanced Search'
+  //   },
+  //   category: 'Sweda Components'
+  // });
 
 
 
@@ -4076,314 +4089,296 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
 
 
 
-
-    // ReUse Component
-    // var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+    // Reuse Component
     var folderUrl = localStorage.getItem("folderUrl");
     var useremail = localStorage.getItem("email");
 
     let foldername = folderUrl.split('/');
-    foldername = foldername[(foldername.length-1)];
+    foldername = foldername[(foldername.length - 1)];
 
     let configFileUrl = 'http://localhost:3032/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
-    $.getJSON( configFileUrl, function( data ) {  
-        var configData = data.data[0].configData;
-        console.log('Config Data:', configData);
-        storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+    $.getJSON(configFileUrl, function(data) {
+      var configData = data.data[0].configData;
+      storedTemplates = Object.keys(configData[2].layoutOptions[0]);
     });
 
     var partialOptions = {};
 
-    setTimeout(function(){
+    setTimeout(function() {
       for (var i = 0; i < storedTemplates.length; i++) {
-          console.log("value...", storedTemplates[i])
-          if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
-              storedTemplates.splice(i, 1)
-          }
+        if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+          storedTemplates.splice(i, 1)
+        }
       }
 
-      
-      // let arr_to_print = []
-      // var folderUrl = localStorage.getItem("folderUrl");
+
       for (var i = 0; i <= storedTemplates.length - 1; i++) {
-          var request = new XMLHttpRequest();
-          console.log("folderUrl", folderUrl)
-          request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
+        var request = new XMLHttpRequest();
+        request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
+        request.setRequestHeader("Content-type", "application/json");
+        request.send();
+        resp = JSON.parse(request.responseText);
+
+        for (let index = 0; index < resp.length; index++) {
+          request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
           request.setRequestHeader("Content-type", "application/json");
           request.send();
-          resp = JSON.parse(request.responseText);
+          resp2 = JSON.parse(request.responseText);
+        }
 
-          for (let index = 0; index < resp.length; index++) {
-              request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
-              request.setRequestHeader("Content-type", "application/json");
-              request.send();
-              resp2 = JSON.parse(request.responseText);
-          }
-
-          if (resp.length != 0 && resp[i] != "Menu") {
-              if (resp2.length >= 2) {
-                  for (let j = 0; j < resp2.length; j++) {
-                      if (j == 0) {
-                          partialOptions[resp[i]] = [{ 'name': resp2[j] }]
-                      } else{
-                          partialOptions[resp[i]].push({ 'name': resp2[j] })
-                      }
-                  }
+        if (resp.length != 0 && resp[i] != "Menu") {
+          if (resp2.length >= 2) {
+            for (let j = 0; j < resp2.length; j++) {
+              if (j == 0) {
+                let string_con = resp2[j]
+                string_con = string_con.toString()
+                var res = string_con.split(".");
+                if (res[1] == "html") {
+                  partialOptions[resp[i]] = [{
+                    'name': resp2[j]
+                  }]
+                }
               } else {
-                  partialOptions[resp[i]] = [{ 'name' : resp2  }]
+                let string_con = resp2[j]
+                string_con = string_con.toString()
+                var res = string_con.split(".");
+                if (res[1] == "html") {
+                  partialOptions[resp[i]].push({
+                    'name': resp2[j]
+                  })
+                }
               }
+            }
+          } else {
+            str = resp2
+            str = resp2.toString()
+            var res = str.split(".");
+            if (res[1] == "html") {
+              partialOptions[resp[i]] = [{
+                'name': resp2
+              }]
+            }
           }
+        }
       }
-    },1000);
-    
+    }, 1000);
+
 
     editor.TraitManager.addType('customConent1', {
 
-        /**
-         * Returns the input element
-         * @return {HTMLElement}
-         */
-        getInputEl: function () {
-            if (!this.inputEl) {
-                var input = document.createElement('select');
-                input.setAttribute("id", "Div1");
-                input.setAttribute("name", "Div1");
-                input.setAttribute("style", "background:#363636");
-                $.each(partialOptions, function (key, value) {
-                    console.log('================' + key);
-                    var group = $('<optgroup label="' + key + '" />');
-                    $.each(value, function () {
-                        $('<option />').html(this.name).appendTo(group);
-                    });
-                    group.appendTo(input);
-                });
-                input.value = this.target.get('customConent1');
-                this.inputEl = input;
-            }
-            return this.inputEl;
-        },
+      getInputEl: function() {
+        if (!this.inputEl) {
+          var input = document.createElement('select');
+          input.setAttribute("id", "Div1");
+          input.setAttribute("name", "Div1");
+          input.setAttribute("style", "background:#363636");
+          $.each(partialOptions, function(key, value) {
+            var group = $('<optgroup label="' + key + '" />');
+            $.each(value, function() {
+              $('<option />').html(this.name).appendTo(group);
+            });
+            group.appendTo(input);
+          });
+          input.value = this.target.get('customConent1');
+          this.inputEl = input;
+        }
+        return this.inputEl;
+      },
 
     });
 
     comps.addType('ReUseComponent', {
-        model: defaultModel.extend({
-            init() {
-                this.listenTo(this, 'change:selectPartial', this.doStuff);
-            },
-            doStuff() {
-                var label, selected_value;
-                var folderUrl = localStorage.getItem("folderUrl");
-                $('#Div1').on('click', function () {
-                    label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-                    selected_value = $("#Div1 option:selected").text();
-                    let model = editor.getSelected();
-                    var split_selected_value = selected_value.split(".");
-                    if (split_selected_value[1] == "html") {
-                        model.components("");
-                        model.components("{{> " + label + " id='" + selected_value + "' }}");
-                    } else if (split_selected_value[1] == "vue"){
-                        // let string = "component"
-                        //let string = '{component :is="' + split_selected_value[0] + '"}' + selected_value + '{/component}'
-                        //model.components('{component :is="' + split_selected_value[0] + '"}' + selected_value + '{/component}');
-                        model.components('<component :is="' + split_selected_value[0] + '">' + selected_value + '</component>');
-                    }
-                });
-            },
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                    label: 'PartialName',
-                    name: 'selectPartial',
-                    type: 'customConent1',
-                    changeProp: 1,
-                }
-                ],
-            }),
-        }, {
-                isComponent: function (el) {
-                    if (el.tagName == 'REUSECOMPONENT') {
-                        return {
-                            type: 'ReUseComponent'
-                        };
-                    }
-                },
-            }),
-        view: defaultType.view,
-        render: function () {
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here';
-            return this;
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:selectPartial', this.doStuff);
         },
+        doStuff() {
+          var label, selected_value;
+          var folderUrl = localStorage.getItem("folderUrl");
+          $('#Div1').on('click', function() {
+            label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+            selected_value = $("#Div1 option:selected").text();
+            let model = editor.getSelected();
+            var split_selected_value = selected_value.split(".");
+            if (split_selected_value[1] == "html") {
+              model.components("");
+              model.components("{{> " + label + " id='" + selected_value + "' }}");
+            } else if (split_selected_value[1] == "vue") {
+              model.components('<component :is="' + split_selected_value[0] + '">' + selected_value + '</component>');
+            }
+          });
+        },
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [{
+            label: 'PartialName',
+            name: 'selectPartial',
+            type: 'customConent1',
+            changeProp: 1,
+          }],
+        }),
+      }, {
+        isComponent: function(el) {
+          if (el.tagName == 'REUSECOMPONENT') {
+            return {
+              type: 'ReUseComponent'
+            };
+          }
+        },
+      }),
+      view: defaultType.view,
+      render: function() {
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here';
+        return this;
+      },
     });
 
 
 
 
+    // Vue Component
+    var folderUrlVue = localStorage.getItem("folderUrl");
+    var useremailVue = localStorage.getItem("email");
+
+    let projectName = folderUrlVue.split('/');
+    projectName = projectName[(projectName.length - 1)];
+
+    let configFileUrl2 = 'http://api.flowz.com/serverapi/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
+    $.getJSON(configFileUrl2, function(data) {
+      var configData = data.data[0].configData;;
+      storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+    });
+
+    var partialOptions2 = {};
+
+    setTimeout(function() {
+      for (var i = 0; i < storedTemplates.length; i++) {
+        if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+          storedTemplates.splice(i, 1)
+        }
+      }
 
 
+      for (var i = 0; i <= storedTemplates.length - 1; i++) {
+        var request = new XMLHttpRequest();
+        request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
+        request.setRequestHeader("Content-type", "application/json");
+        request.send();
+        resp = JSON.parse(request.responseText);
+
+        for (let index = 0; index < resp.length; index++) {
+          request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
+          request.setRequestHeader("Content-type", "application/json");
+          request.send();
+          resp2 = JSON.parse(request.responseText);
+        }
+
+        if (resp.length != 0 && resp[i] != "Menu") {
+          console.log("resp", resp)
+          let counter = 0;
+          if (resp2.length >= 2) {
+            for (let j = 0; j < resp2.length; j++) {
+              var split_selected_value = resp2[j].split(".");
+              if (split_selected_value[1] == "vue") {
+                console.log("inside")
+                if (counter == 0) {
+                  partialOptions2[resp[i]] = [{
+                    'name': resp2[j]
+                  }]
+                  counter++;
+                } else {
+                  partialOptions2[resp[i]].push({
+                    'name': resp2[j]
+                  })
+                }
+              }
+            }
+          } else {
+            var resp3 = resp2.toString();
+            var substring = "vue";
+            if (resp3.indexOf(substring) !== -1) {
+              partialOptions2[resp[i]] = [{
+                'name': resp2
+              }]
+            }
+          }
+
+        }
+      }
+    }, 1000);
 
 
+    editor.TraitManager.addType('customConent2', {
 
+      getInputEl: function() {
+        if (!this.inputEl) {
+          var input = document.createElement('select');
+          input.setAttribute("id", "Div1");
+          input.setAttribute("name", "Div1");
+          input.setAttribute("style", "background:#363636");
+          $.each(partialOptions2, function(key, value) {
+            var group = $('<optgroup label="' + key + '" />');
+            $.each(value, function() {
+              $('<option />').html(this.name).appendTo(group);
+            });
+            group.appendTo(input);
+          });
+          input.value = this.target.get('customConent2');
+          this.inputEl = input;
+        }
+        return this.inputEl;
+      },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    });
 
 
 
     comps.addType('VueComponent', {
-        model: defaultModel.extend({
-            init() {
-                this.listenTo(this, 'change:selectPartial', this.doStuff);
-            },
-            doStuff() {
-                var label, selected_value;
-                var folderUrl = localStorage.getItem("folderUrl");
-                $('#Div1').on('click', function () {
-                    label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-                    selected_value = $("#Div1 option:selected").text();
-                    console.log('$("#Div1 option:selected"):',label)
-                    let model = editor.getSelected();
-                    var split_selected_value = selected_value.split(".");
-                    if (split_selected_value[1] == "vue") {
-                        // let string = "component"
-                        //let string = '{component :is="' + split_selected_value[0] + '"}' + selected_value + '{/component}'
-                        //model.components('{component :is="' + split_selected_value[0] + '"}' + selected_value + '{/component}');
-                        model.components('<div id="'+split_selected_value[0]+'"><component :pathname="'+label+'" :is="' + split_selected_value[0] + '">' + selected_value + '</component></div>');
-                    }
-                });
-            },
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                    label: 'PartialName',
-                    name: 'selectPartial',
-                    type: 'customConent2',
-                    changeProp: 1,
-                }
-                ],
-            }),
-        }, {
-                isComponent: function (el) {
-                    if (el.tagName == 'VUECOMPONENT') {
-                        return {
-                            type: 'VueComponent'
-                        };
-                    }
-                },
-            }),
-        view: defaultType.view,
-        render: function () {
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here';
-            return this;
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:selectPartial', this.doStuff);
         },
-    });
-
-
-
-    // Form Partial
-    editor.TraitManager.addType('customConent2', {
-
-        /**
-         * Returns the input element
-         * @return {HTMLElement}
-         */
-        getInputEl: function () {
-            if (!this.inputEl) {
-                var input = document.createElement('select');
-                input.setAttribute("id", "Div1");
-                input.setAttribute("name", "Div1");
-                input.setAttribute("style", "background:#363636");
-                $.each(partialOptions, function (key, value) {
-                    console.log('================' + key);
-                    var group = $('<optgroup label="' + key + '" />');
-                    $.each(value, function () {
-                        $('<option />').html(this.name).appendTo(group);
-                    });
-                    group.appendTo(input);
-                });
-                input.value = this.target.get('customConent2');
-                this.inputEl = input;
+        doStuff() {
+          var label, selected_value;
+          var folderUrlVue = localStorage.getItem("folderUrl");
+          $('#Div1').on('click', function() {
+            label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+            selected_value = $("#Div1 option:selected").text();
+            let model = editor.getSelected();
+            var split_selected_value = selected_value.split(".");
+            console.log("selected_value", selected_value)
+            if (split_selected_value[1] == "vue") {
+              model.components('<div id="' + split_selected_value[0] + '"><component athname="' + label + '" :is="' + split_selected_value[0] + '">' + selected_value + '</component></div>');
             }
-            return this.inputEl;
+          });
         },
-
-    });
-
-    comps.addType('formpartial', {
-        model: defaultModel.extend({
-            init() {
-                this.listenTo(this, 'change:selectPartial', this.doStuff);
-            },
-            doStuff() {
-                var label, selected_value;
-                var folderUrl = localStorage.getItem("folderUrl");
-                $('#Div1').on('click', function () {
-                    label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-                    selected_value =  $("#Div1 option:selected").text();
-                    let model = editor.getSelected();
-
-                    model.components("");
-                    if(selected_value.match('.hbs')){
-                        model.components("{{> " + label + " id='" + selected_value + "' }}");
-                    }else{
-
-                    model.components("{{> " + label + " id='" + selected_value + ".html' }}");
-                    }
-                });
-            },
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                        label: 'Select Partial',
-                        name: 'selectPartial',
-                        type: 'customConent2',
-                        changeProp: 1,
-                    },
-                    {
-                      label: 'Attribute ID:',
-                      name: 'attr-id'
-                    }
-                ],
-            }),
-        }, {
-                isComponent: function (el) {
-                    if (el.tagName == 'FORMPARTIAL') {
-                        return {
-                            type: 'formpartial'
-                        };
-                    }
-                },
-            }),
-        view: defaultType.view,
-        render: function () {
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here';
-            return this;
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [{
+            label: 'PartialName',
+            name: 'selectPartial',
+            type: 'customConent2',
+            changeProp: 1,
+          }],
+        }),
+      }, {
+        isComponent: function(el) {
+          if (el.tagName == 'VUECOMPONENT') {
+            return {
+              type: 'VueComponent'
+            };
+          }
         },
+      }),
+      view: defaultType.view,
+      render: function() {
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here';
+        return this;
+      },
     });
 
 
@@ -4948,6 +4943,97 @@ grapesjs.plugins.add('product-plugin', function(editor, options){
             return this;
         },
     });
+
+
+
+
+    comps.addType('productSearchFilter', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+        
+          {
+            label: 'API URL',
+            name: 'apiurl'
+          },
+          {
+            label: 'Username',
+            name: 'apiusername',
+            type: 'text'
+          },
+          {
+            label: 'Password',
+            name: 'apipassword',
+            type: 'password'
+          },
+          {
+            label: 'Search',
+            name: 'selectadvance_search_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'category',
+            name: 'selectcategory_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Prices',
+            name: 'selectprices_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Colours',
+            name: 'selectcolours_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Brands',
+            name: 'selectbrands_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'true', name:'True'},{value: 'false', name:'False'}]
+          },
+          {
+            label: 'Themes',
+            name: 'selecttheme_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{value: 'select', name:'Select Filter'},{value: 'portrait', name:'Portrait'},{value: 'landscape', name:'Landscape'}]
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'PRODUCTSEARCHFILTER'){
+          return {type: 'productSearchFilter'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
 
 
 

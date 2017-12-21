@@ -1,65 +1,197 @@
 <template>
   <div class="PageSettings">
+    <!-- Save/Publish/Cancel Buttons -->
+    <div class="page-buttons">
+      <el-button type="primary" size="small" @click="savePageSettings">Save</el-button>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-md-12" style="margin-top: 4%;">
-          <el-form ref="form" :model="form" label-width="160px">
-            <el-form-item label="Page name">
-              <el-input v-model="form.name" :disabled="true"></el-input>
-            </el-form-item>
+          <div class="well">
+            <el-form ref="form" :model="form" label-width="160px">
+              <el-form-item label="Page name">
+                <el-input v-model="form.name" :disabled="true"></el-input>
+              </el-form-item>
 
-            <el-form-item label="Page Layout">
-              <el-select v-model="form.Layout" @change="layoutChange()" placeholder="Please select Layout">
-                <el-option
-                  v-for="item in form.layouts"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
+              <el-form-item label="Page Layout">
+                <el-select v-model="form.Layout" @change="layoutChange()" placeholder="Please select Layout">
+                  <el-option
+                    v-for="item in form.layouts"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
 
-            <div id="demo">
-              <div v-for='(n,index) in partialsList'>
-                 <el-form-item :label="n ">
-                    <el-select  v-model="form.parent_id[n]" placeholder="Please select " >
-                       <el-option v-for="item in AllData[index]" 
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item"
-                          :disabled="item.disabled">
-                       </el-option>
-                    </el-select>
-                 </el-form-item>
+              <div id="demo">
+                <div v-for='(n,index) in partialsList'>
+                   <el-form-item :label="n ">
+                      <el-select  v-model="form.parent_id[n]" placeholder="Please select " >
+                         <el-option v-for="item in AllData[index]" 
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item"
+                            :disabled="item.disabled">
+                         </el-option>
+                      </el-select>
+                   </el-form-item>
+                </div>
               </div>
-            </div>
 
-            <el-form-item label="Page SEO Title">
-              <el-input v-model="form.seoTitle"></el-input>
-            </el-form-item>
+              <el-form-item label="Page SEO Title">
+                <el-input v-model="form.seoTitle"></el-input>
+              </el-form-item>
+              <hr>
+              <el-form-item label="Following CSS have been included:">
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
+                <div style="margin: 15px 0;"></div>
+                <el-checkbox-group v-model="checkedCss" @change="handleCheckedCssChange">
+                  <el-checkbox v-for="css in csses" :label="css" :key="css">{{css}}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
 
-            <el-form-item label="Page SEO Keywords">
-              <el-input v-model="form.seoKeywords"></el-input>
-            </el-form-item>
-            
-            <el-form-item label="Page SEO Description">
-              <el-input type="textarea" :rows="5" v-model="form.seoDesc"></el-input>
-            </el-form-item>
-            <hr>
-            <el-form-item label="Following CSS have been included:">
-              <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
-              <div style="margin: 15px 0;"></div>
-              <el-checkbox-group v-model="checkedCss" @change="handleCheckedCssChange">
-                <el-checkbox v-for="css in csses" :label="css" :key="css">{{css}}</el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
+            </el-form> 
+          </div>          
+        </div>
+      </div> 
 
-            <el-form-item>
-              <el-button type="primary" @click="savePageSettings">Save</el-button>
-              <!-- <el-button>Cancel</el-button> -->
-            </el-form-item>
+      <div class="row">
+        <div class="col-md-12" style="margin-top: 4%;">
+          <div class='well' id='add-js-css'>
+             <div class="row">
+                <div class="col-md-12">
+                   <div class="row">
+                      <div class="col-md-4">
+                         <h3> JS Links </h3>
+                      </div>
+                   </div>
+                   <hr>
+                   <el-form ref="form" :model="form">
+                  <!--  <draggable @start="drag=true" @end="drag=false"> -->
+                      <div v-for="(n, index) in externallinksJS">
+                         <el-form-item>
+                            <div class="row">
+                               <!-- position  -->
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-7" style="margin: 0; padding: 0px">
+                                  <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete"></el-button>
+                               </div>
+                            </div>
+                         </el-form-item>
+                      </div>
+                      <!-- </draggable> -->
+                      <!-- Create new variable -->
+                      <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
+                   </el-form>
+                </div>
+                <div class="col-md-12" style="margin-top: 4%;">
+                   <div class="row">
+                      <div class="col-md-4">
+                         <h3> CSS Links </h3>
+                      </div>
+                   </div>
+                   <hr>
+                   <el-form ref="form" :model="form">
+                      <div v-for="(n, index) in externallinksCSS">
+                         <el-form-item>
+                            <div class="row">
+                               <!-- Enter link type  -->
+                               <!-- <div class="col-md-2" style="margin-left: 0; padding-left: 12px">
+                                  <el-select v-model="n.linktype" placeholder="JS/CSS">
+                                    <el-option
+                                    v-for="item in typelinks"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    > 
+                                    </el-option>
+                                  </el-select>
+                                  </div> -->
+                               <!-- position  -->
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-7" style="margin: 0; padding-left: 0px">
+                                  <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete"></el-button>
+                               </div>
+                            </div>
+                         </el-form-item>
+                      </div>
+                      <!-- Create new variable -->
+                      <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
+                   </el-form>
+                </div>
+             </div>
+          </div>
 
-          </el-form> 
+          <div class="well" id='add-meta-tag'>
+             <div class="row">
+               <div class="col-md-12" >
+                  <div class="row">
+                        <div class="col-md-4">
+                           <h3>Add External meta tags </h3>
+                        </div>
+                     </div>
+                     <hr>
+                   <el-form :inline="true">
+                     <el-form-item label="Meta Charset">
+                        <el-input placeholder="charset value" v-model="Metacharset"></el-input>
+                      </el-form-item>
+                    </el-form>
+               </div>
+                <div class="col-md-12" style="margin-top: 2%">
+                    <table class="table table-hover  table-bordered">
+                        <thead class="thead">
+                          <tr>
+                            <th>Name</th>
+                            <th>Content</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        
+                          <tr v-for="(n, index) in externallinksMeta" >
+                            <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                            <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                            <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete"></el-button></td>
+                          </tr>
+                          <tr><td colspan="3"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                        </tbody>
+                      </table>
+                      <!-- Create new variable -->
+                      <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+                   <!-- </el-form> -->
+                </div>
+             </div>
+          </div>        
         </div>
       </div> 
     </div>
@@ -93,8 +225,6 @@ export default {
         name: '',
         nameSecond:'',
         seoTitle: '',
-        seoKeywords: '',
-        seoDesc: '',
         Header: '',
         Footer: '',
         Layout: '',
@@ -127,7 +257,20 @@ export default {
       checkAll: true,
       checkedCss: [],
       csses: cssOptions,
-      isIndeterminate: true
+      isIndeterminate: true,
+      externallinksJS:[],
+      externallinksCSS:[],
+      externallinksMeta:[{
+        name: 'Edit Me',
+        content: 'Update Me'
+      }],
+      Allposition:[
+      {label:'Start of <head> Tag',value:'starthead'},
+       {label:'End of <head> tag',value:'endhead'},
+      {label:'Start of <body> Tag',value:'startbody'},
+      {label:'End of <body> tag',value:'endbody'}
+      ],
+      Metacharset:''
     }
   },
   component: {
@@ -144,6 +287,28 @@ export default {
       this.checkAll = checkedCount === this.csses.length;
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.csses.length;
       console.log('Checked items:', this.checkedCss);
+    },
+
+    addNewexternallinkJS() {
+      let newVariable = { linktype: 'JS', linkposition: '', linkurl: ''};
+      this.externallinksJS.push(newVariable);
+    },
+    addNewexternallinkCSS() {
+      let newVariable = { linktype: 'CSS', linkposition: '', linkurl: ''};
+      this.externallinksCSS.push(newVariable);
+    },
+    addNewexternallinkMeta() {
+      let newVariable = { name:'EditMe',content:'EditMe'};
+      this.externallinksMeta.push(newVariable);
+    },
+    deletelinkJS(deleteIndex) {
+      this.externallinksJS.splice(deleteIndex, 1);
+    },
+    deletelinkCSS(deleteIndex) {
+      this.externallinksCSS.splice(deleteIndex, 1);
+    },
+    deletelinkMeta(deleteIndex) {
+      this.externallinksMeta.splice(deleteIndex, 1);
     },
 
     async layoutChange() {
@@ -242,8 +407,6 @@ export default {
       var PageSettings = {
         "PageName": this.form.name,
         "PageSEOTitle": this.form.seoTitle,
-        "PageSEOKeywords": this.form.seoKeywords,
-        "PageSEODescription": this.form.seoDesc,
         "PageLayout": this.form.Layout,
         "partials": [],
         "PageCss": this.checkedCss
@@ -252,6 +415,11 @@ export default {
         this.settings[1].pageSettings[this.currentFileIndex].partials = [];
         this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
         this.settings[1].pageSettings[this.currentFileIndex].PageCss = this.checkedCss;
+
+        this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs=this.externallinksJS;
+        this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss=this.externallinksCSS;
+        this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo=this.externallinksMeta;
+        this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle=this.form.seoTitle;
 
         for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
           if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
@@ -425,18 +593,6 @@ export default {
         this.form.seoTitle = '';
       }
 
-      if('PageSEOKeywords' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.form.seoKeywords = this.settings[1].pageSettings[this.currentFileIndex].PageSEOKeywords;
-      } else {
-        this.form.seoKeywords = '';
-      }
-
-      if('PageSEODescription' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.form.seoDesc = this.settings[1].pageSettings[this.currentFileIndex].PageSEODescription;
-      } else {
-        this.form.seoDesc = '';
-      }
-
       if('PageLayout' in this.settings[1].pageSettings[this.currentFileIndex]){
         console.log('Layout Found in config', this.settings[1].pageSettings[this.currentFileIndex].PageLayout)
         this.form.Layout = this.settings[1].pageSettings[this.currentFileIndex].PageLayout;
@@ -448,6 +604,24 @@ export default {
         this.checkedCss = this.settings[1].pageSettings[this.currentFileIndex].PageCss;
       } else {
         this.checkedCss = [];
+      }
+
+      if('PageMetaInfo' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.externallinksMeta = this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo;
+      } else {
+        this.externallinksMeta = [];
+      }
+
+      if('PageExternalCss' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.externallinksCSS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss;
+      } else {
+        this.externallinksCSS = [];
+      }
+
+      if('PageExternalJs' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.externallinksJS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs;
+      } else {
+        this.externallinksJS = [];
       }
 
     } else {
@@ -462,7 +636,23 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.cssChecks{
-  width: 180px;
-}
+  .cssChecks{
+    width: 180px;
+  }
+
+  .page-buttons{
+    position: fixed;
+    bottom: 7px;
+    right: 50px;
+    margin-top: 17.5px;
+    z-index: 10
+  }
+
+  @media(max-width: 680px){
+    .page-buttons{
+      position: relative;
+      left: auto;
+      right: auto;
+    }
+  }
 </style>
