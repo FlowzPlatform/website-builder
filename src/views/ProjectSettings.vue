@@ -38,7 +38,7 @@
               <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Project Settings</a>
           </div>
       </div>
-      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
+      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="">
         <div class="row">
           <div class="col-md-12">
             <el-form ref="form" :model="form" label-width="180px">
