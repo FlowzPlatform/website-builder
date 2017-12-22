@@ -54,7 +54,7 @@
               <div class='icon'>
                   <img src='../assets/images/lock_icon_copy.png'>
               </div>
-              <input placeholder='Password' type='password' v-model="form.checkPass" required>
+              <input placeholder='Confirm Password' type='password' v-model="form.checkPass" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
