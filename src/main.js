@@ -42,22 +42,22 @@ Vue.use(VueParticles);
 // // And plug it in 
 // Vue.use(vueFeathers)
 
-// Include and set up feathers client
-const Feathers = require('feathers/client')
-const hooks = require('feathers-hooks')
-// const authentication = require('feathers-authentication/client')
-const socketio = require('feathers-socketio/client')
-const io = require('socket.io-client')
+// // Include and set up feathers client
+// const Feathers = require('feathers/client')
+// const hooks = require('feathers-hooks')
+// // const authentication = require('feathers-authentication/client')
+// const socketio = require('feathers-socketio/client')
+// const io = require('socket.io-client')
 
-const socket = io('http://localhost:3032')
-const feathers = Feathers()
-  .configure(socketio(socket))
-  .configure(hooks())
-  // .configure(authentication({storage: window.localStorage}))
-  // Include it as a CommonJS module
-const vueFeathers = require('vue-feathers')
-  // And plug it in
-Vue.use(vueFeathers, feathers)
+// const socket = io(config.socketURL)
+// const feathers = Feathers()
+//   .configure(socketio(socket))
+//   .configure(hooks())
+//   // .configure(authentication({storage: window.localStorage}))
+//   // Include it as a CommonJS module
+// const vueFeathers = require('vue-feathers')
+//   // And plug it in
+// Vue.use(vueFeathers, feathers)
 
 
 
@@ -115,6 +115,9 @@ router.beforeEach((to, from, next) => {
       }).catch(error => {
         console.log(7)
         console.log(error)
+        if (error.response.data === 'invalid token') {
+          router.app.$cookie.delete('auth_token')
+        }
         // window.console.log('Not authenticated')
         next({
           path: '/login',
