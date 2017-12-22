@@ -12,7 +12,7 @@ if (process.env.NODE_ENV !== 'development') {
 } else {
     ipAdd = 'http://localhost',
     socketURL = 'http://localhost:4032',
-    frontEndUrl = 'http://localhost:8080'
+    frontEndUrl = 'http://localhost:8080/dashboard'
 }
 
 
