@@ -1705,7 +1705,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let foldername = folderUrl.split('/');
   foldername = foldername[(foldername.length - 1)];
 
-  let configFileUrl = 'http://localhost:3032/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
+  let configFileUrl = 'http://api.flowz.com/serverapi/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
 
   $.getJSON(configFileUrl, function(data) {
     var configData = data.data[0].configData;
@@ -1725,13 +1725,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       var request = new XMLHttpRequest();
-      request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
+      request.open("POST", 'http://api.flowz.com/serverapi/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
       request.setRequestHeader("Content-type", "application/json");
       request.send();
       resp = JSON.parse(request.responseText);
 
       for (let index = 0; index < resp.length; index++) {
-        request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
+        request.open("POST", 'http://api.flowz.com/serverapi/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
         request.setRequestHeader("Content-type", "application/json");
         request.send();
         resp2 = JSON.parse(request.responseText);
@@ -1856,7 +1856,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let projectName = folderUrlVue.split('/');
   projectName = projectName[(projectName.length - 1)];
 
-  let configFileUrl2 = 'http://localhost:3032/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
+  let configFileUrl2 = 'http://api.flowz.com/serverapi/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
   $.getJSON(configFileUrl2, function(data) {
     var configData = data.data[0].configData;;
     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
@@ -1874,13 +1874,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       var request = new XMLHttpRequest();
-      request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
+      request.open("POST", 'http://api.flowz.com/serverapi/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
       request.setRequestHeader("Content-type", "application/json");
       request.send();
       resp = JSON.parse(request.responseText);
 
       for (let index = 0; index < resp.length; index++) {
-        request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
+        request.open("POST", 'http://api.flowz.com/serverapi/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
         request.setRequestHeader("Content-type", "application/json");
         request.send();
         resp2 = JSON.parse(request.responseText);
