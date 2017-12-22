@@ -70,15 +70,15 @@
 
               <!-- New Folder Dialog if it's not dashboard page -->
               <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
-                  <el-form :model="formAddFolder">
-                      <el-form-item>
+                  <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
+                      <el-form-item prop="foldername">
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
-                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder()" auto-complete="off" placeholder="Folder Name"></el-input>
+                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Folder Name"></el-input>
                       </el-form-item>
                   </el-form>
-                  <span slot="footer" class="dialog-footer">
+                  <span slot="footer" class="dialog-footer">formAddFolder
                       <el-button @click="newFolderDialog = false">Cancel</el-button>
-                      <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
+                      <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
                   </span>
               </el-dialog>
 
@@ -203,15 +203,15 @@
                   </span>
                 </el-dialog>
                 <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
-                  <el-form :model="formAddFolder">
-                      <el-form-item>
+                  <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
+                      <el-form-item prop="foldername">
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
-                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder()" auto-complete="off" placeholder="Folder Name"></el-input>
+                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Folder Name"></el-input>
                       </el-form-item>
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button @click="newFolderDialog = false">Cancel</el-button>
-                      <el-button type="primary" @click="addFolder()" :loading="addNewFolderLoading">Create</el-button>
+                      <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
                   </span>
               </el-dialog>
 
@@ -413,7 +413,18 @@
       if (!value) {
           return callback(new Error('Please enter filename.'));
       }else if(!(/^[a-z0-9_.@()-]+\.[^.]+$/i.test(value))){
-          return callback(new Error('Please enter valid filename.'));
+          return callback(new Error('Please enter valid filename, with extension.'));
+      }else{
+          return callback();
+      }
+  }
+
+  // New Folder creation validator
+  let checkFolderName = (rule, value, callback) => {
+      if (!value) {
+          return callback(new Error('Please enter Folder Name.'));
+      }else if(!(/^[a-z0-9_.@()-]+$/i.test(value))){
+          return callback(new Error('Please enter valid Foldername.'));
       }else{
           return callback();
       }
@@ -466,6 +477,11 @@
         },
         formAddFolder : {
             foldername : null
+        },
+        rulesFolderName: {
+            foldername: [
+                { validator: checkFolderName, trigger: 'blur' }
+            ]
         },
         formAddProjectFolder : {
             projectName : 'NewWebsite'
@@ -982,83 +998,87 @@
       },
 
       // Create new Folder
-      addFolder() {
-        let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
-        return axios.post(config.baseURL + '/flows-dir-listing', {
-            foldername: newFolderName,
-            type: 'folder'
-          })
-          .then(async(res) => {
-            var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-            storedTemplates.push(this.formAddFolder.foldername)
-            localStorage.setItem("listOfTempaltes", JSON.stringify(storedTemplates));
-
-            let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-            let urlparts = configFileUrl.split("/");
-            let fileNameOrginal = urlparts[urlparts.length - 1];
-            let fileName = '';
-            if(_.includes(configFileUrl, 'Partials')){
-                fileName = '/' + urlparts[urlparts.length - 1];
-            }
-            let folderUrl = configFileUrl.replace(fileName, '');
-            let foldername = folderUrl.split('/');
-            foldername = foldername[(foldername.length - 1)];
-            // this.getConfigFileData(folderUrl);
-            let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
-            let rawConfigs = responseConfig.data.data[0].configData;
-            this.globalConfigData = rawConfigs;
-
-            this.newFolderDialog = false;
-            this.addNewFolderLoading = false;
-            if(this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')){
-              axios.post(config.baseURL + '/flows-dir-listing', {
-                  filename: newFolderName+'/default.partial',
-                  text: '',
-                  type: 'file'
+      addFolder(foldername) {
+        this.$refs[foldername].validate((valid) => {
+          if (valid) {
+            let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
+            return axios.post(config.baseURL + '/flows-dir-listing', {
+                foldername: newFolderName,
+                type: 'folder'
               })
-              .then((res)=>{
-              console.log("folder created inside partials folder");
-              console.log("foldername:",this.formAddFolder.foldername)
-              console.log("this.globalConfigData:",this.globalConfigData)
-              let checkfolder=false
-              for(let i=0;i<Object.keys(this.globalConfigData[2].layoutOptions[0]).length;i++){
-                var temp=Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
-                console.log("temp:",temp)
-                if(temp==this.formAddFolder.foldername){
-                  console.log("file already exists");
-                  checkfolder=true
+              .then(async(res) => {
+                var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+                storedTemplates.push(this.formAddFolder.foldername)
+                localStorage.setItem("listOfTempaltes", JSON.stringify(storedTemplates));
+
+                let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                let urlparts = configFileUrl.split("/");
+                let fileNameOrginal = urlparts[urlparts.length - 1];
+                let fileName = '';
+                if(_.includes(configFileUrl, 'Partials')){
+                    fileName = '/' + urlparts[urlparts.length - 1];
                 }
-              }
-              if(checkfolder!=true){
-                console.log("As, folder not found in config file. We are adding this folder inside config file:")
-                var obj={value:'default',label:'default'}
-                this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername]=[]
-                this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
-              }
+                let folderUrl = configFileUrl.replace(fileName, '');
+                let foldername = folderUrl.split('/');
+                foldername = foldername[(foldername.length - 1)];
+                // this.getConfigFileData(folderUrl);
+                let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+                let rawConfigs = responseConfig.data.data[0].configData;
+                this.globalConfigData = rawConfigs;
 
-              console.log("New this.globalConfigData:",this.globalConfigData)
-              this.saveConfigFile(folderUrl)
+                this.newFolderDialog = false;
+                this.addNewFolderLoading = false;
+                if(this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')){
+                  axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: newFolderName+'/default.partial',
+                      text: '',
+                      type: 'file'
+                  })
+                  .then((res)=>{
+                  console.log("folder created inside partials folder");
+                  console.log("foldername:",this.formAddFolder.foldername)
+                  console.log("this.globalConfigData:",this.globalConfigData)
+                  let checkfolder=false
+                  for(let i=0;i<Object.keys(this.globalConfigData[2].layoutOptions[0]).length;i++){
+                    var temp=Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
+                    console.log("temp:",temp)
+                    if(temp==this.formAddFolder.foldername){
+                      console.log("file already exists");
+                      checkfolder=true
+                    }
+                  }
+                  if(checkfolder!=true){
+                    console.log("As, folder not found in config file. We are adding this folder inside config file:")
+                    var obj={value:'default',label:'default'}
+                    this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername]=[]
+                    this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
+                  }
 
-              }).catch((e)=>{
+                  console.log("New this.globalConfigData:",this.globalConfigData)
+                  this.saveConfigFile(folderUrl)
+
+                  }).catch((e)=>{
+                    console.log(e)
+                  })
+                  
+                }
+                this.$message({
+                  showClose: true,
+                  message: 'Folder Created..',
+                  type: 'success'
+                });
+
+              })
+              .catch((e) => {
+                this.$message({
+                  showClose: true,
+                  message: 'Folder creation failed. Try again.',
+                  type: 'error'
+                });
                 console.log(e)
               })
-              
-            }
-            this.$message({
-              showClose: true,
-              message: 'Folder Created..',
-              type: 'success'
-            });
-
-          })
-          .catch((e) => {
-            this.$message({
-              showClose: true,
-              message: 'Folder creation failed. Try again.',
-              type: 'error'
-            });
-            console.log(e)
-          })
+          }
+        })
       },
 
       // Create new Website
@@ -1141,7 +1161,7 @@
             // this.componentId = 'buyPage';
             this.newProjectFolderDialog = false;
             this.fullscreenLoading = false;
-            this.buyNowDialog = true;
+            // this.buyNowDialog = true;
             console.log(e)
           });
       },
@@ -1693,29 +1713,6 @@
         //   })
         //   .then((res) => {
         //     console.log(listingPlugin + ' file created');
-        //   })
-        //   .catch((e) => {
-        //       console.log(e)
-        //   })
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        // });
-
-        // // Dynamic menu Navbar Plugin 
-        // let navbarPlugin = newFolderName + '/assets/client-plugins/client-navbar-plugin.js';
-        // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-navbar-plugin.js', {
-            
-        // })
-        // .then((res) => {
-        //   let navbarPluginData = res.data;
-        //   axios.post(config.baseURL + '/flows-dir-listing', {
-        //       filename : navbarPlugin,
-        //       text : navbarPluginData,
-        //       type : 'file'
-        //   })
-        //   .then((res) => {
-        //     console.log(navbarPlugin + ' file created');    
         //   })
         //   .catch((e) => {
         //       console.log(e)
@@ -3224,7 +3221,7 @@
                      console.log('Error while creating MetalSmith JS file' + e)
                  })
          }, 2000);
-    },
+      },
 
       // Triggered when confirmed for autoSave from grapes component
       async autoSaveFromGrapes(self) {

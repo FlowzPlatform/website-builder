@@ -77,7 +77,7 @@ export default {
       console.log(this.formLogin)
       var auth = await axios({
         method: 'post',
-        url: config.socialUrl + '/googleauthprocess',
+        url: config.socialUrl + '/verifyemail',
         data: this.formLogin
       }).catch(error => {
         this.authen.status = false;
