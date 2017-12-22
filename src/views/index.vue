@@ -319,9 +319,10 @@
               </el-dialog>
             </div>
 
+
             <div v-if="!previewGrid" style="margin-left: 10px;">
               <!-- <component :is="componentId" ref="contentComponent"></component> -->
-              <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  @tab-click="tabClicked" @edit="handleTabsEdit">
+              <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  editable @tab-click="tabClicked" @edit="handleTabsEdit">
 
                 <el-tab-pane
                   v-for="(item, index) in editableTabs"
@@ -330,16 +331,16 @@
                   :name="item.name"
                 >
                   <component :is="item.componentId" ref="contentComponent"></component>
+
                 </el-tab-pane>
 
               </el-tabs>
-              <!-- <el-tabs :tab-position="tabPosition" style="height: 200px;">
-                <el-tab-pane label="User">User</el-tab-pane>
-                <el-tab-pane label="Config">Config</el-tab-pane>
-                <el-tab-pane label="Role">Role</el-tab-pane>
-                <el-tab-pane label="Task">Task</el-tab-pane>
-              </el-tabs> -->
+
             </div>
+            <!-- <div v-else style="margin-left: 10px;">
+
+              All status
+            </div> -->
 
           </div>
         </div>
@@ -682,6 +683,7 @@
 
       // If clicked the root folder
       goToHomePage () {
+
         this.componentId = 'Dashboard';
       },
 
@@ -777,6 +779,12 @@
 
         // If PageSettings Clicked
         if(this.isPageEditing){
+          if(this.$store.state.tabChange != null) {
+            if(this.$store.state.tabChange != ''){
+              this.saveFile('getFileContent')
+            }
+          }
+
           this.isPageEditing = false;
           this.isProjectEditing = false;
           this.isSettingsPage = true;
@@ -831,6 +839,49 @@
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = true;
           this.componentId = 'ProjectSettings';
+
+          let url = data.path;
+          let compId = this.componentId;
+          let newTabName = ++this.tabIndex + '';
+          let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+          let editableTabValue = this.editableTabsValue
+
+          let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
+          function checkIfExist(filepath,array) {  // The last one is array
+            console.log("checkIfExist is called")
+              var found = array.some(function (el) {
+                return el.filepath == url;
+              });
+              if (!found)
+              {
+                  array.push({
+                    title: tab_file_name,
+                    name: newTabName,
+                    content: newTabName,
+                    componentId : compId,
+                    filepath : url
+                  });
+
+              }else{
+                let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+                array = removedArray  ;
+                editableTabValue = newTabName;
+                array.push({
+                    title: tab_file_name,
+                    name: newTabName,
+                    content: newTabName,
+                    componentId : compId,
+                    filepath : url
+                  });
+              }
+              return array
+          }
+
+          this.editableTabs =  selectedPagePositionFirstArray ;
+
+          this.editableTabs.reverse();
+
+          this.editableTabsValue = newTabName;
         }
         // If Clicked in ProjectName
         else if(this.isProjectStats) {
@@ -868,6 +919,7 @@
         }
         // Every other clicks
         else {
+          // console.log('************', this.editableTabs )
           this.isProjectStats = false;
           this.isPartialStats = false;
           this.isPageEditing = false;
@@ -882,6 +934,10 @@
       },
 
       tabClicked : async function(targetName, action) {
+        if(this.componentId == 'GridManager'){
+          this.$refs.contentComponent[0].getHtml()
+          this.saveFile('tabClicked')
+        }
         if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
           if(this.$store.state.tabChange != ''){
             this.saveFile('tabClicked')
@@ -895,7 +951,7 @@
         switch (this.componentId) {
           case 'GrapesComponent':
             this.$refs.contentComponent[0].getSavedHtml();
-            // newContent = tempContent;
+            newContent = this.$store.state.content;
             break;
           case 'json-viewer':
             newContent = JSON.stringify(this.$store.state.content);
@@ -975,12 +1031,17 @@
       },
       // Get File content Locally
       getFileContent: async function(url) {
+
         let configFileUrl = url.replace(/\\/g, "\/");
 
         let urlparts = configFileUrl.split("/");
         let fileNameOrginal = urlparts[urlparts.length - 1];
+        if(this.componentId == 'GridManager'){
+          this.$refs.contentComponent[0].getHtml()
+          this.saveFile('getFileContent')
+        }
 
-        
+
         // this.$router.push('/'+ fileNameOrginal)
         if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
           if(this.$store.state.tabChange != ''){
@@ -1165,9 +1226,9 @@
        }
        this.editableTabs =  selectedPagePositionFirstArray ;
        this.editableTabs.reverse();
+       console.log('this.editableTabs', this.editableTabs)
 
        this.editableTabsValue = newTabName;
-
 
        // if(this.editableTabs[0].title){
        //   console.log("myInterval",myInterval);
@@ -2146,22 +2207,27 @@
 
       // Save file with autometalsmith folders from layout and hbs file
       async saveFile(arg) {
+
         let configFileUrl
         let newContent
         if (arg == 'getFileContent') {
+          console.log('this.componentId.....', this.componentId)
+          var componentId = this.componentId
+          let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+          console.log('myIndex', myIndex)
           this.saveFileLoading = true
           var tempContent = this.$store.state.tabChange
           // newContent = tempContent;
           switch (this.componentId) {
             case 'GrapesComponent':
-              this.$refs.contentComponent[0].getHtml();
+              this.$refs.contentComponent[myIndex].getHtml();
               newContent = tempContent;
               break;
             case 'json-viewer':
               newContent = JSON.stringify(this.$store.state.content);
               break;
             case 'GridManager':
-              this.$refs.contentComponent[0].getHtml();
+              this.$refs.contentComponent[myIndex].getHtml();
               newContent = this.$store.state.content;
               break;
             case 'MenuBuilder':
@@ -2567,6 +2633,10 @@
         }
         else{
           if(arg == 'tabClicked') {
+
+            // var componentId = this.componentId
+            // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+            // console.log('myIndex', myIndex)
             this.saveFileLoading = true
             var tempContent = this.$store.state.tabChange;
             this.$store.state.content = this.$store.state.tabChange;
@@ -2632,7 +2702,8 @@
           let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
           let rawConfigs = responseConfig.data.data[0].configData;
           this.globalConfigData = rawConfigs;
-
+          console.log('newContent.......',newContent)
+          console.log('this.$refs.fileUrl...', previousUrl)
           axios.post(config.baseURL + '/flows-dir-listing', {
               filename: previousUrl.replace(/\\/g, "\/"),
               text: newContent,
