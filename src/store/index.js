@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         content: null,
+        tabChange: null,
         fileUrl: null,
         currentIndex: null,
         LayoutOptions: [{

@@ -21,7 +21,7 @@
             <el-button type="primary" @click="setComponent()">Confirm</el-button>
           </span>
         </el-dialog>
-    </div> 
+    </div>
 </template>
 <script>
     let gm = null;
@@ -30,9 +30,9 @@
     const beautify = require('beautify');
 
     // import './GridManager/jquery.gridmanager.min.js';
-    
-    export default {         
-        name:'GridManager',    
+
+    export default {
+        name:'GridManager',
         data () {
             return {
                 dialogVisible: false,
@@ -48,11 +48,11 @@
                 }],
                 selectedComponent: ''
             }
-        }, 
+        },
         components: {
         },
-        mounted: function() { 
-            
+        mounted: function() {
+
             var self = this;
 
             if(gm != null){
@@ -64,7 +64,7 @@
                     global_col: [{ callback: self.test_callback, loc: 'top' }]
                 }
             }).data('gridmanager');
-            
+
             $("#gm-canvas").empty().append(this.$store.state.content)
             $(".gm-edit-mode").click().click();
 
@@ -84,8 +84,8 @@
             setComponent() {
                 this.dialogVisible = false;
 
-                $(containerObj).text(this.selectedComponent);  
-                
+                $(containerObj).text(this.selectedComponent);
+
             }
         }
     }

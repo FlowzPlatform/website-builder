@@ -42,7 +42,6 @@ export default {
     }
   },
     async mounted () {
-
         this.fileSaved = false;
 
         this.fileUrl = this.$store.state.fileUrl;
@@ -59,7 +58,7 @@ export default {
         // // get fontawesome css
         // let fontawesomecss = await axios.get('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
 
-        
+
         // Get Config File
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
@@ -79,6 +78,7 @@ export default {
         foldername = foldername[(foldername.length -1)];
 
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
         let rawConfigs = responseConfig.data.data[0].configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
@@ -134,10 +134,10 @@ export default {
                 } else {
                     variableCss += '\t' + this.globalCssVariables[i].variableName + ': ' + this.globalCssVariables[i].variableValue + ';\n';
                 }
-            } 
+            }
         }
 
-        
+
 
         variableCss += '}'
 
@@ -385,9 +385,17 @@ export default {
         },
 
   		style: variableCss + css,
-  		
-  		});
 
+  		});
+      let self = this;
+      editor.on("component:update", function() {
+        let gethtml = beautify(editor.getHtml(), { format: 'html'});
+        let getcss =  beautify(editor.getCss(), { format: 'css'});
+
+        let fullhtml= "<style>\n" + getcss + "\n</style>\n"+
+            "\n\n\n\n" + gethtml;
+          self.$store.state.tabChange = fullhtml
+      });
         const categories = editor.BlockManager.getCategories();
         categories.each(category => {
             category.set('open', false).on('change:open', opened => {
@@ -415,9 +423,9 @@ export default {
             },
             content: '<img id="brandLogo" src="'+this.imageBlob+'" alt="company-logo" class="brand-logo"/>',
         });
-        
+
         $('.gjs-frame').contents().find('body [id="brandName"]').html(this.brandName);
-        
+
         $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
 
         // console.log('Global Variables length:', this.globalVariables.length);
@@ -430,7 +438,7 @@ export default {
                     if(($('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         // var encodeText = String(this.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
                         $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').text(this.globalVariables[i].variableValue);
-                    } 
+                    }
                     break;
 
                 case 'image':
@@ -439,7 +447,7 @@ export default {
                     var _varValue = this.globalVariables[i].variableValue;
 
                     if(($('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').length > 0)){
-                        
+
                         // Get all local images
                         if(this.globalVariables[i].isImageUrl == true){
                             console.log('Image is URL link.');
@@ -454,10 +462,10 @@ export default {
                             })
                             .catch((e) => {
                                 console.log(e);
-                            }) 
+                            })
                         }
-                      
-                    } 
+
+                    }
                     break;
 
                 case 'hyperlink':
@@ -465,16 +473,16 @@ export default {
                         $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].text = this.globalVariables[i].variableTitle;
                         $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
                     }
-                    break; 
+                    break;
 
                 case 'html':
                     if(($('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
-                    } 
+                    }
                     break;
 
                 default:
-                    console.log('No Variables Found'); 
+                    console.log('No Variables Found');
             }
 
         }
@@ -489,6 +497,10 @@ export default {
 
 
 	methods:{
+    getSavedHtml() {
+      let response = axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl);
+      this.$store.state.content = response.data
+    },
 	    getHtml: function () {
 
             let grapesCss = beautify(editor.getCss(), { format: 'css'});
