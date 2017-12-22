@@ -147,10 +147,10 @@
 
             <!-- New Website Project Dialog if it's not dashboard page -->
             <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
-              <el-form :model="formAddProjectFolder">
-                <el-form-item>
+              <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
+                <el-form-item prop="projectName">
                   <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                  <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder()" auto-complete="off" placeholder="Project Name"></el-input>
+                  <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -183,7 +183,7 @@
               </el-form>
               <span slot="footer" class="dialog-footer">
                   <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                  <el-button type="primary" @click="addProjectFolder()" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
+                  <el-button type="primary" @click="addProjectFolder('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
               </span>
             </el-dialog>
           </div>
@@ -278,10 +278,10 @@
             </el-dialog>
 
               <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
-                <el-form :model="formAddProjectFolder">
-                  <el-form-item>
+                <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
+                  <el-form-item prop="projectName">
                     <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                    <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder()" auto-complete="off" placeholder="Project Name"></el-input>
+                    <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                   </el-form-item>
 
                   <el-form-item>
@@ -314,7 +314,7 @@
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                    <el-button type="primary" @click="addProjectFolder()" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
+                    <el-button type="primary" @click="addProjectFolder('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
                 </span>
               </el-dialog>
             </div>
@@ -424,7 +424,18 @@
       if (!value) {
           return callback(new Error('Please enter Folder Name.'));
       }else if(!(/^[a-z0-9_.@()-]+$/i.test(value))){
-          return callback(new Error('Please enter valid Foldername.'));
+          return callback(new Error('Please enter valid Foldername. (Folder name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
+      }else{
+          return callback();
+      }
+  }
+
+  // New Project creation validator
+  let checkProjectName = (rule, value, callback) => {
+      if (!value) {
+          return callback(new Error('Please enter Project Name.'));
+      }else if(!(/^[a-z0-9_.@()-]+$/i.test(value))){
+          return callback(new Error('Please enter valid Project Name. (Project name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
       }else{
           return callback();
       }
@@ -485,6 +496,11 @@
         },
         formAddProjectFolder : {
             projectName : 'NewWebsite'
+        },
+        rulesProjectName: {
+            projectName: [
+                { validator: checkProjectName, trigger: 'blur' }
+            ]
         },
         newFileDialog : false,
         newFolderDialog : false,
@@ -1082,88 +1098,92 @@
       },
 
       // Create new Website
-      addProjectFolder() {
+      addProjectFolder(projectName) {
 
-        this.fullscreenLoading = true;
+        this.$refs[projectName].validate((valid) => {
+          if (valid) {
+            this.fullscreenLoading = true;
 
-        let username = this.$session.get('username');
-        let token = this.$session.get('token');
-        console.log('Login Token: ', token);
+            let username = this.$session.get('username');
+            let token = this.$session.get('token');
+            console.log('Login Token: ', token);
 
-        let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-        return axios.post(config.baseURL + '/flows-dir-listing', {
-            foldername: newFolderName,
-            type: 'folder'
-          },{
-          headers: {
-            'authorization': token
-          }
-          })
-          .then((res) => {
-            this.newProjectFolderDialog = false
-            this.addNewProjectFolderLoading = false;
+            let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+            return axios.post(config.baseURL + '/flows-dir-listing', {
+                foldername: newFolderName,
+                type: 'folder'
+              },{
+              headers: {
+                'authorization': token
+              }
+              })
+              .then((res) => {
+                this.newProjectFolderDialog = false
+                this.addNewProjectFolderLoading = false;
 
-            // Create repositoroty on GitLab
-            axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&privateToken=' + this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {})
-              .then((response) => {
-                console.log('Gitlab Response: ', response);
-                if (!(response.data.statusCode)) {
+                // Create repositoroty on GitLab
+                axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&privateToken=' + this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {})
+                  .then((response) => {
+                    console.log('Gitlab Response: ', response);
+                    if (!(response.data.statusCode)) {
 
-                  localStorage.setItem("folderUrl", newFolderName);
-                  var folder = localStorage.getItem("folderUrl");
+                      localStorage.setItem("folderUrl", newFolderName);
+                      var folder = localStorage.getItem("folderUrl");
 
-                  axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName, {
+                      axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName, {
 
-                  }).then((response) => {
-                    localStorage.setItem("listOfTempaltes", JSON.stringify(response.data));
-                  })
-                  .catch((e) => {
-                    console.log(e)
-                  })
+                      }).then((response) => {
+                        localStorage.setItem("listOfTempaltes", JSON.stringify(response.data));
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      })
 
-                  this.newRepoId = response.data.id;
-                  this.repoName = response.data.name;
+                      this.newRepoId = response.data.id;
+                      this.repoName = response.data.name;
 
-                  // Create essential folders
-                  this.addOtherFolder(newFolderName)
+                      // Create essential folders
+                      this.addOtherFolder(newFolderName)
 
-                  this.formAddProjectFolder.projectName = null;
-                } else {
-                  console.log(response);
+                      this.formAddProjectFolder.projectName = null;
+                    } else {
+                      console.log(response);
+                      this.fullscreenLoading = false;
+                      this.$message({
+                        showClose: true,
+                        message: 'Error from server: ' + response.data.error.message.name,
+                        type: 'error'
+                      });
+
+                      // Delete folder from storage
+                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      })
+                      return;
+                    }
+
+                })
+                .catch((e) => {
+                  console.log(e);
+                  this.newProjectFolderDialog = false;
                   this.fullscreenLoading = false;
-                  this.$message({
-                    showClose: true,
-                    message: 'Error from server: ' + response.data.error.message.name,
-                    type: 'error'
-                  });
+                });
 
-                  // Delete folder from storage
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
-                  .then((res) => {
-                    console.log(res.data);
-                  })
-                  .catch((e) => {
-                    console.log(e)
-                  })
-                  return;
-                }
-
-            })
-            .catch((e) => {
-              console.log(e);
-              this.newProjectFolderDialog = false;
-              this.fullscreenLoading = false;
-            });
-
-          })
-          .catch((e) => {
-            console.log(e);
-            // this.componentId = 'buyPage';
-            this.newProjectFolderDialog = false;
-            this.fullscreenLoading = false;
-            // this.buyNowDialog = true;
-            console.log(e)
-          });
+              })
+              .catch((e) => {
+                console.log(e);
+                // this.componentId = 'buyPage';
+                this.newProjectFolderDialog = false;
+                this.fullscreenLoading = false;
+                // this.buyNowDialog = true;
+                console.log(e)
+              });
+          }
+        });
       },
 
       // Create neccessary folders for project
