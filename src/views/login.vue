@@ -88,7 +88,7 @@ export default {
         if (valid) {
           this.form.isLoading = true;
             // http://162.242.223.167:3001/api/login
-            axios.post('http://ec2-54-88-11-110.compute-1.amazonaws.com/api/login', {
+            axios.post('http://auth.flowz.com/api/login', {
               password: this.form.pass,
               email: this.form.user
             }, {
