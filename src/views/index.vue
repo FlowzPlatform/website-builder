@@ -3138,7 +3138,140 @@
                                                      text: metalsmithJSON,
                                                      type: 'file'
                                                  })
-                                                 .then((res) => {
+                                                 .then(async (res)  => {
+console.log('============================');
+console.log(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/' + nameF);
+                                                    
+                                                    let pageHtml = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/' + nameF + '.html')
+
+
+
+console.log(pageHtml.data);
+//var bodyHtml =  /<body.*?>([\s\S]*)<\/body>/.exec(html_string)[1];
+//var bodyHtml=pageHtml.data.replace(/^.*?<body[^>]*>(.*?)<\/body>.*?$/i,"$1");
+ var bodyHtml = /<body.*?>([\s\S]*)<\/body>/.exec(pageHtml.data)[1];
+//$("body").html(bodyHtml);
+//let newHtml = $.parseHTML(pageHtml.data);
+console.log('******************************************************');
+//console.log(bodyHtml);
+var objHtml = $('<div/>').html(bodyHtml);
+
+console.log(objHtml.find('datafieldgroup').html());
+
+/*
+$.getJSON(apiUrl, function (data) {
+    data
+}); */
+//var apiUrl = "http://172.16.230.176:3080/connectiondata/" + connString + "?schemaname=" + schemaName;
+
+// http://localhost/local/data.json
+
+let jsStr = 'let allData = {};';
+/* // uncomment this
+let jsTpl = "$.getJSON('http://172.16.230.176:3080/connectiondata/@connString@?schemaname=@schemaName@', function (data) { allData.@conn_schema@ = data; console.log(allData); let source = $('#@conn_schema@').html(); var template = Handlebars.compile(source); var html = template(allData); $('#@tpl_html_id@').html(html);  });";
+*/
+let jsTpl = "$.getJSON('http://localhost/local/data.json', function (data) { allData.@conn_schema@ = data; console.log('====================='); console.log(allData); let source = $('#@hb_tpl_id@').html(); var template = Handlebars.compile(source); var html = template(allData); $('#@tpl_html_id@').html(html);  });";
+
+$(objHtml).find("datafieldlist").each(function(e){
+    let mainHtml = $(this).html();
+    let schemaVal = $(this).data('list-field');
+    $(this).before("{{#each "+schemaVal+"}}");
+    $(this).before(mainHtml);
+    $(this).before("{{/each}}");
+    $(this).remove();
+});
+$(objHtml).find("datafieldtext").each(function(e){
+    let textName = $(this).data('text-field');
+    $(this).before("{{"+textName+"}}");
+    $(this).remove();
+});
+
+let cnt = 0;
+
+$(objHtml).find('datafieldgroup').each(function(){
+
+    let mainHtml = $(this).html();
+    let thisJsTpl = jsTpl;
+    console.log('==============' + $(this).data('schema'));
+    //let connSchema = $(this).data('schema').replace(' : ','_');
+    
+    let schemaVal = $(this).data('schema').split(":");
+    let connString = $.trim(schemaVal[0]);
+    let schemaName = $.trim(schemaVal[1]);
+
+    let connSchema = connString+'_'+schemaName;
+    let newTag = '{{#each '+ connSchema +' }}';
+    let divHtml = connSchema+'_html_'+cnt;
+    let hbTpl = connSchema+'_hbtpl_'+cnt;
+
+    thisJsTpl = thisJsTpl.replace('@connString@', connString);
+    thisJsTpl = thisJsTpl.replace('@schemaName@', schemaName);
+    thisJsTpl = thisJsTpl.replace('@conn_schema@', connSchema);
+    thisJsTpl = thisJsTpl.replace('@hb_tpl_id@', hbTpl);
+    //jsTpl = jsTpl.replace(/@conn_schema@/g, connSchema);
+    thisJsTpl = thisJsTpl.replace('@tpl_html_id@', divHtml);
+
+    jsStr += thisJsTpl;
+    
+    $(this).before('<div id="'+divHtml+'">');
+    //$(this).before();
+    $(this).before('<script id="'+hbTpl+'" type="text/x-handlebars-template">'+ "{{#each "+connSchema+"}}"+mainHtml+"{{/each}}"+"<\/script>");
+    //$(this).before();
+    $(this).before('</div>');
+
+    $(this).remove();
+    //$(this).replaceWith("{{#each}");
+
+    cnt++;
+});
+
+let initJs = '$(function() {';
+let endJS = '});';
+/*
+jsStr += `$(function() {
+var source = $("#newConnection_person").html();
+var template = Handlebars.compile(source);
+var html = template(allData);
+$('#hbHtml').html(html);
+});`; */
+
+jsStr = '<script>'+initJs+jsStr+endJS+'<\/script>';
+console.log(jsStr);
+
+$(objHtml).append(jsStr);
+
+console.log('***************************************************');
+console.log($(objHtml).html());
+
+let newContent2 = "<html>\n<head>\n" + tophead +
+                          "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" + 
+                          "<title>" + pageSeoTitle + "</title>" +
+                          "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
+                          "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                          "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+                          '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                          "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                          "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+                          "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                          "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                          "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                          "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.js'><\/script>" +
+                          "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body>\n" +
+                          $(objHtml).html() + topbody +
+                          '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                          '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                          // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                          '<script src="./../main-files/main.js"><\/script>\n' + endbody +
+                          '</body>\n</html>';
+
+console.log('------------------------------------------------------');
+
+                                             axios.post(config.baseURL + '/flows-dir-listing', {
+                                                     filename: folderUrl + '/public/' + nameF + '.html',
+                                                     text: newContent2,
+                                                     type: 'file'
+                                                 });
+
                                                      self.fullscreenLoading = false;
                                                      self.previewLoading = false;
 
