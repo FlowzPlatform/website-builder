@@ -41,5 +41,7 @@ notifications:
       - kaushalm@officebrain.com
       - anuj@officebrain.com
       - naveeng@officebrain.com
+      - fsaiyed@officebrain.com
+      - gkumar@officebrain.com
     on_success: always
     on_failure: always         
