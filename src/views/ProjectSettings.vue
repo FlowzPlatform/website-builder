@@ -315,7 +315,7 @@
                
                   <div >
                      <el-form-item>
-                        <draggable @start="drag=true" @end="drag=false">
+                        <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
                           <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
                              <!-- position  -->
                              <div class="col-md-3" style="margin: 0; padding-left: 15px">
@@ -358,7 +358,7 @@
                </div>
                <hr>
                <el-form ref="form" :model="form">
-               <draggable @start="drag=true" @end="drag=false">
+               <draggable v-model='externallinksCSS' @start="drag=true" @end="drag=false">
 
                   <div v-for="(n, index) in externallinksCSS">
                      <el-form-item>
