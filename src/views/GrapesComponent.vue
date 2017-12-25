@@ -161,7 +161,15 @@ export default {
         // 'gjs-plugin-ckeditor'
 
 		editor = grapesjs.init({
-			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks' ],
+			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks', 'gjs-plugin-filestack' ],
+            pluginsOpts: {
+                'gjs-plugin-filestack': {
+                    'key': 'AgfKKwgZjQ8iLBVKGVXMdz',
+                    'filestackOpts': {
+                        'fromSources':["local_file_system","imagesearch","facebook","instagram","googledrive","dropbox","flickr","onedrive"]
+                    }
+                }
+            },
       		container : '#gjs',
       		components: '<div class="cssImports">' + cssUrlString + '</div>' + htmlObject.html(),
             allowScripts: true,

@@ -4025,7 +4025,7 @@
       async generatePreview() {
            this.previewLoading = true;
            this.fullscreenLoading = true;
-           this.saveFile();
+           await this.saveFile();
            console.log("done with saveFile")
 
            let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
