@@ -1942,6 +1942,7 @@
         });
       }, 
 
+      // Save File
       async saveFile() {
         console.log('Saving File');
         this.saveFileLoading = true
@@ -2745,6 +2746,7 @@
         this.form.checked = [];
         this.form.namearray = [];
       },
+      // Ends Save File
 
       recursivecall(name, partials, defaultListtemp) {
         for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
@@ -2782,6 +2784,7 @@
         }
       },
 
+      // Generate Preview
       async generatePreview() {
            this.previewLoading = true;
            this.fullscreenLoading = true;
@@ -3315,61 +3318,7 @@
                    })
            }, 2000);
       },
-
-      // Triggered when confirmed for autoSave from grapes component
-      async autoSaveFromGrapes(self) {
-        let fileUrl = self;
-        console.log('Autosave File URL:', fileUrl);
-        let configFileUrl = fileUrl.replace(/\\/g, "\/");
-        let urlparts = configFileUrl.split("/");
-        let fileNameOrginal = urlparts[urlparts.length - 1];
-        let foldername = urlparts[urlparts.length - 2];
-        // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-        // var folderUrl = configFileUrl.replace(fileName, '');
-
-        let fileName = '';
-        if(_.includes(configFileUrl, 'Partials')){
-            fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-        } else if(_.includes(configFileUrl, 'Pages')){
-            fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-        } else {
-            fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-        }
-
-        let folderUrl = configFileUrl.replace(fileName, '');
-
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
-
-        let rawConfigs = responseConfig.data.data[0].configData;
-        this.globalConfigData = rawConfigs;
-
-        // this.getConfigFileData(folderUrl);
-
-        axios.post(config.baseURL + '/flows-dir-listing', {
-            filename: this.currentFile.path.replace(/\\/g, "\/"),
-            text: newContent,
-            type: 'file'
-          })
-          .then((res) => {
-            this.saveFileLoading = false
-            this.$message({
-              showClose: true,
-              message: 'File Saved!',
-              type: 'success'
-            });
-          })
-          .catch((e) => {
-            this.saveFileLoading = false
-            this.$message({
-              showClose: true,
-              message: 'File not saved! Please try again.',
-              type: 'error'
-            });
-            console.log(e)
-          })
-        this.form.checked = [];
-        this.form.namearray = [];
-      },
+      // Generate Preview
 
       // New Partials confirmation dialog
       async dialogFormVisibleAdd() {
