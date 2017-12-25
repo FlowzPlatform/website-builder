@@ -91,7 +91,7 @@
       </div>
       <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
-          <div class="col-md-12" align="right">
+          <div class="col-md-12" align="right" style="margin-bottom: 10px;">
             <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
               <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
             </el-tooltip>
@@ -134,7 +134,7 @@
           <div class="col-md-4">
             <h3>Dynamic Values</h3>
           </div>
-          <div class="col-md-8" align="right">
+          <div class="col-md-8" align="right" style="margin-bottom: 10px;">
             <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
               <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
               <input type="file" name="uploaderVariableJson">
@@ -448,12 +448,15 @@
       <!-- Meta Tags Ends -->
 
       <!-- List of Commits Section -->
-      <!-- <div class="well" id="list-of-commits">
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleCommits" class="card color-div toggleableDivHeader">List of Commits</a>
+          </div>
+      </div>
+      <div id="toggleCommitsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
-          <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
-            <h3>List of Commits</h3>
-            <hr>
-             <el-table
+            <div class="col-md-12" style="margin-top: 2%">
+              <el-table
                 :data="commitsData"
                 :row-class-name="tableRowClassName"
                 border
@@ -483,10 +486,12 @@
                   </template>
                 </el-table-column>
               </el-table>
-          </div>
+            </div>
         </div>
-      </div> -->
+      </div>
       <!-- List of Commits Ends -->
+
+      <div class="margin-50"></div>
       
     </div>
     
@@ -1780,6 +1785,15 @@ export default {
             }
         });
 
+        $("#toggleCommits").click(function() {
+            $("#toggleCommitsContent").slideToggle("slow");
+            if ($("#toggleCommits").text() == "List of Commits") {
+                $("#toggleCommits").html("List of Commits")
+            } else {
+                $("#toggleCommits").text("List of Commits")
+            }
+        });
+
 
 
     });
@@ -2119,5 +2133,9 @@ export default {
   .color-div:hover {
       box-shadow: 2px 2px 10px #aaa;
       transition: 0.2s all linear;
+  }
+
+  .margin-50{
+    margin: 50px;
   }
 </style>
