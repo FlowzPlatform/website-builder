@@ -1245,6 +1245,9 @@
 
            if (!found)
            {
+             let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+             array = removedArray  ;
+             editableTabValue = newTabName;
                array.push({
                  title: tab_file_name,
                  name: newTabName,
