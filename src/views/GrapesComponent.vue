@@ -497,8 +497,18 @@ export default {
 
 
 	methods:{
-    getSavedHtml() {
-      let response = axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl);
+    async getSavedHtml() {
+      // axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+      // })
+      // .then((res) => {
+      //   this.$store.state.content = res.data
+      //
+      // })
+      console.log('grid file url:', this.$store.state.fileUrl)
+      let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+      });
+
+      console.log('File response : ', response.data);
       this.$store.state.content = response.data
     },
 	    getHtml: function () {

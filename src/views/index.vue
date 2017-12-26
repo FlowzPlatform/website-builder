@@ -320,7 +320,7 @@
             </div>
 
 
-            <div v-if="!previewGrid" style="margin-left: 10px;">
+            <div v-if="!previewGrid && display != true" style="margin-left: 10px;">
               <!-- <component :is="componentId" ref="contentComponent"></component> -->
               <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  editable @tab-click="tabClicked" @edit="handleTabsEdit">
 
@@ -336,7 +336,12 @@
 
               </el-tabs>
 
+
             </div>
+            <div v-if="!previewGrid && display == true" style="margin-left: 10px;">
+            <component :is="componentId" ref="contentComponent"></component>
+          </div>
+
             <!-- <div v-else style="margin-left: 10px;">
 
               All status
@@ -444,6 +449,8 @@
     },
     data () {
       return {
+        display: true,
+        flag: false,
         tabPosition: 'bottom',
         taburl: '',
         editableTabsValue: '0',
@@ -680,7 +687,7 @@
 
       // If clicked the root folder
       goToHomePage () {
-
+        this.display = true
         this.componentId = 'Dashboard';
       },
 
@@ -765,7 +772,6 @@
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
           let editableTabValue = this.editableTabsValue
-
           let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
           function checkIfExist(filepath,array) {  // The last one is array
             console.log("checkIfExist is called")
@@ -805,6 +811,16 @@
         }
         // If ProjectSettings is clicked
         else if(this.isProjectEditing) {
+          if(this.$store.state.tabChange != null) {
+            if(this.$store.state.tabChange != ''){
+              this.saveFile('getFileContent')
+            }
+          }
+          if(this.componentId == 'GridManager'){
+            // this.$refs.contentComponent[0].getHtml()
+            this.saveFile('getFileContent')
+          }
+
           this.isProjectEditing = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = true;
@@ -860,35 +876,70 @@
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'ProjectStats';
+          this.display = true;
+
           localStorage.setItem("folderUrl", data.path);
         }
         // If Clicked in Partials Folder
         else if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))) {
+          if(this.$store.state.tabChange != null) {
+            if(this.$store.state.tabChange != ''){
+              this.saveFile('getFileContent')
+            }
+          }
+          if(this.componentId == 'GridManager'){
+            // this.$refs.contentComponent[0].getHtml()
+            this.saveFile('getFileContent')
+          }
+
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'PartialStats';
+          this.display = true;
         }
         // If Clicked in Layouts Folder
         else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
+          if(this.$store.state.tabChange != null) {
+            if(this.$store.state.tabChange != ''){
+              this.saveFile('getFileContent')
+            }
+          }
+          if(this.componentId == 'GridManager'){
+            // this.$refs.contentComponent[0].getHtml()
+            this.saveFile('getFileContent')
+          }
+
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'LayoutStats';
+          this.display = true;
         }
         // If Clicked in Pages Folder
         else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
+          if(this.$store.state.tabChange != null) {
+            if(this.$store.state.tabChange != ''){
+              this.saveFile('getFileContent')
+            }
+          }
+          if(this.componentId == 'GridManager'){
+            // this.$refs.contentComponent[0].getHtml()
+            this.saveFile('getFileContent')
+          }
+
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'PageStats';
+          this.display = true
         }
         // Every other clicks
         else {
-          // console.log('************', this.editableTabs )
+          this.display = true;
           this.isProjectStats = false;
           this.isPartialStats = false;
           this.isPageEditing = false;
@@ -897,6 +948,7 @@
           this.isSettingsPage = false;
           this.currentFile = data;
           if(data.type == "file"){
+            this.display = false;
               this.getFileContent(data.path);
           }
         }
@@ -906,27 +958,37 @@
         if(this.componentId == 'GridManager'){
           this.$refs.contentComponent[0].getHtml()
           this.saveFile('tabClicked')
+          // let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
+          // this.$store.state.fileUrl =findingValue[0].filepath;
         }
         if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
           if(this.$store.state.tabChange != ''){
             this.saveFile('tabClicked')
+            // let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
+            // this.$store.state.fileUrl = findingValue[0].filepath;
+            //
+            // this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
           }
         }
         let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
-        this.$store.state.fileUrl =findingValue[0].filepath;
-
+        this.$store.state.fileUrl = findingValue[0].filepath;
+        this.componentId = targetName.$vnode.componentOptions.children[0].componentOptions.tag
+        this.flag = true
         this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
-
+        console.log('>>>>>>>>>>>>>>>', this.$refs.contentComponent)
+        var componentId = this.componentId
+        let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+        let newContent
         switch (this.componentId) {
           case 'GrapesComponent':
-            this.$refs.contentComponent[0].getSavedHtml();
+            this.$refs.contentComponent[myIndex].getSavedHtml();
             newContent = this.$store.state.content;
             break;
           case 'json-viewer':
             newContent = JSON.stringify(this.$store.state.content);
             break;
           case 'GridManager':
-            this.$refs.contentComponent[0].getHtml();
+            await this.$refs.contentComponent[myIndex].getSavedHtml();
             newContent = this.$store.state.content;
             break;
           case 'MenuBuilder':
@@ -944,7 +1006,6 @@
         // this.$refs.contentComponent[0].getHtml();
         let newContent = this.$store.state.content;
 
-         console.log("this.$store.state.fileUrl " , this.$store.state.fileUrl)
         if (action === 'remove') {
 
 
@@ -1005,10 +1066,13 @@
 
         let urlparts = configFileUrl.split("/");
         let fileNameOrginal = urlparts[urlparts.length - 1];
-        if(this.componentId == 'GridManager'){
-          this.$refs.contentComponent[0].getHtml()
-          this.saveFile('getFileContent')
+        if(this.flag != true){
+          if(this.componentId == 'GridManager'){
+            this.$refs.contentComponent[0].getHtml()
+            this.saveFile('getFileContent')
+          }
         }
+        this.flag = false
 
 
         // this.$router.push('/'+ fileNameOrginal)
@@ -1156,12 +1220,14 @@
               break;
           }
         }
+        console.log('!!!!!!!!!!!!!!!!', this.componentId)
         let compId = this.componentId;
        let newTabName = ++this.tabIndex + '';
        let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
        let editableTabValue = this.editableTabsValue
        let selectedPagePositionFirstArray = await checkIfExist(url , this.editableTabs);
+
        var self = this
        function checkIfExist(filepath,array) {  // The last one is array
 
@@ -1191,11 +1257,11 @@
                  filepath : url
                });
            }
+
            return array
        }
        this.editableTabs =  selectedPagePositionFirstArray ;
        this.editableTabs.reverse();
-       console.log('this.editableTabs', this.editableTabs)
 
        this.editableTabsValue = newTabName;
 
@@ -2177,14 +2243,11 @@
 
       // Save file with autometalsmith folders from layout and hbs file
       async saveFile(arg) {
-
         let configFileUrl
         let newContent
         if (arg == 'getFileContent') {
-          console.log('this.componentId.....', this.componentId)
           var componentId = this.componentId
           let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-          console.log('myIndex', myIndex)
           this.saveFileLoading = true
           var tempContent = this.$store.state.tabChange
           // newContent = tempContent;
@@ -2603,23 +2666,20 @@
         }
         else{
           if(arg == 'tabClicked') {
+            var componentId = this.componentId
+            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
 
-            // var componentId = this.componentId
-            // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            // console.log('myIndex', myIndex)
             this.saveFileLoading = true
-            var tempContent = this.$store.state.tabChange;
-            this.$store.state.content = this.$store.state.tabChange;
             switch (this.componentId) {
               case 'GrapesComponent':
-                this.$refs.contentComponent[0].getHtml();
+                this.$refs.contentComponent[myIndex].getHtml();
                 newContent = this.$store.state.content;
                 break;
               case 'json-viewer':
                 newContent = JSON.stringify(this.$store.state.content);
                 break;
               case 'GridManager':
-                this.$refs.contentComponent[0].getHtml();
+                this.$refs.contentComponent[myIndex].getHtml();
                 newContent = this.$store.state.content;
                 break;
               case 'MenuBuilder':
@@ -2629,18 +2689,21 @@
 
             this.$store.state.tabChange = ''
           } else {
+            console.log('#############', this.componentId)
+            var componentId = this.componentId
+            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
             this.saveFileLoading = true
             newContent = this.$store.state.content;
             switch (this.componentId) {
               case 'GrapesComponent':
-                this.$refs.contentComponent[0].getHtml();
+                this.$refs.contentComponent[myIndex].getHtml();
                 newContent = this.$store.state.content;
                 break;
               case 'json-viewer':
                 newContent = JSON.stringify(this.$store.state.content);
                 break;
               case 'GridManager':
-                this.$refs.contentComponent[0].getHtml();
+                this.$refs.contentComponent[myIndex].getHtml();
                 newContent = this.$store.state.content;
                 break;
               case 'MenuBuilder':
@@ -2672,8 +2735,6 @@
           let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
           let rawConfigs = responseConfig.data.data[0].configData;
           this.globalConfigData = rawConfigs;
-          console.log('newContent.......',newContent)
-          console.log('this.$refs.fileUrl...', previousUrl)
           axios.post(config.baseURL + '/flows-dir-listing', {
               filename: previousUrl.replace(/\\/g, "\/"),
               text: newContent,
@@ -3505,7 +3566,6 @@
                               text: temp,
                               type: 'file'
                           }).then(async (res) => {
-                              // console.log("successfully created vuecomponent file")
                               contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
                               // alert(self.form.vuepartials[x].value.split('.')[0] + '.js');
                               axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
@@ -3521,9 +3581,7 @@
                           })
                   }
               }
-              // console.log("this.form.Layout:", self.form.Layout)
               if (self.form.Layout == 'Blank') {
-                  // console.log("inside blank layout condition:")
                   await axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: folderUrl + '/Layout/Blank.layout',
                           text: '{{{ contents }}}',
@@ -3541,12 +3599,10 @@
                       type: 'folder'
                   }).then(async (res) => {
                       for (let i = 0; i < back_partials.length; i++) {
-                          // console.log('partials[i]:', back_partials[i])
                           let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.html');
                           responsepartials = responsepartials.data
                           let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
                           var DefaultParams = [];
-                          // console.log('result:',result)
                           if (result.length > 0) {
                               var resultParam = result
                               for (let i = 0; i < resultParam.length; i++) {
@@ -3587,8 +3643,7 @@
                                   temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
 
                                   temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
-                                  // console.log('temp1:',temp1)
-                                  // console.log('temp2:',temp2)
+
                                   responsepartials = responsepartials.split(temp1).join(temp2)
                               }
                           }
@@ -3645,15 +3700,13 @@
                                       temp1 = '{{> ' + Object.keys(back_partials[i])[0] + ' }}'
 
                                       temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + ' }}'
-                                      // console.log('temp1:',temp1)
-                                      // console.log('temp2:',temp2)
+
                                       layoutdata.data = layoutdata.data.split(temp1).join(temp2)
                                   }
                               }
 
                           }
                       }
-                      // console.log('layoutdata:',layoutdata.data)
 
                   })
                   .catch((e) => {
@@ -3690,13 +3743,7 @@
                   obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
                   self.form.partials[j] = []
                   self.form.partials[j] = obj
-                  // console.log("new self.form.partials[",j,']:',self.form.partials[j])
 
-                  // } else {
-                  //     console.log('partials not found in page')
-                  //     console.log('self.form.partials[j]:', self.form.partials[j])
-
-                  // }
               }
               self.$store.state.content = contentpartials;
               var partials = '';
@@ -3758,7 +3805,7 @@
                           '<script src="./../main-files/main.js"><\/script>\n' +
                           '</body>\n</html>';
 
-                      console.log('newContent:', newContent)
+
                       axios.post(config.baseURL + '/flows-dir-listing', {
                               filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
                               text: newContent,
@@ -4137,7 +4184,7 @@
                       let checkValue = false;
                       for (var i = 0; i < Object.keys(this.globalConfigData[2].layoutOptions[0]).length; i++) {
                         var obj = Object.keys(this.globalConfigData[2].layoutOptions[0])[i];
-                        // console.log("obj:", obj)
+
                         if ((obj) == namefolder) {
                           checkValue = true;
                         }
@@ -4243,10 +4290,11 @@
 
       // Remove File or Folder
       async remove(store, data) {
-
         // Get Config.json file data
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        // console.log('!!!!!!!!!!!!!!!!!', configFileUrl)
         let urlparts = configFileUrl.split("/");
+        // console.log('**************', urlparts)
         let fileNameOrginal = urlparts[urlparts.length - 1];
         let foldername = urlparts[urlparts.length - 2];
         // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
@@ -4263,10 +4311,14 @@
             fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
         }
 
-        let folderUrl = configFileUrl.replace(fileName, '');
-        // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
 
+        let folderUrl = configFileUrl.replace(fileName, '');
+        let projectName = folderUrl.split('/');
+        projectName = projectName[(projectName.length-1)];
+        // this.getConfigFileData(folderUrl);
+        // console.log('1111111111111', config.baseURL, this.$session.get('email'), folderUrl)
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        console.log(responseConfig)
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
 
@@ -4282,6 +4334,7 @@
             .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
+              this.display = true
 
               let file_path_ = data.path.replace(/\\/g, "/")
               let arr_file = file_path_.split('/')
@@ -4297,14 +4350,18 @@
               localStorage.setItem("Templates", JSON.stringify(Templates));
 
               if (_.includes(data.path, 'Pages')) {
-
                 // get index of file to be deleted
                 let indexOfPageName = _.findIndex(this.globalConfigData[1].pageSettings, function(o) {
                   return o.PageName == last_element;
                 });
-
                 // Remove item from array
                 this.globalConfigData[1].pageSettings.splice(indexOfPageName, 1);
+
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                  return o.title == last_element;
+                });
+                this.editableTabs.splice(indexOfTabArray, 1);
+
 
                 // save config file
                 this.saveConfigFile(folderUrl);
@@ -4317,9 +4374,14 @@
                 let indexOfLayoutName = _.findIndex(this.globalConfigData[2].layoutOptions[0].Layout, function(o) {
                   return o.value == layoutName;
                 });
-
                 // Remove item from array
                 this.globalConfigData[2].layoutOptions[0].Layout.splice(indexOfLayoutName, 1);
+
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                  return o.title == last_element;
+                });
+                this.editableTabs.splice(indexOfTabArray, 1);
+
 
                 // save config file
                 this.saveConfigFile(folderUrl);
@@ -4337,6 +4399,11 @@
                 let indexOfPartialName = _.findIndex(this.globalConfigData[2].layoutOptions[0][foldername], function(o) { return o.value == partialNameOnly });
 
                 this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
+
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                  return o.title == last_element;
+                });
+                this.editableTabs.splice(indexOfTabArray, 1);
 
                 // save config file
                 this.saveConfigFile(folderUrl);
@@ -4373,6 +4440,7 @@
               console.log(e)
             })
           this.componentId = 'Dashboard';
+          this.display = true
           this.isHomePage = true;
         }).catch((dismiss) => {
           console.log('error', dismiss)
@@ -4420,6 +4488,7 @@
           .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
+              this.display = true
               let file_path_ = data.path.replace(/\\/g, "/")
 
               let arr_file = file_path_.split('/')
@@ -4503,12 +4572,14 @@
 
               this.currentFile = null
               this.componentId = 'Dashboard';
+              this.display = true
               console.log(res);
             })
             .catch((e) => {
               console.log(e)
             })
           this.componentId = 'Dashboard';
+          this.display = true
           this.isHomePage = true;
         }).catch((dismiss) => {
           console.log('error', dismiss)
