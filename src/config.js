@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== 'development') {
     frontEndUrl = 'http://localhost:8080/dashboard'
 }
 
+console.log('frontEndUrl: ', frontEndUrl);
 
 module.exports = {
     loginUrl: 'http://auth.flowz.com/api/login',

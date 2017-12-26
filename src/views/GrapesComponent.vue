@@ -46,6 +46,8 @@ export default {
 
         this.fileUrl = this.$store.state.fileUrl;
 
+
+
         // // get bootstrap css
         // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
 
@@ -76,6 +78,9 @@ export default {
 
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length -1)];
+
+        // console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
+        localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
         let rawConfigs = responseConfig.data.data[0].configData;
