@@ -77,7 +77,7 @@ export default {
       console.log(this.formLogin)
       var auth = await axios({
         method: 'post',
-        url: config.socialUrl + '/googleauthprocess',
+        url: config.socialUrl + '/verifyemail',
         data: this.formLogin
       }).catch(error => {
         this.authen.status = false;
@@ -85,7 +85,14 @@ export default {
         return
       })
       if (auth) {
-        // Token Store in cookie
+
+        console.log('Auth Reponse: ', auth);
+
+        // Store Token in Cookie
+        let location = psl.parse(window.location.hostname)
+        location = location.domain === null ? location.input : location.domain
+        this.$cookie.set('auth_token', auth.data.logintoken, {expires: 1, domain: location});
+
         this.$router.push({path: '/dashboard'}) // Redirect to dashbord
         this.authen.status = true;
       }

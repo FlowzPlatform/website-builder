@@ -44,6 +44,11 @@
     <script src="./static/js/grapesjs-component-countdown.min.js"></script>
     <script src="./static/js/grapesjs-navbar.min.js"></script>
 
+    <!-- Filestack for Grapes file uploader -->
+    <link rel="stylesheet" type="text/css" href="./static/js/FileStack/grapesjs-plugin-filestack.css">
+    <script src="https://static.filestackapi.com/v3/filestack-0.1.10.js"></script>
+    <script src="./static/js/FileStack/grapesjs-plugin-filestack.min.js"></script>
+
     <!-- Custom Components for Grapes Editor -->
     <script src="./static/js/product-plugin.js"></script>
     <script src="./static/js/flowz-blocks.js"></script>
@@ -108,6 +113,23 @@
         }
         .action-button i{
             visibility: hidden;
+        }
+
+        body::-webkit-scrollbar-track
+        {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #F5F5F5;
+        }
+
+        body::-webkit-scrollbar
+        {
+        width: 6px;
+        background-color: #F5F5F5;
+        }
+
+        body::-webkit-scrollbar-thumb
+        {
+        background-color: #444;
         }
     </style>
 

@@ -18,7 +18,7 @@ import Emitter from '../mixins/emitter'
 let editor = null;
 let cssUrls = [{
             'Bootstrap 3': '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >',
-            'Bootstrap 4': '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">',
+            'Bootstrap 4': '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">',
             'Google Fonts': '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i">',
             'Font Awesome': '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">',
             'Flowz Blocks': '<link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/flowz_blocks.css" type="text/css">'
@@ -45,6 +45,8 @@ export default {
         this.fileSaved = false;
 
         this.fileUrl = this.$store.state.fileUrl;
+
+
 
         // // get bootstrap css
         // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
@@ -77,6 +79,9 @@ export default {
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length -1)];
 
+        // console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
+        localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
+
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
         let rawConfigs = responseConfig.data.data[0].configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
@@ -106,7 +111,7 @@ export default {
                 } 
             }
         } else {
-            cssUrlString = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/flowz_blocks.css" type="text/css">';
+            cssUrlString = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/flowz_blocks.css" type="text/css">';
         }
         console.log('String ', cssUrlString);
         // let cssUrlLinks = '';
@@ -161,7 +166,15 @@ export default {
         // 'gjs-plugin-ckeditor'
 
 		editor = grapesjs.init({
-			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks' ],
+			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks', 'gjs-plugin-filestack' ],
+            pluginsOpts: {
+                'gjs-plugin-filestack': {
+                    'key': 'AgfKKwgZjQ8iLBVKGVXMdz',
+                    'filestackOpts': {
+                        'fromSources':["local_file_system","imagesearch","facebook","instagram","googledrive","dropbox","flickr","onedrive"]
+                    }
+                }
+            },
       		container : '#gjs',
       		components: '<div class="cssImports">' + cssUrlString + '</div>' + htmlObject.html(),
             allowScripts: true,
