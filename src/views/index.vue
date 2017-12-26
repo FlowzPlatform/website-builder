@@ -1143,7 +1143,31 @@
                       this.repoName = response.data.name;
 
                       // Create essential folders
-                      this.addOtherFolder(newFolderName)
+                      this.addOtherFolder(newFolderName);
+
+                      // Set DNS entry for project's subdomain e.g.: projectname.flowzcluster.tk
+                      // axios.post('http://54.85.135.193/pretty/atomiadns.json/SetDnsRecords', {
+                      // [ "flowzcluster.tk", [ { "ttl" : "3600", "label" : "test2", "class" : "IN", "type" : "A", "rdata" : "159.203.142.21" } ] ]
+                      // },headers: {
+                      //   "x-auth-username": "admin@flowz.com",
+                      //   "x-auth-password": "12345678",
+                      // })
+                      // .then((res) => {
+                      //   this.$message({
+                      //         showClose: true,
+                      //         message: 'Successfully done.',
+                      //         type: 'success'
+                      //     });
+                      //     console.log(res.data);
+                      // })
+                      // .catch((e) => {
+                      //     this.$message({
+                      //         showClose: true,
+                      //         message: 'Failed! Please try again.',
+                      //         type: 'error'
+                      //     });
+                      //     console.log(e)
+                      // });
 
                       this.formAddProjectFolder.projectName = null;
                     } else {
@@ -1600,7 +1624,7 @@
         let projectName = newFolderName.split('/');
         projectName = projectName[(projectName.length-1)];
 
-        let projectUrl = config.ipAddress + '/websites/' + projectName;
+        // let projectUrl = config.ipAddress + '/websites/' + projectName;
 
         var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(true)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
@@ -1791,7 +1815,7 @@
             },500); 
 
             setTimeout(function(){
-              location.reload();
+              // location.reload();
             },1000);  
           })
           .catch((e) => {
@@ -2693,39 +2717,39 @@
                            this.saveConfigFile(folderUrl);
                         }
                       }
-                      // if (result1.length <= 0) {
-                      //   console.log("deleting the unused partials other than included in layout")
-                      //   // var layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + this.globalConfigData[1].pageSettings[i].PageLayout + '.layout');
-                      //   // layoutdata = layoutdata.data
-                      //   // var layoutresult = (getFromBetween.get(layoutdata, "{{>", "}}"));
-                      //   // var DefaultParams = [];
-                      //   for(let k=0;k<this.globalConfigData[2].layoutOptions[0].Layout.length;k++){
-                      //     if(this.globalConfigData[2].layoutOptions[0].Layout[k].value==this.globalConfigData[1].pageSettings[i].PageLayout){
-                      //       var layoutresult=this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList
-                            
-                      //     }
-                      //   }
-                      //   if (layoutresult.length > 0) {
-                      //     for (let k = 0; k < this.globalConfigData[1].pageSettings[i].partials.length; k++) {
-                      //       let checklayoutp = false
-                      //       for (let j = 0; j < layoutresult.length; j++) {
-                      //         console.log('partials[k]:',Object.keys(this.globalConfigData[1].pageSettings[i].partials[k])[0])
-                      //         console.log('layoutresult[j]:',layoutresult[j])
-                      //         if (Object.keys(this.globalConfigData[1].pageSettings[i].partials[k])[0] == layoutresult[j]) {
-                      //           console.log('Found.checklayoutp==true')
-                      //           checklayoutp = true
-                      //           break
-                      //         }
+                      if (result1.length <= 0) {
+                        console.log("deleting the unused partials other than included in layout")
+                        // var layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + this.globalConfigData[1].pageSettings[i].PageLayout + '.layout');
+                        // layoutdata = layoutdata.data
+                        // var layoutresult = (getFromBetween.get(layoutdata, "{{>", "}}"));
+                        // var DefaultParams = [];
+                        for(let k=0;k<this.globalConfigData[2].layoutOptions[0].Layout.length;k++){
+                          if(this.globalConfigData[2].layoutOptions[0].Layout[k].value==this.globalConfigData[1].pageSettings[i].PageLayout){
+                            var layoutresult=this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList
+                            console.log("layoutresult:",layoutresult)
+                          }
+                        }
+                        if (layoutresult.length > 0) {
+                          for (let k = 0; k < this.globalConfigData[1].pageSettings[i].partials.length; k++) {
+                            let checklayoutp = false
+                            for (let j = 0; j < layoutresult.length; j++) {
+                              // console.log('partials[k]:',Object.keys(this.globalConfigData[1].pageSettings[i].partials[k])[0])
+                              // console.log('layoutresult[j]:',layoutresult[j])
+                              if (Object.keys(this.globalConfigData[1].pageSettings[i].partials[k])[0] == layoutresult[j]) {
+                                // console.log('Found.checklayoutp==true')
+                                checklayoutp = true
+                                
+                              }
 
-                      //       }
-                      //       if (checklayoutp != true) {
-                      //         this.globalConfigData[1].pageSettings[i].partials.splice(k)
-                      //         k = k - 1
-                      //       }
-                      //     }
-                      //   }
-
-                      // }
+                            }
+                            if (checklayoutp != true) {
+                              this.globalConfigData[1].pageSettings[i].partials.splice(k)
+                              k = k - 1
+                            }
+                          }
+                        }
+                       console.log("final partial are:",this.globalConfigData[1].pageSettings[i].partials) 
+                      }
                     }
                   }
 
@@ -3238,7 +3262,10 @@
                                                        let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
                                                        previewFile = folderUrl.replace('/var/www/html', '');
 
-                                                       window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+                                                       let projName = previewFile.replace('websites/', '');
+
+                                                       // window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+                                                       window.open('http://' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
 
                                                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                                            .then(async(res) => {
