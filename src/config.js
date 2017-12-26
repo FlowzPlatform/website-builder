@@ -6,7 +6,7 @@ if(process.env.baseURL == undefined){
 }
 
 if (process.env.NODE_ENV !== 'development') {
-    ipAdd = 'http://auth.flowz.com:8080',
+    ipAdd = 'flowzcluster.tk',
     socketURL = 'http://ws.flowz.com:4032',
     frontEndUrl = 'http://webbuilder.flowz.com'    
 } else {
