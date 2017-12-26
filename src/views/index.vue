@@ -475,7 +475,6 @@
         previewGrid : false,
         btnPreview : false,
         breadcrumbArr : [],
-        rootpath : '',
         showLeftMenu : true,
         isMenuBuilder: false,
         isHomePage: true,
@@ -487,7 +486,6 @@
         isProjectStats: false,
         isPagesFolder: false,
         isPageCodeEditor: false,
-        // isLayoutFile: false,
         formAddFile : {
             filename:null
         },
@@ -551,10 +549,9 @@
       } else {
         this.$router.push('/login');
       }
-
-      this.$on('saveFileFromChild', this.autoSaveFromGrapes);
     },
     mounted () {
+
       // Sidemenu Toggle
       $(document).ready(function() {
         var trigger = $('.hamburger'),
@@ -589,9 +586,9 @@
 
       let socket
       if (process.env.NODE_ENV !== 'development') {
-        socket = io(config.baseURL, {path: '/serverapi/socket.io'})
+        socket = io(config.socketURL)
       } else {
-        socket = config.baseURL
+        socket = config.socketURL
       }
 
       console.log('Socket url:', socket);
@@ -702,49 +699,22 @@
         axios.get(config.baseURL + '/flows-dir-listing')
           .then(response => {
             response.data.children = this.getTreeData(response.data);
-
-            // let foldersVisibility = [];
-            // let lengthOfFV;
-
-            // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.websitesPath + '/EcommerceSettings/assets/config.json', {
-            // })
-            // .then((res) => {
-            //   let response = JSON.parse(res.data);
-            //   let ecommerceSettings = response[1].projectSettings[1].EcommerceSettings[0];
-
-            //   foldersVisibility = ecommerceSettings;
-
-            //   for(let key in foldersVisibility){
-            //     if (foldersVisibility[key]) delete foldersVisibility[key]
-            //   }
-            //   lengthOfFV = Object.keys(foldersVisibility);
-            // })
-            // .catch((e) => {
-            //     this.$message({
-            //         showClose: true,
-            //         message: 'Failed! Please try again.',
-            //         type: 'error'
-            //     });
-            // });
-
             setTimeout(function(){
               for (let i = 0; i < response.data.children.length; i++) {
                 response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-
                   return !(child.name == 'public' || child.name == '.git')
                 })
               }
             },1000);
-
-
-
             if (this.directoryTree.length == 0) {
               this.directoryTree = [response.data]
             } else {
               this.directoryTree[0].children = response.data.children
             }
+
             this.loadingTree = false
-            this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '')
+            this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '');
+
           })
           .catch(e => {
             this.loadingTree = false;
@@ -1315,7 +1285,7 @@
 
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
         let rawConfigs = responseConfig.data.data[0].configData;
-        this.globalConfigData = rawConfigs;
+        return this.globalConfigData = rawConfigs;
       },
 
       // Save config File
@@ -1701,7 +1671,8 @@
                                   "Header": "default"
                                 }, {
                                   "Footer": "default"
-                                }]
+                                }],
+                                "PageCss": []
                               }]
                             }, {
                               "layoutOptions": [{
@@ -2255,7 +2226,7 @@
                     }
 
                     if(namefolder=='Pages'){
-                      var PageSettings = {"PageName":name,"PageSEOTitle": "", "PageSEOKeywords": "", "PageSEODescription": "","PageLayout":"default","partials":[{"Header": "default"},{"Footer": "default" }]};
+                      var PageSettings = {"PageName":name,"PageSEOTitle": "", "PageSEOKeywords": "", "PageSEODescription": "","PageLayout":"default","partials":[{"Header": "default"},{"Footer": "default" }],"PageCss": []};
                       this.globalConfigData[1].pageSettings.push((PageSettings))
                       this.saveConfigFile(folderUrl);
                     }
