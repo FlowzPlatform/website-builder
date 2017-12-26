@@ -1220,7 +1220,6 @@
               break;
           }
         }
-        console.log('!!!!!!!!!!!!!!!!', this.componentId)
         let compId = this.componentId;
        let newTabName = ++this.tabIndex + '';
        let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
@@ -2148,8 +2147,6 @@
             fileName = '/' + urlparts[urlparts.length - 1];
         }
 
-        console.log('Folder Name: ', fileName);
-
         var folderUrl = configFileUrl.replace(fileName, '');
 
         let projectName = folderUrl.split('/');
@@ -2165,7 +2162,6 @@
             if (valid) {
                 this.addNewFileLoading = true
                 var name=this.formAddFile.filename;
-                // console.log('This currentFile:', this.currentFile.path);
                 console.log('Store path:', this.$store.state.fileUrl);
                 var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
                 return axios.post(config.baseURL + '/flows-dir-listing', {
@@ -2200,7 +2196,6 @@
                     let checkValue = false;
                     var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
                     namefolder=namefolder[namefolder.length - 1 ];
-                    console.log(this.globalConfigData);
 
                     if(namefolder != 'Pages'){
                       if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
@@ -2689,7 +2684,6 @@
 
             this.$store.state.tabChange = ''
           } else {
-            console.log('#############', this.componentId)
             var componentId = this.componentId
             let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
             this.saveFileLoading = true
@@ -4292,13 +4286,9 @@
       async remove(store, data) {
         // Get Config.json file data
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        // console.log('!!!!!!!!!!!!!!!!!', configFileUrl)
         let urlparts = configFileUrl.split("/");
-        // console.log('**************', urlparts)
         let fileNameOrginal = urlparts[urlparts.length - 1];
         let foldername = urlparts[urlparts.length - 2];
-        // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-        // var folderUrl = configFileUrl.replace(fileName, '');
 
         let fileName = '';
         if(_.includes(configFileUrl, 'Partials')){
@@ -4315,10 +4305,7 @@
         let folderUrl = configFileUrl.replace(fileName, '');
         let projectName = folderUrl.split('/');
         projectName = projectName[(projectName.length-1)];
-        // this.getConfigFileData(folderUrl);
-        // console.log('1111111111111', config.baseURL, this.$session.get('email'), folderUrl)
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
-        console.log(responseConfig)
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
 
@@ -4474,8 +4461,6 @@
 
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
-
-        console.log("this.globalConfigData:",this.globalConfigData)
         this.$swal({
           title: 'Are you sure?',
           text: 'You want you delete this Folder!',
@@ -4495,7 +4480,6 @@
 
               if (_.includes(data.path, 'Partials')) {
                   var foldername = arr_file[arr_file.length - 1]
-                  console.log("foldername:", foldername)
                   if (this.globalConfigData[2].layoutOptions[0][foldername] != undefined) {
 
                       delete this.globalConfigData[2].layoutOptions[0][foldername];
