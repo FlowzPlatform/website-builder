@@ -1250,6 +1250,7 @@
               break;
           }
         }
+        console.log('!!!!!!!!!!!!!!!!', this.componentId)
         let compId = this.componentId;
        let newTabName = ++this.tabIndex + '';
        let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
