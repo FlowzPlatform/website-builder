@@ -817,6 +817,7 @@
             }
           }
           if(this.componentId == 'GridManager'){
+            // this.$refs.contentComponent[0].getHtml()
             this.saveFile('getFileContent')
           }
 
@@ -887,6 +888,7 @@
             }
           }
           if(this.componentId == 'GridManager'){
+            // this.$refs.contentComponent[0].getHtml()
             this.saveFile('getFileContent')
           }
 
@@ -905,6 +907,7 @@
             }
           }
           if(this.componentId == 'GridManager'){
+            // this.$refs.contentComponent[0].getHtml()
             this.saveFile('getFileContent')
           }
 
@@ -923,6 +926,7 @@
             }
           }
           if(this.componentId == 'GridManager'){
+            // this.$refs.contentComponent[0].getHtml()
             this.saveFile('getFileContent')
           }
 
@@ -945,7 +949,7 @@
           this.currentFile = data;
           if(data.type == "file"){
             this.display = false;
-            if(this.flag != true){
+            if(this.flag != true && this.editableTabs.length > 0){
               if(this.componentId == 'GridManager'){
                 this.saveFile('getFileContent')
               }
@@ -1076,20 +1080,7 @@
 
         let urlparts = configFileUrl.split("/");
         let fileNameOrginal = urlparts[urlparts.length - 1];
-        // if(this.flag != true){
-        //   if(this.componentId == 'GridManager'){
-        //     this.saveFile('getFileContent')
-        //   }
-        // }
-        // this.flag = false
-        //
-        //
-        // // this.$router.push('/'+ fileNameOrginal)
-        // if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
-        //   if(this.$store.state.tabChange != ''){
-        //     this.saveFile('getFileContent')
-        //   }
-        // }
+
         url = url.replace(/\\/g, "\/")
         this.btnPreview = false
         this.previewFile = false
