@@ -456,6 +456,7 @@
           label: 'name'
         },
         rootpath : '',
+        backuplayout:'',
         componentId: Dashboard,
         addNewFileLoading : false,
         addNewFolderLoading : false,
@@ -1382,7 +1383,8 @@
                                 "GlobalCssVariables": [],
                                 "ProjectExternalCss": [],
                                 "ProjectExternalJs": [],
-                                "ProjectMetaInfo": []
+                                "ProjectMetaInfo": [],
+                                "ProjectMetacharset": ''
                               }],
                               "pageSettings": [{
                                 "PageName": "index.html",
@@ -1399,7 +1401,7 @@
                                 "PageExternalCss": [],
                                 "PageExternalJs": [],
                                 "PageMetaInfo": [],
-                                "PageMetacharset":[]
+                                "PageMetacharset":''
                               }]
                             }, {
                               "layoutOptions": [{
@@ -1780,6 +1782,29 @@
           })
           .then((res) => {
             console.log(flowzBuilderEngine + ' file created');    
+          })
+          .catch((e) => {
+              console.log(e)
+          })
+        })
+        .catch((e) => {
+            console.log(e)
+        });
+
+        // Shopping cart js
+        let shoppingCartJs = newFolderName + '/assets/client-plugins/shopping-cart.js';
+        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/shop_cart.js', {
+            
+        })
+        .then((res) => {
+          let shoppingCartData = res.data;
+          axios.post(config.baseURL + '/flows-dir-listing', {
+              filename : shoppingCartJs,
+              text : shoppingCartData,
+              type : 'file'
+          })
+          .then((res) => {
+            console.log(shoppingCartJs + ' file created');    
           })
           .catch((e) => {
               console.log(e)
@@ -2810,540 +2835,642 @@
 
       // Generate Preview
       async generatePreview() {
-           this.previewLoading = true;
-           this.fullscreenLoading = true;
-           await this.saveFile();
-           console.log("done with saveFile")
+        this.previewLoading = true;
+        this.fullscreenLoading = true;
+        await this.saveFile();
+        console.log("done with saveFile")
 
-           let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
+        let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
 
-           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-           let urlparts = configFileUrl.split("/");
-           let fileNameOrginal = urlparts[urlparts.length - 1];
-           let fileName = '';
-           if (_.includes(configFileUrl, 'Partials')) {
-               fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-           } else if (_.includes(configFileUrl, 'Pages')) {
-               fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-           } else {
-               fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-           }
-           let folderUrl = configFileUrl.replace(fileName, '');
-           await this.getConfigFileData(folderUrl);
-           var getFromBetween = {
-               results: [],
-               string: "",
-               getFromBetween: function(sub1, sub2) {
-                   if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-                   var SP = this.string.indexOf(sub1) + sub1.length;
-                   var string1 = this.string.substr(0, SP);
-                   var string2 = this.string.substr(SP);
-                   var TP = string1.length + string2.indexOf(sub2);
-                   return this.string.substring(SP, TP);
-               },
-               removeFromBetween: function(sub1, sub2) {
-                   if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-                   var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
-                   this.string = this.string.replace(removal, "");
-               },
-               getAllResults: function(sub1, sub2) {
-                   if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
-                   var result = this.getFromBetween(sub1, sub2);
-                   this.results.push(result);
-                   this.removeFromBetween(sub1, sub2);
-                   if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
-                       this.getAllResults(sub1, sub2);
-                   } else return;
-               },
-               get: function(string, sub1, sub2) {
-                   this.results = [];
-                   this.string = string;
-                   this.getAllResults(sub1, sub2);
-                   return this.results;
-               }
-           };
-           let self = this;
-           setTimeout(async function() {
+        let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        let urlparts = configFileUrl.split("/");
+        let fileNameOrginal = urlparts[urlparts.length - 1];
+        let fileName = '';
+        if (_.includes(configFileUrl, 'Partials')) {
+          fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        } else if (_.includes(configFileUrl, 'Pages')) {
+          fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        } else {
+          fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        }
+        let folderUrl = configFileUrl.replace(fileName, '');
+        await this.getConfigFileData(folderUrl);
+        var getFromBetween = {
+          results: [],
+          string: "",
+          getFromBetween: function(sub1, sub2) {
+            if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+            var SP = this.string.indexOf(sub1) + sub1.length;
+            var string1 = this.string.substr(0, SP);
+            var string2 = this.string.substr(SP);
+            var TP = string1.length + string2.indexOf(sub2);
+            return this.string.substring(SP, TP);
+          },
+          removeFromBetween: function(sub1, sub2) {
+            if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+            var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+            this.string = this.string.replace(removal, "");
+          },
+          getAllResults: function(sub1, sub2) {
+            if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+            var result = this.getFromBetween(sub1, sub2);
+            this.results.push(result);
+            this.removeFromBetween(sub1, sub2);
+            if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+              this.getAllResults(sub1, sub2);
+            } else return;
+          },
+          get: function(string, sub1, sub2) {
+            this.results = [];
+            this.string = string;
+            this.getAllResults(sub1, sub2);
+            return this.results;
+          }
+        };
+        let self = this;
+        setTimeout(async function() {
 
-               var externalJs = self.globalConfigData[1].projectSettings[1].ProjectExternalJs;
-               var externalCss = self.globalConfigData[1].projectSettings[1].ProjectExternalCss;
-               var metaInfo = self.globalConfigData[1].projectSettings[1].ProjectMetaInfo;
-               var tophead = '';
-               var endhead = '';
-               var topbody = '';
-               var endbody = '';
+          var externalJs = self.globalConfigData[1].projectSettings[1].ProjectExternalJs;
+          var externalCss = self.globalConfigData[1].projectSettings[1].ProjectExternalCss;
+          var metaInfo = self.globalConfigData[1].projectSettings[1].ProjectMetaInfo;
+          var ProjectMetacharset=self.globalConfigData[1].projectSettings[1].ProjectMetacharset
+          var tophead = '';
+          var endhead = '';
+          var topbody = '';
+          var endbody = '';
 
-               var pageexternalJs= [];
-               var pageexternalCss= [];
-               var pageMetaInfo= [];
-               var pageSeoTitle;
+          var pageexternalJs = [];
+          var pageexternalCss = [];
+          var pageMetaInfo = [];
+          var pageSeoTitle;
+          var PageMetacharset=''
+          if(ProjectMetacharset!=''){
+            tophead=tophead+'<meta charset="'+ProjectMetacharset+'">'
+          }
+          if (metaInfo.length > 0) {
+            for (let a = 0; a < metaInfo.length; a++) {
+              tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+            }
+          }
 
-              if(metaInfo.length > 0){
-                for (let a = 0; a < metaInfo.length; a++) {
-                   tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+          if (externalJs.length > 0) {
+            for (let a = 0; a < externalJs.length; a++) {
+              if (externalJs[a].linkposition == 'starthead') {
+                tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+              } else if (externalJs[a].linkposition == 'endhead') {
+                endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+              } else if (externalJs[a].linkposition == 'startbody') {
+                topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+              } else if (externalJs[a].linkposition == 'endbody') {
+                endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+              }
+            }
+          }
+
+          if (externalCss.length > 0) {
+            for (let a = 0; a < externalCss.length; a++) {
+              if (externalCss[a].linkposition == 'starthead') {
+                tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+              } else if (externalCss[a].linkposition == 'endhead') {
+                endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+              } else if (externalCss[a].linkposition == 'startbody') {
+                topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+              } else if (externalCss[a].linkposition == 'endbody') {
+                endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
+              }
+
+            }
+          }
+
+          let back_partials = new Array();
+          for (let i = 0; i < self.globalConfigData[1].pageSettings.length; i++) {
+            if (self.globalConfigData[1].pageSettings[i].PageName == (nameF + '.html')) {
+              let tempPartials = self.globalConfigData[1].pageSettings[i].partials;
+
+              self.form.Layout = self.globalConfigData[1].pageSettings[i].PageLayout
+              self.form.partials = tempPartials
+              back_partials = JSON.parse(JSON.stringify(tempPartials));
+              self.form.vuepartials = self.globalConfigData[1].pageSettings[i].VueComponents
+              pageexternalJs = self.globalConfigData[1].pageSettings[i].PageExternalJs;
+              pageexternalCss = self.globalConfigData[1].pageSettings[i].PageExternalCss;
+              pageMetaInfo = self.globalConfigData[1].pageSettings[i].PageMetaInfo;
+              pageSeoTitle = self.globalConfigData[1].pageSettings[i].PageSEOTitle;
+              PageMetacharset=self.globalConfigData[1].pageSettings[i].PageMetacharset;
+            }
+          }
+          if(PageMetacharset!=''){
+            tophead=tophead+'<meta charset="'+PageMetacharset+'">'
+          }
+          if (pageMetaInfo.length > 0) {
+            for (let a = 0; a < pageMetaInfo.length; a++) {
+              tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
+            }
+          }
+          if (pageexternalJs.length > 0) {
+            for (let a = 0; a < pageexternalJs.length; a++) {
+              if (pageexternalJs[a].linkposition == 'starthead') {
+                tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+              } else if (pageexternalJs[a].linkposition == 'endhead') {
+                endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+              } else if (pageexternalJs[a].linkposition == 'startbody') {
+                topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+              } else if (pageexternalJs[a].linkposition == 'endbody') {
+                endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+              }
+            }
+          }
+
+          if (pageexternalCss.length > 0) {
+            for (let a = 0; a < pageexternalCss.length; a++) {
+              if (pageexternalCss[a].linkposition == 'starthead') {
+                tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+              } else if (pageexternalCss[a].linkposition == 'endhead') {
+                endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+              } else if (pageexternalCss[a].linkposition == 'startbody') {
+                topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+              } else if (pageexternalCss[a].linkposition == 'endbody') {
+                endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
+              }
+            }
+          }
+
+          var contentpartials = self.$store.state.content;
+          if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
+            console.log("VueComponents found:")
+            var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+            mainVuefile = mainVuefile.data
+
+            for (let x = 0; x < self.form.vuepartials.length; x++) {
+              let temp = mainVuefile.replace(/@@vuecomponent@@/g, self.form.vuepartials[x].value.split('.')[0])
+              temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
+
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
+                  text: temp,
+                  type: 'file'
+                }).then(async (res) => {
+                  contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+
+                  axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
+                    .then((response) => {
+                      console.log("called webpack_file api successfully:")
+                    })
+                    .catch((e) => {
+                      console.log(e)
+                    })
+                })
+                .catch((e) => {
+                  console.log(e)
+                })
+            }
+          }
+          if (self.form.Layout == 'Blank') {
+            await axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: folderUrl + '/Layout/Blank.layout',
+                text: '{{{ contents }}}',
+                type: 'file'
+              })
+              .catch((e) => {
+                console.log("error while blank file creation")
+              })
+          }
+          let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
+          var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
+          this.backuplayout=backlayoutdata.data;
+          let newFolderName = folderUrl + '/temp';
+          await axios.post(config.baseURL + '/flows-dir-listing', {
+              foldername: newFolderName,
+              type: 'folder'
+            }).then(async (res) => {
+              for (let i = 0; i < back_partials.length; i++) {
+                let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial');
+                responsepartials = responsepartials.data
+                let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
+                var DefaultParams = [];
+                if (result.length > 0) {
+                  var resultParam = result
+                  for (let i = 0; i < resultParam.length; i++) {
+                    var temp;
+                    temp = resultParam[i].trim()
+                    result[i] = result[i].trim()
+                    result[i] = result[i].replace(/&nbsp;/g, ' ').trim()
+                    temp = temp.replace(/&nbsp;/g, ' ')
+                    temp = temp.replace(/\s+/g, ' ');
+                    temp = temp.trim();
+                    temp = temp.split(' ')
+                    for (let j = 0; j < temp.length; j++) {
+                      if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                        if (temp[j + 1] != undefined) {
+                          result[i] = temp[0];
+                          if (temp[j + 1].indexOf('.') > -1) {
+                            let x = temp[j + 1]
+                            x = temp[j + 1].split(/'/)[1];
+                            let obj = {}
+                            obj[temp[0]] = x
+                            DefaultParams.push(obj)
+                            break;
+                          }
+                        } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                          result[i] = temp[0];
+                          if (temp[j]) {
+                            let x = temp[j]
+                            x = temp[j].split(/'/)[1];
+                            let obj = {}
+                            obj[temp[0]] = x
+                            DefaultParams.push(obj)
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  }
+                  for (let j = 0; j < result.length; j++) {
+                    temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+
+                    temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+                    responsepartials = responsepartials.split(temp1).join(temp2)
+                  }
+                }
+                await axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: folderUrl + '/temp/' + Object.keys(back_partials[i]) + '_' + back_partials[i][Object.keys(back_partials[i])] + '.html',
+                  text: responsepartials,
+                  type: 'file'
+                }).catch((e) => {
+                  console.log(e)
+                })
+              }
+              let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
+              DefaultParams = [];
+              if (result.length > 0) {
+                var resultParam = result
+                for (let i = 0; i < resultParam.length; i++) {
+                  var temp;
+                  temp = resultParam[i].trim()
+                  result[i] = result[i].trim()
+                  result[i] = result[i].replace(/&nbsp;/g, ' ').trim()
+                  temp = temp.replace(/&nbsp;/g, ' ')
+                  temp = temp.replace(/\s+/g, ' ');
+                  temp = temp.trim();
+                  temp = temp.split(' ')
+                  for (let j = 0; j < temp.length; j++) {
+                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                      if (temp[j + 1] != undefined) {
+                        result[i] = temp[0];
+                        if (temp[j + 1].indexOf('.') > -1) {
+                          let x = temp[j + 1]
+                          x = temp[j + 1].split(/'/)[1];
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
+                      } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                        result[i] = temp[0];
+                        if (temp[j]) {
+                          let x = temp[j]
+                          x = temp[j].split(/'/)[1];
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
+                      }
+                    }
+                  }
+                }
+                for (let j = 0; j < result.length; j++) {
+                  for (let i = 0; i < back_partials.length; i++) {
+                    if (Object.keys(back_partials[i])[0] == result[j]) {
+
+                      temp1 = '{{> ' + Object.keys(back_partials[i])[0] + ' }}'
+                      if (layoutdata.data.search(temp1) > 0) {
+
+                        temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + ' }}'
+                      } else {
+                        temp1 = '{{> ' + Object.keys(back_partials[i])[0] + " id='" + DefaultParams[j][Object.keys(back_partials[i])[0]] + "' }}"
+
+                        temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[i])[0]] + "' }}"
+                      }
+                      console.log('temp1:', temp1)
+                      console.log('temp2:', temp2)
+                      if (layoutdata.data.split(temp1).join(temp2)) {
+                        console.log('replacing in layout file successfully')
+                        layoutdata.data = layoutdata.data.split(temp1).join(temp2)
+                      } else {
+                        console.log('replacing in layout file failed')
+                      }
+                    }
+                  }
+
                 }
               }
-               
-              if(externalJs.length > 0){
-                for (let a = 0; a < externalJs.length; a++) {
-                   if (externalJs[a].linkposition == 'starthead') {
-                       tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-                   } else if (externalJs[a].linkposition == 'endhead') {
-                       endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-                   } else if (externalJs[a].linkposition == 'startbody') {
-                       topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-                   } else if (externalJs[a].linkposition == 'endbody') {
-                       endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-                   }
-                }
-              }
-               
-              if(externalCss.length > 0){
-                for (let a = 0; a < externalCss.length; a++) {
-                   if (externalCss[a].linkposition == 'starthead') {
-                       tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-                   } else if (externalCss[a].linkposition == 'endhead') {
-                       endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-                   } else if (externalCss[a].linkposition == 'startbody') {
-                       topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-                   } else if (externalCss[a].linkposition == 'endbody') {
-                       endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
-                   }
 
-               }
-              }
-               
+            })
+            .catch((e) => {
+              console.log(e)
+            })
 
-               let back_partials = new Array();
-               for (let i = 0; i < self.globalConfigData[1].pageSettings.length; i++) {
-                   if (self.globalConfigData[1].pageSettings[i].PageName == (nameF + '.html')) {
-                       let tempPartials = self.globalConfigData[1].pageSettings[i].partials;
+          let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
 
-                       self.form.Layout = self.globalConfigData[1].pageSettings[i].PageLayout
-                       self.form.partials = tempPartials
-                       back_partials = JSON.parse(JSON.stringify(tempPartials));
-                       self.form.vuepartials = self.globalConfigData[1].pageSettings[i].VueComponents
-                       pageexternalJs = self.globalConfigData[1].pageSettings[i].PageExternalJs;
-                       pageexternalCss = self.globalConfigData[1].pageSettings[i].PageExternalCss;
-                       pageMetaInfo = self.globalConfigData[1].pageSettings[i].PageMetaInfo;
-                       pageSeoTitle = self.globalConfigData[1].pageSettings[i].PageSEOTitle;
-                   }
-               }
-               if(pageMetaInfo.length>0){
-                for (let a = 0; a < pageMetaInfo.length; a++) {
-                   tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
-                }
-               }
-               if(pageexternalJs.length>0){
-                for (let a = 0; a < pageexternalJs.length; a++) {
-                   if (pageexternalJs[a].linkposition == 'starthead') {
-                       tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-                   } else if (pageexternalJs[a].linkposition == 'endhead') {
-                       endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-                   } else if (pageexternalJs[a].linkposition == 'startbody') {
-                       topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-                   } else if (pageexternalJs[a].linkposition == 'endbody') {
-                       endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-                   }
-                }
-               }
+          var index = responseMetal.data.search('.source')
 
-               
-               if(pageexternalCss.length>0){
-                for (let a = 0; a < pageexternalCss.length; a++) {
-                   if (pageexternalCss[a].linkposition == 'starthead') {
-                       tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-                   } else if (pageexternalCss[a].linkposition == 'endhead') {
-                       endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-                   } else if (pageexternalCss[a].linkposition == 'startbody') {
-                       topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-                   } else if (pageexternalCss[a].linkposition == 'endbody') {
-                       endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
-                   }
-                }
-               }
+          responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
+          var indexPartial = responseMetal.data.search("handlebars");
 
-               var contentpartials = self.$store.state.content;
-               if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
-                   console.log("VueComponents found:")
-                   var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
-                   mainVuefile = mainVuefile.data
+          for (var j = 0; j < self.form.partials.length; j++) {
+            var temp1, temp2;
+            temp1 = '{{> ' + Object.keys(self.form.partials[j])[0] + " id='" + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + ".partial' }}"
 
-                   for (let x = 0; x < self.form.vuepartials.length; x++) {
-                       let temp = mainVuefile.replace(/@@vuecomponent@@/g, self.form.vuepartials[x].value.split('.')[0])
-                       temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
+            temp2 = '{{> ' + Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + " id='" + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + ".partial' }}"
+            if (contentpartials.match(temp1)) {
 
-                       await axios.post(config.baseURL + '/flows-dir-listing', {
-                               filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
-                               text: temp,
-                               type: 'file'
-                           }).then(async(res) => {
-                               contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+              contentpartials = contentpartials.split(temp1).join(temp2)
+            }
+            var obj = {}
+            var key = Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]]
+            obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
+            self.form.partials[j] = []
+            self.form.partials[j] = obj
+          }
+          // self.$store.state.content = contentpartials;
+          var partials = '';
+          for (var i = 0; i < self.form.partials.length; i++) {
+            let key = Object.keys(self.form.partials[i])[0];
+            let value = self.form.partials[i]
+            let key2 = key;
+            key = key.trim();
+            if (value[key2].match('partial')) {
+              key = key.split('.')[0]
+              var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + "').toString())\n"
+            } else {
+              var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + ".html').toString())\n"
+            }
+            partials = partials + temp;
+          }
+          responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
+          self.form.partials = back_partials
+          console.log("final metalsmith:", responseMetal.data)
+          let mainMetal = folderUrl + '/assets/metalsmith.js'
+          axios.post(config.baseURL + '/flows-dir-listing', {
+              filename: mainMetal,
+              text: responseMetal.data,
+              type: 'file'
+            })
+            .then(async (response) => {
+              let newFolderName1 = folderUrl + '/Preview';
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                foldername: newFolderName1,
+                type: 'folder'
+              }).then(async (res) => {
+                console.log(res)
 
-                               axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
-                                   .then((response) => {
-                                       console.log("called webpack_file api successfully:")
-                                   })
-                                   .catch((e) => {
-                                       console.log(e)
-                                   })
-                           })
-                           .catch((e) => {
-                               console.log(e)
-                           })
-                   }
-               }
-               if (self.form.Layout == 'Blank') {
-                   await axios.post(config.baseURL + '/flows-dir-listing', {
-                           filename: folderUrl + '/Layout/Blank.layout',
-                           text: '{{{ contents }}}',
-                           type: 'file'
-                       })
-                       .catch((e) => {
-                           console.log("error while blank file creation")
-                       })
-               }
-               let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
-               var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
-               let newFolderName = folderUrl + '/temp';
-               await axios.post(config.baseURL + '/flows-dir-listing', {
-                       foldername: newFolderName,
-                       type: 'folder'
-                   }).then(async(res) => {
-                       for (let i = 0; i < back_partials.length; i++) {
-                           let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial');
-                           responsepartials = responsepartials.data
-                           let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
-                           var DefaultParams = [];
-                           if (result.length > 0) {
-                               var resultParam = result
-                               for (let i = 0; i < resultParam.length; i++) {
-                                   var temp;
-                                   temp = resultParam[i].trim()
-                                   result[i] = result[i].trim()
-                                   temp = temp.replace(/&nbsp;/g, ' ')
-                                   temp = temp.replace(/\s+/g, ' ');
-                                   temp = temp.trim();
-                                   temp = temp.split(' ')
-                                   for (let j = 0; j < temp.length; j++) {
-                                       if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                                           if (temp[j + 1] != undefined) {
-                                               result[i] = temp[0];
-                                               if (temp[j + 1].indexOf('.') > -1) {
-                                                   let x = temp[j + 1]
-                                                   x = temp[j + 1].split(/'/)[1];
-                                                   let obj = {}
-                                                   obj[temp[0]] = x
-                                                   DefaultParams.push(obj)
-                                                   break;
-                                               }
-                                           } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                                               result[i] = temp[0];
-                                               if (temp[j]) {
-                                                   let x = temp[j]
-                                                   x = temp[j].split(/'/)[1];
-                                                   let obj = {}
-                                                   obj[temp[0]] = x
-                                                   DefaultParams.push(obj)
-                                                   break;
-                                               }
-                                           }
-                                       }
-                                   }
-                               }
-                               for (let j = 0; j < result.length; j++) {
-                                   temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+              }).catch((e) => {
+                console.log(e)
+              })
+              let newContent = "<html>\n<head>\n" + tophead +
+                "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+                "<title>" + pageSeoTitle + "</title>" +
+                "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
+                "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+                '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+                "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
+                "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body><div id=\"app\">\n" +
+                layoutdata.data + topbody +
+                '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
+                // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                '<script src="./../main-files/main.js"><\/script>\n' + endbody +
+                '</body>\n</html>';
 
-                                   temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
-                                   responsepartials = responsepartials.split(temp1).join(temp2)
-                               }
-                           }
-                           await axios.post(config.baseURL + '/flows-dir-listing', {
-                               filename: folderUrl + '/temp/' + Object.keys(back_partials[i]) + '_' + back_partials[i][Object.keys(back_partials[i])] + '.html',
-                               text: responsepartials,
-                               type: 'file'
-                           }).catch((e) => {
-                               console.log(e)
-                           })
-                       }
-                       let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
-                       DefaultParams = [];
-                       if (result.length > 0) {
-                           var resultParam = result
-                           for (let i = 0; i < resultParam.length; i++) {
-                               var temp;
-                               temp = resultParam[i].trim()
-                               result[i] = result[i].trim()
-                               temp = temp.replace(/&nbsp;/g, ' ')
-                               temp = temp.replace(/\s+/g, ' ');
-                               temp = temp.trim();
-                               temp = temp.split(' ')
-                               for (let j = 0; j < temp.length; j++) {
-                                   if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                                       if (temp[j + 1] != undefined) {
-                                           result[i] = temp[0];
-                                           if (temp[j + 1].indexOf('.') > -1) {
-                                               let x = temp[j + 1]
-                                               x = temp[j + 1].split(/'/)[1];
-                                               let obj = {}
-                                               obj[temp[0]] = x
-                                               DefaultParams.push(obj)
-                                               break;
-                                           }
-                                       } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                                           result[i] = temp[0];
-                                           if (temp[j]) {
-                                               let x = temp[j]
-                                               x = temp[j].split(/'/)[1];
-                                               let obj = {}
-                                               obj[temp[0]] = x
-                                               DefaultParams.push(obj)
-                                               break;
-                                           }
-                                       }
-                                   }
-                               }
-                           }
-                           for (let j = 0; j < result.length; j++) {
-                               for (let i = 0; i < back_partials.length; i++) {
-                                   if (Object.keys(back_partials[i])[0] == result[j]) {
+              axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                  text: newContent,
+                  type: 'file'
+                })
+                .then(async (res) => {
 
-                                       temp1 = '{{> ' + Object.keys(back_partials[i])[0] + ' }}'
-                                       if(layoutdata.data.search(temp1)>0){
+                  var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
 
-                                       temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + ' }}'
-                                       }
-                                       else{
-                                        temp1 = '{{> ' + Object.keys(back_partials[i])[0] + " id='" + DefaultParams[j][Object.keys(back_partials[i])[0]] + "' }}"
+                  if (self.form.Layout == 'Blank') {
+                    rawContent = '---\nlayout: ' + self.form.Layout + '.layout\n---\n' + rawContent
 
-                                        temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[i])[0]] + "' }}"
-                                       }
-                                       console.log('temp1:',temp1)
-                                       console.log('temp2:',temp2)
-                                       if(layoutdata.data.split(temp1).join(temp2)){
-                                        console.log('replacing in layout file successfully')
-                                       layoutdata.data = layoutdata.data.split(temp1).join(temp2)
-                                       }else{
-                                        console.log('replacing in layout file failed')
-                                       }
-                                   }
-                               }
+                  } else {
+                    var tempValueLayout = '---\nlayout: ' + self.form.Layout + '.layout\n---\n';
+                    rawContent = tempValueLayout + rawContent
+                  }
+                  self.PageLayout = '';
+                  var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: previewFileName,
+                      text: rawContent,
+                      type: 'file'
+                    })
+                    .then(async (res) => {
 
-                           }
-                       }
+                      self.saveFileLoading = false;
+                      await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
+                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                   })
-                   .catch((e) => {
-                       console.log(e)
-                   })
-
-
-               let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
-
-               var index = responseMetal.data.search('.source')
-
-               responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
-               var indexPartial = responseMetal.data.search("handlebars");
-
-               for (var j = 0; j < self.form.partials.length; j++) {
-                   var temp1, temp2;
-                   
-
-                       temp1 = '{{> ' + Object.keys(self.form.partials[j])[0] + " id='" + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + ".partial' }}"
-
-                       temp2 = '{{> ' + Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + " id='" + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + ".partial' }}"
-                  
-                   if (contentpartials.match(temp1)) {
-
-                       contentpartials = contentpartials.split(temp1).join(temp2)
-                   }
-                   var obj = {}
-                   var key = Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]]
-                   obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
-                   self.form.partials[j] = []
-                   self.form.partials[j] = obj
-               }
-               // self.$store.state.content = contentpartials;
-               var partials = '';
-               for (var i = 0; i < self.form.partials.length; i++) {
-                   let key = Object.keys(self.form.partials[i])[0];
-                   let value = self.form.partials[i]
-                   let key2 = key;
-                   key = key.trim();
-                   if (value[key2].match('partial')) {
-                       key = key.split('.')[0]
-                       var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + "').toString())\n"
-                   } else if (value[key2].match('hbs')) {
-                       key = key.split('.')[0]
-                       var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "/" + value[key2] + "').toString())\n"
-                   } else {
-                       var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + ".html').toString())\n"
-                   }
-                   partials = partials + temp;
-               }
-               responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
-               self.form.partials=back_partials
-               console.log("final metalsmith:", responseMetal.data)
-               let mainMetal = folderUrl + '/assets/metalsmith.js'
-               axios.post(config.baseURL + '/flows-dir-listing', {
-                       filename: mainMetal,
-                       text: responseMetal.data,
-                       type: 'file'
-                   })
-                   .then(async(response) => {
-                       let newFolderName1 = folderUrl + '/Preview';
-                       await axios.post(config.baseURL + '/flows-dir-listing', {
-                           foldername: newFolderName1,
-                           type: 'folder'
-                       }).then(async(res) => {
-                           console.log(res)
-
-
-                       }).catch((e) => {
-                           console.log(e)
-                       })
-                       let newContent = "<html>\n<head>\n" + tophead +
-                            "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" + 
-                            "<title>" + pageSeoTitle + "</title>" +
-                            "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
-                            "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
-                            "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                            '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
-                            "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                            "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                            "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                            "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                            "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                            "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body>\n" +
-                            layoutdata.data + topbody +
-                            '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                            '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                            // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
-                            '<script src="./../main-files/main.js"><\/script>\n' + endbody +
-                            '</body>\n</html>';
-
-                            axios.post(config.baseURL + '/flows-dir-listing', {
-                               filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                               text: newContent,
-                               type: 'file'
+                          axios.post(config.baseURL + '/flows-dir-listing', {
+                              filename: mainMetal,
+                              text: metalsmithJSON,
+                              type: 'file'
                             })
-                            .then(async(res) => {
+                            .then(async (res) => {
+                              self.fullscreenLoading = false;
+                              self.previewLoading = false;
 
-                               var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
+                              let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
+                              previewFile = folderUrl.replace('/var/www/html', '');
 
-                               if (self.form.Layout == 'Blank') {
-                                   rawContent = '---\nlayout: ' + self.form.Layout + '.layout\n---\n' + rawContent
+                              let projName = previewFile.replace('websites/', '');
 
-                               } else {
-                                   var tempValueLayout = '---\nlayout: ' + self.form.Layout + '.layout\n---\n';
-                                   rawContent = tempValueLayout + rawContent
-                               }
-                               self.PageLayout = '';
-                               var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
-                               await axios.post(config.baseURL + '/flows-dir-listing', {
-                                       filename: previewFileName,
-                                       text: rawContent,
-                                       type: 'file'
-                                   })
-                                   .then(async(res) => {
-                                       self.saveFileLoading = false;
-                                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
-                                               var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                              // window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+                              window.open('http://' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
 
-                                               axios.post(config.baseURL + '/flows-dir-listing', {
-                                                       filename: mainMetal,
-                                                       text: metalsmithJSON,
-                                                       type: 'file'
-                                                   })
-                                                   .then((res) => {
-                                                       self.fullscreenLoading = false;
-                                                       self.previewLoading = false;
+                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                                .then(async (res) => {
+                                  console.log(res);
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
 
-                                                       let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
-                                                       previewFile = folderUrl.replace('/var/www/html', '');
+                                  axios.post(config.baseURL + '/flows-dir-listing', {
+                                      filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                                      text: backlayoutdata.data,
+                                      type: 'file'
+                                    })
+                                    .then((res) => {
+                                      if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
+                                        for (let x = 0; x < self.form.vuepartials.length; x++) {
+                                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                              console.log(res)
+                                            })
+                                            .catch((e) => {
+                                              console.log(e)
+                                            })
+                                        }
+                                      }
+                                      console.log("layout file reset")
+                                      if (self.form.Layout == 'Blank') {
+                                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                          .catch((e) => {
+                                            self.fullscreenLoading = false;
+                                            console.log("error while deleting blank.layout file")
+                                          })
+                                      }
 
-                                                       let projName = previewFile.replace('websites/', '');
+                                    })
+                                    .catch((e) => {
+                                      self.fullscreenLoading = false;
+                                      self.$message({
+                                        showClose: true,
+                                        message: 'Cannot save file! Some error occured, try again.',
+                                        type: 'danger'
+                                      });
+                                      console.log(e)
+                                    })
 
-                                                       // window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
-                                                       window.open('http://' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
+                                })
+                                .catch((e) => {
+                                  self.fullscreenLoading = false;
+                                  self.$message({
+                                    showClose: true,
+                                    message: 'Cannot save file! Some error occured, try again.',
+                                    type: 'danger'
+                                  });
+                                  console.log(e)
+                                })
 
-                                                       axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                                           .then(async(res) => {
-                                                               console.log(res);
-                                                               await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                            })
+                            .catch((e) => {
+                              self.fullscreenLoading = false;
+                              self.$message({
+                                showClose: true,
+                                message: 'Cannot save file! Some error occured, try again.',
+                                type: 'danger'
+                              });
+                              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                                                               return axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                       filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                                                                       text: backlayoutdata.data,
-                                                                       type: 'file'
-                                                                   })
-                                                                   .then((res) => {
-                                                                       if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
-                                                                           for (let x = 0; x < self.form.vuepartials.length; x++) {
-                                                                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                                                                       console.log(res)
-                                                                                   })
-                                                                                   .catch((e) => {
-                                                                                       console.log(e)
-                                                                                   })
-                                                                           }
-                                                                       }
-                                                                       console.log("layout file reset")
-                                                                       if (self.form.Layout == 'Blank') {
-                                                                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
-                                                                               .catch((e) => {
-                                                                                   self.fullscreenLoading = false;
-                                                                                   console.log("error while deleting blank.layout file")
-                                                                               })
-                                                                       }
+                              axios.post(config.baseURL + '/flows-dir-listing', {
+                                filename: mainMetal,
+                                text: metalsmithJSON,
+                                type: 'file'
+                              })
 
-                                                                   })
-                                                                   .catch((e) => {
-                                                                       self.fullscreenLoading = false;
-                                                                       console.log(e)
-                                                                   })
+                              axios.post(config.baseURL + '/flows-dir-listing', {
+                                filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                                text: backlayoutdata.data,
+                                type: 'file'
+                              })
+                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                              console.log(e)
+                            })
 
-                                                           })
-                                                           .catch((e) => {
-                                                               self.fullscreenLoading = false;
+                        })
+                        .catch((err) => {
+                          self.fullscreenLoading = false;
+                          window.open(config.ipAddress + '/plugins/public/error.html');
+                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                                                               console.log(e)
-                                                           })
+                          axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename: mainMetal,
+                            text: metalsmithJSON,
+                            type: 'file'
+                          })
 
-                                                   })
-                                                   .catch((e) => {
-                                                       self.fullscreenLoading = false;
+                          axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                            text: backlayoutdata.data,
+                            type: 'file'
+                          })
+                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                          console.log('Error while creating MetalSmith JS file' + err)
 
-                                                       console.log(e)
-                                                   })
+                        })
 
-                                           })
-                                           .catch((err) => {
-                                               self.fullscreenLoading = false;
-                                               window.open(config.ipAddress + '/plugins/public/error.html');
-                                               console.log('Error while creating MetalSmith JS file' + err)
-                                           })
+                    })
+                    .catch((e) => {
+                      self.fullscreenLoading = false;
+                      window.open(config.ipAddress + '/plugins/public/error.html');
 
-                                   })
-                                   .catch((e) => {
-                                       self.fullscreenLoading = false;
-                                       window.open(config.ipAddress + '/plugins/public/error.html');
-                                       self.saveFileLoading = false
-                                       console.log(e)
-                                   })
-                           })
-                           .catch((e) => {
-                               self.fullscreenLoading = false;
-                               window.open(config.ipAddress + '/plugins/public/error.html');
-                               console.log(e);
-                           })
-                   })
-                   .catch((e) => {
-                       self.fullscreenLoading = false;
-                       window.open(config.ipAddress + '/plugins/public/error.html');
-                       console.log('Error while creating MetalSmith JS file' + e)
-                   })
-           }, 2000);
+                      var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                      axios.post(config.baseURL + '/flows-dir-listing', {
+                        filename: mainMetal,
+                        text: metalsmithJSON,
+                        type: 'file'
+                      })
+
+                      axios.post(config.baseURL + '/flows-dir-listing', {
+                        filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                        text: backlayoutdata.data,
+                        type: 'file'
+                      })
+                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                      self.saveFileLoading = false
+                      console.log(e)
+                    })
+                })
+                .catch((e) => {
+                  self.fullscreenLoading = false;
+                  window.open(config.ipAddress + '/plugins/public/error.html');
+                  var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                  axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename: mainMetal,
+                    text: metalsmithJSON,
+                    type: 'file'
+                  })
+
+                  axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                    text: backlayoutdata.data,
+                    type: 'file'
+                  })
+                  console.log(e);
+                })
+            })
+            .catch((e) => {
+              self.fullscreenLoading = false;
+              window.open(config.ipAddress + '/plugins/public/error.html');
+              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+              axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: mainMetal,
+                text: metalsmithJSON,
+                type: 'file'
+              })
+              axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                text: backlayoutdata.data,
+                type: 'file'
+              })
+      
+              console.log('Error while creating MetalSmith JS file' + e)
+            })
+
+        }, 2000);
+          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+              axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: mainMetal,
+                text: metalsmithJSON,
+                type: 'file'
+              })
+              axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                text: this.backuplayout,
+                type: 'file'
+              })
       },
       // Generate Preview
 
