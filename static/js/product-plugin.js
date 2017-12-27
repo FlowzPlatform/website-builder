@@ -1700,14 +1700,14 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let arr_schema = []
   let arr_coll_schema = new Array()
   console.log("arr_schema type11111111111111s", typeof arr_schema)
-  $.getJSON("http://172.16.230.80:3080/settings",
+  $.getJSON("http://172.16.230.222:3080/settings",
     // $.getJSON("http://localhost:3080/settings",
     function (data) {
       //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
       for (let index = 0; index < data.rethink.dbinstance.length; index++) {
         //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
         arr_collection.push(data.rethink.dbinstance[index].connection_name)
-        $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
+        $.getJSON("http://172.16.230.222:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
           // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
           function (data_) {
             console.log("data_", data_)
