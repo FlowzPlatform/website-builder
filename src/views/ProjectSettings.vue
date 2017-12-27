@@ -2030,6 +2030,7 @@ export default {
 
 
         // Open in new window
+        // window.open(config.ipAddress + '/websites/' + this.repoName + '/public/');
         window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
 
         // Publish with Zeit Now
