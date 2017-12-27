@@ -2893,7 +2893,7 @@
           var externalJs = self.globalConfigData[1].projectSettings[1].ProjectExternalJs;
           var externalCss = self.globalConfigData[1].projectSettings[1].ProjectExternalCss;
           var metaInfo = self.globalConfigData[1].projectSettings[1].ProjectMetaInfo;
-          var ProjectMetacharset=self.globalConfigData[1].projectSettings[1].ProjectMetacharset
+          var ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
           var tophead = '';
           var endhead = '';
           var topbody = '';
@@ -2903,9 +2903,9 @@
           var pageexternalCss = [];
           var pageMetaInfo = [];
           var pageSeoTitle;
-          var PageMetacharset=''
-          if(ProjectMetacharset!=''){
-            tophead=tophead+'<meta charset="'+ProjectMetacharset+'">'
+          var PageMetacharset = ''
+          if (ProjectMetacharset != '') {
+            tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
           }
           if (metaInfo.length > 0) {
             for (let a = 0; a < metaInfo.length; a++) {
@@ -2948,6 +2948,7 @@
               let tempPartials = self.globalConfigData[1].pageSettings[i].partials;
 
               self.form.Layout = self.globalConfigData[1].pageSettings[i].PageLayout
+
               self.form.partials = tempPartials
               back_partials = JSON.parse(JSON.stringify(tempPartials));
               self.form.vuepartials = self.globalConfigData[1].pageSettings[i].VueComponents
@@ -2955,11 +2956,11 @@
               pageexternalCss = self.globalConfigData[1].pageSettings[i].PageExternalCss;
               pageMetaInfo = self.globalConfigData[1].pageSettings[i].PageMetaInfo;
               pageSeoTitle = self.globalConfigData[1].pageSettings[i].PageSEOTitle;
-              PageMetacharset=self.globalConfigData[1].pageSettings[i].PageMetacharset;
+              PageMetacharset = self.globalConfigData[1].pageSettings[i].PageMetacharset;
             }
           }
-          if(PageMetacharset!=''){
-            tophead=tophead+'<meta charset="'+PageMetacharset+'">'
+          if (PageMetacharset != '') {
+            tophead = tophead + '<meta charset="' + PageMetacharset + '">'
           }
           if (pageMetaInfo.length > 0) {
             for (let a = 0; a < pageMetaInfo.length; a++) {
@@ -3036,7 +3037,7 @@
           }
           let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
           var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
-          this.backuplayout=backlayoutdata.data;
+          this.backuplayout = backlayoutdata.data;
           let newFolderName = folderUrl + '/temp';
           await axios.post(config.baseURL + '/flows-dir-listing', {
               foldername: newFolderName,
@@ -3210,7 +3211,7 @@
           responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
           self.form.partials = back_partials
           console.log("final metalsmith:", responseMetal.data)
-          let mainMetal = folderUrl + '/assets/metalsmith.js'
+          var mainMetal = folderUrl + '/assets/metalsmith.js'
           axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
               text: responseMetal.data,
@@ -3250,7 +3251,7 @@
                 '</body>\n</html>';
 
               axios.post(config.baseURL + '/flows-dir-listing', {
-                  filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                  filename: folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',
                   text: newContent,
                   type: 'file'
                 })
@@ -3262,10 +3263,10 @@
                     rawContent = '---\nlayout: ' + self.form.Layout + '.layout\n---\n' + rawContent
 
                   } else {
-                    var tempValueLayout = '---\nlayout: ' + self.form.Layout + '.layout\n---\n';
+                    var tempValueLayout = '---\nlayout: ' + self.form.Layout + '_metal.layout\n---\n';
                     rawContent = tempValueLayout + rawContent
                   }
-                  self.PageLayout = '';
+                  self.PageLayout = JSON.parse(JSON.stringify(self.form.Layout));
                   var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
                   await axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: previewFileName,
@@ -3293,68 +3294,46 @@
                               let projName = previewFile.replace('websites/', '');
 
                               // window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
-                              window.open('http://' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
+                              window.open('http://' + projName + '.'+ config.ipAddress + '/public/' + nameF + '.html');
 
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                 .then(async (res) => {
                                   console.log(res);
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-
-                                  axios.post(config.baseURL + '/flows-dir-listing', {
-                                      filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                                      text: backlayoutdata.data,
-                                      type: 'file'
-                                    })
-                                    .then((res) => {
-                                      if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
-                                        for (let x = 0; x < self.form.vuepartials.length; x++) {
-                                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                              console.log(res)
-                                            })
-                                            .catch((e) => {
-                                              console.log(e)
-                                            })
-                                        }
-                                      }
-                                      console.log("layout file reset")
-                                      if (self.form.Layout == 'Blank') {
-                                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
-                                          .catch((e) => {
-                                            self.fullscreenLoading = false;
-                                            console.log("error while deleting blank.layout file")
-                                          })
-                                      }
-
-                                    })
-                                    .catch((e) => {
-                                      self.fullscreenLoading = false;
-                                      self.$message({
-                                        showClose: true,
-                                        message: 'Cannot save file! Some error occured, try again.',
-                                        type: 'danger'
-                                      });
-                                      console.log(e)
-                                    })
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                                    console.log('deleted extra layout file:', res)
+                                  }).catch((e) => {
+                                    console.log(e)
+                                  })
+                                  if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
+                                    for (let x = 0; x < self.form.vuepartials.length; x++) {
+                                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                          console.log(res)
+                                        })
+                                        .catch((e) => {
+                                          console.log(e)
+                                        })
+                                    }
+                                  }
+                                  console.log("layout file reset")
+                                  if (self.form.Layout == 'Blank') {
+                                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                      .catch((e) => {
+                                        self.fullscreenLoading = false;
+                                        console.log("error while deleting blank.layout file")
+                                      })
+                                  }
 
                                 })
                                 .catch((e) => {
                                   self.fullscreenLoading = false;
-                                  self.$message({
-                                    showClose: true,
-                                    message: 'Cannot save file! Some error occured, try again.',
-                                    type: 'danger'
-                                  });
                                   console.log(e)
                                 })
 
                             })
                             .catch((e) => {
                               self.fullscreenLoading = false;
-                              self.$message({
-                                showClose: true,
-                                message: 'Cannot save file! Some error occured, try again.',
-                                type: 'danger'
-                              });
+                              window.open(config.ipAddress + '/plugins/public/error.html');
                               var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                               axios.post(config.baseURL + '/flows-dir-listing', {
@@ -3363,10 +3342,10 @@
                                 type: 'file'
                               })
 
-                              axios.post(config.baseURL + '/flows-dir-listing', {
-                                filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                                text: backlayoutdata.data,
-                                type: 'file'
+                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                                console.log('deleted extra layout file:', res)
+                              }).catch((e) => {
+                                console.log(e)
                               })
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
@@ -3385,10 +3364,10 @@
                             type: 'file'
                           })
 
-                          axios.post(config.baseURL + '/flows-dir-listing', {
-                            filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                            text: backlayoutdata.data,
-                            type: 'file'
+                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                            console.log('deleted extra layout file:', res)
+                          }).catch((e) => {
+                            console.log(e)
                           })
                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
@@ -3409,10 +3388,10 @@
                         type: 'file'
                       })
 
-                      axios.post(config.baseURL + '/flows-dir-listing', {
-                        filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                        text: backlayoutdata.data,
-                        type: 'file'
+                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                        console.log('deleted extra layout file:', res)
+                      }).catch((e) => {
+                        console.log(e)
                       })
                       // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                       // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
@@ -3431,10 +3410,10 @@
                     type: 'file'
                   })
 
-                  axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                    text: backlayoutdata.data,
-                    type: 'file'
+                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                    console.log('deleted extra layout file:', res)
+                  }).catch((e) => {
+                    console.log(e)
                   })
                   console.log(e);
                 })
@@ -3449,28 +3428,16 @@
                 text: metalsmithJSON,
                 type: 'file'
               })
-              axios.post(config.baseURL + '/flows-dir-listing', {
-                filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                text: backlayoutdata.data,
-                type: 'file'
+              aaxios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                console.log('deleted extra layout file:', res)
+              }).catch((e) => {
+                console.log(e)
               })
-      
+
               console.log('Error while creating MetalSmith JS file' + e)
             })
 
         }, 2000);
-          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-              axios.post(config.baseURL + '/flows-dir-listing', {
-                filename: mainMetal,
-                text: metalsmithJSON,
-                type: 'file'
-              })
-              axios.post(config.baseURL + '/flows-dir-listing', {
-                filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
-                text: this.backuplayout,
-                type: 'file'
-              })
       },
       // Generate Preview
 
