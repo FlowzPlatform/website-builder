@@ -1109,6 +1109,8 @@
             let token = this.$session.get('token');
             console.log('Login Token: ', token);
 
+            this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+
             let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
             return axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName,
