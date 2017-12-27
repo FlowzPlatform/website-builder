@@ -456,6 +456,7 @@
           label: 'name'
         },
         rootpath : '',
+        backuplayout:'',
         componentId: Dashboard,
         addNewFileLoading : false,
         addNewFolderLoading : false,
@@ -1382,7 +1383,8 @@
                                 "GlobalCssVariables": [],
                                 "ProjectExternalCss": [],
                                 "ProjectExternalJs": [],
-                                "ProjectMetaInfo": []
+                                "ProjectMetaInfo": [],
+                                "ProjectMetacharset": ''
                               }],
                               "pageSettings": [{
                                 "PageName": "index.html",
@@ -1399,7 +1401,7 @@
                                 "PageExternalCss": [],
                                 "PageExternalJs": [],
                                 "PageMetaInfo": [],
-                                "PageMetacharset":[]
+                                "PageMetacharset":''
                               }]
                             }, {
                               "layoutOptions": [{
@@ -1780,6 +1782,29 @@
           })
           .then((res) => {
             console.log(flowzBuilderEngine + ' file created');    
+          })
+          .catch((e) => {
+              console.log(e)
+          })
+        })
+        .catch((e) => {
+            console.log(e)
+        });
+
+        // Shopping cart js
+        let shoppingCartJs = newFolderName + '/assets/client-plugins/shopping-cart.js';
+        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/shop_cart.js', {
+            
+        })
+        .then((res) => {
+          let shoppingCartData = res.data;
+          axios.post(config.baseURL + '/flows-dir-listing', {
+              filename : shoppingCartJs,
+              text : shoppingCartData,
+              type : 'file'
+          })
+          .then((res) => {
+            console.log(shoppingCartJs + ' file created');    
           })
           .catch((e) => {
               console.log(e)
@@ -3011,6 +3036,7 @@
           }
           let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
           var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
+          this.backuplayout=backlayoutdata.data;
           let newFolderName = folderUrl + '/temp';
           await axios.post(config.baseURL + '/flows-dir-listing', {
               foldername: newFolderName,
@@ -3213,10 +3239,12 @@
                 "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                 "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                 "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body>\n" +
+                "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
+                "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body><div id=\"app\">\n" +
                 layoutdata.data + topbody +
-                '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
                 // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
                 '<script src="./../main-files/main.js"><\/script>\n' + endbody +
                 '</body>\n</html>';
@@ -3245,6 +3273,7 @@
                       type: 'file'
                     })
                     .then(async (res) => {
+
                       self.saveFileLoading = false;
                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                           var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
@@ -3254,7 +3283,7 @@
                               text: metalsmithJSON,
                               type: 'file'
                             })
-                            .then((res) => {
+                            .then(async (res) => {
                               self.fullscreenLoading = false;
                               self.previewLoading = false;
 
@@ -3385,8 +3414,8 @@
                         text: backlayoutdata.data,
                         type: 'file'
                       })
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                       self.saveFileLoading = false
                       console.log(e)
                     })
@@ -3425,11 +3454,23 @@
                 text: backlayoutdata.data,
                 type: 'file'
               })
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+      
               console.log('Error while creating MetalSmith JS file' + e)
             })
+
         }, 2000);
+          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+              axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: mainMetal,
+                text: metalsmithJSON,
+                type: 'file'
+              })
+              axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: folderUrl + '/Layout/' + self.form.Layout + '.layout',
+                text: this.backuplayout,
+                type: 'file'
+              })
       },
       // Generate Preview
 
