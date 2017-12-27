@@ -952,12 +952,11 @@
             if(this.flag != true && this.editableTabs.length > 0){
               if(this.componentId == 'GridManager'){
                 this.saveFile('getFileContent')
+              } else if (this.componentId == 'MenuBuilder'){
+                this.saveFile('getFileContent')
               }
             }
             this.flag = false
-
-
-            // this.$router.push('/'+ fileNameOrginal)
             if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
               if(this.$store.state.tabChange != ''){
                 this.saveFile('getFileContent')
@@ -969,19 +968,13 @@
       },
 
       tabClicked : async function(targetName, action) {
-        if(this.componentId == 'GridManager'){
-          this.$refs.contentComponent[0].getHtml()
+        console.log('this.componentId', this.componentId)
+        if(this.componentId == 'GridManager' || 'MenuBuilder'){
           this.saveFile('tabClicked')
-          // let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
-          // this.$store.state.fileUrl =findingValue[0].filepath;
         }
         if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
           if(this.$store.state.tabChange != ''){
             this.saveFile('tabClicked')
-            // let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
-            // this.$store.state.fileUrl = findingValue[0].filepath;
-            //
-            // this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
           }
         }
         let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
@@ -989,7 +982,6 @@
         this.componentId = targetName.$vnode.componentOptions.children[0].componentOptions.tag
         this.flag = true
         this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
-        console.log('>>>>>>>>>>>>>>>', this.$refs.contentComponent)
         var componentId = this.componentId
         let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
         let newContent
@@ -1006,7 +998,7 @@
             newContent = this.$store.state.content;
             break;
           case 'MenuBuilder':
-            this.saveJsonFile();
+            this.saveJsonFile('else');
             break;
         }
       },
@@ -2248,7 +2240,6 @@
           let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
           this.saveFileLoading = true
           var tempContent = this.$store.state.tabChange
-          // newContent = tempContent;
           switch (this.componentId) {
             case 'GrapesComponent':
               this.$refs.contentComponent[myIndex].getHtml();
@@ -2262,33 +2253,9 @@
               newContent = this.$store.state.content;
               break;
             case 'MenuBuilder':
-              this.saveJsonFile();
+              this.saveJsonFile('getFileContent');
               break;
           }
-
-          configFileUrl = this.taburl.replace(/\\/g, "\/");
-
-          let urlparts = configFileUrl.split("/");
-
-          let fileNameOrginal = urlparts[urlparts.length - 1];
-          let foldername = urlparts[urlparts.length - 2];
-
-          let fileName = '';
-          if(_.includes(configFileUrl, 'Partials')){
-              fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-          } else if(_.includes(configFileUrl, 'Pages')){
-              fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-          } else if(_.includes(configFileUrl, 'client-plugins')){
-              fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-          } else {
-              fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-          }
-          let folderUrl = configFileUrl.replace(fileName, '');
-          let projectName = folderUrl.split('/');
-          projectName = projectName[(projectName.length-1)];
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
-          let rawConfigs = responseConfig.data.data[0].configData;
-          this.globalConfigData = rawConfigs;
           axios.post(config.baseURL + '/flows-dir-listing', {
               filename: this.taburl.replace(/\\/g, "\/"),
               text: newContent,
@@ -2301,350 +2268,6 @@
                 message: 'File Saved!',
                 type: 'success'
               });
-
-              var content = this.$store.state.content;
-
-              if (this.taburl.replace(/\\/g, "\/").match('Layout')) {
-
-                var getFromBetween = {
-                  results: [],
-                  string: "",
-                  getFromBetween: function(sub1, sub2) {
-                    if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-                    var SP = this.string.indexOf(sub1) + sub1.length;
-                    var string1 = this.string.substr(0, SP);
-                    var string2 = this.string.substr(SP);
-                    var TP = string1.length + string2.indexOf(sub2);
-                    return this.string.substring(SP, TP);
-                  },
-                  removeFromBetween: function(sub1, sub2) {
-                    if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-                    var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
-                    this.string = this.string.replace(removal, "");
-                  },
-                  getAllResults: function(sub1, sub2) {
-                    // first check to see if we do have both substrings
-                    if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
-                    // find one result
-                    var result = this.getFromBetween(sub1, sub2);
-                    // push it to the results array
-                    this.results.push(result);
-                    // remove the most recently found one from the string
-                    this.removeFromBetween(sub1, sub2);
-                    // if there's more substrings
-                    if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
-                      this.getAllResults(sub1, sub2);
-                    } else return;
-                  },
-                  get: function(string, sub1, sub2) {
-                    this.results = [];
-                    this.string = string;
-                    this.getAllResults(sub1, sub2);
-                    return this.results;
-                  }
-                };
-                var result = (getFromBetween.get(content, "{{>", "}}"));
-                var DefaultParams = [];
-                if (result.length > 0) {
-                  var resultParam = result
-                  for (let i = 0; i < resultParam.length; i++) {
-                    var temp;
-                    temp = resultParam[i].trim()
-                    result[i] = result[i].trim()
-                    temp = temp.replace(/&nbsp;/g, ' ')
-                    temp = temp.replace(/\s+/g, ' ');
-                    temp = temp.trim();
-                    temp = temp.split(' ')
-                    for (let j = 0; j < temp.length; j++) {
-                      if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                        if (temp[j + 1] != undefined) {
-                          result[i] = temp[0];
-                          if (temp[j + 1].indexOf('.') > -1) {
-                            let x = temp[j + 1]
-                            x = temp[j + 1].split(/'/)[1];
-                            let obj = {}
-                            obj[temp[0]] = x
-                            DefaultParams.push(obj)
-                            break;
-                          }
-                        } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                          result[i] = temp[0];
-                          if (temp[j]) {
-                            let x = temp[j]
-                            x = temp[j].split(/'/)[1];
-                            let obj = {}
-                            obj[temp[0]] = x
-                            DefaultParams.push(obj)
-                            break;
-                          }
-                        }
-                      }
-                    }
-                  }
-                  let totalPartial = content.match(/{{>/g).length;
-                }
-
-                let name = this.taburl.replace(/\\/g, "\/").substring(this.taburl.replace(/\\/g, "\/").indexOf('Layout/') + 7, this.taburl.replace(/\\/g, "\/").indexOf('.layout'));
-                let temp = {
-                  value: name,
-                  label: name,
-                  partialsList: result,
-                  defaultList: DefaultParams
-
-                }
-
-                let checkValue = false;
-                for (var i = 0; i < this.globalConfigData[2].layoutOptions[0].Layout.length; i++) {
-                  var obj = this.globalConfigData[2].layoutOptions[0].Layout[i];
-                  if ((obj.label) == name) {
-                    checkValue = true;
-                  }
-                }
-                if (checkValue == true) {
-                  let currentFileIndex = daex.indexFirst(this.globalConfigData[2].layoutOptions[0].Layout, {
-                    'label': name
-                  });
-                  this.globalConfigData[2].layoutOptions[0].Layout[currentFileIndex].partialsList = result;
-                  this.globalConfigData[2].layoutOptions[0].Layout[currentFileIndex].defaultList = DefaultParams;
-                  this.saveConfigFile(folderUrl);
-                } else {
-                  this.globalConfigData[2].layoutOptions[0].Layout.push(temp);
-
-                  this.saveConfigFile(folderUrl);
-                }
-                var foldernameKey = Object.keys(this.globalConfigData[2].layoutOptions[0])
-                for (var i = 0; i < result.length; i++) {
-                  var check = false;
-                  for (var j = 0; j < foldernameKey.length; j++) {
-                    if (result[i] == foldernameKey[j]) {
-                      check = true
-                    }
-                  }
-                  if (check == false) {
-                    let newName = result[i]
-                    let newFolderName = folderUrl + '/Partials/' + result[i];
-                    axios.post(config.baseURL + '/flows-dir-listing', {
-                        foldername: newFolderName,
-                        type: 'folder'
-                      })
-                      .then((res) => {
-                        this.newFolderDialog = false
-                        this.addNewFolderLoading = false
-                        let x = newName
-
-                        this.addNewFileLoading = true
-
-                        let newfilename = newFolderName + '/default.html'
-                        axios.post(config.baseURL + '/flows-dir-listing', {
-                            filename: newfilename,
-                            text: ' ',
-                            type: 'file'
-                          })
-                          .then((res) => {
-                            this.newFileDialog = false
-                            this.addNewFileLoading = false
-                            this.formAddFile.filename = null
-                            this.globalConfigData[2].layoutOptions[0][x] = [];
-                            let temp = {
-                              value: "default",
-                              label: "default"
-                            }
-                            this.globalConfigData[2].layoutOptions[0][x].push(temp)
-                            this.saveConfigFile(folderUrl);
-                          })
-                          .catch((e) => {
-                            console.log(e)
-                          })
-                      })
-                      .catch((e) => {
-                        console.log(e)
-                      })
-                  }
-                }
-              } else if (this.taburl.replace(/\\/g, "\/").match('Partials')) {
-
-                let checkValue = false;
-                if (fileName.search('hbs') != -1) {
-                  var content = this.$store.state.content;
-                  var getFromBetween = {
-                    results: [],
-                    string: "",
-                    getFromBetween: function(sub1, sub2) {
-                      if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-                      var SP = this.string.indexOf(sub1) + sub1.length;
-                      var string1 = this.string.substr(0, SP);
-                      var string2 = this.string.substr(SP);
-                      var TP = string1.length + string2.indexOf(sub2);
-                      return this.string.substring(SP, TP);
-                    },
-                    removeFromBetween: function(sub1, sub2) {
-                      if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-                      var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
-                      this.string = this.string.replace(removal, "");
-                    },
-                    getAllResults: function(sub1, sub2) {
-                      if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
-                      var result = this.getFromBetween(sub1, sub2);
-                      this.results.push(result);
-                      this.removeFromBetween(sub1, sub2);
-                      if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
-                        this.getAllResults(sub1, sub2);
-                      } else return;
-                    },
-                    get: function(string, sub1, sub2) {
-                      this.results = [];
-                      this.string = string;
-                      this.getAllResults(sub1, sub2);
-                      return this.results;
-                    }
-                  };
-                  var result = (getFromBetween.get(content, "{{>", "}}"));
-
-                  var resultParam = result
-                  var DefaultParams = [];
-                  for (let i = 0; i < resultParam.length; i++) {
-                    var temp;
-                    temp = resultParam[i].trim()
-                    result[i] = result[i].trim()
-                    temp = temp.replace(/&nbsp;/g, ' ')
-                    temp = temp.replace(/\s+/g, ' ');
-                    temp = temp.split(' ')
-                    for (let j = 0; j < temp.length; j++) {
-                      if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                        if (temp[j + 1] != undefined) {
-                          result[i] = temp[0];
-                          if (temp[j + 1].indexOf('.') > -1) {
-                            let x = temp[j + 1]
-                            x = temp[j + 1].split(/'/)[1];
-                            let obj = {}
-                            obj[temp[0]] = x
-                            DefaultParams.push(obj)
-                            break;
-                          }
-                        } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                          result[i] = temp[0];
-                          if (temp[j]) {
-                            let x = temp[j]
-                            x = temp[j].split(/'/)[1];
-                            let obj = {}
-                            obj[temp[0]] = x
-                            DefaultParams.push(obj)
-                            break;
-                          }
-                        }
-                      }
-                    }
-                  }
-                  /*****
-                    adding new code for prompt
-                  ******/
-                  var Allfoldername = Object.keys(this.globalConfigData[2].layoutOptions[0])
-                  for (var i = 0; i < result.length; i++) {
-                    var check = false;
-                    for (var j = 0; j < Allfoldername.length; j++) {
-                      if (result[i] == Allfoldername[j]) {
-                        check = true
-                      }
-                    }
-                    if (check == false) {
-                      this.form.namearray.push(result[i])
-                    }
-                  }
-                  /**
-                    prompt user here
-                  **/
-                  if (this.form.namearray.length > 0) {
-                    this.dialogFormVisible = true
-                  } else {
-                    for (let k = 0; k < result.length; k++) {
-                      let ch = false
-                      for (let r = 0; r < DefaultParams.length; r++) {
-                        if (Object.keys(DefaultParams[r]) == result[k]) {
-                          ch = true
-                        }
-                      }
-                      if (ch == false) {
-                        let self = this;
-                        setTimeout(function() {
-                          self.$notify.info({
-                            title: 'AutoSet',
-                            message: result[k] + " id='default.html'",
-                            type: 'warning'
-                          });
-                        }, 100);
-
-                        let obj = {}
-                        obj[result[k]] = 'default.html'
-                        DefaultParams.push(obj)
-
-                      }
-                    }
-
-                    let totalPartial = content.match(/{{>/g).length;
-
-                    let namefile = fileNameOrginal.split('.')[0];
-                    let namefolder = foldername;
-                    let temp = {
-                      value: namefile,
-                      label: namefile,
-                      partialsList: result,
-                      defaultList: DefaultParams
-                    }
-                    let checkValue = false;
-                    for (var i = 0; i < Object.keys(this.globalConfigData[2].layoutOptions[0]).length; i++) {
-                      var obj = Object.keys(this.globalConfigData[2].layoutOptions[0])[i];
-                      if ((obj) == namefolder) {
-                        checkValue = true;
-                      }
-                    }
-                    if (checkValue == true) {
-                      let checkFileNamevalue = false;
-                      for (let j = 0; j < this.globalConfigData[2].layoutOptions[0][namefolder].length; j++) {
-                        if (this.globalConfigData[2].layoutOptions[0][namefolder][j].label == namefile) {
-                          checkFileNamevalue = true
-                          this.globalConfigData[2].layoutOptions[0][namefolder][j].partialsList = [];
-                          this.globalConfigData[2].layoutOptions[0][namefolder][j].defaultList = [];
-                          this.globalConfigData[2].layoutOptions[0][namefolder][j].partialsList = result;
-                          this.globalConfigData[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
-                        }
-                      }
-                      if (checkFileNamevalue != true) {
-                        this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
-                      }
-                      this.saveConfigFile(folderUrl);
-                    } else {
-                      console.log('file doesnt exists');
-                    }
-                  }
-
-                } else {
-                  let name = this.taburl.replace(/\\/g, "\/").substring(this.taburl.replace(/\\/g, "\/").indexOf(foldername) + foldername.length + 1, this.taburl.replace(/\\/g, "\/").indexOf('.'));
-                  let temp = {
-                    value: name,
-                    label: name
-                  }
-                  let checkValue = false;
-                  if (this.globalConfigData[2].layoutOptions[0][foldername]) {
-                    for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][foldername].length; i++) {
-                      var obj = this.globalConfigData[2].layoutOptions[0][foldername][i];
-                      if ((obj.label) == name) {
-                        checkValue = true;
-                      }
-                    }
-                    if (checkValue == true) {
-                      console.log("file already exists")
-                    } else {
-                      this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
-                      // saveConfigFile
-                      this.saveConfigFile(folderUrl);
-                    }
-                  } else {
-                    this.globalConfigData[2].layoutOptions[0][foldername] = [];
-                    this.globalConfigData[2].layoutOptions[0][foldername].push(temp)
-                    this.saveConfigFile(folderUrl);
-                  }
-                }
-              }
             })
             .catch((e) => {
               this.saveFileLoading = false
@@ -2655,15 +2278,9 @@
               });
               console.log(e)
             })
-          this.form.checked = [];
-          this.form.namearray = [];
-          // this.taburl = '';
-          // this.$store.state.content = this.$store.state.tabChange
           this.$store.state.tabChange = '';
-
         }
         else{
-          if(arg == 'tabClicked') {
             var componentId = this.componentId
             let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
 
@@ -2671,6 +2288,7 @@
             switch (this.componentId) {
               case 'GrapesComponent':
                 this.$refs.contentComponent[myIndex].getHtml();
+                console.log('this.$store.state.content;', this.$store.state.content)
                 newContent = this.$store.state.content;
                 break;
               case 'json-viewer':
@@ -2681,33 +2299,12 @@
                 newContent = this.$store.state.content;
                 break;
               case 'MenuBuilder':
-                this.saveJsonFile();
+                this.saveJsonFile('else');
                 break;
             }
 
             this.$store.state.tabChange = ''
-          } else {
-            var componentId = this.componentId
-            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            this.saveFileLoading = true
-            newContent = this.$store.state.content;
-            switch (this.componentId) {
-              case 'GrapesComponent':
-                this.$refs.contentComponent[myIndex].getHtml();
-                newContent = this.$store.state.content;
-                break;
-              case 'json-viewer':
-                newContent = JSON.stringify(this.$store.state.content);
-                break;
-              case 'GridManager':
-                this.$refs.contentComponent[myIndex].getHtml();
-                newContent = this.$store.state.content;
-                break;
-              case 'MenuBuilder':
-                this.saveJsonFile();
-                break;
-            }
-          }
+
 
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           this.currentFile.path = this.$store.state.fileUrl
@@ -4244,23 +3841,35 @@
       },
 
       // Save Menu's JSON file
-      saveJsonFile: function(){
+      saveJsonFile: function(arg){
         console.log('Saving menu json file');
           this.saveFileLoading = true
           let newContent = this.$store.state.content;
-
-          this.$refs.contentComponent.getMenuJson();
+          console.log(this.$refs.contentComponent)
+          var componentId = this.componentId
+          let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+          this.$refs.contentComponent[myIndex].getMenuJson();
           newContent = this.$store.state.content;
-
-          let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          let urlparts = configFileUrl.split("/");
-          let fileNameOrginal = urlparts[urlparts.length - 1];
-          let fileNameParts = fileNameOrginal.split('.');
-          let actualFileNameOnly = fileNameParts[0];
-          let fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-          var folderUrl = configFileUrl.replace(fileName, '');
-
-          let newJsonName = folderUrl + '/assets/'+actualFileNameOnly+'.json';
+            let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+            let tempurlparts = configFileUrl.split("/");
+            let fileName = '/' + tempurlparts[tempurlparts.length - 3] + '/' + tempurlparts[tempurlparts.length - 2] + '/' + tempurlparts[tempurlparts.length - 1];
+            var folderUrl = configFileUrl.replace(fileName, '');
+            let newJsonName
+          if (arg == 'getFileContent'){
+            let urlparts = this.taburl.split("/");
+            let fileNameOrginal = urlparts[urlparts.length - 1];
+            let fileNameParts = fileNameOrginal.split('.');
+            let actualFileNameOnly = fileNameParts[0];
+            newJsonName = folderUrl + '/assets/'+actualFileNameOnly+'.json';
+            console.log('newJsonName', newJsonName)
+          } else {
+            let urlparts = configFileUrl.split("/");
+            let fileNameOrginal = urlparts[urlparts.length - 1];
+            let fileNameParts = fileNameOrginal.split('.');
+            let actualFileNameOnly = fileNameParts[0];
+            newJsonName = folderUrl + '/assets/'+actualFileNameOnly+'.json';
+            console.log('newJsonName', newJsonName)
+          }
           return axios.post(config.baseURL + '/flows-dir-listing', {
               filename : newJsonName ,
               text : newContent,

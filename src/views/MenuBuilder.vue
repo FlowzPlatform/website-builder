@@ -11,16 +11,16 @@
 		  						<select class="form-control" id="menuType">
 							  		<option value="headMenu">Header Menu</option>
 							  		<option value="headMenu">Footer Menu</option>
-						  		</select>		
+						  		</select>
 		  					</div>
 		  				</div>
 		  			</form>
-		  			
+
 		  		</div>
 		  	</div> -->
 
 		  	<!-- <hr> -->
-		  	
+
 		  	<div class="row">
 		  		<div class="col-md-12">
 		  			<div class="dd" id="domenu-1">
@@ -101,6 +101,7 @@
 // import $ from 'jquery'
 
 import axios from 'axios'
+const config = require('../config');
 
 import domenu from 'domenu'
 
@@ -108,7 +109,6 @@ import domenu from 'domenu'
 		name: 'menuBuilder',
 		data: () => ({
 	        outputJson: [],
-	        baseURL: 'http://localhost:3030',
 	        MenuJSON: []
 	    }),
 	    components: {
@@ -123,7 +123,7 @@ import domenu from 'domenu'
 			var folderUrl = configFileUrl.replace(fileName, '');
 
 			try {
-			    let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
+			    let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
 				// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
 					window.localStorage.setItem('domenu-1Json', responseConfig.data);
@@ -134,7 +134,7 @@ import domenu from 'domenu'
 			    // window.localStorage.clear();
 			}
 
-			
+
 
 			// this.MenuJSON = responseConfig.data;
 
@@ -147,7 +147,7 @@ import domenu from 'domenu'
 		        $keepChanges       = $outputContainer.find('.keepChanges'),
 		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-	        
+
 
 		    // var MenuJSON;
 	     //    var jsonUrl = 'http://localhost:3030/flows-dir-listing/0?path=/home/software/AllProjects/FlowzServiceApi/projects/product-listing/assets/menu.json';
