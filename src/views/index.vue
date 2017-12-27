@@ -1840,7 +1840,7 @@
             },500); 
 
             setTimeout(function(){
-              // location.reload();
+              location.reload();
             },1000);  
           })
           .catch((e) => {
