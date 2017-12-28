@@ -1384,15 +1384,15 @@ export default {
         pagescripts=rawSettings[1].pageSettings[i].PageScripts;
 
 
-        if (PageMetacharset != '') {
+        if (PageMetacharset != '' && PageMetacharset != undefined) {
           tophead = tophead + '<meta charset="' + PageMetacharset + '">'
         }
-        if (pageMetaInfo.length > 0) {
+        if (pageMetaInfo.length > 0 && pageMetaInfo != undefined) {
           for (let a = 0; a < pageMetaInfo.length; a++) {
             tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
           }
         }
-        if (pageexternalJs.length > 0) {
+        if (pageexternalJs.length > 0 && pageexternalJs != undefined) {
           for (let a = 0; a < pageexternalJs.length; a++) {
             if (pageexternalJs[a].linkposition == 'starthead') {
               tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
@@ -1407,7 +1407,7 @@ export default {
         }
 
 
-        if (pageexternalCss.length > 0) {
+        if (pageexternalCss.length > 0 && pageexternalCss != undefined) {
           for (let a = 0; a < pageexternalCss.length; a++) {
             if (pageexternalCss[a].linkposition == 'starthead') {
               tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
@@ -1420,7 +1420,7 @@ export default {
             }
           }
         }
-        if (pagescripts.length > 0) {
+        if (pagescripts.length > 0 && pagescripts != undefined) {
             for (let a = 0; a < pagescripts.length; a++) {
               if (pagescripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
