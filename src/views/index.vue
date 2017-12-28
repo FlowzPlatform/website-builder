@@ -3330,8 +3330,8 @@
 
                               let projName = previewFile.replace('websites/', '');
 
-                              window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
-                              // window.open('http://' + projName + '.'+ config.ipAddress + '/public/' + nameF + '.html');
+                              // window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+                              window.open('http://' + projName + '.'+ config.ipAddress + '/public/' + nameF + '.html');
 
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                 .then(async(res) => {
