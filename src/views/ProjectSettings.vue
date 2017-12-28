@@ -1826,8 +1826,8 @@ export default {
 
 
         // Open in new window
-        // window.open('http://' + this.repoName + '.'+ config.ipAddress);
-        window.open(config.ipAddress +'/'+ this.repoName + '/public/');
+        window.open('http://' + this.repoName + '.'+ config.ipAddress);
+        // window.open(config.ipAddress +'/'+ this.repoName + '/public/');
         // Publish with Zeit Now
         axios.post(config.baseURL + '/publish-now', {
             projectName: this.repoName
