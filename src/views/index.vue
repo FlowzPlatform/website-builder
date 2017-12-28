@@ -2949,12 +2949,12 @@
           if (ProjectMetacharset != '') {
             tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
           }
-          if (metaInfo.length > 0) {
+          if (metaInfo.length > 0 && metaInfo != undefined) {
             for (let a = 0; a < metaInfo.length; a++) {
               tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
             }
           }
-          if (externalJs.length > 0) {
+          if (externalJs.length > 0 && externalJs != undefined) {
             for (let a = 0; a < externalJs.length; a++) {
               if (externalJs[a].linkposition == 'starthead') {
                 tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
@@ -2968,7 +2968,7 @@
             }
           }
 
-          if (externalCss.length > 0) {
+          if (externalCss.length > 0 && externalCss != undefined) {
             for (let a = 0; a < externalCss.length; a++) {
               if (externalCss[a].linkposition == 'starthead') {
                 tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
@@ -2982,7 +2982,7 @@
 
             }
           }
-          if (projectscripts.length > 0) {
+          if (projectscripts.length > 0 && projectscripts != undefined) {
             for (let a = 0; a < projectscripts.length; a++) {
               if (projectscripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
@@ -3014,15 +3014,15 @@
               pagescripts=self.globalConfigData[1].pageSettings[i].PageScripts;
             }
           }
-          if (PageMetacharset != '') {
+          if (PageMetacharset != '' && PageMetacharset != undefined) {
             tophead = tophead + '<meta charset="' + PageMetacharset + '">'
           }
-          if (pageMetaInfo.length > 0) {
+          if (pageMetaInfo.length > 0 && pageMetaInfo != undefined) {
             for (let a = 0; a < pageMetaInfo.length; a++) {
               tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
             }
           }
-          if (pageexternalJs.length > 0) {
+          if (pageexternalJs.length > 0 && pageexternalJs != undefined) {
             for (let a = 0; a < pageexternalJs.length; a++) {
               if (pageexternalJs[a].linkposition == 'starthead') {
                 tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
@@ -3036,7 +3036,7 @@
             }
           }
 
-          if (pageexternalCss.length > 0) {
+          if (pageexternalCss.length > 0 && pageexternalCss != undefined) {
             for (let a = 0; a < pageexternalCss.length; a++) {
               if (pageexternalCss[a].linkposition == 'starthead') {
                 tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
@@ -3049,7 +3049,7 @@
               }
             }
           }
-          if (pagescripts.length > 0) {
+          if (pagescripts.length > 0 && pagescripts != undefined) {
             for (let a = 0; a < pagescripts.length; a++) {
               if (pagescripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
