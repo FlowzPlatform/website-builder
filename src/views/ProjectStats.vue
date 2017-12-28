@@ -915,7 +915,7 @@ export default {
 
 
         // Open in new window
-        window.open('http://' + this.repoName + '.'+ config.ipAddress);
+        window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
         // window.open(config.ipAddress +'/'+ this.repoName + '/public/');
         // Publish with Zeit Now
         axios.post(config.baseURL + '/publish-now', {
