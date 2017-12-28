@@ -351,10 +351,9 @@ export default {
       var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
       var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
       var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
-      var tophead = '';
-      var endhead = '';
-      var topbody = '';
-      var endbody = '';
+      var projectscripts=rawConfigs[1].projectSettings[1].ProjectScripts
+
+      
       var getFromBetween = {
         results: [],
         string: "",
@@ -387,7 +386,13 @@ export default {
           return this.results;
         }
       };
-      if (ProjectMetacharset != '') {
+      
+      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+      var tophead = '';
+      var endhead = '';
+      var topbody = '';
+      var endbody = '';
+        if (ProjectMetacharset != '') {
         tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
       }
 
@@ -425,10 +430,21 @@ export default {
 
         }
       }
-      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+      if (projectscripts.length > 0) {
+            for (let a = 0; a < projectscripts.length; a++) {
+              if (projectscripts[a].linkposition == 'starthead') {
+                tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'endhead') {
+                endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'startbody') {
+                topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'endbody') {
+                endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              }
+            }
+          }
 
         var partials = ''
-
         let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
 
         var rawSettings = responseConfigLoop.data.data[0].configData;
@@ -437,7 +453,7 @@ export default {
         var Layout = ''
         var partialsPage = [];
         var vuepartials = [];
-
+        var pagescripts=[];
         var layoutdata = '';
         var pageexternalJs = [];
         var pageexternalCss = [];
@@ -453,6 +469,8 @@ export default {
         pageMetaInfo = rawSettings[1].pageSettings[i].PageMetaInfo;
         pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
         PageMetacharset = rawSettings[1].pageSettings[i].PageMetacharset;
+        pagescripts=rawSettings[1].pageSettings[i].PageScripts;
+
 
         if (PageMetacharset != '') {
           tophead = tophead + '<meta charset="' + PageMetacharset + '">'
@@ -490,6 +508,20 @@ export default {
             }
           }
         }
+        if (pagescripts.length > 0) {
+            for (let a = 0; a < pagescripts.length; a++) {
+              if (pagescripts[a].linkposition == 'starthead') {
+                tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'endhead') {
+                endhead = endhead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'startbody') {
+                topbody = topbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'endbody') {
+                endbody = endbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              }
+            }
+          }
+
         if (vuepartials != undefined && vuepartials.length > 0) {
           var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
           mainVuefile = mainVuefile.data
@@ -502,7 +534,7 @@ export default {
                 filename: config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js',
                 text: temp,
                 type: 'file'
-              }).then(async(res) => {
+              }).then(async (res) => {
                 contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
                 axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
@@ -538,7 +570,7 @@ export default {
         await axios.post(config.baseURL + '/flows-dir-listing', {
             foldername: newFolderName,
             type: 'folder'
-          }).then(async(res) => {
+          }).then(async (res) => {
             for (let p = 0; p < back_partials.length; p++) {
               let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial');
               responsepartials = responsepartials.data
@@ -685,8 +717,8 @@ export default {
           }
           var obj = {}
           var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
-            // console.log('key:',key)
-            // console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
+          // console.log('key:',key)
+          // console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
           obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
           partialsPage[j] = []
           partialsPage[j] = obj
@@ -714,13 +746,13 @@ export default {
             filename: mainMetal,
             text: responseMetal,
             type: 'file'
-          }).then(async(response) => {
+          }).then(async (response) => {
             var newFolderName = folderUrl + '/Preview';
             await axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName,
                 type: 'folder'
               })
-              .then(async(res) => {
+              .then(async (res) => {
                 console.log(res);
                 let newContent = "<html>\n<head>\n" + tophead +
                   "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
@@ -740,7 +772,7 @@ export default {
                   '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                   '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                   '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                  // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
                   '<script src="./../main-files/main.js"><\/script>\n' + endbody +
                   '</body>\n</html>';
 
@@ -768,37 +800,30 @@ export default {
                     text: rawContent,
                     type: 'file'
                   })
-                  .then(async(res) => {
+                  .then(async (res) => {
                     this.saveFileLoading = false;
 
-                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async(response) => {
+                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
 
                         await axios.post(config.baseURL + '/flows-dir-listing', {
                             filename: mainMetal,
                             text: responseMetal,
                             type: 'file'
                           })
-                          .then(async(res) => {
+                          .then(async (res) => {
                             var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                             previewFile = folderUrl.replace('/var/www/html', '');
 
                             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                              .then(async(res) => {
+                              .then(async (res) => {
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                                   console.log(e)
                                 })
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
-                                    // console.log('deleted extra layout file:', res)
-                                  }).catch((e) => {
-                                    console.log(e)
-                                  })
-                                  // console.log(res);
-                                  // await axios.post(config.baseURL + '/flows-dir-listing', {
-                                  //         filename: folderUrl + '/Layout/' + Layout + '.layout',
-                                  //         text: layoutdata.data,
-                                  //         type: 'file'
-                                  //     })
-                                  //     .then(async (res) => {
+                                  // console.log('deleted extra layout file:', res)
+                                }).catch((e) => {
+                                  console.log(e)
+                                })
                                 if (vuepartials != undefined && vuepartials.length > 0) {
                                   for (let x = 0; x < vuepartials.length; x++) {
 
@@ -889,35 +914,34 @@ export default {
 
 
         // Open in new window
-        window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
-        // window.open(config.ipAddress + previewFile + '/public/');
-        
+        window.open('http://' + this.repoName + '.'+ config.ipAddress);
+        // window.open(config.ipAddress +'/'+ this.repoName + '/public/');
         // Publish with Zeit Now
-        // axios.post(config.baseURL + '/publish-now', {
-        //   projectName: this.repoName
-        // })
-        // .then((res) => {
-        //   let serverUrl = res.data;
-        //   // window.open( serverUrl + '/public/');
-        //   this.$message({
-        //     showClose: true,
-        //     message: 'Successfully Published.',
-        //     type: 'success'
-        //   });
-        //   console.log(res.data);
-        //   this.previewLoader = false;
-        // })
-        // .catch((e) => {
-        //   this.$message({
-        //     showClose: true,
-        //     message: 'Failed! Please try again.',
-        //     type: 'error'
-        //   });
-        //   console.log(e);
-        //   this.previewLoader = false;
-        // });
+        axios.post(config.baseURL + '/publish-now', {
+            projectName: this.repoName
+          })
+          .then((res) => {
+            let serverUrl = res.data;
+            // window.open( serverUrl + '/public/');
+            this.$message({
+              showClose: true,
+              message: 'Successfully Published.',
+              type: 'success'
+            });
+            console.log(res.data);
+            this.previewLoader = false;
+          })
+          .catch((e) => {
+            this.$message({
+              showClose: true,
+              message: 'Failed! Please try again.',
+              type: 'error'
+            });
+            console.log(e);
+            this.previewLoader = false;
+          });
       }
-    },
+    }
   },
 
     // previewWebsite () {

@@ -10,7 +10,7 @@ if(process.env.baseURL == undefined){
 if (process.env.NODE_ENV !== 'development') {
     ipAdd = 'flowzcluster.tk';
     socketURL = 'ws://ws.flowz.com:4032';
-    frontEndUrl = 'http://webbuilder.flowzcluster.tk';
+    frontEndUrl = 'http://webbuilder.flowzcluster.tk/dashboard';
 
     loginUrl = 'http://auth.flowz.com/api/login';
     registerUrl = 'http://auth.flowz.com/api/setup';

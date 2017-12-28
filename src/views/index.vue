@@ -587,12 +587,12 @@
       // Project Directory Listing
       let self = this
 
-      let socket
-      if (process.env.NODE_ENV !== 'development') {
-        socket = io(config.socketURL)
-      } else {
-        socket = config.socketURL
-      }
+      let socket = config.socketURL;
+      // if (process.env.NODE_ENV !== 'development') {
+      //   socket = io(config.socketURL);
+      // } else {
+      //   socket = config.socketURL
+      // }
 
       console.log('Socket url:', socket);
       
@@ -1386,7 +1386,8 @@
                                 "ProjectExternalCss": [],
                                 "ProjectExternalJs": [],
                                 "ProjectMetaInfo": [],
-                                "ProjectMetacharset": ''
+                                "ProjectMetacharset": '',
+                                "ProjectScripts":[]
                               }],
                               "pageSettings": [{
                                 "PageName": "index.html",
@@ -1403,7 +1404,8 @@
                                 "PageExternalCss": [],
                                 "PageExternalJs": [],
                                 "PageMetaInfo": [],
-                                "PageMetacharset":''
+                                "PageMetacharset":'',
+                                "ProjectScripts":[]
                               }]
                             }, {
                               "layoutOptions": [{
@@ -2006,7 +2008,8 @@
                                           "PageExternalJs": [],
                                           "PageMetaInfo": [],
                                           "PageMetacharset": [],
-                                          "partials": totpartial
+                                          "partials": totpartial,
+                                          "PageScripts":[]
                                          };
                                          
                       this.globalConfigData[1].pageSettings.push((PageSettings))
@@ -2805,7 +2808,7 @@
 
                             }
                             if (checklayoutp != true) {
-                              this.globalConfigData[1].pageSettings[i].partials.splice(k)
+                              this.globalConfigData[1].pageSettings[i].partials.splice(k,1)
                               k = k - 1
                             }
                           }
@@ -2931,12 +2934,14 @@
           var externalCss = self.globalConfigData[1].projectSettings[1].ProjectExternalCss;
           var metaInfo = self.globalConfigData[1].projectSettings[1].ProjectMetaInfo;
           var ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
+          var projectscripts=self.globalConfigData[1].projectSettings[1].ProjectScripts
           var tophead = '';
           var endhead = '';
           var topbody = '';
           var endbody = '';
 
           var pageexternalJs = [];
+          var pagescripts=[];
           var pageexternalCss = [];
           var pageMetaInfo = [];
           var pageSeoTitle;
@@ -2949,7 +2954,6 @@
               tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
             }
           }
-
           if (externalJs.length > 0) {
             for (let a = 0; a < externalJs.length; a++) {
               if (externalJs[a].linkposition == 'starthead') {
@@ -2978,6 +2982,19 @@
 
             }
           }
+          if (projectscripts.length > 0) {
+            for (let a = 0; a < projectscripts.length; a++) {
+              if (projectscripts[a].linkposition == 'starthead') {
+                tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'endhead') {
+                endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'startbody') {
+                topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'endbody') {
+                endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              }
+            }
+          }
 
           let back_partials = new Array();
           for (let i = 0; i < self.globalConfigData[1].pageSettings.length; i++) {
@@ -2994,6 +3011,7 @@
               pageMetaInfo = self.globalConfigData[1].pageSettings[i].PageMetaInfo;
               pageSeoTitle = self.globalConfigData[1].pageSettings[i].PageSEOTitle;
               PageMetacharset = self.globalConfigData[1].pageSettings[i].PageMetacharset;
+              pagescripts=self.globalConfigData[1].pageSettings[i].PageScripts;
             }
           }
           if (PageMetacharset != '') {
@@ -3031,6 +3049,19 @@
               }
             }
           }
+          if (pagescripts.length > 0) {
+            for (let a = 0; a < pagescripts.length; a++) {
+              if (pagescripts[a].linkposition == 'starthead') {
+                tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'endhead') {
+                endhead = endhead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'startbody') {
+                topbody = topbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'endbody') {
+                endbody = endbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              }
+            }
+          }
 
           var contentpartials = self.$store.state.content;
           if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
@@ -3046,7 +3077,7 @@
                   filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
                   text: temp,
                   type: 'file'
-                }).then(async(res) => {
+                }).then(async (res) => {
                   contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
                   axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
@@ -3079,7 +3110,7 @@
           await axios.post(config.baseURL + '/flows-dir-listing', {
               foldername: newFolderName,
               type: 'folder'
-            }).then(async(res) => {
+            }).then(async (res) => {
               for (let i = 0; i < back_partials.length; i++) {
                 let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial');
                 responsepartials = responsepartials.data
@@ -3254,12 +3285,12 @@
               text: responseMetal.data,
               type: 'file'
             })
-            .then(async(response) => {
+            .then(async (response) => {
               let newFolderName1 = folderUrl + '/Preview';
               await axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName1,
                 type: 'folder'
-              }).then(async(res) => {
+              }).then(async (res) => {
                 console.log(res)
 
               }).catch((e) => {
@@ -3283,7 +3314,7 @@
                 '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
                 '<script src="./../main-files/main.js"><\/script>\n' + endbody +
                 '</body>\n</html>';
 
@@ -3292,7 +3323,7 @@
                   text: newContent,
                   type: 'file'
                 })
-                .then(async(res) => {
+                .then(async (res) => {
 
                   var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
 
@@ -3310,7 +3341,7 @@
                       text: rawContent,
                       type: 'file'
                     })
-                    .then(async(res) => {
+                    .then(async (res) => {
 
                       self.saveFileLoading = false;
                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
@@ -3321,7 +3352,7 @@
                               text: metalsmithJSON,
                               type: 'file'
                             })
-                            .then(async(res) => {
+                            .then(async (res) => {
                               self.fullscreenLoading = false;
                               self.previewLoading = false;
 
@@ -3331,10 +3362,10 @@
                               let projName = previewFile.replace('websites/', '');
 
                               // window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
-                              window.open('http://' + projName + '.'+ config.ipAddress + '/public/' + nameF + '.html');
+                              window.open('http://' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
 
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                .then(async(res) => {
+                                .then(async (res) => {
                                   console.log(res);
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
@@ -3426,12 +3457,12 @@
                       })
 
                       axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                          console.log('deleted extra layout file:', res)
-                        }).catch((e) => {
-                          console.log(e)
-                        })
-                        // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                        // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                        console.log('deleted extra layout file:', res)
+                      }).catch((e) => {
+                        console.log(e)
+                      })
+                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                       self.saveFileLoading = false
                       console.log(e)
                     })
