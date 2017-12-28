@@ -1304,57 +1304,59 @@ export default {
       var endhead = '';
       var topbody = '';
       var endbody = '';
-        if (ProjectMetacharset != '') {
-        tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
-      }
+        
 
-      if (metaInfo.length > 0) {
-        for (let a = 0; a < metaInfo.length; a++) {
-          tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+        if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
+          tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
         }
-      }
 
-      if (externalJs.length > 0) {
-        for (let a = 0; a < externalJs.length; a++) {
-          if (externalJs[a].linkposition == 'starthead') {
-            tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-          } else if (externalJs[a].linkposition == 'endhead') {
-            endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-          } else if (externalJs[a].linkposition == 'startbody') {
-            topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-          } else if (externalJs[a].linkposition == 'endbody') {
-            endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+        if (metaInfo != undefined && metaInfo.length > 0) {
+          for (let a = 0; a < metaInfo.length; a++) {
+            tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
           }
         }
-      }
 
-      if (externalCss.length > 0) {
-        for (let a = 0; a < externalCss.length; a++) {
-          if (externalCss[a].linkposition == 'starthead') {
-            tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-          } else if (externalCss[a].linkposition == 'endhead') {
-            endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-          } else if (externalCss[a].linkposition == 'startbody') {
-            topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-          } else if (externalCss[a].linkposition == 'endbody') {
-            endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
-          }
-
-        }
-      }
-      if (projectscripts.length > 0) {
-            for (let a = 0; a < projectscripts.length; a++) {
-              if (projectscripts[a].linkposition == 'starthead') {
-                tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'endhead') {
-                endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'startbody') {
-                topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'endbody') {
-                endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              }
+        if (externalJs != undefined && externalJs.length > 0) {
+          for (let a = 0; a < externalJs.length; a++) {
+            if (externalJs[a].linkposition == 'starthead') {
+              tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+            } else if (externalJs[a].linkposition == 'endhead') {
+              endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+            } else if (externalJs[a].linkposition == 'startbody') {
+              topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+            } else if (externalJs[a].linkposition == 'endbody') {
+              endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
             }
           }
+        }
+
+        if (externalCss != undefined && externalCss.length > 0) {
+          for (let a = 0; a < externalCss.length; a++) {
+            if (externalCss[a].linkposition == 'starthead') {
+              tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+            } else if (externalCss[a].linkposition == 'endhead') {
+              endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+            } else if (externalCss[a].linkposition == 'startbody') {
+              topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+            } else if (externalCss[a].linkposition == 'endbody') {
+              endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
+            }
+
+          }
+        }
+        if (projectscripts != undefined && projectscripts.length > 0) {
+          for (let a = 0; a < projectscripts.length; a++) {
+            if (projectscripts[a].linkposition == 'starthead') {
+              tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+            } else if (projectscripts[a].linkposition == 'endhead') {
+              endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+            } else if (projectscripts[a].linkposition == 'startbody') {
+              topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+            } else if (projectscripts[a].linkposition == 'endbody') {
+              endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+            }
+          }
+        }
 
         var partials = ''
         let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
@@ -1384,15 +1386,15 @@ export default {
         pagescripts=rawSettings[1].pageSettings[i].PageScripts;
 
 
-        if (PageMetacharset != '' && PageMetacharset != undefined) {
+        if (PageMetacharset != undefined && PageMetacharset != '') {
           tophead = tophead + '<meta charset="' + PageMetacharset + '">'
         }
-        if (pageMetaInfo.length > 0 && pageMetaInfo != undefined) {
+        if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
           for (let a = 0; a < pageMetaInfo.length; a++) {
             tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
           }
         }
-        if (pageexternalJs.length > 0 && pageexternalJs != undefined) {
+        if (pageexternalJs != undefined && pageexternalJs.length > 0) {
           for (let a = 0; a < pageexternalJs.length; a++) {
             if (pageexternalJs[a].linkposition == 'starthead') {
               tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
@@ -1407,7 +1409,7 @@ export default {
         }
 
 
-        if (pageexternalCss.length > 0 && pageexternalCss != undefined) {
+        if (pageexternalCss != undefined && pageexternalCss.length > 0) {
           for (let a = 0; a < pageexternalCss.length; a++) {
             if (pageexternalCss[a].linkposition == 'starthead') {
               tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
@@ -1420,7 +1422,7 @@ export default {
             }
           }
         }
-        if (pagescripts.length > 0 && pagescripts != undefined) {
+        if (pagescripts != undefined && pagescripts.length > 0) {
             for (let a = 0; a < pagescripts.length; a++) {
               if (pagescripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
