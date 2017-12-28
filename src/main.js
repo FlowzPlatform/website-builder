@@ -52,7 +52,8 @@ router.beforeEach((to, from, next) => {
     obId = to.query.ob_id
   }
   if (to.query.token) {
-    router.app.$cookie.set('auth_token', to.query.token, { expires: 1, domain: location })
+    router.app.$cookie.set('auth_token', to.query.token, { expires: 1, domain: location });
+    console.log('After social login: ', router.app.$cookie.get('auth_token'))
   }
   const token = router.app.$cookie.get('auth_token')
   if (to.matched.some(record => record.meta.requiresAuth) && obId) {

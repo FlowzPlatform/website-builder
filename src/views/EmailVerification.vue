@@ -165,7 +165,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
   @import url(https://fonts.googleapis.com/css?family=Gudea:400,700);
   
   p {

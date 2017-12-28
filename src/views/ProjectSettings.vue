@@ -396,6 +396,65 @@
       </div>
       <!-- External Links section ends -->
 
+      <!-- Local Scripts -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Local Scripts</a>
+          </div>
+      </div>
+      <div id="toggleLocalscriptsContent" class="toggleableDivHeaderContent" style="display: none;">
+         <div class="row">
+          <div class="col-md-12">
+               <div class="row">
+                  <div class="col-md-4">
+                     <h3> Scripts: </h3>
+                  </div>
+               </div>
+               <hr>
+               <el-form ref="form" :model="form">
+               
+                  <div >
+                     <el-form-item>
+                        <draggable v-model='localscripts' @start="drag=true" @end="drag=false">
+                          <div style="margin-bottom: 25px" v-for='(n, index) in localscripts' class="row">
+                             <!-- position  -->
+                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                <el-select v-model="n.linkposition" placeholder="Position">
+                                   <el-option
+                                      v-for="item in Allposition"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                   </el-option>
+                                </el-select>
+                             </div>
+                             <!-- link url -->
+                             <div class="col-md-6" style="margin: 0; padding: 0px">
+                                <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
+                             </div>
+                             <!-- Delete Variable -->
+                             <div class="col-md-1">
+                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
+                             </div>
+                             <div class="col-md-1">
+                                <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                              
+                             </div>
+                             
+
+                          </div>
+                        </draggable>
+                     </el-form-item>
+                  </div>
+                 
+                  <!-- Create new variable -->
+                  <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
+               </el-form>
+            </div>
+        </div>
+      </div>
+      <!-- Local Scripts -->
+
       <!-- Meta Tags -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -611,7 +670,8 @@ export default {
         name: 'Edit Me',
         content: 'Update Me'
       }],
-      Metacharset: ''
+      Metacharset: '',
+      localscripts:[],
     }
   },
   components: {
@@ -679,6 +739,15 @@ export default {
       let newVariable = { name:'',content:''};
       this.externallinksMeta.push(newVariable);
       this.editableInit();
+    },
+
+    addNewlocalscripts(){
+      let newVariable = { linkposition:'',script:''};
+      this.localscripts.push(newVariable);
+    },
+
+    deletelocalscripts(deleteIndex){
+      this.localscripts.splice(deleteIndex,1);
     },
 
     async addNewPlugin(pluginFileData) {
@@ -984,7 +1053,8 @@ export default {
                                               "PageExternalCss": [],
                                               "PageExternalJs": [],
                                               "PageMetaInfo": [],
-                                              "PageMetacharset":''
+                                              "PageMetacharset":'',
+                                              "ProjectScripts":[]
                                             };
 
             this.settings[1].pageSettings.push(notRegisteredPageSettings);
@@ -1098,7 +1168,8 @@ export default {
                               "ProjectExternalCss": this.externallinksCSS,
                               "ProjectExternalJs": this.externallinksJS,
                               "ProjectMetaInfo": this.externallinksMeta,
-                              "ProjectMetacharset":this.Metacharset
+                              "ProjectMetacharset":this.Metacharset,
+                              "ProjectScripts":this.localscripts
                             }];
 
       this.settings[1].projectSettings = ProjectSettings;
@@ -1732,7 +1803,7 @@ export default {
         // Open in new window
         window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
         // window.open(config.ipAddress + previewFile + '/public/');
-        
+
         // Publish with Zeit Now
         // axios.post(config.baseURL + '/publish-now', {
         //   projectName: this.repoName
@@ -1814,6 +1885,7 @@ export default {
         this.externallinksJS = this.settings[1].projectSettings[1].ProjectExternalJs;
         this.externallinksMeta = this.settings[1].projectSettings[1].ProjectMetaInfo;
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
+        this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
 
 
         // Old Code for tree data
@@ -2044,6 +2116,15 @@ export default {
                 $("#toggleCommits").html("List of Commits")
             } else {
                 $("#toggleCommits").text("List of Commits")
+            }
+        });
+
+        $("#toggleLocalscripts").click(function() {
+            $("#toggleLocalscriptsContent").slideToggle("slow");
+            if ($("#toggleLocalscripts").text() == "Local Scripts") {
+                $("#toggleLocalscripts").html("Local Scripts")
+            } else {
+                $("#toggleLocalscripts").text("Local Scripts")
             }
         });
 

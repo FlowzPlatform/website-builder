@@ -159,48 +159,103 @@
         </div>
 
       <div class="well" id='add-meta-tag'>
-         <div class="row">
-           <div class="col-md-12" >
-              <div class="row">
+           <div class="row">
+             <div class="col-md-12" >
+                <div class="row">
+                      <div class="col-md-4">
+                         <h3>Add External meta tags </h3>
+                      </div>
+                   </div>
+                   <hr>
+                 <el-form :inline="true">
+                   <el-form-item label="Meta Charset">
+                      <el-input placeholder="charset value" v-model="Metacharset"></el-input>
+                    </el-form-item>
+                  </el-form>
+             </div>
+              <div class="col-md-12" style="margin-top: 2%">
+                  <table class="table table-hover  table-bordered">
+                      <!-- <draggable @start="drag=true" @end="drag=false"> -->
+                      <thead class="thead">
+                        <tr>
+                          <th>Name</th>
+                          <th>Content</th>
+                          <th></th>
+                          <!-- <th></th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(n, index) in externallinksMeta" >
+                          <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                          <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                          <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
+                          <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
+                        </tr>
+                        <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                      </tbody>
+                        <!-- </draggable> -->
+                    </table>
+                    <!-- Create new variable -->
+                    <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+                 <!-- </el-form> -->
+              </div>
+           </div>
+        </div>  
+
+        <div class="well" id='add-local-scripts'>
+          <div class="row">
+            <div class="col-md-12">
+                 <div class="row">
                     <div class="col-md-4">
-                       <h3>Add External meta tags </h3>
+                       <h3> Scripts: </h3>
                     </div>
                  </div>
                  <hr>
-               <el-form :inline="true">
-                 <el-form-item label="Meta Charset">
-                    <el-input placeholder="charset value" v-model="Metacharset"></el-input>
-                  </el-form-item>
-                </el-form>
-           </div>
-            <div class="col-md-12" style="margin-top: 2%">
-                <table class="table table-hover  table-bordered">
-                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
-                    <thead class="thead">
-                      <tr>
-                        <th>Name</th>
-                        <th>Content</th>
-                        <th></th>
-                        <!-- <th></th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(n, index) in externallinksMeta" >
-                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
-                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
-                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
-                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
-                      </tr>
-                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
-                    </tbody>
-                      <!-- </draggable> -->
-                  </table>
-                  <!-- Create new variable -->
-                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
-               <!-- </el-form> -->
-            </div>
-         </div>
-      </div>        
+                 <el-form ref="form" :model="form">
+                 
+                    <div >
+                       <el-form-item>
+                          <draggable v-model='localpagescripts' @start="drag=true" @end="drag=false">
+                            <div style="margin-bottom: 25px" v-for='(n, index) in localpagescripts' class="row">
+                               <!-- position  -->
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-6" style="margin: 0; padding: 0px">
+                                  <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
+                               </div>
+                               <div class="col-md-1">
+                                  <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                                
+                               </div>
+                               
+
+                            </div>
+                          </draggable>
+                       </el-form-item>
+                    </div>
+                   
+                    <!-- Create new variable -->
+                    <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
+                 </el-form>
+              </div>
+          </div>
+        </div> 
+
+
+
         </div>
       </div>
     </div>
@@ -279,7 +334,8 @@ export default {
       {label:'Start of <body> Tag',value:'startbody'},
       {label:'End of <body> tag',value:'endbody'}
       ],
-      Metacharset:''
+      Metacharset:'',
+      localpagescripts:[],
     }
   },
   components: {
@@ -319,6 +375,13 @@ export default {
     },
     deletelinkMeta(deleteIndex) {
       this.externallinksMeta.splice(deleteIndex, 1);
+    },
+    addNewlocalscripts(){
+      let newVariable = { linkposition:'',script:''};
+      this.localpagescripts.push(newVariable);
+    },
+    deletelocalscripts(deleteIndex){
+      this.localpagescripts.splice(deleteIndex,1);
     },
 
     async layoutChange() {
@@ -431,6 +494,9 @@ export default {
         this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo=this.externallinksMeta;
         this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle=this.form.seoTitle;
         this.settings[1].pageSettings[this.currentFileIndex].PageMetacharset=this.Metacharset;
+        this.settings[1].pageSettings[this.currentFileIndex].PageScripts=this.localpagescripts;
+
+
         
         for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
           if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
@@ -637,6 +703,12 @@ export default {
         this.externallinksJS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs;
       } else {
         this.externallinksJS = [];
+      }
+
+      if('PageScripts' in this.settings[1].pageSettings[this.currentFileIndex]){
+        this.localpagescripts = this.settings[1].pageSettings[this.currentFileIndex].PageScripts;
+      } else {
+        this.localpagescripts = [];
       }
 
       for (var i = 0; i < this.form.layouts.length; i++) {
