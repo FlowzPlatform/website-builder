@@ -1182,881 +1182,581 @@ export default {
       }) 
     },
 
-    // async publishMetalsmith () {
-    //     this.previewLoader = true;
-    //     var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    //     var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
-    //     var rawConfigs = responseConfig.data.data[0].configData;
-    //     var partialstotal = []
-    //     console.log("rawConfigs[1].pageSettings.length:",rawConfigs[1].pageSettings.length)
-    //     for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+    async publishMetalsmith() {
+      this.previewLoader = true;
+      var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+      var rawConfigs = responseConfig.data.data[0].configData;
+      var partialstotal = []
+      var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
+      var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
+      var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
+      var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
+      var tophead = '';
+      var endhead = '';
+      var topbody = '';
+      var endbody = '';
+      var getFromBetween = {
+        results: [],
+        string: "",
+        getFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var SP = this.string.indexOf(sub1) + sub1.length;
+          var string1 = this.string.substr(0, SP);
+          var string2 = this.string.substr(SP);
+          var TP = string1.length + string2.indexOf(sub2);
+          return this.string.substring(SP, TP);
+        },
+        removeFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+          this.string = this.string.replace(removal, "");
+        },
+        getAllResults: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+          var result = this.getFromBetween(sub1, sub2);
+          this.results.push(result);
+          this.removeFromBetween(sub1, sub2);
+          if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+            this.getAllResults(sub1, sub2);
+          } else return;
+        },
+        get: function(string, sub1, sub2) {
+          this.results = [];
+          this.string = string;
+          this.getAllResults(sub1, sub2);
+          return this.results;
+        }
+      };
+      if (ProjectMetacharset != '') {
+        tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
+      }
 
-    //         var partials = ''
+      if (metaInfo.length > 0) {
+        for (let a = 0; a < metaInfo.length; a++) {
+          tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+        }
+      }
 
-    //         let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
-
-    //         var rawSettings = responseConfigLoop.data.data[0].configData;
-    //         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-    //         console.log('nameF:',nameF)
-    //         var Layout = ''
-    //         var partialsPage = [];
-    //         var vuepartials = [];
-    //         Layout = rawSettings[1].pageSettings[i].PageLayout
-    //         partialsPage = rawSettings[1].pageSettings[i].partials
-    //         var back_partials = JSON.parse(JSON.stringify(partialsPage));
-    //         vuepartials = rawSettings[1].pageSettings[i].VueComponents
-    //         if (vuepartials != undefined && vuepartials.length > 0) {
-    //             // console.log("VueComponents found:")
-    //             var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
-    //             mainVuefile = mainVuefile.data
-
-    //             for (let x = 0; x < vuepartials.length; x++) {
-    //                 let temp = mainVuefile.replace(/@@vuecomponent@@/g, vuepartials[x].value.split('.')[0])
-    //                 temp = temp.replace('./' + vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + vuepartials[x].partialsName + '/' + vuepartials[x].value.split('.')[0])
-
-    //                 await axios.post(config.baseURL + '/flows-dir-listing', {
-    //                         filename: config.webpackpublic + vuepartials[x].value.split('.')[0] + '.js',
-    //                         text: temp,
-    //                         type: 'file'
-    //                     }).then(async (res) => {
-    //                         // console.log("successfully created vuecomponent file") 
-    //                         contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
-
-    //                         axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
-    //                             .then((response) => {
-    //                                 console.log("called webpack_file api successfully:")
-    //                             })
-    //                             .catch((e) => {
-    //                                 console.log(e)
-    //                             })
-    //                     })
-    //                     .catch((e) => {
-    //                         console.log(e)
-    //                     })
-
-    //             }
-    //             for (let x = 0; x < vuepartials.length; x++) {
-
-    //                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + '/home/software/workspace/faizan/FlowzServiceApi/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-    //                         console.log(res)
-    //                     })
-    //                     .catch((e) => {
-    //                         console.log(e)
-    //                     })
-    //             }
-    //         }
-
-    //         var responseMetal = ''
-    //         let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
-    //         contentpartials = contentpartials.data
-
-    //         responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(permalinks({pattern: ':date'}))\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
-    //         var index = responseMetal.search('.source')
-
-    //         responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
-    //         var indexPartial = responseMetal.search("handlebars");
-
-    //         for (var j = 0; j < partialsPage.length; j++) {
-    //             var temp1, temp2;
-    //             if (partialsPage[j][Object.keys(partialsPage[j])[0]].match('.hbs')) {
-    //                 temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + "' }}"
-    //                 temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]].split('.')[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + "' }}"
-    //             } else {
-
-    //                 temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".html' }}"
-
-    //                 temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".html' }}"
-    //             }
-
-    //             if (contentpartials.match(temp1)) {
-
-    //                 contentpartials = contentpartials.split(temp1).join(temp2)
-    //                 // let partialsinherit = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/'+Object.keys(partialsPage[j])[0]+'/'+partialsPage[j][Object.keys(partialsPage[j])[0]]);
-
-    //                 var obj = {}
-    //                 var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
-    //                 obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
-    //                 partialsPage[j] = []
-    //                 partialsPage[j] = obj
-    //                 // console.log("new partialsPage[",j,']:',partialsPage[j])
-
-
-
-    //             } else {
-    //                 console.log('partials not found in page')
-    //                 console.log('partialsPage[j]:', partialsPage[j])
-
-    //             }
-    //         }
-    //         console.log("back_partials:",back_partials)
-    //         for (var z = 0; z < partialsPage.length; z++) {
-    //           let key = Object.keys(partialsPage[z])[0];
-    //           let value = partialsPage[z]
-    //           let key2 = key;
-    //           key = key.trim();
-    //           if (value[key2].match('html')) {
-    //               key = key.split('.')[0]
-    //               var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + "').toString())\n"
-    //           } else if (value[key2].match('hbs')) {
-    //               key = key.split('.')[0]
-    //               var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + "').toString())\n"
-    //           } else {
-    //               var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + ".html').toString())\n"
-    //           }
-    //           partials = partials + temp;
-    //       }
-
-    //         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-    //         console.log('final responseMetal:', responseMetal)
-    //         var mainMetal = folderUrl + '/assets/metalsmith.js'
-    //         var value = true;
-    //         await axios.post(config.baseURL + '/flows-dir-listing', {
-    //                 filename: mainMetal,
-    //                 text: responseMetal,
-    //                 type: 'file'
-    //             }).then(async (response) => {
-    //                 var newFolderName = folderUrl + '/Preview';
-    //                 await axios.post(config.baseURL + '/flows-dir-listing', {
-    //                         foldername: newFolderName,
-    //                         type: 'folder'
-    //                     })
-    //                     .then(async (res) => {
-    //                         console.log(res);
-    //                         // console.log('Current URL:', this.$store.state.fileUrl.replace(/\\/g, "\/"));
-
-    //                         console.log("this.form.Layout:", Layout)
-    //                         if (Layout == 'Blank') {
-    //                             // console.log("inside blank layout condition:")
-    //                             await axios.post(config.baseURL + '/flows-dir-listing', {
-    //                                     filename: folderUrl + '/Layout/Blank.layout',
-    //                                     text: '{{{ contents }}}',
-    //                                     type: 'file'
-    //                                 })
-    //                                 .catch((e) => {
-    //                                     console.log("error while blank file creation")
-    //                                 })
-    //                         }
-    //                         let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
-
-    //                         let newContent = "<html>\n<head>\n" +
-    //                             "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-    //                             "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
-    //                             "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-    //                             "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-    //                             "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
-    //                             "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-    //                             "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-    //                             "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-    //                             "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-    //                             '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
-    //                             '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
-    //                             "<link rel='stylesheet' href='./../main-files/main.css'/>\n</head><body>\n" +
-    //                             layoutdata.data +
-    //                             '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
-    //                             '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
-    //                             // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-    //                             '<script src="./../main-files/main.js"><\/script>\n' +
-    //                             '</body>\n</html>';
-
-    //                         await axios.post(config.baseURL + '/flows-dir-listing', {
-    //                             filename: folderUrl + '/Layout/' + Layout + '.layout',
-    //                             text: newContent,
-    //                             type: 'file'
-    //                         })
-
-    //                         var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
-
-    //                         if (Layout == 'Blank') {
-                                
-    //                             rawContent = '---\nlayout: ' + Layout + '.layout\n---\n' + rawContent
-    //                             // }
-    //                         } else {
-    //                             let tempValueLayout = '---\nlayout: ' + Layout + '.layout\n---\n';
-    //                             rawContent = tempValueLayout + rawContent
-
-    //                             // }
-    //                         }
-
-    //                         var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
-
-    //                         await axios.post(config.baseURL + '/flows-dir-listing', {
-    //                                 filename: previewFileName,
-    //                                 text: rawContent,
-    //                                 type: 'file'
-    //                             })
-    //                             .then(async (res) => {
-    //                                 this.saveFileLoading = false;
-
-    //                                 await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
-
-    //                                         await axios.post(config.baseURL + '/flows-dir-listing', {
-    //                                                 filename: mainMetal,
-    //                                                 text: responseMetal,
-    //                                                 type: 'file'
-    //                                             })
-    //                                             .then(async (res) => {
-    //                                                 let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    //                                                 previewFile = folderUrl.replace('/var/www/html', '');
-
-    //                                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-    //                                                     .then(async (res) => {
-    //                                                         console.log(res);
-    //                                                         // value = false;
-    //                                                         // return value
-    //                                                         await axios.post(config.baseURL + '/flows-dir-listing', {
-    //                                                                 filename: folderUrl + '/Layout/' + Layout + '.layout',
-    //                                                                 text: layoutdata.data,
-    //                                                                 type: 'file'
-    //                                                             })
-    //                                                             .then(async (res) => {
-    //                                                                 // location.reload();
-    //                                                                 if (vuepartials != undefined && vuepartials.length > 0) {
-    //                                                                     for (let x = 0; x < vuepartials.length; x++) {
-
-    //                                                                         await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.webpackpublic + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-    //                                                                                 console.log(res)
-    //                                                                             })
-    //                                                                             .catch((e) => {
-    //                                                                                 console.log(e)
-    //                                                                             })
-    //                                                                     }
-    //                                                                     // location.reload();
-    //                                                                 }
-    //                                                                 console.log("layout file reset")
-    //                                                                 if (Layout == 'Blank') {
-    //                                                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
-    //                                                                         .catch((e) => {
-    //                                                                             console.log("error while deleting blank.layout file")
-    //                                                                         })
-    //                                                                 }
-
-    //                                                             })
-
-    //                                                     })
-    //                                                     .catch((e) => {
-    //                                                         console.log(e)
-    //                                                     })
-    //                                             })
-
-    //                                     })
-    //                                     .catch((err) => {
-    //                                         console.log('error while creating metalsmithJSON file' + err)
-    //                                     })
-    //                             })
-    //                             .catch((e) => {
-    //                                 this.saveFileLoading = false
-    //                                 this.$message({
-    //                                     showClose: true,
-    //                                     message: 'File not saved! Please try again.',
-    //                                     type: 'error'
-    //                                 });
-    //                                 console.log(e)
-    //                             })
-
-    //                     })
-    //                     .catch((e) => {
-    //                         console.log(e)
-    //                     })
-
-    //             })
-    //             .catch((e) => {
-    //                 console.log('error while creating metalsmithJSON file' + e)
-    //                 this.$message({
-    //                     showClose: true,
-    //                     message: 'Cannot save file! Some error occured, try again.',
-    //                     type: 'danger'
-    //                 });
-    //             })
-
-    //     }
-
-    //     // window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
-    //     // Publish with Zeit Now
-    //     axios.post(config.baseURL + '/publish-now', {
-    //         projectName : this.repoName
-    //     })
-    //     .then((res) => {
-    //       let serverUrl = res.data;
-    //       window.open( serverUrl + '/public/');
-    //       this.$message({
-    //         showClose: true,
-    //         message: 'Successfully Published.',
-    //         type: 'success'
-    //       });
-    //       console.log(res.data);
-    //       this.previewLoader = false;
-    //     })
-    //     .catch((e) => {
-    //       this.$message({
-    //         showClose: true,
-    //         message: 'Failed! Please try again.',
-    //         type: 'error'
-    //       });
-    //       console.log(e);
-    //       this.previewLoader = false;
-    //     });
-    //     // location.reload();
-    // },
-
-    async publishMetalsmith () {
-        this.previewLoader = true;
-        var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
-        var rawConfigs = responseConfig.data.data[0].configData;
-        var partialstotal = []
-        var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
-       var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
-       var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
-       var getFromBetween = {
-           results: [],
-           string: "",
-           getFromBetween: function(sub1, sub2) {
-               if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-               var SP = this.string.indexOf(sub1) + sub1.length;
-               var string1 = this.string.substr(0, SP);
-               var string2 = this.string.substr(SP);
-               var TP = string1.length + string2.indexOf(sub2);
-               return this.string.substring(SP, TP);
-           },
-           removeFromBetween: function(sub1, sub2) {
-               if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-               var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
-               this.string = this.string.replace(removal, "");
-           },
-           getAllResults: function(sub1, sub2) {
-               if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
-               var result = this.getFromBetween(sub1, sub2);
-               this.results.push(result);
-               this.removeFromBetween(sub1, sub2);
-               if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
-                   this.getAllResults(sub1, sub2);
-               } else return;
-           },
-           get: function(string, sub1, sub2) {
-               this.results = [];
-               this.string = string;
-               this.getAllResults(sub1, sub2);
-               return this.results;
-           }
-       };
-       if(metaInfo.length > 0){
-          for (let a = 0; a < metaInfo.length; a++) {
-             tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+      if (externalJs.length > 0) {
+        for (let a = 0; a < externalJs.length; a++) {
+          if (externalJs[a].linkposition == 'starthead') {
+            tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'endhead') {
+            endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'startbody') {
+            topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'endbody') {
+            endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
           }
         }
-         
-        if(externalJs.length > 0){
-          for (let a = 0; a < externalJs.length; a++) {
-             if (externalJs[a].linkposition == 'starthead') {
-                 tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-             } else if (externalJs[a].linkposition == 'endhead') {
-                 endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-             } else if (externalJs[a].linkposition == 'startbody') {
-                 topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-             } else if (externalJs[a].linkposition == 'endbody') {
-                 endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-             }
-          }
-        }
-         
-        if(externalCss.length > 0){
-          for (let a = 0; a < externalCss.length; a++) {
-             if (externalCss[a].linkposition == 'starthead') {
-                 tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-             } else if (externalCss[a].linkposition == 'endhead') {
-                 endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-             } else if (externalCss[a].linkposition == 'startbody') {
-                 topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-             } else if (externalCss[a].linkposition == 'endbody') {
-                 endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
-             }
+      }
 
-         }
-        }
-        for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
-
-            var partials = ''
-
-            let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
-
-            var rawSettings = responseConfigLoop.data.data[0].configData;
-            var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-            console.log('nameF:',nameF)
-            var Layout = ''
-            var partialsPage = [];
-            var vuepartials = [];
-            var tophead = '';
-            var endhead = '';
-            var topbody = '';
-            var endbody = '';
-            var layoutdata='';
-            var pageexternalJs= [];
-            var pageexternalCss= [];
-            var pageMetaInfo= [];
-            var pageSeoTitle;
-            Layout = rawSettings[1].pageSettings[i].PageLayout
-            partialsPage = rawSettings[1].pageSettings[i].partials
-            var back_partials = JSON.parse(JSON.stringify(partialsPage));
-            vuepartials = rawSettings[1].pageSettings[i].VueComponents
-            pageexternalJs = rawSettings[1].pageSettings[i].PageExternalJs;
-            pageexternalCss = rawSettings[1].pageSettings[i].PageExternalCss;
-            pageMetaInfo = rawSettings[1].pageSettings[i].PageMetaInfo;
-            pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
-            if(pageMetaInfo.length>0){
-                for (let a = 0; a < pageMetaInfo.length; a++) {
-                   tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
-                }
-               }
-               if(pageexternalJs.length>0){
-                for (let a = 0; a < pageexternalJs.length; a++) {
-                   if (pageexternalJs[a].linkposition == 'starthead') {
-                       tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-                   } else if (pageexternalJs[a].linkposition == 'endhead') {
-                       endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-                   } else if (pageexternalJs[a].linkposition == 'startbody') {
-                       topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-                   } else if (pageexternalJs[a].linkposition == 'endbody') {
-                       endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-                   }
-                }
-               }
-
-               
-               if(pageexternalCss.length>0){
-                for (let a = 0; a < pageexternalCss.length; a++) {
-                   if (pageexternalCss[a].linkposition == 'starthead') {
-                       tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-                   } else if (pageexternalCss[a].linkposition == 'endhead') {
-                       endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-                   } else if (pageexternalCss[a].linkposition == 'startbody') {
-                       topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-                   } else if (pageexternalCss[a].linkposition == 'endbody') {
-                       endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
-                   }
-                }
-               }
-            if (vuepartials != undefined && vuepartials.length > 0) {
-                var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
-                mainVuefile = mainVuefile.data
-
-                for (let x = 0; x < vuepartials.length; x++) {
-                    let temp = mainVuefile.replace(/@@vuecomponent@@/g, vuepartials[x].value.split('.')[0])
-                    temp = temp.replace('./' + vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + vuepartials[x].partialsName + '/' + vuepartials[x].value.split('.')[0])
-
-                    await axios.post(config.baseURL + '/flows-dir-listing', {
-                            filename: config.pluginsPath + '/public/' +  vuepartials[x].value.split('.')[0] + '.js',
-                            text: temp,
-                            type: 'file'
-                        }).then(async (res) => {
-                            contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
-
-                            axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
-                                .then((response) => {
-                                    console.log("called webpack_file api successfully:")
-                                })
-                                .catch((e) => {
-                                    console.log(e)
-                                })
-                        })
-                        .catch((e) => {
-                            console.log(e)
-                        })
-
-                }
-            }
-            if (Layout == 'Blank') {
-                await axios.post(config.baseURL + '/flows-dir-listing', {
-                        filename: folderUrl + '/Layout/Blank.layout',
-                        text: '{{{ contents }}}',
-                        type: 'file'
-                    })
-                    .catch((e) => {
-                        console.log("error while blank file creation")
-                    })
-            }
-             layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
-            var responseMetal = ''
-            let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
-            contentpartials = contentpartials.data
-            var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
-             let newFolderName = folderUrl + '/temp';
-             await axios.post(config.baseURL + '/flows-dir-listing', {
-                     foldername: newFolderName,
-                     type: 'folder'
-               }).then(async(res) => {
-                 for (let p = 0; p < back_partials.length; p++) {
-                     let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial');
-                     responsepartials = responsepartials.data
-                     let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
-                     var DefaultParams = [];
-                     if (result.length > 0) {
-                         var resultParam = result
-                         for (let q = 0; q < resultParam.length; q++) {
-                             var temp;
-                             temp = resultParam[q].trim()
-                             result[q] = result[q].trim()
-                             temp = temp.replace(/&nbsp;/g, ' ')
-                             temp = temp.replace(/\s+/g, ' ');
-                             temp = temp.trim();
-                             temp = temp.split(' ')
-                             for (let j = 0; j < temp.length; j++) {
-                                 if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                                     if (temp[j + 1] != undefined) {
-                                         result[q] = temp[0];
-                                         if (temp[j + 1].indexOf('.') > -1) {
-                                             let x = temp[j + 1]
-                                             x = temp[j + 1].split(/'/)[1];
-                                             let obj = {}
-                                             obj[temp[0]] = x
-                                             DefaultParams.push(obj)
-                                             break;
-                                         }
-                                     } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                                         result[q] = temp[0];
-                                         if (temp[j]) {
-                                             let x = temp[j]
-                                             x = temp[j].split(/'/)[1];
-                                             let obj = {}
-                                             obj[temp[0]] = x
-                                             DefaultParams.push(obj)
-                                             break;
-                                         }
-                                     }
-                                 }
-                             }
-                         }
-                         for (let j = 0; j < result.length; j++) {
-                             temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
-
-                             temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
-                             responsepartials = responsepartials.split(temp1).join(temp2)
-                         }
-                     }
-                     await axios.post(config.baseURL + '/flows-dir-listing', {
-                         filename: folderUrl + '/temp/' + Object.keys(back_partials[p]) + '_' + back_partials[p][Object.keys(back_partials[p])] + '.html',
-                         text: responsepartials,
-                         type: 'file'
-                     }).catch((e) => {
-                         console.log(e)
-                     })
-                 }
-                 let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
-                 DefaultParams = [];
-                 if (result.length > 0) {
-                     var resultParam = result
-                     for (let w = 0; w < resultParam.length; w++) {
-                         var temp;
-                         temp = resultParam[w].trim()
-                         result[w] = result[w].trim()
-                         temp = temp.replace(/&nbsp;/g, ' ')
-                         temp = temp.replace(/\s+/g, ' ');
-                         temp = temp.trim();
-                         temp = temp.split(' ')
-                         for (let j = 0; j < temp.length; j++) {
-                             if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                                 if (temp[j + 1] != undefined) {
-                                     result[w] = temp[0];
-                                     if (temp[j + 1].indexOf('.') > -1) {
-                                         let x = temp[j + 1]
-                                         x = temp[j + 1].split(/'/)[1];
-                                         let obj = {}
-                                         obj[temp[0]] = x
-                                         DefaultParams.push(obj)
-                                         break;
-                                     }
-                                 } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                                     result[w] = temp[0];
-                                     if (temp[j]) {
-                                         let x = temp[j]
-                                         x = temp[j].split(/'/)[1];
-                                         let obj = {}
-                                         obj[temp[0]] = x
-                                         DefaultParams.push(obj)
-                                         break;
-                                     }
-                                 }
-                             }
-                         }
-                     }
-                     for (let j = 0; j < result.length; j++) {
-                         for (let w = 0; w < back_partials.length; w++) {
-                             if (Object.keys(back_partials[w])[0] == result[j]) {
-
-                                 temp1 = '{{> ' + Object.keys(back_partials[w])[0] + ' }}'
-                                 if(layoutdata.data.search(temp1)>0){
-
-                                 temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + ' }}'
-                                 }
-                                 else{
-                                  temp1 = '{{> ' + Object.keys(back_partials[w])[0] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
-
-                                  temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
-                                 }
-                                 console.log('temp1:',temp1)
-                                 console.log('temp2:',temp2)
-                                 if(layoutdata.data.split(temp1).join(temp2)){
-                                  console.log('replacing in layout file successfully')
-                                 layoutdata.data = layoutdata.data.split(temp1).join(temp2)
-                                 }else{
-                                  console.log('replacing in layout file failed')
-                                 }
-                             }
-                         }
-
-                     }
-                 }
-
-             })
-             .catch((e) => {
-                 console.log(e)
-             })
-
-            responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
-            var index = responseMetal.search('.source')
-
-            responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
-            var indexPartial = responseMetal.search("handlebars");
-
-            for (var j = 0; j < partialsPage.length; j++) {
-              var temp1, temp2;
-                  temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
-
-                  temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
-              
-                console.log('temp1:',temp1)
-                console.log('temp2:',temp2)
-                if (contentpartials.match(temp1)) {
-                    contentpartials = contentpartials.split(temp1).join(temp2)
-                  }
-                var obj = {}
-                var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
-                console.log('key:',key)
-                console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
-                obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
-                partialsPage[j] = []
-                partialsPage[j] = obj
-                    
-            }
-            for (var z = 0; z < partialsPage.length; z++) {
-              let key = Object.keys(partialsPage[z])[0];
-              let value = partialsPage[z]
-              let key2 = key;
-              key = key.trim();
-              if (value[key2].match('partial')) {
-                  key = key.split('.')[0]
-                  var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + "').toString())\n"
-              }
-             else {
-                var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + ".html').toString())\n"
-            }
-              partials = partials + temp;
+      if (externalCss.length > 0) {
+        for (let a = 0; a < externalCss.length; a++) {
+          if (externalCss[a].linkposition == 'starthead') {
+            tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'endhead') {
+            endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'startbody') {
+            topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'endbody') {
+            endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
           }
 
-            responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-            console.log('final responseMetal:', responseMetal)
-            var mainMetal = folderUrl + '/assets/metalsmith.js'
-            var value = true;
+        }
+      }
+      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+
+        var partials = ''
+
+        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+
+        var rawSettings = responseConfigLoop.data.data[0].configData;
+        var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
+        console.log('nameF:', nameF)
+        var Layout = ''
+        var partialsPage = [];
+        var vuepartials = [];
+
+        var layoutdata = '';
+        var pageexternalJs = [];
+        var pageexternalCss = [];
+        var pageMetaInfo = [];
+        var pageSeoTitle;
+        var PageMetacharset = '';
+        Layout = rawSettings[1].pageSettings[i].PageLayout
+        partialsPage = rawSettings[1].pageSettings[i].partials
+        var back_partials = JSON.parse(JSON.stringify(partialsPage));
+        vuepartials = rawSettings[1].pageSettings[i].VueComponents
+        pageexternalJs = rawSettings[1].pageSettings[i].PageExternalJs;
+        pageexternalCss = rawSettings[1].pageSettings[i].PageExternalCss;
+        pageMetaInfo = rawSettings[1].pageSettings[i].PageMetaInfo;
+        pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
+        PageMetacharset = rawSettings[1].pageSettings[i].PageMetacharset;
+
+        if (PageMetacharset != '') {
+          tophead = tophead + '<meta charset="' + PageMetacharset + '">'
+        }
+        if (pageMetaInfo.length > 0) {
+          for (let a = 0; a < pageMetaInfo.length; a++) {
+            tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
+          }
+        }
+        if (pageexternalJs.length > 0) {
+          for (let a = 0; a < pageexternalJs.length; a++) {
+            if (pageexternalJs[a].linkposition == 'starthead') {
+              tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+            } else if (pageexternalJs[a].linkposition == 'endhead') {
+              endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+            } else if (pageexternalJs[a].linkposition == 'startbody') {
+              topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+            } else if (pageexternalJs[a].linkposition == 'endbody') {
+              endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+            }
+          }
+        }
+
+
+        if (pageexternalCss.length > 0) {
+          for (let a = 0; a < pageexternalCss.length; a++) {
+            if (pageexternalCss[a].linkposition == 'starthead') {
+              tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+            } else if (pageexternalCss[a].linkposition == 'endhead') {
+              endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+            } else if (pageexternalCss[a].linkposition == 'startbody') {
+              topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+            } else if (pageexternalCss[a].linkposition == 'endbody') {
+              endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
+            }
+          }
+        }
+        if (vuepartials != undefined && vuepartials.length > 0) {
+          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+          mainVuefile = mainVuefile.data
+
+          for (let x = 0; x < vuepartials.length; x++) {
+            let temp = mainVuefile.replace(/@@vuecomponent@@/g, vuepartials[x].value.split('.')[0])
+            temp = temp.replace('./' + vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + vuepartials[x].partialsName + '/' + vuepartials[x].value.split('.')[0])
+
             await axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: mainMetal,
-                    text: responseMetal,
+                filename: config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js',
+                text: temp,
+                type: 'file'
+              }).then(async(res) => {
+                contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+
+                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
+                  .then((response) => {
+                    console.log("called webpack_file api successfully:")
+                  })
+                  .catch((e) => {
+                    console.log(e)
+                  })
+              })
+              .catch((e) => {
+                console.log(e)
+              })
+
+          }
+        }
+        if (Layout == 'Blank') {
+          await axios.post(config.baseURL + '/flows-dir-listing', {
+              filename: folderUrl + '/Layout/Blank.layout',
+              text: '{{{ contents }}}',
+              type: 'file'
+            })
+            .catch((e) => {
+              console.log("error while blank file creation")
+            })
+        }
+        layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
+        var responseMetal = ''
+        let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
+        contentpartials = contentpartials.data
+        var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
+        let newFolderName = folderUrl + '/temp';
+        await axios.post(config.baseURL + '/flows-dir-listing', {
+            foldername: newFolderName,
+            type: 'folder'
+          }).then(async(res) => {
+            for (let p = 0; p < back_partials.length; p++) {
+              let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial');
+              responsepartials = responsepartials.data
+              let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
+              var DefaultParams = [];
+              if (result.length > 0) {
+                var resultParam = result
+                for (let q = 0; q < resultParam.length; q++) {
+                  var temp;
+                  temp = resultParam[q].trim()
+                  result[q] = result[q].trim()
+                  temp = temp.replace(/&nbsp;/g, ' ')
+                  temp = temp.replace(/\s+/g, ' ');
+                  temp = temp.trim();
+                  temp = temp.split(' ')
+                  for (let j = 0; j < temp.length; j++) {
+                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                      if (temp[j + 1] != undefined) {
+                        result[q] = temp[0];
+                        if (temp[j + 1].indexOf('.') > -1) {
+                          let x = temp[j + 1]
+                          x = temp[j + 1].split(/'/)[1];
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
+                      } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                        result[q] = temp[0];
+                        if (temp[j]) {
+                          let x = temp[j]
+                          x = temp[j].split(/'/)[1];
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
+                      }
+                    }
+                  }
+                }
+                for (let j = 0; j < result.length; j++) {
+                  temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+
+                  temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+                  responsepartials = responsepartials.split(temp1).join(temp2)
+                }
+              }
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: folderUrl + '/temp/' + Object.keys(back_partials[p]) + '_' + back_partials[p][Object.keys(back_partials[p])] + '.html',
+                text: responsepartials,
+                type: 'file'
+              }).catch((e) => {
+                console.log(e)
+              })
+            }
+            let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
+            DefaultParams = [];
+            if (result.length > 0) {
+              var resultParam = result
+              for (let w = 0; w < resultParam.length; w++) {
+                var temp;
+                temp = resultParam[w].trim()
+                result[w] = result[w].trim()
+                temp = temp.replace(/&nbsp;/g, ' ')
+                temp = temp.replace(/\s+/g, ' ');
+                temp = temp.trim();
+                temp = temp.split(' ')
+                for (let j = 0; j < temp.length; j++) {
+                  if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                    if (temp[j + 1] != undefined) {
+                      result[w] = temp[0];
+                      if (temp[j + 1].indexOf('.') > -1) {
+                        let x = temp[j + 1]
+                        x = temp[j + 1].split(/'/)[1];
+                        let obj = {}
+                        obj[temp[0]] = x
+                        DefaultParams.push(obj)
+                        break;
+                      }
+                    } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                      result[w] = temp[0];
+                      if (temp[j]) {
+                        let x = temp[j]
+                        x = temp[j].split(/'/)[1];
+                        let obj = {}
+                        obj[temp[0]] = x
+                        DefaultParams.push(obj)
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+              for (let j = 0; j < result.length; j++) {
+                for (let w = 0; w < back_partials.length; w++) {
+                  if (Object.keys(back_partials[w])[0] == result[j]) {
+
+                    temp1 = '{{> ' + Object.keys(back_partials[w])[0] + ' }}'
+                    if (layoutdata.data.search(temp1) > 0) {
+
+                      temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + ' }}'
+                    } else {
+                      temp1 = '{{> ' + Object.keys(back_partials[w])[0] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
+
+                      temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
+                    }
+                    console.log('temp1:', temp1)
+                    console.log('temp2:', temp2)
+                    if (layoutdata.data.split(temp1).join(temp2)) {
+                      console.log('replacing in layout file successfully')
+                      layoutdata.data = layoutdata.data.split(temp1).join(temp2)
+                    } else {
+                      console.log('replacing in layout file failed')
+                    }
+                  }
+                }
+
+              }
+            }
+
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+
+        responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+        var index = responseMetal.search('.source')
+
+        responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
+        var indexPartial = responseMetal.search("handlebars");
+
+        for (var j = 0; j < partialsPage.length; j++) {
+          var temp1, temp2;
+          temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
+
+          temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
+
+          // console.log('temp1:',temp1)
+          // console.log('temp2:',temp2)
+          if (contentpartials.match(temp1)) {
+            contentpartials = contentpartials.split(temp1).join(temp2)
+          }
+          var obj = {}
+          var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
+            // console.log('key:',key)
+            // console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
+          obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
+          partialsPage[j] = []
+          partialsPage[j] = obj
+
+        }
+        for (var z = 0; z < partialsPage.length; z++) {
+          let key = Object.keys(partialsPage[z])[0];
+          let value = partialsPage[z]
+          let key2 = key;
+          key = key.trim();
+          if (value[key2].match('partial')) {
+            key = key.split('.')[0]
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + "').toString())\n"
+          } else {
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + ".html').toString())\n"
+          }
+          partials = partials + temp;
+        }
+
+        responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
+        console.log('final responseMetal:', responseMetal)
+        var mainMetal = folderUrl + '/assets/metalsmith.js'
+        var value = true;
+        await axios.post(config.baseURL + '/flows-dir-listing', {
+            filename: mainMetal,
+            text: responseMetal,
+            type: 'file'
+          }).then(async(response) => {
+            var newFolderName = folderUrl + '/Preview';
+            await axios.post(config.baseURL + '/flows-dir-listing', {
+                foldername: newFolderName,
+                type: 'folder'
+              })
+              .then(async(res) => {
+                console.log(res);
+                let newContent = "<html>\n<head>\n" + tophead +
+                  "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+                  "<title>" + pageSeoTitle + "</title>" +
+                  "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
+                  "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                  "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+                  '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                  "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                  "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+                  "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                  "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                  "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                  "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
+                  "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body><div id=\"app\">\n" +
+                  layoutdata.data + topbody +
+                  '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                  '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                  '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
+                  // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                  '<script src="./../main-files/main.js"><\/script>\n' + endbody +
+                  '</body>\n</html>';
+
+                await axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
+                  text: newContent,
+                  type: 'file'
+                })
+
+                var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
+
+                if (Layout == 'Blank') {
+
+                  rawContent = '---\nlayout: ' + Layout + '.layout\n---\n' + rawContent
+
+                } else {
+                  let tempValueLayout = '---\nlayout: ' + Layout + '_temp.layout\n---\n';
+                  rawContent = tempValueLayout + rawContent
+                }
+
+                var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
+
+                await axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename: previewFileName,
+                    text: rawContent,
                     type: 'file'
-                }).then(async (response) => {
-                    var newFolderName = folderUrl + '/Preview';
-                    await axios.post(config.baseURL + '/flows-dir-listing', {
-                            foldername: newFolderName,
-                            type: 'folder'
-                        })
-                        .then(async (res) => {
-                            console.log(res);
-                            let newContent = "<html>\n<head>\n" + tophead +
-                            "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" + 
-                            "<title>" + pageSeoTitle + "</title>" +
-                            "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
-                            "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
-                            "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                            '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
-                            "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                            "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                            "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                            "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                            "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                            "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body>\n" +
-                            layoutdata.data + topbody +
-                            '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                            '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                            '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                            // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
-                            '<script src="./../main-files/main.js"><\/script>\n' + endbody +
-                            '</body>\n</html>';
+                  })
+                  .then(async(res) => {
+                    this.saveFileLoading = false;
 
-                            await axios.post(config.baseURL + '/flows-dir-listing', {
-                                filename: folderUrl + '/Layout/' + Layout + '.layout',
-                                text: newContent,
-                                type: 'file'
-                            })
+                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async(response) => {
 
-                            var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
-
-                            if (Layout == 'Blank') {
-                                
-                                rawContent = '---\nlayout: ' + Layout + '.layout\n---\n' + rawContent
-                                
-                            } else {
-                                let tempValueLayout = '---\nlayout: ' + Layout + '.layout\n---\n';
-                                rawContent = tempValueLayout + rawContent
-                            }
-
-                            var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
-
-                            await axios.post(config.baseURL + '/flows-dir-listing', {
-                                    filename: previewFileName,
-                                    text: rawContent,
-                                    type: 'file'
-                                })
-                                .then(async (res) => {
-                                    this.saveFileLoading = false;
-
-                                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
-
-                                            await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                    filename: mainMetal,
-                                                    text: responseMetal,
-                                                    type: 'file'
-                                                })
-                                                .then(async (res) => {
-                                                    let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                                                    previewFile = folderUrl.replace('/var/www/html', '');
-
-                                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                                        .then(async (res) => {
-                                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e)=>{console.log(e)})
-                                                            // console.log(res);
-                                                            await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                    filename: folderUrl + '/Layout/' + Layout + '.layout',
-                                                                    text: layoutdata.data,
-                                                                    type: 'file'
-                                                                })
-                                                                .then(async (res) => {
-                                                                    if (vuepartials != undefined && vuepartials.length > 0) {
-                                                                        for (let x = 0; x < vuepartials.length; x++) {
-
-                                                                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                                                                       console.log(res)
-                                                                                   })
-                                                                                   .catch((e) => {
-                                                                                       console.log(e)
-                                                                                   })
-                                                                        }
-                                                                    }
-                                                                    console.log("layout file reset")
-                                                                    if (Layout == 'Blank') {
-                                                                       await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
-                                                                            .catch((e) => {
-                                                                                console.log("error while deleting blank.layout file")
-                                                                            })
-                                                                    }
-
-                                                                })
-
-                                                        })
-                                                        .catch((e) => {
-                                                            console.log(e)
-                                                        })
-                                                })
-
-                                        })
-                                        .catch((err) => {
-                                            console.log('error while creating metalsmithJSON file' + err)
-                                            axios.post(config.baseURL + '/flows-dir-listing', {
-                                            filename: mainMetal,
-                                            text: responseMetal,
-                                            type: 'file'
-                                            })
-                                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e)=>{console.log(e)})
-                                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                            console.log(e)
-                                        })
-                                })
-                                .catch((e) => {
-                                    this.saveFileLoading = false
-                                    this.$message({
-                                        showClose: true,
-                                        message: 'File not saved! Please try again.',
-                                        type: 'error'
-                                    });
-                                    axios.post(config.baseURL + '/flows-dir-listing', {
-                                    filename: mainMetal,
-                                    text: responseMetal,
-                                    type: 'file'
-                                    })
-                                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e)=>{console.log(e)})
-                                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                    console.log(e)
-                                })
-
-                        })
-                        .catch((e) => {
-                            console.log(e)
-                            axios.post(config.baseURL + '/flows-dir-listing', {
+                        await axios.post(config.baseURL + '/flows-dir-listing', {
                             filename: mainMetal,
                             text: responseMetal,
                             type: 'file'
-                            })
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e)=>{console.log(e)})
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                          })
+                          .then(async(res) => {
+                            var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                            previewFile = folderUrl.replace('/var/www/html', '');
+
+                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              .then(async(res) => {
+                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                                  console.log(e)
+                                })
+                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
+                                    // console.log('deleted extra layout file:', res)
+                                  }).catch((e) => {
+                                    console.log(e)
+                                  })
+                                  // console.log(res);
+                                  // await axios.post(config.baseURL + '/flows-dir-listing', {
+                                  //         filename: folderUrl + '/Layout/' + Layout + '.layout',
+                                  //         text: layoutdata.data,
+                                  //         type: 'file'
+                                  //     })
+                                  //     .then(async (res) => {
+                                if (vuepartials != undefined && vuepartials.length > 0) {
+                                  for (let x = 0; x < vuepartials.length; x++) {
+
+                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                        console.log(res)
+                                      })
+                                      .catch((e) => {
+                                        console.log(e)
+                                      })
+                                  }
+                                }
+                                console.log("layout file reset")
+                                if (Layout == 'Blank') {
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                    .catch((e) => {
+                                      console.log("error while deleting blank.layout file")
+                                    })
+                                }
+
+                                // })
+
+                              })
+                              .catch((e) => {
+                                console.log(e)
+                              })
+                          })
+
+                      })
+                      .catch((err) => {
+                        console.log('error while creating metalsmithJSON file' + err)
+                        axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename: mainMetal,
+                          text: responseMetal,
+                          type: 'file'
                         })
-
-                })
-                .catch((e) => {
-                    console.log('error while creating metalsmithJSON file' + e)
-                  axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: mainMetal,
-                    text: responseMetal,
-                    type: 'file'
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                          console.log(e)
+                        })
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        console.log(e)
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                      })
+                  })
+                  .catch((e) => {
+                    this.saveFileLoading = false
+                    axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: mainMetal,
+                      text: responseMetal,
+                      type: 'file'
                     })
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e)=>{console.log(e)})
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                      console.log(e)
+                    })
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                    console.log(e)
+                  })
 
+              })
+              .catch((e) => {
+                console.log(e)
+                axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: mainMetal,
+                  text: responseMetal,
+                  type: 'file'
                 })
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                  console.log(e)
+                })
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+              })
+
+          })
+          .catch((e) => {
+            console.log('error while creating metalsmithJSON file' + e)
+            axios.post(config.baseURL + '/flows-dir-listing', {
+              filename: mainMetal,
+              text: responseMetal,
+              type: 'file'
+            })
+            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+              console.log(e)
+            })
+
+          })
 
 
         // Open in new window
-        // window.open(config.ipAddress + '/websites/' + this.repoName + '/public/');
         window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
-
+        // window.open(config.ipAddress + previewFile + '/public/');
+        
         // Publish with Zeit Now
-        axios.post(config.baseURL + '/publish-now', {
-            projectName : this.repoName
-        })
-        .then((res) => {
-          let serverUrl = res.data;
-          // window.open( serverUrl + '/public/');
-          this.$message({
-            showClose: true,
-            message: 'Successfully Published.',
-            type: 'success'
-          });
-          console.log(res.data);
-          this.previewLoader = false;
-        })
-        .catch((e) => {
-          this.$message({
-            showClose: true,
-            message: 'Failed! Please try again.',
-            type: 'error'
-          });
-          console.log(e);
-          this.previewLoader = false;
-        });
+        // axios.post(config.baseURL + '/publish-now', {
+        //   projectName: this.repoName
+        // })
+        // .then((res) => {
+        //   let serverUrl = res.data;
+        //   // window.open( serverUrl + '/public/');
+        //   this.$message({
+        //     showClose: true,
+        //     message: 'Successfully Published.',
+        //     type: 'success'
+        //   });
+        //   console.log(res.data);
+        //   this.previewLoader = false;
+        // })
+        // .catch((e) => {
+        //   this.$message({
+        //     showClose: true,
+        //     message: 'Failed! Please try again.',
+        //     type: 'error'
+        //   });
+        //   console.log(e);
+        //   this.previewLoader = false;
+        // });
       }
     },
 
