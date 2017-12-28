@@ -3314,7 +3314,7 @@
                 '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
                 '<script src="./../main-files/main.js"><\/script>\n' + endbody +
                 '</body>\n</html>';
 
