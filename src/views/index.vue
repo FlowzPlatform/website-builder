@@ -766,11 +766,13 @@
           this.isProjectEditing = false;
           this.isSettingsPage = true;
           this.componentId = 'PageSettings';
+          this.display = 'false'
 
           let url = data.path;
           let compId = this.componentId;
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+          console.log('!!!!!!!!!!!!!!!!', tab_file_name)
           let editableTabValue = this.editableTabsValue
           let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
           function checkIfExist(filepath,array) {  // The last one is array
@@ -780,6 +782,9 @@
               });
               if (!found)
               {
+                let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+                array = removedArray  ;
+                editableTabValue = newTabName;
                   array.push({
                     title: tab_file_name,
                     name: newTabName,
@@ -825,11 +830,13 @@
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = true;
           this.componentId = 'ProjectSettings';
+          this.display = 'false'
 
           let url = data.path;
           let compId = this.componentId;
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+          console.log('@@@@@@@@@@@@@@@', tab_file_name)
           let editableTabValue = this.editableTabsValue
 
           let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
@@ -950,18 +957,18 @@
           if(data.type == "file"){
             this.display = false;
             if(this.flag != true && this.editableTabs.length > 0){
-              if(this.componentId == 'GridManager'){
-                this.saveFile('getFileContent')
-              } else if (this.componentId == 'MenuBuilder'){
+              if(this.componentId == 'GrapesComponent'){
+                if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
+                  if(this.$store.state.tabChange != ''){
+                    this.saveFile('getFileContent')
+                  }
+                }
+              } else {
                 this.saveFile('getFileContent')
               }
             }
             this.flag = false
-            if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
-              if(this.$store.state.tabChange != ''){
-                this.saveFile('getFileContent')
-              }
-            }
+
               this.getFileContent(data.path);
           }
         }
@@ -969,14 +976,16 @@
 
       tabClicked : async function(targetName, action) {
         console.log('this.componentId', this.componentId)
-        if(this.componentId == 'GridManager' || 'MenuBuilder'){
+        if(this.componentId == 'GrapesComponent'){
+          if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
+            if(this.$store.state.tabChange != ''){
+              this.saveFile('tabClicked')
+            }
+          }
+        } else {
           this.saveFile('tabClicked')
         }
-        if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
-          if(this.$store.state.tabChange != ''){
-            this.saveFile('tabClicked')
-          }
-        }
+
         let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
         this.$store.state.fileUrl = findingValue[0].filepath;
         this.componentId = targetName.$vnode.componentOptions.children[0].componentOptions.tag
@@ -1000,6 +1009,8 @@
           case 'MenuBuilder':
             this.saveJsonFile('else');
             break;
+          default:
+              newContent = this.$store.state.content;
         }
       },
       handleTabsEdit: async function(targetName, action) {
@@ -2128,9 +2139,6 @@
         let fileNameOrginal = urlparts[urlparts.length-1];
         let foldername = urlparts[urlparts.length - 2];
         // let fileName = '/' + urlparts[urlparts.length-1];
-
-
-
         let fileName = '';
         if(_.includes(configFileUrl, 'Partials')){
             fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
@@ -2255,6 +2263,8 @@
             case 'MenuBuilder':
               this.saveJsonFile('getFileContent');
               break;
+            default:
+                newContent = this.$store.state.content;
           }
           axios.post(config.baseURL + '/flows-dir-listing', {
               filename: this.taburl.replace(/\\/g, "\/"),
@@ -2283,7 +2293,7 @@
         else{
             var componentId = this.componentId
             let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-
+            // newContent = this.$store.state.content
             this.saveFileLoading = true
             switch (this.componentId) {
               case 'GrapesComponent':
@@ -2301,6 +2311,8 @@
               case 'MenuBuilder':
                 this.saveJsonFile('else');
                 break;
+              default:
+                  newContent = this.$store.state.content;
             }
 
             this.$store.state.tabChange = ''
@@ -3959,6 +3971,7 @@
                 let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
                   return o.title == last_element;
                 });
+                // Remove item from tab
                 this.editableTabs.splice(indexOfTabArray, 1);
 
 
@@ -3979,6 +3992,7 @@
                 let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
                   return o.title == last_element;
                 });
+                // Remove item from tab
                 this.editableTabs.splice(indexOfTabArray, 1);
 
 
@@ -4002,6 +4016,7 @@
                 let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
                   return o.title == last_element;
                 });
+                // Remove item from tab
                 this.editableTabs.splice(indexOfTabArray, 1);
 
                 // save config file
@@ -5138,4 +5153,9 @@
   .hamburger.is-open > .sideOpener > .fa-angle-left {
       display: table-cell;
   }
+</style>
+<style>
+.el-tabs__new-tab {
+  display: none !important;
+}
 </style>
