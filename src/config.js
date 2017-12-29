@@ -24,7 +24,8 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithLinkedInUrl = 'http://auth.flowz.com/auth/linkedin';
 } else {
     ipAdd = 'http://localhost';
-    socketURL = 'ws://devws.flowz.com:4032';
+    // socketURL = 'ws://devws.flowz.com:4032';
+    socketURL = 'http://localhost:4032';
     frontEndUrl = 'http://localhost:8080/dashboard';
 
     loginUrl = 'http://devauth.flowz.com/api/login';

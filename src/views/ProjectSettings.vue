@@ -4,7 +4,7 @@
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" size="small" @click="publishMetalsmith" :loading="previewLoader">Publish Website</el-button>
+      <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Publish Website</el-button>
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
@@ -651,7 +651,7 @@ export default {
         label: 'label'
       },
       checkedList: [],
-      previewLoader: false,
+      fullscreenLoading: false,
 
       Allposition:[
         {
@@ -1073,6 +1073,8 @@ export default {
           this.refreshPluginsLoading = false;
           console.log(e)
       });
+
+      location.reload();
     },
 
     deleteVariable(deleteIndex) {
@@ -1254,7 +1256,7 @@ export default {
     },
 
     async publishMetalsmith() {
-      this.previewLoader = true;
+      this.fullscreenLoading = true;
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
       var rawConfigs = responseConfig.data.data[0].configData;
@@ -1837,33 +1839,34 @@ export default {
           })
 
 
+          this.fullscreenLoading = false;
         // Open in new window
+        // window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
         window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
-        // window.open(config.ipAddress +'/'+ this.repoName + '/public/');
         // Publish with Zeit Now
-        axios.post(config.baseURL + '/publish-now', {
-            projectName: this.repoName
-          })
-          .then((res) => {
-            let serverUrl = res.data;
-            // window.open( serverUrl + '/public/');
-            this.$message({
-              showClose: true,
-              message: 'Successfully Published.',
-              type: 'success'
-            });
-            console.log(res.data);
-            this.previewLoader = false;
-          })
-          .catch((e) => {
-            this.$message({
-              showClose: true,
-              message: 'Failed! Please try again.',
-              type: 'error'
-            });
-            console.log(e);
-            this.previewLoader = false;
-          });
+        // axios.post(config.baseURL + '/publish-now', {
+        //     projectName: this.repoName
+        //   })
+        //   .then((res) => {
+        //     let serverUrl = res.data;
+        //     // window.open( serverUrl + '/public/');
+        //     this.$message({
+        //       showClose: true,
+        //       message: 'Successfully Published.',
+        //       type: 'success'
+        //     });
+        //     console.log(res.data);
+        //     this.fullscreenLoading = false;
+        //   })
+        //   .catch((e) => {
+        //     this.$message({
+        //       showClose: true,
+        //       message: 'Failed! Please try again.',
+        //       type: 'error'
+        //     });
+        //     console.log(e);
+        //     this.fullscreenLoading = false;
+        //   });
       }
     },
 
