@@ -744,7 +744,6 @@
         return _.sortBy(newData, [function(o) {
           return o.type;
         }]);
-        
       },
 
       // Sort directory tree
@@ -1011,7 +1010,6 @@
               type: 'error'
           });
         }   
-
       },
 
       // Create new Folder
@@ -1096,6 +1094,175 @@
               })
           }
         })
+      },
+
+      // Create new File
+      async addFile(formName){
+        // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        // let urlparts = configFileUrl.split("/");
+        // let fileNameOrginal = urlparts[urlparts.length - 1];
+        // let foldername = urlparts[urlparts.length - 1];
+        // let fileName = '/' + urlparts[urlparts.length - 1];
+        // var folderUrl = configFileUrl.replace(fileName, '');
+
+        let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        let urlparts = configFileUrl.split("/");
+        let fileNameOrginal = urlparts[urlparts.length-1];
+        let foldername = urlparts[urlparts.length - 2];
+        // let fileName = '/' + urlparts[urlparts.length-1];
+
+
+
+        let fileName = '';
+        if(_.includes(configFileUrl, 'Partials')){
+            fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+        } else if(_.includes(configFileUrl, 'Pages')){
+            fileName = '/' + urlparts[urlparts.length - 1];
+        } else if(_.includes(configFileUrl, 'Layout')){
+            fileName = '/' + urlparts[urlparts.length - 1];
+        } else {
+            fileName = '/' + urlparts[urlparts.length - 1];
+        }
+
+        console.log('Folder Name: ', fileName);
+
+        var folderUrl = configFileUrl.replace(fileName, '');
+
+        let projectName = folderUrl.split('/');
+        projectName = projectName[(projectName.length-1)];
+
+        // this.getConfigFileData(folderUrl);
+
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        let rawConfigs = responseConfig.data.data[0].configData;
+        this.globalConfigData = rawConfigs;
+        
+        this.$refs[formName].validate((valid) => {
+            if (valid) {
+                this.addNewFileLoading = true
+                var name=this.formAddFile.filename;
+                // console.log('This currentFile:', this.currentFile.path);
+                console.log('Store path:', this.$store.state.fileUrl);
+                var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
+                return axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename : newfilename,
+                    text : ' ',
+                    type : 'file'
+                })
+                .then( (res) => {
+
+                    // For ReUse Component
+                    let currentFile_path = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/');
+                    
+                    var last_element = currentFile_path[currentFile_path.length - 1];
+                    
+                    if (last_element == "Templates") {
+                      var Templates = JSON.parse(localStorage.getItem("Templates"));
+                      var temp_filename = this.formAddFile.filename;
+                      var new_name = temp_filename.replace(".html","")
+                      Templates.push(new_name)
+                      localStorage.setItem("Templates", JSON.stringify(Templates));
+                    }
+
+                    this.newFileDialog = false
+                    this.addNewFileLoading = false
+                    this.formAddFile.filename = null
+                    
+                    let temp = {
+                        value: name.split('.')[0],
+                        label: name.split('.')[0]
+                    }
+
+                    let checkValue = false;
+                    var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                    namefolder=namefolder[namefolder.length - 1 ];
+                    console.log(this.globalConfigData);
+                    
+                    if(namefolder != 'Pages'){
+                      if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
+                        for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
+                            var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
+                            if ((obj.label) == name) {
+                                checkValue = true;
+                            }
+                        }
+                        if (checkValue == true) {
+                        } else {
+                            this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+
+                            // saveConfigFile
+                            this.saveConfigFile(folderUrl);
+                        }
+
+                      } else {
+                          this.globalConfigData[2].layoutOptions[0][namefolder] = [];
+                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
+                          this.saveConfigFile(folderUrl);
+                      }
+                    }
+                    
+                    if(namefolder=='Pages'){
+                      // console.log('inside pages')
+                      var totpartial=[]
+                      for(let k=0;k<this.globalConfigData[2].layoutOptions[0].Layout.length;k++){
+                        if(this.globalConfigData[2].layoutOptions[0].Layout[k].value=='default'){
+                          console.log('inside default layout');
+                          if(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList.length>0){
+                            // console.log('defaultList:',this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList)
+                            totpartial=JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList))
+                            // console.log('found some default partial')
+
+                          }
+                          // console.log('totpartial:',totpartial);
+                          if(this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length>0){
+
+                            for(let j=0;j<this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length;j++){
+                              let checklayoutvalue=false;
+                              for(let r=0;r<totpartial.length;r++){
+                                // console.log('totpartial[r]:',Object.keys(totpartial[r])[0])
+                              if(Object.keys(totpartial[r])[0]==this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]){
+                                checklayoutvalue=true;
+                                totpartial[r][Object.keys(totpartial[r])[0]]=totpartial[r][Object.keys(totpartial[r])[0]].split('.')[0]
+                              }
+                            }
+                            if(checklayoutvalue!=true){
+                              var obj={}
+                              obj[this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]]='default'
+                              totpartial.push(obj); 
+                            }
+                                                            
+                            }
+                          }
+                        }
+                      }
+                      console.log('totpartial:',totpartial);
+                      var PageSettings = {
+                                          "PageName": name,
+                                          "PageSEOTitle": "",
+                                          "PageSEOKeywords": "",
+                                          "PageSEODescription": "",
+                                          "PageLayout": "default",
+                                          "PageCss": ["Bootstrap 3", "Bootstrap 4", "Font Awesome", "Flowz Blocks", "Google Fonts"],
+                                          "PageExternalCss": [],
+                                          "PageExternalJs": [],
+                                          "PageMetaInfo": [],
+                                          "PageMetacharset": [],
+                                          "partials": totpartial,
+                                          "PageScripts":[]
+                                         };
+                                         
+                      this.globalConfigData[1].pageSettings.push((PageSettings))
+                      this.saveConfigFile(folderUrl);
+                    }
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
+            } else {
+                console.log('error submit!!');
+                return false;
+            }
+        });
       },
 
       // Create new Website
@@ -1853,176 +2020,6 @@
         })
         .catch((e) => {
             console.log(e)
-        });
-
-      },
-
-      // Create new File
-      async addFile(formName){
-        // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        // let urlparts = configFileUrl.split("/");
-        // let fileNameOrginal = urlparts[urlparts.length - 1];
-        // let foldername = urlparts[urlparts.length - 1];
-        // let fileName = '/' + urlparts[urlparts.length - 1];
-        // var folderUrl = configFileUrl.replace(fileName, '');
-
-        let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        let urlparts = configFileUrl.split("/");
-        let fileNameOrginal = urlparts[urlparts.length-1];
-        let foldername = urlparts[urlparts.length - 2];
-        // let fileName = '/' + urlparts[urlparts.length-1];
-
-
-
-        let fileName = '';
-        if(_.includes(configFileUrl, 'Partials')){
-            fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-        } else if(_.includes(configFileUrl, 'Pages')){
-            fileName = '/' + urlparts[urlparts.length - 1];
-        } else if(_.includes(configFileUrl, 'Layout')){
-            fileName = '/' + urlparts[urlparts.length - 1];
-        } else {
-            fileName = '/' + urlparts[urlparts.length - 1];
-        }
-
-        console.log('Folder Name: ', fileName);
-
-        var folderUrl = configFileUrl.replace(fileName, '');
-
-        let projectName = folderUrl.split('/');
-        projectName = projectName[(projectName.length-1)];
-
-        // this.getConfigFileData(folderUrl);
-
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
-        let rawConfigs = responseConfig.data.data[0].configData;
-        this.globalConfigData = rawConfigs;
-        
-        this.$refs[formName].validate((valid) => {
-            if (valid) {
-                this.addNewFileLoading = true
-                var name=this.formAddFile.filename;
-                // console.log('This currentFile:', this.currentFile.path);
-                console.log('Store path:', this.$store.state.fileUrl);
-                var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
-                return axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename : newfilename,
-                    text : ' ',
-                    type : 'file'
-                })
-                .then( (res) => {
-
-                    // For ReUse Component
-                    let currentFile_path = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/');
-                    
-                    var last_element = currentFile_path[currentFile_path.length - 1];
-                    
-                    if (last_element == "Templates") {
-                      var Templates = JSON.parse(localStorage.getItem("Templates"));
-                      var temp_filename = this.formAddFile.filename;
-                      var new_name = temp_filename.replace(".html","")
-                      Templates.push(new_name)
-                      localStorage.setItem("Templates", JSON.stringify(Templates));
-                    }
-
-                    this.newFileDialog = false
-                    this.addNewFileLoading = false
-                    this.formAddFile.filename = null
-                    
-                    let temp = {
-                        value: name.split('.')[0],
-                        label: name.split('.')[0]
-                    }
-
-                    let checkValue = false;
-                    var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                    namefolder=namefolder[namefolder.length - 1 ];
-                    console.log(this.globalConfigData);
-                    
-                    if(namefolder != 'Pages'){
-                      if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
-                        for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
-                            var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
-                            if ((obj.label) == name) {
-                                checkValue = true;
-                            }
-                        }
-                        if (checkValue == true) {
-                        } else {
-                            this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
-
-                            // saveConfigFile
-                            this.saveConfigFile(folderUrl);
-                        }
-
-                      } else {
-                          this.globalConfigData[2].layoutOptions[0][namefolder] = [];
-                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
-                          this.saveConfigFile(folderUrl);
-                      }
-                    }
-                    
-                    if(namefolder=='Pages'){
-                      // console.log('inside pages')
-                      var totpartial=[]
-                      for(let k=0;k<this.globalConfigData[2].layoutOptions[0].Layout.length;k++){
-                        if(this.globalConfigData[2].layoutOptions[0].Layout[k].value=='default'){
-                          console.log('inside default layout');
-                          if(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList.length>0){
-                            // console.log('defaultList:',this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList)
-                            totpartial=JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList))
-                            // console.log('found some default partial')
-
-                          }
-                          // console.log('totpartial:',totpartial);
-                          if(this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length>0){
-
-                            for(let j=0;j<this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length;j++){
-                              let checklayoutvalue=false;
-                              for(let r=0;r<totpartial.length;r++){
-                                // console.log('totpartial[r]:',Object.keys(totpartial[r])[0])
-                              if(Object.keys(totpartial[r])[0]==this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]){
-                                checklayoutvalue=true;
-                                totpartial[r][Object.keys(totpartial[r])[0]]=totpartial[r][Object.keys(totpartial[r])[0]].split('.')[0]
-                              }
-                            }
-                            if(checklayoutvalue!=true){
-                              var obj={}
-                              obj[this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]]='default'
-                              totpartial.push(obj); 
-                            }
-                                                            
-                            }
-                          }
-                        }
-                      }
-                      console.log('totpartial:',totpartial);
-                      var PageSettings = {
-                                          "PageName": name,
-                                          "PageSEOTitle": "",
-                                          "PageSEOKeywords": "",
-                                          "PageSEODescription": "",
-                                          "PageLayout": "default",
-                                          "PageCss": ["Bootstrap 3", "Bootstrap 4", "Font Awesome", "Flowz Blocks", "Google Fonts"],
-                                          "PageExternalCss": [],
-                                          "PageExternalJs": [],
-                                          "PageMetaInfo": [],
-                                          "PageMetacharset": [],
-                                          "partials": totpartial,
-                                          "PageScripts":[]
-                                         };
-                                         
-                      this.globalConfigData[1].pageSettings.push((PageSettings))
-                      this.saveConfigFile(folderUrl);
-                    }
-                })
-                .catch((e) => {
-                    console.log(e)
-                })
-            } else {
-                console.log('error submit!!');
-                return false;
-            }
         });
       },
 
@@ -2949,12 +2946,12 @@
           if (ProjectMetacharset != '') {
             tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
           }
-          if (metaInfo.length > 0 && metaInfo != undefined) {
+          if (metaInfo != undefined && metaInfo.length > 0) {
             for (let a = 0; a < metaInfo.length; a++) {
               tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
             }
           }
-          if (externalJs.length > 0 && externalJs != undefined) {
+          if (externalJs != undefined && externalJs.length > 0) {
             for (let a = 0; a < externalJs.length; a++) {
               if (externalJs[a].linkposition == 'starthead') {
                 tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
@@ -2968,7 +2965,7 @@
             }
           }
 
-          if (externalCss.length > 0 && externalCss != undefined) {
+          if (externalCss != undefined && externalCss.length > 0) {
             for (let a = 0; a < externalCss.length; a++) {
               if (externalCss[a].linkposition == 'starthead') {
                 tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
@@ -2982,7 +2979,7 @@
 
             }
           }
-          if (projectscripts.length > 0 && projectscripts != undefined) {
+          if (projectscripts != undefined && projectscripts.length > 0) {
             for (let a = 0; a < projectscripts.length; a++) {
               if (projectscripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
@@ -3299,7 +3296,7 @@
               })
               let newContent = "<html>\n<head>\n" + tophead +
                 "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                "<title>" + pageSeoTitle + "</title>" +
+                "<title>" + pageSeoTitle + "</title>\n" +
                 "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
                 "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                 "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
@@ -3310,12 +3307,12 @@
                 "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                 "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                 "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
-                "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body><div id=\"app\">\n" +
+                "<link rel='stylesheet' href='./../main-files/main.css'/>\n<script src=\"./../main-files/main.js\"><\/script>\n" + endhead + "\n</head>\n<body>\n<div id=\"app\">\n" +
                 layoutdata.data + topbody +
                 '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>\n'+
                 '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                 '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                 '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
@@ -3326,8 +3323,8 @@
                 '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
                 '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                 '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
-                '<script src="./../main-files/main.js"><\/script>\n' + endbody +
-                '</body>\n</html>';
+                endbody +
+                '\n</body>\n</html>';
 
               axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: folderUrl + '/Layout/' + self.form.Layout + '_temp.layout',
@@ -3809,7 +3806,7 @@
           })
       },
 
-      // Remove File or Folder
+      // Remove File
       async remove(store, data) {
 
         // Get Config.json file data
@@ -3833,9 +3830,12 @@
    
         let folderUrl = configFileUrl.replace(fileName, '');
 
-        let projectName = folderUrl.split('/');
-        projectName = projectName[(projectName.length-1)];
-
+        // let projectName = folderUrl.split('/');
+        // projectName = projectName[(projectName.length-1)];
+        
+        let projectName = urlparts[5];
+        console.log('Project Name: ', projectName);
+        
         // this.getConfigFileData(folderUrl);
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
 
@@ -3973,8 +3973,10 @@
         }
    
         let folderUrl = configFileUrl.replace(fileName, '');
+
+        let projectName = urlparts[5];
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
 
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
@@ -4008,14 +4010,20 @@
                   }
               }
 
+              this.$message({
+                  showClose: true,
+                  message: 'Folder deleted!',
+                  type: 'success'
+              });
+
           })
           .catch((e) => {
-              console.log(e)
+            console.log(e)
           })
         })
         .catch((e)=>{
-              console.log(e)
-            })
+          console.log(e)
+        })
       },
 
       // Remove Project Folder and Delete GitLab Repository

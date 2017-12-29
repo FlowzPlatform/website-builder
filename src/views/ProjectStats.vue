@@ -1,7 +1,7 @@
 <template>
   <div class="ProjectStats">
     <div class="page-buttons">
-      <el-button type="info" size="small" @click="publishMetalsmith" :loading="previewLoader">Preview Website</el-button>
+      <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button>
     </div>
   	<div class="container-fluid">
     	<div class="row" style="margin-top: 20px;">
@@ -205,7 +205,7 @@ export default {
       },
       commitsData: [],
       commitMessage: '',
-      previewLoader: false
+      fullscreenLoading: false
     }
   },
   component: {
@@ -342,7 +342,7 @@ export default {
 
 
     async publishMetalsmith() {
-      this.previewLoader = true;
+      this.fullscreenLoading = true;
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
       var rawConfigs = responseConfig.data.data[0].configData;
@@ -923,34 +923,34 @@ export default {
 
           })
 
-
+        this.fullscreenLoading = false;
         // Open in new window
+        // window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
         window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
-        // window.open(config.ipAddress +'/'+ this.repoName + '/public/');
         // Publish with Zeit Now
-        axios.post(config.baseURL + '/publish-now', {
-            projectName: this.repoName
-          })
-          .then((res) => {
-            let serverUrl = res.data;
-            // window.open( serverUrl + '/public/');
-            this.$message({
-              showClose: true,
-              message: 'Successfully Published.',
-              type: 'success'
-            });
-            console.log(res.data);
-            this.previewLoader = false;
-          })
-          .catch((e) => {
-            this.$message({
-              showClose: true,
-              message: 'Failed! Please try again.',
-              type: 'error'
-            });
-            console.log(e);
-            this.previewLoader = false;
-          });
+        // axios.post(config.baseURL + '/publish-now', {
+        //     projectName: this.repoName
+        //   })
+        //   .then((res) => {
+        //     let serverUrl = res.data;
+        //     // window.open( serverUrl + '/public/');
+        //     this.$message({
+        //       showClose: true,
+        //       message: 'Successfully Published.',
+        //       type: 'success'
+        //     });
+        //     console.log(res.data);
+        //     this.fullscreenLoading = false;
+        //   })
+        //   .catch((e) => {
+        //     this.$message({
+        //       showClose: true,
+        //       message: 'Failed! Please try again.',
+        //       type: 'error'
+        //     });
+        //     console.log(e);
+        //     this.fullscreenLoading = false;
+        //   });
       }
     }
   },
