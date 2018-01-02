@@ -7,7 +7,7 @@
       <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Publish Website</el-button>
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
-        <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
+        <el-button type="success" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
       </el-tooltip>
 
     </div>
@@ -2419,9 +2419,13 @@ export default {
   .page-buttons{
     position: fixed;
     bottom: 7px;
-    right: 50px;
+    right: 85px;
     margin-top: 17.5px;
-    z-index: 10
+    z-index: 10;
+  }
+
+  .el-button+.el-button {
+    margin-left: 4px;
   }
 
   @media(max-width: 680px){

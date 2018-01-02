@@ -2,7 +2,7 @@
   <div class="Login">
     <vue-particles color="#dedede"></vue-particles>
     <div class='brand'>
-      <a href='/'>
+      <a href="javascript:void()" @click="goToLandingPage">
           <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
       </a>
     </div>
@@ -172,7 +172,7 @@ export default {
 
                 let self = this;
                 setTimeout(function () {
-                  self.$router.push('/dashboard');
+                  self.$router.push('/editor');
                 }, 2000);
                 
             }
@@ -220,12 +220,16 @@ export default {
     doLinkedInLogin () {
       console.log('LinkedIn Login');
       document.getElementById('form-linkedIn').submit();
+    },
+
+    goToLandingPage () {
+      this.$router.push('/');
     }
   },
   created () {
     // Check if login token in cookie exist or not
     if(this.$cookie.get('auth_token')){
-      this.$router.push('/dashboard');
+      this.$router.push('/editor');
     }
   },
   mounted () {

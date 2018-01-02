@@ -4959,7 +4959,7 @@
   .editor-buttons {
       position: fixed;
       bottom: -8px;
-      right: 25px;
+      right: 55px;
       z-index: 15;
   }
 

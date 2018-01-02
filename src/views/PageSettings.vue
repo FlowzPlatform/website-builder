@@ -202,7 +202,7 @@
            </div>
         </div>  
 
-        <div class="well" id='add-local-scripts'>
+        <div class="well" id='add-local-scripts' style="margin-bottom: 100px;">
           <div class="row">
             <div class="col-md-12">
                  <div class="row">
@@ -800,7 +800,7 @@ export default {
   .page-buttons{
     position: fixed;
     bottom: 7px;
-    right: 50px;
+    right: 85px;
     margin-top: 17.5px;
     z-index: 10
   }

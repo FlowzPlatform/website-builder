@@ -93,7 +93,7 @@ router.beforeEach((to, from, next) => {
        if (to.path === '/login' && token) {
         
         next({
-          path: '/dashboard'
+          path: '/user-dashboard'
         })
       } else {
         

@@ -1308,7 +1308,7 @@ h3.subtitle{
 .page-buttons{
   position: fixed;
   bottom: 7px;
-  right: 50px;
+  right: 85px;
   margin-top: 17.5px;
   z-index: 10
 }

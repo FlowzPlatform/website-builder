@@ -5,6 +5,7 @@ import Login from '@/views/login'
 import Register from '@/views/register'
 import ForgotPassword from '@/views/ForgotPassword'
 import Homepage from '@/views/Homepage'
+import UserDashboard from '@/views/UserDashboard'
 import EmailVerification from '@/views/EmailVerification'
 
 Vue.use(Router)
@@ -18,10 +19,15 @@ export default new Router({
       component: Homepage
     },
     {
-      path: '/dashboard',
+      path: '/user-dashboard',
+      name: 'UserDashboard',
+      component: UserDashboard
+    },
+    {
+      path: '/editor',
       name: 'Index',
       component: Index,
-      meta: { description: 'User Dashboard', requiresAuth: true },
+      meta: { description: 'Website Editor', requiresAuth: true },
     },
     {
       path: '/login',

@@ -2,7 +2,7 @@
   <div class="EmailVerification">
     <vue-particles color="#dedede"></vue-particles>
     <div class='brand'>
-      <a href='/'>
+      <a href="javascript:void()" @click="goToLandingPage">
           <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
       </a>
     </div>
@@ -93,10 +93,13 @@ export default {
         location = location.domain === null ? location.input : location.domain
         this.$cookie.set('auth_token', auth.data.logintoken, {expires: 1, domain: location});
 
-        this.$router.push({path: '/dashboard'}) // Redirect to dashbord
+        this.$router.push({path: '/editor'}) // Redirect to dashbord
         this.authen.status = true;
       }
       this.loading = false
+    },
+    goToLandingPage () {
+      this.$router.push('/');
     }
   },
   mounted () {
