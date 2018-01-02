@@ -695,8 +695,8 @@
 
       // Get directory listing data
       getData() {
-        let username_session = this.$session.get('username');
-        console.log("username_session", username_session)
+        // let username_session = this.$session.get('username');
+        // console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
         axios.get(config.baseURL + '/flows-dir-listing')
           .then(response => {
@@ -1272,7 +1272,7 @@
           if (valid) {
             this.fullscreenLoading = true;
 
-            let username = this.$session.get('username');
+            // let username = this.$session.get('username');
             let token = this.$session.get('token');
             console.log('Login Token: ', token);
 
@@ -1292,7 +1292,7 @@
                 this.addNewProjectFolderLoading = false;
 
                 // Create repositoroty on GitLab
-                axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&privateToken=' + this.$session.get('privateToken') + '&username=' + this.$session.get('username'), {})
+                axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName, {})
                   .then((response) => {
                     console.log('Gitlab Response: ', response);
                     if (!(response.data.statusCode)) {
@@ -3369,8 +3369,8 @@
 
                               let projName = previewFile.replace('websites/', '');
 
-                              // window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
-                              window.open('http://' + projName + '.'+ config.ipAddress + '/public/' + nameF + '.html');
+                              window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+                              // window.open('http://' + projName + '.'+ config.ipAddress + '/public/' + nameF + '.html');
 
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                 .then(async (res) => {
@@ -4050,7 +4050,7 @@
             .then(async(res) => {
 
               // Delete Repository from GitLab Server
-              let response = await axios.get(config.baseURL + '/gitlab-add-repo/' + repositoryId + '?privateToken=' + this.$session.get('privateToken'), {})
+              let response = await axios.get(config.baseURL + '/gitlab-add-repo/' + repositoryId, {})
                 .then((response) => {
 
                   // delete project configuration from RethinkDB

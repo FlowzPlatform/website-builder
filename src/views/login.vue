@@ -151,40 +151,49 @@ export default {
           this.$session.set('email', this.form.user);
           localStorage.setItem('email', this.form.user);
           // this.$router.push('/');
-          await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
-          }).then(response => {
-            if (response.data) {
-                console.log(response.data.private_token);
-                console.log(response.data.id);
-                this.$session.set('privateToken', response.data.private_token);
-                this.$session.set('userId', response.data.id);
-                this.$session.set('username', response.data.username);
-                console.log("Username:", this.$session.get('username'));
-                this.authen.status = true;
 
-                // axios.post(config.baseURL+'/flows-dir-listing' , {
-                //   foldername :'/var/www/html/websites/'+ this.$session.get('username'),
-                //   type : 'folder'
-                // })
-                // .then((res) => {
-                //   console.log('user Folder created!');
-                // })
+          this.$session.set('privateToken', response.data.private_token);
+          this.$session.set('userId', response.data.id);
+          this.$session.set('username', response.data.username);
+          this.authen.status = true;
 
-                let self = this;
-                setTimeout(function () {
-                  self.$router.push('/editor');
-                }, 2000);
+          let self = this;
+          setTimeout(function () {
+            self.$router.push('/editor');
+          }, 2000);
+
+
+          // await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
+          // }).then(response => {
+          //   if (response.data) {
+          //       this.$session.set('privateToken', response.data.private_token);
+          //       this.$session.set('userId', response.data.id);
+          //       this.$session.set('username', response.data.username);
+          //       this.authen.status = true;
+
+          //       // axios.post(config.baseURL+'/flows-dir-listing' , {
+          //       //   foldername :'/var/www/html/websites/'+ this.$session.get('username'),
+          //       //   type : 'folder'
+          //       // })
+          //       // .then((res) => {
+          //       //   console.log('user Folder created!');
+          //       // })
+
+          //       let self = this;
+          //       setTimeout(function () {
+          //         self.$router.push('/editor');
+          //       }, 2000);
                 
-            }
-          }).catch(error => {
-            console.log(error);
-            this.authen.status = false;
-            // this.$notify.error({
-            //   title: 'Error',
-            //   message: error.response.data,
-            //   offset: 100
-            // });
-          })
+          //   }
+          // }).catch(error => {
+          //   console.log(error);
+          //   this.authen.status = false;
+          //   // this.$notify.error({
+          //   //   title: 'Error',
+          //   //   message: error.response.data,
+          //   //   offset: 100
+          //   // });
+          // })
         }
         
       }).catch(error => {

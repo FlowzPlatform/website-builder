@@ -7,7 +7,7 @@
       <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Publish Website</el-button>
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
-        <el-button type="success" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
+        <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
       </el-tooltip>
 
     </div>
@@ -95,6 +95,10 @@
             <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
               <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
             </el-tooltip>
+            <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
+              <el-button size="small" type="primary">Click to upload</el-button>
+              
+            </el-upload> -->
           </div>
           <div class="col-md-12">
             <el-tree
@@ -396,7 +400,58 @@
       </div>
       <!-- External Links section ends -->
 
-      <!-- Local Scripts -->
+      <!-- Meta Tags -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleMetaTags" class="card color-div toggleableDivHeader">Meta Tags</a>
+          </div>
+      </div>
+      <div id="toggleMetaTagsContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12" >
+              <div class="row">
+                    <div class="col-md-4">
+                       <h3>Add External meta tags </h3>
+                    </div>
+                 </div>
+                 <hr>
+               <el-form :inline="true">
+                 <el-form-item label="Meta Charset">
+                    <el-input placeholder="charset value" v-model="Metacharset"></el-input>
+                  </el-form-item>
+                </el-form>
+           </div>
+            <div class="col-md-12" style="margin-top: 2%">
+                <table class="table table-hover  table-bordered">
+                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
+                    <thead class="thead">
+                      <tr>
+                        <th>Name</th>
+                        <th>Content</th>
+                        <th></th>
+                        <!-- <th></th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(n, index) in externallinksMeta" >
+                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
+                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
+                      </tr>
+                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                    </tbody>
+                      <!-- </draggable> -->
+                  </table>
+                  <!-- Create new variable -->
+                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+               <!-- </el-form> -->
+            </div>
+        </div>
+      </div>
+      <!-- Meta Tags Ends -->
+
+      <!-- External script-->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
               <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Local Scripts</a>
@@ -452,59 +507,7 @@
                </el-form>
             </div>
         </div>
-      </div>
-      <!-- Local Scripts -->
-
-      <!-- Meta Tags -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleMetaTags" class="card color-div toggleableDivHeader">Meta Tags</a>
-          </div>
-      </div>
-      <div id="toggleMetaTagsContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12" >
-              <div class="row">
-                    <div class="col-md-4">
-                       <h3>Add External meta tags </h3>
-                    </div>
-                 </div>
-                 <hr>
-               <el-form :inline="true">
-                 <el-form-item label="Meta Charset">
-                    <el-input placeholder="charset value" v-model="Metacharset"></el-input>
-                  </el-form-item>
-                </el-form>
-           </div>
-            <div class="col-md-12" style="margin-top: 2%">
-                <table class="table table-hover  table-bordered">
-                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
-                    <thead class="thead">
-                      <tr>
-                        <th>Name</th>
-                        <th>Content</th>
-                        <th></th>
-                        <!-- <th></th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(n, index) in externallinksMeta" >
-                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
-                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
-                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
-                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
-                      </tr>
-                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
-                    </tbody>
-                      <!-- </draggable> -->
-                  </table>
-                  <!-- Create new variable -->
-                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
-               <!-- </el-form> -->
-            </div>
-        </div>
-      </div>
-      <!-- Meta Tags Ends -->
+      </div> 
 
       <!-- List of Commits Section -->
       <div class="collapsingDivWrapper row">
@@ -564,7 +567,7 @@ const beautify = require('beautify');
 import Vue from 'vue';
 import VueSession from 'vue-session';
 Vue.use(VueSession);
-
+// import extract from 'extract-zip'
 import axios from 'axios';
 import _ from 'lodash';
 const config = require('../config');
@@ -594,6 +597,7 @@ export default {
         selectedFooter: ''
       },
       commitsData: [],
+      fileList3: [],
       pluginsData: [],
       commitMessage: '',
       newRepoId: '',
@@ -666,19 +670,26 @@ export default {
       ],
       externallinksJS:[],
       externallinksCSS:[],
+      localscripts:[],
       externallinksMeta:[{
         name: 'Edit Me',
         content: 'Update Me'
       }],
-      Metacharset: '',
-      localscripts:[],
+      Metacharset: ''
     }
   },
   components: {
     draggable
   },
   methods: {
-
+    handleChange(file, fileList) {
+        this.fileList3 = fileList.slice(-3);
+        console.log('fileList3:',this.fileList3)
+        // var extract = require('extract-zip')
+        // extract(source, {dir: target}, function (err) {
+        //  // extraction is complete. make sure to handle the err
+        // })
+      },
     async globalImageUploading(currentImageVariableIndex, file) {
       
       this.imageInputIsDisabled = true;
@@ -740,14 +751,9 @@ export default {
       this.externallinksMeta.push(newVariable);
       this.editableInit();
     },
-
     addNewlocalscripts(){
       let newVariable = { linkposition:'',script:''};
       this.localscripts.push(newVariable);
-    },
-
-    deletelocalscripts(deleteIndex){
-      this.localscripts.splice(deleteIndex,1);
     },
 
     async addNewPlugin(pluginFileData) {
@@ -935,6 +941,81 @@ export default {
 
       this.addPluginLoading = false;
     },
+    async saveConfigFile(folderUrl,configData){
+
+        let foldername = folderUrl.split('/');
+        foldername = foldername[(foldername.length-1)];
+
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
+        if(rethinkdbCheck.data.data){
+
+          // update existing data
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+            configData: configData
+          })
+          .then(async (res) => {
+            this.$message({
+                showClose: true,
+                message: 'Successfully updated.',
+                type: 'success'
+            });
+            // console.log(res.data);
+          })
+          .catch((e) => {
+              this.$message({
+                  showClose: true,
+                  message: 'Failed! Please try again.',
+                  type: 'error'
+              });
+              console.log(e)
+          });
+
+          } else {
+          this.$message({
+              showClose: true,
+              message: 'Data Error.',
+              type: 'error'
+          });
+        }   
+
+      },
+      recursivecall(name, partials, defaultListtemp,configData) {
+          console.log('inside recursivecall')
+        for (let i = 0; i < configData[1].pageSettings.length; i++) {
+          let temp = configData[1].pageSettings[i].PageName
+          temp = temp.split('.')[0]
+          if (name == temp) {
+            for (let y = 0; y < defaultListtemp.length; y++) {
+              let checkinner = false
+              for (let x = 0; x < partials.length; x++) {
+                if (Object.keys(partials[x])[0] == Object.keys(defaultListtemp[y])[0]) {
+                  if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]]) {
+                    checkinner = true
+                    break;
+                  }
+                }
+                var partemp = defaultListtemp[y]
+                if (configData[2].layoutOptions[0][Object.keys(partemp)[0]] != undefined) {
+                  for (let k = 0; k < configData[2].layoutOptions[0][Object.keys(partemp)[0]].length; k++) {
+                    if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].value == partemp[Object.keys(partemp)[0]]) {
+                      if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList != undefined) {
+                        recursivecall(name, partials, configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList,configData)
+                      }
+                    }
+                  }
+                }
+              }
+              if (checkinner != true) {
+                defaultListtemp[y][Object.keys(defaultListtemp[y])[0]] = defaultListtemp[y][Object.keys(defaultListtemp[y])[0]].split('.')[0]
+
+                configData[1].pageSettings[i].partials.push(defaultListtemp[y]);
+
+              }
+            }
+          }
+        }
+      },
 
     async refreshPlugins() {
       this.refreshPluginsLoading = true;
@@ -1055,6 +1136,7 @@ export default {
                                               "PageMetaInfo": [],
                                               "PageMetacharset":'',
                                               "ProjectScripts":[]
+
                                             };
 
             this.settings[1].pageSettings.push(notRegisteredPageSettings);
@@ -1074,7 +1156,358 @@ export default {
           console.log(e)
       });
 
-      location.reload();
+      var getFromBetween = {
+        results: [],
+        string: "",
+        getFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var SP = this.string.indexOf(sub1) + sub1.length;
+          var string1 = this.string.substr(0, SP);
+          var string2 = this.string.substr(SP);
+          var TP = string1.length + string2.indexOf(sub2);
+          return this.string.substring(SP, TP);
+        },
+        removeFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+          this.string = this.string.replace(removal, "");
+        },
+        getAllResults: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+          var result = this.getFromBetween(sub1, sub2);
+          this.results.push(result);
+          this.removeFromBetween(sub1, sub2);
+          if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+            this.getAllResults(sub1, sub2);
+          } else return;
+        },
+        get: function(string, sub1, sub2) {
+          this.results = [];
+          this.string = string;
+          this.getAllResults(sub1, sub2);
+          return this.results;
+        }
+      };
+      console.log('now running loop for saving every file in page and in partial')
+      this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
+      let splitUrl = url.split('/');
+
+      let websiteName = splitUrl[(splitUrl.length -1)];
+
+
+      // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+
+      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
+
+      configData=JSON.parse(JSON.stringify(configData.data.data[0].configData))
+      // console.log('new config file:',configData);
+      // console.log('now partial');
+      for(let q=0;q<Object.keys(configData[2].layoutOptions[0]).length;q++){
+        // console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
+        if(Object.keys(configData[2].layoutOptions[0])[q]!=('Layout')){
+          if(Object.keys(configData[2].layoutOptions[0])[q]!=('Menu')){
+           for(let p=0;p<configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length;p++){
+            var namepartial=configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
+            // console.log('name:',namepartial)
+             var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Partials/'+Object.keys(configData[2].layoutOptions[0])[q]+'/'+namepartial+'.partial');
+             // console.log('content of partial:',contentpage.data)
+             // console.log("inside !=pages directory")
+                var content=''
+                content = contentpage.data;
+                var result = (getFromBetween.get(content, "{{>", "}}"));
+                var DefaultParams = [];
+                if (result.length > 0) {
+                  var resultParam = result
+                  for (let i = 0; i < resultParam.length; i++) {
+                    var temp;
+                    temp = resultParam[i].trim()
+                    result[i] = result[i].trim()
+                    result[i]=result[i].replace(/&nbsp;/g, ' ').trim()
+                    temp = temp.replace(/&nbsp;/g, ' ')
+                    temp = temp.replace(/\s+/g, ' ');
+                    temp = temp.split(' ')
+                    for (let j = 0; j < temp.length; j++) {
+                      if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                        if (temp[j + 1] != undefined) {
+                          result[i] = temp[0];
+                          if (temp[j + 1].indexOf('.') > -1) {
+                            let x = temp[j + 1]
+                            x = temp[j + 1].split(/'/)[1];
+                            let obj = {}
+                            obj[temp[0]] = x
+                            DefaultParams.push(obj)
+                            break;
+                          }
+                        } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                          result[i] = temp[0];
+                          if (temp[j]) {
+                            let x = temp[j]
+                            x = temp[j].split(/'/)[1];
+                            let obj = {}
+                            obj[temp[0]] = x
+                            DefaultParams.push(obj)
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  }
+                  let totalPartial = content.match(/{{>/g).length;
+
+                  let namefile = namepartial
+                  let namefolder = Object.keys(configData[2].layoutOptions[0])[q];
+                  let temp = {
+                    value: namefile,
+                    label: namefile,
+                    partialsList: result,
+                    defaultList: DefaultParams
+                  }
+                  let checkValue = false;
+                  for (var i = 0; i < Object.keys(configData[2].layoutOptions[0]).length; i++) {
+                    var obj = Object.keys(configData[2].layoutOptions[0])[i];
+                    if ((obj) == namefolder) {
+                      checkValue = true;
+                    }
+                  }
+                  if (checkValue == true) {
+                    let checkFileNamevalue = false;
+                    for (let j = 0; j < configData[2].layoutOptions[0][namefolder].length; j++) {
+                      if (configData[2].layoutOptions[0][namefolder][j].label == namefile) {
+                        checkFileNamevalue = true
+                        configData[2].layoutOptions[0][namefolder][j].partialsList = [];
+                        configData[2].layoutOptions[0][namefolder][j].defaultList = [];
+                        configData[2].layoutOptions[0][namefolder][j].partialsList = result;
+                        configData[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
+
+                      }
+                    }
+                    if (checkFileNamevalue != true) {
+
+                      configData[2].layoutOptions[0][namefolder].push(temp)
+                    }
+                    this.saveConfigFile(this.repoName,configData);
+                  } else {
+                    console.log('file doesnt exists');
+                  }
+                } else {
+                  let namefile = namepartial;
+                  let namefolder = Object.keys(configData[2].layoutOptions[0])[q];
+                  let temp = {
+                    value: namefile,
+                    label: namefile,
+                  }
+                  let checkValue = false;
+                  for (var i = 0; i < Object.keys(configData[2].layoutOptions[0]).length; i++) {
+                    var obj = Object.keys(configData[2].layoutOptions[0])[i];
+                    if ((obj) == namefolder) {
+                      checkValue = true;
+                    }
+                  }
+                  if (checkValue == true) {
+                    let checkFileNamevalue = false;
+                    for (let j = 0; j < configData[2].layoutOptions[0][namefolder].length; j++) {
+                      if (configData[2].layoutOptions[0][namefolder][j].label == namefile) {
+                        checkFileNamevalue = true
+                        delete configData[2].layoutOptions[0][namefolder][j].partialsList;
+                        delete configData[2].layoutOptions[0][namefolder][j].defaultList;
+                      }
+                    }
+                    if (checkFileNamevalue != true) {
+
+                      configData[2].layoutOptions[0][namefolder].push(temp)
+                    }
+                    this.saveConfigFile(this.repoName,configData);
+                  } else {
+                    console.log('file doesnt exists');
+                  }
+                }
+          } 
+          }
+            
+        }       
+      }
+      // console.log('now pages');
+      for(let r=0;r<configData[1].pageSettings.length;r++){
+        var namepage=configData[1].pageSettings[r].PageName
+        // console.log('namepage:',namepage)
+        // console.log('this.repoName:',this.repoName)
+        console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
+        var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Pages/'+namepage);
+        // console.log('contentpage:',contentpage)
+
+        // console.log("inside ==pages directory")
+        var content1=''
+         // content = this.$store.state.content;
+        let name = namepage;
+         // console.log('name:',name)
+         name=name.split('.')[0]
+         content1=contentpage.data
+          var result1=[];
+         result1 = (getFromBetween.get(content1, "{{>", "}}"));
+        var DefaultParams = [];
+        if (result1.length > 0) {
+          var resultParam = result1
+          for (let i = 0; i < resultParam.length; i++) {
+            var temp;
+            temp = resultParam[i].trim()
+            result1[i] = result1[i].trim()
+            result1[i]=result1[i].replace(/&nbsp;/g, ' ').trim()
+            temp = temp.replace(/&nbsp;/g, ' ')
+            temp = temp.replace(/\s+/g, ' ');
+            temp = temp.trim();
+            temp = temp.split(' ')
+            for (let j = 0; j < temp.length; j++) {
+              if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                if (temp[j + 1] != undefined) {
+                  result1[i] = temp[0];
+                  if (temp[j + 1].indexOf('.') > -1) {
+                    let x = temp[j + 1]
+                    x = temp[j + 1].split(/'/)[1];
+                    let obj = {}
+                    obj[temp[0]] = x
+                    DefaultParams.push(obj)
+                    break;
+                  }
+                } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                  result1[i] = temp[0];
+                  if (temp[j]) {
+                    let x = temp[j]
+                    x = temp[j].split(/'/)[1];
+                    let obj = {}
+                    obj[temp[0]] = x
+                    DefaultParams.push(obj)
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          // console.log("DefaultParams:",DefaultParams)
+          for (let i = 0; i < configData[1].pageSettings.length; i++) {
+            let temp = configData[1].pageSettings[i].PageName
+            temp = temp.split('.')[0]
+            // console.log('temp:',temp)
+            if (name == temp) {
+              console.log('temp:',temp)
+              var partials = configData[1].pageSettings[i].partials
+              for (let k = 0; k < result1.length; k++) {
+                let checkpartial = false
+                // console.log("result[k]:", result[k])
+                for (let r = 0; r < partials.length; r++) {
+                  if (Object.keys(partials[r])[0] == result1[k]) {
+                    checkpartial = true
+                    console.log("checkpartial==true")
+                    var temp1 = DefaultParams[k][result1[k]]
+                    var temp2 = partials[r][result1[k]]
+                    if (temp1.split('.')[0] == temp2.split('.')[0]) {
+                      for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
+
+                        if (configData[2].layoutOptions[0][result1[k]][z].value == DefaultParams[k][result1[k]].split('.')[0]) {
+                          if (configData[2].layoutOptions[0][result1[k]][z].defaultList != undefined) {
+                            var defaultListtemp = configData[2].layoutOptions[0][result1[k]][z].defaultList
+                            this.recursivecall(name, partials, defaultListtemp,configData)
+                          }
+                        }
+                      }
+                      break;
+                    } else {
+                      checkpartial = false
+                    }
+                  }
+
+                }
+                if (checkpartial != true) {
+                  console.log("checkpartial!=true")
+                  var obj = {}
+                  obj[result1[k]] = DefaultParams[k][result1[k]].split('.')[0]
+                  for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
+                    if (configData[2].layoutOptions[0][result1[k]][z].value == DefaultParams[k][result1[k]].split('.')[0]) {
+                      if (configData[2].layoutOptions[0][result1[k]][z].defaultList != undefined) {
+                        var defaultListtemp = configData[2].layoutOptions[0][result1[k]][z].defaultList
+                        this.recursivecall(name, partials, defaultListtemp,configData)
+                      }
+                    }
+                  }
+                  configData[1].pageSettings[i].partials.push(obj);
+                }
+              }
+            } else if (name != temp) {
+              // console.log("file not found in config file")
+            }
+          }
+          this.saveConfigFile(this.repoName,configData);
+        }
+        // this.configData=JSON.parse(JSON.stringify(this.configData.data.data[0].configData))
+        var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
+        if (vueresult.length > 0) {
+          for (let i = 0; i < vueresult.length; i++) {
+            var tempvue = vueresult[i]
+            var tempvue = tempvue.trim().split(' ')
+            if (tempvue[2] != undefined) {
+              var vuetemp = {
+                partialsName: tempvue[0].replace(/"/g, ''),
+                value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue',
+                options: tempvue[2].split('=')[1].replace(/"/g, '')
+              }
+            } else {
+              var vuetemp = {
+                partialsName: tempvue[0].replace(/"/g, ''),
+                value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue'
+              }
+            }
+
+            for (let i = 0; i < configData[1].pageSettings.length; i++) {
+              let temp = configData[1].pageSettings[i].PageName
+              temp = temp.split('.')[0]
+              if (name == temp) {
+                if (configData[1].pageSettings[i].VueComponents != undefined) {
+                  let checkvue = false
+                  for (let j = 0; j < configData[1].pageSettings[i].VueComponents.length; j++) {
+                    if (configData[1].pageSettings[i].VueComponents[j].partialsName == tempvue[0].replace(/"/g, '')) {
+                      if (configData[1].pageSettings[i].VueComponents[j].value.split('.')[0] == tempvue[1].split('=')[1].replace(/"/g, '')) {
+                        checkvue = true;
+                        if (configData[1].pageSettings[i].VueComponents[j].options != '') {
+                          if (tempvue[2] != undefined) {
+
+                            configData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
+                          } else {
+                            configData[1].pageSettings[i].VueComponents[j].options = ''
+                          }
+                        } else {
+                          if (tempvue[2] != undefined) {
+
+                            configData[1].pageSettings[i].VueComponents[j]['options'] = ''
+                            configData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
+                          } else {
+
+                          }
+                        }
+                      } else {
+                        console.log("value not matched")
+
+                      }
+
+                    }
+                  }
+                  if (checkvue != true) {
+
+                    configData[1].pageSettings[i].VueComponents.push(vuetemp)
+                  }
+                } else {
+                  configData[1].pageSettings[i]['VueComponents'] = []
+                  configData[1].pageSettings[i].VueComponents.push(vuetemp)
+                }
+              }
+            }
+          }
+          this.saveConfigFile(this.repoName,configData);
+        }
+
+          this.saveConfigFile(this.repoName,configData);
+        // }
+      }
     },
 
     deleteVariable(deleteIndex) {
@@ -1088,7 +1521,9 @@ export default {
     deleteEcommerceVariable(deleteIndex) {
       this.ecommerceVariables.splice(deleteIndex, 1);
     },
-
+    deletelocalscripts(deleteIndex){
+      this.localscripts.splice(deleteIndex,1);
+    },
     deletelinkJS(deleteIndex) {
       this.externallinksJS.splice(deleteIndex, 1);
     },
@@ -1255,7 +1690,7 @@ export default {
       }) 
     },
 
-    async publishMetalsmith() {
+  async publishMetalsmith() {
       this.fullscreenLoading = true;
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
@@ -1306,59 +1741,57 @@ export default {
       var endhead = '';
       var topbody = '';
       var endbody = '';
-        
+        if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
+        tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
+      }
 
-        if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
-          tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
+      if (metaInfo!=undefined && metaInfo.length > 0) {
+        for (let a = 0; a < metaInfo.length; a++) {
+          tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
         }
+      }
 
-        if (metaInfo != undefined && metaInfo.length > 0) {
-          for (let a = 0; a < metaInfo.length; a++) {
-            tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+      if (externalJs!=undefined && externalJs.length > 0) {
+        for (let a = 0; a < externalJs.length; a++) {
+          if (externalJs[a].linkposition == 'starthead') {
+            tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'endhead') {
+            endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'startbody') {
+            topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'endbody') {
+            endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
           }
         }
+      }
 
-        if (externalJs != undefined && externalJs.length > 0) {
-          for (let a = 0; a < externalJs.length; a++) {
-            if (externalJs[a].linkposition == 'starthead') {
-              tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-            } else if (externalJs[a].linkposition == 'endhead') {
-              endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-            } else if (externalJs[a].linkposition == 'startbody') {
-              topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-            } else if (externalJs[a].linkposition == 'endbody') {
-              endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+      if (externalCss!=undefined && externalCss.length > 0) {
+        for (let a = 0; a < externalCss.length; a++) {
+          if (externalCss[a].linkposition == 'starthead') {
+            tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'endhead') {
+            endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'startbody') {
+            topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'endbody') {
+            endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
+          }
+
+        }
+      }
+      if (projectscripts!=undefined && projectscripts.length > 0) {
+            for (let a = 0; a < projectscripts.length; a++) {
+              if (projectscripts[a].linkposition == 'starthead') {
+                tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'endhead') {
+                endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'startbody') {
+                topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'endbody') {
+                endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              }
             }
           }
-        }
-
-        if (externalCss != undefined && externalCss.length > 0) {
-          for (let a = 0; a < externalCss.length; a++) {
-            if (externalCss[a].linkposition == 'starthead') {
-              tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-            } else if (externalCss[a].linkposition == 'endhead') {
-              endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-            } else if (externalCss[a].linkposition == 'startbody') {
-              topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-            } else if (externalCss[a].linkposition == 'endbody') {
-              endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
-            }
-
-          }
-        }
-        if (projectscripts != undefined && projectscripts.length > 0) {
-          for (let a = 0; a < projectscripts.length; a++) {
-            if (projectscripts[a].linkposition == 'starthead') {
-              tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-            } else if (projectscripts[a].linkposition == 'endhead') {
-              endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-            } else if (projectscripts[a].linkposition == 'startbody') {
-              topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-            } else if (projectscripts[a].linkposition == 'endbody') {
-              endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-            }
-          }
-        }
 
         var partials = ''
         let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
@@ -1388,15 +1821,15 @@ export default {
         pagescripts=rawSettings[1].pageSettings[i].PageScripts;
 
 
-        if (PageMetacharset != undefined && PageMetacharset != '') {
+        if (PageMetacharset!=undefined && PageMetacharset != '') {
           tophead = tophead + '<meta charset="' + PageMetacharset + '">'
         }
-        if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
+        if (pageMetaInfo!=undefined && pageMetaInfo.length > 0) {
           for (let a = 0; a < pageMetaInfo.length; a++) {
             tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
           }
         }
-        if (pageexternalJs != undefined && pageexternalJs.length > 0) {
+        if (pageexternalJs!=undefined && pageexternalJs.length > 0) {
           for (let a = 0; a < pageexternalJs.length; a++) {
             if (pageexternalJs[a].linkposition == 'starthead') {
               tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
@@ -1411,7 +1844,7 @@ export default {
         }
 
 
-        if (pageexternalCss != undefined && pageexternalCss.length > 0) {
+        if (pageexternalCss!=undefined && pageexternalCss.length > 0) {
           for (let a = 0; a < pageexternalCss.length; a++) {
             if (pageexternalCss[a].linkposition == 'starthead') {
               tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
@@ -1424,7 +1857,7 @@ export default {
             }
           }
         }
-        if (pagescripts != undefined && pagescripts.length > 0) {
+        if (pagescripts!=undefined && pagescripts.length > 0) {
             for (let a = 0; a < pagescripts.length; a++) {
               if (pagescripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
@@ -1594,13 +2027,13 @@ export default {
 
                       temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
                     }
-                    console.log('temp1:', temp1)
-                    console.log('temp2:', temp2)
+                    // console.log('temp1:', temp1)
+                    // console.log('temp2:', temp2)
                     if (layoutdata.data.split(temp1).join(temp2)) {
-                      console.log('replacing in layout file successfully')
+                      // console.log('replacing in layout file successfully')
                       layoutdata.data = layoutdata.data.split(temp1).join(temp2)
                     } else {
-                      console.log('replacing in layout file failed')
+                      // console.log('replacing in layout file failed')
                     }
                   }
                 }
@@ -1688,17 +2121,7 @@ export default {
                   '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                   '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                   '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
-                  '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-memory@8.0.9/dist/y-memory.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-webrtc@8.0.7/dist/y-webrtc.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
+                  // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
                   '<script src="./../main-files/main.js"><\/script>\n' + endbody +
                   '</body>\n</html>';
 
@@ -1838,11 +2261,10 @@ export default {
 
           })
 
-
-          this.fullscreenLoading = false;
+        this.fullscreenLoading = false;
         // Open in new window
-        // window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
-        window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
+        window.open(config.ipAddress + '/websites/' + this.repoName + '/public/');
+        // window.open('http://' + this.repoName + '.'+ config.ipAddress);
         // Publish with Zeit Now
         // axios.post(config.baseURL + '/publish-now', {
         //     projectName: this.repoName
@@ -1856,7 +2278,7 @@ export default {
         //       type: 'success'
         //     });
         //     console.log(res.data);
-        //     this.fullscreenLoading = false;
+        //     this.previewLoader = false;
         //   })
         //   .catch((e) => {
         //     this.$message({
@@ -1865,7 +2287,7 @@ export default {
         //       type: 'error'
         //     });
         //     console.log(e);
-        //     this.fullscreenLoading = false;
+        //     this.previewLoader = false;
         //   });
       }
     },
@@ -1890,7 +2312,7 @@ export default {
     },
 
     exportWebsite(){
-      window.open(config.ipAddress + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
+      window.open(config.gitLapIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
     },
 
     async init () {
@@ -1925,88 +2347,6 @@ export default {
         this.externallinksMeta = this.settings[1].projectSettings[1].ProjectMetaInfo;
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
-
-
-        // Old Code for tree data
-        // // Getting tree data structure from partials listings
-        // let pluginNames = [];
-
-        // pluginNames = Object.keys(this.settings[2].layoutOptions[0]);
-        // pluginNames.splice(pluginNames.indexOf('Layout'), 1);
-
-        // let treeData = [];
-        // let count = 0;
-
-        // // Loop thru all plugins found
-        // for(let i = 0; i < pluginNames.length; i++){
-        //   count++;
-
-        //   let partialName = pluginNames[i];
-
-        //   let temp1 = {
-        //     id: count,
-        //     children: [],
-        //     label: partialName,
-        //     isActive: true
-        //   }
-
-        //   treeData.push(temp1);
-
-        //   // Loop thru all plugin variants
-        //   for(let j = 0; j < this.settings[2].layoutOptions[0][partialName].length; j++){
-            
-        //     count++;
-
-        //     let temp2 = {
-        //       id: count,
-        //       children: [],
-        //       label: this.settings[2].layoutOptions[0][partialName][j].label,
-        //       isActive: true
-        //     }
-
-        //     treeData[i].children.push(temp2);
-        //   }
-
-        // }
-
-        // this.pluginsTreedata = treeData;
-
-        // // Get checked items
-        // this.checkedList = getIds(this.pluginsTreedata);
-
-        // function getIds(ma) {       
-        //   let ida = []
-
-        //   if (ma instanceof Array) {               
-        //     for (let i in ma) {                       
-        //       let ii = getIds(ma[i])                        
-        //       ida = ida.concat(ii)               
-        //     }       
-        //   } else if (typeof ma == 'object') {               
-        //     if (ma.isActive) { 
-        //       ida.push(ma.id) 
-        //     }
-        //     let ii = getIds(ma.children)                
-        //     ida = ida.concat(ii)       
-        //   }       
-        //   return ida
-        // }
-
-        // Set Brand Logo Name
-        // if(this.form.brandLogoName != ''){
-        //   if (this.form.brandLogoName.length > 18) {
-        //       $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
-        //       $('.valid').removeClass('error').addClass('correct');
-        //       $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-        //    }else{
-        //       $('#text2').text(this.form.brandLogoName);
-        //       $('.valid').removeClass('error').addClass('correct');
-        //       $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-        //   }  
-        // } else {
-        //   console.log('BrandLogoName not found!');
-        // }
-        
 
       } else {
         console.log('Cannot get configurations!');
@@ -2139,6 +2479,14 @@ export default {
                 $("#toggleExternalLinks").text("External Links")
             }
         });
+        $("#toggleLocalscripts").click(function() {
+            $("#toggleLocalscriptsContent").slideToggle("slow");
+            if ($("#toggleLocalscripts").text() == "Local Scripts") {
+                $("#toggleLocalscripts").html("Local Scripts")
+            } else {
+                $("#toggleLocalscripts").text("Local Scripts")
+            }
+        });
 
         $("#toggleMetaTags").click(function() {
             $("#toggleMetaTagsContent").slideToggle("slow");
@@ -2155,15 +2503,6 @@ export default {
                 $("#toggleCommits").html("List of Commits")
             } else {
                 $("#toggleCommits").text("List of Commits")
-            }
-        });
-
-        $("#toggleLocalscripts").click(function() {
-            $("#toggleLocalscriptsContent").slideToggle("slow");
-            if ($("#toggleLocalscripts").text() == "Local Scripts") {
-                $("#toggleLocalscripts").html("Local Scripts")
-            } else {
-                $("#toggleLocalscripts").text("Local Scripts")
             }
         });
 
@@ -2419,13 +2758,9 @@ export default {
   .page-buttons{
     position: fixed;
     bottom: 7px;
-    right: 85px;
+    right: 50px;
     margin-top: 17.5px;
-    z-index: 10;
-  }
-
-  .el-button+.el-button {
-    margin-left: 4px;
+    z-index: 10
   }
 
   @media(max-width: 680px){
