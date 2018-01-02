@@ -1997,22 +1997,36 @@
               text : globalVariablesPluginData,
               type : 'file'
           })
-          .then((res) => {
+          .then(async (res) => {
             console.log(globalVariablesPlugin + ' file created');  
-            this.fullscreenLoading = false;
+            
 
-            let self = this;
-            setTimeout(function(){
-              self.$message({
-                showClose: true,
-                message: 'Project Created. Please wait...',
-                type: 'success'
-              });
-            },500); 
+            // Push repository changes
+            await axios.post(config.baseURL + '/gitlab-add-repo', {
+              commitMessage: 'Initial Push',
+              repoName: this.repoName
+            }).then(response => {
+              console.log(response);
+              if(response.status == 200 || response.status == 201){
+                this.fullscreenLoading = false;
+                let self = this;
+                setTimeout(function(){
+                  self.$message({
+                    showClose: true,
+                    message: 'Project Created. Please wait...',
+                    type: 'success'
+                  });
+                },500); 
 
-            setTimeout(function(){
-              location.reload();
-            },1000);  
+                setTimeout(function(){
+                  location.reload();
+                },1000);  
+              }
+            }).catch(error => {
+              console.log("Some error occured: ", error);
+            }) 
+
+            
           })
           .catch((e) => {
               console.log(e)
