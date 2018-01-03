@@ -2,24 +2,6 @@
 	<div class="root">
 		<section class="container" style="margin-top: 2%;">
 		  <h3 id="user-menu">Customize Menu:</h3>
-		  	<!-- <div class="row">
-		  		<div class="col-md-6">
-		  			<form class="form form-horizontal">
-		  				<div class="form-group">
-		  					<label class="control-label col-md-4" for="menuType">Select Menu Type:</label>
-		  					<div class="col-md-8">
-		  						<select class="form-control" id="menuType">
-							  		<option value="headMenu">Header Menu</option>
-							  		<option value="headMenu">Footer Menu</option>
-						  		</select>		
-		  					</div>
-		  				</div>
-		  			</form>
-		  			
-		  		</div>
-		  	</div> -->
-
-		  	<!-- <hr> -->
 		  	
 		  	<div class="row">
 		  		<div class="col-md-12">
@@ -102,13 +84,14 @@
 
 import axios from 'axios'
 
+const config = require('../config');
+
 import domenu from 'domenu'
 
 	export default {
 		name: 'menuBuilder',
 		data: () => ({
 	        outputJson: [],
-	        baseURL: 'http://localhost:3030',
 	        MenuJSON: []
 	    }),
 	    components: {
@@ -123,7 +106,7 @@ import domenu from 'domenu'
 			var folderUrl = configFileUrl.replace(fileName, '');
 
 			try {
-			    let responseConfig = await axios.get(this.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
+			    let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
 				// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
 					window.localStorage.setItem('domenu-1Json', responseConfig.data);
@@ -146,27 +129,6 @@ import domenu from 'domenu'
 		        $jsonOutput        = $outputContainer.find('.jsonOutput'),
 		        $keepChanges       = $outputContainer.find('.keepChanges'),
 		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
-
-	        
-
-		    // var MenuJSON;
-	     //    var jsonUrl = 'http://localhost:3030/flows-dir-listing/0?path=/home/software/AllProjects/FlowzServiceApi/projects/product-listing/assets/menu.json';
-
-	     //    $.ajax({
-		    //     type: 'GET',
-		    //     url: jsonUrl,
-		    //     async: true,
-		    //     dataType: 'json',
-		    //     success: function(data) {
-		    //         MenuJSON = data;
-		    //     }
-		    // });
-
-		    // console.log(this.MenuJSON);
-
-		    // if(!this.MenuJSON){
-		    // 	MenuJSON = [];
-		    // }
 
 		    $domenu.domenu({
 		        slideAnimationDuration: 0,

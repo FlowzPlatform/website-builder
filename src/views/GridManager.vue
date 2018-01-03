@@ -30,6 +30,9 @@
     const beautify = require('beautify');
 
     // import './GridManager/jquery.gridmanager.min.js';
+
+    import axios from 'axios';
+    const config = require('../config');
     
     export default {         
         name:'GridManager',    
@@ -64,12 +67,25 @@
                     global_col: [{ callback: self.test_callback, loc: 'top' }]
                 }
             }).data('gridmanager');
+
+            // $(document).bind('page:before-unload', function() {
+            //     if (typeof(CKEDITOR) != "undefined"){
+            //         for(name in CKEDITOR.instances){
+            //             CKEDITOR.instances[name].destroy()
+            //         }
+            //     }
+            // });
             
             $("#gm-canvas").empty().append(this.$store.state.content)
             $(".gm-edit-mode").click().click();
 
         },
         methods: {
+            getSavedHtml: async function(){
+              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+              });
+              this.$store.state.content = response.data
+            },
             getHtml: function(){
                 let canvas = gm.$el.find("#" + gm.options.canvasId);
                 gm.deinitCanvas();

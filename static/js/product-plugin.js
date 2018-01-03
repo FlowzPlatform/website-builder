@@ -1,6 +1,7 @@
 // Change baseURL when going live
-// const baseURL = 'http://localhost:3032';
-const baseURL = 'http://api.flowz.com/serverapi';
+const baseURL = 'http://localhost:3032';
+// const baseURL = 'http://devapi.flowz.com/serverapi';
+// const baseURL = 'http://api.flowz.com/serverapi';
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;
@@ -327,6 +328,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Ecommerce Blocks'
   });
 
+  bm.add('Slider', {
+    label: 'Slider',
+    content: '<Slider style="display: block; min-height: 50px"> <style>#slider{margin: 0 auto; width: 1146px; position: relative;}#slides{background: #fff; padding: 5px; -webkit-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -moz-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -o-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -ms-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}.inner{width: 500%;}.inner:after{display: block; height: 0; clear: both;}.page{float: left; width: 20%;}.page img{width: 100%; height: 466px;}#overflow{overflow: hidden;}#slider input{display: none;}#controls{position: absolute; width: 100%; top: 216px; left: 0; height: 50px;}#controls label{display: none; opacity: 0.3; cursor: pointer;}#controls label:hover{opacity: 0.8;}#slide1:checked ~ #controls label:nth-child(2), #slide2:checked ~ #controls label:nth-child(3), #slide3:checked ~ #controls label:nth-child(4), #slide4:checked ~ #controls label:nth-child(5), #slide5:checked ~ #controls label:nth-child(1){width: 0; height: 0; border-top: 20px solid transparent; border-left: 20px solid #333; border-bottom: 20px solid transparent; float: right; margin-right: -30px; display: block;}#slide1:checked ~ #controls label:nth-child(5), #slide2:checked ~ #controls label:nth-child(1), #slide3:checked ~ #controls label:nth-child(2), #slide4:checked ~ #controls label:nth-child(3), #slide5:checked ~ #controls label:nth-child(4){width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent; border-right: 20px solid rgb(51, 51, 51); float: left; display: block; margin-left: -27px;}#slide1:checked ~ #slides .inner{margin-left: 0;}#slide2:checked ~ #slides .inner{margin-left: -100%;}#slide3:checked ~ #slides .inner{margin-left: -200%;}#slide4:checked ~ #slides .inner{margin-left: -300%;}#slide5:checked ~ #slides .inner{margin-left: -400%;}#active{text-align: center; margin-top: 10px; text-align: center; vertical-align: middle; padding-right: 3px;}#active label{padding: 6px; width: 230px; height: 53px; background: #f1f1f1; display: table-cell; cursor: pointer; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; line-height: 19px; font-family: sans-serif; font-size: small;}#active label:hover{background: #c4bebe;}#slide1:checked ~ #active label:nth-child(1), #slide2:checked ~ #active label:nth-child(2), #slide3:checked ~ #active label:nth-child(3), #slide4:checked ~ #active label:nth-child(4), #slide5:checked ~ #active label:nth-child(5){background: #dddddd;}#slides .inner{-webkit-transition: all 0.8s ease-in-out; -moz-transition: all 0.8s ease-in-out; -ms-transition: all 0.8s ease-in-out; -o-transition: all 0.8s ease-in-out; transition: all 0.8s ease-in-out;}</style> <div id="slider"> <input type="radio" id="slide1" name="slider" checked/> <input type="radio" id="slide2" name="slider"/> <input type="radio" id="slide3" name="slider"/> <input type="radio" id="slide4" name="slider"/> <input type="radio" id="slide5" name="slider"/> <div id="slides"> <div id="overflow"> <div class="inner"> <div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div></div></div></div><div id="controls"> <label for="slide1"></label> <label for="slide2"></label> <label for="slide3"></label> <label for="slide4"></label> <label for="slide5"></label> </div><div id="active"> <label for="slide1"> <p>IT\'S A WRAP</p></label> <label for="slide2"> <p>CHECK OUT OUR <br>Autumn Savings</p></label> <label for="slide3"> <p>New! <br>Light Up Pen!</p></label> <label for="slide4"> <p>INTRODUCING... <br>Sweda Outlet</p></label> <label for="slide5"> <p>Take 40% Off</p></label> </div></div></Slider>',
+    attributes: {
+        class: 'fa fa-code',
+        title: 'Slider'
+    },
+    category: 'Ecommerce Blocks'
+  });
+
 
 
 
@@ -467,16 +478,67 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
+  // dataField component
   bm.add('DataFieldGroup', {
     label: 'Data Field Group',
-    content: '<DataFieldGroup style="display: block; width: 100%; min-height:40px"><div style="border:solid black 2px"></div></DataFieldGroup>',
+    content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
     attributes: {
-      class: 'fa fa-spinner',
-      title: 'Progress Bar',
+      class: 'fa fa-database',
+      title: 'Data Field',
     },
-    category: 'Special Component'
+    category: 'Data Field Group'
+  });
+  
+  bm.add('DataFieldObject', {
+    label: 'Data Field Object',
+    content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
   });
 
+  bm.add('DataFieldText', {
+    label: 'Data Field Text',
+    content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
+
+  bm.add('DataFieldList', {
+    label: 'Data Field List',
+    content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
+
+  bm.add('DataFieldImage', {
+      label: 'Data Field Image',
+      content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
+      attributes: {
+          class: 'fa fa-database',
+          title: 'Progress Bar',
+      },
+      category: 'Data Field Group'
+  });
+
+
+  bm.add('ShoppingCart', {
+        label: 'Shopping Cart',
+  content:'<ShoppingCart  style="display: block; width: 100%;padding:15px; vertical-align: middle;"><div id="ShoppingCart_append"><i class="fa fa-shopping-cart"></i> <label style="margin: inherit;">Shopping Cart</label></div></ShoppingCart>',
+  attributes: {
+              class:'fa fa-shopping-cart',
+              title: 'Shopping cart',
+        },
+    category: 'Payment Components'
+  });
 
 
   // Get DomComponents module
@@ -1513,46 +1575,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  //DataFieldGroup
 
-  comps.addType('DataFieldGroup', {
-    // Define the Model
-    model: defaultModel.extend({
-      // Extend default properties
-      defaults: Object.assign({}, defaultModel.prototype.defaults, {
-        editable: true,
-        droppable: true,
-        traits: [{
-          label: 'Connection-name',
-          name: 'Connection-name',
-          type: 'text'
-        }, {
-          label: 'Schema-name',
-          name: 'Schema-name',
-          type: 'text'
-        }],
-      }),
-
-    }, {
-      isComponent: function(el) {
-        if (el.tagName == 'DATAFIELDGROUP') {
-          return {
-            type: 'DataFieldGroup'
-          };
-        }
-      },
-    }),
-
-    view: defaultType.view,
-
-    // The render() should return 'this'
-    render: function() {
-      // Extend the original render method
-      defaultType.view.prototype.render.apply(this, arguments);
-      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-      return this;
-    },
-  });
 
 
 
@@ -1691,6 +1714,280 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       return this;
     },
   });
+
+
+
+
+
+
+
+
+
+  // dataField components
+
+  //http://172.16.230.176:3034/connectiondata
+  let arr_collection = new Array();
+  let arr_schema = []
+  let arr_coll_schema = new Array()
+  console.log("arr_schema type11111111111111s", typeof arr_schema)
+  $.getJSON("http://172.16.230.80:3080/settings",
+    // $.getJSON("http://localhost:3080/settings",
+    function (data) {
+      //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
+      for (let index = 0; index < data.rethink.dbinstance.length; index++) {
+        //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+        arr_collection.push(data.rethink.dbinstance[index].connection_name)
+        $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
+          // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
+          function (data_) {
+            console.log("data_", data_)
+            // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+            let collection_name = data.rethink.dbinstance[index].connection_name
+            console.log(data_[0].t_name)
+            for (let index_ = 0; index_ < data_.length; index_++) {
+              console.log(data_[index_].t_name)
+              if (data_[index_].t_name != undefined) {
+                let schema_name = data_[index_].t_name
+                console.log("arr_schema type", typeof arr_schema)
+                arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
+              }
+            }
+            arr_coll_schema.push("''")
+            $.each(arr_schema, function (index, value) {
+              arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
+            });
+            console.log("arr_coll_schema", typeof arr_coll_schema)
+          });
+      }
+    });
+
+    comps.addType('DataFieldGroup', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+          console.log("hello here")
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'select',
+              label: 'data-schema',
+              name: ':data_schema',
+              options: arr_coll_schema,
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: ':data_api'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDGROUP') {
+              return {
+                type: 'DataFieldGroup'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+
+    comps.addType('DataFieldObject', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+          console.log("hello here")
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'select',
+              label: 'data-schema',
+              name: ':data_schema',
+              options: arr_coll_schema,
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: ':data_api'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDOBJECT') {
+              return {
+                type: 'DataFieldObject'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+
+
+    comps.addType('DataFieldText', {
+      // Define the Model
+      model: defaultModel.extend({
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              label: 'Data text field',
+              name: ':text',
+              type: 'text'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDTEXT') {
+              return {
+                type: 'DataFieldText'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+    comps.addType('DataFieldList', {
+      // Define the Model
+      model: defaultModel.extend({
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              label: 'Data list field',
+              name: ':items',
+              type: 'text'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDLIST') {
+              return {
+                type: 'DataFieldList'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+
+    comps.addType('img', {
+        // Define the Model
+        model: defaultModel.extend({
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [
+                    {
+                        label: 'Data image field',
+                        name: ':src',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image height',
+                        name: 'height',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image width',
+                        name: 'width',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image alt',
+                        name: 'alt',
+                        type: 'text'
+                    }
+                ]
+            }),
+
+        }, {
+                isComponent: function (el) {
+                    if (el.tagName == 'IMG') {
+                        return {
+                            type: 'img'
+                        };
+                    }
+                },
+            }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+        },
+    });
 
 
 
@@ -1996,6 +2293,105 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     },
   });
 
+comps.addType('ShoppingCart', {
+    model: defaultModel.extend({
+
+            init() {
+            this.listenTo(this, 'changeaypal', this.paypalcheck);
+            this.listenTo(this, 'change:Stripe', this.stripecheck);
+            this.listenTo(this, 'change:AuthorizeDotNet', this.authcheck);
+        },
+
+        paypalcheck() {
+            console.log("paypal change event function called")
+
+            console.log("this.get('traits').where({name:'x_api_token_paypal'})",this.get('traits').where({name:'x_api_token_paypal'})[0].get('value'))
+            console.log("this.get('traits').where({name:'x_api_login_paypal'})",this.get('traits').where({name:'x_api_login_paypal'})[0].get('value'))
+
+                        //    this.get('traits').each(function(trait) {
+                        //            console.log("trait",trait.get('name'));
+                        //            if (trait.get('name') == 'Paypal') {
+                        //                    console.log("Inside if paypal")
+                        //                    // this.get('traits').where({name:'x_api_token_paypal'}).style = "display:none"
+                        //            }
+                //     console.log("trait value",trait.get('value'));
+                // });
+        },
+
+        stripecheck() {
+            console.log("stripe change event function called")
+
+            console.log("this.get('traits').where({name:'x_api_token_stripe'})",this.get('traits').where({name:'x_api_token_stripe'})[0].get('value'))
+        },
+
+        authcheck() {
+            console.log("auth change event function called")
+
+            console.log("this.get('traits').where({name:'x_api_token_authdotnet'})",this.get('traits').where({name:'x_api_token_authdotnet'})[0].get('value'))
+            console.log("this.get('traits').where({name:'x_api_login_authdotnet'})",this.get('traits').where({name:'x_api_login_authdotnet'})[0].get('value'))
+        },
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+           {
+            type: 'checkbox',        
+            label: 'Paypal',
+            name: 'Paypal',
+          },
+          {
+            label: 'Token',
+            name: 'x_api_token_paypal',
+          },
+          {
+            label: 'Login',
+            name: 'x_api_login_paypal',
+          },
+          {
+            type: 'checkbox',        
+            label: 'Stripe',
+            name: 'Stripe',
+          },
+          {
+            label: 'Token',
+            name: 'x_api_token_stripe',
+          },
+          {
+            label: 'Authorize DotNet',
+            name: 'AuthorizeDotNet',
+            type: 'checkbox',        
+          },
+          {
+            label: 'Token',
+            name: 'x_api_token_authdotnet',
+          },
+          {
+            label: 'Login',
+            name: 'x_api_login_authdotnet',
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'SHOPPINGCART'){
+          return {type: 'ShoppingCart'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
 
 
 })
