@@ -217,7 +217,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&email='+ this.$session.get('email'), {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'), {
       }).then(response => {
         console.log(response.data);
         this.$message({
@@ -925,8 +925,13 @@ export default {
 
         this.fullscreenLoading = false;
         // Open in new window
-        // window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
-        window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
+        if(process.env.NODE_ENV !== 'development'){
+          window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+        } else {
+          window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
+        }   
+        
+        
         // Publish with Zeit Now
         // axios.post(config.baseURL + '/publish-now', {
         //     projectName: this.repoName
