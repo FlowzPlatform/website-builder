@@ -98,10 +98,12 @@ export default {
 
       let routerName =  this.$route.path;
 
-      if(routerName == '/user-dashboard' && this.$session.get('username') != undefined){
-       this.ifDashboard = true;  
+      if(routerName == '/user-dashboard' || this.$session.get('username') != undefined){
+       this.ifDashboard = true;
+       this.isLoggedIn = true;  
       } else {
         this.ifDashboard = false;
+        this.isLoggedIn = false;
       }
     }
   },

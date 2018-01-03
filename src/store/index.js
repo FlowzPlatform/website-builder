@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
     state: {
         content: null,
         fileUrl: null,
+        tabChange: null,
         currentIndex: null,
         LayoutOptions: [{
           value: 'Blank',

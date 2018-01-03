@@ -400,6 +400,16 @@ export default {
   		
   		});
 
+        let self = this;
+        editor.on("component:update", function() {
+          let gethtml = beautify(editor.getHtml(), { format: 'html'});
+          let getcss =  beautify(editor.getCss(), { format: 'css'});
+
+          let fullhtml= "<style>\n" + getcss + "\n</style>\n"+
+              "\n\n\n\n" + gethtml;
+            self.$store.state.tabChange = fullhtml
+        });
+
         const categories = editor.BlockManager.getCategories();
         categories.each(category => {
             category.set('open', false).on('change:open', opened => {
@@ -501,16 +511,21 @@ export default {
 
 
 	methods:{
-	    getHtml: function () {
+    async getSavedHtml() {
+      let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+      });
+      this.$store.state.content = response.data
+    },
+    getHtml: function () {
 
-            let grapesCss = beautify(editor.getCss(), { format: 'css'});
-            let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
+          let grapesCss = beautify(editor.getCss(), { format: 'css'});
+          let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
 
-            this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
-                "\n\n\n\n" + grapesHtml;
+          this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
+              "\n\n\n\n" + grapesHtml;
 
-            this.savedFile = true;
-        }
+          this.savedFile = true;
+      }
 	},
 
 }

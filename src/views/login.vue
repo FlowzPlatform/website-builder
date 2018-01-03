@@ -157,12 +157,14 @@ export default {
           this.$session.set('username', response.data.username);
           this.authen.status = true;
 
-          let self = this;
-          setTimeout(function () {
-            self.$router.push('/editor');
-          }, 2000);
-
-
+          await axios.post(config.baseURL+'/flows-dir-listing' , {
+            foldername :'/var/www/html/websites/'+ this.$session.get('email'),
+            type : 'folder'
+          })
+          .then((res) => {
+            this.$router.push('/editor');
+            console.log('user Folder created!');
+          })
           // await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
           // }).then(response => {
           //   if (response.data) {

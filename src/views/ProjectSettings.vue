@@ -1653,7 +1653,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&email='+ this.$session.get('email'), {
       }).then(response => {
         console.log(response.data);
         this.$message({
@@ -1672,7 +1672,8 @@ export default {
       // Push repository changes
       axios.post(config.baseURL + '/gitlab-add-repo', {
         commitMessage: this.commitMessage,
-        repoName: this.repoName
+        repoName: this.repoName,
+        email: this.$session.get('email')
       }).then(response => {
         console.log(response);
         if(response.status == 200 || response.status == 201){
