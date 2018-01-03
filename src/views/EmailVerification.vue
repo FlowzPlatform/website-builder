@@ -2,7 +2,7 @@
   <div class="EmailVerification">
     <vue-particles color="#dedede"></vue-particles>
     <div class='brand'>
-      <a href='/'>
+      <a href="javascript:void()" @click="goToLandingPage">
           <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
       </a>
     </div>
@@ -85,11 +85,21 @@ export default {
         return
       })
       if (auth) {
-        // Token Store in cookie
-        this.$router.push({path: '/dashboard'}) // Redirect to dashbord
+
+        console.log('Auth Reponse: ', auth);
+
+        // Store Token in Cookie
+        let location = psl.parse(window.location.hostname)
+        location = location.domain === null ? location.input : location.domain
+        this.$cookie.set('auth_token', auth.data.logintoken, {expires: 1, domain: location});
+
+        this.$router.push({path: '/editor'}) // Redirect to dashbord
         this.authen.status = true;
       }
       this.loading = false
+    },
+    goToLandingPage () {
+      this.$router.push('/');
     }
   },
   mounted () {
@@ -158,7 +168,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
   @import url(https://fonts.googleapis.com/css?family=Gudea:400,700);
   
   p {

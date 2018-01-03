@@ -46,6 +46,8 @@ export default {
 
         this.fileUrl = this.$store.state.fileUrl;
 
+
+
         // // get bootstrap css
         // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
 
@@ -76,6 +78,9 @@ export default {
 
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length -1)];
+
+        // console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
+        localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
         let rawConfigs = responseConfig.data.data[0].configData;
@@ -161,7 +166,15 @@ export default {
         // 'gjs-plugin-ckeditor'
 
 		editor = grapesjs.init({
-			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks' ],
+			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks', 'gjs-plugin-filestack' ],
+            pluginsOpts: {
+                'gjs-plugin-filestack': {
+                    'key': 'AgfKKwgZjQ8iLBVKGVXMdz',
+                    'filestackOpts': {
+                        'fromSources':["local_file_system","imagesearch","facebook","instagram","googledrive","dropbox","flickr","onedrive"]
+                    }
+                }
+            },
       		container : '#gjs',
       		components: '<div class="cssImports">' + cssUrlString + '</div>' + htmlObject.html(),
             allowScripts: true,
@@ -387,6 +400,16 @@ export default {
   		
   		});
 
+        let self = this;
+        editor.on("component:update", function() {
+          let gethtml = beautify(editor.getHtml(), { format: 'html'});
+          let getcss =  beautify(editor.getCss(), { format: 'css'});
+
+          let fullhtml= "<style>\n" + getcss + "\n</style>\n"+
+              "\n\n\n\n" + gethtml;
+            self.$store.state.tabChange = fullhtml
+        });
+
         const categories = editor.BlockManager.getCategories();
         categories.each(category => {
             category.set('open', false).on('change:open', opened => {
@@ -488,16 +511,21 @@ export default {
 
 
 	methods:{
-	    getHtml: function () {
+    async getSavedHtml() {
+      let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+      });
+      this.$store.state.content = response.data
+    },
+    getHtml: function () {
 
-            let grapesCss = beautify(editor.getCss(), { format: 'css'});
-            let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
+          let grapesCss = beautify(editor.getCss(), { format: 'css'});
+          let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
 
-            this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
-                "\n\n\n\n" + grapesHtml;
+          this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
+              "\n\n\n\n" + grapesHtml;
 
-            this.savedFile = true;
-        }
+          this.savedFile = true;
+      }
 	},
 
 }

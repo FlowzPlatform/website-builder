@@ -2,7 +2,7 @@
   <div class="Register">
     <vue-particles color="#dedede"></vue-particles>
     <div class='brand'>
-        <a href='/'>
+        <a href="javascript:void()" @click="goToLandingPage">
             <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
         </a>
     </div>
@@ -125,39 +125,47 @@ export default {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
         }
       }).then(response => {
+        this.authen.status = true;
+        let self = this;
+        setTimeout(function () {
+          self.$router.push('/login');
+        }, 2000);
         // window.location = '/login'
-        axios.post( config.baseURL + '/user-service', {
-            username : this.form.Uname,
-            password : this.form.pass,
-            email : this.form.email,
-            name : this.form.name                  
-        }).then(response => {
-          // window.location = '/login';
-          // Create user Folder
-          //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-          // axios.post(config.baseURL+'/flows-dir-listing' , {
-          //   foldername :'/var/www/html/websites/'+ this.form.Uname,
-          //   type : 'folder'
-          // })
-          // .then((res) => {
-          //   console.log('user Folder created!');
-          // })
-          // .catch((e)=>{
-          //   console.log("Error from pages"+res)
-          // });
-          this.authen.status = true;
-          let self = this;
-          setTimeout(function () {
-            self.$router.push('/login');
-          }, 2000);
-        }).catch(error => {
-          this.authen.status = false;
-          this.authen.error = response.data;
-        })
+        // axios.post( config.baseURL + '/user-service', {
+        //     username : this.form.Uname,
+        //     password : this.form.pass,
+        //     email : this.form.email,
+        //     name : this.form.name                  
+        // }).then(response => {
+        //   // window.location = '/login';
+        //   // Create user Folder
+        //   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+        //   // axios.post(config.baseURL+'/flows-dir-listing' , {
+        //   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
+        //   //   type : 'folder'
+        //   // })
+        //   // .then((res) => {
+        //   //   console.log('user Folder created!');
+        //   // })
+        //   // .catch((e)=>{
+        //   //   console.log("Error from pages"+res)
+        //   // });
+        //   this.authen.status = true;
+        //   let self = this;
+        //   setTimeout(function () {
+        //     self.$router.push('/login');
+        //   }, 2000);
+        // }).catch(error => {
+        //   this.authen.status = false;
+        //   this.authen.error = response.data;
+        // })
       }).catch(error => {
         this.authen.status = false;
         this.authen.error = response.data;
       })
+    },
+    goToLandingPage () {
+      this.$router.push('/');
     }
   },
   mounted () {

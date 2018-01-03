@@ -2,42 +2,71 @@ if(process.env.baseURL == undefined){
     url = 'http://api.flowz.com/serverapi'
 } else {
     url = process.env.baseURL;
+    // url = 'http://devapi.flowz.com/serverapi';
     console.log('Custom BaseURL set: ', url);
 }
 
+// If Production Environment
 if (process.env.NODE_ENV !== 'development') {
-    ipAdd = 'http://auth.flowz.com:8080',
-    socketURL = 'http://ws.flowz.com:4032',
-    frontEndUrl = 'http://webbuilder.flowz.com'    
+    ipAdd = 'flowzcluster.tk';
+    socketURL = 'ws://ws.flowz.com:4032';
+    frontEndUrl = 'http://webbuilder.flowzcluster.tk/dashboard';
+
+    loginUrl = 'http://auth.flowz.com/api/login';
+    registerUrl = 'http://auth.flowz.com/api/setup';
+    userDetail = 'http://auth.flowz.com/api/userdetails';
+    socialUrl = 'http://auth.flowz.com/api';
+
+    loginWithFacebookUrl = 'http://auth.flowz.com/auth/facebook';
+    loginWithGoogleUrl = 'http://auth.flowz.com/auth/Gplus';
+    loginWithTwitterUrl = 'http://auth.flowz.com/auth/twitter';
+    loginWithGithubUrl = 'http://auth.flowz.com/auth/github';
+    loginWithLinkedInUrl = 'http://auth.flowz.com/auth/linkedin';
 } else {
-    ipAdd = 'http://localhost',
-    socketURL = 'http://localhost:4032',
-    frontEndUrl = 'http://localhost:8080/dashboard'
+    ipAdd = 'http://localhost';
+    // socketURL = 'ws://devws.flowz.com:4032';
+    socketURL = 'http://localhost:4032';
+    frontEndUrl = 'http://localhost:8080/dashboard';
+
+    loginUrl = 'http://devauth.flowz.com/api/login';
+    registerUrl = 'http://devauth.flowz.com/api/setup';
+    userDetail = 'http://devauth.flowz.com/api/userdetails';
+    socialUrl = 'http://devauth.flowz.com/api';
+
+    loginWithFacebookUrl = 'http://devauth.flowz.com/auth/facebook';
+    loginWithGoogleUrl = 'http://devauth.flowz.com/auth/Gplus';
+    loginWithTwitterUrl = 'http://devauth.flowz.com/auth/twitter';
+    loginWithGithubUrl = 'http://devauth.flowz.com/auth/github';
+    loginWithLinkedInUrl = 'http://devauth.flowz.com/auth/linkedin';
 }
 
+console.log('frontEndUrl: ', frontEndUrl);
 
 module.exports = {
-    loginUrl: 'http://auth.flowz.com/api/login',
-    registerUrl: 'http://auth.flowz.com/api/setup',
-    userDetail: 'http://auth.flowz.com/api/userdetails',
-    socialUrl: 'http://auth.flowz.com/api',
+    loginUrl: loginUrl,
+    registerUrl: registerUrl,
+    userDetail: userDetail,
+    socialUrl: socialUrl,
 
     facebookSuccessCallbackUrl: frontEndUrl,
-    loginWithFacebookUrl: 'http://auth.flowz.com/auth/facebook',
     googleSuccessCallbackUrl: frontEndUrl,
-    loginWithGoogleUrl: 'http://auth.flowz.com/auth/Gplus',
     twitterSuccessCallbackUrl: frontEndUrl,
-    loginWithTwitterUrl: 'http://auth.flowz.com/auth/twitter',
     githubSuccessCallbackUrl: frontEndUrl,
-    loginWithGithubUrl: 'http://auth.flowz.com/auth/github',
     linkedInSuccessCallbackUrl: frontEndUrl,
-    loginWithLinkedInUrl: 'http://auth.flowz.com/auth/linkedin',
+
+    loginWithFacebookUrl: loginWithFacebookUrl,
+    loginWithGoogleUrl: loginWithGoogleUrl,
+    loginWithTwitterUrl: loginWithTwitterUrl,
+    loginWithGithubUrl: loginWithGithubUrl,
+    loginWithLinkedInUrl: loginWithLinkedInUrl,
 
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     webpackPath: '/var/www/html/node_modules/',
+
     baseURL : url,
     ipAddress: ipAdd,
-    socketURL: socketURL
+    socketURL: socketURL,
+    gitLabIpAddress: 'http://162.209.122.250/'
 }
