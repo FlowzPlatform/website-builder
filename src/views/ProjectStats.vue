@@ -925,8 +925,8 @@ export default {
 
         this.fullscreenLoading = false;
         // Open in new window
-        window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
-        // window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
+        // window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
+        window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
         // Publish with Zeit Now
         // axios.post(config.baseURL + '/publish-now', {
         //     projectName: this.repoName
