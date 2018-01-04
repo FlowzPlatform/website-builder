@@ -2309,6 +2309,31 @@
             console.log(e)
         });
 
+
+	// Carousel Slider Plugin
+      let sliderPlugin = newFolderName + '/assets/client-plugins/client-slider-plugin.js';
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-slider-plugin.js', {
+
+      })
+      .then((res) => {
+        let sliderPluginData = res.data;
+        axios.post(config.baseURL + '/flows-dir-listing', {
+            filename : sliderPlugin,
+            text : sliderPluginData,
+            type : 'file'
+        })
+        .then((res) => {
+          console.log(sliderPlugin + ' file created');
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+
+
         // Create default menu file
         let menu = newFolderName + '/Partials/Menu/default.menu'
         axios.post(config.baseURL + '/flows-dir-listing', {
@@ -3878,6 +3903,8 @@
                 '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
+         	'<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
+                '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                 '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>\n' +
                 '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                 '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
