@@ -1033,58 +1033,6 @@
         // save the content
         // this.$refs.contentComponent[0].getHtml();
         let newContent = this.$store.state.content;
-
-        if (action === 'remove') {
-
-
-        this.$confirm('Do you want to save the file before closing?', 'Warning', {
-            confirmButtonText: 'Save',
-            cancelButtonText: "Don't",
-            type: 'warning'
-          }).then(() => {
-
-            this.saveFile('savebutton');
-          tabs = this.editableTabs;
-            activeName = this.editableTabsValue;
-            if (activeName === targetName) {
-              tabs.forEach((tab, index) => {
-                if (tab.name === targetName) {
-                  let nextTab = tabs[index + 1] || tabs[index - 1];
-                  if (nextTab) {
-                    activeName = nextTab.name;
-                  }
-                }
-              });
-            }
-        this.editableTabsValue = activeName;
-        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-            this.$message({
-              type: 'success',
-              message: 'Save completed'
-            });
-          }).catch(() => {
-            //if (action === 'remove') {
-            tabs = this.editableTabs;
-            activeName = this.editableTabsValue;
-            if (activeName === targetName) {
-              tabs.forEach((tab, index) => {
-                if (tab.name === targetName) {
-                  let nextTab = tabs[index + 1] || tabs[index - 1];
-                  if (nextTab) {
-                    activeName = nextTab.name;
-                  }
-                }
-              });
-            }
-         //};
-         this.editableTabsValue = activeName;
-         this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-            this.$message({
-              type: 'info',
-              message: "Didn't save the file"
-            });
-          });
-       }
       },
 
       // Get File content Locally
@@ -4125,7 +4073,7 @@
       // Generate Preview
 
       // Save Menu's JSON file
-      saveJsonFile: function(){
+      saveJsonFile: function(arg){
         this.saveFileLoading = true
           let newContent = this.$store.state.content;
           var componentId = this.componentId
@@ -4156,15 +4104,10 @@
               type : 'file'
           })
           .then((res) => {
-              this.saveFileLoading = false
-              this.$message({
-                  showClose: true,
-                  message: 'Menu Saved!',
-                  type: 'success'
-              });
+              this.saveFileLoading = false;
           })
           .catch((e) => {
-              this.saveFileLoading = false
+              this.saveFileLoading = false;
               this.$message({
                   showClose: true,
                   message: 'File not saved! Please try again.',

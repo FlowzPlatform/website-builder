@@ -1,7 +1,7 @@
 // Change baseURL when going live
-// const baseURL = 'http://localhost:3032';
+const baseURL = 'http://localhost:3032';
 // const baseURL = 'http://devapi.flowz.com/serverapi';
-const baseURL = 'http://api.flowz.com/serverapi';
+// const baseURL = 'http://api.flowz.com/serverapi';
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;
@@ -1999,7 +1999,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-// Reuse Component
+  // Reuse Component
   var folderUrl = localStorage.getItem("folderUrl");
   var useremail = localStorage.getItem("email");
   let storedTemplates;
@@ -2008,11 +2008,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let foldername = folderUrl.split('/');
   foldername = foldername[(foldername.length - 1)];
 
-  console.log('JS FOlde rname:', foldername);
-
   let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
 
-  $.getJSON(configFileUrl, function (data) {
+  $.getJSON(configFileUrl, function(data) {
     configData = data.data[0].configData;
     console.log('ReUseVue co2nfigData:', configData);
     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
@@ -2021,17 +2019,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   var partialOptions = {};
 
-  setTimeout(function () {
+  setTimeout(function() {
     for (var i = 0; i < storedTemplates.length; i++) {
       if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
         storedTemplates = storedTemplates.splice(i, 1)
       }
     }
 
-
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       let resp2 = []
-      $.getJSON(configFileUrl, function (data) {
+      $.getJSON(configFileUrl, function(data) {
         configData = data.data[0].configData;
         // console.log('ReUseVue co2nfigData:', configData);
         storedTemplates = Object.keys(configData[2].layoutOptions[0]);
@@ -2041,25 +2038,22 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
               if (configData[2].layoutOptions[0][data_].length >= 2) {
                 for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
-                      if (j == 0) {
-                        partialOptions[storedTemplates[index]] = [{
-                          'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
-                        }]
-
-                      } else {
-                        partialOptions[storedTemplates[index]].push({
-                          'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
-                        })
-
-                      }
-                    }
-                  } else {
-                        partialOptions[storedTemplates[index]] = [{
+                  if (j == 0) {
+                    partialOptions[storedTemplates[index]] = [{
                       'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
                     }]
-
+                  } else {
+                    partialOptions[storedTemplates[index]].push({
+                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                    })
                   }
                 }
+              } else {
+                partialOptions[storedTemplates[index]] = [{
+                  'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                }]
+              }
+            }
           }
         }
       });
