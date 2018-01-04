@@ -835,12 +835,7 @@ export default {
           type : 'file'
       })
       .then((res) => {
-        this.$message({
-              showClose: true,
-              message: 'Successfully done.',
-              type: 'success'
-          });
-          console.log(res.data);
+        console.log(res.data);
       })
       .catch((e) => {
           this.$message({
@@ -1017,12 +1012,7 @@ export default {
             configData: configData
           })
           .then(async (res) => {
-            this.$message({
-                showClose: true,
-                message: 'Successfully updated.',
-                type: 'success'
-            });
-            // console.log(res.data);
+            console.log(res.data);
           })
           .catch((e) => {
               this.$message({
@@ -1689,11 +1679,6 @@ export default {
           pluginsData: this.pluginsTreedata
         })
         .then(async (res) => {
-          this.$message({
-              showClose: true,
-              message: 'Successfully updated.',
-              type: 'success'
-          });
           console.log(res.data);
         })
         .catch((e) => {
@@ -1758,7 +1743,7 @@ export default {
       }) 
     },
 
-  async publishMetalsmith() {
+    async publishMetalsmith() {
       this.fullscreenLoading = true;
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
@@ -2365,13 +2350,8 @@ export default {
 
           })
 
-        this.fullscreenLoading = false;
-        // Open in new window
-        if(process.env.NODE_ENV !== 'development'){
-          window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
-        } else {
-          window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
-        }  
+        
+         
         
         // Publish with Zeit Now
         // axios.post(config.baseURL + '/publish-now', {
@@ -2398,6 +2378,15 @@ export default {
         //     this.previewLoader = false;
         //   });
       }
+
+      this.fullscreenLoading = false;
+
+      // Open in new window
+      if(process.env.NODE_ENV !== 'development'){
+        window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+      } else {
+        window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
+      } 
     },
 
     handleRemove(file, fileList) {
