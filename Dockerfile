@@ -7,6 +7,8 @@ RUN apt-get update \
 		apache2 \
 	&& rm -r /var/lib/apt/lists/*
 
+ARG serverkey
+
 # Default command
 CMD ["apachectl", "-D", "FOREGROUND"]
 
