@@ -155,7 +155,6 @@ export default {
 
         var blkStyle = '.blk-row::after{ content: ""; clear: both; display: block;} .blk-row{padding: 10px;}';
 
-		var lp = './static/img/';
         var plp = 'http://placehold.it/350x250/';
         var images = [
             'https://imgur.com/XQuOMKc.png', 'https://imgur.com/fBuNwuy.jpg', 'https://imgur.com/GgCaYku.jpg', 'https://imgur.com/AGMTzXe.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',

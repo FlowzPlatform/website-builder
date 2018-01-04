@@ -454,7 +454,7 @@
       <!-- Local style/css-->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleLocalstyles" class="card color-div toggleableDivHeader">Local Styles</a>
+              <a href="javascript:void(0)" id="toggleLocalstyles" class="card color-div toggleableDivHeader">Global Styles</a>
           </div>
       </div>
       <div id="toggleLocalstylesContent" class="toggleableDivHeaderContent" style="display: none;">
@@ -511,7 +511,7 @@
       <!-- Local script-->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Local Scripts</a>
+              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Global Scripts</a>
           </div>
       </div>
       <div id="toggleLocalscriptsContent" class="toggleableDivHeaderContent" style="display: none;">
@@ -2589,18 +2589,18 @@ export default {
         });
         $("#toggleLocalscripts").click(function() {
             $("#toggleLocalscriptsContent").slideToggle("slow");
-            if ($("#toggleLocalscripts").text() == "Local Scripts") {
-                $("#toggleLocalscripts").html("Local Scripts")
+            if ($("#toggleLocalscripts").text() == "Global Scripts") {
+                $("#toggleLocalscripts").html("Global Scripts")
             } else {
-                $("#toggleLocalscripts").text("Local Scripts")
+                $("#toggleLocalscripts").text("Global Scripts")
             }
         });
         $("#toggleLocalstyles").click(function() {
             $("#toggleLocalstylesContent").slideToggle("slow");
-            if ($("#toggleLocalstyles").text() == "Local Styles") {
-                $("#toggleLocalstyles").html("Local Styles")
+            if ($("#toggleLocalstyles").text() == "Global Styles") {
+                $("#toggleLocalstyles").html("Global Styles")
             } else {
-                $("#toggleLocalstyles").text("Local Styles")
+                $("#toggleLocalstyles").text("Global Styles")
             }
         });
 
