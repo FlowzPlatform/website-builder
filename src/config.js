@@ -8,20 +8,21 @@ if(process.env.baseURL == undefined){
 
 // If Production Environment
 if (process.env.NODE_ENV !== 'development') {
+    serverkey = JSON.stringify(process.env.serverkey);
     ipAdd = 'flowzcluster.tk';
     socketURL = 'ws://ws.flowz.com:4032';
     frontEndUrl = 'http://webbuilder.flowzcluster.tk/dashboard';
 
-    loginUrl = 'http://auth.flowz.com/api/login';
-    registerUrl = 'http://auth.flowz.com/api/setup';
-    userDetail = 'http://auth.flowz.com/api/userdetails';
-    socialUrl = 'http://auth.flowz.com/api';
+    loginUrl = 'http://'+ serverkey+'.flowz.com/api/login';
+    registerUrl = 'http://'+ serverkey+'.flowz.com/api/setup';
+    userDetail = 'http://'+ serverkey+'.flowz.com/api/userdetails';
+    socialUrl = 'http://'+ serverkey+'.flowz.com/api';
 
-    loginWithFacebookUrl = 'http://auth.flowz.com/auth/facebook';
-    loginWithGoogleUrl = 'http://auth.flowz.com/auth/Gplus';
-    loginWithTwitterUrl = 'http://auth.flowz.com/auth/twitter';
-    loginWithGithubUrl = 'http://auth.flowz.com/auth/github';
-    loginWithLinkedInUrl = 'http://auth.flowz.com/auth/linkedin';
+    loginWithFacebookUrl = 'http://'+ serverkey+'.flowz.com/auth/facebook';
+    loginWithGoogleUrl = 'http://'+ serverkey+'.flowz.com/auth/Gplus';
+    loginWithTwitterUrl = 'http://'+ serverkey+'.flowz.com/auth/twitter';
+    loginWithGithubUrl = 'http://'+ serverkey+'.flowz.com/auth/github';
+    loginWithLinkedInUrl = 'http://'+ serverkey+'.flowz.com/auth/linkedin';
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
