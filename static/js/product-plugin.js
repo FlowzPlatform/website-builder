@@ -697,7 +697,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     },
   });
 
-
   comps.addType('Slider', {
     // Define the Model
     model: defaultModel.extend({
@@ -727,16 +726,19 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           type: 'text'
         }],
       }),
+
     }, {
       isComponent: function(el) {
         if (el.tagName == 'SLIDER') {
           return {
-            type: 'Slider'
+            type: 'slider'
           };
         }
       },
     }),
+
     view: defaultType.view,
+
     // The render() should return 'this'
     render: function() {
       // Extend the original render method
@@ -745,6 +747,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       return this;
     },
   });
+
+
   comps.addType('Pagination', {
     // Define the Model
     model: defaultModel.extend({
