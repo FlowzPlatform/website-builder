@@ -3885,6 +3885,17 @@
               }).catch((e) => {
                 console.log(e)
               })
+
+              let vueBodyStart = '';
+              let vueBodyEnd = ''
+              console.log('nameF :: --',nameF+'**'+$.trim(nameF));
+              if($.trim(nameF) != 'search')
+              {
+                vueBodyStart = '<div id=\"app\">' + "\n";
+                vueBodyEnd = '</div>\n';
+              }
+              console.log('---' + vueBodyStart + '======' + vueBodyEnd);
+
               let newContent = "<html>\n<head>\n" + tophead +
                 "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                 "<title>" + pageSeoTitle + "</title>\n" +
@@ -3898,9 +3909,9 @@
                 "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                 "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                 "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
-                "<link rel='stylesheet' href='./../main-files/main.css'/>\n<script src=\"./../main-files/main.js\"><\/script>\n" + endhead + "\n</head>\n<body>\n<div id=\"app\">\n" +
+                "<link rel='stylesheet' href='./../main-files/main.css'/>\n<script src=\"./../main-files/main.js\"><\/script>\n" + endhead + "\n</head>\n<body>\n" + vueBodyStart +
                 layoutdata.data + topbody +
-                '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                '\n'+vueBodyEnd+'<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                 '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
          	'<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
@@ -3969,7 +3980,7 @@
                               console.log('Dir name: ', __dirname);
 
                               if(process.env.NODE_ENV !== 'development'){
-                                window.open('http://' + this.$session.get('userDetailId') + '.' + projName + '.'+ config.ipAddress + nameF + '.html');
+                                window.open('http://' + self.$session.get('userDetailId') + '.' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
                               } else {
                                 window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
                               } 
@@ -4106,7 +4117,7 @@
                 text: metalsmithJSON,
                 type: 'file'
               })
-              aaxios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
                 console.log('deleted extra layout file:', res)
               }).catch((e) => {
                 console.log(e)
