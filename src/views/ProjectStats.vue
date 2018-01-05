@@ -2,6 +2,7 @@
   <div class="ProjectStats">
     <div class="page-buttons">
       <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button>
+      <!-- <el-button type="success" size="small" @click="goToProjectSettings">Project Settings</el-button> -->
     </div>
   	<div class="container-fluid">
     	<div class="row" style="margin-top: 20px;">
@@ -552,7 +553,7 @@ export default {
           }
 
         if (vuepartials != undefined && vuepartials.length > 0) {
-          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
           mainVuefile = mainVuefile.data
 
           for (let x = 0; x < vuepartials.length; x++) {
@@ -564,9 +565,9 @@ export default {
                 text: temp,
                 type: 'file'
               }).then(async (res) => {
-                contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+                contentpartials = contentpartials + '<script src="./assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
-                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
+                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
                   .then((response) => {
                     console.log("called webpack_file api successfully:")
                   })
@@ -769,7 +770,7 @@ export default {
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
         console.log('final responseMetal:', responseMetal)
-        var mainMetal = folderUrl + '/assets/metalsmith.js'
+        var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename: mainMetal,
@@ -798,11 +799,22 @@ export default {
                   "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
                   "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body><div id=\"app\">\n" +
                   layoutdata.data + topbody +
-                  '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                  '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                  '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                  // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
-                  '<script src="./../main-files/main.js"><\/script>\n' + endbody +
+                  '\n</div>\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/slider-plugin.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/shopping-cart.js"><\/script>\n' +
+                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>\n' +
+                  '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-memory@8.0.9/dist/y-memory.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-webrtc@8.0.7/dist/y-webrtc.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' + 
+                  endbody +
                   '</body>\n</html>';
 
                 await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -986,6 +998,10 @@ export default {
         window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
       } 
     },
+
+    goToProjectSettings () {
+      
+    }
   },
 
     // previewWebsite () {

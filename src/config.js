@@ -12,6 +12,7 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'ws://ws.flowz.com:4032';
     frontEndUrl = 'http://webbuilder.flowzcluster.tk/dashboard';
 
+    
     loginUrl = 'http://auth.flowz.com/api/login';
     registerUrl = 'http://auth.flowz.com/api/setup';
     userDetail = 'http://auth.flowz.com/api/userdetails';

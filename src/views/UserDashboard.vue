@@ -54,7 +54,7 @@
                                     </li>
                                 </ul>
                             </li> -->
-                            <li class="hh-dropdown no-color">
+                            <!-- <li class="hh-dropdown no-color">
                                 <a class="hh-menu-item" href="#">
                                     <img class="hh-list-img sm-img" src="https://api.adorable.io/avatars/285/gaurav@adorable.io.png" alt="me" /></a>
                                 <ul class="hh-dropmenu-item sm-menu">
@@ -65,7 +65,7 @@
                                         <a class="hh-notification-content lg-text" href="#" @click="doLogout"><i class="fa fa-power-off"></i>Sign out</a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
                         </ul>
                         <ul class="pull-right links">
                             <!-- <li>
@@ -162,24 +162,42 @@
                 <ul>
                     <li>
                         <a href="#" class="inbox">
-                            <i class="fa fa-dashboard"><span class="icon-bg hh-bg-success"></span></i>
+                            <i class="fa fa-dashboard">
+                                <span class="icon-bg hh-bg-success"></span>
+                            </i>
                             <span class="hh-sidebar-item">Dashboard</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" @click='goToEditor()'>
                             <i class="fa fa-globe">
-                            <span class="icon-bg hh-bg-danger"></span>
-                        </i>
-                            <span class="hh-sidebar-item">Manage Websites</span>
+                                <span class="icon-bg hh-bg-danger"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Website Builder</span>
                         </a>
                     </li>
-                    <li><a href="#" class="snooz"><i class="fa fa-line-chart"><span class="icon-bg hh-bg-primary"></span></i><span class="hh-sidebar-item">Transactions</span></a></li>
-                    <li><a href="#" class="done"><i class="fa fa-area-chart"><span class="icon-bg hh-bg-warning"></span></i><span class="hh-sidebar-item">Revenue</span></a></li>
+                    <!-- <li>
+                        <a href="#" class="snooz">
+                            <i class="fa fa-line-chart">
+                                <span class="icon-bg hh-bg-primary"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Transactions</span>
+                        </a>
+                    </li>
                     <li>
-                        <a href="#">
-                            <i class="fa fa-wrench"><span class="icon-bg hh-bg-violet"></span></i>
-                            <span class="hh-sidebar-item">Settings</span>
+                        <a href="#" class="done">
+                            <i class="fa fa-area-chart">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Revenue</span>
+                        </a>
+                    </li> -->
+                    <li>
+                        <a href="javascript:void(0)" @click="doLogout">
+                            <i class="fa fa-sign-out">
+                                <span class="icon-bg hh-bg-violet"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Logout</span>
                         </a>
                     </li>
                 </ul>
@@ -299,9 +317,6 @@ export default {
             $(".hh-logo-container").toggleClass("hh-nav-min");
             $(".hh-sidebar").toggleClass("hh-nav-min");
             $(".hh-body-wrapper").toggleClass("hh-nav-min");
-            setTimeout(function () {
-                initializeCharts();
-            }, 200);
         });
 
         $("li.hh-dropdown > a.hh-menu-item").on('click', function (e) {
@@ -315,9 +330,6 @@ export default {
             var $ele = $(this).parents('.panel-heading');
             $ele.siblings('.panel-footer').toggleClass("hh-collapse");
             $ele.siblings('.panel-body').toggleClass("hh-collapse", function () {
-                setTimeout(function () {
-                    initializeCharts();
-                }, 200);
             });
         });
 
