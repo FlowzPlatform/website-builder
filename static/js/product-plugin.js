@@ -697,7 +697,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     },
   });
 
-
   comps.addType('Slider', {
     // Define the Model
     model: defaultModel.extend({
@@ -727,16 +726,19 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           type: 'text'
         }],
       }),
+
     }, {
       isComponent: function(el) {
         if (el.tagName == 'SLIDER') {
           return {
-            type: 'Slider'
+            type: 'slider'
           };
         }
       },
     }),
+
     view: defaultType.view,
+
     // The render() should return 'this'
     render: function() {
       // Extend the original render method
@@ -745,6 +747,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       return this;
     },
   });
+
+
   comps.addType('Pagination', {
     // Define the Model
     model: defaultModel.extend({
@@ -1999,79 +2003,64 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-// Reuse Component
+  // Reuse Component
   var folderUrl = localStorage.getItem("folderUrl");
   var useremail = localStorage.getItem("email");
-
+  let storedTemplates;
+  let configData;
+  let storedTemplates_data
   let foldername = folderUrl.split('/');
   foldername = foldername[(foldername.length - 1)];
 
   let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
 
   $.getJSON(configFileUrl, function(data) {
-    var configData = data.data[0].configData;
-    console.log('ReUseVue configData:', configData);
+    configData = data.data[0].configData;
+    console.log('ReUseVue co2nfigData:', configData);
     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
   });
+
 
   var partialOptions = {};
 
   setTimeout(function() {
     for (var i = 0; i < storedTemplates.length; i++) {
       if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
-        storedTemplates.splice(i, 1)
+        storedTemplates = storedTemplates.splice(i, 1)
       }
     }
 
-
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
-      var request = new XMLHttpRequest();
-      request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
-      request.setRequestHeader("Content-type", "application/json");
-      request.send();
-      resp = JSON.parse(request.responseText);
-
-      for (let index = 0; index < resp.length; index++) {
-        request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
-        request.setRequestHeader("Content-type", "application/json");
-        request.send();
-        resp2 = JSON.parse(request.responseText);
-      }
-
-      if (resp.length != 0 && resp[i] != "Menu") {
-        if (resp2.length >= 2) {
-          for (let j = 0; j < resp2.length; j++) {
-            if (j == 0) {
-              let string_con = resp2[j]
-              string_con = string_con.toString()
-              var res = string_con.split(".");
-              if (res[1] == "partial") {
-                partialOptions[resp[i]] = [{
-                  'name': resp2[j]
+      let resp2 = []
+      $.getJSON(configFileUrl, function(data) {
+        configData = data.data[0].configData;
+        // console.log('ReUseVue co2nfigData:', configData);
+        storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+        for (let index = 0; index < storedTemplates.length; index++) {
+          let data_ = storedTemplates[index]
+          for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
+            if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
+              if (configData[2].layoutOptions[0][data_].length >= 2) {
+                for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
+                  if (j == 0) {
+                    partialOptions[storedTemplates[index]] = [{
+                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                    }]
+                  } else {
+                    partialOptions[storedTemplates[index]].push({
+                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                    })
+                  }
+                }
+              } else {
+                partialOptions[storedTemplates[index]] = [{
+                  'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
                 }]
-              }
-            } else {
-              let string_con = resp2[j]
-              string_con = string_con.toString()
-              var res = string_con.split(".");
-              if (res[1] == "partial") {
-                partialOptions[resp[i]].push({
-                  'name': resp2[j]
-                })
               }
             }
           }
-        } else {
-          str = resp2
-          str = resp2.toString()
-          var res = str.split(".");
-          if (res[1] == "partial") {
-            partialOptions[resp[i]] = [{
-              'name': resp2
-            }]
-          }
         }
-      }
+      });
     }
   }, 1000);
 
@@ -2150,100 +2139,100 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  // Vue Component
-  var folderUrlVue = localStorage.getItem("folderUrl");
-  var useremailVue = localStorage.getItem("email");
+  // // Vue Component
+  // var folderUrlVue = localStorage.getItem("folderUrl");
+  // var useremailVue = localStorage.getItem("email");
 
-  let projectName = folderUrlVue.split('/');
-  projectName = projectName[(projectName.length - 1)];
+  // let projectName = folderUrlVue.split('/');
+  // projectName = projectName[(projectName.length - 1)];
 
-  let configFileUrl2 = baseURL + '/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
-  $.getJSON(configFileUrl2, function(data) {
-    var configData = data.data[0].configData;;
-    storedTemplates = Object.keys(configData[2].layoutOptions[0]);
-  });
+  // let configFileUrl2 = baseURL + '/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
+  // $.getJSON(configFileUrl2, function(data) {
+  //   var configData = data.data[0].configData;;
+  //   storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+  // });
 
-  var partialOptions2 = {};
+  // var partialOptions2 = {};
 
-  setTimeout(function() {
-    for (var i = 0; i < storedTemplates.length; i++) {
-      if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
-        storedTemplates.splice(i, 1)
-      }
-    }
-
-
-    for (var i = 0; i <= storedTemplates.length - 1; i++) {
-      var request = new XMLHttpRequest();
-      request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
-      request.setRequestHeader("Content-type", "application/json");
-      request.send();
-      resp = JSON.parse(request.responseText);
-
-      for (let index = 0; index < resp.length; index++) {
-        request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
-        request.setRequestHeader("Content-type", "application/json");
-        request.send();
-        resp2 = JSON.parse(request.responseText);
-      }
-
-      if (resp.length != 0 && resp[i] != "Menu") {
-        console.log("resp", resp)
-        let counter = 0;
-        if (resp2.length >= 2) {
-          for (let j = 0; j < resp2.length; j++) {
-            var split_selected_value = resp2[j].split(".");
-            if (split_selected_value[1] == "vue") {
-              console.log("inside")
-              if (counter == 0) {
-                partialOptions2[resp[i]] = [{
-                  'name': resp2[j]
-                }]
-                counter++;
-              } else {
-                partialOptions2[resp[i]].push({
-                  'name': resp2[j]
-                })
-              }
-            }
-          }
-        } else {
-          var resp3 = resp2.toString();
-          var substring = "vue";
-          if (resp3.indexOf(substring) !== -1) {
-            partialOptions2[resp[i]] = [{
-              'name': resp2
-            }]
-          }
-        }
-
-      }
-    }
-  }, 1000);
+  // setTimeout(function() {
+  //   for (var i = 0; i < storedTemplates.length; i++) {
+  //     if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+  //       storedTemplates.splice(i, 1)
+  //     }
+  //   }
 
 
-  editor.TraitManager.addType('customConent2', {
+  //   for (var i = 0; i <= storedTemplates.length - 1; i++) {
+  //     var request = new XMLHttpRequest();
+  //     request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
+  //     request.setRequestHeader("Content-type", "application/json");
+  //     request.send();
+  //     resp = JSON.parse(request.responseText);
 
-    getInputEl: function() {
-      if (!this.inputEl) {
-        var input = document.createElement('select');
-        input.setAttribute("id", "Div1");
-        input.setAttribute("name", "Div1");
-        input.setAttribute("style", "background:#363636");
-        $.each(partialOptions2, function(key, value) {
-          var group = $('<optgroup label="' + key + '" />');
-          $.each(value, function() {
-            $('<option />').html(this.name).appendTo(group);
-          });
-          group.appendTo(input);
-        });
-        input.value = this.target.get('customConent2');
-        this.inputEl = input;
-      }
-      return this.inputEl;
-    },
+  //     for (let index = 0; index < resp.length; index++) {
+  //       request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
+  //       request.setRequestHeader("Content-type", "application/json");
+  //       request.send();
+  //       resp2 = JSON.parse(request.responseText);
+  //     }
 
-  });
+  //     if (resp.length != 0 && resp[i] != "Menu") {
+  //       console.log("resp", resp)
+  //       let counter = 0;
+  //       if (resp2.length >= 2) {
+  //         for (let j = 0; j < resp2.length; j++) {
+  //           var split_selected_value = resp2[j].split(".");
+  //           if (split_selected_value[1] == "vue") {
+  //             console.log("inside")
+  //             if (counter == 0) {
+  //               partialOptions2[resp[i]] = [{
+  //                 'name': resp2[j]
+  //               }]
+  //               counter++;
+  //             } else {
+  //               partialOptions2[resp[i]].push({
+  //                 'name': resp2[j]
+  //               })
+  //             }
+  //           }
+  //         }
+  //       } else {
+  //         var resp3 = resp2.toString();
+  //         var substring = "vue";
+  //         if (resp3.indexOf(substring) !== -1) {
+  //           partialOptions2[resp[i]] = [{
+  //             'name': resp2
+  //           }]
+  //         }
+  //       }
+
+  //     }
+  //   }
+  // }, 1000);
+
+
+  // editor.TraitManager.addType('customConent2', {
+
+  //   getInputEl: function() {
+  //     if (!this.inputEl) {
+  //       var input = document.createElement('select');
+  //       input.setAttribute("id", "Div1");
+  //       input.setAttribute("name", "Div1");
+  //       input.setAttribute("style", "background:#363636");
+  //       $.each(partialOptions2, function(key, value) {
+  //         var group = $('<optgroup label="' + key + '" />');
+  //         $.each(value, function() {
+  //           $('<option />').html(this.name).appendTo(group);
+  //         });
+  //         group.appendTo(input);
+  //       });
+  //       input.value = this.target.get('customConent2');
+  //       this.inputEl = input;
+  //     }
+  //     return this.inputEl;
+  //   },
+
+  // });
 
 
 
@@ -2272,7 +2261,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'PartialName',
           name: 'selectPartial',
-          type: 'customConent2',
+          type: 'customConent1',
           changeProp: 1,
         }],
       }),

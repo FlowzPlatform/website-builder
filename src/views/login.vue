@@ -120,7 +120,8 @@ export default {
       loginWithGoogleUrl : config.loginWithGoogleUrl,
       loginWithTwitterUrl: config.loginWithTwitterUrl,
       loginWithGithubUrl: config.loginWithGithubUrl,
-      loginWithLinkedInUrl: config.loginWithLinkedInUrl
+      loginWithLinkedInUrl: config.loginWithLinkedInUrl,
+      userDetailId: ''
     }
   },
   component: {
@@ -148,6 +149,31 @@ export default {
           this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
 
           // Set email Session
+          console.log('User Details: ', response.data);
+          axios.get(config.userDetail, {
+            headers: {
+              'Authorization' : response.data.logintoken
+            }   
+          })
+          .then(async (res) => {
+            this.userDetailId = res.data.data._id;
+
+            this.$session.set('userDetailId', this.userDetailId);
+            localStorage.setItem('userDetailId', this.userDetailId);
+
+            await axios.post(config.baseURL+'/flows-dir-listing' , {
+              foldername :'/var/www/html/websites/'+ this.userDetailId,
+              type : 'folder'
+            })
+            .then((res) => {
+              this.$router.push('/editor');
+              console.log('user Folder created!');
+            });
+            
+          })
+          .catch((e) => {
+            console.log(e)
+          })
           this.$session.set('email', this.form.user);
           localStorage.setItem('email', this.form.user);
           // this.$router.push('/');
@@ -157,14 +183,7 @@ export default {
           this.$session.set('username', response.data.username);
           this.authen.status = true;
 
-          await axios.post(config.baseURL+'/flows-dir-listing' , {
-            foldername :'/var/www/html/websites/'+ this.$session.get('email'),
-            type : 'folder'
-          })
-          .then((res) => {
-            this.$router.push('/editor');
-            console.log('user Folder created!');
-          })
+          
           // await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
           // }).then(response => {
           //   if (response.data) {

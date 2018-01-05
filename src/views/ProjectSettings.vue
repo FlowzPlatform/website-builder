@@ -451,10 +451,67 @@
       </div>
       <!-- Meta Tags Ends -->
 
-      <!-- External script-->
+      <!-- Local style/css-->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Local Scripts</a>
+              <a href="javascript:void(0)" id="toggleLocalstyles" class="card color-div toggleableDivHeader">Global Styles</a>
+          </div>
+      </div>
+      <div id="toggleLocalstylesContent" class="toggleableDivHeaderContent" style="display: none;">
+         <div class="row">
+          <div class="col-md-12">
+               <div class="row">
+                  <div class="col-md-4">
+                     <h3> Styles: </h3>
+                  </div>
+               </div>
+               <hr>
+               <el-form ref="form" :model="form">
+               
+                  <div >
+                     <el-form-item>
+                        <draggable v-model='localstyles' @start="drag=true" @end="drag=false">
+                          <div style="margin-bottom: 25px" v-for='(n, index) in localstyles' class="row">
+                             <!-- position  -->
+                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                <el-select v-model="n.linkposition" placeholder="Position">
+                                   <el-option
+                                      v-for="item in Allposition"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                   </el-option>
+                                </el-select>
+                             </div>
+                             <!-- link url -->
+                             <div class="col-md-6" style="margin: 0; padding: 0px">
+                                <el-input type="textarea" :rows="5" placeholder="css" v-model="n.style"></el-input>
+                             </div>
+                             <!-- Delete Variable -->
+                             <div class="col-md-1">
+                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
+                             </div>
+                             <div class="col-md-1">
+                                <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                              
+                             </div>
+                             
+
+                          </div>
+                        </draggable>
+                     </el-form-item>
+                  </div>
+                 
+                  <!-- Create new variable -->
+                  <el-button type="primary" @click="addNewlocalstyles">New Style</el-button>
+               </el-form>
+            </div>
+        </div>
+      </div> 
+      <!-- Local script-->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Global Scripts</a>
           </div>
       </div>
       <div id="toggleLocalscriptsContent" class="toggleableDivHeaderContent" style="display: none;">
@@ -507,7 +564,7 @@
                </el-form>
             </div>
         </div>
-      </div> 
+      </div>
 
       <!-- List of Commits Section -->
       <div class="collapsingDivWrapper row">
@@ -671,6 +728,7 @@ export default {
       externallinksJS:[],
       externallinksCSS:[],
       localscripts:[],
+      localstyles:[],
       externallinksMeta:[{
         name: 'Edit Me',
         content: 'Update Me'
@@ -755,6 +813,10 @@ export default {
       let newVariable = { linkposition:'',script:''};
       this.localscripts.push(newVariable);
     },
+    addNewlocalstyles(){
+      let newVariable = { linkposition:'',style:''};
+      this.localstyles.push(newVariable);
+    },
 
     async addNewPlugin(pluginFileData) {
 
@@ -773,12 +835,7 @@ export default {
           type : 'file'
       })
       .then((res) => {
-        this.$message({
-              showClose: true,
-              message: 'Successfully done.',
-              type: 'success'
-          });
-          console.log(res.data);
+        console.log(res.data);
       })
       .catch((e) => {
           this.$message({
@@ -955,12 +1012,7 @@ export default {
             configData: configData
           })
           .then(async (res) => {
-            this.$message({
-                showClose: true,
-                message: 'Successfully updated.',
-                type: 'success'
-            });
-            // console.log(res.data);
+            console.log(res.data);
           })
           .catch((e) => {
               this.$message({
@@ -1023,7 +1075,7 @@ export default {
       // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
       // Call Listings API and get Tree
-      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.repoName, {
+      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.$session.get('userDetailId') + '/' + this.repoName, {
       })
       .then(async (res) => {
         console.log(res);
@@ -1135,7 +1187,8 @@ export default {
                                               "PageExternalJs": [],
                                               "PageMetaInfo": [],
                                               "PageMetacharset":'',
-                                              "ProjectScripts":[]
+                                              "ProjectScripts":[],
+                                              "ProjectStyles":[]
 
                                             };
 
@@ -1211,7 +1264,7 @@ export default {
            for(let p=0;p<configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length;p++){
             var namepartial=configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
             // console.log('name:',namepartial)
-             var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Partials/'+Object.keys(configData[2].layoutOptions[0])[q]+'/'+namepartial+'.partial');
+             var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.$session.get('userDetailId') + '/' + this.repoName+'/Partials/'+Object.keys(configData[2].layoutOptions[0])[q]+'/'+namepartial+'.partial');
              // console.log('content of partial:',contentpage.data)
              // console.log("inside !=pages directory")
                 var content=''
@@ -1524,6 +1577,9 @@ export default {
     deletelocalscripts(deleteIndex){
       this.localscripts.splice(deleteIndex,1);
     },
+    deletelocalstyles(deleteIndex){
+      this.localstyles.splice(deleteIndex,1);
+    },
     deletelinkJS(deleteIndex) {
       this.externallinksJS.splice(deleteIndex, 1);
     },
@@ -1606,7 +1662,8 @@ export default {
                               "ProjectExternalJs": this.externallinksJS,
                               "ProjectMetaInfo": this.externallinksMeta,
                               "ProjectMetacharset":this.Metacharset,
-                              "ProjectScripts":this.localscripts
+                              "ProjectScripts":this.localscripts,
+                              "ProjectStyles":this.localstyles
                             }];
 
       this.settings[1].projectSettings = ProjectSettings;
@@ -1622,11 +1679,6 @@ export default {
           pluginsData: this.pluginsTreedata
         })
         .then(async (res) => {
-          this.$message({
-              showClose: true,
-              message: 'Successfully updated.',
-              type: 'success'
-          });
           console.log(res.data);
         })
         .catch((e) => {
@@ -1653,7 +1705,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&email='+ this.$session.get('email'), {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'), {
       }).then(response => {
         console.log(response.data);
         this.$message({
@@ -1673,7 +1725,7 @@ export default {
       axios.post(config.baseURL + '/gitlab-add-repo', {
         commitMessage: this.commitMessage,
         repoName: this.repoName,
-        email: this.$session.get('email')
+        userDetailId: this.$session.get('userDetailId')
       }).then(response => {
         console.log(response);
         if(response.status == 200 || response.status == 201){
@@ -1691,7 +1743,7 @@ export default {
       }) 
     },
 
-  async publishMetalsmith() {
+    async publishMetalsmith() {
       this.fullscreenLoading = true;
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
@@ -1702,6 +1754,7 @@ export default {
       var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
       var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
       var projectscripts=rawConfigs[1].projectSettings[1].ProjectScripts
+      var projectstyles=rawConfigs[1].projectSettings[1].ProjectStyles
 
       
       var getFromBetween = {
@@ -1793,6 +1846,19 @@ export default {
               }
             }
           }
+          if (projectstyles!=undefined && projectstyles.length > 0) {
+            for (let a = 0; a < projectstyles.length; a++) {
+              if (projectstyles[a].linkposition == 'starthead') {
+                tophead = tophead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'endhead') {
+                endhead = endhead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'startbody') {
+                topbody = topbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'endbody') {
+                endbody = endbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              }
+            }
+          }
 
         var partials = ''
         let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
@@ -1804,6 +1870,7 @@ export default {
         var partialsPage = [];
         var vuepartials = [];
         var pagescripts=[];
+        var pagestyles=[];
         var layoutdata = '';
         var pageexternalJs = [];
         var pageexternalCss = [];
@@ -1820,6 +1887,7 @@ export default {
         pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
         PageMetacharset = rawSettings[1].pageSettings[i].PageMetacharset;
         pagescripts=rawSettings[1].pageSettings[i].PageScripts;
+        pagestyles=rawSettings[1].pageSettings[i].PageStyles;
 
 
         if (PageMetacharset!=undefined && PageMetacharset != '') {
@@ -1868,6 +1936,19 @@ export default {
                 topbody = topbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
               } else if (pagescripts[a].linkposition == 'endbody') {
                 endbody = endbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              }
+            }
+          }
+          if (pagestyles!=undefined && pagestyles.length > 0) {
+            for (let a = 0; a < pagestyles.length; a++) {
+              if (pagestyles[a].linkposition == 'starthead') {
+                tophead = tophead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'endhead') {
+                endhead = endhead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'startbody') {
+                topbody = topbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'endbody') {
+                endbody = endbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
               }
             }
           }
@@ -2203,6 +2284,8 @@ export default {
 
                       })
                       .catch((err) => {
+                         this.saveFileLoading = false;
+                          this.fullscreenLoading = false;
                         console.log('error while creating metalsmithJSON file' + err)
                         axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: mainMetal,
@@ -2219,6 +2302,7 @@ export default {
                   })
                   .catch((e) => {
                     this.saveFileLoading = false
+                     this.fullscreenLoading = false;
                     axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: mainMetal,
                       text: responseMetal,
@@ -2234,6 +2318,8 @@ export default {
 
               })
               .catch((e) => {
+                 this.saveFileLoading = false;
+                  this.fullscreenLoading = false;
                 console.log(e)
                 axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: mainMetal,
@@ -2249,6 +2335,8 @@ export default {
 
           })
           .catch((e) => {
+             this.saveFileLoading = false;
+              this.fullscreenLoading = false;
             console.log('error while creating metalsmithJSON file' + e)
             axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
@@ -2262,10 +2350,9 @@ export default {
 
           })
 
-        this.fullscreenLoading = false;
-        // Open in new window
-        // window.open(config.ipAddress + '/websites/' + this.repoName + '/public/');
-        window.open('http://' + this.repoName + '.'+ config.ipAddress);
+        
+         
+        
         // Publish with Zeit Now
         // axios.post(config.baseURL + '/publish-now', {
         //     projectName: this.repoName
@@ -2291,6 +2378,15 @@ export default {
         //     this.previewLoader = false;
         //   });
       }
+
+      this.fullscreenLoading = false;
+
+      // Open in new window
+      if(process.env.NODE_ENV !== 'development'){
+        window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+      } else {
+        window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
+      } 
     },
 
     handleRemove(file, fileList) {
@@ -2348,7 +2444,7 @@ export default {
         this.externallinksMeta = this.settings[1].projectSettings[1].ProjectMetaInfo;
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
-
+        this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
       } else {
         console.log('Cannot get configurations!');
       } 
@@ -2482,12 +2578,21 @@ export default {
         });
         $("#toggleLocalscripts").click(function() {
             $("#toggleLocalscriptsContent").slideToggle("slow");
-            if ($("#toggleLocalscripts").text() == "Local Scripts") {
-                $("#toggleLocalscripts").html("Local Scripts")
+            if ($("#toggleLocalscripts").text() == "Global Scripts") {
+                $("#toggleLocalscripts").html("Global Scripts")
             } else {
-                $("#toggleLocalscripts").text("Local Scripts")
+                $("#toggleLocalscripts").text("Global Scripts")
             }
         });
+        $("#toggleLocalstyles").click(function() {
+            $("#toggleLocalstylesContent").slideToggle("slow");
+            if ($("#toggleLocalstyles").text() == "Global Styles") {
+                $("#toggleLocalstyles").html("Global Styles")
+            } else {
+                $("#toggleLocalstyles").text("Global Styles")
+            }
+        });
+
 
         $("#toggleMetaTags").click(function() {
             $("#toggleMetaTagsContent").slideToggle("slow");
