@@ -1,6 +1,8 @@
 #FROM ubuntu:16.04
 FROM whiledo/letsencrypt-apache-ubuntu
 
+ARG serverkey
+
 # install dependencies
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
