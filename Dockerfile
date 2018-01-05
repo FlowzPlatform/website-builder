@@ -1,7 +1,7 @@
 #FROM ubuntu:16.04
 FROM whiledo/letsencrypt-apache-ubuntu
 
-ARG serverkey
+ARG domainkey
 
 # install dependencies
 RUN apt-get update \
