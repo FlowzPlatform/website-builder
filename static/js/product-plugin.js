@@ -731,7 +731,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       isComponent: function(el) {
         if (el.tagName == 'SLIDER') {
           return {
-            type: 'slider'
+            type: 'Slider'
           };
         }
       },
