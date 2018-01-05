@@ -2411,19 +2411,19 @@
         });
 
         // Slider Plugin
-        let sliderPlugin = newFolderName + '/public/assets/client-plugins/slider-plugin.js';
+        let sliderPluginFileName = newFolderName + '/public/assets/client-plugins/slider-plugin.js';
         axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-slider-plugin.js', {
             
         })
         .then((res) => {
           let sliderData = res.data;
           axios.post(config.baseURL + '/flows-dir-listing', {
-              filename : sliderPlugin,
+              filename : sliderPluginFileName,
               text : sliderData,
               type : 'file'
           })
           .then((res) => {
-            console.log(sliderPlugin + ' file created');    
+            console.log(sliderPluginFileName + ' file created');    
           })
           .catch((e) => {
               console.log(e)
