@@ -2321,6 +2321,31 @@
             console.log(e)
         });
 
+
+	// Carousel Slider Plugin
+      let sliderPlugin = newFolderName + '/assets/client-plugins/client-slider-plugin.js';
+      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-slider-plugin.js', {
+
+      })
+      .then((res) => {
+        let sliderPluginData = res.data;
+        axios.post(config.baseURL + '/flows-dir-listing', {
+            filename : sliderPlugin,
+            text : sliderPluginData,
+            type : 'file'
+        })
+        .then((res) => {
+          console.log(sliderPlugin + ' file created');
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+
+
         // Create default menu file
         let menu = newFolderName + '/Partials/Menu/default.menu'
         axios.post(config.baseURL + '/flows-dir-listing', {
