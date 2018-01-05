@@ -8,19 +8,40 @@ services:
 branches:
   only:
   - master
+  - demo
 
 jobs:
   include:
     - stage: Web-Builder-Fronted-Flowz
       script:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-      - docker build -t web_builder_fronted_flowz:"$DOCKER_IMAGE_TAG" .
+      - docker build -t web_builder_fronted_flowz:$TRAVIS_BRANCH .
       - docker images
-      - docker tag web_builder_fronted_flowz:"$DOCKER_IMAGE_TAG" $DOCKER_USERNAME/web_builder_fronted_flowz:"$DOCKER_IMAGE_TAG"
-      - docker push $DOCKER_USERNAME/web_builder_fronted_flowz:"$DOCKER_IMAGE_TAG"
+      - docker tag web_builder_fronted_flowz:$TRAVIS_BRANCH $DOCKER_USERNAME/web_builder_fronted_flowz:$TRAVIS_BRANCH
+      - docker push $DOCKER_USERNAME/web_builder_fronted_flowz:$TRAVIS_BRANCH
     - stage: Upgrade Rancher Service
       script:
-      - bash ./upgrade.sh
+      - 'if [ ${TRAVIS_BRANCH} = "demo" ]; then
+            bash ./upgrade_demo.sh;
+         else
+            bash ./upgrade.sh;
+         fi'
     - stage: Finish Rancher Service
       script:
-      - bash ./finish.sh
+      - 'if [ ${TRAVIS_BRANCH} = "demo" ]; then
+            bash ./finish_demo.sh;
+         else
+            bash ./finish.sh;
+         fi'
+
+notifications:
+  email:
+    recipients:
+      - arpitap@officebeacon.com
+      - kaushalm@officebrain.com
+      - anuj@officebrain.com
+      - naveeng@officebrain.com
+      - fsaiyed@officebrain.com
+      - gkumar@officebrain.com
+    on_success: always
+    on_failure: always         

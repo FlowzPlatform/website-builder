@@ -4,7 +4,7 @@
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" size="small" @click="publishMetalsmith" :loading="previewLoader">Publish Website</el-button>
+      <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Publish Website</el-button>
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
@@ -33,116 +33,70 @@
       <!-- Commit Section Ends -->
 
       <!-- Project Settings Section -->
-      <div class="well" id="project-settings">
-        <div class="row">
-
+      <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-
-            <div class="row">
-              <div class="col-md-4">
-                <h3>Project Settings</h3>
-              </div>
-            </div>
-
-            <hr>
-          
+              <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Project Settings</a>
+          </div>
+      </div>
+      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="">
+        <div class="row">
+          <div class="col-md-12">
             <el-form ref="form" :model="form" label-width="180px">
 
-            <el-form-item label="Repository Id:">
-                <el-input v-model="newRepoId" :disabled="true"></el-input>
-              </el-form-item>
+              <el-form-item label="Repository Id:">
+                  <el-input v-model="newRepoId" :disabled="true"></el-input>
+                </el-form-item>
 
-              <el-form-item label="Project name">
-                <el-input v-model="repoName" :disabled="true"></el-input>
-              </el-form-item>
+                <el-form-item label="Project name">
+                  <el-input v-model="repoName" :disabled="true"></el-input>
+                </el-form-item>
 
-              <!-- <el-form-item label="Brand name">
-                <el-input v-model="form.brandName" placeholder="My Company"></el-input>
-              </el-form-item> -->
+                <!-- <el-form-item label="Brand name">
+                  <el-input v-model="form.brandName" placeholder="My Company"></el-input>
+                </el-form-item> -->
 
-              <!-- <el-form-item label="Brand Logo">
-                <div class="col6 valid"> 
-                  <label for="upload-validation" class="brandLogoUploadLabel">
-                    <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
-                  </label> 
-                  <input type="file" name="" id="upload-validation">
-                  <span class="dis">(max 1 MB. .jpg or .png only)</span>
-                </div>
-              </el-form-item> -->
+                <!-- <el-form-item label="Brand Logo">
+                  <div class="col6 valid"> 
+                    <label for="upload-validation" class="brandLogoUploadLabel">
+                      <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
+                    </label> 
+                    <input type="file" name="" id="upload-validation">
+                    <span class="dis">(max 1 MB. .jpg or .png only)</span>
+                  </div>
+                </el-form-item> -->
 
-              <el-form-item label="Project SEO Title">
-                <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
-              </el-form-item>
+                <el-form-item label="Project SEO Title">
+                  <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
+                </el-form-item>
 
-              <el-form-item label="Project SEO Keywords">
-                <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
-              </el-form-item>
-              
-              <el-form-item label="Project SEO Description">
-                <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
-              </el-form-item>    
+                <el-form-item label="Project SEO Keywords">
+                  <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
+                </el-form-item>
+                
+                <el-form-item label="Project SEO Description">
+                  <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
+                </el-form-item>    
 
             </el-form> 
           </div>
-        
         </div>
-      </div> 
+      </div>
       <!-- Project Settings section ends -->
 
       <!-- Plugins Section -->
-      <div class="well" id="plugins-section">
-        <div class="row">
+      <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-
-            <div class="row">
-              <div class="col-md-4">
-                <h3>Import Plugin</h3>
-              </div>
-
-              <div class="col-md-8" align="right">
-                <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
-                  <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
-                </el-tooltip>
-              </div>
-            </div>
-            
-            <hr>
-
-            <!-- <el-table
-              :data="pluginsData"
-              border
-              style="width: 100%">
-              <el-table-column
-                prop="pluginName"
-                label="Plugin Name"
-                >
-              </el-table-column>
-              
-              <el-table-column
-                label="Plugin Status"
-                width="180"
-                >
-                <template scope="scope">
-                  <el-switch
-                    v-model="pluginsData[scope.$index].pluginStatus"
-                    on-text="Enabled"
-                    off-text="Disabled"
-                    on-color="#13ce66"
-                    off-color="#ff4949"
-                    :width="90">
-                  </el-switch>
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                label="Delete Plugin"
-                width="180">
-                <template scope="scope">
-                  <el-button @click.native.prevent="deletePlugin(scope.$index, pluginsData)" type="danger" size="small" icon="delete">Delete</el-button>
-                </template>
-              </el-table-column>
-            </el-table> -->
-
+              <a href="javascript:void(0)" id="toggleImportPlugin" class="card color-div toggleableDivHeader">Import Plugin</a>
+          </div>
+      </div>
+      <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12" align="right" style="margin-bottom: 10px;">
+            <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
+              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
+            </el-tooltip>
+          </div>
+          <div class="col-md-12">
             <el-tree
               :data="pluginsTreedata"
               node-key="id"
@@ -153,14 +107,7 @@
               >
             </el-tree>
 
-            <!-- :default-checked-keys="[5]"
-            :render-content="renderContent"
-             -->
-
             <br>
-
-            <!-- Static Upload new Plugin Button -->
-            <!-- <el-button type="primary" :loading="addPluginLoading" @click="addNewPlugin">Upload Plugin JSON</el-button> -->
 
             <div class="row">
               <div class="col-md-6">
@@ -171,34 +118,32 @@
                 
               </div>
             </div>
-
-            
-
           </div>
-        
         </div>
-      </div> 
+      </div>
       <!-- Plugins section ends -->
 
-      <!-- Global Variable section -->
-      <div class="well" id="global-variables-section">
-        <div class="row">
+      <!-- Global Variables Section -->
+      <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-            <div class="row">
-              <div class="col-md-4">
-                <h3>Dynamic Values</h3>
-              </div>
-              <div class="col-md-8" align="right">
-                <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
-                  <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
-                  <input type="file" name="uploaderVariableJson">
-                <!-- </el-tooltip> -->
-                <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
-                  <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
-                <!-- </el-tooltip> -->
-              </div>
-            </div>
-            <hr>
+              <a href="javascript:void(0)" id="toggleGlobalVariables" class="card color-div toggleableDivHeader">Global Variables</a>
+          </div>
+      </div>
+      <div id="toggleGlobalVariablesContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-4">
+            <h3>Dynamic Values</h3>
+          </div>
+          <div class="col-md-8" align="right" style="margin-bottom: 10px;">
+            <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
+              <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
+              <input type="file" name="uploaderVariableJson">
+            <!-- </el-tooltip> -->
+            <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
+              <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
+            <!-- </el-tooltip> -->
+          </div>
+          <div class="col-md-12">
             <el-form ref="form" :model="form">
               <div v-for="(n, index) in globalVariables">
                 <el-form-item>
@@ -278,9 +223,11 @@
               
               <!-- Create new variable -->
               <el-button type="primary" @click="addNewVariable">New Variable</el-button>
-
             </el-form>
           </div>
+        </div>
+
+        <div class="row">
           <div class="col-md-12" style="margin-top: 4%;">
             <h3>Dynamic Styles</h3>
             <hr>
@@ -347,12 +294,17 @@
           </div>
         </div>
       </div>
-      <!-- Global Variable section ends -->
+      <!-- Global Variables section ends -->
 
-      <!-- External JS CSS -->
-      <div class='well' id='add-js-css'>
-         <div class="row">
-            <div class="col-md-12">
+      <!-- External Links Section -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleExternalLinks" class="card color-div toggleableDivHeader">External Links</a>
+          </div>
+      </div>
+      <div id="toggleExternalLinksContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12">
                <div class="row">
                   <div class="col-md-4">
                      <h3> JS Links </h3>
@@ -360,33 +312,40 @@
                </div>
                <hr>
                <el-form ref="form" :model="form">
-              <!--  <draggable @start="drag=true" @end="drag=false"> -->
-                  <div v-for="(n, index) in externallinksJS">
+               
+                  <div >
                      <el-form-item>
-                        <div class="row">
-                           <!-- position  -->
-                           <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                              <el-select v-model="n.linkposition" placeholder="Position">
-                                 <el-option
-                                    v-for="item in Allposition"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                 </el-option>
-                              </el-select>
-                           </div>
-                           <!-- link url -->
-                           <div class="col-md-7" style="margin: 0; padding: 0px">
-                              <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
-                           </div>
-                           <!-- Delete Variable -->
-                           <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete"></el-button>
-                           </div>
-                        </div>
+                        <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
+                          <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
+                             <!-- position  -->
+                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                <el-select v-model="n.linkposition" placeholder="Position">
+                                   <el-option
+                                      v-for="item in Allposition"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                   </el-option>
+                                </el-select>
+                             </div>
+                             <!-- link url -->
+                             <div class="col-md-6" style="margin: 0; padding: 0px">
+                                <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                             </div>
+                             <!-- Delete Variable -->
+                             <div class="col-md-1">
+                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete2"></el-button>
+                             </div>
+                             <div class="col-md-1">
+                                <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                              
+                             </div>
+
+                          </div>
+                        </draggable>
                      </el-form-item>
                   </div>
-                  <!-- </draggable> -->
+                 
                   <!-- Create new variable -->
                   <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
                </el-form>
@@ -399,6 +358,8 @@
                </div>
                <hr>
                <el-form ref="form" :model="form">
+               <draggable v-model='externallinksCSS' @start="drag=true" @end="drag=false">
+
                   <div v-for="(n, index) in externallinksCSS">
                      <el-form-item>
                         <div class="row">
@@ -413,28 +374,96 @@
                               </el-select>
                            </div>
                            <!-- link url -->
-                           <div class="col-md-7" style="margin: 0; padding-left: 0px">
+                           <div class="col-md-6" style="margin: 0; padding-left: 0px">
                               <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
                            </div>
                            <!-- Delete Variable -->
                            <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete"></el-button>
+                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete2"></el-button>
+                           </div>
+                           <div class="col-md-1">
+                              <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                            
                            </div>
                         </div>
                      </el-form-item>
                   </div>
                   <!-- Create new variable -->
+               </draggable></el-form>
                   <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
+            </div>
+        </div>
+      </div>
+      <!-- External Links section ends -->
+
+      <!-- Local Scripts -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Local Scripts</a>
+          </div>
+      </div>
+      <div id="toggleLocalscriptsContent" class="toggleableDivHeaderContent" style="display: none;">
+         <div class="row">
+          <div class="col-md-12">
+               <div class="row">
+                  <div class="col-md-4">
+                     <h3> Scripts: </h3>
+                  </div>
+               </div>
+               <hr>
+               <el-form ref="form" :model="form">
+               
+                  <div >
+                     <el-form-item>
+                        <draggable v-model='localscripts' @start="drag=true" @end="drag=false">
+                          <div style="margin-bottom: 25px" v-for='(n, index) in localscripts' class="row">
+                             <!-- position  -->
+                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                <el-select v-model="n.linkposition" placeholder="Position">
+                                   <el-option
+                                      v-for="item in Allposition"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                   </el-option>
+                                </el-select>
+                             </div>
+                             <!-- link url -->
+                             <div class="col-md-6" style="margin: 0; padding: 0px">
+                                <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
+                             </div>
+                             <!-- Delete Variable -->
+                             <div class="col-md-1">
+                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
+                             </div>
+                             <div class="col-md-1">
+                                <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                              
+                             </div>
+                             
+
+                          </div>
+                        </draggable>
+                     </el-form-item>
+                  </div>
+                 
+                  <!-- Create new variable -->
+                  <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
                </el-form>
             </div>
-         </div>
+        </div>
       </div>
-      <!-- External JS CSS Ends -->
+      <!-- Local Scripts -->
 
       <!-- Meta Tags -->
-      <div class="well" id='add-meta-tag'>
-         <div class="row">
-           <div class="col-md-12" >
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleMetaTags" class="card color-div toggleableDivHeader">Meta Tags</a>
+          </div>
+      </div>
+      <div id="toggleMetaTagsContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12" >
               <div class="row">
                     <div class="col-md-4">
                        <h3>Add External meta tags </h3>
@@ -449,35 +478,44 @@
            </div>
             <div class="col-md-12" style="margin-top: 2%">
                 <table class="table table-hover  table-bordered">
+                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
                     <thead class="thead">
                       <tr>
                         <th>Name</th>
                         <th>Content</th>
                         <th></th>
+                        <!-- <th></th> -->
                       </tr>
                     </thead>
                     <tbody>
-                    
                       <tr v-for="(n, index) in externallinksMeta" >
-                        <td><input type='text' class="form-control" placeholder="Meta Name" value="n.name" v-model="n.name"></td>
-                        <td><textarea class="form-control" rows="1" placeholder="Meta Content" v-model="n.content">{{n.content}}</textarea></td>
-                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete"></el-button></td>
+                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
+                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
                       </tr>
-                      <tr><td colspan="3"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
                     </tbody>
+                      <!-- </draggable> -->
                   </table>
+                  <!-- Create new variable -->
+                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+               <!-- </el-form> -->
             </div>
-         </div>
+        </div>
       </div>
       <!-- Meta Tags Ends -->
 
       <!-- List of Commits Section -->
-      <div class="well" id="list-of-commits">
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleCommits" class="card color-div toggleableDivHeader">List of Commits</a>
+          </div>
+      </div>
+      <div id="toggleCommitsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
-          <div id="tablecommits" class="col-md-12" style="margin-bottom: 100px; z-index: 0">
-            <h3>List of Commits</h3>
-            <hr>
-             <el-table
+            <div class="col-md-12" style="margin-top: 2%">
+              <el-table
                 :data="commitsData"
                 :row-class-name="tableRowClassName"
                 border
@@ -507,10 +545,12 @@
                   </template>
                 </el-table-column>
               </el-table>
-          </div>
+            </div>
         </div>
       </div>
       <!-- List of Commits Ends -->
+
+      <div class="margin-50"></div>
       
     </div>
     
@@ -529,6 +569,8 @@ import axios from 'axios';
 import _ from 'lodash';
 const config = require('../config');
 import fileSaver from 'file-saver';
+
+import draggable from 'vuedraggable';
 
 export default {
   name: 'ProjectSettings',
@@ -609,7 +651,7 @@ export default {
         label: 'label'
       },
       checkedList: [],
-      previewLoader: false,
+      fullscreenLoading: false,
 
       Allposition:[
         {
@@ -628,10 +670,12 @@ export default {
         name: 'Edit Me',
         content: 'Update Me'
       }],
-      Metacharset: ''
+      Metacharset: '',
+      localscripts:[],
     }
   },
-  component: {
+  components: {
+    draggable
   },
   methods: {
 
@@ -695,6 +739,15 @@ export default {
       let newVariable = { name:'',content:''};
       this.externallinksMeta.push(newVariable);
       this.editableInit();
+    },
+
+    addNewlocalscripts(){
+      let newVariable = { linkposition:'',script:''};
+      this.localscripts.push(newVariable);
+    },
+
+    deletelocalscripts(deleteIndex){
+      this.localscripts.splice(deleteIndex,1);
     },
 
     async addNewPlugin(pluginFileData) {
@@ -1000,7 +1053,8 @@ export default {
                                               "PageExternalCss": [],
                                               "PageExternalJs": [],
                                               "PageMetaInfo": [],
-                                              "PageMetacharset":[]
+                                              "PageMetacharset":'',
+                                              "ProjectScripts":[]
                                             };
 
             this.settings[1].pageSettings.push(notRegisteredPageSettings);
@@ -1019,6 +1073,8 @@ export default {
           this.refreshPluginsLoading = false;
           console.log(e)
       });
+
+      location.reload();
     },
 
     deleteVariable(deleteIndex) {
@@ -1114,7 +1170,8 @@ export default {
                               "ProjectExternalCss": this.externallinksCSS,
                               "ProjectExternalJs": this.externallinksJS,
                               "ProjectMetaInfo": this.externallinksMeta,
-                              "ProjectMetacharset":this.Metacharset
+                              "ProjectMetacharset":this.Metacharset,
+                              "ProjectScripts":this.localscripts
                             }];
 
       this.settings[1].projectSettings = ProjectSettings;
@@ -1198,329 +1255,619 @@ export default {
       }) 
     },
 
-    async publishMetalsmith () {
-        this.previewLoader = true;
-        var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
-        var rawConfigs = responseConfig.data.data[0].configData;
-        var partialstotal = []
-        console.log("rawConfigs[1].pageSettings.length:",rawConfigs[1].pageSettings.length)
-        for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+    async publishMetalsmith() {
+      this.fullscreenLoading = true;
+      var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+      var rawConfigs = responseConfig.data.data[0].configData;
+      var partialstotal = []
+      var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
+      var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
+      var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
+      var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
+      var projectscripts=rawConfigs[1].projectSettings[1].ProjectScripts
 
-            var partials = ''
+      
+      var getFromBetween = {
+        results: [],
+        string: "",
+        getFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var SP = this.string.indexOf(sub1) + sub1.length;
+          var string1 = this.string.substr(0, SP);
+          var string2 = this.string.substr(SP);
+          var TP = string1.length + string2.indexOf(sub2);
+          return this.string.substring(SP, TP);
+        },
+        removeFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+          this.string = this.string.replace(removal, "");
+        },
+        getAllResults: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+          var result = this.getFromBetween(sub1, sub2);
+          this.results.push(result);
+          this.removeFromBetween(sub1, sub2);
+          if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+            this.getAllResults(sub1, sub2);
+          } else return;
+        },
+        get: function(string, sub1, sub2) {
+          this.results = [];
+          this.string = string;
+          this.getAllResults(sub1, sub2);
+          return this.results;
+        }
+      };
+      
+      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+      var tophead = '';
+      var endhead = '';
+      var topbody = '';
+      var endbody = '';
+        
 
-            let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
-
-            var rawSettings = responseConfigLoop.data.data[0].configData;
-            var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-            console.log('nameF:',nameF)
-            var Layout = ''
-            var partialsPage = [];
-            var vuepartials = [];
-            Layout = rawSettings[1].pageSettings[i].PageLayout
-            partialsPage = rawSettings[1].pageSettings[i].partials
-            var back_partials = JSON.parse(JSON.stringify(partialsPage));
-            vuepartials = rawSettings[1].pageSettings[i].VueComponents
-            if (vuepartials != undefined && vuepartials.length > 0) {
-                // console.log("VueComponents found:")
-                var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
-                mainVuefile = mainVuefile.data
-
-                for (let x = 0; x < vuepartials.length; x++) {
-                    let temp = mainVuefile.replace(/@@vuecomponent@@/g, vuepartials[x].value.split('.')[0])
-                    temp = temp.replace('./' + vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + vuepartials[x].partialsName + '/' + vuepartials[x].value.split('.')[0])
-
-                    await axios.post(config.baseURL + '/flows-dir-listing', {
-                            filename: config.webpackpublic + vuepartials[x].value.split('.')[0] + '.js',
-                            text: temp,
-                            type: 'file'
-                        }).then(async (res) => {
-                            // console.log("successfully created vuecomponent file") 
-                            contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
-
-                            axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
-                                .then((response) => {
-                                    console.log("called webpack_file api successfully:")
-                                })
-                                .catch((e) => {
-                                    console.log(e)
-                                })
-                        })
-                        .catch((e) => {
-                            console.log(e)
-                        })
-
-                }
-                for (let x = 0; x < vuepartials.length; x++) {
-
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + '/home/software/workspace/faizan/FlowzServiceApi/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                            console.log(res)
-                        })
-                        .catch((e) => {
-                            console.log(e)
-                        })
-                }
-            }
-
-            var responseMetal = ''
-            let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
-            contentpartials = contentpartials.data
-
-            responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(permalinks({pattern: ':date'}))\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
-            var index = responseMetal.search('.source')
-
-            responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
-            var indexPartial = responseMetal.search("handlebars");
-
-            for (var j = 0; j < partialsPage.length; j++) {
-                var temp1, temp2;
-                if (partialsPage[j][Object.keys(partialsPage[j])[0]].match('.hbs')) {
-                    temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + "' }}"
-                    temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]].split('.')[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + "' }}"
-                } else {
-
-                    temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".html' }}"
-
-                    temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".html' }}"
-                }
-
-                if (contentpartials.match(temp1)) {
-
-                    contentpartials = contentpartials.split(temp1).join(temp2)
-                    // let partialsinherit = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/'+Object.keys(partialsPage[j])[0]+'/'+partialsPage[j][Object.keys(partialsPage[j])[0]]);
-
-                    var obj = {}
-                    var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
-                    obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
-                    partialsPage[j] = []
-                    partialsPage[j] = obj
-                    // console.log("new partialsPage[",j,']:',partialsPage[j])
-
-
-
-                } else {
-                    console.log('partials not found in page')
-                    console.log('partialsPage[j]:', partialsPage[j])
-
-                }
-            }
-            console.log("back_partials:",back_partials)
-            for (var z = 0; z < partialsPage.length; z++) {
-              let key = Object.keys(partialsPage[z])[0];
-              let value = partialsPage[z]
-              let key2 = key;
-              key = key.trim();
-              if (value[key2].match('html')) {
-                  key = key.split('.')[0]
-                  var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + "').toString())\n"
-              } else if (value[key2].match('hbs')) {
-                  key = key.split('.')[0]
-                  var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + "').toString())\n"
-              } else {
-                  var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/Partials/" + Object.keys(back_partials[z])[0] + "/" + value[key2] + ".html').toString())\n"
-              }
-              partials = partials + temp;
-          }
-
-            responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-            console.log('final responseMetal:', responseMetal)
-            var mainMetal = folderUrl + '/assets/metalsmith.js'
-            var value = true;
-            await axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: mainMetal,
-                    text: responseMetal,
-                    type: 'file'
-                }).then(async (response) => {
-                    var newFolderName = folderUrl + '/Preview';
-                    await axios.post(config.baseURL + '/flows-dir-listing', {
-                            foldername: newFolderName,
-                            type: 'folder'
-                        })
-                        .then(async (res) => {
-                            console.log(res);
-                            // console.log('Current URL:', this.$store.state.fileUrl.replace(/\\/g, "\/"));
-
-                            console.log("this.form.Layout:", Layout)
-                            if (Layout == 'Blank') {
-                                // console.log("inside blank layout condition:")
-                                await axios.post(config.baseURL + '/flows-dir-listing', {
-                                        filename: folderUrl + '/Layout/Blank.layout',
-                                        text: '{{{ contents }}}',
-                                        type: 'file'
-                                    })
-                                    .catch((e) => {
-                                        console.log("error while blank file creation")
-                                    })
-                            }
-                            let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
-
-                            let newContent = "<html>\n<head>\n" +
-                                "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                                "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
-                                "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                                "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                                "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
-                                "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                                "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                                "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                                '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
-                                '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">\n' +
-                                "<link rel='stylesheet' href='./../main-files/main.css'/>\n</head><body>\n" +
-                                layoutdata.data +
-                                '<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/client-navbar-plugin.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/client-product-listing-plugin.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/client-product-detail-plugin.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/client-pagination-plugin.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/client-my-cart-plugin.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/image-gradient-animation.js"><\/script>\n' +
-                                '<script src="./../assets/client-plugins/progress-bars.js"><\/script>\n' +
-                                // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/client1.js"><\/script>\n'+
-                                '<script src="./../main-files/main.js"><\/script>\n' +
-                                '</body>\n</html>';
-
-                            await axios.post(config.baseURL + '/flows-dir-listing', {
-                                filename: folderUrl + '/Layout/' + Layout + '.layout',
-                                text: newContent,
-                                type: 'file'
-                            })
-
-                            var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
-
-                            if (Layout == 'Blank') {
-                                
-                                rawContent = '---\nlayout: ' + Layout + '.layout\n---\n' + rawContent
-                                // }
-                            } else {
-                                let tempValueLayout = '---\nlayout: ' + Layout + '.layout\n---\n';
-                                rawContent = tempValueLayout + rawContent
-
-                                // }
-                            }
-
-                            var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
-
-                            await axios.post(config.baseURL + '/flows-dir-listing', {
-                                    filename: previewFileName,
-                                    text: rawContent,
-                                    type: 'file'
-                                })
-                                .then(async (res) => {
-                                    this.saveFileLoading = false;
-
-                                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
-
-                                            await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                    filename: mainMetal,
-                                                    text: responseMetal,
-                                                    type: 'file'
-                                                })
-                                                .then(async (res) => {
-                                                    let previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                                                    previewFile = folderUrl.replace('/var/www/html', '');
-
-                                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                                        .then(async (res) => {
-                                                            console.log(res);
-                                                            // value = false;
-                                                            // return value
-                                                            await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                    filename: folderUrl + '/Layout/' + Layout + '.layout',
-                                                                    text: layoutdata.data,
-                                                                    type: 'file'
-                                                                })
-                                                                .then(async (res) => {
-                                                                    // location.reload();
-                                                                    if (vuepartials != undefined && vuepartials.length > 0) {
-                                                                        for (let x = 0; x < vuepartials.length; x++) {
-
-                                                                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.webpackpublic + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                                                                    console.log(res)
-                                                                                })
-                                                                                .catch((e) => {
-                                                                                    console.log(e)
-                                                                                })
-                                                                        }
-                                                                        // location.reload();
-                                                                    }
-                                                                    console.log("layout file reset")
-                                                                    if (Layout == 'Blank') {
-                                                                       await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
-                                                                            .catch((e) => {
-                                                                                console.log("error while deleting blank.layout file")
-                                                                            })
-                                                                    }
-
-                                                                })
-
-                                                        })
-                                                        .catch((e) => {
-                                                            console.log(e)
-                                                        })
-                                                })
-
-                                        })
-                                        .catch((err) => {
-                                            console.log('error while creating metalsmithJSON file' + err)
-                                        })
-                                })
-                                .catch((e) => {
-                                    this.saveFileLoading = false
-                                    this.$message({
-                                        showClose: true,
-                                        message: 'File not saved! Please try again.',
-                                        type: 'error'
-                                    });
-                                    console.log(e)
-                                })
-
-                        })
-                        .catch((e) => {
-                            console.log(e)
-                        })
-
-                })
-                .catch((e) => {
-                    console.log('error while creating metalsmithJSON file' + e)
-                    this.$message({
-                        showClose: true,
-                        message: 'Cannot save file! Some error occured, try again.',
-                        type: 'danger'
-                    });
-                })
-
+        if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
+          tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
         }
 
-        // window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
+        if (metaInfo != undefined && metaInfo.length > 0) {
+          for (let a = 0; a < metaInfo.length; a++) {
+            tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+          }
+        }
+
+        if (externalJs != undefined && externalJs.length > 0) {
+          for (let a = 0; a < externalJs.length; a++) {
+            if (externalJs[a].linkposition == 'starthead') {
+              tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+            } else if (externalJs[a].linkposition == 'endhead') {
+              endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+            } else if (externalJs[a].linkposition == 'startbody') {
+              topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+            } else if (externalJs[a].linkposition == 'endbody') {
+              endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+            }
+          }
+        }
+
+        if (externalCss != undefined && externalCss.length > 0) {
+          for (let a = 0; a < externalCss.length; a++) {
+            if (externalCss[a].linkposition == 'starthead') {
+              tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+            } else if (externalCss[a].linkposition == 'endhead') {
+              endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+            } else if (externalCss[a].linkposition == 'startbody') {
+              topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+            } else if (externalCss[a].linkposition == 'endbody') {
+              endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
+            }
+
+          }
+        }
+        if (projectscripts != undefined && projectscripts.length > 0) {
+          for (let a = 0; a < projectscripts.length; a++) {
+            if (projectscripts[a].linkposition == 'starthead') {
+              tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+            } else if (projectscripts[a].linkposition == 'endhead') {
+              endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+            } else if (projectscripts[a].linkposition == 'startbody') {
+              topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+            } else if (projectscripts[a].linkposition == 'endbody') {
+              endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+            }
+          }
+        }
+
+        var partials = ''
+        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+
+        var rawSettings = responseConfigLoop.data.data[0].configData;
+        var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
+        console.log('nameF:', nameF)
+        var Layout = ''
+        var partialsPage = [];
+        var vuepartials = [];
+        var pagescripts=[];
+        var layoutdata = '';
+        var pageexternalJs = [];
+        var pageexternalCss = [];
+        var pageMetaInfo = [];
+        var pageSeoTitle;
+        var PageMetacharset = '';
+        Layout = rawSettings[1].pageSettings[i].PageLayout
+        partialsPage = rawSettings[1].pageSettings[i].partials
+        var back_partials = JSON.parse(JSON.stringify(partialsPage));
+        vuepartials = rawSettings[1].pageSettings[i].VueComponents
+        pageexternalJs = rawSettings[1].pageSettings[i].PageExternalJs;
+        pageexternalCss = rawSettings[1].pageSettings[i].PageExternalCss;
+        pageMetaInfo = rawSettings[1].pageSettings[i].PageMetaInfo;
+        pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
+        PageMetacharset = rawSettings[1].pageSettings[i].PageMetacharset;
+        pagescripts=rawSettings[1].pageSettings[i].PageScripts;
+
+
+        if (PageMetacharset != undefined && PageMetacharset != '') {
+          tophead = tophead + '<meta charset="' + PageMetacharset + '">'
+        }
+        if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
+          for (let a = 0; a < pageMetaInfo.length; a++) {
+            tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
+          }
+        }
+        if (pageexternalJs != undefined && pageexternalJs.length > 0) {
+          for (let a = 0; a < pageexternalJs.length; a++) {
+            if (pageexternalJs[a].linkposition == 'starthead') {
+              tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+            } else if (pageexternalJs[a].linkposition == 'endhead') {
+              endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+            } else if (pageexternalJs[a].linkposition == 'startbody') {
+              topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+            } else if (pageexternalJs[a].linkposition == 'endbody') {
+              endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+            }
+          }
+        }
+
+
+        if (pageexternalCss != undefined && pageexternalCss.length > 0) {
+          for (let a = 0; a < pageexternalCss.length; a++) {
+            if (pageexternalCss[a].linkposition == 'starthead') {
+              tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+            } else if (pageexternalCss[a].linkposition == 'endhead') {
+              endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+            } else if (pageexternalCss[a].linkposition == 'startbody') {
+              topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+            } else if (pageexternalCss[a].linkposition == 'endbody') {
+              endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
+            }
+          }
+        }
+        if (pagescripts != undefined && pagescripts.length > 0) {
+            for (let a = 0; a < pagescripts.length; a++) {
+              if (pagescripts[a].linkposition == 'starthead') {
+                tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'endhead') {
+                endhead = endhead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'startbody') {
+                topbody = topbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              } else if (pagescripts[a].linkposition == 'endbody') {
+                endbody = endbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+              }
+            }
+          }
+
+        if (vuepartials != undefined && vuepartials.length > 0) {
+          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+          mainVuefile = mainVuefile.data
+
+          for (let x = 0; x < vuepartials.length; x++) {
+            let temp = mainVuefile.replace(/@@vuecomponent@@/g, vuepartials[x].value.split('.')[0])
+            temp = temp.replace('./' + vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + vuepartials[x].partialsName + '/' + vuepartials[x].value.split('.')[0])
+
+            await axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js',
+                text: temp,
+                type: 'file'
+              }).then(async (res) => {
+                contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+
+                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
+                  .then((response) => {
+                    console.log("called webpack_file api successfully:")
+                  })
+                  .catch((e) => {
+                    console.log(e)
+                  })
+              })
+              .catch((e) => {
+                console.log(e)
+              })
+
+          }
+        }
+        if (Layout == 'Blank') {
+          await axios.post(config.baseURL + '/flows-dir-listing', {
+              filename: folderUrl + '/Layout/Blank.layout',
+              text: '{{{ contents }}}',
+              type: 'file'
+            })
+            .catch((e) => {
+              console.log("error while blank file creation")
+            })
+        }
+        layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
+        var responseMetal = ''
+        let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
+        contentpartials = contentpartials.data
+        var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
+        let newFolderName = folderUrl + '/temp';
+        await axios.post(config.baseURL + '/flows-dir-listing', {
+            foldername: newFolderName,
+            type: 'folder'
+          }).then(async (res) => {
+            for (let p = 0; p < back_partials.length; p++) {
+              let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial');
+              responsepartials = responsepartials.data
+              let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
+              var DefaultParams = [];
+              if (result.length > 0) {
+                var resultParam = result
+                for (let q = 0; q < resultParam.length; q++) {
+                  var temp;
+                  temp = resultParam[q].trim()
+                  result[q] = result[q].trim()
+                  temp = temp.replace(/&nbsp;/g, ' ')
+                  temp = temp.replace(/\s+/g, ' ');
+                  temp = temp.trim();
+                  temp = temp.split(' ')
+                  for (let j = 0; j < temp.length; j++) {
+                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                      if (temp[j + 1] != undefined) {
+                        result[q] = temp[0];
+                        if (temp[j + 1].indexOf('.') > -1) {
+                          let x = temp[j + 1]
+                          x = temp[j + 1].split(/'/)[1];
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
+                      } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                        result[q] = temp[0];
+                        if (temp[j]) {
+                          let x = temp[j]
+                          x = temp[j].split(/'/)[1];
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
+                      }
+                    }
+                  }
+                }
+                for (let j = 0; j < result.length; j++) {
+                  temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+
+                  temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+                  responsepartials = responsepartials.split(temp1).join(temp2)
+                }
+              }
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                filename: folderUrl + '/temp/' + Object.keys(back_partials[p]) + '_' + back_partials[p][Object.keys(back_partials[p])] + '.html',
+                text: responsepartials,
+                type: 'file'
+              }).catch((e) => {
+                console.log(e)
+              })
+            }
+            let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
+            DefaultParams = [];
+            if (result.length > 0) {
+              var resultParam = result
+              for (let w = 0; w < resultParam.length; w++) {
+                var temp;
+                temp = resultParam[w].trim()
+                result[w] = result[w].trim()
+                temp = temp.replace(/&nbsp;/g, ' ')
+                temp = temp.replace(/\s+/g, ' ');
+                temp = temp.trim();
+                temp = temp.split(' ')
+                for (let j = 0; j < temp.length; j++) {
+                  if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                    if (temp[j + 1] != undefined) {
+                      result[w] = temp[0];
+                      if (temp[j + 1].indexOf('.') > -1) {
+                        let x = temp[j + 1]
+                        x = temp[j + 1].split(/'/)[1];
+                        let obj = {}
+                        obj[temp[0]] = x
+                        DefaultParams.push(obj)
+                        break;
+                      }
+                    } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                      result[w] = temp[0];
+                      if (temp[j]) {
+                        let x = temp[j]
+                        x = temp[j].split(/'/)[1];
+                        let obj = {}
+                        obj[temp[0]] = x
+                        DefaultParams.push(obj)
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+              for (let j = 0; j < result.length; j++) {
+                for (let w = 0; w < back_partials.length; w++) {
+                  if (Object.keys(back_partials[w])[0] == result[j]) {
+
+                    temp1 = '{{> ' + Object.keys(back_partials[w])[0] + ' }}'
+                    if (layoutdata.data.search(temp1) > 0) {
+
+                      temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + ' }}'
+                    } else {
+                      temp1 = '{{> ' + Object.keys(back_partials[w])[0] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
+
+                      temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
+                    }
+                    console.log('temp1:', temp1)
+                    console.log('temp2:', temp2)
+                    if (layoutdata.data.split(temp1).join(temp2)) {
+                      console.log('replacing in layout file successfully')
+                      layoutdata.data = layoutdata.data.split(temp1).join(temp2)
+                    } else {
+                      console.log('replacing in layout file failed')
+                    }
+                  }
+                }
+
+              }
+            }
+
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+
+        responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+        var index = responseMetal.search('.source')
+
+        responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
+        var indexPartial = responseMetal.search("handlebars");
+
+        for (var j = 0; j < partialsPage.length; j++) {
+          var temp1, temp2;
+          temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
+
+          temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
+
+          // console.log('temp1:',temp1)
+          // console.log('temp2:',temp2)
+          if (contentpartials.match(temp1)) {
+            contentpartials = contentpartials.split(temp1).join(temp2)
+          }
+          var obj = {}
+          var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
+          // console.log('key:',key)
+          // console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
+          obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
+          partialsPage[j] = []
+          partialsPage[j] = obj
+
+        }
+        for (var z = 0; z < partialsPage.length; z++) {
+          let key = Object.keys(partialsPage[z])[0];
+          let value = partialsPage[z]
+          let key2 = key;
+          key = key.trim();
+          if (value[key2].match('partial')) {
+            key = key.split('.')[0]
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + "').toString())\n"
+          } else {
+            var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + ".html').toString())\n"
+          }
+          partials = partials + temp;
+        }
+
+        responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
+        console.log('final responseMetal:', responseMetal)
+        var mainMetal = folderUrl + '/assets/metalsmith.js'
+        var value = true;
+        await axios.post(config.baseURL + '/flows-dir-listing', {
+            filename: mainMetal,
+            text: responseMetal,
+            type: 'file'
+          }).then(async (response) => {
+            var newFolderName = folderUrl + '/Preview';
+            await axios.post(config.baseURL + '/flows-dir-listing', {
+                foldername: newFolderName,
+                type: 'folder'
+              })
+              .then(async (res) => {
+                console.log(res);
+                let newContent = "<html>\n<head>\n" + tophead +
+                  "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+                  "<title>" + pageSeoTitle + "</title>" +
+                  "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
+                  "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                  "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+                  '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                  "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                  "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+                  "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                  "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                  "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                  "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
+                  "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body><div id=\"app\">\n" +
+                  layoutdata.data + topbody +
+                  '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                  '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                  '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
+                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                  '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-memory@8.0.9/dist/y-memory.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-webrtc@8.0.7/dist/y-webrtc.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
+                  '<script src="./../main-files/main.js"><\/script>\n' + endbody +
+                  '</body>\n</html>';
+
+                await axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
+                  text: newContent,
+                  type: 'file'
+                })
+
+                var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
+
+                if (Layout == 'Blank') {
+
+                  rawContent = '---\nlayout: ' + Layout + '.layout\n---\n' + rawContent
+
+                } else {
+                  let tempValueLayout = '---\nlayout: ' + Layout + '_temp.layout\n---\n';
+                  rawContent = tempValueLayout + rawContent
+                }
+
+                var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
+
+                await axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename: previewFileName,
+                    text: rawContent,
+                    type: 'file'
+                  })
+                  .then(async (res) => {
+                    this.saveFileLoading = false;
+
+                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
+
+                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename: mainMetal,
+                            text: responseMetal,
+                            type: 'file'
+                          })
+                          .then(async (res) => {
+                            var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                            previewFile = folderUrl.replace('/var/www/html', '');
+
+                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              .then(async (res) => {
+                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                                  console.log(e)
+                                })
+                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
+                                  // console.log('deleted extra layout file:', res)
+                                }).catch((e) => {
+                                  console.log(e)
+                                })
+                                if (vuepartials != undefined && vuepartials.length > 0) {
+                                  for (let x = 0; x < vuepartials.length; x++) {
+
+                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                        console.log(res)
+                                      })
+                                      .catch((e) => {
+                                        console.log(e)
+                                      })
+                                  }
+                                }
+                                console.log("layout file reset")
+                                if (Layout == 'Blank') {
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                    .catch((e) => {
+                                      console.log("error while deleting blank.layout file")
+                                    })
+                                }
+
+                                // })
+
+                              })
+                              .catch((e) => {
+                                console.log(e)
+                              })
+                          })
+
+                      })
+                      .catch((err) => {
+                        console.log('error while creating metalsmithJSON file' + err)
+                        axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename: mainMetal,
+                          text: responseMetal,
+                          type: 'file'
+                        })
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                          console.log(e)
+                        })
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        console.log(e)
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                      })
+                  })
+                  .catch((e) => {
+                    this.saveFileLoading = false
+                    axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: mainMetal,
+                      text: responseMetal,
+                      type: 'file'
+                    })
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                      console.log(e)
+                    })
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                    console.log(e)
+                  })
+
+              })
+              .catch((e) => {
+                console.log(e)
+                axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: mainMetal,
+                  text: responseMetal,
+                  type: 'file'
+                })
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                  console.log(e)
+                })
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+              })
+
+          })
+          .catch((e) => {
+            console.log('error while creating metalsmithJSON file' + e)
+            axios.post(config.baseURL + '/flows-dir-listing', {
+              filename: mainMetal,
+              text: responseMetal,
+              type: 'file'
+            })
+            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+              console.log(e)
+            })
+
+          })
+
+
+          this.fullscreenLoading = false;
+        // Open in new window
+        // window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
+        window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
         // Publish with Zeit Now
-        axios.post(config.baseURL + '/publish-now', {
-            projectName : this.repoName
-        })
-        .then((res) => {
-          let serverUrl = res.data;
-          window.open( serverUrl + '/public/');
-          this.$message({
-            showClose: true,
-            message: 'Successfully Published.',
-            type: 'success'
-          });
-          console.log(res.data);
-          this.previewLoader = false;
-        })
-        .catch((e) => {
-          this.$message({
-            showClose: true,
-            message: 'Failed! Please try again.',
-            type: 'error'
-          });
-          console.log(e);
-          this.previewLoader = false;
-        });
-        // location.reload();
+        // axios.post(config.baseURL + '/publish-now', {
+        //     projectName: this.repoName
+        //   })
+        //   .then((res) => {
+        //     let serverUrl = res.data;
+        //     // window.open( serverUrl + '/public/');
+        //     this.$message({
+        //       showClose: true,
+        //       message: 'Successfully Published.',
+        //       type: 'success'
+        //     });
+        //     console.log(res.data);
+        //     this.fullscreenLoading = false;
+        //   })
+        //   .catch((e) => {
+        //     this.$message({
+        //       showClose: true,
+        //       message: 'Failed! Please try again.',
+        //       type: 'error'
+        //     });
+        //     console.log(e);
+        //     this.fullscreenLoading = false;
+        //   });
+      }
     },
 
     handleRemove(file, fileList) {
@@ -1577,6 +1924,7 @@ export default {
         this.externallinksJS = this.settings[1].projectSettings[1].ProjectExternalJs;
         this.externallinksMeta = this.settings[1].projectSettings[1].ProjectMetaInfo;
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
+        this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
 
 
         // Old Code for tree data
@@ -1752,6 +2100,76 @@ export default {
   },
 
   async mounted () {
+
+    // Collapsing Divs
+    $(document).ready(function($) {
+        
+        $("#toogleProjectSettings").click(function() {
+            $("#toogleProjectSettingsContent").slideToggle("slow");
+            if ($("#toogleProjectSettings").text() == "Project Settings") {
+                $("#toogleProjectSettings").html("Project Settings")
+            } else {
+                $("#toogleProjectSettings").text("Project Settings")
+            }
+        });
+
+        $("#toggleImportPlugin").click(function() {
+            $("#toggleImportPluginContent").slideToggle("slow");
+            if ($("#toggleImportPlugin").text() == "Import Plugin") {
+                $("#toggleImportPlugin").html("Import Plugin")
+            } else {
+                $("#toggleImportPlugin").text("Import Plugin")
+            }
+        });
+
+        $("#toggleGlobalVariables").click(function() {
+            $("#toggleGlobalVariablesContent").slideToggle("slow");
+            if ($("#toggleGlobalVariables").text() == "Global Variables") {
+                $("#toggleGlobalVariables").html("Global Variables")
+            } else {
+                $("#toggleGlobalVariables").text("Global Variables")
+            }
+        });
+
+        $("#toggleExternalLinks").click(function() {
+            $("#toggleExternalLinksContent").slideToggle("slow");
+            if ($("#toggleExternalLinks").text() == "External Links") {
+                $("#toggleExternalLinks").html("External Links")
+            } else {
+                $("#toggleExternalLinks").text("External Links")
+            }
+        });
+
+        $("#toggleMetaTags").click(function() {
+            $("#toggleMetaTagsContent").slideToggle("slow");
+            if ($("#toggleMetaTags").text() == "Meta Tags") {
+                $("#toggleMetaTags").html("Meta Tags")
+            } else {
+                $("#toggleMetaTags").text("Meta Tags")
+            }
+        });
+
+        $("#toggleCommits").click(function() {
+            $("#toggleCommitsContent").slideToggle("slow");
+            if ($("#toggleCommits").text() == "List of Commits") {
+                $("#toggleCommits").html("List of Commits")
+            } else {
+                $("#toggleCommits").text("List of Commits")
+            }
+        });
+
+        $("#toggleLocalscripts").click(function() {
+            $("#toggleLocalscriptsContent").slideToggle("slow");
+            if ($("#toggleLocalscripts").text() == "Local Scripts") {
+                $("#toggleLocalscripts").html("Local Scripts")
+            } else {
+                $("#toggleLocalscripts").text("Local Scripts")
+            }
+        });
+
+
+
+    });
 
     // Brand Image uploader
     let scope = this;
@@ -2029,5 +2447,68 @@ export default {
 
   .tree-action-button {
       display: none;
+  }
+
+
+
+
+  /*For Collapsing Divs*/
+  .toggleableDivHeaderContent {
+      margin-top: 0px;
+      margin-bottom: 30px;
+      background: #eee;
+      width: auto;
+      height: auto;
+      margin: 0px 5px;
+      padding: 15px;
+  }
+  
+  .toggleableDivHeader {
+      height: 35px;
+      line-height: 15px;
+      text-align: center;
+      color: black;
+      font-weight: bold;
+      text-decoration: none;
+  }
+  
+  .card {
+      padding: 15px;
+      box-shadow: 0px 0px 10px #999;
+      transition: 0.2s all linear;
+      margin: 20px;
+  }
+  
+  .card:hover {
+      box-shadow: 2px 2px 20px #999;
+      transition: 0.2s all linear;
+  }
+  
+  .color-div {
+      height: 45px;
+      display: block;
+      padding: 10px 25px;
+      line-height: 25px;
+      color: #292929;
+      text-transform: uppercase;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px #aaa;
+      transition: 0.2s all linear;
+      margin: 5px 5px;
+      background: #8e9eab;
+      /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #eef2f3, #8e9eab);
+      /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #eef2f3, #8e9eab);
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+  
+  .color-div:hover {
+      box-shadow: 2px 2px 10px #aaa;
+      transition: 0.2s all linear;
+  }
+
+  .margin-50{
+    margin: 50px;
   }
 </style>

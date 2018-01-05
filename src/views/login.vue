@@ -141,9 +141,13 @@ export default {
           this.$session.start()
           this.$session.set('token', response.data.logintoken);
           // localStorage.setItem("auth_token", response.data.logintoken);
+
+          // Store Token in Cookie
           let location = psl.parse(window.location.hostname)
           location = location.domain === null ? location.input : location.domain
           this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
+
+          // Set email Session
           this.$session.set('email', this.form.user);
           localStorage.setItem('email', this.form.user);
           // this.$router.push('/');
@@ -214,7 +218,7 @@ export default {
     },
 
     doLinkedInLogin () {
-      console.log('Github Login');
+      console.log('LinkedIn Login');
       document.getElementById('form-linkedIn').submit();
     }
   },

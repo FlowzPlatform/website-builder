@@ -1,3 +1,8 @@
+// Change baseURL when going live
+// const baseURL = 'http://localhost:3032';
+// const baseURL = 'http://devapi.flowz.com/serverapi';
+const baseURL = 'http://api.flowz.com/serverapi';
+
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;
 
@@ -463,16 +468,48 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  bm.add('DataFieldGroup', {
-    label: 'Data Field Group',
-    content: '<DataFieldGroup style="display: block; width: 100%; min-height:40px"><div style="border:solid black 2px"></div></DataFieldGroup>',
-    attributes: {
-      class: 'fa fa-spinner',
-      title: 'Progress Bar',
-    },
-    category: 'Special Component'
-  });
+  // // dataField component
+  // bm.add('DataFieldGroup', {
+  //   label: 'Data Field Group',
+  //   content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
+  //   attributes: {
+  //     class: 'fa fa-database',
+  //     title: 'Data Field',
+  //   },
+  //   category: 'Data Field Group'
+  // });
 
+
+  // bm.add('DataFieldText', {
+  //   label: 'Data Field Text',
+  //   content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
+  //   attributes: {
+  //     class: 'fa fa-database',
+  //     title: 'Data Field',
+  //   },
+  //   category: 'Data Field Group'
+  // });
+
+  // bm.add('DataFieldList', {
+  //   label: 'Data Field List',
+  //   content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
+  //   attributes: {
+  //     class: 'fa fa-database',
+  //     title: 'Data Field',
+  //   },
+  //   category: 'Data Field Group'
+  // });
+
+
+  bm.add('ShoppingCart', {
+        label: 'Shopping Cart',
+  content:'<ShoppingCart  style="display: block; width: 100%;padding:15px; vertical-align: middle;"><div id="ShoppingCart_append"><i class="fa fa-shopping-cart"></i> <label style="margin: inherit;">Shopping Cart</label></div></ShoppingCart>',
+  attributes: {
+              class:'fa fa-shopping-cart',
+              title: 'Shopping cart',
+        },
+    category: 'Payment Components'
+  });
 
 
   // Get DomComponents module
@@ -1508,46 +1545,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  //DataFieldGroup
 
-  comps.addType('DataFieldGroup', {
-    // Define the Model
-    model: defaultModel.extend({
-      // Extend default properties
-      defaults: Object.assign({}, defaultModel.prototype.defaults, {
-        editable: true,
-        droppable: true,
-        traits: [{
-          label: 'Connection-name',
-          name: 'Connection-name',
-          type: 'text'
-        }, {
-          label: 'Schema-name',
-          name: 'Schema-name',
-          type: 'text'
-        }],
-      }),
-
-    }, {
-      isComponent: function(el) {
-        if (el.tagName == 'DATAFIELDGROUP') {
-          return {
-            type: 'DataFieldGroup'
-          };
-        }
-      },
-    }),
-
-    view: defaultType.view,
-
-    // The render() should return 'this'
-    render: function() {
-      // Extend the original render method
-      defaultType.view.prototype.render.apply(this, arguments);
-      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-      return this;
-    },
-  });
 
 
 
@@ -1695,6 +1693,171 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
+  // // dataField components
+
+  // //http://172.16.230.176:3034/connectiondata
+  // let arr_collection = new Array();
+  // let arr_schema = []
+  // let arr_coll_schema = new Array()
+  // console.log("arr_schema type11111111111111s", typeof arr_schema)
+  // $.getJSON("http://172.16.230.222:3080/settings",
+  //   // $.getJSON("http://localhost:3080/settings",
+  //   function (data) {
+  //     //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
+  //     for (let index = 0; index < data.rethink.dbinstance.length; index++) {
+  //       //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+  //       arr_collection.push(data.rethink.dbinstance[index].connection_name)
+  //       $.getJSON("http://172.16.230.222:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
+  //         // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
+  //         function (data_) {
+  //           console.log("data_", data_)
+  //           // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+  //           let collection_name = data.rethink.dbinstance[index].connection_name
+  //           console.log(data_[0].t_name)
+  //           for (let index_ = 0; index_ < data_.length; index_++) {
+  //             console.log(data_[index_].t_name)
+  //             if (data_[index_].t_name != undefined) {
+  //               let schema_name = data_[index_].t_name
+  //               console.log("arr_schema type", typeof arr_schema)
+  //               arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
+  //             }
+  //           }
+  //           $.each(arr_schema, function (index, value) {
+  //             arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
+  //           });
+  //           console.log("arr_coll_schema", typeof arr_coll_schema)
+  //         });
+  //     }
+  //   });
+
+  //   comps.addType('DataFieldGroup', {
+  //     // Define the Model
+  //     model: defaultModel.extend({
+  //       init() {
+  //         this.listenTo(this, 'change:connectiondata', this.doStuff);
+  //       },
+  //       doStuff() {
+  //         console.log("hello here")
+  //       },
+  //       // Extend default properties
+  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //         editable: true,
+  //         droppable: true,
+  //         traits: [
+  //           {
+  //             type: 'select',
+  //             label: 'data-schema',
+  //             name: ':data_schema',
+  //             options: arr_coll_schema,
+  //           }
+  //         ]
+  //       }),
+
+  //     }, {
+  //         isComponent: function (el) {
+  //           if (el.tagName == 'DATAFIELDGROUP') {
+  //             return {
+  //               type: 'DataFieldGroup'
+  //             };
+  //           }
+  //         },
+  //       }),
+
+  //     view: defaultType.view,
+
+  //     // The render() should return 'this'
+  //     render: function () {
+  //       // Extend the original render method
+  //       defaultType.view.prototype.render.apply(this, arguments);
+  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+  //       return this;
+  //     },
+  //   });
+
+
+
+  //   comps.addType('DataFieldText', {
+  //     // Define the Model
+  //     model: defaultModel.extend({
+  //       // Extend default properties
+  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //         editable: true,
+  //         droppable: true,
+  //         traits: [
+  //           {
+  //             label: 'Data text field',
+  //             name: ':text',
+  //             type: 'text'
+  //           }
+  //         ]
+  //       }),
+
+  //     }, {
+  //         isComponent: function (el) {
+  //           if (el.tagName == 'DATAFIELDTEXT') {
+  //             return {
+  //               type: 'DataFieldText'
+  //             };
+  //           }
+  //         },
+  //       }),
+
+  //     view: defaultType.view,
+
+  //     // The render() should return 'this'
+  //     render: function () {
+  //       // Extend the original render method
+  //       defaultType.view.prototype.render.apply(this, arguments);
+  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+  //       return this;
+  //     },
+  //   });
+
+  //   comps.addType('DataFieldList', {
+  //     // Define the Model
+  //     model: defaultModel.extend({
+  //       // Extend default properties
+  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //         editable: true,
+  //         droppable: true,
+  //         traits: [
+  //           {
+  //             label: 'Data list field',
+  //             name: ':items',
+  //             type: 'text'
+  //           }
+  //         ]
+  //       }),
+
+  //     }, {
+  //         isComponent: function (el) {
+  //           if (el.tagName == 'DATAFIELDLIST') {
+  //             return {
+  //               type: 'DataFieldList'
+  //             };
+  //           }
+  //         },
+  //       }),
+
+  //     view: defaultType.view,
+
+  //     // The render() should return 'this'
+  //     render: function () {
+  //       // Extend the original render method
+  //       defaultType.view.prototype.render.apply(this, arguments);
+  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+  //       return this;
+  //     },
+  //   });
+
+
+
+
+
+
+
+
+
 
 
 // Reuse Component
@@ -1704,7 +1867,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let foldername = folderUrl.split('/');
   foldername = foldername[(foldername.length - 1)];
 
-  let configFileUrl = 'http://localhost:3032/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
+  let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
 
   $.getJSON(configFileUrl, function(data) {
     var configData = data.data[0].configData;
@@ -1724,13 +1887,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       var request = new XMLHttpRequest();
-      request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
+      request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
       request.setRequestHeader("Content-type", "application/json");
       request.send();
       resp = JSON.parse(request.responseText);
 
       for (let index = 0; index < resp.length; index++) {
-        request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
+        request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
         request.setRequestHeader("Content-type", "application/json");
         request.send();
         resp2 = JSON.parse(request.responseText);
@@ -1855,7 +2018,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let projectName = folderUrlVue.split('/');
   projectName = projectName[(projectName.length - 1)];
 
-  let configFileUrl2 = 'http://api.flowz.com/serverapi/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
+  let configFileUrl2 = baseURL + '/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
   $.getJSON(configFileUrl2, function(data) {
     var configData = data.data[0].configData;;
     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
@@ -1873,13 +2036,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       var request = new XMLHttpRequest();
-      request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
+      request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
       request.setRequestHeader("Content-type", "application/json");
       request.send();
       resp = JSON.parse(request.responseText);
 
       for (let index = 0; index < resp.length; index++) {
-        request.open("POST", 'http://localhost:3032/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
+        request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
         request.setRequestHeader("Content-type", "application/json");
         request.send();
         resp2 = JSON.parse(request.responseText);
@@ -1991,6 +2154,105 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     },
   });
 
+comps.addType('ShoppingCart', {
+    model: defaultModel.extend({
+
+            init() {
+            this.listenTo(this, 'changeaypal', this.paypalcheck);
+            this.listenTo(this, 'change:Stripe', this.stripecheck);
+            this.listenTo(this, 'change:AuthorizeDotNet', this.authcheck);
+        },
+
+        paypalcheck() {
+            console.log("paypal change event function called")
+
+            console.log("this.get('traits').where({name:'x_api_token_paypal'})",this.get('traits').where({name:'x_api_token_paypal'})[0].get('value'))
+            console.log("this.get('traits').where({name:'x_api_login_paypal'})",this.get('traits').where({name:'x_api_login_paypal'})[0].get('value'))
+
+                        //    this.get('traits').each(function(trait) {
+                        //            console.log("trait",trait.get('name'));
+                        //            if (trait.get('name') == 'Paypal') {
+                        //                    console.log("Inside if paypal")
+                        //                    // this.get('traits').where({name:'x_api_token_paypal'}).style = "display:none"
+                        //            }
+                //     console.log("trait value",trait.get('value'));
+                // });
+        },
+
+        stripecheck() {
+            console.log("stripe change event function called")
+
+            console.log("this.get('traits').where({name:'x_api_token_stripe'})",this.get('traits').where({name:'x_api_token_stripe'})[0].get('value'))
+        },
+
+        authcheck() {
+            console.log("auth change event function called")
+
+            console.log("this.get('traits').where({name:'x_api_token_authdotnet'})",this.get('traits').where({name:'x_api_token_authdotnet'})[0].get('value'))
+            console.log("this.get('traits').where({name:'x_api_login_authdotnet'})",this.get('traits').where({name:'x_api_login_authdotnet'})[0].get('value'))
+        },
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+           {
+            type: 'checkbox',        
+            label: 'Paypal',
+            name: 'Paypal',
+          },
+          {
+            label: 'Token',
+            name: 'x_api_token_paypal',
+          },
+          {
+            label: 'Login',
+            name: 'x_api_login_paypal',
+          },
+          {
+            type: 'checkbox',        
+            label: 'Stripe',
+            name: 'Stripe',
+          },
+          {
+            label: 'Token',
+            name: 'x_api_token_stripe',
+          },
+          {
+            label: 'Authorize DotNet',
+            name: 'AuthorizeDotNet',
+            type: 'checkbox',        
+          },
+          {
+            label: 'Token',
+            name: 'x_api_token_authdotnet',
+          },
+          {
+            label: 'Login',
+            name: 'x_api_login_authdotnet',
+          }
+        ],
+      }),
+
+    },
+    {
+      isComponent: function(el) {
+        if(el.tagName == 'SHOPPINGCART'){
+          return {type: 'ShoppingCart'};
+        }
+      },
+    }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
 
 
 })
