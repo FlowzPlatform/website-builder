@@ -785,6 +785,12 @@
 
           let url = data.path;
           let compId = this.componentId;
+
+          //   remove this
+          this.tabIndex = 0
+          this.editableTabs = []
+          //////////////////
+
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
           console.log('!!!!!!!!!!!!!!!!', tab_file_name)
@@ -851,6 +857,12 @@
 
           let url = data.path;
           let compId = this.componentId;
+          
+          //   remove this
+          this.tabIndex = 0
+          this.editableTabs = []
+          //////////////////
+          
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
           console.log('@@@@@@@@@@@@@@@', tab_file_name)
@@ -1205,6 +1217,12 @@
         }
 
         let compId = this.componentId;
+
+        //   remove this
+        this.tabIndex = 0
+        this.editableTabs = []
+        //////////////////
+
         let newTabName = ++this.tabIndex + '';
         let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
