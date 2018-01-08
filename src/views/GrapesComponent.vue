@@ -150,7 +150,7 @@ export default {
 
         variableCss += '}'
 
-        let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
+        let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/brand-logo.png');
         this.imageBlob = imageData.data;
 
         var blkStyle = '.blk-row::after{ content: ""; clear: both; display: block;} .blk-row{padding: 10px;}';
@@ -466,7 +466,7 @@ export default {
                             console.log('Image is URL link.');
                             $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', _varValue);
                         } else {
-                            let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue, {
+                            let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + _varValue, {
                             })
                             .then((res) => {
                                 // If image is present in assets folder

@@ -106,7 +106,7 @@ import domenu from 'domenu'
 			var folderUrl = configFileUrl.replace(fileName, '');
 
 			try {
-			    let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + actualFileNameOnly + '.json');
+			    let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json');
 				// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
 					window.localStorage.setItem('domenu-1Json', responseConfig.data);

@@ -715,6 +715,7 @@
               for (let i = 0; i < response.data.children.length; i++) {
                 response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
                   return !(child.name == 'public' || child.name == '.git')
+                  // return !(child.name == '.git')
                 })
               }
             },1000);
@@ -784,6 +785,12 @@
 
           let url = data.path;
           let compId = this.componentId;
+
+          //   remove this
+          this.tabIndex = 0
+          this.editableTabs = []
+          //////////////////
+
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
           console.log('!!!!!!!!!!!!!!!!', tab_file_name)
@@ -850,6 +857,12 @@
 
           let url = data.path;
           let compId = this.componentId;
+          
+          //   remove this
+          this.tabIndex = 0
+          this.editableTabs = []
+          //////////////////
+          
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
           console.log('@@@@@@@@@@@@@@@', tab_file_name)
@@ -986,6 +999,7 @@
         }
       },
 
+      // If Tabs is clicked
       tabClicked : async function(targetName, action) {
         if(this.componentId == 'GrapesComponent'){
           if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
@@ -1024,6 +1038,8 @@
               newContent = this.$store.state.content;
         }
       },
+
+      // Closing a tab
       handleTabsEdit: async function(targetName, action) {
         let activeName;
         let tabs;
@@ -1201,6 +1217,12 @@
         }
 
         let compId = this.componentId;
+
+        //   remove this
+        this.tabIndex = 0
+        this.editableTabs = []
+        //////////////////
+
         let newTabName = ++this.tabIndex + '';
         let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
@@ -1792,24 +1814,49 @@
       // Create neccessary folders for project
       async addOtherFolder(newFolderName){
 
-        // Create Assets folder
+        // Create Public folder
         axios.post(config.baseURL+'/flows-dir-listing' , {
-          foldername : newFolderName+'/assets',
+          foldername : newFolderName+'/public',
           type : 'folder'
         })
         .then((res) => {
-          console.log('Assets Folder created!'); 
+          console.log('Public Folder created!');
+
           // Create Assets folder
           axios.post(config.baseURL+'/flows-dir-listing' , {
-            foldername : newFolderName+'/assets/client-plugins',
+            foldername : newFolderName+'/public/assets',
             type : 'folder'
           })
           .then((res) => {
-             console.log('Client-Plugins Folder created!');  
+            console.log('Assets Folder created!'); 
+            // Create Assets folder
+            axios.post(config.baseURL+'/flows-dir-listing' , {
+              foldername : newFolderName+'/public/assets/client-plugins',
+              type : 'folder'
+            })
+            .then((res) => {
+               console.log('Client-Plugins Folder created!');  
+            })
+            .catch((e)=>{
+              console.log("Error from Client-Plugins"+res)
+            }); 
           })
           .catch((e)=>{
-            console.log("Error from Client-Plugins"+res)
-          }); 
+            console.log("Error from Assests"+res)
+          });
+
+          // Create Main-Files Folder
+          axios.post(config.baseURL+'/flows-dir-listing' , {
+            foldername : newFolderName+'/public/main-files',
+            type : 'folder'
+          })
+          .then((res) => {
+            console.log('main-files Folder created!');
+          })
+          .catch((e)=>{
+            console.log("Error from pages"+res)
+          });
+
         })
         .catch((e)=>{
           console.log("Error from Assests"+res)
@@ -1909,18 +1956,6 @@
         })
         .then((res) => {
           console.log('Pages Folder created!');
-        })
-        .catch((e)=>{
-          console.log("Error from pages"+res)
-        });
-
-        // Create Main-Files Folder
-        axios.post(config.baseURL+'/flows-dir-listing' , {
-          foldername : newFolderName+'/main-files',
-          type : 'folder'
-        })
-        .then((res) => {
-          console.log('main-files Folder created!');
         })
         .catch((e)=>{
           console.log("Error from pages"+res)
@@ -2086,11 +2121,6 @@
           pluginsData: pluginSettingsData
         })
         .then((res) => {
-          this.$message({
-            showClose: true,
-            message: 'Successfully Saved in database.',
-            type: 'success'
-          });
           console.log(res.data);
         })
         .catch((e) => {
@@ -2104,7 +2134,7 @@
         })
 
         // Create project-details.json file
-        let projectDetails = newFolderName + '/assets/project-details.json';
+        let projectDetails = newFolderName + '/public/assets/project-details.json';
         let projectDetailsData = [{
                                   "projectOwner" : this.$session.get('email'),
                                   "projectName" : this.repoName
@@ -2121,7 +2151,7 @@
         });
 
         // Create main.css file
-        let maincss = newFolderName + '/main-files/main.css'
+        let maincss = newFolderName + '/public/main-files/main.css'
         axios.post(config.baseURL + '/flows-dir-listing', {
             filename : maincss,
             text : '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}',
@@ -2135,7 +2165,7 @@
         });
 
         // Create main.js file
-        let mainjs = newFolderName + '/main-files/main.js'
+        let mainjs = newFolderName + '/public/main-files/main.js'
         axios.post(config.baseURL + '/flows-dir-listing', {
             filename : mainjs,
             text : '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */',
@@ -2149,7 +2179,7 @@
         });
 
         // Create default.json for menu file
-        let defaultMenuJson = newFolderName + '/assets/default.json'
+        let defaultMenuJson = newFolderName + '/public/assets/default.json'
         axios.post(config.baseURL + '/flows-dir-listing', {
             filename : defaultMenuJson,
             text : '[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]',
@@ -2163,7 +2193,7 @@
         });
 
         // Brand Logo
-        let brandLogo = newFolderName + '/assets/brand-logo.png';
+        let brandLogo = newFolderName + '/public/assets/brand-logo.png';
         
         axios.post(config.baseURL + '/flows-dir-listing', {
           filename : brandLogo,
@@ -2203,14 +2233,14 @@
         });
 
         // Create metalsmith file
-        let mainMetal = newFolderName + '/assets/metalsmith.js';
+        let mainMetal = newFolderName + '/public/assets/metalsmith.js';
 
         let projectName = newFolderName.split('/');
         projectName = projectName[(projectName.length-1)];
 
         // let projectUrl = config.ipAddress + '/websites/' + projectName;
 
-        var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(true)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+        var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
          axios.post(config.baseURL + '/flows-dir-listing', {
             filename : mainMetal,
@@ -2227,7 +2257,7 @@
 
 
         //create backup_mainVue file
-        var back_main_path= newFolderName + '/assets/back_main.js'
+        var back_main_path= newFolderName + '/public/assets/back_main.js'
         var back_main="import vue from 'vue'\n import ElementUI from 'element-ui'\n import element from 'element-ui/src/locale/lang/en'\n import 'element-ui/lib/theme-chalk/index.css'\n vue.use(ElementUI, { element })\n import @@vuecomponent@@ from './@@vuecomponent@@.vue'\nvue.component('@@vuecomponent@@', @@vuecomponent@@)\n new vue({ el: '#@@vuecomponent@@',\n render: h => h(@@vuecomponent@@)\n })"
 
         axios.post(config.baseURL + '/flows-dir-listing', {
@@ -2376,7 +2406,7 @@
         // });
 
         // Flowz Engine JS
-        let flowzBuilderEngine = newFolderName + '/assets/client-plugins/flowz-builder-engine.js';
+        let flowzBuilderEngine = newFolderName + '/public/assets/client-plugins/flowz-builder-engine.js';
         axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/flowz-builder-engine.js', {
             
         })
@@ -2398,8 +2428,31 @@
             console.log(e)
         });
 
+        // Slider Plugin
+        let sliderPluginFileName = newFolderName + '/public/assets/client-plugins/slider-plugin.js';
+        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-slider-plugin.js', {
+            
+        })
+        .then((res) => {
+          let sliderData = res.data;
+          axios.post(config.baseURL + '/flows-dir-listing', {
+              filename : sliderPluginFileName,
+              text : sliderData,
+              type : 'file'
+          })
+          .then((res) => {
+            console.log(sliderPluginFileName + ' file created');    
+          })
+          .catch((e) => {
+              console.log(e)
+          })
+        })
+        .catch((e) => {
+            console.log(e)
+        });
+
         // Shopping cart js
-        let shoppingCartJs = newFolderName + '/assets/client-plugins/shopping-cart.js';
+        let shoppingCartJs = newFolderName + '/public/assets/client-plugins/shopping-cart.js';
         axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/shop_cart.js', {
             
         })
@@ -2422,7 +2475,7 @@
         });
 
         // Client Global variables Plugin
-        let globalVariablesPlugin = newFolderName + '/assets/client-plugins/global-variables-plugin.js';
+        let globalVariablesPlugin = newFolderName + '/public/assets/client-plugins/global-variables-plugin.js';
         axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/global-variables-plugin.js', {
             
         })
@@ -3653,7 +3706,7 @@
           var contentpartials = self.$store.state.content;
           if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
             console.log("VueComponents found:")
-            var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+            var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
             mainVuefile = mainVuefile.data
 
             for (let x = 0; x < self.form.vuepartials.length; x++) {
@@ -3665,9 +3718,9 @@
                   text: temp,
                   type: 'file'
                 }).then(async (res) => {
-                  contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+                  contentpartials = contentpartials + '<script src="./assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
-                  axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
+                  axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
                     .then((response) => {
                       console.log("called webpack_file api successfully:")
                     })
@@ -3828,7 +3881,7 @@
               console.log(e)
             })
 
-          let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
+          let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmith.js');
 
           var index = responseMetal.data.search('.source')
 
@@ -3868,7 +3921,7 @@
           responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
           self.form.partials = back_partials
           console.log("final metalsmith:", responseMetal.data)
-          var mainMetal = folderUrl + '/assets/metalsmith.js'
+          var mainMetal = folderUrl + '/public/assets/metalsmith.js'
           axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
               text: responseMetal.data,
@@ -3888,14 +3941,13 @@
 
               let vueBodyStart = '';
               let vueBodyEnd = ''
-              console.log('nameF :: --',nameF+'**'+$.trim(nameF));
               if($.trim(nameF) != 'search')
               {
                 vueBodyStart = '<div id=\"app\">' + "\n";
                 vueBodyEnd = '</div>\n';
               }
-              console.log('---' + vueBodyStart + '======' + vueBodyEnd);
 
+<<<<<<< HEAD
 	       let newContent = "<html>\n<head>\n" + tophead +
                "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                "<title>" + pageSeoTitle + "</title>\n" +
@@ -3932,8 +3984,42 @@
                // '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
          endbody +
                '\n</body>\n</html>';
+=======
+              let newContent = "<html>\n<head>\n" + tophead +
+                "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+                "<title>" + pageSeoTitle + "</title>\n" +
+                "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
+                "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+                '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+                "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
+                "<link rel='stylesheet' href='./main-files/main.css'/>\n<script src=\"./main-files/main.js\"><\/script>\n" + endhead + "\n</head>\n<body>\n" + vueBodyStart +
+                layoutdata.data + topbody +
+                '\n'+vueBodyEnd+'<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                '<script src="./assets/client-plugins/slider-plugin.js"><\/script>\n' +
+                '<script src="./assets/client-plugins/shopping-cart.js"><\/script>\n' +
+                '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>\n' +
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/y-memory@8.0.9/dist/y-memory.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/y-webrtc@8.0.7/dist/y-webrtc.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+                '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
+                endbody +
+                '\n</body>\n</html>';
+>>>>>>> c91f6f99a92bd36bfa75d01a009de67f7b3d6cea
 
-              axios.post(config.baseURL + '/flows-dir-listing', {
+                axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: folderUrl + '/Layout/' + self.form.Layout + '_temp.layout',
                   text: newContent,
                   type: 'file'
@@ -3960,10 +4046,10 @@
 
                       self.saveFileLoading = false;
                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
-                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
+                          var metalsmithJSON = "gaurav var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                          console.log('Metalsmith js: ', folderUrl + '/public/assets/metalsmith.js');
                           axios.post(config.baseURL + '/flows-dir-listing', {
-                              filename: mainMetal,
+                              filename: folderUrl + '/public/assets/metalsmith.js',
                               text: metalsmithJSON,
                               type: 'file'
                             })
@@ -4151,13 +4237,13 @@
             let fileNameOrginal = urlparts[urlparts.length - 1];
             let fileNameParts = fileNameOrginal.split('.');
             let actualFileNameOnly = fileNameParts[0];
-            newJsonName = folderUrl + '/assets/'+actualFileNameOnly+'.json';
+            newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
           } else {
             let urlparts = configFileUrl.split("/");
             let fileNameOrginal = urlparts[urlparts.length - 1];
             let fileNameParts = fileNameOrginal.split('.');
             let actualFileNameOnly = fileNameParts[0];
-            newJsonName = folderUrl + '/assets/'+actualFileNameOnly+'.json';
+            newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
           }
           return axios.post(config.baseURL + '/flows-dir-listing', {
               filename : newJsonName ,
@@ -4205,7 +4291,7 @@
         // let projectName = folderUrl.split('/');
         // projectName = projectName[(projectName.length-1)];
         
-        let projectName = urlparts[5];
+        let projectName = urlparts[6];
         console.log('Project Name: ', projectName);
         
         // this.getConfigFileData(folderUrl);
@@ -4346,7 +4432,7 @@
    
         let folderUrl = configFileUrl.replace(fileName, '');
 
-        let projectName = urlparts[5];
+        let projectName = urlparts[6];
         // this.getConfigFileData(folderUrl);
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
 
