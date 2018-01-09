@@ -604,11 +604,6 @@ export default {
               configData: this.settings
             })
             .then(async(res) => {
-              this.$message({
-                showClose: true,
-                message: 'Successfully updated.',
-                type: 'success'
-              });
               console.log(res.data);
             })
             .catch((e) => {
@@ -649,11 +644,6 @@ export default {
               configData: this.settings
             })
             .then(async(res) => {
-              this.$message({
-                showClose: true,
-                message: 'Successfully updated.',
-                type: 'success'
-              });
               console.log(res.data);
             })
             .catch((e) => {

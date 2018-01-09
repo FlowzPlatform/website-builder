@@ -94,8 +94,6 @@ export default {
     },
     checkDashboard(){
 
-      console.log('Checkign called')
-
       let routerName =  this.$route.path;
 
       if(routerName == '/user-dashboard' || this.$session.get('username') != undefined){

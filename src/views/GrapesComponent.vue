@@ -1,6 +1,6 @@
 <template id="GrapesComponent">
   <div class="GrapesComponent">
-    <div id="gjs" style="width: 100%; height: 89vh !important;"></div>
+    <div id="gjs" style="width: 100%; height: 88.8vh !important; margin-bottom: 45px"></div>
   </div>
 </template>
 
