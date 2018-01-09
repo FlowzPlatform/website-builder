@@ -5,7 +5,6 @@ if(process.env.baseURL == undefined){
 } else {
     url = process.env.baseURL;
     // url = 'http://devapi.flowz.com/serverapi';
-    console.log('Custom BaseURL set: ', url);
 }
 
 // If Production Environment
@@ -41,8 +40,6 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithGithubUrl = 'http://devauth.flowz.com/auth/github';
     loginWithLinkedInUrl = 'http://devauth.flowz.com/auth/linkedin';
 }
-
-console.log('frontEndUrl: ', frontEndUrl);
 
 module.exports = {
     loginUrl: loginUrl,

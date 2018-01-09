@@ -9,7 +9,6 @@
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
       </el-tooltip>
-
     </div>
 
     <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
@@ -300,6 +299,69 @@
       </div>
       <!-- Global Variables section ends -->
 
+      <!-- URL Bucket Section -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleUrlBucket" class="card color-div toggleableDivHeader">URL Bucket</a>
+          </div>
+      </div>
+      <div id="toggleUrlBucketContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12">
+            <el-form ref="form" :model="form">
+              <div v-for="(n, index) in urlVariables">
+                <el-form-item>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <el-input placeholder="URL ID" v-model="n.urlId"></el-input>
+                    </div>
+                    <div class="col-md-6">
+                      <el-input placeholder="URL Value" v-model="n.urlValue"></el-input>
+                    </div>
+
+                    <!-- Delete Variable -->
+                    <div class="col-md-1">
+                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>      
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+
+              <!-- Create new url variable -->
+              <el-button type="primary" @click="addNewUrl">New URL</el-button>
+            </el-form>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-12">
+            <el-form ref="form" :model="form">
+              <div v-for="(n, index) in urlHeaderVariables">
+                <el-form-item>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <el-input placeholder="Header Name" v-model="n.headerName"></el-input>
+                    </div>
+                    <div class="col-md-6">
+                      <el-input placeholder="Header Value" v-model="n.headerValue"></el-input>
+                    </div>
+
+                    <!-- Delete Variable -->
+                    <div class="col-md-1">
+                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index)" icon="delete"></el-button>      
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+
+              <!-- Create new header variable -->
+              <el-button type="primary" @click="addNewHeader">New Header</el-button>
+            </el-form>
+          </div>
+        </div>
+      </div>
+      <!-- URL Bucket section ends -->
+
       <!-- External Links Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -508,6 +570,7 @@
             </div>
         </div>
       </div> 
+
       <!-- Local script-->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -601,7 +664,7 @@
                   label="Revert To Commit"
                   width="180">
                   <template scope="scope">
-                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Revert Commit</el-button>
+                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -696,6 +759,8 @@ export default {
       }],
 
       globalVariables: [],
+      urlVariables: [],
+      urlHeaderVariables: [],
       globalCssVariables: [],
       ecommerceVariables: [],
       imageInputIsDisabled: false,
@@ -747,7 +812,8 @@ export default {
         // extract(source, {dir: target}, function (err) {
         //  // extraction is complete. make sure to handle the err
         // })
-      },
+    },
+
     async globalImageUploading(currentImageVariableIndex, file) {
       
       this.imageInputIsDisabled = true;
@@ -787,6 +853,16 @@ export default {
       let newVariable = { variableId: '', variableType: '', variableTitle: '', variableValue: '' , isImageUrl: true};
       this.globalVariables.push(newVariable);
       this.imageInputIsDisabled = false;
+    },
+
+    addNewUrl() {
+      let newVariable = { urlId: '', urlValue: ''};
+      this.urlVariables.push(newVariable);
+    },
+
+    addNewHeader() {
+      let newVariable = { headerName: '', headerValue: ''};
+      this.urlHeaderVariables.push(newVariable);
     },
 
     addNewCssVariable() {
@@ -1031,43 +1107,43 @@ export default {
           });
         }   
 
-      },
-      recursivecall(name, partials, defaultListtemp,configData) {
-          console.log('inside recursivecall')
-        for (let i = 0; i < configData[1].pageSettings.length; i++) {
-          let temp = configData[1].pageSettings[i].PageName
-          temp = temp.split('.')[0]
-          if (name == temp) {
-            for (let y = 0; y < defaultListtemp.length; y++) {
-              let checkinner = false
-              for (let x = 0; x < partials.length; x++) {
-                if (Object.keys(partials[x])[0] == Object.keys(defaultListtemp[y])[0]) {
-                  if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]]) {
-                    checkinner = true
-                    break;
-                  }
+    },
+    recursivecall(name, partials, defaultListtemp,configData) {
+      console.log('inside recursivecall')
+      for (let i = 0; i < configData[1].pageSettings.length; i++) {
+        let temp = configData[1].pageSettings[i].PageName
+        temp = temp.split('.')[0]
+        if (name == temp) {
+          for (let y = 0; y < defaultListtemp.length; y++) {
+            let checkinner = false
+            for (let x = 0; x < partials.length; x++) {
+              if (Object.keys(partials[x])[0] == Object.keys(defaultListtemp[y])[0]) {
+                if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]]) {
+                  checkinner = true
+                  break;
                 }
-                var partemp = defaultListtemp[y]
-                if (configData[2].layoutOptions[0][Object.keys(partemp)[0]] != undefined) {
-                  for (let k = 0; k < configData[2].layoutOptions[0][Object.keys(partemp)[0]].length; k++) {
-                    if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].value == partemp[Object.keys(partemp)[0]]) {
-                      if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList != undefined) {
-                        recursivecall(name, partials, configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList,configData)
-                      }
+              }
+              var partemp = defaultListtemp[y]
+              if (configData[2].layoutOptions[0][Object.keys(partemp)[0]] != undefined) {
+                for (let k = 0; k < configData[2].layoutOptions[0][Object.keys(partemp)[0]].length; k++) {
+                  if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].value == partemp[Object.keys(partemp)[0]]) {
+                    if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList != undefined) {
+                      recursivecall(name, partials, configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList,configData)
                     }
                   }
                 }
               }
-              if (checkinner != true) {
-                defaultListtemp[y][Object.keys(defaultListtemp[y])[0]] = defaultListtemp[y][Object.keys(defaultListtemp[y])[0]].split('.')[0]
+            }
+            if (checkinner != true) {
+              defaultListtemp[y][Object.keys(defaultListtemp[y])[0]] = defaultListtemp[y][Object.keys(defaultListtemp[y])[0]].split('.')[0]
 
-                configData[1].pageSettings[i].partials.push(defaultListtemp[y]);
+              configData[1].pageSettings[i].partials.push(defaultListtemp[y]);
 
-              }
             }
           }
         }
-      },
+      }
+    },
 
     async refreshPlugins() {
       this.refreshPluginsLoading = true;
@@ -1569,6 +1645,14 @@ export default {
       this.globalVariables.splice(deleteIndex, 1);
     },
 
+    deleteUrlVariable(deleteIndex) {
+      this.urlVariables.splice(deleteIndex, 1);
+    },
+
+    deleteUrlHeaderVariable(deleteIndex) {
+      this.urlHeaderVariables.splice(deleteIndex, 1);
+    },
+
     deleteCssVariable(deleteIndex) {
       this.globalCssVariables.splice(deleteIndex, 1);
     },
@@ -1658,6 +1742,8 @@ export default {
                               "ProjectSEODescription": this.form.seoDesc
                             }, {
                               "GlobalVariables": this.globalVariables,
+                              "GlobalUrlVariables": this.urlVariables,
+                              "GlobalUrlHeaderVariables": this.urlHeaderVariables,
                               "GlobalCssVariables": this.globalCssVariables,
                               "EcommerceSettings": this.ecommerceSettings,
                               "ProjectExternalCss": this.externallinksCSS,
@@ -1747,6 +1833,14 @@ export default {
 
     async publishMetalsmith() {
       this.fullscreenLoading = true;
+
+      var dt = new Date();
+      var utcDate = dt.toUTCString();
+
+      this.commitMessage = 'Publish - ' + utcDate;
+
+      await this.commitProject();
+
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
       var rawConfigs = responseConfig.data.data[0].configData;
@@ -2433,7 +2527,7 @@ export default {
 
       let websiteName = splitUrl[(splitUrl.length -1)];
 
-
+      console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
@@ -2450,6 +2544,8 @@ export default {
         this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
         this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
+        this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
+        this.urlHeaderVariables = this.settings[1].projectSettings[1].GlobalUrlHeaderVariables;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
         this.externallinksCSS = this.settings[1].projectSettings[1].ProjectExternalCss;
@@ -2569,6 +2665,15 @@ export default {
                 $("#toggleImportPlugin").html("Import Plugin")
             } else {
                 $("#toggleImportPlugin").text("Import Plugin")
+            }
+        });
+
+        $("#toggleUrlBucket").click(function() {
+            $("#toggleUrlBucketContent").slideToggle("slow");
+            if ($("#toggleUrlBucket").text() == "URL Bucket") {
+                $("#toggleUrlBucket").html("URL Bucket")
+            } else {
+                $("#toggleUrlBucket").text("URL Bucket")
             }
         });
 

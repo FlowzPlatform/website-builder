@@ -2,8 +2,27 @@
 	<div class="root">
 		<section class="container" style="margin-top: 2%;">
 		  <h3 id="user-menu">Customize Menu:</h3>
+
+		  	<div class="well">
+		  		<div class="row">
+		  			<div class="col-md-12">
+                	<div class="row">
+                		<div class="col-md-5">
+                			<input type="text" class="form-control" placeholder="Enter API URL" name="apiUrl" v-model="apiUrl">		
+                		</div>
+                		<div class="col-md-5">
+                			<input type="text" class="form-control" placeholder="Enter Base URL" name="apiUrl" v-model="menuBaseUrl">		
+                		</div>
+                		<div class="col-md-2">
+                			<button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button>
+                		</div>
+                	</div>
+                	
+		  			</div>
+		  		</div>
+		  	</div>
 		  	
-		  	<div class="row">
+		  	<div class="row" style="margin-bottom: 70px;">
 		  		<div class="col-md-12">
 		  			<div class="dd" id="domenu-1">
 					    <button id="domenu-add-item-btn" class="dd-new-item">+</button>
@@ -91,8 +110,10 @@ import domenu from 'domenu'
 	export default {
 		name: 'menuBuilder',
 		data: () => ({
-	        outputJson: [],
-	        MenuJSON: []
+        outputJson: [],
+        MenuJSON: [],
+        apiUrl: '',
+        menuBaseUrl: ''
 	    }),
 	    components: {
 	    },
@@ -117,9 +138,12 @@ import domenu from 'domenu'
 			    // window.localStorage.clear();
 			}
 
-			
+			this.initMenu();
+		},
 
-			// this.MenuJSON = responseConfig.data;
+		methods: {
+			initMenu(){
+				// this.MenuJSON = responseConfig.data;
 
 			let montedself = this;
 			$(document).ready(function() {
@@ -240,11 +264,54 @@ import domenu from 'domenu'
 
 		    if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
 		  });
-		},
-
-		methods: {
+			},
 			getMenuJson: function () {
 				this.$store.state.content = $('.jsonOutput').val();
+			},
+
+			updateMenuData () {
+
+				window.localStorage.removeItem('domenu-1Json');
+
+				console.log('data: ', window.localStorage.removeItem('domenu-1Json'))
+
+				axios.get(this.apiUrl, {
+			    headers: {
+			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OTkxNDA1NTZjNzFkMTAwMWMwMjA3MjkiLCJpYXQiOjE1MTU0ODAyMjksImV4cCI6MTUxNTQ4Mzg1OSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.VAHYQZzbvvPlNjtaoB4h4WCFBKa8VzXzAIT4CMn95Og'
+			    }
+				})
+				.then((res) => {
+					let menuJson = [];
+			    let categories = res.data.aggregations.group_by_category.buckets;
+
+			    for(let i = 0; i < categories.length; i++){
+			    	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
+			    	let menuItem = {
+														    "id": i,
+														    "title": categories[i].key,
+														    "customSelect": this.menuBaseUrl + urlName,
+														    "__domenu_params": {}
+														    ,
+														    "select2ScrollPosition": {
+														        "x": 0, "y": 0
+														    }
+														};
+
+						menuJson.push(menuItem);								
+			    }
+
+			    window.localStorage.setItem('domenu-1Json', JSON.stringify(menuJson));
+
+			    this.initMenu();
+				})
+				.catch((e) => {
+				    this.$message({
+				        showClose: true,
+				        message: 'Failed! Please try again.',
+				        type: 'error'
+				    });
+				    console.log(e)
+				})
 			}
 		}
 	}

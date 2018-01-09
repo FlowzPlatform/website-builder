@@ -212,10 +212,20 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   });
 
   // Dynamic navigation menu from JSON created from menu builder
+  // bm.add('navimenu', {
+  //   label: 'Navbar Menu',
+  //   content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">' +
+  //     '<navimenu style="padding: 10px; display: block; min-height: 75px;"><div class="navbar navbar-default" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> </div><div class="collapse navbar-collapse" id="navigationDiv"><ul class="nav navbar-nav"><li class="active"><a href="#" target="_blank">Home</a></li></ul></li></ul></div></div></div></navimenu>',
+  //   attributes: {
+  //     class: 'fa fa-bars',
+  //     title: 'Navigation Menu'
+  //   },
+  //   category: 'Ecommerce Blocks'
+  // });
+
   bm.add('navimenu', {
     label: 'Navbar Menu',
-    content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">' +
-      '<navimenu style="padding: 10px; display: block; min-height: 75px;"><div class="navbar navbar-default" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> </div><div class="collapse navbar-collapse" id="navigationDiv"><ul class="nav navbar-nav"><li class="active"><a href="#" target="_blank">Home</a></li></ul></li></ul></div></div></div></navimenu>',
+    content:'<navimenu style="padding: 10px; display: block; min-height: 75px;"><nav class="navbar navbar-expand-sm bg-dark navbar-dark"><div class="container"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navigationDiv"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"> Dropdown link </a> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Link 1</a> <a class="dropdown-item" href="#">Link 2</a> <a class="dropdown-item" href="#">Link 3</a> </div></li></ul> </div></div></nav></navimenu>',
     attributes: {
       class: 'fa fa-bars',
       title: 'Navigation Menu'
@@ -2006,6 +2016,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   // Reuse Component
   var folderUrl = localStorage.getItem("folderUrl");
   var useremail = localStorage.getItem("email");
+  var userDetailId = localStorage.getItem("userDetailId");
   let storedTemplates;
   let configData;
   let storedTemplates_data
@@ -2016,10 +2027,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   $.getJSON(configFileUrl, function(data) {
     configData = data.data[0].configData;
-    console.log('ReUseVue co2nfigData:', configData);
     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
   });
 
+  
 
   var partialOptions = {};
 
@@ -2062,7 +2073,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         }
       });
     }
-  }, 1000);
+  }, 2000);
 
 
   editor.TraitManager.addType('customConent1', {
