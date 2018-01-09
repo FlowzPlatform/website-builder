@@ -6,7 +6,7 @@
 
         <!-- Overlay when sidebar is opened. Currently disabled in CSS -->
         <div class="overlay"></div>
-    
+
         <!-- Sidebar Wrapper -->
         <nav id="sidebar-wrapper" role="navigation">
           <div class="treeViewBlock" style="transform: scaleX(-1);">
@@ -46,7 +46,7 @@
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
                         <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter Filename"></el-input>
-                      </el-form-item> 
+                      </el-form-item>
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button @click="newFileDialog = false">Cancel</el-button>
@@ -181,7 +181,7 @@
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
                         <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter Filename"></el-input>
                       </el-form-item>
-                       
+
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button @click="newFileDialog = false">Cancel</el-button>
@@ -323,7 +323,7 @@
             <div v-if="!previewGrid && display == true" style="margin-left: 10px;">
               <component :is="componentId" ref="contentComponent"></component>
             </div>
-            
+
           </div>
         </div>
         <!-- /#page-content-wrapper -->
@@ -377,7 +377,7 @@
   import GrapesComponent from './GrapesComponent'
 
   // JSON Viewver
-  import JsonViewer from './JsonViewer'   
+  import JsonViewer from './JsonViewer'
 
   // Menu Builder
   import MenuBuilder from './MenuBuilder'
@@ -601,7 +601,7 @@
       // } else {
       //   socket = config.socketURL
       // }
-      
+
       const app = feathers().configure(socketio(io(socket)))
       app.service("flows-dir-listing").on("created", (response) => {
         console.log('Created Function called');
@@ -693,7 +693,7 @@
         this.componentId = 'GrapesComponent';
         this.isPageCodeEditor = false;
       },
-      
+
       // If clicked the root folder
       goToHomePage () {
         this.display = true
@@ -759,7 +759,7 @@
         return  _.sortBy(data.children, [function(o) { return o.type; }]);
       },
 
-      // Selecting any node in Listing tree 
+      // Selecting any node in Listing tree
       handleNodeClick(data) {
         // Store file/folder path
         this.taburl = this.$store.state.fileUrl;
@@ -785,8 +785,8 @@
           let compId = this.componentId;
 
           //   remove this
-          this.tabIndex = 0
-          this.editableTabs = []
+          // this.tabIndex = 0
+          // this.editableTabs = []
           //////////////////
 
           let newTabName = ++this.tabIndex + '';
@@ -833,7 +833,7 @@
 
           this.editableTabsValue = newTabName;
         }
-        // If ProjectSettings is clicked 
+        // If ProjectSettings is clicked
         else if(this.isProjectEditing) {
 
           if(this.$store.state.tabChange != null) {
@@ -855,12 +855,12 @@
 
           let url = data.path;
           let compId = this.componentId;
-          
+
           //   remove this
-          this.tabIndex = 0
-          this.editableTabs = []
+          // this.tabIndex = 0
+          // this.editableTabs = []
           //////////////////
-          
+
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
           console.log('@@@@@@@@@@@@@@@', tab_file_name)
@@ -901,7 +901,7 @@
           this.editableTabs.reverse();
           this.editableTabsValue = newTabName;
         }
-        // If Clicked in ProjectName 
+        // If Clicked in ProjectName
         else if(this.isProjectStats) {
           this.isProjectEditing = false;
           this.isProjectStats = false;
@@ -911,7 +911,7 @@
           this.display = true;
           localStorage.setItem("folderUrl", data.path);
         }
-        // If Clicked in Partials Folder 
+        // If Clicked in Partials Folder
         else if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))) {
 
           if(this.$store.state.tabChange != null) {
@@ -930,7 +930,7 @@
           this.componentId = 'PartialStats';
           this.display = true;
         }
-        // If Clicked in Layouts Folder 
+        // If Clicked in Layouts Folder
         else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
 
           if(this.$store.state.tabChange != null) {
@@ -949,7 +949,7 @@
           this.componentId = 'LayoutStats';
           this.display = true;
         }
-        // If Clicked in Pages Folder 
+        // If Clicked in Pages Folder
         else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
 
           if(this.$store.state.tabChange != null) {
@@ -1041,29 +1041,56 @@
       handleTabsEdit: async function(targetName, action) {
         let activeName;
         let tabs;
-
         let findingValue =  _.filter(this.editableTabs, {name: targetName});
         this.$store.state.fileUrl =findingValue[0].filepath;
-        // save the content
-        // this.$refs.contentComponent[0].getHtml();
-        let newContent = this.$store.state.content;
+
 
         if (action === 'remove') {
-          this.saveFile('savebutton');
           tabs = this.editableTabs;
           activeName = this.editableTabsValue;
           if (activeName === targetName) {
+            this.saveFile(2);
             tabs.forEach((tab, index) => {
               if (tab.name === targetName) {
                 let nextTab = tabs[index + 1] || tabs[index - 1];
                 if (nextTab) {
                   activeName = nextTab.name;
+                  this.$store.state.fileUrl = nextTab.filepath
+                  console.log('this.$store.state.fileUrl,', this.$store.state.fileUrl)
+                  this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
                 }
               }
             });
+          } else {
+            let componentId = findingValue[0].componentId;
+            this.componentId = findingValue[0].componentId;
+            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+            let newContent
+            switch (this.componentId) {
+              case 'GrapesComponent':
+                await this.$refs.contentComponent[myIndex].getSavedHtml();
+                newContent = this.$store.state.content;
+                break;
+              case 'json-viewer':
+                newContent = JSON.stringify(this.$store.state.content);
+                break;
+              case 'GridManager':
+                await this.$refs.contentComponent[myIndex].getSavedHtml();
+                newContent = this.$store.state.content;
+                break;
+              case 'MenuBuilder':
+                this.saveJsonFile('else');
+                break;
+              default:
+                  newContent = this.$store.state.content;
+            }
+            this.taburl = this.$store.state.fileUrl
+            this.saveFileData(newContent)
           }
+
           this.editableTabsValue = activeName;
           this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+          // this.editableTabs
         }
       },
 
@@ -1132,7 +1159,7 @@
               this.isHomePage = false;
               if (this.isEditOption == true) {
 
-                // For preview button only in HTML file of Pages Folder 
+                // For preview button only in HTML file of Pages Folder
                 var filePath = url;
                 var pathParts = filePath.split('/');
                 var parentFolderName = pathParts[pathParts.length - 2];
@@ -1146,7 +1173,7 @@
                 this.isEditOption = false;
               } else {
                 this.isPageCodeEditor = false;
-                // For preview button only in HTML file of Pages Folder 
+                // For preview button only in HTML file of Pages Folder
                 var filePath = url;
                 var pathParts = filePath.split('/');
                 var parentFolderName = pathParts[pathParts.length - 2];
@@ -1155,7 +1182,7 @@
                 } else {
                   this.isPagesFolder = false;
                 }
-                // 
+                //
 
                 this.componentId = 'GrapesComponent';
                 // this.getConfigFileData();
@@ -1167,7 +1194,7 @@
               this.isHomePage = false;
               if (this.isEditOption == true) {
 
-                // For preview button only in HTML file of Pages Folder 
+                // For preview button only in HTML file of Pages Folder
                 var filePath = url;
                 var pathParts = filePath.split('/');
                 var parentFolderName = pathParts[pathParts.length - 2];
@@ -1181,7 +1208,7 @@
                 this.isEditOption = false;
               } else {
                 this.isPageCodeEditor = false;
-                // For preview button only in HTML file of Pages Folder 
+                // For preview button only in HTML file of Pages Folder
                 var filePath = url;
                 var pathParts = filePath.split('/');
                 var parentFolderName = pathParts[pathParts.length - 2];
@@ -1190,7 +1217,7 @@
                 } else {
                   this.isPagesFolder = false;
                 }
-                // 
+                //
 
                 this.componentId = 'GrapesComponent';
                 // this.getConfigFileData();
@@ -1217,8 +1244,8 @@
         let compId = this.componentId;
 
         //   remove this
-        this.tabIndex = 0
-        this.editableTabs = []
+        // this.tabIndex = 0
+        // this.editableTabs = []
         //////////////////
 
         let newTabName = ++this.tabIndex + '';
@@ -1314,7 +1341,7 @@
               message: 'Data Error.',
               type: 'error'
           });
-        }   
+        }
       },
 
       // Create new Folder
@@ -1380,7 +1407,7 @@
                   }).catch((e)=>{
                     console.log(e)
                   })
-                  
+
                 }
               })
               .catch((e) => {
@@ -1435,7 +1462,7 @@
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
-        
+
         this.$refs[formName].validate((valid) => {
             if (valid) {
               this.addNewFileLoading = true
@@ -1454,7 +1481,7 @@
                     this.newFileDialog = false
                     this.addNewFileLoading = false
                     this.formAddFile.filename = null
-                    
+
                     let temp = {
                         value: name+'.partial',
                         label: name
@@ -1464,7 +1491,7 @@
                     var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
                     namefolder=namefolder[namefolder.length - 1 ];
                     console.log(this.globalConfigData);
-                    
+
                     if(namefolder != 'Pages'){
                       if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
                         for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
@@ -1487,8 +1514,8 @@
                           this.saveConfigFile(folderUrl);
                       }
                     }
-                    
-                    
+
+
                       })
                       .catch((e) => {
                           console.log(e)
@@ -1504,7 +1531,7 @@
                     this.newFileDialog = false
                     this.addNewFileLoading = false
                     this.formAddFile.filename = null
-                    
+
                     let temp = {
                         value: name+'.menu',
                         label: name
@@ -1514,7 +1541,7 @@
                     var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
                     namefolder=namefolder[namefolder.length - 1 ];
                     console.log(this.globalConfigData);
-                    
+
                     if(namefolder != 'Pages'){
                       if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
                         for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
@@ -1537,8 +1564,8 @@
                           this.saveConfigFile(folderUrl);
                       }
                     }
-                    
-                    
+
+
                       })
                       .catch((e) => {
                           console.log(e)
@@ -1552,11 +1579,11 @@
                   })
                   .then( (res) => {
 
-        
+
                     this.newFileDialog = false
                     this.addNewFileLoading = false
                     this.formAddFile.filename = null
-                    
+
                     let temp = {
                         value: name+'.html',
                         label: name
@@ -1566,7 +1593,7 @@
                     var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
                     namefolder=namefolder[namefolder.length - 1 ];
                     console.log(this.globalConfigData);
-                    
+
                     if(namefolder=='Pages'){
                       // console.log('inside pages')
                       var totpartial=[]
@@ -1594,9 +1621,9 @@
                             if(checklayoutvalue!=true){
                               var obj={}
                               obj[this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]]='default'
-                              totpartial.push(obj); 
+                              totpartial.push(obj);
                             }
-                                                            
+
                             }
                           }
                         }
@@ -1617,7 +1644,7 @@
                                           "PageStyles": [],
                                           "partials": totpartial
                                          };
-                                         
+
                       this.globalConfigData[1].pageSettings.push((PageSettings))
                       this.saveConfigFile(folderUrl);
                     }
@@ -1636,7 +1663,7 @@
                     this.newFileDialog = false
                     this.addNewFileLoading = false
                     this.formAddFile.filename = null
-                    
+
                     let temp = {
                         value: name+'.layout',
                         label: name
@@ -1646,7 +1673,7 @@
                     var namefolder= this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
                     namefolder=namefolder[namefolder.length - 1 ];
                     console.log(this.globalConfigData);
-                    
+
                     if(namefolder != 'Pages'){
                       if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
                         for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
@@ -1669,8 +1696,8 @@
                           this.saveConfigFile(folderUrl);
                       }
                     }
-                    
-                    
+
+
                   })
                   .catch((e) => {
                       console.log(e)
@@ -1815,18 +1842,18 @@
             type : 'folder'
           })
           .then((res) => {
-            console.log('Assets Folder created!'); 
+            console.log('Assets Folder created!');
             // Create Assets folder
             axios.post(config.baseURL+'/flows-dir-listing' , {
               foldername : newFolderName+'/public/assets/client-plugins',
               type : 'folder'
             })
             .then((res) => {
-               console.log('Client-Plugins Folder created!');  
+               console.log('Client-Plugins Folder created!');
             })
             .catch((e)=>{
               console.log("Error from Client-Plugins"+res)
-            }); 
+            });
           })
           .catch((e)=>{
             console.log("Error from Assests"+res)
@@ -2186,14 +2213,14 @@
 
         // Brand Logo
         let brandLogo = newFolderName + '/public/assets/brand-logo.png';
-        
+
         axios.post(config.baseURL + '/flows-dir-listing', {
           filename : brandLogo,
           text : '',
           type : 'file'
         })
         .then((res) => {
-          console.log(brandLogo + ' file created');    
+          console.log(brandLogo + ' file created');
         })
         .catch((e) => {
             console.log(e)
@@ -2374,13 +2401,13 @@
         // let listingPlugin = newFolderName + '/assets/client-plugins/client-product-listing-plugin.js';
         // let pluginJsData = '';
         // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/product-listing-plugin-cleaned.js', {
-            
+
         // })
         // .then((response) => {
         //   pluginJsData = response.data;
         //   let ProjectName = newFolderName.replace('/var/www/html/websites/', '')
         //   pluginJsData = pluginJsData.replace('setNameHere', ProjectName);
-          
+
         //   axios.post(config.baseURL + '/flows-dir-listing', {
         //       filename : listingPlugin,
         //       text : pluginJsData,
@@ -2400,7 +2427,7 @@
         // Flowz Engine JS
         let flowzBuilderEngine = newFolderName + '/public/assets/client-plugins/flowz-builder-engine.js';
         axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/flowz-builder-engine.js', {
-            
+
         })
         .then((res) => {
           let flowzEngineData = res.data;
@@ -2410,7 +2437,7 @@
               type : 'file'
           })
           .then((res) => {
-            console.log(flowzBuilderEngine + ' file created');    
+            console.log(flowzBuilderEngine + ' file created');
           })
           .catch((e) => {
               console.log(e)
@@ -2423,7 +2450,7 @@
         // Slider Plugin
         let sliderPluginFileName = newFolderName + '/public/assets/client-plugins/slider-plugin.js';
         axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-slider-plugin.js', {
-            
+
         })
         .then((res) => {
           let sliderData = res.data;
@@ -2433,7 +2460,7 @@
               type : 'file'
           })
           .then((res) => {
-            console.log(sliderPluginFileName + ' file created');    
+            console.log(sliderPluginFileName + ' file created');
           })
           .catch((e) => {
               console.log(e)
@@ -2446,7 +2473,7 @@
         // Shopping cart js
         let shoppingCartJs = newFolderName + '/public/assets/client-plugins/shopping-cart.js';
         axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/shop_cart.js', {
-            
+
         })
         .then((res) => {
           let shoppingCartData = res.data;
@@ -2456,7 +2483,7 @@
               type : 'file'
           })
           .then((res) => {
-            console.log(shoppingCartJs + ' file created');    
+            console.log(shoppingCartJs + ' file created');
           })
           .catch((e) => {
               console.log(e)
@@ -2469,7 +2496,7 @@
         // Client Global variables Plugin
         let globalVariablesPlugin = newFolderName + '/public/assets/client-plugins/global-variables-plugin.js';
         axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/global-variables-plugin.js', {
-            
+
         })
         .then((res) => {
           let globalVariablesPluginData = res.data;
@@ -2479,8 +2506,8 @@
               type : 'file'
           })
           .then(async (res) => {
-            console.log(globalVariablesPlugin + ' file created');  
-            
+            console.log(globalVariablesPlugin + ' file created');
+
             console.log('Repo Name : ', this.repoName);
             // Push repository changes
             await axios.post(config.baseURL + '/gitlab-add-repo', {
@@ -2498,17 +2525,17 @@
                     message: 'Project Created. Please wait...',
                     type: 'success'
                   });
-                },500); 
+                },500);
 
                 setTimeout(function(){
                   location.reload();
-                },1000);  
+                },1000);
               }
             }).catch(error => {
               console.log("Some error occured: ", error);
-            }) 
+            })
 
-            
+
           })
           .catch((e) => {
               console.log(e)
@@ -2636,8 +2663,8 @@
             })
             .then(async(res) => {
               this.saveFileLoading = false
-              
-              // 
+
+              //
               var getFromBetween = {
                 results: [],
                 string: "",
@@ -2680,7 +2707,7 @@
                 var result = (getFromBetween.get(content, "{{>", "}}"));
                 var changeresult=JSON.parse(JSON.stringify(result))
                 // console.log("changeresult:",changeresult)
-                
+
                 for(let s=0;s<changeresult.length;s++){
                   content=content.replace(changeresult[s],changeresult[s].replace(/&nbsp;/g,'').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g,"").replace(/\s*=\s*/g,'='))
                 }
@@ -2693,7 +2720,7 @@
                   this.$store.state.content = content
                })
                 result = (getFromBetween.get(content, "{{>", "}}"));
-          
+
                 var DefaultParams = [];
                 if (result.length > 0) {
                   var resultParam = result
@@ -3216,7 +3243,7 @@
                   //                 if(layoutDefault.length>0){
                   //                   for(let x=0;x<layoutDefault.length;x++){
                   //                     if(Object.keys(layoutDefault[x])[0]==layoutresult[j]){
-                  //                       checklayoutp = true     
+                  //                       checklayoutp = true
                   //                     }
                   //                   }
                   //                 }else{
@@ -3310,8 +3337,8 @@
                                     }
                                   }
                                 }
-                                
-                              } 
+
+                              }
                               // else {
                               //   checkpartial = false
                               // }
@@ -3448,7 +3475,7 @@
                   //                 if(layoutDefault.length>0){
                   //                   for(let x=0;x<layoutDefault.length;x++){
                   //                     if(Object.keys(layoutDefault[x])[0]==layoutresult[j]){
-                  //                       checklayoutp = true     
+                  //                       checklayoutp = true
                   //                     }
                   //                   }
                   //                 }else{
@@ -3488,7 +3515,7 @@
             })
           this.form.checked = [];
           this.form.namearray = [];
-        } 
+        }
       },
       // Ends Save File
 
@@ -3869,7 +3896,7 @@
                   var temp;
                   temp = resultParam[i].trim()
                   result[i] = result[i].trim()
-                  
+
                   temp = temp.split(' ')
                   for (let j = 0; j < temp.length; j++) {
                      temp[j] = temp[j].trim();
@@ -4091,7 +4118,7 @@
                                 window.open('http://' + self.$session.get('userDetailId') + '.' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
                               } else {
                                 window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
-                              } 
+                              }
 
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                 .then(async (res) => {
@@ -4293,7 +4320,7 @@
         let foldername = urlparts[urlparts.length - 2];
         // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
         // var folderUrl = configFileUrl.replace(fileName, '');
-   
+
         let fileName = '';
         if(_.includes(configFileUrl, 'Partials')){
             fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
@@ -4304,15 +4331,15 @@
         } else {
             fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
         }
-   
+
         let folderUrl = configFileUrl.replace(fileName, '');
 
         // let projectName = folderUrl.split('/');
         // projectName = projectName[(projectName.length-1)];
-        
+
         let projectName = urlparts[6];
         console.log('Project Name: ', projectName);
-        
+
         // this.getConfigFileData(folderUrl);
         let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
 
@@ -4374,7 +4401,7 @@
                 this.saveConfigFile(folderUrl);
               }else if (_.includes(data.path, 'Partials')) {
                 console.log("inside partials")
-                var foldername=arr_file[arr_file.length-2]           
+                var foldername=arr_file[arr_file.length-2]
                 var partialNameBreak = last_element.split('.');
                 console.log("partialNameBreak:",partialNameBreak)
                 var partialNameOnly = partialNameBreak[0];
@@ -4386,10 +4413,10 @@
                 let indexOfPartialName = _.findIndex(this.globalConfigData[2].layoutOptions[0][foldername], function(o) { return o.value == partialNameOnly });
 
                 this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
-              
+
                 // save config file
                 this.saveConfigFile(folderUrl);
-              } 
+              }
               else {
                 console.log('Other some file not in config.json');
                 let partialsArray = [];
@@ -4437,7 +4464,7 @@
         let foldername = urlparts[urlparts.length - 2];
         // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
         // var folderUrl = configFileUrl.replace(fileName, '');
-   
+
         let fileName = '';
         if(_.includes(configFileUrl, 'Partials')){
             fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
@@ -4448,7 +4475,7 @@
         } else {
             fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
         }
-   
+
         let folderUrl = configFileUrl.replace(fileName, '');
 
         let projectName = urlparts[6];
@@ -4582,7 +4609,7 @@
         this.removeProject(store, data);
       },
 
-      // Displaying icons in tree nodes  
+      // Displaying icons in tree nodes
       renderContent(h, { node, data, store }) {
 
         if(data.type=='directory' && node.label != 'websites'){
@@ -4594,20 +4621,20 @@
                       <span>{node.label}</span>
                   </span>
                   <span class="action-button" style="float: right; padding-right: 5px;">
-                    
+
                         <i title="Create New Folder" class="fa fa-folder-open-o" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
-                    
-                    
+
+
                         <i title="Create New File" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
-                    
-                    
+
+
                       <i title="Project Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
-                    
-                    
+
+
                         <i title="Delete Project" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
-                    
+
                   </span>
-              </span>)  
+              </span>)
           } else {
             // If it's a simple directory
             if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
@@ -4617,12 +4644,12 @@
                     <span>{node.label}</span>
                 </span>
                 <span class="action-button" style="float: right; padding-right: 5px;">
-                  
+
                       <i title="Create New Partial" class="fa fa-plus" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
-                  
-                  
+
+
                       <i title="Delete Partial" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
-                  
+
                 </span>
             </span>);
             } else if(_.includes(data.path, '/Partials/')){
@@ -4632,12 +4659,12 @@
                     <span>{node.label}</span>
                 </span>
                 <span class="action-button" style="float: right; padding-right: 5px;">
-                  
+
                     <i title="Create New Variant" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
-                  
-                  
+
+
                       <i title="Delete File" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
-                  
+
                 </span>
             </span>);
             } else if (node.level == 1) {
@@ -4659,17 +4686,17 @@
                       <span>{node.label}</span>
                   </span>
                   <span class="action-button" style="float: right; padding-right: 5px;">
-                    
+
                         <i title="Add File" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
-                    
-                    
+
+
                         <i title="Delete File" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
-                    
+
                   </span>
               </span>);
             }
           }
-            
+
         } else if(data.type=='file'){
           // var filePath = data.path;
           // var pathParts = filePath.split('/');
@@ -4683,17 +4710,17 @@
                   <span>{node.label}</span>
               </span>
               <span class="action-button">
-                  
+
                       <i title="Remove" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                  
-                  
+
+
                     <i title="Page settings" class="fa fa-cog" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #607C8A" on-click={ () => this.isPageEditing = true }></i>
-                  
-                  
+
+
                     <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 35px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
 
                     <i title="Preview File" class="fa fa-eye" style="position:absolute; right: 55px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #00C04F" on-click={ () => this.quickPreview(data.path) }></i>
-                  
+
               </span>
           </span>)
           } else if(data.extension == '.partial'){
@@ -4704,12 +4731,12 @@
                     <span>{node.label}</span>
                 </span>
                 <span class="action-button">
-                    
+
                         <i title="Delete file" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                    
-                    
+
+
                       <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
-                    
+
                 </span>
             </span>)
           } else if(data.extension == '.layout'){
@@ -4720,12 +4747,12 @@
                     <span>{node.label}</span>
                 </span>
                 <span class="action-button">
-                   
+
                         <i title="Delete File" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                    
-                    
+
+
                       <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
-                    
+
                 </span>
             </span>)
           } else {
@@ -4736,13 +4763,13 @@
                       <span>{node.label}</span>
                   </span>
                   <span class="action-button">
-                    
+
                         <i title="Delete File" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                    
+
                   </span>
               </span>)
           }
-          
+
         }else{
           // Root Folder
           return;
@@ -4753,7 +4780,7 @@
   // Methods End
 }
 
-  
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -4777,7 +4804,7 @@
 
   .logo{
     padding: 8px 70px;
-    cursor: pointer; 
+    cursor: pointer;
   }
   .loginBtn{
     float: right;
@@ -5291,7 +5318,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: rgba(0,0,0,.6); 
+      background-color: rgba(0,0,0,.6);
       z-index: 1;
   }*/
 
@@ -5339,7 +5366,7 @@
 
   /*.el-tree-node__expand-icon{
     border: 8px solid transparent;
-    border-left-width: 10px; 
+    border-left-width: 10px;
   }*/
 
 
