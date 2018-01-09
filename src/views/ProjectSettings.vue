@@ -1,10 +1,33 @@
 <template>
   <div class="ProjectSettings">
+
+    <!-- Publish Site Modal -->
+    <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
+        
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="Default Domain" name="first">
+          Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
+          <br>
+          <div align="right" style="margin-top: 15px;">
+            <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="Custom Domain" name="second">
+          <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+          <div align="right" style="margin-top: 15px;">
+            <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
+          </div>
+          
+        </el-tab-pane>
+      </el-tabs>
+
+      
+    </el-dialog>
     
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Publish Website</el-button>
+      <el-button type="info" size="small" @click="publishWebsite = true" >Publish Website</el-button>
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
@@ -798,13 +821,24 @@ export default {
         name: 'Edit Me',
         content: 'Update Me'
       }],
-      Metacharset: ''
+      Metacharset: '',
+
+      publishWebsite: false,
+      activeName: 'first',
+      customDomainName: '',
+      userDetailId: '',
+      ipAddress: config.ipAddress
     }
   },
   components: {
     draggable
   },
   methods: {
+
+    handleTabClick(tab, event) {
+      console.log(tab, event);
+    },
+
     handleChange(file, fileList) {
         this.fileList3 = fileList.slice(-3);
         console.log('fileList3:',this.fileList3)
@@ -1831,7 +1865,7 @@ export default {
       }) 
     },
 
-    async publishMetalsmith() {
+    async publishMetalsmith(publishType) {
       this.fullscreenLoading = true;
 
       var dt = new Date();
@@ -2486,14 +2520,41 @@ export default {
         //   });
       }
 
-      this.fullscreenLoading = false;
+      if(publishType == 'custom'){
+        console.log('Custom Domain')
+        // Surge.sh API
+        axios.post( config.baseURL + '/publish-surge', {
+            projectPath : this.$session.get('userDetailId') + '/' + this.repoName + '/public' ,
+            domainName: this.customDomainName
+        })
+        .then((res) => {
+          this.fullscreenLoading = false;
+          this.publishWebsite = false;
+          window.open(this.customDomainName);
+          console.log(res.data);
+        })
+        .catch((e) => {
+          this.fullscreenLoading = false;
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
 
-      // Open in new window
-      if(process.env.NODE_ENV !== 'development'){
-        window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
       } else {
-        window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
-      } 
+        console.log('Default Publish');
+        this.fullscreenLoading = false;
+        this.publishWebsite = false;
+
+        // Open in new window
+        if(process.env.NODE_ENV !== 'development'){
+          window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+        } else {
+          window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
+        }
+      }
     },
 
     handleRemove(file, fileList) {
@@ -2522,6 +2583,8 @@ export default {
     async init () {
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
+      this.userDetailId = this.$session.get('userDetailId');
 
       let splitUrl = url.split('/');
 
