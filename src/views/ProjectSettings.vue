@@ -3,7 +3,6 @@
 
     <!-- Publish Site Modal -->
     <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
-        
       <el-tabs v-model="activeName">
         <el-tab-pane label="Default Domain" name="first">
           Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
@@ -20,8 +19,6 @@
           
         </el-tab-pane>
       </el-tabs>
-
-      
     </el-dialog>
     
     <!-- Save/Publish/Cancel Buttons -->
@@ -100,6 +97,26 @@
                 </el-form-item>    
 
             </el-form> 
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="thumbnail" style="padding: 20px;">
+              <h3>Ecommerce Website Templates</h3>
+              <hr>
+              <div class="row">
+                <div class="col-md-4">
+                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web2')">Template 2</button>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web3')">Template 3</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1001,10 +1018,12 @@ export default {
       this.externallinksMeta.push(newVariable);
       this.editableInit();
     },
+
     addNewlocalscripts(){
       let newVariable = { linkposition:'',script:''};
       this.localscripts.push(newVariable);
     },
+
     addNewlocalstyles(){
       let newVariable = { linkposition:'',style:''};
       this.localstyles.push(newVariable);
@@ -1014,7 +1033,6 @@ export default {
       let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
       this.paymentgateway.push(newVariable);
       this.Paymentfields.push([])
-      
     },
 
     gatewaychange(n,index){
@@ -1218,6 +1236,7 @@ export default {
 
       this.addPluginLoading = false;
     },
+
     async saveConfigFile(folderUrl,configData){
 
         let foldername = folderUrl.split('/');
@@ -1250,8 +1269,8 @@ export default {
               type: 'error'
           });
         }   
-
     },
+
     recursivecall(name, partials, defaultListtemp,configData) {
       console.log('inside recursivecall')
       for (let i = 0; i < configData[1].pageSettings.length; i++) {
@@ -1607,7 +1626,7 @@ export default {
         // console.log('namepage:',namepage)
         // console.log('this.repoName:',this.repoName)
         console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
-        var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Pages/'+namepage);
+        var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/'+namepage);
         // console.log('contentpage:',contentpage)
 
         // console.log("inside ==pages directory")
@@ -1782,7 +1801,37 @@ export default {
         // }
       }
 
-      location.reload();
+      window.location.reload();
+      
+    },
+
+    revertToTemplate(template){
+      this.$confirm('This will permanatly overwrite current Pages, Partials, Layouts and Website assets. Do you want to continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async () => {
+
+        // Call service to copy files for selected template
+        await axios.post( config.baseURL + '/copy-website', {
+            projectPath : this.userDetailId + '/' + this.repoName,
+            templateName : template
+        })
+        .then(async (res) => {
+          await this.refreshPlugins();  
+        })
+        .catch((e) => {
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
+
+      }).catch((err) => {
+        console.log('Some error occured.', err);
+      });
     },
 
     deleteVariable(deleteIndex) {
@@ -3080,6 +3129,7 @@ export default {
 
     });
   },
+
   watch: {
     '$store.state.fileUrl': function(newvalue) {
       this.init()
