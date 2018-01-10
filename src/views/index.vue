@@ -690,8 +690,54 @@
 
       // Route to GrapesEditor page from code view
       goToGrapesEditor: function(){
+        this.saveFile('void')
         this.componentId = 'GrapesComponent';
         this.isPageCodeEditor = false;
+        this.display = false;
+        let url = this.$store.state.fileUrl;
+        let compId = this.componentId;
+        let newTabName = ++this.tabIndex + '';
+        let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+        let editableTabValue = this.editableTabsValue
+        let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
+        function checkIfExist(filepath,array) {  // The last one is array
+          console.log("checkIfExist is called")
+            var found = array.some(function (el) {
+              return el.filepath == url;
+            });
+            if (!found)
+            {
+              let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+              array = removedArray  ;
+              editableTabValue = newTabName;
+                array.push({
+                  title: tab_file_name,
+                  name: newTabName,
+                  content: newTabName,
+                  componentId : compId,
+                  filepath : url
+                });
+
+            }else{
+              let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+              array = removedArray  ;
+              editableTabValue = newTabName;
+              array.push({
+                  title: tab_file_name,
+                  name: newTabName,
+                  content: newTabName,
+                  componentId : compId,
+                  filepath : url
+                });
+            }
+            return array
+        }
+
+        this.editableTabs =  selectedPagePositionFirstArray ;
+
+        this.editableTabs.reverse();
+
+        this.editableTabsValue = newTabName;
       },
 
       // If clicked the root folder
@@ -761,6 +807,7 @@
 
       // Selecting any node in Listing tree
       handleNodeClick(data) {
+        var self = this
         // Store file/folder path
         this.taburl = this.$store.state.fileUrl;
 
@@ -992,7 +1039,10 @@
               }
             }
             this.flag = false;
-            this.getFileContent(data.path);
+            setTimeout(function(){
+              console.log('this.componentId', self.componentId)
+              self.getFileContent(data.path);
+            },50)
           }
         }
       },
@@ -1056,7 +1106,7 @@
                 if (nextTab) {
                   activeName = nextTab.name;
                   this.$store.state.fileUrl = nextTab.filepath
-                  console.log('this.$store.state.fileUrl,', this.$store.state.fileUrl)
+                  this.flag = true
                   this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
                 }
               }
@@ -1165,6 +1215,9 @@
                 var parentFolderName = pathParts[pathParts.length - 2];
                 if (parentFolderName == 'Pages') {
                   this.isPageCodeEditor = true;
+                  let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+                  });
+                  this.$store.state.content = response.data
                 } else {
                   this.isPageCodeEditor = false;
                 }
@@ -1253,7 +1306,6 @@
 
         let editableTabValue = this.editableTabsValue
         let selectedPagePositionFirstArray = await checkIfExist(url , this.editableTabs);
-
         var self = this
         function checkIfExist(filepath,array) {  // The last one is array
 
@@ -4382,6 +4434,11 @@
                 // Remove item from array
                 this.globalConfigData[1].pageSettings.splice(indexOfPageName, 1);
 
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+	                 return o.title == last_element;
+                });
+                // Remove item from tab
+                this.editableTabs.splice(indexOfTabArray, 1);
                 // save config file
                 this.saveConfigFile(folderUrl);
 
@@ -4396,7 +4453,11 @@
 
                 // Remove item from array
                 this.globalConfigData[2].layoutOptions[0].Layout.splice(indexOfLayoutName, 1);
-
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+	                 return o.title == last_element;
+                });
+                // Remove item from tab
+                this.editableTabs.splice(indexOfTabArray, 1);
                 // save config file
                 this.saveConfigFile(folderUrl);
               }else if (_.includes(data.path, 'Partials')) {
@@ -4413,7 +4474,11 @@
                 let indexOfPartialName = _.findIndex(this.globalConfigData[2].layoutOptions[0][foldername], function(o) { return o.value == partialNameOnly });
 
                 this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
-
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+	                 return o.title == last_element;
+                });
+                // Remove item from tab
+                this.editableTabs.splice(indexOfTabArray, 1);
                 // save config file
                 this.saveConfigFile(folderUrl);
               }

@@ -399,7 +399,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   // Global Variables
 
-  // Global Image Variable 
+  // Global Image Variable
   bm.add('globalImageVariable', {
     label: 'Image Variable',
     category: 'Global Variables',
@@ -409,7 +409,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     content: '<globalImage style="padding: 5px; display: inline-block;"><img src="http://placehold.it/250x100" alt="Global Image" /></globalImage>'
   });
 
-  // Global Link Variable 
+  // Global Link Variable
   bm.add('globalLinkVariable', {
     label: 'Link Variable',
     category: 'Global Variables',
@@ -419,7 +419,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     content: '<globalLink style="padding: 5px; display: inline-block;"><a href="#">Hyperlink</a></globalLink>'
   });
 
-  // Global HTML Variable 
+  // Global HTML Variable
   bm.add('globalHtmlVariable', {
     label: 'HTML Variable',
     category: 'Global Variables',
@@ -429,7 +429,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     content: '<globalHtmlVariable style="padding: 2px; display: inline-block;">HTML Code</globalHtmlVariable>',
   });
 
-  // Global Text Variable 
+  // Global Text Variable
   bm.add('globalTextVariable', {
     label: 'Text Variable',
     category: 'Global Variables',
@@ -498,7 +498,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     },
     category: 'Data Field Group'
   });
-  
+
   bm.add('DataFieldObject', {
     label: 'Data Field Object',
     content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
@@ -2030,7 +2030,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
   });
 
-  
+
 
   var partialOptions = {};
 
@@ -2336,7 +2336,7 @@ comps.addType('ShoppingCart', {
         droppable: true,
         traits: [
            {
-            type: 'checkbox',        
+            type: 'checkbox',
             label: 'Paypal',
             name: 'Paypal',
           },
@@ -2349,7 +2349,7 @@ comps.addType('ShoppingCart', {
             name: 'x_api_login_paypal',
           },
           {
-            type: 'checkbox',        
+            type: 'checkbox',
             label: 'Stripe',
             name: 'Stripe',
           },
@@ -2360,7 +2360,7 @@ comps.addType('ShoppingCart', {
           {
             label: 'Authorize DotNet',
             name: 'AuthorizeDotNet',
-            type: 'checkbox',        
+            type: 'checkbox',
           },
           {
             label: 'Token',

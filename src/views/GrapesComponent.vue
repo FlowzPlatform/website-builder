@@ -60,7 +60,7 @@ export default {
         // // get fontawesome css
         // let fontawesomecss = await axios.get('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
 
-        
+
         // Get Config File
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
@@ -108,7 +108,7 @@ export default {
             for (let i=0;  i<this.pageCss.length; i++) {
                 if (cssUrls[0][this.pageCss[i]]){
                     cssUrlString += cssUrls[0][this.pageCss[i]];
-                } 
+                }
             }
         } else {
             cssUrlString = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/flowz_blocks.css" type="text/css">';
@@ -143,10 +143,10 @@ export default {
                 } else {
                     variableCss += '\t' + this.globalCssVariables[i].variableName + ': ' + this.globalCssVariables[i].variableValue + ';\n';
                 }
-            } 
+            }
         }
 
-        
+
 
         variableCss += '}'
 
@@ -163,7 +163,6 @@ export default {
         ];
 
         // 'gjs-plugin-ckeditor'
-
 		editor = grapesjs.init({
 			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks', 'gjs-plugin-filestack' ],
             pluginsOpts: {
@@ -396,7 +395,7 @@ export default {
         },
 
   		style: variableCss + css,
-  		
+
   		});
 
         let self = this;
@@ -436,9 +435,9 @@ export default {
             },
             content: '<img id="brandLogo" src="'+this.imageBlob+'" alt="company-logo" class="brand-logo"/>',
         });
-        
+
         $('.gjs-frame').contents().find('body [id="brandName"]').html(this.brandName);
-        
+
         $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
 
         // console.log('Global Variables length:', this.globalVariables.length);
@@ -451,7 +450,7 @@ export default {
                     if(($('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         // var encodeText = String(this.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
                         $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').text(this.globalVariables[i].variableValue);
-                    } 
+                    }
                     break;
 
                 case 'image':
@@ -460,7 +459,7 @@ export default {
                     var _varValue = this.globalVariables[i].variableValue;
 
                     if(($('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').length > 0)){
-                        
+
                         // Get all local images
                         if(this.globalVariables[i].isImageUrl == true){
                             console.log('Image is URL link.');
@@ -475,10 +474,10 @@ export default {
                             })
                             .catch((e) => {
                                 console.log(e);
-                            }) 
+                            })
                         }
-                      
-                    } 
+
+                    }
                     break;
 
                 case 'hyperlink':
@@ -486,16 +485,16 @@ export default {
                         $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].text = this.globalVariables[i].variableTitle;
                         $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
                     }
-                    break; 
+                    break;
 
                 case 'html':
                     if(($('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
                         $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
-                    } 
+                    }
                     break;
 
                 default:
-                    console.log('No Variables Found'); 
+                    console.log('No Variables Found');
             }
 
         }

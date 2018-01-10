@@ -56,7 +56,6 @@
         },
         mounted: function() {
           var self = this;
-
           if(gm != null){
               gm.deinitCanvas();
           }
