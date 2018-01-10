@@ -36,7 +36,6 @@
           this.editor = editor
         },
         onCodeChange (editor) {
-          console.log(editor.getValue());
           this.$store.state.content = editor.getValue();
         }
       }

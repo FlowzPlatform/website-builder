@@ -1,15 +1,37 @@
 <template>
   <div class="ProjectSettings">
+
+    <!-- Publish Site Modal -->
+    <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
+        
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="Default Domain" name="first">
+          Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
+          <br>
+          <div align="right" style="margin-top: 15px;">
+            <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="Custom Domain" name="second">
+          <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+          <div align="right" style="margin-top: 15px;">
+            <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
+          </div>
+          
+        </el-tab-pane>
+      </el-tabs>
+
+      
+    </el-dialog>
     
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Publish Website</el-button>
+      <el-button type="info" size="small" @click="publishWebsite = true" >Publish Website</el-button>
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
       </el-tooltip>
-
     </div>
 
     <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
@@ -95,6 +117,10 @@
             <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
               <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
             </el-tooltip>
+            <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
+              <el-button size="small" type="primary">Click to upload</el-button>
+              
+            </el-upload> -->
           </div>
           <div class="col-md-12">
             <el-tree
@@ -102,10 +128,10 @@
               node-key="id"
               :default-expand-all="true"
               :props="defaultProps"
-              :default-checked-keys=checkedList
-              :render-content="renderContent"
-              >
+              :default-checked-keys=checkedList>
             </el-tree>
+
+            <!-- :render-content="renderContent" -->
 
             <br>
 
@@ -296,6 +322,69 @@
       </div>
       <!-- Global Variables section ends -->
 
+      <!-- URL Bucket Section -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleUrlBucket" class="card color-div toggleableDivHeader">URL Bucket</a>
+          </div>
+      </div>
+      <div id="toggleUrlBucketContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12">
+            <el-form ref="form" :model="form">
+              <div v-for="(n, index) in urlVariables">
+                <el-form-item>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <el-input placeholder="URL ID" v-model="n.urlId"></el-input>
+                    </div>
+                    <div class="col-md-6">
+                      <el-input placeholder="URL Value" v-model="n.urlValue"></el-input>
+                    </div>
+
+                    <!-- Delete Variable -->
+                    <div class="col-md-1">
+                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>      
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+
+              <!-- Create new url variable -->
+              <el-button type="primary" @click="addNewUrl">New URL</el-button>
+            </el-form>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-12">
+            <el-form ref="form" :model="form">
+              <div v-for="(n, index) in urlHeaderVariables">
+                <el-form-item>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <el-input placeholder="Header Name" v-model="n.headerName"></el-input>
+                    </div>
+                    <div class="col-md-6">
+                      <el-input placeholder="Header Value" v-model="n.headerValue"></el-input>
+                    </div>
+
+                    <!-- Delete Variable -->
+                    <div class="col-md-1">
+                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index)" icon="delete"></el-button>      
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+
+              <!-- Create new header variable -->
+              <el-button type="primary" @click="addNewHeader">New Header</el-button>
+            </el-form>
+          </div>
+        </div>
+      </div>
+      <!-- URL Bucket section ends -->
+
       <!-- External Links Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -396,10 +485,119 @@
       </div>
       <!-- External Links section ends -->
 
-      <!-- Local Scripts -->
+      <!-- Meta Tags -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Local Scripts</a>
+              <a href="javascript:void(0)" id="toggleMetaTags" class="card color-div toggleableDivHeader">Meta Tags</a>
+          </div>
+      </div>
+      <div id="toggleMetaTagsContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12" >
+              <div class="row">
+                    <div class="col-md-4">
+                       <h3>Add External meta tags </h3>
+                    </div>
+                 </div>
+                 <hr>
+               <el-form :inline="true">
+                 <el-form-item label="Meta Charset">
+                    <el-input placeholder="charset value" v-model="Metacharset"></el-input>
+                  </el-form-item>
+                </el-form>
+           </div>
+            <div class="col-md-12" style="margin-top: 2%">
+                <table class="table table-hover  table-bordered">
+                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
+                    <thead class="thead">
+                      <tr>
+                        <th>Name</th>
+                        <th>Content</th>
+                        <th></th>
+                        <!-- <th></th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(n, index) in externallinksMeta" >
+                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
+                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
+                      </tr>
+                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                    </tbody>
+                      <!-- </draggable> -->
+                  </table>
+                  <!-- Create new variable -->
+                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+               <!-- </el-form> -->
+            </div>
+        </div>
+      </div>
+      <!-- Meta Tags Ends -->
+
+      <!-- Local style/css-->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleLocalstyles" class="card color-div toggleableDivHeader">Global Styles</a>
+          </div>
+      </div>
+      <div id="toggleLocalstylesContent" class="toggleableDivHeaderContent" style="display: none;">
+         <div class="row">
+          <div class="col-md-12">
+               <div class="row">
+                  <div class="col-md-4">
+                     <h3> Styles: </h3>
+                  </div>
+               </div>
+               <hr>
+               <el-form ref="form" :model="form">
+               
+                  <div >
+                     <el-form-item>
+                        <draggable v-model='localstyles' @start="drag=true" @end="drag=false">
+                          <div style="margin-bottom: 25px" v-for='(n, index) in localstyles' class="row">
+                             <!-- position  -->
+                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                <el-select v-model="n.linkposition" placeholder="Position">
+                                   <el-option
+                                      v-for="item in Allposition"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                   </el-option>
+                                </el-select>
+                             </div>
+                             <!-- link url -->
+                             <div class="col-md-6" style="margin: 0; padding: 0px">
+                                <el-input type="textarea" :rows="5" placeholder="css" v-model="n.style"></el-input>
+                             </div>
+                             <!-- Delete Variable -->
+                             <div class="col-md-1">
+                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
+                             </div>
+                             <div class="col-md-1">
+                                <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                              
+                             </div>
+                             
+
+                          </div>
+                        </draggable>
+                     </el-form-item>
+                  </div>
+                 
+                  <!-- Create new variable -->
+                  <el-button type="primary" @click="addNewlocalstyles">New Style</el-button>
+               </el-form>
+            </div>
+        </div>
+      </div> 
+
+      <!-- Local script-->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Global Scripts</a>
           </div>
       </div>
       <div id="toggleLocalscriptsContent" class="toggleableDivHeaderContent" style="display: none;">
@@ -453,58 +651,85 @@
             </div>
         </div>
       </div>
-      <!-- Local Scripts -->
 
-      <!-- Meta Tags -->
+      <!-- Payment Block -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleMetaTags" class="card color-div toggleableDivHeader">Meta Tags</a>
+              <a href="javascript:void(0)" id="togglePaymentgateway" class="card color-div toggleableDivHeader">Payment gateway</a>
           </div>
       </div>
-      <div id="toggleMetaTagsContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12" >
-              <div class="row">
-                    <div class="col-md-4">
-                       <h3>Add External meta tags </h3>
-                    </div>
-                 </div>
-                 <hr>
-               <el-form :inline="true">
-                 <el-form-item label="Meta Charset">
-                    <el-input placeholder="charset value" v-model="Metacharset"></el-input>
-                  </el-form-item>
-                </el-form>
-           </div>
-            <div class="col-md-12" style="margin-top: 2%">
-                <table class="table table-hover  table-bordered">
-                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
-                    <thead class="thead">
-                      <tr>
-                        <th>Name</th>
-                        <th>Content</th>
-                        <th></th>
-                        <!-- <th></th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(n, index) in externallinksMeta" >
-                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
-                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
-                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
-                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
-                      </tr>
-                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
-                    </tbody>
-                      <!-- </draggable> -->
-                  </table>
-                  <!-- Create new variable -->
-                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
-               <!-- </el-form> -->
-            </div>
-        </div>
+      <div id="togglePaymentgatewayContent" class="toggleableDivHeaderContent" style="display: none;">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="row">
+                      <div class="col-md-4">
+                          <h3> Gateways: </h3>
+                      </div>
+                  </div>
+                  <hr>
+                  <el-form ref="form" :model="form">
+
+                      <div>
+                          <el-form-item>
+                              <draggable v-model='paymentgateway' @start="drag=true" @end="drag=false">
+                                  <div style="margin-bottom: 25px" v-for='(n, index) in paymentgateway'>
+                                      <div class="row">
+                                          <div class="col-md-1" style="margin: 0; padding-left: 15px">
+                                              <el-checkbox v-model="n.checked"></el-checkbox>
+                                          </div>
+                                          <!-- name of gateway-->
+                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
+                                              <el-input type="text" placeholder="Name" v-model="n.name"></el-input>
+                                          </div>
+                                          <!-- gateway  -->
+                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
+                                              <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
+                                                  <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
+                                                  </el-option>
+                                              </el-select>
+                                          </div>
+                                          <!-- gateway description -->
+                                          <div class="col-md-5" style="margin: 0; padding: 0px">
+                                              <el-input type="textarea" placeholder="Description" v-model="n.description"></el-input>
+                                          </div>
+                                          <!-- Delete Variable -->
+                                          <div class="col-md-1">
+                                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletepaymentgateway(index)" icon="delete2"></el-button>
+                                          </div>
+                                          <div class="col-md-1">
+                                              <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+
+                                          </div>
+                                      </div>
+                                      <!-- <div> -->
+                                      <div class="row">
+                                          <div class="col-md-4">
+                                              <h5> Fields: </h5>
+                                          </div>
+                                      </div>
+                                      <div class="row">
+                                          <div v-for='i,k in Paymentfields[index]'>
+                                              <el-form ref="form" label-width="120px">
+                                                  <el-form-item style="margin: 0; padding-left:5px" v-bind:label='Paymentfields[index][k]'>
+                                                      <el-input type='text' v-model='n.fields[k][i]'></el-input>
+                                                  </el-form-item>
+                                              </el-form>
+                                          </div>
+                                      </div>
+                                      <!-- </div> -->
+                                      <hr>
+                                  </div>
+                              </draggable>
+                          </el-form-item>
+                      </div>
+
+                      <!-- Create new variable -->
+                      <el-button type="primary" @click="addNewpaymentgateway">New Gateway</el-button>
+                  </el-form>
+              </div>
+          </div>
       </div>
-      <!-- Meta Tags Ends -->
+      <!-- Payment Block -->
 
       <!-- List of Commits Section -->
       <div class="collapsingDivWrapper row">
@@ -541,7 +766,7 @@
                   label="Revert To Commit"
                   width="180">
                   <template scope="scope">
-                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Revert Commit</el-button>
+                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -564,7 +789,7 @@ const beautify = require('beautify');
 import Vue from 'vue';
 import VueSession from 'vue-session';
 Vue.use(VueSession);
-
+// import extract from 'extract-zip'
 import axios from 'axios';
 import _ from 'lodash';
 const config = require('../config');
@@ -594,6 +819,7 @@ export default {
         selectedFooter: ''
       },
       commitsData: [],
+      fileList3: [],
       pluginsData: [],
       commitMessage: '',
       newRepoId: '',
@@ -635,6 +861,8 @@ export default {
       }],
 
       globalVariables: [],
+      urlVariables: [],
+      urlHeaderVariables: [],
       globalCssVariables: [],
       ecommerceVariables: [],
       imageInputIsDisabled: false,
@@ -666,18 +894,41 @@ export default {
       ],
       externallinksJS:[],
       externallinksCSS:[],
+      localscripts:[],
+      localstyles:[],
       externallinksMeta:[{
         name: 'Edit Me',
         content: 'Update Me'
       }],
       Metacharset: '',
-      localscripts:[],
+
+      publishWebsite: false,
+      activeName: 'first',
+      customDomainName: '',
+      userDetailId: '',
+      ipAddress: config.ipAddress,
+      paymentgateway: [],
+      Paymentfields: [],
+      Allgateway: []
     }
   },
   components: {
     draggable
   },
   methods: {
+
+    handleTabClick(tab, event) {
+      console.log(tab, event);
+    },
+
+    handleChange(file, fileList) {
+        this.fileList3 = fileList.slice(-3);
+        console.log('fileList3:',this.fileList3)
+        // var extract = require('extract-zip')
+        // extract(source, {dir: target}, function (err) {
+        //  // extraction is complete. make sure to handle the err
+        // })
+    },
 
     async globalImageUploading(currentImageVariableIndex, file) {
       
@@ -698,7 +949,7 @@ export default {
           globalFileData = e.target.result;
           
           axios.post( config.baseURL + '/image-upload', {
-              filename : scope.folderUrl + '/assets/' + imageName,
+              filename : scope.folderUrl + '/public/assets/' + imageName,
               text : globalFileData,
               type : 'file'
           })
@@ -718,6 +969,16 @@ export default {
       let newVariable = { variableId: '', variableType: '', variableTitle: '', variableValue: '' , isImageUrl: true};
       this.globalVariables.push(newVariable);
       this.imageInputIsDisabled = false;
+    },
+
+    addNewUrl() {
+      let newVariable = { urlId: '', urlValue: ''};
+      this.urlVariables.push(newVariable);
+    },
+
+    addNewHeader() {
+      let newVariable = { headerName: '', headerValue: ''};
+      this.urlHeaderVariables.push(newVariable);
     },
 
     addNewCssVariable() {
@@ -740,14 +1001,41 @@ export default {
       this.externallinksMeta.push(newVariable);
       this.editableInit();
     },
-
     addNewlocalscripts(){
       let newVariable = { linkposition:'',script:''};
       this.localscripts.push(newVariable);
     },
+    addNewlocalstyles(){
+      let newVariable = { linkposition:'',style:''};
+      this.localstyles.push(newVariable);
+    },
 
-    deletelocalscripts(deleteIndex){
-      this.localscripts.splice(deleteIndex,1);
+    addNewpaymentgateway(){
+      let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
+      this.paymentgateway.push(newVariable);
+      this.Paymentfields.push([])
+      
+    },
+
+    gatewaychange(n,index){
+      // console.log(n,index)
+     this.paymentgateway[index].fields=[]
+
+     for(let i=0;i<this.Allgateway.length;i++){
+      if(this.Allgateway[i].name==n.gateway){
+        
+        for(let j=0;j<this.Allgateway[i].keys.length;j++){
+          var temp={}
+        temp[this.Allgateway[i].keys[j]]=''
+        this.paymentgateway[index].fields.push(temp)
+        }
+        this.Paymentfields[index]=this.Allgateway[i].keys
+      }
+     }
+     var ter=this.paymentgateway[index].description
+     this.paymentgateway[index].description=' '
+     this.paymentgateway[index].description=ter
+     // console.log(this.paymentgateway,this.Paymentfields)
     },
 
     async addNewPlugin(pluginFileData) {
@@ -758,7 +1046,7 @@ export default {
       // Validate Schema (pending)
 
       // If Schema Valid, upload this file to /assets/client-plugins folder
-      let uploadNewPluginUrl = this.folderUrl + '/assets/client-plugins/' + pluginFileData.name + '.json';
+      let uploadNewPluginUrl = this.folderUrl + '/public/assets/client-plugins/' + pluginFileData.name + '.json';
 
       // Create this file under this particular project
       axios.post(config.baseURL + '/flows-dir-listing', {
@@ -767,12 +1055,7 @@ export default {
           type : 'file'
       })
       .then((res) => {
-        this.$message({
-              showClose: true,
-              message: 'Successfully done.',
-              type: 'success'
-          });
-          console.log(res.data);
+        console.log(res.data);
       })
       .catch((e) => {
           this.$message({
@@ -869,7 +1152,7 @@ export default {
           // Combine all Css code
           generatedCss = styleHref + '<style type="text/css">\n' + beautify(styleTag, { format: 'css'}) + '\n</style>';
 
-          let addOnScript = 'let configData = [];\n$(function($) { $.getJSON( "../../assets/config.json", function(data){\n var configDataRaw = data;\n configData = configDataRaw[1].projectSettings[1].GlobalVariables;\n }); ';
+          let addOnScript = 'let configData = [];\n$(function($) { $.getJSON( "../public/assets/config.json", function(data){\n var configDataRaw = data;\n configData = configDataRaw[1].projectSettings[1].GlobalVariables;\n }); ';
 
           let dynamicVariables = '';
 
@@ -935,6 +1218,76 @@ export default {
 
       this.addPluginLoading = false;
     },
+    async saveConfigFile(folderUrl,configData){
+
+        let foldername = folderUrl.split('/');
+        foldername = foldername[(foldername.length-1)];
+
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+
+        if(rethinkdbCheck.data.data){
+
+          // update existing data
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+            configData: configData
+          })
+          .then(async (res) => {
+            console.log(res.data);
+          })
+          .catch((e) => {
+              this.$message({
+                  showClose: true,
+                  message: 'Failed! Please try again.',
+                  type: 'error'
+              });
+              console.log(e)
+          });
+
+          } else {
+          this.$message({
+              showClose: true,
+              message: 'Data Error.',
+              type: 'error'
+          });
+        }   
+
+    },
+    recursivecall(name, partials, defaultListtemp,configData) {
+      console.log('inside recursivecall')
+      for (let i = 0; i < configData[1].pageSettings.length; i++) {
+        let temp = configData[1].pageSettings[i].PageName
+        temp = temp.split('.')[0]
+        if (name == temp) {
+          for (let y = 0; y < defaultListtemp.length; y++) {
+            let checkinner = false
+            for (let x = 0; x < partials.length; x++) {
+              if (Object.keys(partials[x])[0] == Object.keys(defaultListtemp[y])[0]) {
+                if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]]) {
+                  checkinner = true
+                  break;
+                }
+              }
+              var partemp = defaultListtemp[y]
+              if (configData[2].layoutOptions[0][Object.keys(partemp)[0]] != undefined) {
+                for (let k = 0; k < configData[2].layoutOptions[0][Object.keys(partemp)[0]].length; k++) {
+                  if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].value == partemp[Object.keys(partemp)[0]]) {
+                    if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList != undefined) {
+                      recursivecall(name, partials, configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList,configData)
+                    }
+                  }
+                }
+              }
+            }
+            if (checkinner != true) {
+              defaultListtemp[y][Object.keys(defaultListtemp[y])[0]] = defaultListtemp[y][Object.keys(defaultListtemp[y])[0]].split('.')[0]
+
+              configData[1].pageSettings[i].partials.push(defaultListtemp[y]);
+
+            }
+          }
+        }
+      }
+    },
 
     async refreshPlugins() {
       this.refreshPluginsLoading = true;
@@ -942,7 +1295,7 @@ export default {
       // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
       // Call Listings API and get Tree
-      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.repoName, {
+      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.$session.get('userDetailId') + '/' + this.repoName, {
       })
       .then(async (res) => {
         console.log(res);
@@ -1054,7 +1407,9 @@ export default {
                                               "PageExternalJs": [],
                                               "PageMetaInfo": [],
                                               "PageMetacharset":'',
-                                              "ProjectScripts":[]
+                                              "ProjectScripts":[],
+                                              "ProjectStyles":[]
+
                                             };
 
             this.settings[1].pageSettings.push(notRegisteredPageSettings);
@@ -1074,11 +1429,372 @@ export default {
           console.log(e)
       });
 
+      var getFromBetween = {
+        results: [],
+        string: "",
+        getFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var SP = this.string.indexOf(sub1) + sub1.length;
+          var string1 = this.string.substr(0, SP);
+          var string2 = this.string.substr(SP);
+          var TP = string1.length + string2.indexOf(sub2);
+          return this.string.substring(SP, TP);
+        },
+        removeFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+          this.string = this.string.replace(removal, "");
+        },
+        getAllResults: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+          var result = this.getFromBetween(sub1, sub2);
+          this.results.push(result);
+          this.removeFromBetween(sub1, sub2);
+          if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+            this.getAllResults(sub1, sub2);
+          } else return;
+        },
+        get: function(string, sub1, sub2) {
+          this.results = [];
+          this.string = string;
+          this.getAllResults(sub1, sub2);
+          return this.results;
+        }
+      };
+      console.log('now running loop for saving every file in page and in partial')
+      this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
+      let splitUrl = url.split('/');
+
+      let websiteName = splitUrl[(splitUrl.length -1)];
+
+
+      // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+
+      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
+
+      configData=JSON.parse(JSON.stringify(configData.data.data[0].configData))
+      // console.log('new config file:',configData);
+      // console.log('now partial');
+      for(let q=0;q<Object.keys(configData[2].layoutOptions[0]).length;q++){
+        // console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
+        if(Object.keys(configData[2].layoutOptions[0])[q]!=('Layout')){
+          if(Object.keys(configData[2].layoutOptions[0])[q]!=('Menu')){
+           for(let p=0;p<configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length;p++){
+            var namepartial=configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
+            // console.log('name:',namepartial)
+             var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.$session.get('userDetailId') + '/' + this.repoName+'/Partials/'+Object.keys(configData[2].layoutOptions[0])[q]+'/'+namepartial+'.partial');
+             // console.log('content of partial:',contentpage.data)
+             // console.log("inside !=pages directory")
+                var content=''
+                content = contentpage.data;
+                var result = (getFromBetween.get(content, "{{>", "}}"));
+                var DefaultParams = [];
+                if (result.length > 0) {
+                  var resultParam = result
+                  for (let i = 0; i < resultParam.length; i++) {
+                    var temp;
+                    temp = resultParam[i].trim()
+                    result[i] = result[i].trim()
+                    result[i]=result[i].replace(/&nbsp;/g, ' ').trim()
+                    temp = temp.replace(/&nbsp;/g, ' ')
+                    temp = temp.replace(/\s+/g, ' ');
+                    temp = temp.split(' ')
+                    for (let j = 0; j < temp.length; j++) {
+                      if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                        if (temp[j + 1] != undefined) {
+                          result[i] = temp[0];
+                          if (temp[j + 1].indexOf('.') > -1) {
+                            let x = temp[j + 1]
+                            x = temp[j + 1].split(/'/)[1];
+                            let obj = {}
+                            obj[temp[0]] = x
+                            DefaultParams.push(obj)
+                            break;
+                          }
+                        } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                          result[i] = temp[0];
+                          if (temp[j]) {
+                            let x = temp[j]
+                            x = temp[j].split(/'/)[1];
+                            let obj = {}
+                            obj[temp[0]] = x
+                            DefaultParams.push(obj)
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  }
+                  let totalPartial = content.match(/{{>/g).length;
+
+                  let namefile = namepartial
+                  let namefolder = Object.keys(configData[2].layoutOptions[0])[q];
+                  let temp = {
+                    value: namefile,
+                    label: namefile,
+                    partialsList: result,
+                    defaultList: DefaultParams
+                  }
+                  let checkValue = false;
+                  for (var i = 0; i < Object.keys(configData[2].layoutOptions[0]).length; i++) {
+                    var obj = Object.keys(configData[2].layoutOptions[0])[i];
+                    if ((obj) == namefolder) {
+                      checkValue = true;
+                    }
+                  }
+                  if (checkValue == true) {
+                    let checkFileNamevalue = false;
+                    for (let j = 0; j < configData[2].layoutOptions[0][namefolder].length; j++) {
+                      if (configData[2].layoutOptions[0][namefolder][j].label == namefile) {
+                        checkFileNamevalue = true
+                        configData[2].layoutOptions[0][namefolder][j].partialsList = [];
+                        configData[2].layoutOptions[0][namefolder][j].defaultList = [];
+                        configData[2].layoutOptions[0][namefolder][j].partialsList = result;
+                        configData[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
+
+                      }
+                    }
+                    if (checkFileNamevalue != true) {
+
+                      configData[2].layoutOptions[0][namefolder].push(temp)
+                    }
+                    this.saveConfigFile(this.repoName,configData);
+                  } else {
+                    console.log('file doesnt exists');
+                  }
+                } else {
+                  let namefile = namepartial;
+                  let namefolder = Object.keys(configData[2].layoutOptions[0])[q];
+                  let temp = {
+                    value: namefile,
+                    label: namefile,
+                  }
+                  let checkValue = false;
+                  for (var i = 0; i < Object.keys(configData[2].layoutOptions[0]).length; i++) {
+                    var obj = Object.keys(configData[2].layoutOptions[0])[i];
+                    if ((obj) == namefolder) {
+                      checkValue = true;
+                    }
+                  }
+                  if (checkValue == true) {
+                    let checkFileNamevalue = false;
+                    for (let j = 0; j < configData[2].layoutOptions[0][namefolder].length; j++) {
+                      if (configData[2].layoutOptions[0][namefolder][j].label == namefile) {
+                        checkFileNamevalue = true
+                        delete configData[2].layoutOptions[0][namefolder][j].partialsList;
+                        delete configData[2].layoutOptions[0][namefolder][j].defaultList;
+                      }
+                    }
+                    if (checkFileNamevalue != true) {
+
+                      configData[2].layoutOptions[0][namefolder].push(temp)
+                    }
+                    this.saveConfigFile(this.repoName,configData);
+                  } else {
+                    console.log('file doesnt exists');
+                  }
+                }
+          } 
+          }
+            
+        }       
+      }
+      // console.log('now pages');
+      for(let r=0;r<configData[1].pageSettings.length;r++){
+        var namepage=configData[1].pageSettings[r].PageName
+        // console.log('namepage:',namepage)
+        // console.log('this.repoName:',this.repoName)
+        console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
+        var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Pages/'+namepage);
+        // console.log('contentpage:',contentpage)
+
+        // console.log("inside ==pages directory")
+        var content1=''
+         // content = this.$store.state.content;
+        let name = namepage;
+         // console.log('name:',name)
+         name=name.split('.')[0]
+         content1=contentpage.data
+          var result1=[];
+         result1 = (getFromBetween.get(content1, "{{>", "}}"));
+        var DefaultParams = [];
+        if (result1.length > 0) {
+          var resultParam = result1
+          for (let i = 0; i < resultParam.length; i++) {
+            var temp;
+            temp = resultParam[i].trim()
+            result1[i] = result1[i].trim()
+            result1[i]=result1[i].replace(/&nbsp;/g, ' ').trim()
+            temp = temp.replace(/&nbsp;/g, ' ')
+            temp = temp.replace(/\s+/g, ' ');
+            temp = temp.trim();
+            temp = temp.split(' ')
+            for (let j = 0; j < temp.length; j++) {
+              if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                if (temp[j + 1] != undefined) {
+                  result1[i] = temp[0];
+                  if (temp[j + 1].indexOf('.') > -1) {
+                    let x = temp[j + 1]
+                    x = temp[j + 1].split(/'/)[1];
+                    let obj = {}
+                    obj[temp[0]] = x
+                    DefaultParams.push(obj)
+                    break;
+                  }
+                } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                  result1[i] = temp[0];
+                  if (temp[j]) {
+                    let x = temp[j]
+                    x = temp[j].split(/'/)[1];
+                    let obj = {}
+                    obj[temp[0]] = x
+                    DefaultParams.push(obj)
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          // console.log("DefaultParams:",DefaultParams)
+          for (let i = 0; i < configData[1].pageSettings.length; i++) {
+            let temp = configData[1].pageSettings[i].PageName
+            temp = temp.split('.')[0]
+            // console.log('temp:',temp)
+            if (name == temp) {
+              console.log('temp:',temp)
+              var partials = configData[1].pageSettings[i].partials
+              for (let k = 0; k < result1.length; k++) {
+                let checkpartial = false
+                // console.log("result[k]:", result[k])
+                for (let r = 0; r < partials.length; r++) {
+                  if (Object.keys(partials[r])[0] == result1[k]) {
+                    checkpartial = true
+                    console.log("checkpartial==true")
+                    var temp1 = DefaultParams[k][result1[k]]
+                    var temp2 = partials[r][result1[k]]
+                    if (temp1.split('.')[0] == temp2.split('.')[0]) {
+                      for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
+
+                        if (configData[2].layoutOptions[0][result1[k]][z].value == DefaultParams[k][result1[k]].split('.')[0]) {
+                          if (configData[2].layoutOptions[0][result1[k]][z].defaultList != undefined) {
+                            var defaultListtemp = configData[2].layoutOptions[0][result1[k]][z].defaultList
+                            this.recursivecall(name, partials, defaultListtemp,configData)
+                          }
+                        }
+                      }
+                      break;
+                    } else {
+                      checkpartial = false
+                    }
+                  }
+
+                }
+                if (checkpartial != true) {
+                  console.log("checkpartial!=true")
+                  var obj = {}
+                  obj[result1[k]] = DefaultParams[k][result1[k]].split('.')[0]
+                  for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
+                    if (configData[2].layoutOptions[0][result1[k]][z].value == DefaultParams[k][result1[k]].split('.')[0]) {
+                      if (configData[2].layoutOptions[0][result1[k]][z].defaultList != undefined) {
+                        var defaultListtemp = configData[2].layoutOptions[0][result1[k]][z].defaultList
+                        this.recursivecall(name, partials, defaultListtemp,configData)
+                      }
+                    }
+                  }
+                  configData[1].pageSettings[i].partials.push(obj);
+                }
+              }
+            } else if (name != temp) {
+              // console.log("file not found in config file")
+            }
+          }
+          this.saveConfigFile(this.repoName,configData);
+        }
+        // this.configData=JSON.parse(JSON.stringify(this.configData.data.data[0].configData))
+        var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
+        if (vueresult.length > 0) {
+          for (let i = 0; i < vueresult.length; i++) {
+            var tempvue = vueresult[i]
+            var tempvue = tempvue.trim().split(' ')
+            if (tempvue[2] != undefined) {
+              var vuetemp = {
+                partialsName: tempvue[0].replace(/"/g, ''),
+                value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue',
+                options: tempvue[2].split('=')[1].replace(/"/g, '')
+              }
+            } else {
+              var vuetemp = {
+                partialsName: tempvue[0].replace(/"/g, ''),
+                value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue'
+              }
+            }
+
+            for (let i = 0; i < configData[1].pageSettings.length; i++) {
+              let temp = configData[1].pageSettings[i].PageName
+              temp = temp.split('.')[0]
+              if (name == temp) {
+                if (configData[1].pageSettings[i].VueComponents != undefined) {
+                  let checkvue = false
+                  for (let j = 0; j < configData[1].pageSettings[i].VueComponents.length; j++) {
+                    if (configData[1].pageSettings[i].VueComponents[j].partialsName == tempvue[0].replace(/"/g, '')) {
+                      if (configData[1].pageSettings[i].VueComponents[j].value.split('.')[0] == tempvue[1].split('=')[1].replace(/"/g, '')) {
+                        checkvue = true;
+                        if (configData[1].pageSettings[i].VueComponents[j].options != '') {
+                          if (tempvue[2] != undefined) {
+
+                            configData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
+                          } else {
+                            configData[1].pageSettings[i].VueComponents[j].options = ''
+                          }
+                        } else {
+                          if (tempvue[2] != undefined) {
+
+                            configData[1].pageSettings[i].VueComponents[j]['options'] = ''
+                            configData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
+                          } else {
+
+                          }
+                        }
+                      } else {
+                        console.log("value not matched")
+
+                      }
+
+                    }
+                  }
+                  if (checkvue != true) {
+
+                    configData[1].pageSettings[i].VueComponents.push(vuetemp)
+                  }
+                } else {
+                  configData[1].pageSettings[i]['VueComponents'] = []
+                  configData[1].pageSettings[i].VueComponents.push(vuetemp)
+                }
+              }
+            }
+          }
+          this.saveConfigFile(this.repoName,configData);
+        }
+
+          this.saveConfigFile(this.repoName,configData);
+        // }
+      }
+
       location.reload();
     },
 
     deleteVariable(deleteIndex) {
       this.globalVariables.splice(deleteIndex, 1);
+    },
+
+    deleteUrlVariable(deleteIndex) {
+      this.urlVariables.splice(deleteIndex, 1);
+    },
+
+    deleteUrlHeaderVariable(deleteIndex) {
+      this.urlHeaderVariables.splice(deleteIndex, 1);
     },
 
     deleteCssVariable(deleteIndex) {
@@ -1088,7 +1804,12 @@ export default {
     deleteEcommerceVariable(deleteIndex) {
       this.ecommerceVariables.splice(deleteIndex, 1);
     },
-
+    deletelocalscripts(deleteIndex){
+      this.localscripts.splice(deleteIndex,1);
+    },
+    deletelocalstyles(deleteIndex){
+      this.localstyles.splice(deleteIndex,1);
+    },
     deletelinkJS(deleteIndex) {
       this.externallinksJS.splice(deleteIndex, 1);
     },
@@ -1097,6 +1818,11 @@ export default {
     },
     deletelinkMeta(deleteIndex) {
       this.externallinksMeta.splice(deleteIndex, 1);
+    },
+
+    deletepaymentgateway(deleteIndex) {
+      this.paymentgateway.splice(deleteIndex,1);
+      this.Paymentfields.splice(deleteIndex,1);
     },
 
     deletePlugin(deleteIndex){
@@ -1141,7 +1867,7 @@ export default {
       this.form.brandLogoName = fileData.name;
 
       axios.post( config.baseURL + '/image-upload', {
-          filename : this.folderUrl + '/assets/' + this.form.brandLogoName,
+          filename : this.folderUrl + '/public/assets/' + this.form.brandLogoName,
           text : fileBlob,
           type : 'file'
       })
@@ -1165,13 +1891,17 @@ export default {
                               "ProjectSEODescription": this.form.seoDesc
                             }, {
                               "GlobalVariables": this.globalVariables,
+                              "GlobalUrlVariables": this.urlVariables,
+                              "GlobalUrlHeaderVariables": this.urlHeaderVariables,
                               "GlobalCssVariables": this.globalCssVariables,
                               "EcommerceSettings": this.ecommerceSettings,
                               "ProjectExternalCss": this.externallinksCSS,
                               "ProjectExternalJs": this.externallinksJS,
                               "ProjectMetaInfo": this.externallinksMeta,
                               "ProjectMetacharset":this.Metacharset,
-                              "ProjectScripts":this.localscripts
+                              "ProjectScripts":this.localscripts,
+                              "ProjectStyles":this.localstyles,
+                               "PaymentGateways":this.paymentgateway
                             }];
 
       this.settings[1].projectSettings = ProjectSettings;
@@ -1187,11 +1917,6 @@ export default {
           pluginsData: this.pluginsTreedata
         })
         .then(async (res) => {
-          this.$message({
-              showClose: true,
-              message: 'Successfully updated.',
-              type: 'success'
-          });
           console.log(res.data);
         })
         .catch((e) => {
@@ -1218,7 +1943,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'), {
       }).then(response => {
         console.log(response.data);
         this.$message({
@@ -1237,7 +1962,8 @@ export default {
       // Push repository changes
       axios.post(config.baseURL + '/gitlab-add-repo', {
         commitMessage: this.commitMessage,
-        repoName: this.repoName
+        repoName: this.repoName,
+        userDetailId: this.$session.get('userDetailId')
       }).then(response => {
         console.log(response);
         if(response.status == 200 || response.status == 201){
@@ -1255,8 +1981,16 @@ export default {
       }) 
     },
 
-    async publishMetalsmith() {
+    async publishMetalsmith(publishType) {
       this.fullscreenLoading = true;
+
+      var dt = new Date();
+      var utcDate = dt.toUTCString();
+
+      this.commitMessage = 'Publish - ' + utcDate;
+
+      await this.commitProject();
+
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
       var rawConfigs = responseConfig.data.data[0].configData;
@@ -1266,6 +2000,7 @@ export default {
       var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
       var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
       var projectscripts=rawConfigs[1].projectSettings[1].ProjectScripts
+      var projectstyles=rawConfigs[1].projectSettings[1].ProjectStyles
 
       
       var getFromBetween = {
@@ -1306,59 +2041,70 @@ export default {
       var endhead = '';
       var topbody = '';
       var endbody = '';
-        
+        if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
+        tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
+      }
 
-        if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
-          tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
+      if (metaInfo!=undefined && metaInfo.length > 0) {
+        for (let a = 0; a < metaInfo.length; a++) {
+          tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
         }
+      }
 
-        if (metaInfo != undefined && metaInfo.length > 0) {
-          for (let a = 0; a < metaInfo.length; a++) {
-            tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+      if (externalJs!=undefined && externalJs.length > 0) {
+        for (let a = 0; a < externalJs.length; a++) {
+          if (externalJs[a].linkposition == 'starthead') {
+            tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'endhead') {
+            endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'startbody') {
+            topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+          } else if (externalJs[a].linkposition == 'endbody') {
+            endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
           }
         }
+      }
 
-        if (externalJs != undefined && externalJs.length > 0) {
-          for (let a = 0; a < externalJs.length; a++) {
-            if (externalJs[a].linkposition == 'starthead') {
-              tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-            } else if (externalJs[a].linkposition == 'endhead') {
-              endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-            } else if (externalJs[a].linkposition == 'startbody') {
-              topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-            } else if (externalJs[a].linkposition == 'endbody') {
-              endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+      if (externalCss!=undefined && externalCss.length > 0) {
+        for (let a = 0; a < externalCss.length; a++) {
+          if (externalCss[a].linkposition == 'starthead') {
+            tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'endhead') {
+            endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'startbody') {
+            topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+          } else if (externalCss[a].linkposition == 'endbody') {
+            endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
+          }
+
+        }
+      }
+      if (projectscripts!=undefined && projectscripts.length > 0) {
+            for (let a = 0; a < projectscripts.length; a++) {
+              if (projectscripts[a].linkposition == 'starthead') {
+                tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'endhead') {
+                endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'startbody') {
+                topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              } else if (projectscripts[a].linkposition == 'endbody') {
+                endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              }
             }
           }
-        }
-
-        if (externalCss != undefined && externalCss.length > 0) {
-          for (let a = 0; a < externalCss.length; a++) {
-            if (externalCss[a].linkposition == 'starthead') {
-              tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-            } else if (externalCss[a].linkposition == 'endhead') {
-              endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-            } else if (externalCss[a].linkposition == 'startbody') {
-              topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-            } else if (externalCss[a].linkposition == 'endbody') {
-              endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
-            }
-
-          }
-        }
-        if (projectscripts != undefined && projectscripts.length > 0) {
-          for (let a = 0; a < projectscripts.length; a++) {
-            if (projectscripts[a].linkposition == 'starthead') {
-              tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-            } else if (projectscripts[a].linkposition == 'endhead') {
-              endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-            } else if (projectscripts[a].linkposition == 'startbody') {
-              topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-            } else if (projectscripts[a].linkposition == 'endbody') {
-              endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+          if (projectstyles!=undefined && projectstyles.length > 0) {
+            for (let a = 0; a < projectstyles.length; a++) {
+              if (projectstyles[a].linkposition == 'starthead') {
+                tophead = tophead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'endhead') {
+                endhead = endhead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'startbody') {
+                topbody = topbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'endbody') {
+                endbody = endbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              }
             }
           }
-        }
 
         var partials = ''
         let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
@@ -1370,6 +2116,7 @@ export default {
         var partialsPage = [];
         var vuepartials = [];
         var pagescripts=[];
+        var pagestyles=[];
         var layoutdata = '';
         var pageexternalJs = [];
         var pageexternalCss = [];
@@ -1386,17 +2133,18 @@ export default {
         pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
         PageMetacharset = rawSettings[1].pageSettings[i].PageMetacharset;
         pagescripts=rawSettings[1].pageSettings[i].PageScripts;
+        pagestyles=rawSettings[1].pageSettings[i].PageStyles;
 
 
-        if (PageMetacharset != undefined && PageMetacharset != '') {
+        if (PageMetacharset!=undefined && PageMetacharset != '') {
           tophead = tophead + '<meta charset="' + PageMetacharset + '">'
         }
-        if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
+        if (pageMetaInfo!=undefined && pageMetaInfo.length > 0) {
           for (let a = 0; a < pageMetaInfo.length; a++) {
             tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
           }
         }
-        if (pageexternalJs != undefined && pageexternalJs.length > 0) {
+        if (pageexternalJs!=undefined && pageexternalJs.length > 0) {
           for (let a = 0; a < pageexternalJs.length; a++) {
             if (pageexternalJs[a].linkposition == 'starthead') {
               tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
@@ -1411,7 +2159,7 @@ export default {
         }
 
 
-        if (pageexternalCss != undefined && pageexternalCss.length > 0) {
+        if (pageexternalCss!=undefined && pageexternalCss.length > 0) {
           for (let a = 0; a < pageexternalCss.length; a++) {
             if (pageexternalCss[a].linkposition == 'starthead') {
               tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
@@ -1424,7 +2172,7 @@ export default {
             }
           }
         }
-        if (pagescripts != undefined && pagescripts.length > 0) {
+        if (pagescripts!=undefined && pagescripts.length > 0) {
             for (let a = 0; a < pagescripts.length; a++) {
               if (pagescripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
@@ -1437,9 +2185,22 @@ export default {
               }
             }
           }
+          if (pagestyles!=undefined && pagestyles.length > 0) {
+            for (let a = 0; a < pagestyles.length; a++) {
+              if (pagestyles[a].linkposition == 'starthead') {
+                tophead = tophead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'endhead') {
+                endhead = endhead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'startbody') {
+                topbody = topbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'endbody') {
+                endbody = endbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              }
+            }
+          }
 
         if (vuepartials != undefined && vuepartials.length > 0) {
-          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
           mainVuefile = mainVuefile.data
 
           for (let x = 0; x < vuepartials.length; x++) {
@@ -1451,9 +2212,9 @@ export default {
                 text: temp,
                 type: 'file'
               }).then(async (res) => {
-                contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+                contentpartials = contentpartials + '<script src="./assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
-                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
+                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
                   .then((response) => {
                     console.log("called webpack_file api successfully:")
                   })
@@ -1594,13 +2355,13 @@ export default {
 
                       temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
                     }
-                    console.log('temp1:', temp1)
-                    console.log('temp2:', temp2)
+                    // console.log('temp1:', temp1)
+                    // console.log('temp2:', temp2)
                     if (layoutdata.data.split(temp1).join(temp2)) {
-                      console.log('replacing in layout file successfully')
+                      // console.log('replacing in layout file successfully')
                       layoutdata.data = layoutdata.data.split(temp1).join(temp2)
                     } else {
-                      console.log('replacing in layout file failed')
+                      // console.log('replacing in layout file failed')
                     }
                   }
                 }
@@ -1656,7 +2417,7 @@ export default {
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
         console.log('final responseMetal:', responseMetal)
-        var mainMetal = folderUrl + '/assets/metalsmith.js'
+        var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename: mainMetal,
@@ -1683,12 +2444,13 @@ export default {
                   "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                   "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                   "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
-                  "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body><div id=\"app\">\n" +
+                  "<link rel='stylesheet' href='./main-files/main.css'/>\n<script src=\"./main-files/main.js\"><\/script>\n" + endhead + "</head><body><div id=\"app\">\n" +
                   layoutdata.data + topbody +
-                  '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                  '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                  '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                  '\n</div>\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/slider-plugin.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/shopping-cart.js"><\/script>\n' +
+                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>\n' +
                   '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                   '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                   '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
@@ -1698,8 +2460,8 @@ export default {
                   '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
                   '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
                   '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
-                  '<script src="./../main-files/main.js"><\/script>\n' + endbody +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' + 
+                  endbody +
                   '</body>\n</html>';
 
                 await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -1779,6 +2541,8 @@ export default {
 
                       })
                       .catch((err) => {
+                         this.saveFileLoading = false;
+                          this.fullscreenLoading = false;
                         console.log('error while creating metalsmithJSON file' + err)
                         axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: mainMetal,
@@ -1795,6 +2559,7 @@ export default {
                   })
                   .catch((e) => {
                     this.saveFileLoading = false
+                     this.fullscreenLoading = false;
                     axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: mainMetal,
                       text: responseMetal,
@@ -1810,6 +2575,8 @@ export default {
 
               })
               .catch((e) => {
+                 this.saveFileLoading = false;
+                  this.fullscreenLoading = false;
                 console.log(e)
                 axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: mainMetal,
@@ -1825,6 +2592,8 @@ export default {
 
           })
           .catch((e) => {
+             this.saveFileLoading = false;
+              this.fullscreenLoading = false;
             console.log('error while creating metalsmithJSON file' + e)
             axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
@@ -1838,11 +2607,9 @@ export default {
 
           })
 
-
-          this.fullscreenLoading = false;
-        // Open in new window
-        // window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
-        window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
+        
+         
+        
         // Publish with Zeit Now
         // axios.post(config.baseURL + '/publish-now', {
         //     projectName: this.repoName
@@ -1856,7 +2623,7 @@ export default {
         //       type: 'success'
         //     });
         //     console.log(res.data);
-        //     this.fullscreenLoading = false;
+        //     this.previewLoader = false;
         //   })
         //   .catch((e) => {
         //     this.$message({
@@ -1865,8 +2632,44 @@ export default {
         //       type: 'error'
         //     });
         //     console.log(e);
-        //     this.fullscreenLoading = false;
+        //     this.previewLoader = false;
         //   });
+      }
+
+      if(publishType == 'custom'){
+        console.log('Custom Domain')
+        // Surge.sh API
+        axios.post( config.baseURL + '/publish-surge', {
+            projectPath : this.$session.get('userDetailId') + '/' + this.repoName + '/public' ,
+            domainName: this.customDomainName
+        })
+        .then((res) => {
+          this.fullscreenLoading = false;
+          this.publishWebsite = false;
+          window.open(this.customDomainName);
+          console.log(res.data);
+        })
+        .catch((e) => {
+          this.fullscreenLoading = false;
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
+
+      } else {
+        console.log('Default Publish');
+        this.fullscreenLoading = false;
+        this.publishWebsite = false;
+
+        // Open in new window
+        if(process.env.NODE_ENV !== 'development'){
+          window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+        } else {
+          window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
+        }
       }
     },
 
@@ -1890,18 +2693,24 @@ export default {
     },
 
     exportWebsite(){
-      window.open(config.ipAddress + this.$session.get('username') + '/' + this.repoName + '/repository/archive.zip?ref=master');
+      window.open(config.gitLapIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
     },
 
     async init () {
+
+      var gateways= await axios.get('http://api.flowzcluster.tk/payment/availablegateway');
+      this.Allgateway = gateways.data.gateways;
+
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
+      this.userDetailId = this.$session.get('userDetailId');
 
       let splitUrl = url.split('/');
 
       let websiteName = splitUrl[(splitUrl.length -1)];
 
-
+      console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
@@ -1918,6 +2727,8 @@ export default {
         this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
         this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
+        this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
+        this.urlHeaderVariables = this.settings[1].projectSettings[1].GlobalUrlHeaderVariables;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
         this.externallinksCSS = this.settings[1].projectSettings[1].ProjectExternalCss;
@@ -1925,99 +2736,26 @@ export default {
         this.externallinksMeta = this.settings[1].projectSettings[1].ProjectMetaInfo;
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
-
-
-        // Old Code for tree data
-        // // Getting tree data structure from partials listings
-        // let pluginNames = [];
-
-        // pluginNames = Object.keys(this.settings[2].layoutOptions[0]);
-        // pluginNames.splice(pluginNames.indexOf('Layout'), 1);
-
-        // let treeData = [];
-        // let count = 0;
-
-        // // Loop thru all plugins found
-        // for(let i = 0; i < pluginNames.length; i++){
-        //   count++;
-
-        //   let partialName = pluginNames[i];
-
-        //   let temp1 = {
-        //     id: count,
-        //     children: [],
-        //     label: partialName,
-        //     isActive: true
-        //   }
-
-        //   treeData.push(temp1);
-
-        //   // Loop thru all plugin variants
-        //   for(let j = 0; j < this.settings[2].layoutOptions[0][partialName].length; j++){
-            
-        //     count++;
-
-        //     let temp2 = {
-        //       id: count,
-        //       children: [],
-        //       label: this.settings[2].layoutOptions[0][partialName][j].label,
-        //       isActive: true
-        //     }
-
-        //     treeData[i].children.push(temp2);
-        //   }
-
-        // }
-
-        // this.pluginsTreedata = treeData;
-
-        // // Get checked items
-        // this.checkedList = getIds(this.pluginsTreedata);
-
-        // function getIds(ma) {       
-        //   let ida = []
-
-        //   if (ma instanceof Array) {               
-        //     for (let i in ma) {                       
-        //       let ii = getIds(ma[i])                        
-        //       ida = ida.concat(ii)               
-        //     }       
-        //   } else if (typeof ma == 'object') {               
-        //     if (ma.isActive) { 
-        //       ida.push(ma.id) 
-        //     }
-        //     let ii = getIds(ma.children)                
-        //     ida = ida.concat(ii)       
-        //   }       
-        //   return ida
-        // }
-
-        // Set Brand Logo Name
-        // if(this.form.brandLogoName != ''){
-        //   if (this.form.brandLogoName.length > 18) {
-        //       $('#text2').text(this.form.brandLogoName.substr(0, 10)+'...'+this.form.brandLogoName.substr(this.form.brandLogoName.length-8, this.form.brandLogoName.length));
-        //       $('.valid').removeClass('error').addClass('correct');
-        //       $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-        //    }else{
-        //       $('#text2').text(this.form.brandLogoName);
-        //       $('.valid').removeClass('error').addClass('correct');
-        //       $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-        //   }  
-        // } else {
-        //   console.log('BrandLogoName not found!');
-        // }
-        
-
+        this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
+        this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
       } else {
         console.log('Cannot get configurations!');
       } 
+
+      for(let i=0;i<this.paymentgateway.length;i++){
+        var temp=[]
+        for(let j=0;j<this.paymentgateway[i].fields.length;j++){
+          temp.push(Object.keys(this.paymentgateway[i].fields[j])[0])
+        }
+        this.Paymentfields[i]=temp
+      }
 
       // replace all image tag source with index as name attribute to get the image file preview
       
       for (var i = 0; i < this.globalVariables.length; i++){
         if(this.globalVariables[i].variableType == 'image'){
           let _imageIndex = i;
-          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
+          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/public/assets/' + this.globalVariables[i].variableValue, {
           }).then(response => {
             $('[name = ' + _imageIndex + ']').attr('src', response.data);
           }).catch(error => {
@@ -2122,6 +2860,15 @@ export default {
             }
         });
 
+        $("#toggleUrlBucket").click(function() {
+            $("#toggleUrlBucketContent").slideToggle("slow");
+            if ($("#toggleUrlBucket").text() == "URL Bucket") {
+                $("#toggleUrlBucket").html("URL Bucket")
+            } else {
+                $("#toggleUrlBucket").text("URL Bucket")
+            }
+        });
+
         $("#toggleGlobalVariables").click(function() {
             $("#toggleGlobalVariablesContent").slideToggle("slow");
             if ($("#toggleGlobalVariables").text() == "Global Variables") {
@@ -2139,6 +2886,23 @@ export default {
                 $("#toggleExternalLinks").text("External Links")
             }
         });
+        $("#toggleLocalscripts").click(function() {
+            $("#toggleLocalscriptsContent").slideToggle("slow");
+            if ($("#toggleLocalscripts").text() == "Global Scripts") {
+                $("#toggleLocalscripts").html("Global Scripts")
+            } else {
+                $("#toggleLocalscripts").text("Global Scripts")
+            }
+        });
+        $("#toggleLocalstyles").click(function() {
+            $("#toggleLocalstylesContent").slideToggle("slow");
+            if ($("#toggleLocalstyles").text() == "Global Styles") {
+                $("#toggleLocalstyles").html("Global Styles")
+            } else {
+                $("#toggleLocalstyles").text("Global Styles")
+            }
+        });
+
 
         $("#toggleMetaTags").click(function() {
             $("#toggleMetaTagsContent").slideToggle("slow");
@@ -2149,21 +2913,21 @@ export default {
             }
         });
 
+        $("#togglePaymentgateway").click(function() {
+            $("#togglePaymentgatewayContent").slideToggle("slow");
+            if ($("#togglePaymentgateway").text() == "Payment gateway") {
+                $("#togglePaymentgateway").html("Payment gateway")
+            } else {
+                $("#togglePaymentgateway").text("Payment gateway")
+            }
+        });
+
         $("#toggleCommits").click(function() {
             $("#toggleCommitsContent").slideToggle("slow");
             if ($("#toggleCommits").text() == "List of Commits") {
                 $("#toggleCommits").html("List of Commits")
             } else {
                 $("#toggleCommits").text("List of Commits")
-            }
-        });
-
-        $("#toggleLocalscripts").click(function() {
-            $("#toggleLocalscriptsContent").slideToggle("slow");
-            if ($("#toggleLocalscripts").text() == "Local Scripts") {
-                $("#toggleLocalscripts").html("Local Scripts")
-            } else {
-                $("#toggleLocalscripts").text("Local Scripts")
             }
         });
 

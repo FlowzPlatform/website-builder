@@ -2,7 +2,7 @@
   <div class="Login">
     <vue-particles color="#dedede"></vue-particles>
     <div class='brand'>
-      <a href='/'>
+      <a href="javascript:void()" @click="goToLandingPage">
           <img src='../../static/img/Flowz-logo.png' class="flowz-logo">
       </a>
     </div>
@@ -120,7 +120,8 @@ export default {
       loginWithGoogleUrl : config.loginWithGoogleUrl,
       loginWithTwitterUrl: config.loginWithTwitterUrl,
       loginWithGithubUrl: config.loginWithGithubUrl,
-      loginWithLinkedInUrl: config.loginWithLinkedInUrl
+      loginWithLinkedInUrl: config.loginWithLinkedInUrl,
+      userDetailId: ''
     }
   },
   component: {
@@ -148,43 +149,72 @@ export default {
           this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
 
           // Set email Session
+          console.log('User Details: ', response.data);
+          axios.get(config.userDetail, {
+            headers: {
+              'Authorization' : response.data.logintoken
+            }   
+          })
+          .then(async (res) => {
+            this.userDetailId = res.data.data._id;
+
+            this.$session.set('userDetailId', this.userDetailId);
+            localStorage.setItem('userDetailId', this.userDetailId);
+
+            await axios.post(config.baseURL+'/flows-dir-listing' , {
+              foldername :'/var/www/html/websites/'+ this.userDetailId,
+              type : 'folder'
+            })
+            .then((res) => {
+              this.$router.push('/editor');
+              console.log('user Folder created!');
+            });
+            
+          })
+          .catch((e) => {
+            console.log(e)
+          })
           this.$session.set('email', this.form.user);
           localStorage.setItem('email', this.form.user);
           // this.$router.push('/');
-          await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
-          }).then(response => {
-            if (response.data) {
-                console.log(response.data.private_token);
-                console.log(response.data.id);
-                this.$session.set('privateToken', response.data.private_token);
-                this.$session.set('userId', response.data.id);
-                this.$session.set('username', response.data.username);
-                console.log("Username:", this.$session.get('username'));
-                this.authen.status = true;
 
-                // axios.post(config.baseURL+'/flows-dir-listing' , {
-                //   foldername :'/var/www/html/websites/'+ this.$session.get('username'),
-                //   type : 'folder'
-                // })
-                // .then((res) => {
-                //   console.log('user Folder created!');
-                // })
+          this.$session.set('privateToken', response.data.private_token);
+          this.$session.set('userId', response.data.id);
+          this.$session.set('username', response.data.username);
+          this.authen.status = true;
 
-                let self = this;
-                setTimeout(function () {
-                  self.$router.push('/dashboard');
-                }, 2000);
+          
+          // await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
+          // }).then(response => {
+          //   if (response.data) {
+          //       this.$session.set('privateToken', response.data.private_token);
+          //       this.$session.set('userId', response.data.id);
+          //       this.$session.set('username', response.data.username);
+          //       this.authen.status = true;
+
+          //       // axios.post(config.baseURL+'/flows-dir-listing' , {
+          //       //   foldername :'/var/www/html/websites/'+ this.$session.get('username'),
+          //       //   type : 'folder'
+          //       // })
+          //       // .then((res) => {
+          //       //   console.log('user Folder created!');
+          //       // })
+
+          //       let self = this;
+          //       setTimeout(function () {
+          //         self.$router.push('/editor');
+          //       }, 2000);
                 
-            }
-          }).catch(error => {
-            console.log(error);
-            this.authen.status = false;
-            // this.$notify.error({
-            //   title: 'Error',
-            //   message: error.response.data,
-            //   offset: 100
-            // });
-          })
+          //   }
+          // }).catch(error => {
+          //   console.log(error);
+          //   this.authen.status = false;
+          //   // this.$notify.error({
+          //   //   title: 'Error',
+          //   //   message: error.response.data,
+          //   //   offset: 100
+          //   // });
+          // })
         }
         
       }).catch(error => {
@@ -220,12 +250,16 @@ export default {
     doLinkedInLogin () {
       console.log('LinkedIn Login');
       document.getElementById('form-linkedIn').submit();
+    },
+
+    goToLandingPage () {
+      this.$router.push('/');
     }
   },
   created () {
     // Check if login token in cookie exist or not
     if(this.$cookie.get('auth_token')){
-      this.$router.push('/dashboard');
+      this.$router.push('/editor');
     }
   },
   mounted () {

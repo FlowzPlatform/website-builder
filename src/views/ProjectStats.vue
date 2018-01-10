@@ -2,6 +2,7 @@
   <div class="ProjectStats">
     <div class="page-buttons">
       <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button>
+      <!-- <el-button type="success" size="small" @click="goToProjectSettings">Project Settings</el-button> -->
     </div>
   	<div class="container-fluid">
     	<div class="row" style="margin-top: 20px;">
@@ -217,7 +218,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName, {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'), {
       }).then(response => {
         console.log(response.data);
         this.$message({
@@ -246,11 +247,6 @@ export default {
             configData: this.settings
         })
         .then(async(res) => {
-            this.$message({
-                showClose: true,
-                message: 'Successfully updated.',
-                type: 'success'
-            });
             console.log(res.data);
         })
         .catch((e) => {
@@ -352,6 +348,7 @@ export default {
       var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
       var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
       var projectscripts=rawConfigs[1].projectSettings[1].ProjectScripts
+      var projectstyles=rawConfigs[1].projectSettings[1].ProjectStyles
 
       
       var getFromBetween = {
@@ -392,18 +389,17 @@ export default {
       var endhead = '';
       var topbody = '';
       var endbody = '';
-      
-      if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
+        if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
         tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
       }
 
-      if (metaInfo != undefined && metaInfo.length > 0) {
+      if (metaInfo!=undefined && metaInfo.length > 0) {
         for (let a = 0; a < metaInfo.length; a++) {
           tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
         }
       }
 
-      if (externalJs != undefined && externalJs.length > 0) {
+      if (externalJs!=undefined && externalJs.length > 0) {
         for (let a = 0; a < externalJs.length; a++) {
           if (externalJs[a].linkposition == 'starthead') {
             tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
@@ -417,7 +413,7 @@ export default {
         }
       }
 
-      if (externalCss != undefined && externalCss.length > 0) {
+      if (externalCss!=undefined && externalCss.length > 0) {
         for (let a = 0; a < externalCss.length; a++) {
           if (externalCss[a].linkposition == 'starthead') {
             tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
@@ -431,7 +427,7 @@ export default {
 
         }
       }
-      if (projectscripts != undefined && projectscripts.length > 0) {
+      if (projectscripts!=undefined && projectscripts.length > 0) {
             for (let a = 0; a < projectscripts.length; a++) {
               if (projectscripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
@@ -441,6 +437,19 @@ export default {
                 topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
               } else if (projectscripts[a].linkposition == 'endbody') {
                 endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+              }
+            }
+          }
+          if (projectstyles!=undefined && projectstyles.length > 0) {
+            for (let a = 0; a < projectstyles.length; a++) {
+              if (projectstyles[a].linkposition == 'starthead') {
+                tophead = tophead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'endhead') {
+                endhead = endhead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'startbody') {
+                topbody = topbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+              } else if (projectstyles[a].linkposition == 'endbody') {
+                endbody = endbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
               }
             }
           }
@@ -455,6 +464,7 @@ export default {
         var partialsPage = [];
         var vuepartials = [];
         var pagescripts=[];
+        var pagestyles=[];
         var layoutdata = '';
         var pageexternalJs = [];
         var pageexternalCss = [];
@@ -471,17 +481,18 @@ export default {
         pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
         PageMetacharset = rawSettings[1].pageSettings[i].PageMetacharset;
         pagescripts=rawSettings[1].pageSettings[i].PageScripts;
+        pagestyles=rawSettings[1].pageSettings[i].PageStyles;
 
 
-        if (PageMetacharset != undefined && PageMetacharset != '') {
+        if (PageMetacharset!=undefined && PageMetacharset != '') {
           tophead = tophead + '<meta charset="' + PageMetacharset + '">'
         }
-        if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
+        if (pageMetaInfo!=undefined && pageMetaInfo.length > 0) {
           for (let a = 0; a < pageMetaInfo.length; a++) {
             tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
           }
         }
-        if (pageexternalJs != undefined && pageexternalJs.length > 0) {
+        if (pageexternalJs!=undefined && pageexternalJs.length > 0) {
           for (let a = 0; a < pageexternalJs.length; a++) {
             if (pageexternalJs[a].linkposition == 'starthead') {
               tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
@@ -496,7 +507,7 @@ export default {
         }
 
 
-        if (pageexternalCss != undefined && pageexternalCss.length > 0) {
+        if (pageexternalCss!=undefined && pageexternalCss.length > 0) {
           for (let a = 0; a < pageexternalCss.length; a++) {
             if (pageexternalCss[a].linkposition == 'starthead') {
               tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
@@ -509,7 +520,7 @@ export default {
             }
           }
         }
-        if (pagescripts != undefined && pagescripts.length > 0) {
+        if (pagescripts!=undefined && pagescripts.length > 0) {
             for (let a = 0; a < pagescripts.length; a++) {
               if (pagescripts[a].linkposition == 'starthead') {
                 tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
@@ -522,9 +533,22 @@ export default {
               }
             }
           }
+          if (pagestyles!=undefined && pagestyles.length > 0) {
+            for (let a = 0; a < pagestyles.length; a++) {
+              if (pagestyles[a].linkposition == 'starthead') {
+                tophead = tophead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'endhead') {
+                endhead = endhead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'startbody') {
+                topbody = topbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              } else if (pagestyles[a].linkposition == 'endbody') {
+                endbody = endbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+              }
+            }
+          }
 
         if (vuepartials != undefined && vuepartials.length > 0) {
-          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
           mainVuefile = mainVuefile.data
 
           for (let x = 0; x < vuepartials.length; x++) {
@@ -536,9 +560,9 @@ export default {
                 text: temp,
                 type: 'file'
               }).then(async (res) => {
-                contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+                contentpartials = contentpartials + '<script src="./assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
-                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
+                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
                   .then((response) => {
                     console.log("called webpack_file api successfully:")
                   })
@@ -679,13 +703,13 @@ export default {
 
                       temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
                     }
-                    console.log('temp1:', temp1)
-                    console.log('temp2:', temp2)
+                    // console.log('temp1:', temp1)
+                    // console.log('temp2:', temp2)
                     if (layoutdata.data.split(temp1).join(temp2)) {
-                      console.log('replacing in layout file successfully')
+                      // console.log('replacing in layout file successfully')
                       layoutdata.data = layoutdata.data.split(temp1).join(temp2)
                     } else {
-                      console.log('replacing in layout file failed')
+                      // console.log('replacing in layout file failed')
                     }
                   }
                 }
@@ -741,7 +765,7 @@ export default {
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
         console.log('final responseMetal:', responseMetal)
-        var mainMetal = folderUrl + '/assets/metalsmith.js'
+        var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename: mainMetal,
@@ -770,10 +794,11 @@ export default {
                   "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
                   "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + endhead + "</head><body><div id=\"app\">\n" +
                   layoutdata.data + topbody +
-                  '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                  '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                  '<script src="./../assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>'+
+                  '\n</div>\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/slider-plugin.js"><\/script>\n' +
+                  '<script src="./assets/client-plugins/shopping-cart.js"><\/script>\n' +
+                  '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>\n' +
                   '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                   '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                   '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
@@ -783,8 +808,8 @@ export default {
                   '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
                   '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
                   '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
-                  '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
-                  '<script src="./../main-files/main.js"><\/script>\n' + endbody +
+                  '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' + 
+                  endbody +
                   '</body>\n</html>';
 
                 await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -864,6 +889,8 @@ export default {
 
                       })
                       .catch((err) => {
+                         this.saveFileLoading = false;
+                          this.fullscreenLoading = false;
                         console.log('error while creating metalsmithJSON file' + err)
                         axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: mainMetal,
@@ -880,6 +907,7 @@ export default {
                   })
                   .catch((e) => {
                     this.saveFileLoading = false
+                     this.fullscreenLoading = false;
                     axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: mainMetal,
                       text: responseMetal,
@@ -895,6 +923,8 @@ export default {
 
               })
               .catch((e) => {
+                 this.saveFileLoading = false;
+                  this.fullscreenLoading = false;
                 console.log(e)
                 axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: mainMetal,
@@ -910,6 +940,8 @@ export default {
 
           })
           .catch((e) => {
+             this.saveFileLoading = false;
+              this.fullscreenLoading = false;
             console.log('error while creating metalsmithJSON file' + e)
             axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
@@ -923,10 +955,9 @@ export default {
 
           })
 
-        this.fullscreenLoading = false;
-        // Open in new window
-        // window.open(config.ipAddress +'/websites/'+ this.repoName + '/public/');
-        window.open('http://' + this.repoName + '.'+ config.ipAddress + '/public/');
+        
+         
+        
         // Publish with Zeit Now
         // axios.post(config.baseURL + '/publish-now', {
         //     projectName: this.repoName
@@ -940,7 +971,7 @@ export default {
         //       type: 'success'
         //     });
         //     console.log(res.data);
-        //     this.fullscreenLoading = false;
+        //     this.previewLoader = false;
         //   })
         //   .catch((e) => {
         //     this.$message({
@@ -949,9 +980,22 @@ export default {
         //       type: 'error'
         //     });
         //     console.log(e);
-        //     this.fullscreenLoading = false;
+        //     this.previewLoader = false;
         //   });
       }
+
+      this.fullscreenLoading = false;
+
+      // Open in new window
+      if(process.env.NODE_ENV !== 'development'){
+        window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+      } else {
+        window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
+      } 
+    },
+
+    goToProjectSettings () {
+      
     }
   },
 
@@ -1308,7 +1352,7 @@ h3.subtitle{
 .page-buttons{
   position: fixed;
   bottom: 7px;
-  right: 50px;
+  right: 85px;
   margin-top: 17.5px;
   z-index: 10
 }

@@ -21,7 +21,7 @@
             <el-button type="primary" @click="setComponent()">Confirm</el-button>
           </span>
         </el-dialog>
-    </div> 
+    </div>
 </template>
 <script>
     let gm = null;
@@ -30,9 +30,12 @@
     const beautify = require('beautify');
 
     // import './GridManager/jquery.gridmanager.min.js';
-    
-    export default {         
-        name:'GridManager',    
+
+    import axios from 'axios';
+    const config = require('../config');
+
+    export default {
+        name:'GridManager',
         data () {
             return {
                 dialogVisible: false,
@@ -48,28 +51,37 @@
                 }],
                 selectedComponent: ''
             }
-        }, 
+        },
         components: {
         },
-        mounted: function() { 
-            
-            var self = this;
+        mounted: function() {
+          var self = this;
 
-            if(gm != null){
-                gm.deinitCanvas();
-            }
-            gm = $("#mycanvas").gridmanager({
-                debug: 1,
-                customControls: {
-                    global_col: [{ callback: self.test_callback, loc: 'top' }]
-                }
-            }).data('gridmanager');
-            
-            $("#gm-canvas").empty().append(this.$store.state.content)
-            $(".gm-edit-mode").click().click();
+          if(gm != null){
+              gm.deinitCanvas();
+          }
+          gm = $("#mycanvas").gridmanager({
+              debug: 1,
+              customControls: {
+                  global_col: [{ callback: self.test_callback, loc: 'top' }]
+              }
+          }).data('gridmanager');
+            this.init();
 
         },
         methods: {
+            init(){
+
+
+              $("#gm-canvas").empty().append(this.$store.state.content)
+              $(".gm-edit-mode").click().click();
+            },
+            getSavedHtml: async function(){
+              console.log('from GridManager')
+              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+              });
+              this.$store.state.content = response.data
+            },
             getHtml: function(){
                 let canvas = gm.$el.find("#" + gm.options.canvasId);
                 gm.deinitCanvas();
@@ -84,9 +96,14 @@
             setComponent() {
                 this.dialogVisible = false;
 
-                $(containerObj).text(this.selectedComponent);  
-                
+                $(containerObj).text(this.selectedComponent);
+
             }
+        },
+        watch: {
+          '$store.state.content': function(newvalue) {
+            this.init();
+          }
         }
     }
 </script>

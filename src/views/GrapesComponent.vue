@@ -1,6 +1,6 @@
 <template id="GrapesComponent">
   <div class="GrapesComponent">
-    <div id="gjs" style="width: 100%; height: 89vh !important;"></div>
+    <div id="gjs" style="width: 100%; height: 88.8vh !important; margin-bottom: 45px"></div>
   </div>
 </template>
 
@@ -150,12 +150,11 @@ export default {
 
         variableCss += '}'
 
-        let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
+        let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/brand-logo.png');
         this.imageBlob = imageData.data;
 
         var blkStyle = '.blk-row::after{ content: ""; clear: both; display: block;} .blk-row{padding: 10px;}';
 
-		var lp = './static/img/';
         var plp = 'http://placehold.it/350x250/';
         var images = [
             'https://imgur.com/XQuOMKc.png', 'https://imgur.com/fBuNwuy.jpg', 'https://imgur.com/GgCaYku.jpg', 'https://imgur.com/AGMTzXe.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
@@ -400,6 +399,16 @@ export default {
   		
   		});
 
+        let self = this;
+        editor.on("component:update", function() {
+          let gethtml = beautify(editor.getHtml(), { format: 'html'});
+          let getcss =  beautify(editor.getCss(), { format: 'css'});
+
+          let fullhtml= "<style>\n" + getcss + "\n</style>\n"+
+              "\n\n\n\n" + gethtml;
+            self.$store.state.tabChange = fullhtml
+        });
+
         const categories = editor.BlockManager.getCategories();
         categories.each(category => {
             category.set('open', false).on('change:open', opened => {
@@ -457,7 +466,7 @@ export default {
                             console.log('Image is URL link.');
                             $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', _varValue);
                         } else {
-                            let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue, {
+                            let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + _varValue, {
                             })
                             .then((res) => {
                                 // If image is present in assets folder
@@ -501,16 +510,21 @@ export default {
 
 
 	methods:{
-	    getHtml: function () {
+    async getSavedHtml() {
+      let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+      });
+      this.$store.state.content = response.data
+    },
+    getHtml: function () {
 
-            let grapesCss = beautify(editor.getCss(), { format: 'css'});
-            let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
+          let grapesCss = beautify(editor.getCss(), { format: 'css'});
+          let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
 
-            this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
-                "\n\n\n\n" + grapesHtml;
+          this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
+              "\n\n\n\n" + grapesHtml;
 
-            this.savedFile = true;
-        }
+          this.savedFile = true;
+      }
 	},
 
 }

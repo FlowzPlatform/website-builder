@@ -1,27 +1,28 @@
+domainkey = process.env.domainkey;
+
 if(process.env.baseURL == undefined){
-    url = 'http://api.flowz.com/serverapi'
+    url = 'http://api.'+domainkey+'/serverapi'
 } else {
     url = process.env.baseURL;
     // url = 'http://devapi.flowz.com/serverapi';
-    console.log('Custom BaseURL set: ', url);
 }
 
 // If Production Environment
 if (process.env.NODE_ENV !== 'development') {
-    ipAdd = 'flowzcluster.tk';
-    socketURL = 'ws://ws.flowz.com:4032';
-    frontEndUrl = 'http://webbuilder.flowzcluster.tk/dashboard';
+    ipAdd = domainkey;
+    socketURL = 'ws://ws.'+domainkey+':4032';
+    frontEndUrl = 'http://webbuilder.'+domainkey+'/dashboard';
 
-    loginUrl = 'http://auth.flowz.com/api/login';
-    registerUrl = 'http://auth.flowz.com/api/setup';
-    userDetail = 'http://auth.flowz.com/api/userdetails';
-    socialUrl = 'http://auth.flowz.com/api';
+    loginUrl = 'http://auth.'+domainkey+'/api/login';
+    registerUrl = 'http://auth.'+domainkey+'/api/setup';
+    userDetail = 'http://auth.'+domainkey+'/api/userdetails';
+    socialUrl = 'http://auth.'+domainkey+'/api';
 
-    loginWithFacebookUrl = 'http://auth.flowz.com/auth/facebook';
-    loginWithGoogleUrl = 'http://auth.flowz.com/auth/Gplus';
-    loginWithTwitterUrl = 'http://auth.flowz.com/auth/twitter';
-    loginWithGithubUrl = 'http://auth.flowz.com/auth/github';
-    loginWithLinkedInUrl = 'http://auth.flowz.com/auth/linkedin';
+    loginWithFacebookUrl = 'http://auth.'+domainkey+'/auth/facebook';
+    loginWithGoogleUrl = 'http://auth.'+domainkey+'/auth/Gplus';
+    loginWithTwitterUrl = 'http://auth.'+domainkey+'/auth/twitter';
+    loginWithGithubUrl = 'http://auth.'+domainkey+'/auth/github';
+    loginWithLinkedInUrl = 'http://auth.'+domainkey+'/auth/linkedin';
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -39,8 +40,6 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithGithubUrl = 'http://devauth.flowz.com/auth/github';
     loginWithLinkedInUrl = 'http://devauth.flowz.com/auth/linkedin';
 }
-
-console.log('frontEndUrl: ', frontEndUrl);
 
 module.exports = {
     loginUrl: loginUrl,
@@ -67,5 +66,6 @@ module.exports = {
 
     baseURL : url,
     ipAddress: ipAdd,
-    socketURL: socketURL
+    socketURL: socketURL,
+    gitLabIpAddress: 'http://162.209.122.250/'
 }

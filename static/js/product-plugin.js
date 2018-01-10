@@ -18,6 +18,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   //     }
   // });
 
+  bm.add('PaymentGateway', {
+    label: 'PaymentGateway',
+    content: '<paymentgateway style="display: block; padding: 10px; min-height: 20px;">PaymentGateways</paymentgateway>',
+    attributes: {
+       class:'fa fa-shopping-cart',
+       title: 'Shopping cart',
+    },
+    category: 'Payment Components'
+  });
+
   bm.add('g-form-template', {
     label: 'Form Full',
     content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
@@ -212,10 +222,20 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   });
 
   // Dynamic navigation menu from JSON created from menu builder
+  // bm.add('navimenu', {
+  //   label: 'Navbar Menu',
+  //   content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">' +
+  //     '<navimenu style="padding: 10px; display: block; min-height: 75px;"><div class="navbar navbar-default" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> </div><div class="collapse navbar-collapse" id="navigationDiv"><ul class="nav navbar-nav"><li class="active"><a href="#" target="_blank">Home</a></li></ul></li></ul></div></div></div></navimenu>',
+  //   attributes: {
+  //     class: 'fa fa-bars',
+  //     title: 'Navigation Menu'
+  //   },
+  //   category: 'Ecommerce Blocks'
+  // });
+
   bm.add('navimenu', {
     label: 'Navbar Menu',
-    content: '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">' +
-      '<navimenu style="padding: 10px; display: block; min-height: 75px;"><div class="navbar navbar-default" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> </div><div class="collapse navbar-collapse" id="navigationDiv"><ul class="nav navbar-nav"><li class="active"><a href="#" target="_blank">Home</a></li></ul></li></ul></div></div></div></navimenu>',
+    content:'<navimenu style="padding: 10px; display: block; min-height: 75px;"><nav class="navbar navbar-expand-sm bg-dark navbar-dark"><div class="container"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navigationDiv"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"> Dropdown link </a> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Link 1</a> <a class="dropdown-item" href="#">Link 2</a> <a class="dropdown-item" href="#">Link 3</a> </div></li></ul> </div></div></nav></navimenu>',
     attributes: {
       class: 'fa fa-bars',
       title: 'Navigation Menu'
@@ -321,9 +341,19 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   bm.add('productSearchFilter', {
     label: 'Product Search Filter',
     content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"><productSearchFilter  style="display: block; width: 100%;padding:15px; vertical-align: middle;"><div class="reomve-texts"> <i class="fa fa-search"></i> <label style="margin: inherit;">Product Search Filter</label></div></productSearchFilter>',
+    attributes: { 
+        class: 'fa fa-filter',
+        title: 'Product search Filter'
+    },
+    category: 'Ecommerce Blocks'
+  });
+
+  bm.add('Slider', {
+    label: 'Slider',
+    content: '<Slider style="display: block; min-height: 50px"> <style>#slider{margin: 0 auto; width: 1146px; position: relative;}#slides{background: #fff; padding: 5px; -webkit-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -moz-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -o-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -ms-box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; box-shadow: 2px 2px 4px #333, inset 1px 1px 0 #ddd; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}.inner{width: 500%;}.inner:after{display: block; height: 0; clear: both;}.page{float: left; width: 20%;}.page img{width: 100%; height: 466px;}#overflow{overflow: hidden;}#slider input{display: none;}#controls{position: absolute; width: 100%; top: 216px; left: 0; height: 50px;}#controls label{display: none; opacity: 0.3; cursor: pointer;}#controls label:hover{opacity: 0.8;}#slide1:checked ~ #controls label:nth-child(2), #slide2:checked ~ #controls label:nth-child(3), #slide3:checked ~ #controls label:nth-child(4), #slide4:checked ~ #controls label:nth-child(5), #slide5:checked ~ #controls label:nth-child(1){width: 0; height: 0; border-top: 20px solid transparent; border-left: 20px solid #333; border-bottom: 20px solid transparent; float: right; margin-right: -30px; display: block;}#slide1:checked ~ #controls label:nth-child(5), #slide2:checked ~ #controls label:nth-child(1), #slide3:checked ~ #controls label:nth-child(2), #slide4:checked ~ #controls label:nth-child(3), #slide5:checked ~ #controls label:nth-child(4){width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent; border-right: 20px solid rgb(51, 51, 51); float: left; display: block; margin-left: -27px;}#slide1:checked ~ #slides .inner{margin-left: 0;}#slide2:checked ~ #slides .inner{margin-left: -100%;}#slide3:checked ~ #slides .inner{margin-left: -200%;}#slide4:checked ~ #slides .inner{margin-left: -300%;}#slide5:checked ~ #slides .inner{margin-left: -400%;}#active{text-align: center; margin-top: 10px; text-align: center; vertical-align: middle; padding-right: 3px;}#active label{padding: 6px; width: 230px; height: 53px; background: #f1f1f1; display: table-cell; cursor: pointer; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; line-height: 19px; font-family: sans-serif; font-size: small;}#active label:hover{background: #c4bebe;}#slide1:checked ~ #active label:nth-child(1), #slide2:checked ~ #active label:nth-child(2), #slide3:checked ~ #active label:nth-child(3), #slide4:checked ~ #active label:nth-child(4), #slide5:checked ~ #active label:nth-child(5){background: #dddddd;}#slides .inner{-webkit-transition: all 0.8s ease-in-out; -moz-transition: all 0.8s ease-in-out; -ms-transition: all 0.8s ease-in-out; -o-transition: all 0.8s ease-in-out; transition: all 0.8s ease-in-out;}</style> <div id="slider"> <input type="radio" id="slide1" name="slider" checked/> <input type="radio" id="slide2" name="slider"/> <input type="radio" id="slide3" name="slider"/> <input type="radio" id="slide4" name="slider"/> <input type="radio" id="slide5" name="slider"/> <div id="slides"> <div id="overflow"> <div class="inner"> <div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div><div class="page"><img src="http://placehold.it/1146x466" alt=""/> </div></div></div></div><div id="controls"> <label for="slide1"></label> <label for="slide2"></label> <label for="slide3"></label> <label for="slide4"></label> <label for="slide5"></label> </div><div id="active"> <label for="slide1"> <p>IT\'S A WRAP</p></label> <label for="slide2"> <p>CHECK OUT OUR <br>Autumn Savings</p></label> <label for="slide3"> <p>New! <br>Light Up Pen!</p></label> <label for="slide4"> <p>INTRODUCING... <br>Sweda Outlet</p></label> <label for="slide5"> <p>Take 40% Off</p></label> </div></div></Slider>',
     attributes: {
-      class: 'fa fa-filter',
-      title: 'Product search Filter'
+        class: 'fa fa-code',
+        title: 'Slider'
     },
     category: 'Ecommerce Blocks'
   });
@@ -468,37 +498,56 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  // // dataField component
-  // bm.add('DataFieldGroup', {
-  //   label: 'Data Field Group',
-  //   content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
-  //   attributes: {
-  //     class: 'fa fa-database',
-  //     title: 'Data Field',
-  //   },
-  //   category: 'Data Field Group'
-  // });
+  // dataField component
+  bm.add('DataFieldGroup', {
+    label: 'Data Field Group',
+    content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
+  
+  bm.add('DataFieldObject', {
+    label: 'Data Field Object',
+    content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
 
+  bm.add('DataFieldText', {
+    label: 'Data Field Text',
+    content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
 
-  // bm.add('DataFieldText', {
-  //   label: 'Data Field Text',
-  //   content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
-  //   attributes: {
-  //     class: 'fa fa-database',
-  //     title: 'Data Field',
-  //   },
-  //   category: 'Data Field Group'
-  // });
+  bm.add('DataFieldList', {
+    label: 'Data Field List',
+    content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
 
-  // bm.add('DataFieldList', {
-  //   label: 'Data Field List',
-  //   content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
-  //   attributes: {
-  //     class: 'fa fa-database',
-  //     title: 'Data Field',
-  //   },
-  //   category: 'Data Field Group'
-  // });
+  bm.add('DataFieldImage', {
+      label: 'Data Field Image',
+      content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
+      attributes: {
+          class: 'fa fa-database',
+          title: 'Progress Bar',
+      },
+      category: 'Data Field Group'
+  });
 
 
   bm.add('ShoppingCart', {
@@ -521,6 +570,93 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   var defaultView = defaultType.view;
   var traits;
 
+
+
+
+  // Reuse Component
+  var folderUrl = localStorage.getItem("folderUrl");
+  var useremail = localStorage.getItem("email");
+  var userDetailId = localStorage.getItem("userDetailId");
+  let storedTemplates;
+  let configData;
+  let storedTemplates_data
+  let foldername = folderUrl.split('/');
+  foldername = foldername[(foldername.length - 1)];
+
+  let globalVariables = [];
+
+  let urlVariables = [];
+  let urlVarValue = [];
+
+  urlVarValue.push({name: 'Select', value: ''});
+
+  let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
+
+  $.getJSON(configFileUrl, function(data) {
+    configData = data.data[0].configData;
+    globalVariables = configData[1].projectSettings[1].GlobalVariables;
+    urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
+    storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+  });
+
+  
+
+  var partialOptions = {};
+
+  setTimeout(function() {
+
+
+    for(var j = 0; j < urlVariables.length; j++){
+      let value = {name: urlVariables[j].urlId, value: urlVariables[j].urlValue}
+      urlVarValue.push(value);
+    }
+
+    
+    console.log('URL Variables: ', urlVarValue);
+
+    for (var i = 0; i < storedTemplates.length; i++) {
+      if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+        storedTemplates = storedTemplates.splice(i, 1)
+      }
+    }
+
+    for (var i = 0; i <= storedTemplates.length - 1; i++) {
+      let resp2 = []
+      $.getJSON(configFileUrl, function(data) {
+        configData = data.data[0].configData;
+
+
+
+        // console.log('ReUseVue co2nfigData:', configData);
+        storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+        for (let index = 0; index < storedTemplates.length; index++) {
+          let data_ = storedTemplates[index]
+          for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
+            if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
+              if (configData[2].layoutOptions[0][data_].length >= 2) {
+                for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
+                  if (j == 0) {
+                    partialOptions[storedTemplates[index]] = [{
+                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                    }]
+                  } else {
+                    partialOptions[storedTemplates[index]].push({
+                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                    })
+                  }
+                }
+              } else {
+                partialOptions[storedTemplates[index]] = [{
+                  'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                }]
+              }
+            }
+          }
+        }
+      });
+    }
+  }, 2000);
+
   // The `input` will be the Component type ID
   comps.addType('productListing', {
     // Define the Model
@@ -532,15 +668,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [
           'id', {
             label: 'API URL',
-            name: 'apiurl'
-          }, {
-            label: 'Username',
-            name: 'apiusername',
-            type: 'text'
-          }, {
-            label: 'Password',
-            name: 'apipassword',
-            type: 'password'
+            name: 'apiurl',
+            type: 'select',
+            options: urlVarValue
           }, {
             label: 'Items',
             name: 'numberofitems',
@@ -667,7 +797,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     },
   });
 
-
   comps.addType('Slider', {
     // Define the Model
     model: defaultModel.extend({
@@ -697,6 +826,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           type: 'text'
         }],
       }),
+
     }, {
       isComponent: function(el) {
         if (el.tagName == 'SLIDER') {
@@ -706,7 +836,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         }
       },
     }),
+
     view: defaultType.view,
+
     // The render() should return 'this'
     render: function() {
       // Extend the original render method
@@ -715,6 +847,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       return this;
     },
   });
+
+
   comps.addType('Pagination', {
     // Define the Model
     model: defaultModel.extend({
@@ -1693,248 +1827,282 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  // // dataField components
+  // dataField components
 
-  // //http://172.16.230.176:3034/connectiondata
-  // let arr_collection = new Array();
-  // let arr_schema = []
-  // let arr_coll_schema = new Array()
-  // console.log("arr_schema type11111111111111s", typeof arr_schema)
-  // $.getJSON("http://172.16.230.222:3080/settings",
-  //   // $.getJSON("http://localhost:3080/settings",
-  //   function (data) {
-  //     //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
-  //     for (let index = 0; index < data.rethink.dbinstance.length; index++) {
-  //       //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-  //       arr_collection.push(data.rethink.dbinstance[index].connection_name)
-  //       $.getJSON("http://172.16.230.222:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
-  //         // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
-  //         function (data_) {
-  //           console.log("data_", data_)
-  //           // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-  //           let collection_name = data.rethink.dbinstance[index].connection_name
-  //           console.log(data_[0].t_name)
-  //           for (let index_ = 0; index_ < data_.length; index_++) {
-  //             console.log(data_[index_].t_name)
-  //             if (data_[index_].t_name != undefined) {
-  //               let schema_name = data_[index_].t_name
-  //               console.log("arr_schema type", typeof arr_schema)
-  //               arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
-  //             }
-  //           }
-  //           $.each(arr_schema, function (index, value) {
-  //             arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
-  //           });
-  //           console.log("arr_coll_schema", typeof arr_coll_schema)
-  //         });
-  //     }
-  //   });
-
-  //   comps.addType('DataFieldGroup', {
-  //     // Define the Model
-  //     model: defaultModel.extend({
-  //       init() {
-  //         this.listenTo(this, 'change:connectiondata', this.doStuff);
-  //       },
-  //       doStuff() {
-  //         console.log("hello here")
-  //       },
-  //       // Extend default properties
-  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
-  //         editable: true,
-  //         droppable: true,
-  //         traits: [
-  //           {
-  //             type: 'select',
-  //             label: 'data-schema',
-  //             name: ':data_schema',
-  //             options: arr_coll_schema,
-  //           }
-  //         ]
-  //       }),
-
-  //     }, {
-  //         isComponent: function (el) {
-  //           if (el.tagName == 'DATAFIELDGROUP') {
-  //             return {
-  //               type: 'DataFieldGroup'
-  //             };
-  //           }
-  //         },
-  //       }),
-
-  //     view: defaultType.view,
-
-  //     // The render() should return 'this'
-  //     render: function () {
-  //       // Extend the original render method
-  //       defaultType.view.prototype.render.apply(this, arguments);
-  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-  //       return this;
-  //     },
-  //   });
-
-
-
-  //   comps.addType('DataFieldText', {
-  //     // Define the Model
-  //     model: defaultModel.extend({
-  //       // Extend default properties
-  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
-  //         editable: true,
-  //         droppable: true,
-  //         traits: [
-  //           {
-  //             label: 'Data text field',
-  //             name: ':text',
-  //             type: 'text'
-  //           }
-  //         ]
-  //       }),
-
-  //     }, {
-  //         isComponent: function (el) {
-  //           if (el.tagName == 'DATAFIELDTEXT') {
-  //             return {
-  //               type: 'DataFieldText'
-  //             };
-  //           }
-  //         },
-  //       }),
-
-  //     view: defaultType.view,
-
-  //     // The render() should return 'this'
-  //     render: function () {
-  //       // Extend the original render method
-  //       defaultType.view.prototype.render.apply(this, arguments);
-  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-  //       return this;
-  //     },
-  //   });
-
-  //   comps.addType('DataFieldList', {
-  //     // Define the Model
-  //     model: defaultModel.extend({
-  //       // Extend default properties
-  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
-  //         editable: true,
-  //         droppable: true,
-  //         traits: [
-  //           {
-  //             label: 'Data list field',
-  //             name: ':items',
-  //             type: 'text'
-  //           }
-  //         ]
-  //       }),
-
-  //     }, {
-  //         isComponent: function (el) {
-  //           if (el.tagName == 'DATAFIELDLIST') {
-  //             return {
-  //               type: 'DataFieldList'
-  //             };
-  //           }
-  //         },
-  //       }),
-
-  //     view: defaultType.view,
-
-  //     // The render() should return 'this'
-  //     render: function () {
-  //       // Extend the original render method
-  //       defaultType.view.prototype.render.apply(this, arguments);
-  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-  //       return this;
-  //     },
-  //   });
-
-
-
-
-
-
-
-
-
-
-
-// Reuse Component
-  var folderUrl = localStorage.getItem("folderUrl");
-  var useremail = localStorage.getItem("email");
-
-  let foldername = folderUrl.split('/');
-  foldername = foldername[(foldername.length - 1)];
-
-  let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
-
-  $.getJSON(configFileUrl, function(data) {
-    var configData = data.data[0].configData;
-    console.log('ReUseVue configData:', configData);
-    storedTemplates = Object.keys(configData[2].layoutOptions[0]);
-  });
-
-  var partialOptions = {};
-
-  setTimeout(function() {
-    for (var i = 0; i < storedTemplates.length; i++) {
-      if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
-        storedTemplates.splice(i, 1)
-      }
-    }
-
-
-    for (var i = 0; i <= storedTemplates.length - 1; i++) {
-      var request = new XMLHttpRequest();
-      request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials", false);
-      request.setRequestHeader("Content-type", "application/json");
-      request.send();
-      resp = JSON.parse(request.responseText);
-
-      for (let index = 0; index < resp.length; index++) {
-        request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrl + '/' + "Partials/" + resp[i], false);
-        request.setRequestHeader("Content-type", "application/json");
-        request.send();
-        resp2 = JSON.parse(request.responseText);
-      }
-
-      if (resp.length != 0 && resp[i] != "Menu") {
-        if (resp2.length >= 2) {
-          for (let j = 0; j < resp2.length; j++) {
-            if (j == 0) {
-              let string_con = resp2[j]
-              string_con = string_con.toString()
-              var res = string_con.split(".");
-              if (res[1] == "partial") {
-                partialOptions[resp[i]] = [{
-                  'name': resp2[j]
-                }]
-              }
-            } else {
-              let string_con = resp2[j]
-              string_con = string_con.toString()
-              var res = string_con.split(".");
-              if (res[1] == "partial") {
-                partialOptions[resp[i]].push({
-                  'name': resp2[j]
-                })
+  //http://172.16.230.176:3034/connectiondata
+  let arr_collection = new Array();
+  let arr_schema = []
+  let arr_coll_schema = new Array()
+  console.log("arr_schema type11111111111111s", typeof arr_schema)
+  $.getJSON("http://172.16.230.80:3080/settings",
+    // $.getJSON("http://localhost:3080/settings",
+    function (data) {
+      //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
+      for (let index = 0; index < data.rethink.dbinstance.length; index++) {
+        //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+        arr_collection.push(data.rethink.dbinstance[index].connection_name)
+        $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
+          // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
+          function (data_) {
+            console.log("data_", data_)
+            // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+            let collection_name = data.rethink.dbinstance[index].connection_name
+            console.log(data_[0].t_name)
+            for (let index_ = 0; index_ < data_.length; index_++) {
+              console.log(data_[index_].t_name)
+              if (data_[index_].t_name != undefined) {
+                let schema_name = data_[index_].t_name
+                console.log("arr_schema type", typeof arr_schema)
+                arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
               }
             }
-          }
-        } else {
-          str = resp2
-          str = resp2.toString()
-          var res = str.split(".");
-          if (res[1] == "partial") {
-            partialOptions[resp[i]] = [{
-              'name': resp2
-            }]
-          }
-        }
+            arr_coll_schema.push("''")
+            $.each(arr_schema, function (index, value) {
+              arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
+            });
+            console.log("arr_coll_schema", typeof arr_coll_schema)
+          });
       }
-    }
-  }, 1000);
+    });
+
+    comps.addType('DataFieldGroup', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+          console.log("hello here")
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'select',
+              label: 'data-schema',
+              name: ':data_schema',
+              options: arr_coll_schema,
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: ':data_api'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDGROUP') {
+              return {
+                type: 'DataFieldGroup'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+
+    comps.addType('DataFieldObject', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+          console.log("hello here")
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'select',
+              label: 'data-schema',
+              name: ':data_schema',
+              options: arr_coll_schema,
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: ':data_api'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDOBJECT') {
+              return {
+                type: 'DataFieldObject'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+
+
+    comps.addType('DataFieldText', {
+      // Define the Model
+      model: defaultModel.extend({
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              label: 'Data text field',
+              name: ':text',
+              type: 'text'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDTEXT') {
+              return {
+                type: 'DataFieldText'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+    comps.addType('DataFieldList', {
+      // Define the Model
+      model: defaultModel.extend({
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              label: 'Data list field',
+              name: ':items',
+              type: 'text'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDLIST') {
+              return {
+                type: 'DataFieldList'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+
+    comps.addType('img', {
+        // Define the Model
+        model: defaultModel.extend({
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [
+                    {
+                        label: 'Data image field',
+                        name: ':src',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image height',
+                        name: 'height',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image width',
+                        name: 'width',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image alt',
+                        name: 'alt',
+                        type: 'text'
+                    }
+                ]
+            }),
+
+        }, {
+                isComponent: function (el) {
+                    if (el.tagName == 'IMG') {
+                        return {
+                            type: 'img'
+                        };
+                    }
+                },
+            }),
+
+        view: defaultType.view,
+
+        // The render() should return 'this'
+        render: function () {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+        },
+    });
+
+
+
+
+
+
+
+
+
+
+
 
 
   editor.TraitManager.addType('customConent1', {
@@ -2011,100 +2179,100 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  // Vue Component
-  var folderUrlVue = localStorage.getItem("folderUrl");
-  var useremailVue = localStorage.getItem("email");
+  // // Vue Component
+  // var folderUrlVue = localStorage.getItem("folderUrl");
+  // var useremailVue = localStorage.getItem("email");
 
-  let projectName = folderUrlVue.split('/');
-  projectName = projectName[(projectName.length - 1)];
+  // let projectName = folderUrlVue.split('/');
+  // projectName = projectName[(projectName.length - 1)];
 
-  let configFileUrl2 = baseURL + '/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
-  $.getJSON(configFileUrl2, function(data) {
-    var configData = data.data[0].configData;;
-    storedTemplates = Object.keys(configData[2].layoutOptions[0]);
-  });
+  // let configFileUrl2 = baseURL + '/project-configuration?userEmail=' + useremailVue + '&websiteName=' + projectName;
+  // $.getJSON(configFileUrl2, function(data) {
+  //   var configData = data.data[0].configData;;
+  //   storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+  // });
 
-  var partialOptions2 = {};
+  // var partialOptions2 = {};
 
-  setTimeout(function() {
-    for (var i = 0; i < storedTemplates.length; i++) {
-      if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
-        storedTemplates.splice(i, 1)
-      }
-    }
-
-
-    for (var i = 0; i <= storedTemplates.length - 1; i++) {
-      var request = new XMLHttpRequest();
-      request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
-      request.setRequestHeader("Content-type", "application/json");
-      request.send();
-      resp = JSON.parse(request.responseText);
-
-      for (let index = 0; index < resp.length; index++) {
-        request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
-        request.setRequestHeader("Content-type", "application/json");
-        request.send();
-        resp2 = JSON.parse(request.responseText);
-      }
-
-      if (resp.length != 0 && resp[i] != "Menu") {
-        console.log("resp", resp)
-        let counter = 0;
-        if (resp2.length >= 2) {
-          for (let j = 0; j < resp2.length; j++) {
-            var split_selected_value = resp2[j].split(".");
-            if (split_selected_value[1] == "vue") {
-              console.log("inside")
-              if (counter == 0) {
-                partialOptions2[resp[i]] = [{
-                  'name': resp2[j]
-                }]
-                counter++;
-              } else {
-                partialOptions2[resp[i]].push({
-                  'name': resp2[j]
-                })
-              }
-            }
-          }
-        } else {
-          var resp3 = resp2.toString();
-          var substring = "vue";
-          if (resp3.indexOf(substring) !== -1) {
-            partialOptions2[resp[i]] = [{
-              'name': resp2
-            }]
-          }
-        }
-
-      }
-    }
-  }, 1000);
+  // setTimeout(function() {
+  //   for (var i = 0; i < storedTemplates.length; i++) {
+  //     if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+  //       storedTemplates.splice(i, 1)
+  //     }
+  //   }
 
 
-  editor.TraitManager.addType('customConent2', {
+  //   for (var i = 0; i <= storedTemplates.length - 1; i++) {
+  //     var request = new XMLHttpRequest();
+  //     request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials", false);
+  //     request.setRequestHeader("Content-type", "application/json");
+  //     request.send();
+  //     resp = JSON.parse(request.responseText);
 
-    getInputEl: function() {
-      if (!this.inputEl) {
-        var input = document.createElement('select');
-        input.setAttribute("id", "Div1");
-        input.setAttribute("name", "Div1");
-        input.setAttribute("style", "background:#363636");
-        $.each(partialOptions2, function(key, value) {
-          var group = $('<optgroup label="' + key + '" />');
-          $.each(value, function() {
-            $('<option />').html(this.name).appendTo(group);
-          });
-          group.appendTo(input);
-        });
-        input.value = this.target.get('customConent2');
-        this.inputEl = input;
-      }
-      return this.inputEl;
-    },
+  //     for (let index = 0; index < resp.length; index++) {
+  //       request.open("POST", baseURL + '/get-directory-list?folderUrl=' + folderUrlVue + '/' + "Partials/" + resp[i], false);
+  //       request.setRequestHeader("Content-type", "application/json");
+  //       request.send();
+  //       resp2 = JSON.parse(request.responseText);
+  //     }
 
-  });
+  //     if (resp.length != 0 && resp[i] != "Menu") {
+  //       console.log("resp", resp)
+  //       let counter = 0;
+  //       if (resp2.length >= 2) {
+  //         for (let j = 0; j < resp2.length; j++) {
+  //           var split_selected_value = resp2[j].split(".");
+  //           if (split_selected_value[1] == "vue") {
+  //             console.log("inside")
+  //             if (counter == 0) {
+  //               partialOptions2[resp[i]] = [{
+  //                 'name': resp2[j]
+  //               }]
+  //               counter++;
+  //             } else {
+  //               partialOptions2[resp[i]].push({
+  //                 'name': resp2[j]
+  //               })
+  //             }
+  //           }
+  //         }
+  //       } else {
+  //         var resp3 = resp2.toString();
+  //         var substring = "vue";
+  //         if (resp3.indexOf(substring) !== -1) {
+  //           partialOptions2[resp[i]] = [{
+  //             'name': resp2
+  //           }]
+  //         }
+  //       }
+
+  //     }
+  //   }
+  // }, 1000);
+
+
+  // editor.TraitManager.addType('customConent2', {
+
+  //   getInputEl: function() {
+  //     if (!this.inputEl) {
+  //       var input = document.createElement('select');
+  //       input.setAttribute("id", "Div1");
+  //       input.setAttribute("name", "Div1");
+  //       input.setAttribute("style", "background:#363636");
+  //       $.each(partialOptions2, function(key, value) {
+  //         var group = $('<optgroup label="' + key + '" />');
+  //         $.each(value, function() {
+  //           $('<option />').html(this.name).appendTo(group);
+  //         });
+  //         group.appendTo(input);
+  //       });
+  //       input.value = this.target.get('customConent2');
+  //       this.inputEl = input;
+  //     }
+  //     return this.inputEl;
+  //   },
+
+  // });
 
 
 
@@ -2133,7 +2301,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'PartialName',
           name: 'selectPartial',
-          type: 'customConent2',
+          type: 'customConent1',
           changeProp: 1,
         }],
       }),

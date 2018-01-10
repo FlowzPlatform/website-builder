@@ -20,7 +20,10 @@
 		        
 		      </el-row>
 		    </el-menu> -->
-        <el-tooltip class="item" effect="dark" content="Logout" placement="bottom" v-if="isLoggedIn === true">
+        <el-tooltip class="item" effect="dark" content="Go To Dashboard" placement="bottom" v-if="isLoggedIn === true && ifDashboard === false">
+          <el-button type="warning" class="dashboard-btn" @click="goToDashboard"><i class="fa fa-tachometer"></i></el-button>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="Logout" placement="bottom" v-if="isLoggedIn === true && ifDashboard === false">
           <el-button type="danger" class="logout-btn" @click="doLogout"><i class="fa fa-sign-out"></i></el-button>
         </el-tooltip>
         <div class="layout-content">
@@ -41,7 +44,8 @@ export default {
   data () {
     return {
       isLoggedIn: false,
-      username : ''
+      username : '',
+      ifDashboard: false
     }
 	},
   components: {
@@ -56,13 +60,14 @@ export default {
   },
   mounted: function () {
     this.init();
+    this.checkDashboard();
   },
   methods: {
     init () {
       if(this.$cookie.get('auth_token')){
         this.isLoggedIn = true;
       } else {
-
+        this.isLoggedIn = false;
       }
     },
   	handleSelect() {
@@ -83,6 +88,27 @@ export default {
 
       this.isLoggedIn = false;
       this.$router.push('/login');
+    },
+    goToDashboard(){
+      this.$router.push('/user-dashboard');
+    },
+    checkDashboard(){
+
+      let routerName =  this.$route.path;
+
+      if(routerName == '/user-dashboard' || this.$session.get('username') != undefined){
+       this.ifDashboard = true;
+       this.isLoggedIn = true;  
+      } else {
+        this.ifDashboard = false;
+        this.isLoggedIn = false;
+      }
+    }
+  },
+  watch: {
+    '$route.path': function(newvalue) {
+      this.init();
+      this.checkDashboard();
     }
   }
 }
@@ -167,13 +193,28 @@ export default {
     bottom: 7px;
     z-index: 10;
     width: 30px;
-    height: 30px;
+    height: 28px;
+  }
+
+  .dashboard-btn{
+    position: fixed;
+    right: 45px;
+    bottom: 7px;
+    z-index: 10;
+    width: 30px;
+    height: 28px;
+  }
+
+  .dashboard-btn i{
+    position: absolute;
+    left: 7px;
+    top: 7px;
   }
 
   .logout-btn i{
     position: absolute;
-    left: 10px;
-    top: 8px;
+    left: 9px;
+    top: 7px;
   }
 
   .SiteFooter{
