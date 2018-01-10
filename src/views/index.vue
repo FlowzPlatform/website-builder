@@ -9,6 +9,7 @@
     
         <!-- Sidebar Wrapper -->
         <nav id="sidebar-wrapper" role="navigation">
+           <!-- <el-button type="primary" @click="newProjectFolderDialog = true">Primary</el-button> -->
           <div class="treeViewBlock" style="transform: scaleX(-1);">
             <el-tree style="transform: scaleX(-1);" :data="directoryTree" accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
@@ -405,6 +406,9 @@
 
   // Footer Bar
   import SiteFooter from './footer'
+  
+  //UserPlans
+  import UserPlans from './UserPlans'
 
 
 
@@ -562,7 +566,6 @@
       }
     },
     mounted () {
-
       // Sidemenu Toggle
       $(document).ready(function() {
         var trigger = $('.hamburger'),
@@ -572,6 +575,7 @@
         trigger.click(function() {
             hamburger_cross();
         });
+
 
         function hamburger_cross() {
           if (isClosed == true) {
@@ -707,7 +711,7 @@
         // let username_session = this.$session.get('username');
         // console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
-        axios.get(config.baseURL + '/flows-dir-listing?website=' + this.$session.get('userDetailId'))
+        axios.get(config.baseURL + '/flows-dir-listing?website=' + this.$session.get('userDetailId'),{ headers: { 'Authorization': this.$session.get('token') } })
           .then(response => {
             response.data.children = this.getTreeData(response.data);
 
@@ -1102,7 +1106,7 @@
         let ext = url.split('.').pop();
 
         this.$store.state.fileUrl = url;
-        let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + url);
+        let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + url, { headers: { 'Authorization': this.$session.get('token') } });
 
         this.$store.dispatch('updateContent', {
           text: response.data
@@ -1291,7 +1295,7 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length - 1)];
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername,{ headers: { 'Authorization': this.$session.get('token') } } );
         let rawConfigs = responseConfig.data.data[0].configData;
         return this.globalConfigData = rawConfigs;
       },
@@ -1302,14 +1306,14 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length-1)];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername,{ headers: { 'Authorization': this.$session.get('token') } } );
 
         if(rethinkdbCheck.data.data){
 
           // update existing data
           await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
             configData: this.globalConfigData
-          })
+          },{ headers: { 'Authorization': this.$session.get('token') } })
           .then(async (res) => {
             this.$message({
                 showClose: true,
@@ -1341,10 +1345,10 @@
         this.$refs[foldername].validate((valid) => {
           if (valid) {
             let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
-            return axios.post(config.baseURL + '/flows-dir-listing', {
+            return axios.post(config.baseURL + '/create-user-folder', {
                 foldername: newFolderName,
                 type: 'folder'
-              })
+              },{ headers: { 'Authorization': this.$session.get('token') } })
               .then(async(res) => {
                 var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
                 storedTemplates.push(this.formAddFolder.foldername)
@@ -1361,18 +1365,18 @@
                 let foldername = folderUrl.split('/');
                 foldername = foldername[(foldername.length - 1)];
                 // this.getConfigFileData(folderUrl);
-                let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+                let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername,{ headers: { 'Authorization': this.$session.get('token') } } );
                 let rawConfigs = responseConfig.data.data[0].configData;
                 this.globalConfigData = rawConfigs;
 
                 this.newFolderDialog = false;
                 this.addNewFolderLoading = false;
                 if(this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')){
-                  axios.post(config.baseURL + '/flows-dir-listing', {
+                  axios.post(config.baseURL + '/create-user-folder', {
                       filename: newFolderName+'/default.partial',
                       text: '',
                       type: 'file'
-                  })
+                  },{ headers: { 'Authorization': this.$session.get('token') } })
                   .then((res)=>{
                   console.log("folder created inside partials folder");
                   console.log("foldername:",this.formAddFolder.foldername)
@@ -1457,7 +1461,7 @@
 
         // this.getConfigFileData(folderUrl);
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName,{ headers: { 'Authorization': this.$session.get('token') } } );
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
         
@@ -1470,11 +1474,11 @@
                 var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
                 console.log('newfilename',newfilename)
                 if(newfilename.search('/Partials')!=-1 && newfilename.search('/Menu')==-1){
-                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                  return axios.post(config.baseURL + '/create-user-folder', {
                     filename : newfilename+'.partial',
                     text : ' ',
                     type : 'file'
-                  })
+                  },{ headers: { 'Authorization': this.$session.get('token') } })
                   .then( (res) => {
                     this.newFileDialog = false
                     this.addNewFileLoading = false
@@ -1520,11 +1524,11 @@
                       })
                 }
                 else if(newfilename.search('/Partials')!=-1 && newfilename.search('/Menu')!=-1){
-                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                  return axios.post(config.baseURL + '/create-user-folder', {
                     filename : newfilename+'.menu',
                     text : ' ',
                     type : 'file'
-                  })
+                  },{ headers: { 'Authorization': this.$session.get('token') } })
                   .then( (res) => {
                     this.newFileDialog = false
                     this.addNewFileLoading = false
@@ -1570,11 +1574,11 @@
                       })
                 }
                 else if(newfilename.search('/Pages')!=-1){
-                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                  return axios.post(config.baseURL + '/create-user-folder', {
                     filename : newfilename+'.html',
                     text : ' ',
                     type : 'file'
-                  })
+                  },{ headers: { 'Authorization': this.$session.get('token') } })
                   .then( (res) => {
 
         
@@ -1652,11 +1656,11 @@
                   })
                 }
                 else if(newfilename.search('/Layout')!=-1){
-                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                  return axios.post(config.baseURL + '/create-user-folder', {
                     filename : newfilename+'.layout',
                     text : ' ',
                     type : 'file'
-                  })
+                  },{ headers: { 'Authorization': this.$session.get('token') } })
                   .then( (res) => {
                     this.newFileDialog = false
                     this.addNewFileLoading = false
@@ -1709,19 +1713,18 @@
       },
 
       // Create new Website
-      addProjectFolder(projectName) {
-
+      async addProjectFolder(projectName) {
         this.$refs[projectName].validate((valid) => {
           if (valid) {
+
             this.fullscreenLoading = true;
 
             // let username = this.$session.get('username');
             let token = this.$session.get('token');
-            console.log('Login Token: ', token);
 
             this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
-
-            let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+            console.log(" this.formAddProjectFolder.projectName", this.formAddProjectFolder.projectName)
+            let newFolderName = '/var/www/html/websites/' + this.$session.get('userDetailId') + '/' + this.formAddProjectFolder.projectName;
             return axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName,
                 type: 'folder'
@@ -1735,7 +1738,7 @@
                 this.addNewProjectFolderLoading = false;
 
                 // Create repositoroty on GitLab
-                axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&userDetailId=' + this.$session.get('userDetailId'), {})
+                axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&userDetailId=' + this.$session.get('userDetailId'), { headers: { 'Authorization': this.$session.get('token') } })
                   .then((response) => {
                     console.log('Gitlab Response: ', response);
                     if (!(response.data.statusCode)) {
@@ -1745,7 +1748,7 @@
 
                       axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName, {
 
-                      }).then((response) => {
+                      },{ headers: { 'Authorization': this.$session.get('token') } }).then((response) => {
                         localStorage.setItem("listOfTempaltes", JSON.stringify(response.data));
                       })
                       .catch((e) => {
@@ -1793,7 +1796,7 @@
                       });
 
                       // Delete folder from storage
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
+                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName,{ headers: { 'Authorization': this.$session.get('token') } })
                       .then((res) => {
                         console.log(res.data);
                       })
@@ -1816,7 +1819,7 @@
                 // this.componentId = 'buyPage';
                 this.newProjectFolderDialog = false;
                 this.fullscreenLoading = false;
-                // this.buyNowDialog = true;
+                this.componentId = UserPlans;
                 console.log(e)
               });
           }
@@ -1827,17 +1830,17 @@
       async addOtherFolder(newFolderName){
 
         // Create Assets folder
-        axios.post(config.baseURL+'/flows-dir-listing' , {
+        axios.post(config.baseURL+'/create-user-folder' , {
           foldername : newFolderName+'/assets',
           type : 'folder'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Assets Folder created!'); 
           // Create Assets folder
-          axios.post(config.baseURL+'/flows-dir-listing' , {
+          axios.post(config.baseURL+'/create-user-folder' , {
             foldername : newFolderName+'/assets/client-plugins',
             type : 'folder'
-          })
+          },{ headers: { 'Authorization': this.$session.get('token') } })
           .then((res) => {
              console.log('Client-Plugins Folder created!');  
           })
@@ -1850,17 +1853,17 @@
         });
 
         // Create Partials Folder
-        axios.post(config.baseURL+'/flows-dir-listing' , {
+        axios.post(config.baseURL+'/create-user-folder' , {
           foldername : newFolderName+'/Partials',
           type : 'folder'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
             console.log('Header Folder created!');
             // Create Headers Folder
-            axios.post(config.baseURL+'/flows-dir-listing' , {
+            axios.post(config.baseURL+'/create-user-folder' , {
               foldername : newFolderName+'/Partials/Header',
               type : 'folder'
-            })
+            },{ headers: { 'Authorization': this.$session.get('token') } })
             .then((res) => {
                 console.log('Header Folder created!');
             })
@@ -1869,11 +1872,11 @@
             });
 
             // Create menus Folder
-            axios.post(config.baseURL+'/flows-dir-listing' , {
+            axios.post(config.baseURL+'/create-user-folder' , {
               foldername : newFolderName+'/Partials/Menu',
               type : 'folder'
 
-            })
+            },{ headers: { 'Authorization': this.$session.get('token') } })
             .then((res) => {
               console.log('Menu Folder created!');
             })
@@ -1882,10 +1885,10 @@
             });
 
             // Create Footers Folder
-            axios.post(config.baseURL+'/flows-dir-listing' , {
+            axios.post(config.baseURL+'/create-user-folder' , {
               foldername : newFolderName+'/Partials/Footer',
               type : 'folder'
-            })
+            },{ headers: { 'Authorization': this.$session.get('token') } })
             .then((res) => {
               console.log('Footer Folder created!');
             })
@@ -1906,10 +1909,10 @@
             // });
 
             // Create Sidebars Folder
-            axios.post(config.baseURL+'/flows-dir-listing' , {
+            axios.post(config.baseURL+'/create-user-folder' , {
               foldername : newFolderName+'/Partials/Sidebar',
               type : 'folder'
-            })
+            },{ headers: { 'Authorization': this.$session.get('token') } })
             .then((res) => {
               console.log('Sidebar Folder created!');
             })
@@ -1924,11 +1927,11 @@
         });
 
         // Create Layouts Folder
-        axios.post(config.baseURL+'/flows-dir-listing' , {
+        axios.post(config.baseURL+'/create-user-folder' , {
           foldername : newFolderName+'/Layout',
           type : 'folder'
 
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
             console.log('Layout Folder created!');
         })
@@ -1937,10 +1940,10 @@
         });
 
         // Create Pages Folder
-        axios.post(config.baseURL+'/flows-dir-listing' , {
+        axios.post(config.baseURL+'/create-user-folder' , {
           foldername : newFolderName+'/Pages',
           type : 'folder'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Pages Folder created!');
         })
@@ -1949,10 +1952,10 @@
         });
 
         // Create Main-Files Folder
-        axios.post(config.baseURL+'/flows-dir-listing' , {
+        axios.post(config.baseURL+'/create-user-folder' , {
           foldername : newFolderName+'/main-files',
           type : 'folder'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('main-files Folder created!');
         })
@@ -2118,7 +2121,7 @@
           websiteName: this.repoName,
           configData: repoSettings,
           pluginsData: pluginSettingsData
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           this.$message({
             showClose: true,
@@ -2143,10 +2146,10 @@
                                   "projectOwner" : this.$session.get('email'),
                                   "projectName" : this.repoName
                                   }];
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
             filename : projectDetails,
             text : JSON.stringify(projectDetailsData)
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('project-details.json file created!');
         })
@@ -2156,11 +2159,11 @@
 
         // Create main.css file
         let maincss = newFolderName + '/main-files/main.css'
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
             filename : maincss,
-            text : '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}',
+            text : '/* Add your custom CSS styles here. It will be automatically included in every page. */\n .grid{position: relative;}.item{display: block; position: absolute; width: 100px; height: 100px; margin: 5px; z-index: 1; border: 1px solid red; text-align:center;}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%; padding-top: 10%;} p{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}',
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Main.css file created!');
         })
@@ -2170,11 +2173,11 @@
 
         // Create main.js file
         let mainjs = newFolderName + '/main-files/main.js'
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
             filename : mainjs,
             text : '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */',
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Main.js file created!');
         })
@@ -2184,11 +2187,11 @@
 
         // Create default.json for menu file
         let defaultMenuJson = newFolderName + '/assets/default.json'
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
             filename : defaultMenuJson,
             text : '[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]',
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('default.json for menu file created!');
         })
@@ -2199,11 +2202,11 @@
         // Brand Logo
         let brandLogo = newFolderName + '/assets/brand-logo.png';
         
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
           filename : brandLogo,
           text : '',
           type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log(brandLogo + ' file created');    
         })
@@ -2224,11 +2227,11 @@
         }
         let indexLayout = newFolderName + '/Pages/index.html';
 
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
             filename : indexLayout,
             text : indexLayoutContent,
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Index.html file created!');
         })
@@ -2246,11 +2249,11 @@
 
         var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(true)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-         axios.post(config.baseURL + '/flows-dir-listing', {
+         axios.post(config.baseURL + '/create-user-folder', {
             filename : mainMetal,
             text : metalsmithJSON,
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('metalsmith.js file created!');
         })
@@ -2264,11 +2267,11 @@
         var back_main_path= newFolderName + '/assets/back_main.js'
         var back_main="import vue from 'vue'\n import ElementUI from 'element-ui'\n import element from 'element-ui/src/locale/lang/en'\n import 'element-ui/lib/theme-chalk/index.css'\n vue.use(ElementUI, { element })\n import @@vuecomponent@@ from './@@vuecomponent@@.vue'\nvue.component('@@vuecomponent@@', @@vuecomponent@@)\n new vue({ el: '#@@vuecomponent@@',\n render: h => h(@@vuecomponent@@)\n })"
 
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
             filename : back_main_path,
             text : back_main,
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('back_main.js file created!');
         })
@@ -2283,11 +2286,11 @@
 
         var layoutFileData='<div class="row"><div class="column col-md-12 col-sm-12 col-xs-12"><!--gm-editable-region--><p>{{> Header }}</p><!--/gm-editable-region--></div></div><div class="row"><div class="column col-md-12 col-sm-12 col-xs-12"><!--gm-editable-region--><p>{{{ contents }}}</p><!--/gm-editable-region--></div></div><div class="row"><div class="column col-md-12 col-sm-12 col-xs-12"><!--gm-editable-region--><p>{{> Footer }}</p><!--/gm-editable-region--></div></div>'
 
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
             filename : layoutFileName,
             text : layoutFileData,
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('default.layout file created!');
         })
@@ -2304,7 +2307,7 @@
             filename : headerFileName,
             text : headerFileData,
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Header default.partial file created!');
         })
@@ -2321,7 +2324,7 @@
             filename : footerFileName,
             text : footerFileData,
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Footer default.partial file created!');
         })
@@ -2335,7 +2338,7 @@
             filename : sidebar,
             text : '<div id="sidebar" style="display: block; width: 100%; min-height: 20px"><style type="text/css">#wrapper{padding-left: 250px; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}#wrapper.toggled{padding-left: 250px;}#sidebar-wrapper{z-index: 1000; position: fixed; left: 250px; width: 250px; height: 100%; margin-left: -250px; overflow-y: auto; background: #000; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}#wrapper.toggled #sidebar-wrapper{width: 250px;}#page-content-wrapper{width: 100%; position: absolute; padding: 15px;}#wrapper.toggled #page-content-wrapper{position: absolute; margin-right: -250px;}/* Sidebar Styles */.sidebar-nav{position: absolute; top: 0; width: 250px; margin: 0; padding: 0; list-style: none; width: 100%;}.sidebar-nav li{text-indent: 20px; line-height: 40px;}.sidebar-nav li a{display: block; text-decoration: none; color: #999999; width: 100%;}.sidebar-nav li a:hover{text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);}.sidebar-nav li a:active,.sidebar-nav li a:focus{text-decoration: none;}.sidebar-nav > .sidebar-brand{height: 65px; font-size: 18px; line-height: 60px;}.sidebar-nav > .sidebar-brand a{color: #999999;}.sidebar-nav > .sidebar-brand a:hover{color: #fff; background: none;}</style><div id="wrapper" class="wrapper"> <div id="sidebar-wrapper" class="sidebar-bg"> <ul class="sidebar-nav"> <li class="sidebar-brand"> <a href="#"> Company Name </a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Dashboard</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Shortcuts</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Overview</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Events</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">About</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Services</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Contact</a> </li></ul> </div></div></div>',
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Default Sidebar file created!');
         })
@@ -2349,7 +2352,7 @@
             filename : menu,
             text : '',
             type : 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           console.log('Default Menu file created!');
         })
@@ -2386,16 +2389,14 @@
 
         // Flowz Engine JS
         let flowzBuilderEngine = newFolderName + '/assets/client-plugins/flowz-builder-engine.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/flowz-builder-engine.js', {
-            
-        })
+        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/flowz-builder-engine.js',{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           let flowzEngineData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
+          axios.post(config.baseURL + '/create-user-folder', {
               filename : flowzBuilderEngine,
               text : flowzEngineData,
               type : 'file'
-          })
+          },{ headers: { 'Authorization': this.$session.get('token') } })
           .then((res) => {
             console.log(flowzBuilderEngine + ' file created');    
           })
@@ -2409,16 +2410,14 @@
 
         // Shopping cart js
         let shoppingCartJs = newFolderName + '/assets/client-plugins/shopping-cart.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/shop_cart.js', {
-            
-        })
+        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/shop_cart.js',{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           let shoppingCartData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
+          axios.post(config.baseURL + '/create-user-folder', {
               filename : shoppingCartJs,
               text : shoppingCartData,
               type : 'file'
-          })
+          },{ headers: { 'Authorization': this.$session.get('token') } })
           .then((res) => {
             console.log(shoppingCartJs + ' file created');    
           })
@@ -2432,16 +2431,14 @@
 
         // Client Global variables Plugin
         let globalVariablesPlugin = newFolderName + '/assets/client-plugins/global-variables-plugin.js';
-        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/global-variables-plugin.js', {
-            
-        })
+        axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/global-variables-plugin.js',{ headers: { 'Authorization': this.$session.get('token') } })
         .then((res) => {
           let globalVariablesPluginData = res.data;
-          axios.post(config.baseURL + '/flows-dir-listing', {
+          axios.post(config.baseURL + '/create-user-folder', {
               filename : globalVariablesPlugin,
               text : globalVariablesPluginData,
               type : 'file'
-          })
+          },{ headers: { 'Authorization': this.$session.get('token') } })
           .then(async (res) => {
             console.log(globalVariablesPlugin + ' file created');  
             
@@ -2451,7 +2448,7 @@
               commitMessage: 'Initial Push',
               repoName: this.repoName,
               userDetailId: this.$session.get('userDetailId')
-            }).then(response => {
+            },{ headers: { 'Authorization': this.$session.get('token') } }).then(response => {
               console.log(response);
               if(response.status == 200 || response.status == 201){
                 this.fullscreenLoading = false;
@@ -2484,11 +2481,11 @@
       },
 
       saveFileData(content){
-        axios.post(config.baseURL + '/flows-dir-listing', {
+        axios.post(config.baseURL + '/create-user-folder', {
           filename: this.taburl.replace(/\\/g, "\/"),
           text: content,
           type: 'file'
-        })
+        },{ headers: { 'Authorization': this.$session.get('token') } })
         .then(async(res) => {
           this.saveFileLoading = false
           this.$message({
@@ -2596,14 +2593,14 @@
           let folderUrl = configFileUrl.replace(fileName, '');
           let projectName = folderUrl.split('/');
           projectName = projectName[(projectName.length - 1)];
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName);
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName,{ headers: { 'Authorization': this.$session.get('token') } });
           let rawConfigs = responseConfig.data.data[0].configData;
           this.globalConfigData = rawConfigs;
-          axios.post(config.baseURL + '/flows-dir-listing', {
+          axios.post(config.baseURL + '/create-user-folder', {
               filename: previousUrl.replace(/\\/g, "\/"),
               text: newContent,
               type: 'file'
-            })
+            },{ headers: { 'Authorization': this.$session.get('token') } })
             .then(async(res) => {
               this.saveFileLoading = false
               
@@ -2645,7 +2642,7 @@
                 var content = '';
                 let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Layout/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.layout'));
                 console.log('name:', name)
-                content = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + name + '.layout');
+                content = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + name + '.layout',{ headers: { 'Authorization': this.$session.get('token') } });
                 content = content.data
                 var result = (getFromBetween.get(content, "{{>", "}}"));
                 var DefaultParams = [];
@@ -2789,11 +2786,11 @@
                             }
                             if (checkdefault != true) {
                               let newFolderName = folderUrl + '/Partials/';
-                              await axios.post(config.baseURL + '/flows-dir-listing', {
+                              await axios.post(config.baseURL + '/create-user-folder', {
                                 filename: newFolderName + foldernameKey[j] + "/" + DefaultParams[k][foldernameKey[j]],
                                 text: ' ',
                                 type: 'file'
-                              })
+                              },{ headers: { 'Authorization': this.$session.get('token') } })
                               let temp1 = {
                                 value: DefaultParams[k][foldernameKey[j]].split('.')[0],
                                 label: DefaultParams[k][foldernameKey[j]].split('.')[0]
@@ -2814,10 +2811,10 @@
                   if (check == false) {
                     var newName = result[i]
                     let newFolderName = folderUrl + '/Partials/' + result[i];
-                    axios.post(config.baseURL + '/flows-dir-listing', {
+                    axios.post(config.baseURL + '/create-user-folder', {
                         foldername: newFolderName,
                         type: 'folder'
-                      })
+                      },{ headers: { 'Authorization': this.$session.get('token') } })
                       .then((res) => {
                         this.newFolderDialog = false
                         this.addNewFolderLoading = false
@@ -2826,11 +2823,11 @@
                         this.addNewFileLoading = true
 
                         let newfilename = newFolderName + '/default.partial'
-                        axios.post(config.baseURL + '/flows-dir-listing', {
+                        axios.post(config.baseURL + '/create-user-folder', {
                             filename: newfilename,
                             text: ' ',
                             type: 'file'
-                          })
+                          },{ headers: { 'Authorization': this.$session.get('token') } })
                           .then(async(res) => {
                             this.newFileDialog = false
                             this.addNewFileLoading = false
@@ -2855,11 +2852,11 @@
                                   }
                                   if (checkdefault != true) {
                                     let newFolderName = folderUrl + '/Partials/';
-                                    await axios.post(config.baseURL + '/flows-dir-listing', {
+                                    await axios.post(config.baseURL + '/create-user-folder', {
                                       filename: newFolderName + newName + "/" + DefaultParams[k][newName],
                                       text: ' ',
                                       type: 'file'
-                                    })
+                                    },{ headers: { 'Authorization': this.$session.get('token') } })
                                     let temp1 = {
                                       value: DefaultParams[k][newName].split('.')[0],
                                       label: DefaultParams[k][newName].split('.')[0]
@@ -3122,7 +3119,7 @@
 
                   console.log('Name: ', name);
 
-                  content1 = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + name + '.html');
+                  content1 = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + name + '.html',{ headers: { 'Authorization': this.$session.get('token') } });
                   content1 = content1.data
                   var result1 = [];
                   result1 = (getFromBetween.get(content1, "{{>", "}}"));
@@ -3662,21 +3659,21 @@
           var contentpartials = self.$store.state.content;
           if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
             console.log("VueComponents found:")
-            var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+            var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js',{ headers: { 'Authorization': this.$session.get('token') } });
             mainVuefile = mainVuefile.data
 
             for (let x = 0; x < self.form.vuepartials.length; x++) {
               let temp = mainVuefile.replace(/@@vuecomponent@@/g, self.form.vuepartials[x].value.split('.')[0])
               temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
 
-              await axios.post(config.baseURL + '/flows-dir-listing', {
+              await axios.post(config.baseURL + '/create-user-folder', {
                   filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
                   text: temp,
                   type: 'file'
-                }).then(async (res) => {
+                },{ headers: { 'Authorization': this.$session.get('token') } }).then(async (res) => {
                   contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
-                  axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
+                  axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', { headers: { 'Authorization': this.$session.get('token') } })
                     .then((response) => {
                       console.log("called webpack_file api successfully:")
                     })
@@ -3690,25 +3687,28 @@
             }
           }
           if (self.form.Layout == 'Blank') {
-            await axios.post(config.baseURL + '/flows-dir-listing', {
+            await axios.post(config.baseURL + '/create-user-folder', {
                 filename: folderUrl + '/Layout/Blank.layout',
                 text: '{{{ contents }}}',
                 type: 'file'
-              })
+              },{ headers: { 'Authorization': this.$session.get('token') } })
               .catch((e) => {
                 console.log("error while blank file creation")
               })
           }
-          let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
+          var token = localStorage.getItem("auth_token");
+          console.log("token",token)
+          // console.log("config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout'"+ config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout')
+          let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout', { headers: { 'Authorization': token } });
           var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
           this.backuplayout = backlayoutdata.data;
           let newFolderName = folderUrl + '/temp';
-          await axios.post(config.baseURL + '/flows-dir-listing', {
+          await axios.post(config.baseURL + '/create-user-folder', {
               foldername: newFolderName,
               type: 'folder'
-            }).then(async (res) => {
+            },{ headers: { 'Authorization': token } }).then(async (res) => {
               for (let i = 0; i < back_partials.length; i++) {
-                let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial');
+                let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial',{ headers: { 'Authorization': token } });
                 responsepartials = responsepartials.data
                 let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
                 var DefaultParams = [];
@@ -3756,11 +3756,11 @@
                     responsepartials = responsepartials.split(temp1).join(temp2)
                   }
                 }
-                await axios.post(config.baseURL + '/flows-dir-listing', {
+                await axios.post(config.baseURL + '/create-user-folder', {
                   filename: folderUrl + '/temp/' + Object.keys(back_partials[i]) + '_' + back_partials[i][Object.keys(back_partials[i])] + '.html',
                   text: responsepartials,
                   type: 'file'
-                }).catch((e) => {
+                },{ headers: { 'Authorization': token } }).catch((e) => {
                   console.log(e)
                 })
               }
@@ -3835,8 +3835,8 @@
               console.log(e)
             })
 
-          let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js');
-
+          let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/metalsmith.js',{ headers: { 'Authorization': token } });
+          console.log('metal:',responseMetal.data)
           var index = responseMetal.data.search('.source')
 
           responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
@@ -3876,18 +3876,19 @@
           self.form.partials = back_partials
           console.log("final metalsmith:", responseMetal.data)
           var mainMetal = folderUrl + '/assets/metalsmith.js'
-          axios.post(config.baseURL + '/flows-dir-listing', {
+          axios.post(config.baseURL + '/create-user-folder', {
               filename: mainMetal,
               text: responseMetal.data,
               type: 'file'
-            })
+            },{ headers: { 'Authorization': token } })
             .then(async (response) => {
+              console.log('metal smith created success')
               let newFolderName1 = folderUrl + '/Preview';
-              await axios.post(config.baseURL + '/flows-dir-listing', {
+              await axios.post(config.baseURL + '/create-user-folder', {
                 foldername: newFolderName1,
                 type: 'folder'
-              }).then(async (res) => {
-                console.log(res)
+              },{ headers: { 'Authorization': localStorage.getItem("auth_token") } }).then(async (res) => {
+                console.log('preview created')
 
               }).catch((e) => {
                 console.log(e)
@@ -3895,6 +3896,7 @@
               let newContent = "<html>\n<head>\n" + tophead +
                 "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                 "<title>" + pageSeoTitle + "</title>\n" +
+                "<style type='text/css'>.dfgroup{font-family: 'Montserrat', sans-serif;max-width: 500px;border: 1px groove Red;padding: 10px;display: block;}.fieldGroupRepeater{font-family: 'Montserrat', sans-serif;border: 1px dashed ;padding: 10px;margin: 5px 0;border-bottom: 10px solid #F00;}.dflist{font-family: 'Montserrat', sans-serif;border: 2px solid Blue;display: block;padding: 10px;margin-left: 10px;}.dftext{font-family: 'Montserrat', sans-serif;display: block;border: 1px dashed Green;margin: 5px;width: 200px;} .dfrepeate{display: block;border: 1px solid black; margin: 10px;} </style>" + 
                 "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
                 "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                 "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
@@ -3905,6 +3907,11 @@
                 "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                 "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                 "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
+                '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>\n' + 
+                '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' + 
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.3.1/web-animations.min.js"><\/script>'+ 
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"><\/script>' +
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js"><\/script>' +
                 "<link rel='stylesheet' href='./../main-files/main.css'/>\n<script src=\"./../main-files/main.js\"><\/script>\n" + endhead + "\n</head>\n<body>\n<div id=\"app\">\n" +
                 layoutdata.data + topbody +
                 '\n</div>\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
@@ -3924,40 +3931,40 @@
                 endbody +
                 '\n</body>\n</html>';
 
-              axios.post(config.baseURL + '/flows-dir-listing', {
-                  filename: folderUrl + '/Layout/' + self.form.Layout + '_temp.layout',
+              axios.post(config.baseURL + '/create-user-folder', {
+                  filename: folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',
                   text: newContent,
                   type: 'file'
-                })
+                },{ headers: { 'Authorization': localStorage.getItem("auth_token") } })
                 .then(async (res) => {
-
+                  console.log('layout_metal created');
                   var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
 
                   if (self.form.Layout == 'Blank') {
                     rawContent = '---\nlayout: ' + self.form.Layout + '.layout\n---\n' + rawContent
 
                   } else {
-                    var tempValueLayout = '---\nlayout: ' + self.form.Layout + '_temp.layout\n---\n';
+                    var tempValueLayout = '---\nlayout: ' + self.form.Layout + '_metal.layout\n---\n';
                     rawContent = tempValueLayout + rawContent
                   }
                   self.PageLayout = JSON.parse(JSON.stringify(self.form.Layout));
                   var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
-                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                  await axios.post(config.baseURL + '/create-user-folder', {
                       filename: previewFileName,
                       text: rawContent,
                       type: 'file'
-                    })
+                    },{ headers: { 'Authorization': localStorage.getItem("auth_token") } })
                     .then(async (res) => {
-
+                      console.log('hbs created')
                       self.saveFileLoading = false;
-                      await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
+                      await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, { headers: { 'Authorization': localStorage.getItem("auth_token") } }).then((response) => {
                           var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                          axios.post(config.baseURL + '/flows-dir-listing', {
+                          axios.post(config.baseURL + '/create-user-folder', {
                               filename: mainMetal,
                               text: metalsmithJSON,
                               type: 'file'
-                            })
+                            },{ headers: { 'Authorization': localStorage.getItem("auth_token") } })
                             .then(async (res) => {
                               self.fullscreenLoading = false;
                               self.previewLoading = false;
@@ -3979,18 +3986,18 @@
                                 window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
                               } 
 
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview',{ headers: { 'Authorization': localStorage.getItem("auth_token") } })
                                 .then(async (res) => {
                                   console.log(res);
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization':localStorage.getItem("auth_token") } })
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'Authorization': localStorage.getItem("auth_token") } }).then((res) => {
                                     console.log('deleted extra layout file:', res)
                                   }).catch((e) => {
                                     console.log(e)
                                   })
                                   if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                     for (let x = 0; x < self.form.vuepartials.length; x++) {
-                                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',{ headers: { 'Authorization': this.$session.get('token') } }).then((res) => {
                                           console.log(res)
                                         })
                                         .catch((e) => {
@@ -4000,7 +4007,7 @@
                                   }
                                   console.log("layout file reset")
                                   if (self.form.Layout == 'Blank') {
-                                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout',{ headers: { 'Authorization': this.$session.get('token') } })
                                       .catch((e) => {
                                         self.fullscreenLoading = false;
                                         console.log("error while deleting blank.layout file")
@@ -4019,19 +4026,19 @@
                               window.open(config.ipAddress + '/plugins/public/error.html');
                               var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                              axios.post(config.baseURL + '/flows-dir-listing', {
-                                filename: mainMetal,
-                                text: metalsmithJSON,
-                                type: 'file'
-                              })
+                              // axios.post(config.baseURL + '/create-user-folder', {
+                              //   filename: mainMetal,
+                              //   text: metalsmithJSON,
+                              //   type: 'file'
+                              // },{ headers: { 'Authorization': this.$session.get('token') } })
 
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                                console.log('deleted extra layout file:', res)
-                              }).catch((e) => {
-                                console.log(e)
-                              })
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'Authorization': this.$session.get('token') } }).then((res) => {
+                              //   console.log('deleted extra layout file:', res)
+                              // }).catch((e) => {
+                              //   console.log(e)
+                              // })
+                              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview',{ headers: { 'Authorization': this.$session.get('token') } })
+                              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': this.$session.get('token') } })
                               console.log(e)
                             })
 
@@ -4041,19 +4048,19 @@
                           window.open(config.ipAddress + '/plugins/public/error.html');
                           var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                          axios.post(config.baseURL + '/flows-dir-listing', {
-                            filename: mainMetal,
-                            text: metalsmithJSON,
-                            type: 'file'
-                          })
+                          // axios.post(config.baseURL + '/create-user-folder', {
+                          //   filename: mainMetal,
+                          //   text: metalsmithJSON,
+                          //   type: 'file'
+                          // },{ headers: { 'Authorization': this.$session.get('token') } })
 
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                            console.log('deleted extra layout file:', res)
-                          }).catch((e) => {
-                            console.log(e)
-                          })
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                          // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'Authorization': this.$session.get('token') } }).then((res) => {
+                          //   console.log('deleted extra layout file:', res)
+                          // }).catch((e) => {
+                          //   console.log(e)
+                          // })
+                          // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview',{ headers: { 'Authorization': this.$session.get('token') } })
+                          // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': this.$session.get('token') } })
                           console.log('Error while creating MetalSmith JS file' + err)
 
                         })
@@ -4065,17 +4072,17 @@
 
                       var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                      axios.post(config.baseURL + '/flows-dir-listing', {
-                        filename: mainMetal,
-                        text: metalsmithJSON,
-                        type: 'file'
-                      })
+                      // axios.post(config.baseURL + '/create-user-folder', {
+                      //   filename: mainMetal,
+                      //   text: metalsmithJSON,
+                      //   type: 'file'
+                      // },{ headers: { 'Authorization': this.$session.get('token') } })
 
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                        console.log('deleted extra layout file:', res)
-                      }).catch((e) => {
-                        console.log(e)
-                      })
+                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                      //   console.log('deleted extra layout file:', res)
+                      // },{ headers: { 'Authorization': this.$session.get('token') } }).catch((e) => {
+                      //   console.log(e)
+                      // })
                       // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                       // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                       self.saveFileLoading = false
@@ -4086,18 +4093,18 @@
                   self.fullscreenLoading = false;
                   window.open(config.ipAddress + '/plugins/public/error.html');
                   var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                  axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: mainMetal,
-                    text: metalsmithJSON,
-                    type: 'file'
-                  })
+                  // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': this.$session.get('token') } })
+                  // axios.post(config.baseURL + '/create-user-folder', {
+                  //   filename: mainMetal,
+                  //   text: metalsmithJSON,
+                  //   type: 'file'
+                  // },{ headers: { 'Authorization': this.$session.get('token') } })
 
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                    console.log('deleted extra layout file:', res)
-                  }).catch((e) => {
-                    console.log(e)
-                  })
+                  // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'Authorization': this.$session.get('token') } }).then((res) => {
+                  //   console.log('deleted extra layout file:', res)
+                  // }).catch((e) => {
+                  //   console.log(e)
+                  // })
                   console.log(e);
                 })
             })
@@ -4105,17 +4112,17 @@
               self.fullscreenLoading = false;
               window.open(config.ipAddress + '/plugins/public/error.html');
               var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-              axios.post(config.baseURL + '/flows-dir-listing', {
+              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': token } })
+              axios.post(config.baseURL + '/create-user-folder', {
                 filename: mainMetal,
                 text: metalsmithJSON,
                 type: 'file'
-              })
-              aaxios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                console.log('deleted extra layout file:', res)
-              }).catch((e) => {
-                console.log(e)
-              })
+              },{ headers: { 'Authorization': localStorage.getItem("auth_token") }})
+              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'Authorization': token } }).then((res) => {
+              //   console.log('deleted extra layout file:', res)
+              // }).catch((e) => {
+              //   console.log(e)
+              // })
 
               console.log('Error while creating MetalSmith JS file' + e)
             })
@@ -4150,11 +4157,11 @@
             let actualFileNameOnly = fileNameParts[0];
             newJsonName = folderUrl + '/assets/'+actualFileNameOnly+'.json';
           }
-          return axios.post(config.baseURL + '/flows-dir-listing', {
+          return axios.post(config.baseURL + '/create-user-folder', {
               filename : newJsonName ,
               text : newContent,
               type : 'file'
-          })
+          },{ headers: { 'Authorization': this.$session.get('token') } })
           .then((res) => {
               this.saveFileLoading = false
               this.$message({
@@ -4205,7 +4212,7 @@
         console.log('Project Name: ', projectName);
         
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName ,{ headers: { 'Authorization': this.$session.get('token') } });
 
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
@@ -4218,7 +4225,7 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"),{ headers: { 'Authorization': this.$session.get('token') } })
             .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
@@ -4344,7 +4351,7 @@
 
         let projectName = urlparts[5];
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName,{ headers: { 'Authorization': this.$session.get('token') } } );
 
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
@@ -4358,7 +4365,7 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"),{ headers: { 'Authorization': this.$session.get('token') } })
           .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
@@ -4402,7 +4409,7 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length - 1)];
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername,{ headers: { 'Authorization': this.$session.get('token') } } );
         let rawConfigs = responseConfig.data.data[0].configData;
         let repositoryId = rawConfigs[0].repoSettings[0].RepositoryId;
 
@@ -4414,16 +4421,15 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"),{ headers: { 'Authorization': this.$session.get('token') } })
             .then(async(res) => {
 
               // Delete Repository from GitLab Server
-              let response = await axios.get(config.baseURL + '/gitlab-add-repo/' + repositoryId, {})
+              let response = await axios.get(config.baseURL + '/gitlab-add-repo/' + repositoryId, { headers: { 'Authorization': this.$session.get('token') } })
                 .then((response) => {
 
                   // delete project configuration from RethinkDB
-                  axios.delete(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername , {
-                  })
+                  axios.delete(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername , { headers: { 'Authorization': this.$session.get('token') } })
                   .then((res) => {
                     this.$message({
                       showClose: true,

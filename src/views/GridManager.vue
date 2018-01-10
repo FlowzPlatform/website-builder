@@ -82,8 +82,7 @@
         },
         methods: {
             getSavedHtml: async function(){
-              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
-              });
+              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , { headers: { 'Authorization': this.$session.get('token') } } );
               this.$store.state.content = response.data
             },
             getHtml: function(){

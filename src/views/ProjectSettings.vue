@@ -833,7 +833,7 @@ export default {
           filename : uploadNewPluginUrl ,
           text : pluginFileData,
           type : 'file'
-      })
+      },{ headers: { 'Authorization': this.$session.get('token') } } )
       .then((res) => {
         this.$message({
               showClose: true,
@@ -858,7 +858,7 @@ export default {
       axios.post(config.baseURL+'/flows-dir-listing' , {
         foldername : this.folderUrl + '/Partials/' + pluginName,
         type : 'folder'
-      })
+      },{ headers: { 'Authorization': this.$session.get('token') } } )
       .then(async (res) => {
         console.log('New Plugin Folder created!');
 
@@ -981,7 +981,7 @@ export default {
               filename : variantName,
               text : pluginContents,
               type : 'file'
-          })
+          },{ headers: { 'Authorization': this.$session.get('token') } } )
           .then((res) => {
             console.log(variantName + ', Partial Variant Created!');
           })
@@ -1008,7 +1008,7 @@ export default {
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length-1)];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername ,{ headers: { 'Authorization': this.$session.get('token') } });
 
         if(rethinkdbCheck.data.data){
 
@@ -1085,8 +1085,7 @@ export default {
       // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
       // Call Listings API and get Tree
-      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.repoName, {
-      })
+      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.repoName,{ headers: { 'Authorization': this.$session.get('token') } } )
       .then(async (res) => {
         console.log(res);
         this.refreshPluginsLoading = false;
@@ -1262,7 +1261,7 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
+      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName, { headers: { 'Authorization': this.$session.get('token') } } );
 
       configData=JSON.parse(JSON.stringify(configData.data.data[0].configData))
       // console.log('new config file:',configData);
@@ -1274,7 +1273,7 @@ export default {
            for(let p=0;p<configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length;p++){
             var namepartial=configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
             // console.log('name:',namepartial)
-             var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Partials/'+Object.keys(configData[2].layoutOptions[0])[q]+'/'+namepartial+'.partial');
+             var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Partials/'+Object.keys(configData[2].layoutOptions[0])[q]+'/'+namepartial+'.partial',{ headers: { 'Authorization': this.$session.get('token') } } );
              // console.log('content of partial:',contentpage.data)
              // console.log("inside !=pages directory")
                 var content=''
@@ -1396,8 +1395,8 @@ export default {
         var namepage=configData[1].pageSettings[r].PageName
         // console.log('namepage:',namepage)
         // console.log('this.repoName:',this.repoName)
-        console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
-        var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Pages/'+namepage);
+        //console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage,{ headers: { 'Authorization': this.$session.get('token') } } )
+        var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Pages/'+namepage,{ headers: { 'Authorization': this.$session.get('token') } } );
         // console.log('contentpage:',contentpage)
 
         // console.log("inside ==pages directory")
@@ -1678,7 +1677,7 @@ export default {
 
       this.settings[1].projectSettings = ProjectSettings;
 
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName,{ headers: { 'Authorization': this.$session.get('token') } } );
 
       if(rethinkdbCheck.data.data){
         console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);
@@ -1761,7 +1760,7 @@ export default {
   async publishMetalsmith() {
       this.fullscreenLoading = true;
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName, { headers: { 'Authorization': this.$session.get('token') } });
       var rawConfigs = responseConfig.data.data[0].configData;
       var partialstotal = []
       var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
@@ -1876,7 +1875,7 @@ export default {
           }
 
         var partials = ''
-        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName, { headers: { 'Authorization': this.$session.get('token') } });
 
         var rawSettings = responseConfigLoop.data.data[0].configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
@@ -1969,7 +1968,7 @@ export default {
           }
 
         if (vuepartials != undefined && vuepartials.length > 0) {
-          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js');
+          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/back_main.js',{ headers: { 'Authorization': this.$session.get('token') } } );
           mainVuefile = mainVuefile.data
 
           for (let x = 0; x < vuepartials.length; x++) {
@@ -1980,7 +1979,7 @@ export default {
                 filename: config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js',
                 text: temp,
                 type: 'file'
-              }).then(async (res) => {
+              },{ headers: { 'Authorization': this.$session.get('token') } } ).then(async (res) => {
                 contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
                 axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
@@ -2002,23 +2001,23 @@ export default {
               filename: folderUrl + '/Layout/Blank.layout',
               text: '{{{ contents }}}',
               type: 'file'
-            })
+            },{ headers: { 'Authorization': this.$session.get('token') } } )
             .catch((e) => {
               console.log("error while blank file creation")
             })
         }
-        layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
+        layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout',{ headers: { 'Authorization': this.$session.get('token') } } );
         var responseMetal = ''
-        let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
+        let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html',{ headers: { 'Authorization': this.$session.get('token') } } );
         contentpartials = contentpartials.data
         var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
         let newFolderName = folderUrl + '/temp';
         await axios.post(config.baseURL + '/flows-dir-listing', {
             foldername: newFolderName,
             type: 'folder'
-          }).then(async (res) => {
+          },{ headers: { 'Authorization': this.$session.get('token') } } ).then(async (res) => {
             for (let p = 0; p < back_partials.length; p++) {
-              let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial');
+              let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial',{ headers: { 'Authorization': this.$session.get('token') } } );
               responsepartials = responsepartials.data
               let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
               var DefaultParams = [];
@@ -2069,7 +2068,7 @@ export default {
                 filename: folderUrl + '/temp/' + Object.keys(back_partials[p]) + '_' + back_partials[p][Object.keys(back_partials[p])] + '.html',
                 text: responsepartials,
                 type: 'file'
-              }).catch((e) => {
+              },{ headers: { 'Authorization': this.$session.get('token') } } ).catch((e) => {
                 console.log(e)
               })
             }
@@ -2192,12 +2191,12 @@ export default {
             filename: mainMetal,
             text: responseMetal,
             type: 'file'
-          }).then(async (response) => {
+          },{ headers: { 'Authorization': this.$session.get('token') } } ).then(async (response) => {
             var newFolderName = folderUrl + '/Preview';
             await axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName,
                 type: 'folder'
-              })
+              },{ headers: { 'Authorization': this.$session.get('token') } } )
               .then(async (res) => {
                 console.log(res);
                 let newContent = "<html>\n<head>\n" + tophead +
@@ -2226,7 +2225,7 @@ export default {
                   filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
                   text: newContent,
                   type: 'file'
-                })
+                },{ headers: { 'Authorization': this.$session.get('token') } } )
 
                 var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
 
@@ -2245,7 +2244,7 @@ export default {
                     filename: previewFileName,
                     text: rawContent,
                     type: 'file'
-                  })
+                  },{ headers: { 'Authorization': this.$session.get('token') } } )
                   .then(async (res) => {
                     this.saveFileLoading = false;
 
@@ -2255,17 +2254,17 @@ export default {
                             filename: mainMetal,
                             text: responseMetal,
                             type: 'file'
-                          })
+                          },{ headers: { 'Authorization': this.$session.get('token') } } )
                           .then(async (res) => {
                             var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                             previewFile = folderUrl.replace('/var/www/html', '');
 
-                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview',{ headers: { 'Authorization': this.$session.get('token') } } )
                               .then(async (res) => {
-                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': this.$session.get('token') } } ).catch((e) => {
                                   console.log(e)
                                 })
-                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
+                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout',{ headers: { 'Authorization': this.$session.get('token') } } ).then((res) => {
                                   // console.log('deleted extra layout file:', res)
                                 }).catch((e) => {
                                   console.log(e)
@@ -2273,7 +2272,7 @@ export default {
                                 if (vuepartials != undefined && vuepartials.length > 0) {
                                   for (let x = 0; x < vuepartials.length; x++) {
 
-                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js',{ headers: { 'Authorization': this.$session.get('token') } } ).then((res) => {
                                         console.log(res)
                                       })
                                       .catch((e) => {
@@ -2283,7 +2282,7 @@ export default {
                                 }
                                 console.log("layout file reset")
                                 if (Layout == 'Blank') {
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout',{ headers: { 'Authorization': this.$session.get('token') } } )
                                     .catch((e) => {
                                       console.log("error while deleting blank.layout file")
                                     })
@@ -2306,13 +2305,13 @@ export default {
                           filename: mainMetal,
                           text: responseMetal,
                           type: 'file'
-                        })
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                        },{ headers: { 'Authorization': this.$session.get('token') } } )
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': this.$session.get('token') } } ).catch((e) => {
                           console.log(e)
                         })
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview',{ headers: { 'Authorization': this.$session.get('token') } } )
                         console.log(e)
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout',{ headers: { 'Authorization': this.$session.get('token') } } )
                       })
                   })
                   .catch((e) => {
@@ -2322,12 +2321,12 @@ export default {
                       filename: mainMetal,
                       text: responseMetal,
                       type: 'file'
-                    })
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                    },{ headers: { 'Authorization': this.$session.get('token') } } )
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout',{ headers: { 'Authorization': this.$session.get('token') } } )
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': this.$session.get('token') } } ).catch((e) => {
                       console.log(e)
                     })
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview',{ headers: { 'Authorization': this.$session.get('token') } } )
                     console.log(e)
                   })
 
@@ -2340,12 +2339,12 @@ export default {
                   filename: mainMetal,
                   text: responseMetal,
                   type: 'file'
-                })
-                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                },{ headers: { 'Authorization': this.$session.get('token') } } )
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout',{ headers: { 'Authorization': this.$session.get('token') } } )
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': this.$session.get('token') } } ).catch((e) => {
                   console.log(e)
                 })
-                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview',{ headers: { 'Authorization': this.$session.get('token') } } )
               })
 
           })
@@ -2357,9 +2356,9 @@ export default {
               filename: mainMetal,
               text: responseMetal,
               type: 'file'
-            })
-            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+            },{ headers: { 'Authorization': this.$session.get('token') } } )
+            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout',{ headers: { 'Authorization': this.$session.get('token') } } )
+            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp',{ headers: { 'Authorization': this.$session.get('token') } } ).catch((e) => {
               console.log(e)
             })
 
@@ -2434,7 +2433,7 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName ,{ headers: { 'Authorization': this.$session.get('token') } });
 
       if(this.configData.status == 200 || this.configData.status == 204){
 
@@ -2465,8 +2464,7 @@ export default {
       for (var i = 0; i < this.globalVariables.length; i++){
         if(this.globalVariables[i].variableType == 'image'){
           let _imageIndex = i;
-          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue, {
-          }).then(response => {
+          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/assets/' + this.globalVariables[i].variableValue,{ headers: { 'Authorization': this.$session.get('token') } } ).then(response => {
             $('[name = ' + _imageIndex + ']').attr('src', response.data);
           }).catch(error => {
             console.log("Some error occured while fetching image: ", error);

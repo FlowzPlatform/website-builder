@@ -1,7 +1,7 @@
 // Change baseURL when going live
-// const baseURL = 'http://localhost:3032';
+const baseURL = 'http://localhost:3032';
 // const baseURL = 'http://devapi.flowz.com/serverapi';
-const baseURL = 'http://api.flowz.com/serverapi';
+// const baseURL = 'http://api.flowz.com/serverapi';
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;
@@ -477,8 +477,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-
   // dataField component
+  //DF-container
   bm.add('DataFieldGroup', {
     label: 'Data Field Group',
     content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
@@ -489,6 +489,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Data Field Group'
   });
   
+  //DFObject
   bm.add('DataFieldObject', {
     label: 'Data Field Object',
     content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
@@ -499,6 +500,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Data Field Group'
   });
 
+  //DF-text
   bm.add('DataFieldText', {
     label: 'Data Field Text',
     content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
@@ -509,6 +511,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Data Field Group'
   });
 
+  //DF-grid
   bm.add('DataFieldList', {
     label: 'Data Field List',
     content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
@@ -519,6 +522,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Data Field Group'
   });
 
+  //DF-image
   bm.add('DataFieldImage', {
       label: 'Data Field Image',
       content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
@@ -529,6 +533,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       category: 'Data Field Group'
   });
 
+  //DF-image
+  bm.add('DataFieldTable', {
+    label: 'Data Field Table',
+    content: '<datafieldTable class="c3998" style="display: block; width: 100%; min-height:40px"></datafieldTable>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Progress Bar',
+    },
+    category: 'Data Field Group'
+  });
 
   bm.add('ShoppingCart', {
         label: 'Shopping Cart',
@@ -538,6 +552,28 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
               title: 'Shopping cart',
         },
     category: 'Payment Components'
+  });
+
+  // Bootstrap Blocks
+  bm.add('BootStrap-12-grid', {
+    label: 'BootStrap-12-grid',
+    content: '<div class="row"> <div class="col-md-1 cell">.col-md-1</div><div class="col-md-1 cell">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div><div class="col-md-1">.col-md-1</div></div>',
+    attributes: {
+      class: 'fa fa-shopping-cart',
+      title: 'ootStrap-12-grid',
+    },
+    category: 'BootStrap Block'
+  });
+  
+  
+  bm.add('BootStrap-2-grid', {
+    label: 'BootStrap-2-grid',
+    content: '<div class="row"> <div class="cell col-md-2"></div><div class="cell col-md-2"></div><div class="cell col-md-2"></div><div class="cell col-md-2"></div><div class="cell col-md-2"></div><div class="cell col-md-2"></div></div>',
+    attributes: {
+      class: 'fa fa-shopping-cart',
+      title: 'BootStrap-2-grid',
+    },
+    category: 'BootStrap Block'
   });
 
 
@@ -1990,6 +2026,48 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     });
 
 
+  comps.addType('datafieldtable', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [
+          {
+            label: 'column names',
+            name: ':column_value',
+            type: 'text'
+          },
+          {
+            label: 'api_url',
+            name: ':data_api',
+            type: 'text'
+          }
+        ]
+      }),
+
+    }, {
+        isComponent: function (el) {
+          if (el.tagName == 'DATAFIELDTABLE') {
+            return {
+              type: 'datafieldtable'
+            };
+          }
+        },
+      }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
+
 
 
 
@@ -2040,15 +2118,19 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
             if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
               if (configData[2].layoutOptions[0][data_].length >= 2) {
+                console.log("inside 2")
                 for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
-                      if (j == 0) {
-                        partialOptions[storedTemplates[index]] = [{
-                          'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
-                        }]
-
-                      } else {
+                  console.log("j",j)
+                  if (j == 0) {
+                    console.log(" configData[2].layoutOptions[0][data_][j].value", configData[2].layoutOptions[0][data_][j].value)
+                    partialOptions[storedTemplates[index]] = [{
+                      'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
+                    }]
+                    
+                  } else {
+                    console.log(" configData[2].layoutOptions[0][data_][j].value", configData[2].layoutOptions[0][data_][j].value)
                         partialOptions[storedTemplates[index]].push({
-                          'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                          'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
                         })
 
                       }

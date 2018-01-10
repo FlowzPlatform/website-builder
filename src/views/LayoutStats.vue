@@ -71,7 +71,7 @@ export default {
       let foldername = folderUrl.split('/');
       foldername = foldername[(foldername.length-1)];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername,{ headers: { 'Authorization': this.$session.get('token')}} );
       if(this.configData.status == 200 || this.configData.status == 204){
         console.log('Config file found! Updating fields..');
 

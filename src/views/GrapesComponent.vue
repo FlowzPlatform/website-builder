@@ -47,7 +47,6 @@ export default {
         this.fileUrl = this.$store.state.fileUrl;
 
 
-
         // // get bootstrap css
         // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
 
@@ -82,7 +81,7 @@ export default {
         // console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername,{ headers: { 'Authorization': this.$session.get('token')}} );
         let rawConfigs = responseConfig.data.data[0].configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
@@ -150,7 +149,7 @@ export default {
 
         variableCss += '}'
 
-        let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png');
+        let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/brand-logo.png',{ headers: { 'Authorization': this.$session.get('token') } } );
         this.imageBlob = imageData.data;
 
         var blkStyle = '.blk-row::after{ content: ""; clear: both; display: block;} .blk-row{padding: 10px;}';
@@ -467,8 +466,7 @@ export default {
                             console.log('Image is URL link.');
                             $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', _varValue);
                         } else {
-                            let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue, {
-                            })
+                            let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/assets/' + _varValue,{ headers: { 'Authorization': this.$session.get('token') } } )
                             .then((res) => {
                                 // If image is present in assets folder
                                 console.log('Image found in /assets folder.');
@@ -512,8 +510,7 @@ export default {
 
 	methods:{
     async getSavedHtml() {
-      let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
-      });
+      let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl ,{ headers: { 'Authorization': this.$session.get('token') } } );
       this.$store.state.content = response.data
     },
     getHtml: function () {

@@ -11,6 +11,8 @@ if (process.env.NODE_ENV !== 'development') {
     ipAdd = 'flowzcluster.tk';
     socketURL = 'ws://ws.flowz.com:4032';
     frontEndUrl = 'http://webbuilder.flowzcluster.tk/dashboard';
+    url = process.env.path;
+    console.log("url", url)
 
     loginUrl = 'http://auth.flowz.com/api/login';
     registerUrl = 'http://auth.flowz.com/api/setup';
@@ -28,9 +30,10 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'http://localhost:4032';
     frontEndUrl = 'http://localhost:8080/dashboard';
 
-    loginUrl = 'http://devauth.flowz.com/api/login';
+    loginUrl = 'http://auth.flowzcluster.tk/api/login';
+    // loginUrl = 'http://auth.flowzcluster.tk/api/login';
     registerUrl = 'http://devauth.flowz.com/api/setup';
-    userDetail = 'http://devauth.flowz.com/api/userdetails';
+    userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
     socialUrl = 'http://devauth.flowz.com/api';
 
     loginWithFacebookUrl = 'http://devauth.flowz.com/auth/facebook';

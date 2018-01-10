@@ -141,7 +141,7 @@ export default {
         if (response.data) {
           this.$session.start()
           this.$session.set('token', response.data.logintoken);
-          // localStorage.setItem("auth_token", response.data.logintoken);
+          localStorage.setItem("auth_token", response.data.logintoken);
 
           // Store Token in Cookie
           let location = psl.parse(window.location.hostname)
@@ -160,11 +160,14 @@ export default {
 
             this.$session.set('userDetailId', this.userDetailId);
             localStorage.setItem('userDetailId', this.userDetailId);
-
-            await axios.post(config.baseURL+'/flows-dir-listing' , {
+            axios.post(config.baseURL+'/create-user-folder' , {
               foldername :'/var/www/html/websites/'+ this.userDetailId,
               type : 'folder'
-            })
+            },{
+              headers: {
+                'authorization': this.$session.get('token')
+              }
+              })
             .then((res) => {
               this.$router.push('/editor');
               console.log('user Folder created!');
