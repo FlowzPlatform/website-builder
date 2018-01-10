@@ -1,7 +1,7 @@
 // Change baseURL when going live
-const baseURL = 'http://localhost:3032';
+// const baseURL = 'http://localhost:3032';
 // const baseURL = 'http://devapi.flowz.com/serverapi';
-// const baseURL = 'http://api.flowz.com/serverapi';
+const baseURL = 'http://api.flowz.com/serverapi';
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;
@@ -17,6 +17,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   //         class: 'gjs-fonts gjs-f-hero'
   //     }
   // });
+
+  bm.add('PaymentGateway', {
+    label: 'PaymentGateway',
+    content: '<paymentgateway style="display: block; padding: 10px; min-height: 20px;">PaymentGateways</paymentgateway>',
+    attributes: {
+       class:'fa fa-shopping-cart',
+       title: 'Shopping cart',
+    },
+    category: 'Payment Components'
+  });
 
   bm.add('g-form-template', {
     label: 'Form Full',
@@ -331,9 +341,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   bm.add('productSearchFilter', {
     label: 'Product Search Filter',
     content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"><productSearchFilter  style="display: block; width: 100%;padding:15px; vertical-align: middle;"><div class="reomve-texts"> <i class="fa fa-search"></i> <label style="margin: inherit;">Product Search Filter</label></div></productSearchFilter>',
-    attributes: {
-      class: 'fa fa-filter',
-      title: 'Product search Filter'
+    attributes: { 
+        class: 'fa fa-filter',
+        title: 'Product search Filter'
     },
     category: 'Ecommerce Blocks'
   });

@@ -652,6 +652,85 @@
         </div>
       </div>
 
+      <!-- Payment Block -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="togglePaymentgateway" class="card color-div toggleableDivHeader">Payment gateway</a>
+          </div>
+      </div>
+      <div id="togglePaymentgatewayContent" class="toggleableDivHeaderContent" style="display: none;">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="row">
+                      <div class="col-md-4">
+                          <h3> Gateways: </h3>
+                      </div>
+                  </div>
+                  <hr>
+                  <el-form ref="form" :model="form">
+
+                      <div>
+                          <el-form-item>
+                              <draggable v-model='paymentgateway' @start="drag=true" @end="drag=false">
+                                  <div style="margin-bottom: 25px" v-for='(n, index) in paymentgateway'>
+                                      <div class="row">
+                                          <div class="col-md-1" style="margin: 0; padding-left: 15px">
+                                              <el-checkbox v-model="n.checked"></el-checkbox>
+                                          </div>
+                                          <!-- name of gateway-->
+                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
+                                              <el-input type="text" placeholder="Name" v-model="n.name"></el-input>
+                                          </div>
+                                          <!-- gateway  -->
+                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
+                                              <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
+                                                  <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
+                                                  </el-option>
+                                              </el-select>
+                                          </div>
+                                          <!-- gateway description -->
+                                          <div class="col-md-5" style="margin: 0; padding: 0px">
+                                              <el-input type="textarea" placeholder="Description" v-model="n.description"></el-input>
+                                          </div>
+                                          <!-- Delete Variable -->
+                                          <div class="col-md-1">
+                                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletepaymentgateway(index)" icon="delete2"></el-button>
+                                          </div>
+                                          <div class="col-md-1">
+                                              <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+
+                                          </div>
+                                      </div>
+                                      <!-- <div> -->
+                                      <div class="row">
+                                          <div class="col-md-4">
+                                              <h5> Fields: </h5>
+                                          </div>
+                                      </div>
+                                      <div class="row">
+                                          <div v-for='i,k in Paymentfields[index]'>
+                                              <el-form ref="form" label-width="120px">
+                                                  <el-form-item style="margin: 0; padding-left:5px" v-bind:label='Paymentfields[index][k]'>
+                                                      <el-input type='text' v-model='n.fields[k][i]'></el-input>
+                                                  </el-form-item>
+                                              </el-form>
+                                          </div>
+                                      </div>
+                                      <!-- </div> -->
+                                      <hr>
+                                  </div>
+                              </draggable>
+                          </el-form-item>
+                      </div>
+
+                      <!-- Create new variable -->
+                      <el-button type="primary" @click="addNewpaymentgateway">New Gateway</el-button>
+                  </el-form>
+              </div>
+          </div>
+      </div>
+      <!-- Payment Block -->
+
       <!-- List of Commits Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -827,7 +906,10 @@ export default {
       activeName: 'first',
       customDomainName: '',
       userDetailId: '',
-      ipAddress: config.ipAddress
+      ipAddress: config.ipAddress,
+      paymentgateway: [],
+      Paymentfields: [],
+      Allgateway: []
     }
   },
   components: {
@@ -926,6 +1008,34 @@ export default {
     addNewlocalstyles(){
       let newVariable = { linkposition:'',style:''};
       this.localstyles.push(newVariable);
+    },
+
+    addNewpaymentgateway(){
+      let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
+      this.paymentgateway.push(newVariable);
+      this.Paymentfields.push([])
+      
+    },
+
+    gatewaychange(n,index){
+      // console.log(n,index)
+     this.paymentgateway[index].fields=[]
+
+     for(let i=0;i<this.Allgateway.length;i++){
+      if(this.Allgateway[i].name==n.gateway){
+        
+        for(let j=0;j<this.Allgateway[i].keys.length;j++){
+          var temp={}
+        temp[this.Allgateway[i].keys[j]]=''
+        this.paymentgateway[index].fields.push(temp)
+        }
+        this.Paymentfields[index]=this.Allgateway[i].keys
+      }
+     }
+     var ter=this.paymentgateway[index].description
+     this.paymentgateway[index].description=' '
+     this.paymentgateway[index].description=ter
+     // console.log(this.paymentgateway,this.Paymentfields)
     },
 
     async addNewPlugin(pluginFileData) {
@@ -1710,6 +1820,11 @@ export default {
       this.externallinksMeta.splice(deleteIndex, 1);
     },
 
+    deletepaymentgateway(deleteIndex) {
+      this.paymentgateway.splice(deleteIndex,1);
+      this.Paymentfields.splice(deleteIndex,1);
+    },
+
     deletePlugin(deleteIndex){
       this.$confirm('This plugin will be permanently deleted. Continue?', 'Warning', {
         confirmButtonText: 'OK',
@@ -1785,7 +1900,8 @@ export default {
                               "ProjectMetaInfo": this.externallinksMeta,
                               "ProjectMetacharset":this.Metacharset,
                               "ProjectScripts":this.localscripts,
-                              "ProjectStyles":this.localstyles
+                              "ProjectStyles":this.localstyles,
+                               "PaymentGateways":this.paymentgateway
                             }];
 
       this.settings[1].projectSettings = ProjectSettings;
@@ -2581,6 +2697,10 @@ export default {
     },
 
     async init () {
+
+      var gateways= await axios.get('http://api.flowzcluster.tk/payment/availablegateway');
+      this.Allgateway = gateways.data.gateways;
+
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
@@ -2617,9 +2737,18 @@ export default {
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
+        this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
       } else {
         console.log('Cannot get configurations!');
       } 
+
+      for(let i=0;i<this.paymentgateway.length;i++){
+        var temp=[]
+        for(let j=0;j<this.paymentgateway[i].fields.length;j++){
+          temp.push(Object.keys(this.paymentgateway[i].fields[j])[0])
+        }
+        this.Paymentfields[i]=temp
+      }
 
       // replace all image tag source with index as name attribute to get the image file preview
       
@@ -2781,6 +2910,15 @@ export default {
                 $("#toggleMetaTags").html("Meta Tags")
             } else {
                 $("#toggleMetaTags").text("Meta Tags")
+            }
+        });
+
+        $("#togglePaymentgateway").click(function() {
+            $("#togglePaymentgatewayContent").slideToggle("slow");
+            if ($("#togglePaymentgateway").text() == "Payment gateway") {
+                $("#togglePaymentgateway").html("Payment gateway")
+            } else {
+                $("#togglePaymentgateway").text("Payment gateway")
             }
         });
 
