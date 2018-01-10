@@ -1832,10 +1832,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 type: 'DataFieldGroup'
               };
             }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
+            }
           },
         }),
 
-      view: defaultType.view,
+      view: defaultView.extend({
+        // '<template>' can't be shown so in canvas use another tag
+        tagName: 'div'
+      }),
 
       // The render() should return 'this'
       render: function () {
@@ -1957,6 +1963,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
               return {
                 type: 'DataFieldList'
               };
+            }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
             }
           },
         }),
@@ -2090,68 +2099,126 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
 
-  $.getJSON(configFileUrl, function (data) {
-    configData = data.data[0].configData;
-    console.log('ReUseVue co2nfigData:', configData);
-    storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+  // $.getJSON(configFileUrl, function (data) {
+  //   configData = data.data[0].configData;
+  //   console.log('ReUseVue co2nfigData:', configData);
+  //   storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+  // });
+  //{ headers: { 'Authorization': localStorage.getItem("auth_token") } }
+  $.ajax({
+    beforeSend: function (request) {
+      request.setRequestHeader("Authorization", localStorage.getItem("auth_token"));
+    },
+    dataType: "json",
+    url: configFileUrl,
+    success: function (data) {
+      configData = data.data[0].configData;
+      storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+      console.log("length................", storedTemplates.length)
+    }
   });
-
+  
 
   var partialOptions = {};
-
+  
   setTimeout(function () {
     for (var i = 0; i < storedTemplates.length; i++) {
       if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
         storedTemplates = storedTemplates.splice(i, 1)
       }
     }
-
-
+    
+    
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       let resp2 = []
-      $.getJSON(configFileUrl, function (data) {
-        configData = data.data[0].configData;
-        // console.log('ReUseVue co2nfigData:', configData);
-        storedTemplates = Object.keys(configData[2].layoutOptions[0]);
-        for (let index = 0; index < storedTemplates.length; index++) {
-          let data_ = storedTemplates[index]
-          for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
-            if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
-              if (configData[2].layoutOptions[0][data_].length >= 2) {
-                console.log("inside 2")
-                for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
-                  console.log("j",j)
-                  if (j == 0) {
-                    console.log(" configData[2].layoutOptions[0][data_][j].value", configData[2].layoutOptions[0][data_][j].value)
-                    partialOptions[storedTemplates[index]] = [{
-                      'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
-                    }]
+      // $.getJSON(configFileUrl, function (data) {
+      //   configData = data.data[0].configData;
+      //   // console.log('ReUseVue co2nfigData:', configData);
+      //   storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+      //   for (let index = 0; index < storedTemplates.length; index++) {
+      //     let data_ = storedTemplates[index]
+      //     for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
+      //       if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
+      //         if (configData[2].layoutOptions[0][data_].length >= 2) {
+      //           console.log("inside 2")
+      //           for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
+      //             console.log("j",j)
+      //             if (j == 0) {
+      //               console.log(" configData[2].layoutOptions[0][data_][j].value", configData[2].layoutOptions[0][data_][j].value)
+      //               partialOptions[storedTemplates[index]] = [{
+      //                 'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
+      //               }]
                     
-                  } else {
-                    console.log(" configData[2].layoutOptions[0][data_][j].value", configData[2].layoutOptions[0][data_][j].value)
-                        partialOptions[storedTemplates[index]].push({
-                          'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
-                        })
+      //             } else {
+      //               console.log(" configData[2].layoutOptions[0][data_][j].value", configData[2].layoutOptions[0][data_][j].value)
+      //                   partialOptions[storedTemplates[index]].push({
+      //                     'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
+      //                   })
+                        
+      //                 }
+      //               }
+      //             } else {
+      //               partialOptions[storedTemplates[index]] = [{
+      //                 'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+      //               }]
+                    
+      //             }
+      //             console.log("data...........................................", partialOptions)
+      //           }
+      //         }
+      //       }
+      //     });
+          $.ajax({
+            beforeSend: function (request) {
+              request.setRequestHeader("Authorization", localStorage.getItem("auth_token"));
+            },
+            dataType: "json",
+            url: configFileUrl,
+            success: function (data) {
+              configData = data.data[0].configData;
+              // console.log('ReUseVue co2nfigData:', configData);
+              storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+              for (let index = 0; index < storedTemplates.length; index++) {
+                let data_ = storedTemplates[index]
+                for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
+                  if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
+                    if (configData[2].layoutOptions[0][data_].length >= 2) {
+                      console.log("inside 2")
+                      for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
+                        console.log("j", j)
+                        if (j == 0) {
+                          console.log(" configData[2].layoutOptions[0][data_][j].value", configData[2].layoutOptions[0][data_][j].value)
+                          partialOptions[storedTemplates[index]] = [{
+                            'name': configData[2].layoutOptions[0][data_][j].value 
+                          }]
 
+                        } else {
+                          console.log(" configData[2].layoutOptions[0][data_][j].value", configData[2].layoutOptions[0][data_][j].value)
+                          partialOptions[storedTemplates[index]].push({
+                            'name': configData[2].layoutOptions[0][data_][j].value 
+                          })
+
+                        }
                       }
-                    }
-                  } else {
-                        partialOptions[storedTemplates[index]] = [{
-                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
-                    }]
+                    } else {
+                      partialOptions[storedTemplates[index]] = [{
+                        'name': configData[2].layoutOptions[0][data_][index2].value 
+                      }]
 
+                    }
+                    console.log("data...........................................", partialOptions)
                   }
                 }
-          }
+              }
+            }
+          });
         }
-      });
-    }
-  }, 1000);
-
-
-  editor.TraitManager.addType('customConent1', {
-
-    getInputEl: function() {
+      }, 2000);
+      
+      
+      editor.TraitManager.addType('customConent1', {
+        
+        getInputEl: function() {
       if (!this.inputEl) {
         var input = document.createElement('select');
         input.setAttribute("id", "Div1");
