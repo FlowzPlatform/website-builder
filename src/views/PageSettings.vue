@@ -602,7 +602,7 @@ export default {
           // update existing data
           await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
               configData: this.settings
-            })
+            },{ headers: { 'Authorization': localStorage.getItem("auth_token") } })
             .then(async(res) => {
               this.$message({
                 showClose: true,
@@ -647,7 +647,7 @@ export default {
           // update existing data
           await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
               configData: this.settings
-            })
+            },{ headers: { 'Authorization': localStorage.getItem("auth_token") } })
             .then(async(res) => {
               this.$message({
                 showClose: true,

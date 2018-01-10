@@ -1746,9 +1746,7 @@
                       localStorage.setItem("folderUrl", newFolderName);
                       var folder = localStorage.getItem("folderUrl");
 
-                      axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName, {
-
-                      },{ headers: { 'Authorization': this.$session.get('token') } }).then((response) => {
+                      axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName,{ headers: { 'Authorization': this.$session.get('token') } }).then((response) => {
                         localStorage.setItem("listOfTempaltes", JSON.stringify(response.data));
                       })
                       .catch((e) => {
@@ -3699,7 +3697,7 @@
           var token = localStorage.getItem("auth_token");
           console.log("token",token)
           // console.log("config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout'"+ config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout')
-          let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout', { headers: { 'Authorization': token } });
+          let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout', { headers: { 'Authorization': localStorage.getItem("auth_token") } });
           var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
           this.backuplayout = backlayoutdata.data;
           let newFolderName = folderUrl + '/temp';

@@ -217,8 +217,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'), {
-      }).then(response => {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'),{ headers: { 'Authorization': localStorage.getItem("auth_token") } }).then(response => {
         console.log(response.data);
         this.$message({
           message: 'Successfully reverted to selected commit.',
@@ -244,7 +243,7 @@ export default {
         // update existing data
         await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
             configData: this.settings
-        })
+        },{ headers: { 'Authorization': localStorage.getItem("auth_token") } })
         .then(async(res) => {
             this.$message({
                 showClose: true,
@@ -320,8 +319,7 @@ export default {
       } 
 
       // Get all commits list
-      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
-      }).then(response => {
+      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), { headers: { 'Authorization': localStorage.getItem("auth_token") } }).then(response => {
         this.commitsData = [];
         for(var i in response.data){
           this.commitsData.push({
@@ -538,7 +536,7 @@ export default {
               },{ headers: { 'Authorization': this.$session.get('token') } } ).then(async (res) => {
                 contentpartials = contentpartials + '<script src="./../assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
-                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
+                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js',{ headers: { 'Authorization': this.$session.get('token') } } )
                   .then((response) => {
                     console.log("called webpack_file api successfully:")
                   })
@@ -814,7 +812,7 @@ export default {
                   .then(async (res) => {
                     this.saveFileLoading = false;
 
-                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
+                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, { headers: { 'Authorization': this.$session.get('token') } }).then(async (response) => {
 
                         await axios.post(config.baseURL + '/flows-dir-listing', {
                             filename: mainMetal,

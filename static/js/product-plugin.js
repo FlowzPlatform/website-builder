@@ -2213,7 +2213,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             }
           });
         }
-      }, 2000);
+      }, 4000);
       
       
       editor.TraitManager.addType('customConent1', {
