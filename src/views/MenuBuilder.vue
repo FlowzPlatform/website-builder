@@ -273,11 +273,11 @@ import domenu from 'domenu'
 
 				window.localStorage.removeItem('domenu-1Json');
 
-				console.log('data: ', window.localStorage.removeItem('domenu-1Json'))
+				console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'))
 
 				axios.get(this.apiUrl, {
 			    headers: {
-			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OTkxNDA1NTZjNzFkMTAwMWMwMjA3MjkiLCJpYXQiOjE1MTU0ODAyMjksImV4cCI6MTUxNTQ4Mzg1OSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.VAHYQZzbvvPlNjtaoB4h4WCFBKa8VzXzAIT4CMn95Og'
+			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OTkxNDA1NTZjNzFkMTAwMWMwMjA3MjkiLCJpYXQiOjE1MTU1NjE1OTEsImV4cCI6MTUxNTU2NTIyMSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.RCBX0KPhL6bP_84nIEWA8hIoOceaJTOR2F19v6ypLY0'
 			    }
 				})
 				.then((res) => {

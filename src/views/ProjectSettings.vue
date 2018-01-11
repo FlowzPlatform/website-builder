@@ -1,10 +1,30 @@
 <template>
   <div class="ProjectSettings">
+
+    <!-- Publish Site Modal -->
+    <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="Default Domain" name="first">
+          Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
+          <br>
+          <div align="right" style="margin-top: 15px;">
+            <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="Custom Domain" name="second">
+          <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+          <div align="right" style="margin-top: 15px;">
+            <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
+          </div>
+          
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
     
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Publish Website</el-button>
+      <el-button type="info" size="small" @click="publishWebsite = true" >Publish Website</el-button>
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
@@ -77,6 +97,26 @@
                 </el-form-item>    
 
             </el-form> 
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="thumbnail" style="padding: 20px;">
+              <h3>Ecommerce Website Templates</h3>
+              <hr>
+              <div class="row">
+                <div class="col-md-4">
+                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web2')">Template 2</button>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web3')">Template 3</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -629,6 +669,85 @@
         </div>
       </div>
 
+      <!-- Payment Block -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="togglePaymentgateway" class="card color-div toggleableDivHeader">Payment gateway</a>
+          </div>
+      </div>
+      <div id="togglePaymentgatewayContent" class="toggleableDivHeaderContent" style="display: none;">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="row">
+                      <div class="col-md-4">
+                          <h3> Gateways: </h3>
+                      </div>
+                  </div>
+                  <hr>
+                  <el-form ref="form" :model="form">
+
+                      <div>
+                          <el-form-item>
+                              <draggable v-model='paymentgateway' @start="drag=true" @end="drag=false">
+                                  <div style="margin-bottom: 25px" v-for='(n, index) in paymentgateway'>
+                                      <div class="row">
+                                          <div class="col-md-1" style="margin: 0; padding-left: 15px">
+                                              <el-checkbox v-model="n.checked"></el-checkbox>
+                                          </div>
+                                          <!-- name of gateway-->
+                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
+                                              <el-input type="text" placeholder="Name" v-model="n.name"></el-input>
+                                          </div>
+                                          <!-- gateway  -->
+                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
+                                              <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
+                                                  <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
+                                                  </el-option>
+                                              </el-select>
+                                          </div>
+                                          <!-- gateway description -->
+                                          <div class="col-md-5" style="margin: 0; padding: 0px">
+                                              <el-input type="textarea" placeholder="Description" v-model="n.description"></el-input>
+                                          </div>
+                                          <!-- Delete Variable -->
+                                          <div class="col-md-1">
+                                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletepaymentgateway(index)" icon="delete2"></el-button>
+                                          </div>
+                                          <div class="col-md-1">
+                                              <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+
+                                          </div>
+                                      </div>
+                                      <!-- <div> -->
+                                      <div class="row">
+                                          <div class="col-md-4">
+                                              <h5> Fields: </h5>
+                                          </div>
+                                      </div>
+                                      <div class="row">
+                                          <div v-for='i,k in Paymentfields[index]'>
+                                              <el-form ref="form" label-width="120px">
+                                                  <el-form-item style="margin: 0; padding-left:5px" v-bind:label='Paymentfields[index][k]'>
+                                                      <el-input type='text' v-model='n.fields[k][i]'></el-input>
+                                                  </el-form-item>
+                                              </el-form>
+                                          </div>
+                                      </div>
+                                      <!-- </div> -->
+                                      <hr>
+                                  </div>
+                              </draggable>
+                          </el-form-item>
+                      </div>
+
+                      <!-- Create new variable -->
+                      <el-button type="primary" @click="addNewpaymentgateway">New Gateway</el-button>
+                  </el-form>
+              </div>
+          </div>
+      </div>
+      <!-- Payment Block -->
+
       <!-- List of Commits Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -798,13 +917,27 @@ export default {
         name: 'Edit Me',
         content: 'Update Me'
       }],
-      Metacharset: ''
+      Metacharset: '',
+
+      publishWebsite: false,
+      activeName: 'first',
+      customDomainName: '',
+      userDetailId: '',
+      ipAddress: config.ipAddress,
+      paymentgateway: [],
+      Paymentfields: [],
+      Allgateway: []
     }
   },
   components: {
     draggable
   },
   methods: {
+
+    handleTabClick(tab, event) {
+      console.log(tab, event);
+    },
+
     handleChange(file, fileList) {
         this.fileList3 = fileList.slice(-3);
         console.log('fileList3:',this.fileList3)
@@ -885,13 +1018,42 @@ export default {
       this.externallinksMeta.push(newVariable);
       this.editableInit();
     },
+
     addNewlocalscripts(){
       let newVariable = { linkposition:'',script:''};
       this.localscripts.push(newVariable);
     },
+
     addNewlocalstyles(){
       let newVariable = { linkposition:'',style:''};
       this.localstyles.push(newVariable);
+    },
+
+    addNewpaymentgateway(){
+      let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
+      this.paymentgateway.push(newVariable);
+      this.Paymentfields.push([])
+    },
+
+    gatewaychange(n,index){
+      // console.log(n,index)
+     this.paymentgateway[index].fields=[]
+
+     for(let i=0;i<this.Allgateway.length;i++){
+      if(this.Allgateway[i].name==n.gateway){
+        
+        for(let j=0;j<this.Allgateway[i].keys.length;j++){
+          var temp={}
+        temp[this.Allgateway[i].keys[j]]=''
+        this.paymentgateway[index].fields.push(temp)
+        }
+        this.Paymentfields[index]=this.Allgateway[i].keys
+      }
+     }
+     var ter=this.paymentgateway[index].description
+     this.paymentgateway[index].description=' '
+     this.paymentgateway[index].description=ter
+     // console.log(this.paymentgateway,this.Paymentfields)
     },
 
     async addNewPlugin(pluginFileData) {
@@ -1074,6 +1236,7 @@ export default {
 
       this.addPluginLoading = false;
     },
+
     async saveConfigFile(folderUrl,configData){
 
         let foldername = folderUrl.split('/');
@@ -1106,8 +1269,8 @@ export default {
               type: 'error'
           });
         }   
-
     },
+
     recursivecall(name, partials, defaultListtemp,configData) {
       console.log('inside recursivecall')
       for (let i = 0; i < configData[1].pageSettings.length; i++) {
@@ -1118,7 +1281,7 @@ export default {
             let checkinner = false
             for (let x = 0; x < partials.length; x++) {
               if (Object.keys(partials[x])[0] == Object.keys(defaultListtemp[y])[0]) {
-                if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]]) {
+                if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]].split('.')[0]) {
                   checkinner = true
                   break;
                 }
@@ -1128,7 +1291,7 @@ export default {
                 for (let k = 0; k < configData[2].layoutOptions[0][Object.keys(partemp)[0]].length; k++) {
                   if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].value == partemp[Object.keys(partemp)[0]]) {
                     if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList != undefined) {
-                      recursivecall(name, partials, configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList,configData)
+                      this.recursivecall(name, partials, configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList,configData)
                     }
                   }
                 }
@@ -1463,7 +1626,7 @@ export default {
         // console.log('namepage:',namepage)
         // console.log('this.repoName:',this.repoName)
         console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
-        var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.repoName+'/Pages/'+namepage);
+        var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/'+namepage);
         // console.log('contentpage:',contentpage)
 
         // console.log("inside ==pages directory")
@@ -1527,7 +1690,7 @@ export default {
                 for (let r = 0; r < partials.length; r++) {
                   if (Object.keys(partials[r])[0] == result1[k]) {
                     checkpartial = true
-                    console.log("checkpartial==true")
+                    // console.log("checkpartial==true")
                     var temp1 = DefaultParams[k][result1[k]]
                     var temp2 = partials[r][result1[k]]
                     if (temp1.split('.')[0] == temp2.split('.')[0]) {
@@ -1560,6 +1723,7 @@ export default {
                     }
                   }
                   configData[1].pageSettings[i].partials.push(obj);
+                  r = r - 1;
                 }
               }
             } else if (name != temp) {
@@ -1638,7 +1802,37 @@ export default {
         // }
       }
 
-      location.reload();
+      window.location.reload();
+      
+    },
+
+    revertToTemplate(template){
+      this.$confirm('This will permanatly overwrite current Pages, Partials, Layouts and Website assets. Do you want to continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async () => {
+
+        // Call service to copy files for selected template
+        await axios.post( config.baseURL + '/copy-website', {
+            projectPath : this.userDetailId + '/' + this.repoName,
+            templateName : template
+        })
+        .then(async (res) => {
+          await this.refreshPlugins();  
+        })
+        .catch((e) => {
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
+
+      }).catch((err) => {
+        console.log('Some error occured.', err);
+      });
     },
 
     deleteVariable(deleteIndex) {
@@ -1674,6 +1868,11 @@ export default {
     },
     deletelinkMeta(deleteIndex) {
       this.externallinksMeta.splice(deleteIndex, 1);
+    },
+
+    deletepaymentgateway(deleteIndex) {
+      this.paymentgateway.splice(deleteIndex,1);
+      this.Paymentfields.splice(deleteIndex,1);
     },
 
     deletePlugin(deleteIndex){
@@ -1751,7 +1950,8 @@ export default {
                               "ProjectMetaInfo": this.externallinksMeta,
                               "ProjectMetacharset":this.Metacharset,
                               "ProjectScripts":this.localscripts,
-                              "ProjectStyles":this.localstyles
+                              "ProjectStyles":this.localstyles,
+                               "PaymentGateways":this.paymentgateway
                             }];
 
       this.settings[1].projectSettings = ProjectSettings;
@@ -1831,7 +2031,7 @@ export default {
       }) 
     },
 
-    async publishMetalsmith() {
+    async publishMetalsmith(publishType) {
       this.fullscreenLoading = true;
 
       var dt = new Date();
@@ -2486,14 +2686,41 @@ export default {
         //   });
       }
 
-      this.fullscreenLoading = false;
+      if(publishType == 'custom'){
+        console.log('Custom Domain')
+        // Surge.sh API
+        axios.post( config.baseURL + '/publish-surge', {
+            projectPath : this.$session.get('userDetailId') + '/' + this.repoName + '/public' ,
+            domainName: this.customDomainName
+        })
+        .then((res) => {
+          this.fullscreenLoading = false;
+          this.publishWebsite = false;
+          window.open(this.customDomainName);
+          console.log(res.data);
+        })
+        .catch((e) => {
+          this.fullscreenLoading = false;
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
 
-      // Open in new window
-      if(process.env.NODE_ENV !== 'development'){
-        window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
       } else {
-        window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
-      } 
+        console.log('Default Publish');
+        this.fullscreenLoading = false;
+        this.publishWebsite = false;
+
+        // Open in new window
+        if(process.env.NODE_ENV !== 'development'){
+          window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+        } else {
+          window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
+        }
+      }
     },
 
     handleRemove(file, fileList) {
@@ -2520,8 +2747,14 @@ export default {
     },
 
     async init () {
+
+      var gateways= await axios.get('http://api.flowzcluster.tk/payment/availablegateway');
+      this.Allgateway = gateways.data.gateways;
+
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
+      this.userDetailId = this.$session.get('userDetailId');
 
       let splitUrl = url.split('/');
 
@@ -2554,9 +2787,18 @@ export default {
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
+        this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
       } else {
         console.log('Cannot get configurations!');
       } 
+
+      for(let i=0;i<this.paymentgateway.length;i++){
+        var temp=[]
+        for(let j=0;j<this.paymentgateway[i].fields.length;j++){
+          temp.push(Object.keys(this.paymentgateway[i].fields[j])[0])
+        }
+        this.Paymentfields[i]=temp
+      }
 
       // replace all image tag source with index as name attribute to get the image file preview
       
@@ -2721,6 +2963,15 @@ export default {
             }
         });
 
+        $("#togglePaymentgateway").click(function() {
+            $("#togglePaymentgatewayContent").slideToggle("slow");
+            if ($("#togglePaymentgateway").text() == "Payment gateway") {
+                $("#togglePaymentgateway").html("Payment gateway")
+            } else {
+                $("#togglePaymentgateway").text("Payment gateway")
+            }
+        });
+
         $("#toggleCommits").click(function() {
             $("#toggleCommitsContent").slideToggle("slow");
             if ($("#toggleCommits").text() == "List of Commits") {
@@ -2879,6 +3130,7 @@ export default {
 
     });
   },
+
   watch: {
     '$store.state.fileUrl': function(newvalue) {
       this.init()

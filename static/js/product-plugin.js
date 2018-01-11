@@ -18,6 +18,96 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   //     }
   // });
 
+  bm.add('PaymentGateway', {
+    label: 'PaymentGateway',
+    content: '<paymentgateway style="display: block; padding: 10px; min-height: 20px;">PaymentGateways</paymentgateway>',
+    attributes: {
+       class:'fa fa-shopping-cart',
+       title: 'Shopping cart',
+    },
+    category: 'Payment Components'
+  });
+
+  bm.add('Bootstrap-Block-12', {
+    label: 'Bootstrap-Block-12',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-12 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-12'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-6-6', {
+    label: 'Bootstrap-Block-6-6',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-6 bootstrapblock" ></div><div class="col-md-6 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-6-6'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-4-4-4', {
+    label: 'Bootstrap-Block-4-4-4',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-4 bootstrapblock"></div><div class="col-md-4 bootstrapblock"></div><div class="col-md-4 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-4-4-4'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-3-3-3-3', {
+    label: 'Bootstrap-Block-3-3-3-3',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-3 bootstrapblock"></div><div class="col-md-3 bootstrapblock"></div><div class="col-md-3 bootstrapblock"></div><div class="col-md-3 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-3-3-3-3'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-2-2-2-2-2-2', {
+    label: 'Bootstrap-Block-2-2-2-2-2-2',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-2-2-2-2-2-2'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-2-8-2', {
+    label: 'Bootstrap-Block-2-8-2',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-2 bootstrapblock"></div><div class="col-md-8 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-2-8-2'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-4-8', {
+    label: 'Bootstrap-Block-4-8',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-4 bootstrapblock"></div><div class="col-md-8 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-4-8'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-8-4', {
+    label: 'Bootstrap-Block-8-4',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-8 bootstrapblock"></div><div class="col-md-4 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-8-4'
+    },
+    category: 'Bootstrap-Block'
+  });
+
   bm.add('g-form-template', {
     label: 'Form Full',
     content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
@@ -331,9 +421,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   bm.add('productSearchFilter', {
     label: 'Product Search Filter',
     content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"><productSearchFilter  style="display: block; width: 100%;padding:15px; vertical-align: middle;"><div class="reomve-texts"> <i class="fa fa-search"></i> <label style="margin: inherit;">Product Search Filter</label></div></productSearchFilter>',
-    attributes: {
-      class: 'fa fa-filter',
-      title: 'Product search Filter'
+    attributes: { 
+        class: 'fa fa-filter',
+        title: 'Product search Filter'
     },
     category: 'Ecommerce Blocks'
   });
@@ -560,6 +650,123 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   var defaultView = defaultType.view;
   var traits;
 
+
+
+
+  // Reuse Component
+  var folderUrl = localStorage.getItem("folderUrl");
+  var useremail = localStorage.getItem("email");
+  var userDetailId = localStorage.getItem("userDetailId");
+  let storedTemplates;
+  let configData;
+  let storedTemplates_data
+  let foldername = folderUrl.split('/');
+  foldername = foldername[(foldername.length - 1)];
+
+  let globalVariables = [];
+
+  let urlVariables = [];
+  let urlVarValue = [];
+  let menuOptions = [];
+  var menuNames = [];
+
+  urlVarValue.push({name: 'Select', value: ''});
+  menuNames.push({name: 'Select', value: ''});
+
+  let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
+
+  $.getJSON(configFileUrl, function(data) {
+    configData = data.data[0].configData;
+    globalVariables = configData[1].projectSettings[1].GlobalVariables;
+    urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
+    menuOptions = configData[2].layoutOptions[0].Menu;
+    storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+  });
+
+  
+
+  var partialOptions = {};
+
+
+  setTimeout(function() {
+
+
+    for(var j = 0; j < menuOptions.length; j++){
+      let value = {name: menuOptions[j].label, value: menuOptions[j].label}
+      menuNames.push(value);
+    }
+
+    for(var j = 0; j < urlVariables.length; j++){
+      let value = {name: urlVariables[j].urlId, value: urlVariables[j].urlValue}
+      urlVarValue.push(value);
+    }
+
+    for (var i = 0; i < storedTemplates.length; i++) {
+      if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+        storedTemplates = storedTemplates.splice(i, 1)
+      }
+    }
+
+    for (var i = 0; i <= storedTemplates.length - 1; i++) {
+      let resp2 = []
+      $.getJSON(configFileUrl, function(data) {
+        configData = data.data[0].configData;
+
+
+
+        // console.log('ReUseVue co2nfigData:', configData);
+        storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+        for (let index = 0; index < storedTemplates.length; index++) {
+          let data_ = storedTemplates[index]
+          for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
+            if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
+              if (configData[2].layoutOptions[0][data_].length >= 2) {
+                for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
+                  if (j == 0) {
+                    partialOptions[storedTemplates[index]] = [{
+                      'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
+                    }]
+                  } else {
+                    partialOptions[storedTemplates[index]].push({
+                      'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
+                    })
+                  }
+                }
+              } else {
+                partialOptions[storedTemplates[index]] = [{
+                  'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                }]
+              }
+            }
+
+          }
+          // for (let index3 = 0; index3 < configData[2].layoutOptions[0][data_].length; index3++) {
+          //   if (storedTemplates[index].length != 0 && storedTemplates[index] == "Menu") {
+          //     if (configData[2].layoutOptions[0][data_].length >= 2) {
+          //       for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
+          //         if (j == 0) {
+          //           menuOptions[storedTemplates[index]] = [{
+          //             'name': configData[2].layoutOptions[0][data_][j].value 
+          //           }]
+          //         } else {
+          //           menuOptions[storedTemplates[index]].push({
+          //             'name': configData[2].layoutOptions[0][data_][j].value 
+          //           })
+          //         }
+          //       }
+          //     } else {
+          //       menuOptions[storedTemplates[index]] = [{
+          //         'name': configData[2].layoutOptions[0][data_][index3].value
+          //       }]
+          //     }
+          //   }
+            
+          // }
+        }
+      });
+    }
+  }, 2000);
+
   // The `input` will be the Component type ID
   comps.addType('productListing', {
     // Define the Model
@@ -571,15 +778,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [
           'id', {
             label: 'API URL',
-            name: 'apiurl'
-          }, {
-            label: 'Username',
-            name: 'apiusername',
-            type: 'text'
-          }, {
-            label: 'Password',
-            name: 'apipassword',
-            type: 'password'
+            name: 'apiurl',
+            type: 'select',
+            options: urlVarValue
           }, {
             label: 'Items',
             name: 'numberofitems',
@@ -681,11 +882,12 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         editable: true,
         droppable: true,
         traits: [{
-          label: 'Menu Id',
-          name: 'menuid'
+          label: 'menuId',
+          name: 'menuId',
+          type: 'select',
+          options: menuNames,
         }],
       }),
-
     }, {
       isComponent: function(el) {
         if (el.tagName == 'NAVIMENU') {
@@ -1743,7 +1945,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let arr_collection = new Array();
   let arr_schema = []
   let arr_coll_schema = new Array()
-  console.log("arr_schema type11111111111111s", typeof arr_schema)
   $.getJSON("http://172.16.230.80:3080/settings",
     // $.getJSON("http://localhost:3080/settings",
     function (data) {
@@ -1754,15 +1955,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
           // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
           function (data_) {
-            console.log("data_", data_)
             // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
             let collection_name = data.rethink.dbinstance[index].connection_name
-            console.log(data_[0].t_name)
             for (let index_ = 0; index_ < data_.length; index_++) {
-              console.log(data_[index_].t_name)
               if (data_[index_].t_name != undefined) {
                 let schema_name = data_[index_].t_name
-                console.log("arr_schema type", typeof arr_schema)
                 arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
               }
             }
@@ -1770,7 +1967,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             $.each(arr_schema, function (index, value) {
               arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
             });
-            console.log("arr_coll_schema", typeof arr_coll_schema)
           });
       }
     });
@@ -1782,7 +1978,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           this.listenTo(this, 'change:connectiondata', this.doStuff);
         },
         doStuff() {
-          console.log("hello here")
         },
         // Extend default properties
         defaults: Object.assign({}, defaultModel.prototype.defaults, {
@@ -1832,7 +2027,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           this.listenTo(this, 'change:connectiondata', this.doStuff);
         },
         doStuff() {
-          console.log("hello here")
         },
         // Extend default properties
         defaults: Object.assign({}, defaultModel.prototype.defaults, {
@@ -2013,67 +2207,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  // Reuse Component
-  var folderUrl = localStorage.getItem("folderUrl");
-  var useremail = localStorage.getItem("email");
-  var userDetailId = localStorage.getItem("userDetailId");
-  let storedTemplates;
-  let configData;
-  let storedTemplates_data
-  let foldername = folderUrl.split('/');
-  foldername = foldername[(foldername.length - 1)];
-
-  let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
-
-  $.getJSON(configFileUrl, function(data) {
-    configData = data.data[0].configData;
-    storedTemplates = Object.keys(configData[2].layoutOptions[0]);
-  });
-
-  
-
-  var partialOptions = {};
-
-  setTimeout(function() {
-    for (var i = 0; i < storedTemplates.length; i++) {
-      if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
-        storedTemplates = storedTemplates.splice(i, 1)
-      }
-    }
-
-    for (var i = 0; i <= storedTemplates.length - 1; i++) {
-      let resp2 = []
-      $.getJSON(configFileUrl, function(data) {
-        configData = data.data[0].configData;
-        // console.log('ReUseVue co2nfigData:', configData);
-        storedTemplates = Object.keys(configData[2].layoutOptions[0]);
-        for (let index = 0; index < storedTemplates.length; index++) {
-          let data_ = storedTemplates[index]
-          for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
-            if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
-              if (configData[2].layoutOptions[0][data_].length >= 2) {
-                for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
-                  if (j == 0) {
-                    partialOptions[storedTemplates[index]] = [{
-                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
-                    }]
-                  } else {
-                    partialOptions[storedTemplates[index]].push({
-                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
-                    })
-                  }
-                }
-              } else {
-                partialOptions[storedTemplates[index]] = [{
-                  'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
-                }]
-              }
-            }
-          }
-        }
-      });
-    }
-  }, 2000);
 
 
   editor.TraitManager.addType('customConent1', {
@@ -2260,7 +2393,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           selected_value = $("#Div1 option:selected").text();
           let model = editor.getSelected();
           var split_selected_value = selected_value.split(".");
-          console.log("selected_value", selected_value)
           if (split_selected_value[1] == "vue") {
             model.components('<div id="' + split_selected_value[0] + '"><component athname="' + label + '" :is="' + split_selected_value[0] + '">' + selected_value + '</component></div>');
           }
@@ -2303,10 +2435,10 @@ comps.addType('ShoppingCart', {
         },
 
         paypalcheck() {
-            console.log("paypal change event function called")
+            // console.log("paypal change event function called")
 
-            console.log("this.get('traits').where({name:'x_api_token_paypal'})",this.get('traits').where({name:'x_api_token_paypal'})[0].get('value'))
-            console.log("this.get('traits').where({name:'x_api_login_paypal'})",this.get('traits').where({name:'x_api_login_paypal'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_token_paypal'})",this.get('traits').where({name:'x_api_token_paypal'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_login_paypal'})",this.get('traits').where({name:'x_api_login_paypal'})[0].get('value'))
 
                         //    this.get('traits').each(function(trait) {
                         //            console.log("trait",trait.get('name'));
@@ -2319,16 +2451,16 @@ comps.addType('ShoppingCart', {
         },
 
         stripecheck() {
-            console.log("stripe change event function called")
+            // console.log("stripe change event function called")
 
-            console.log("this.get('traits').where({name:'x_api_token_stripe'})",this.get('traits').where({name:'x_api_token_stripe'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_token_stripe'})",this.get('traits').where({name:'x_api_token_stripe'})[0].get('value'))
         },
 
         authcheck() {
-            console.log("auth change event function called")
+            // console.log("auth change event function called")
 
-            console.log("this.get('traits').where({name:'x_api_token_authdotnet'})",this.get('traits').where({name:'x_api_token_authdotnet'})[0].get('value'))
-            console.log("this.get('traits').where({name:'x_api_login_authdotnet'})",this.get('traits').where({name:'x_api_login_authdotnet'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_token_authdotnet'})",this.get('traits').where({name:'x_api_token_authdotnet'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_login_authdotnet'})",this.get('traits').where({name:'x_api_login_authdotnet'})[0].get('value'))
         },
       // Extend default properties
       defaults: Object.assign({}, defaultModel.prototype.defaults, {
