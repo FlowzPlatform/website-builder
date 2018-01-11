@@ -1281,7 +1281,7 @@ export default {
             let checkinner = false
             for (let x = 0; x < partials.length; x++) {
               if (Object.keys(partials[x])[0] == Object.keys(defaultListtemp[y])[0]) {
-                if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]]) {
+                if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]].split('.')[0]) {
                   checkinner = true
                   break;
                 }
@@ -1291,7 +1291,7 @@ export default {
                 for (let k = 0; k < configData[2].layoutOptions[0][Object.keys(partemp)[0]].length; k++) {
                   if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].value == partemp[Object.keys(partemp)[0]]) {
                     if (configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList != undefined) {
-                      recursivecall(name, partials, configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList,configData)
+                      this.recursivecall(name, partials, configData[2].layoutOptions[0][Object.keys(partemp)[0]][k].defaultList,configData)
                     }
                   }
                 }
@@ -1690,7 +1690,7 @@ export default {
                 for (let r = 0; r < partials.length; r++) {
                   if (Object.keys(partials[r])[0] == result1[k]) {
                     checkpartial = true
-                    console.log("checkpartial==true")
+                    // console.log("checkpartial==true")
                     var temp1 = DefaultParams[k][result1[k]]
                     var temp2 = partials[r][result1[k]]
                     if (temp1.split('.')[0] == temp2.split('.')[0]) {
@@ -1723,6 +1723,7 @@ export default {
                     }
                   }
                   configData[1].pageSettings[i].partials.push(obj);
+                  r = r - 1;
                 }
               }
             } else if (name != temp) {

@@ -28,6 +28,86 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Payment Components'
   });
 
+  bm.add('Bootstrap-Block-12', {
+    label: 'Bootstrap-Block-12',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-12 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-12'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-6-6', {
+    label: 'Bootstrap-Block-6-6',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-6 bootstrapblock" ></div><div class="col-md-6 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-6-6'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-4-4-4', {
+    label: 'Bootstrap-Block-4-4-4',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-4 bootstrapblock"></div><div class="col-md-4 bootstrapblock"></div><div class="col-md-4 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-4-4-4'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-3-3-3-3', {
+    label: 'Bootstrap-Block-3-3-3-3',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-3 bootstrapblock"></div><div class="col-md-3 bootstrapblock"></div><div class="col-md-3 bootstrapblock"></div><div class="col-md-3 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-3-3-3-3'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-2-2-2-2-2-2', {
+    label: 'Bootstrap-Block-2-2-2-2-2-2',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-2-2-2-2-2-2'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-2-8-2', {
+    label: 'Bootstrap-Block-2-8-2',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-2 bootstrapblock"></div><div class="col-md-8 bootstrapblock"></div><div class="col-md-2 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-2-8-2'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-4-8', {
+    label: 'Bootstrap-Block-4-8',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-4 bootstrapblock"></div><div class="col-md-8 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-4-8'
+    },
+    category: 'Bootstrap-Block'
+  });
+
+  bm.add('Bootstrap-Block-8-4', {
+    label: 'Bootstrap-Block-8-4',
+    content: '<div class="row" style="padding: 5px;"><div class="col-md-8 bootstrapblock"></div><div class="col-md-4 bootstrapblock"></div></div>',
+    attributes: {
+      class: 'fa fa-th',
+      title: 'Bootstrap-Block-8-4'
+    },
+    category: 'Bootstrap-Block'
+  });
+
   bm.add('g-form-template', {
     label: 'Form Full',
     content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
