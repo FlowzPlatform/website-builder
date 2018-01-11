@@ -277,7 +277,7 @@ import domenu from 'domenu'
 
 				axios.get(this.apiUrl, {
 			    headers: {
-			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OTkxNDA1NTZjNzFkMTAwMWMwMjA3MjkiLCJpYXQiOjE1MTU1NjE1OTEsImV4cCI6MTUxNTU2NTIyMSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.RCBX0KPhL6bP_84nIEWA8hIoOceaJTOR2F19v6ypLY0'
+			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OTkxNDA1NTZjNzFkMTAwMWMwMjA3MjkiLCJpYXQiOjE1MTU2Nzk2MTksImV4cCI6MTUxNTY4MzI0OSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.VlpmR3tPfLudCto88ryuSYOzK6OxsV59rE9mukOJ9wk'
 			    }
 				})
 				.then((res) => {
