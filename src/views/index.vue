@@ -960,7 +960,6 @@
         }
         // If Clicked in Partials Folder
         else if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))) {
-
           if(this.$store.state.tabChange != null) {
             if(this.$store.state.tabChange != ''){
               this.saveFile('getFileContent')
@@ -1080,7 +1079,11 @@
             newContent = this.$store.state.content;
             break;
           case 'MenuBuilder':
-            this.saveJsonFile('else');
+          console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
+          // let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
+          // });
+          // this.$store.state.content = response.data
+            // this.saveJsonFile('else');
             break;
           default:
               newContent = this.$store.state.content;
@@ -1129,7 +1132,25 @@
                 newContent = this.$store.state.content;
                 break;
               case 'MenuBuilder':
-                this.saveJsonFile('else');
+
+              let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+              let tempurlparts = configFileUrl.split("/");
+              let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+              console.log('fileName', fileName)
+              var folderUrl = fileName
+
+              let urlparts = this.$store.state.fileUrl.split("/");
+              let fileNameOrginal = urlparts[urlparts.length - 1];
+              let fileNameParts = fileNameOrginal.split('.');
+              let actualFileNameOnly = fileNameParts[0];
+              let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+              console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
+              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
+              });
+              console.log('response.data', response.data)
+              this.$store.state.content = response.data
+              newContent = this.$store.state.content
+                // this.saveJsonFile('else');
                 break;
               default:
                   newContent = this.$store.state.content;
@@ -2627,6 +2648,7 @@
         let newContent;
 
         if (arg == 'getFileContent') {
+          console.log('getFileContentgetFileContentgetFileContent')
           var componentId = this.componentId
           let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
           this.saveFileLoading = true
@@ -2659,6 +2681,7 @@
           }
           this.$store.state.tabChange = '';
         } else {
+          console.log('elseelseelseelseelseelseelseelseelseelseelseelse')
           var componentId = this.componentId
           let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
           // newContent = this.$store.state.content
@@ -4093,7 +4116,7 @@
                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
-   '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
+        '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
                '<script src="https://cdn.jsdelivr.net/npm/y-memory@8.0.9/dist/y-memory.js"><\/script>\n' +
@@ -4327,8 +4350,12 @@
           newContent = this.$store.state.content;
             let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             let tempurlparts = configFileUrl.split("/");
-            let fileName = '/' + tempurlparts[tempurlparts.length - 3] + '/' + tempurlparts[tempurlparts.length - 2] + '/' + tempurlparts[tempurlparts.length - 1];
-            var folderUrl = configFileUrl.replace(fileName, '');
+            // let fileName = '/' + tempurlparts[tempurlparts.length - 3] + '/' + tempurlparts[tempurlparts.length - 2] + '/' + tempurlparts[tempurlparts.length - 1];
+            // console.log('fileName', fileName)
+            let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+            console.log('fileName', fileName)
+            // var folderUrl = configFileUrl.replace(fileName, '');
+            var folderUrl = fileName
             let newJsonName
           if (arg == 'getFileContent'){
             let urlparts = this.taburl.split("/");
