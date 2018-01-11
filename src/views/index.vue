@@ -972,7 +972,7 @@
           localStorage.setItem("folderUrl", data.path);
         }
         // If Clicked in Partials Folder
-        else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial'))) {
+        else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && (!(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu')) )) {
           if(this.componentId == 'GrapesComponent'){
             if(this.$store.state.tabChange != null) {
               if(this.$store.state.tabChange != ''){

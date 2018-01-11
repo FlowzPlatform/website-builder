@@ -24,21 +24,36 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithGithubUrl = 'http://auth.'+domainkey+'/auth/github';
     loginWithLinkedInUrl = 'http://auth.'+domainkey+'/auth/linkedin';
 } else {
+    // ipAdd = 'http://localhost';
+    // // socketURL = 'ws://devws.flowz.com:4032';
+    // socketURL = 'http://localhost:4032';
+    // frontEndUrl = 'http://localhost:8080/dashboard';
+    //
+    // loginUrl = 'http://devauth.flowz.com/api/login';
+    // registerUrl = 'http://devauth.flowz.com/api/setup';
+    // userDetail = 'http://devauth.flowz.com/api/userdetails';
+    // socialUrl = 'http://devauth.flowz.com/api';
+    //
+    // loginWithFacebookUrl = 'http://devauth.flowz.com/auth/facebook';
+    // loginWithGoogleUrl = 'http://devauth.flowz.com/auth/Gplus';
+    // loginWithTwitterUrl = 'http://devauth.flowz.com/auth/twitter';
+    // loginWithGithubUrl = 'http://devauth.flowz.com/auth/github';
+    // loginWithLinkedInUrl = 'http://devauth.flowz.com/auth/linkedin';
     ipAdd = 'http://localhost';
-    // socketURL = 'ws://devws.flowz.com:4032';
-    socketURL = 'http://localhost:4032';
-    frontEndUrl = 'http://localhost:8080/dashboard';
+   // socketURL = 'ws://devws.flowz.com:4032';
+   socketURL = 'http://localhost:4032';
+   frontEndUrl = 'http://localhost:8080/editor';
 
-    loginUrl = 'http://devauth.flowz.com/api/login';
-    registerUrl = 'http://devauth.flowz.com/api/setup';
-    userDetail = 'http://devauth.flowz.com/api/userdetails';
-    socialUrl = 'http://devauth.flowz.com/api';
+   loginUrl = 'http://auth.flowzcluster.tk/api/login';
+   registerUrl = 'http://auth.flowzcluster.tk/api/setup';
+   userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
+   socialUrl = 'http://auth.flowzcluster.tk/api';
 
-    loginWithFacebookUrl = 'http://devauth.flowz.com/auth/facebook';
-    loginWithGoogleUrl = 'http://devauth.flowz.com/auth/Gplus';
-    loginWithTwitterUrl = 'http://devauth.flowz.com/auth/twitter';
-    loginWithGithubUrl = 'http://devauth.flowz.com/auth/github';
-    loginWithLinkedInUrl = 'http://devauth.flowz.com/auth/linkedin';
+   loginWithFacebookUrl = 'http://auth.flowzcluster.tk/auth/facebook';
+   loginWithGoogleUrl = 'http://auth.flowzcluster.tk/auth/Gplus';
+   loginWithTwitterUrl = 'http://auth.flowzcluster.tk/auth/twitter';
+   loginWithGithubUrl = 'http://auth.flowzcluster.tk/auth/github';
+   loginWithLinkedInUrl = 'http://auth.flowzcluster.tk/auth/linkedin';
 }
 
 module.exports = {
