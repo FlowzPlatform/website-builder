@@ -3932,12 +3932,6 @@
 
               let vueBodyStart = '';
               let vueBodyEnd = ''
-              /*
-              if($.trim(nameF) != 'search')
-              {
-                vueBodyStart = '<div id=\"app\">' + "\n";
-                vueBodyEnd = '</div>\n';
-              }*/
 
               let newContent = "<html>\n<head>\n" + tophead +
                 "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
