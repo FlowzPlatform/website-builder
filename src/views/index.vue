@@ -889,7 +889,9 @@
                 this.saveFile('getFileContent')
               }
             }
-          } else {this.saveFile('getFileContent')}
+          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+            this.saveFile('getFileContent')
+          }
           // if(this.componentId == 'GridManager'){
           //   // this.$refs.contentComponent[0].getHtml()
           //   this.saveFile('getFileContent')
@@ -958,7 +960,9 @@
                 this.saveFile('getFileContent')
               }
             }
-          } else {this.saveFile('getFileContent')}
+          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+            this.saveFile('getFileContent')
+          }
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
@@ -968,14 +972,16 @@
           localStorage.setItem("folderUrl", data.path);
         }
         // If Clicked in Partials Folder
-        else if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))) {
+        else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial'))) {
           if(this.componentId == 'GrapesComponent'){
             if(this.$store.state.tabChange != null) {
               if(this.$store.state.tabChange != ''){
                 this.saveFile('getFileContent')
               }
             }
-          } else {this.saveFile('getFileContent')}
+          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+            this.saveFile('getFileContent')
+          }
           // if(this.componentId == 'GridManager'){
           //   this.saveFile('getFileContent')
           // }
@@ -995,7 +1001,9 @@
                 this.saveFile('getFileContent')
               }
             }
-          } else {this.saveFile('getFileContent')}
+          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+            this.saveFile('getFileContent')
+          }
           // if(this.componentId == 'GridManager'){
           //   this.saveFile('getFileContent')
           // }
@@ -1015,7 +1023,9 @@
                 this.saveFile('getFileContent')
               }
             }
-          } else {this.saveFile('getFileContent')}
+          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+            this.saveFile('getFileContent')
+          }
           // if(this.componentId == 'GridManager'){
           //   this.saveFile('getFileContent')
           // }
@@ -1046,13 +1056,12 @@
                     this.saveFile('getFileContent')
                   }
                 }
-              } else {
+              } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
                 this.saveFile('getFileContent')
               }
             }
             this.flag = false;
             setTimeout(function(){
-              console.log('this.componentId', self.componentId)
               self.getFileContent(data.path);
             },50)
           }

@@ -65,11 +65,11 @@ export default {
       let urlparts = configFileUrl.split("/");
       let fileNameOrginal = urlparts[urlparts.length - 1];
       let fileName = '/' + urlparts[urlparts.length - 1];
-      
+
       let folderUrl = configFileUrl.replace(fileName, '');
 
       let foldername = folderUrl.split('/');
-      foldername = foldername[(foldername.length-1)];
+      foldername = foldername[6];
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
 
@@ -102,7 +102,7 @@ export default {
 
       } else {
         console.log('Cannot get config file!');
-      } 
+      }
   	}
   },
   async mounted () {
@@ -182,22 +182,22 @@ hr{
 .block::after {
   background: -moz-linear-gradient(45deg, rgba(187, 67, 67, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   /* FF3.6+ */
-  
+
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(187, 67, 67, 0.8)), color-stop(100%, rgba(255, 255, 255, 0)));
   /* Chrome,Safari4+ */
-  
+
   background: -webkit-linear-gradient(45deg, rgba(187, 67, 67, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   /* Chrome10+,Safari5.1+ */
-  
+
   background: -o-linear-gradient(45deg, rgba(187, 67, 67, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   /* Opera 11.10+ */
-  
+
   background: -ms-linear-gradient(45deg, rgba(187, 67, 67, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   /* IE10+ */
-  
+
   background: linear-gradient(210deg, rgba(187, 67, 67, 0.8) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(160deg, rgba(239, 171, 75, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   /* W3C */
-  
+
   filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ccbb4343', endColorstr='#00ffffff', GradientType=1);
   /* IE6-9 fallback on horizontal gradient */
 }
@@ -269,7 +269,7 @@ hr{
   height: 550px;
   background-size: cover;
   background-position: 0 -100px;
-  background-image: 
+  background-image:
 }
 .block-10::after {
   content: '';
@@ -282,13 +282,13 @@ hr{
 .block-10::after {
   background: -moz-linear-gradient(45deg, rgba(187, 67, 67, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   /* FF3.6+ */
-  
+
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(187, 67, 67, 0.8)), color-stop(100%, rgba(255, 255, 255, 0)));
   /* Chrome,Safari4+ */
-  
+
   background: -webkit-linear-gradient(45deg, rgba(187, 67, 67, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   /* Chrome10+,Safari5.1+ */
-  
+
   background: linear-gradient(210deg, rgba(187, 67, 67, 0.8) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(160deg, rgba(239, 171, 75, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   /* W3C */
 }
