@@ -907,8 +907,8 @@
           localStorage.setItem("folderUrl", data.path);
         }
         // If Clicked in Partials Folder 
-        else if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))) {
-
+        else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial'))) {
+          console.log('Data Path: ', data.path);
           if(this.$store.state.tabChange != null) {
             if(this.$store.state.tabChange != ''){
               this.saveFile('getFileContent')
