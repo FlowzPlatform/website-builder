@@ -808,7 +808,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           options: menuNames,
         }],
       }),
-
     }, {
       isComponent: function(el) {
         if (el.tagName == 'NAVIMENU') {
