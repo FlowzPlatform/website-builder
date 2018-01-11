@@ -1425,7 +1425,7 @@
                     this.formAddFile.filename = null
                     
                     let temp = {
-                        value: name+'.partial',
+                        value: name,
                         label: name
                     }
 
@@ -1474,7 +1474,7 @@
                     this.formAddFile.filename = null
                     
                     let temp = {
-                        value: name+'.menu',
+                        value: name,
                         label: name
                     }
 
@@ -1525,7 +1525,7 @@
                     this.formAddFile.filename = null
                     
                     let temp = {
-                        value: name+'.html',
+                        value: name,
                         label: name
                     }
 
@@ -1604,7 +1604,7 @@
                     this.formAddFile.filename = null
                     
                     let temp = {
-                        value: name+'.layout',
+                        value: name,
                         label: name
                     }
 
@@ -3092,71 +3092,6 @@
                   var result1 = [];
                   var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
                   result1 = (getFromBetween.get(content1, "{{>", "}}"));
-                  // if (foldername == 'Pages') {
-                  //   for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
-                  //     let temp = this.globalConfigData[1].pageSettings[i].PageName
-                  //     temp = temp.split('.')[0]
-                  //     if (name == temp) {
-                  //       console.log("result.length:", result1.length)
-                  //       checkValue = true;
-                  //       if (vueresult.length <= 0) {
-                  //         if (this.globalConfigData[1].pageSettings[i].VueComponents != undefined && this.globalConfigData[1].pageSettings[i].VueComponents.length > 0) {
-                  //           this.globalConfigData[1].pageSettings[i].VueComponents = [];
-                  //           this.saveConfigFile(folderUrl);
-                  //         }
-                  //       }
-                  //       if (result1.length >= 0) {
-                  //         console.log("deleting the unused partials other than included in layout")
-                  //           // var layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + this.globalConfigData[1].pageSettings[i].PageLayout + '.layout');
-                  //           // layoutdata = layoutdata.data
-                  //           // var layoutresult = (getFromBetween.get(layoutdata, "{{>", "}}"));
-                  //           // var DefaultParams = [];
-                  //         var layoutresult = [];
-                  //         var layoutDefault=[];
-                  //         for (let k = 0; k < this.globalConfigData[2].layoutOptions[0].Layout.length; k++) {
-                  //           if (this.globalConfigData[2].layoutOptions[0].Layout[k].value == this.globalConfigData[1].pageSettings[i].PageLayout) {
-                  //             layoutresult = this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList
-                  //             layoutDefault=this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList
-                  //             console.log("layoutresult:", layoutresult)
-                  //           }
-                  //         }
-                  //         if (layoutresult.length > 0) {
-                  //           for (let k = 0; k < this.globalConfigData[1].pageSettings[i].partials.length; k++) {
-                  //             let checklayoutp = false
-                  //             for (let j = 0; j < layoutresult.length; j++) {
-                  //               // console.log('partials[k]:',Object.keys(this.globalConfigData[1].pageSettings[i].partials[k])[0])
-                  //               // console.log('layoutresult[j]:',layoutresult[j])
-                  //               if (Object.keys(this.globalConfigData[1].pageSettings[i].partials[k])[0] == layoutresult[j]) {
-                  //                 // console.log('Found.checklayoutp==true')
-                  //                 if(layoutDefault.length>0){
-                  //                   for(let x=0;x<layoutDefault.length;x++){
-                  //                     if(Object.keys(layoutDefault[x])[0]==layoutresult[j]){
-                  //                       checklayoutp = true     
-                  //                     }
-                  //                   }
-                  //                 }else{
-                  //                   if(this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]]=='default'){
-                  //                     checklayoutp = true
-                  //                   }
-                  //                 }
-                  //                 // checklayoutp = true
-
-                  //               }
-
-                  //             }
-                  //             if (checklayoutp != true) {
-                  //               this.globalConfigData[1].pageSettings[i].partials.splice(k,1)
-                  //               k = k - 1
-                  //             }
-                  //           }
-                  //         }
-                  //         console.log("final partial are:", this.globalConfigData[1].pageSettings[i].partials)
-                  //       }
-                  //     }
-                  //   }
-
-                  //   this.saveConfigFile(folderUrl);
-                  // }
 
                   var DefaultParams = [];
                   if (result1.length > 0) {
@@ -3205,7 +3140,7 @@
                         for (let k = 0; k < result1.length; k++) {
                           let checkpartial = false
                             // console.log("result[k]:", result[k])
-                          for (let r = 0; r < partials.length; r++) {
+                          for (var r = 0; r < partials.length; r++) {
                             if (Object.keys(partials[r])[0] == result1[k]) {
 
                               var temp1 = DefaultParams[k][result1[k]]
@@ -3242,6 +3177,7 @@
                               }
                             }
                             this.globalConfigData[1].pageSettings[i].partials.push(obj);
+                            r = r - 1;
                           }
                         }
                       } else if (name != temp) {
@@ -3410,7 +3346,7 @@
               let checkinner = false
               for (let x = 0; x < partials.length; x++) {
                 if (Object.keys(partials[x])[0] == Object.keys(defaultListtemp[y])[0]) {
-                  if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]]) {
+                  if (partials[x][Object.keys(partials[x])[0]] == defaultListtemp[y][Object.keys(defaultListtemp[y])[0]].split('.')[0]) {
                     checkinner = true
                     break;
                   }
