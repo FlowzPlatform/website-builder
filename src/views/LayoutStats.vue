@@ -81,8 +81,8 @@ export default {
 
         this.tablePagesData = [];
 
-        for(var i = 1; i <= Object.keys(this.settings[2].layoutOptions[0].Layout).length; i++){
-          let partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
+        for(var i = 0; i < Object.keys(this.settings[2].layoutOptions[0].Layout).length; i++){
+          var partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
           let partialsListString = '';
           for(let j = 0; j < partialsList.length; j++){
             partialsListString += '<span class="label label-info" style="padding: 0.7em .6em .6em; margin-right: 5px; ">' + partialsList[j] + '</span>';

@@ -69,7 +69,9 @@ export default {
       let folderUrl = configFileUrl.replace(fileName, '');
 
       let foldername = folderUrl.split('/');
-      foldername = foldername[(foldername.length-1)];
+      // foldername = foldername[(foldername.length-1)];
+
+      foldername = foldername[6];
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
 

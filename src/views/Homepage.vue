@@ -1309,7 +1309,7 @@ export default {
     }
   }
   #demo .video-roll li:first-child a {
-    background-image: url("../../static/img/sc-2.png");
+    background-image: url("../../static/img/wb-sc-2.png");
     -webkit-transform-origin: left center;
             transform-origin: left center;
   }
@@ -1331,7 +1331,7 @@ export default {
     -webkit-box-flex: 1;
         -ms-flex-positive: 1;
             flex-grow: 1;
-    background-image: url("../../static/img/sc-3.png");
+    background-image: url("../../static/img/wb-sc-3.png");
     -webkit-transform-origin: center center;
             transform-origin: center center;
   }
@@ -1354,7 +1354,7 @@ export default {
     }
   }
   #demo .video-roll li:last-child a {
-    background-image: url("../../static/img/sc-1.png");
+    background-image: url("../../static/img/wb-sc-1.png");
     -webkit-transform-origin: right center;
             transform-origin: right center;
   }
