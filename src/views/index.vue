@@ -3854,33 +3854,23 @@
 
               let vueBodyStart = '';
               let vueBodyEnd = ''
-              /*
-              if($.trim(nameF) != 'search')
-              {
-                vueBodyStart = '<div id=\"app\">' + "\n";
-                vueBodyEnd = '</div>\n';
-              }*/
 
               let newContent = "<html>\n<head>\n" + tophead +
                 "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                 "<title>" + pageSeoTitle + "</title>\n" +
-                // "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' />\n" +
                 "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                 "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
                 '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
                 "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
                 "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                // "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                // "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" +
-                "<link rel='stylesheet' href='./main-files/main.css'/>\n<script src=\"./main-files/main.js\"><\/script>\n" + endhead + "\n</head>\n<body>\n" + vueBodyStart +
+                "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js' defer><\/script>\n" +
+                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js' defer><\/script>\n" +
+                "<link rel='stylesheet' href='./main-files/main.css'/>\n<script src=\"./main-files/main.js\" defer><\/script>\n" + endhead + "\n</head>\n<body>\n" +
                 layoutdata.data + topbody +
-                '\n'+vueBodyEnd+'<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                 '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                 '<script src="./assets/client-plugins/slider-plugin.js"><\/script>\n' +
                 '<script src="./assets/client-plugins/shopping-cart.js"><\/script>\n' +
-                // '<script src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/js/product-search.js"><\/script>\n' +
                 '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                 '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                 '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
