@@ -150,8 +150,8 @@ export default {
 
         variableCss += '}'
 
-        let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/brand-logo.png');
-        this.imageBlob = imageData.data;
+        // let imageData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/brand-logo.png');
+        // this.imageBlob = imageData.data;
 
         var blkStyle = '.blk-row::after{ content: ""; clear: both; display: block;} .blk-row{padding: 10px;}';
 
@@ -376,24 +376,26 @@ export default {
                         width: '615px',
                     }
                 },
-            },{
-                id: 'brandName',
-                label: 'Brand Name',
-                category: 'Global Variables',
-                attributes: {
-                    class: 'fa fa-facebook-official',
-                },
-                content: '<span id="brandName">'+this.brandName+'</span>',
-            },{
-                id: 'brandLogo',
-                label: 'Brand Logo',
-                category: 'Global Variables',
-                attributes: {
-                    class: 'fa fa-flag',
-                },
-                content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
             }],
         },
+
+        // ,{
+        //     id: 'brandName',
+        //     label: 'Brand Name',
+        //     category: 'Global Variables',
+        //     attributes: {
+        //         class: 'fa fa-facebook-official',
+        //     },
+        //     content: '<span id="brandName">'+this.brandName+'</span>',
+        // },{
+        //     id: 'brandLogo',
+        //     label: 'Brand Logo',
+        //     category: 'Global Variables',
+        //     attributes: {
+        //         class: 'fa fa-flag',
+        //     },
+        //     content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
+        // }
 
   		style: variableCss + css,
   		
@@ -419,27 +421,27 @@ export default {
         });
 
         var bm = editor.BlockManager;
-        bm.add('brandName', {
-            label: 'Brand Name',
-            category: 'Global Variables',
-            attributes: {
-                class: 'fa fa-facebook-official',
-            },
-            content: '<span id="brandName">'+this.brandName+'</span>',
-        });
+        // bm.add('brandName', {
+        //     label: 'Brand Name',
+        //     category: 'Global Variables',
+        //     attributes: {
+        //         class: 'fa fa-facebook-official',
+        //     },
+        //     content: '<span id="brandName">'+this.brandName+'</span>',
+        // });
 
-        bm.add('brandLogo', {
-            label: 'Brand Logo',
-            category: 'Global Variables',
-            attributes: {
-                class: 'fa fa-flag',
-            },
-            content: '<img id="brandLogo" src="'+this.imageBlob+'" alt="company-logo" class="brand-logo"/>',
-        });
+        // bm.add('brandLogo', {
+        //     label: 'Brand Logo',
+        //     category: 'Global Variables',
+        //     attributes: {
+        //         class: 'fa fa-flag',
+        //     },
+        //     content: '<img id="brandLogo" src="'+this.imageBlob+'" alt="company-logo" class="brand-logo"/>',
+        // });
         
-        $('.gjs-frame').contents().find('body [id="brandName"]').html(this.brandName);
+        // $('.gjs-frame').contents().find('body [id="brandName"]').html(this.brandName);
         
-        $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
+        // $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
 
         // console.log('Global Variables length:', this.globalVariables.length);
 

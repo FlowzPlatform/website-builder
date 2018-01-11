@@ -926,7 +926,8 @@ export default {
       ipAddress: config.ipAddress,
       paymentgateway: [],
       Paymentfields: [],
-      Allgateway: []
+      Allgateway: [],
+      currentSha: ''
     }
   },
   components: {
@@ -1803,7 +1804,6 @@ export default {
       }
 
       window.location.reload();
-      
     },
 
     revertToTemplate(template){
@@ -1931,6 +1931,14 @@ export default {
 
     async saveProjectSettings() {
 
+      // let repoSettings = [{
+      //                     "RepositoryId": this.newRepoId,
+      //                     "RepositoryName": this.repoName,
+      //                     "CurrentHeadSHA": this.currentSha
+      //                   }];
+
+      this.settings[0].CurrentHeadSHA = this.currentSha;
+
       let ProjectSettings = [{
                               "RepositoryId": this.newRepoId,
                               "ProjectName": this.repoName,
@@ -1992,14 +2000,12 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
+      this.currentSha = this.commitsData[index].commitSHA;
+
       // console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'), {
       }).then(response => {
-        console.log(response.data);
-        this.$message({
-          message: 'Successfully reverted to selected commit.',
-          type: 'success'
-        });
+        this.saveProjectSettings();
       }).catch(error => {
         console.log("Some error occured: ", error);
       })
@@ -2769,6 +2775,7 @@ export default {
 
         this.settings = this.configData.data.data[0].configData;
         this.pluginsTreedata = this.configData.data.data[0].pluginsData;
+        this.currentSha = this.settings[0].repoSettings[0].CurrentHeadSHA;
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
