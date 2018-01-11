@@ -11,7 +11,7 @@ if(process.env.baseURL == undefined){
 if (process.env.NODE_ENV !== 'development') {
     ipAdd = domainkey;
     socketURL = 'ws://ws.'+domainkey+':4032';
-    frontEndUrl = 'http://webbuilder.'+domainkey+'/dashboard';
+    frontEndUrl = 'http://webbuilder.'+domainkey+'/editor';
 
     loginUrl = 'http://auth.'+domainkey+'/api/login';
     registerUrl = 'http://auth.'+domainkey+'/api/setup';
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'development') {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
     socketURL = 'http://localhost:4032';
-    frontEndUrl = 'http://localhost:8080/dashboard';
+    frontEndUrl = 'http://localhost:8080/editor';
 
     loginUrl = 'http://devauth.flowz.com/api/login';
     registerUrl = 'http://devauth.flowz.com/api/setup';
