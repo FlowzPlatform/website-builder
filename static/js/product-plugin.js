@@ -587,8 +587,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   let urlVariables = [];
   let urlVarValue = [];
+  let menuOptions = [];
+  var menuNames = [];
 
   urlVarValue.push({name: 'Select', value: ''});
+  menuNames.push({name: 'Select', value: ''});
 
   let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
 
@@ -596,6 +599,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     configData = data.data[0].configData;
     globalVariables = configData[1].projectSettings[1].GlobalVariables;
     urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
+    menuOptions = configData[2].layoutOptions[0].Menu;
     storedTemplates = Object.keys(configData[2].layoutOptions[0]);
   });
 
@@ -603,16 +607,19 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   var partialOptions = {};
 
+
   setTimeout(function() {
 
+
+    for(var j = 0; j < menuOptions.length; j++){
+      let value = {name: menuOptions[j].label, value: menuOptions[j].label}
+      menuNames.push(value);
+    }
 
     for(var j = 0; j < urlVariables.length; j++){
       let value = {name: urlVariables[j].urlId, value: urlVariables[j].urlValue}
       urlVarValue.push(value);
     }
-
-    
-    console.log('URL Variables: ', urlVarValue);
 
     for (var i = 0; i < storedTemplates.length; i++) {
       if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
@@ -637,11 +644,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
                   if (j == 0) {
                     partialOptions[storedTemplates[index]] = [{
-                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                      'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
                     }]
                   } else {
                     partialOptions[storedTemplates[index]].push({
-                      'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                      'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
                     })
                   }
                 }
@@ -651,7 +658,30 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 }]
               }
             }
+
           }
+          // for (let index3 = 0; index3 < configData[2].layoutOptions[0][data_].length; index3++) {
+          //   if (storedTemplates[index].length != 0 && storedTemplates[index] == "Menu") {
+          //     if (configData[2].layoutOptions[0][data_].length >= 2) {
+          //       for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
+          //         if (j == 0) {
+          //           menuOptions[storedTemplates[index]] = [{
+          //             'name': configData[2].layoutOptions[0][data_][j].value 
+          //           }]
+          //         } else {
+          //           menuOptions[storedTemplates[index]].push({
+          //             'name': configData[2].layoutOptions[0][data_][j].value 
+          //           })
+          //         }
+          //       }
+          //     } else {
+          //       menuOptions[storedTemplates[index]] = [{
+          //         'name': configData[2].layoutOptions[0][data_][index3].value
+          //       }]
+          //     }
+          //   }
+            
+          // }
         }
       });
     }
@@ -772,8 +802,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         editable: true,
         droppable: true,
         traits: [{
-          label: 'Menu Id',
-          name: 'menuid'
+          label: 'menuId',
+          name: 'menuId',
+          type: 'select',
+          options: menuNames,
         }],
       }),
     }, {
@@ -1833,7 +1865,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let arr_collection = new Array();
   let arr_schema = []
   let arr_coll_schema = new Array()
-  console.log("arr_schema type11111111111111s", typeof arr_schema)
   $.getJSON("http://172.16.230.80:3080/settings",
     // $.getJSON("http://localhost:3080/settings",
     function (data) {
@@ -1844,15 +1875,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
           // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
           function (data_) {
-            console.log("data_", data_)
             // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
             let collection_name = data.rethink.dbinstance[index].connection_name
-            console.log(data_[0].t_name)
             for (let index_ = 0; index_ < data_.length; index_++) {
-              console.log(data_[index_].t_name)
               if (data_[index_].t_name != undefined) {
                 let schema_name = data_[index_].t_name
-                console.log("arr_schema type", typeof arr_schema)
                 arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
               }
             }
@@ -1860,7 +1887,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             $.each(arr_schema, function (index, value) {
               arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
             });
-            console.log("arr_coll_schema", typeof arr_coll_schema)
           });
       }
     });
@@ -1872,7 +1898,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           this.listenTo(this, 'change:connectiondata', this.doStuff);
         },
         doStuff() {
-          console.log("hello here")
         },
         // Extend default properties
         defaults: Object.assign({}, defaultModel.prototype.defaults, {
@@ -1922,7 +1947,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           this.listenTo(this, 'change:connectiondata', this.doStuff);
         },
         doStuff() {
-          console.log("hello here")
         },
         // Extend default properties
         defaults: Object.assign({}, defaultModel.prototype.defaults, {
@@ -2289,7 +2313,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
           selected_value = $("#Div1 option:selected").text();
           let model = editor.getSelected();
           var split_selected_value = selected_value.split(".");
-          console.log("selected_value", selected_value)
           if (split_selected_value[1] == "vue") {
             model.components('<div id="' + split_selected_value[0] + '"><component athname="' + label + '" :is="' + split_selected_value[0] + '">' + selected_value + '</component></div>');
           }
@@ -2332,10 +2355,10 @@ comps.addType('ShoppingCart', {
         },
 
         paypalcheck() {
-            console.log("paypal change event function called")
+            // console.log("paypal change event function called")
 
-            console.log("this.get('traits').where({name:'x_api_token_paypal'})",this.get('traits').where({name:'x_api_token_paypal'})[0].get('value'))
-            console.log("this.get('traits').where({name:'x_api_login_paypal'})",this.get('traits').where({name:'x_api_login_paypal'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_token_paypal'})",this.get('traits').where({name:'x_api_token_paypal'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_login_paypal'})",this.get('traits').where({name:'x_api_login_paypal'})[0].get('value'))
 
                         //    this.get('traits').each(function(trait) {
                         //            console.log("trait",trait.get('name'));
@@ -2348,16 +2371,16 @@ comps.addType('ShoppingCart', {
         },
 
         stripecheck() {
-            console.log("stripe change event function called")
+            // console.log("stripe change event function called")
 
-            console.log("this.get('traits').where({name:'x_api_token_stripe'})",this.get('traits').where({name:'x_api_token_stripe'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_token_stripe'})",this.get('traits').where({name:'x_api_token_stripe'})[0].get('value'))
         },
 
         authcheck() {
-            console.log("auth change event function called")
+            // console.log("auth change event function called")
 
-            console.log("this.get('traits').where({name:'x_api_token_authdotnet'})",this.get('traits').where({name:'x_api_token_authdotnet'})[0].get('value'))
-            console.log("this.get('traits').where({name:'x_api_login_authdotnet'})",this.get('traits').where({name:'x_api_login_authdotnet'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_token_authdotnet'})",this.get('traits').where({name:'x_api_token_authdotnet'})[0].get('value'))
+            // console.log("this.get('traits').where({name:'x_api_login_authdotnet'})",this.get('traits').where({name:'x_api_login_authdotnet'})[0].get('value'))
         },
       // Extend default properties
       defaults: Object.assign({}, defaultModel.prototype.defaults, {

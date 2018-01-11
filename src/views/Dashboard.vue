@@ -1,6 +1,6 @@
 <template>
   <div class="HomePage">
-    <div class="container">
+    <!-- <div class="container">
       <div class="block">
         <div class="number">52</div>
         <div class="string">projects</div>
@@ -22,7 +22,7 @@
         <div class="string">requests</div>
       </div>
 
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -57,14 +57,41 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.mainDiv{
+
+.HomePage {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-image: url(http://katiepellegrinphotography.com/wp-content/uploads/2013/09/clean-white-polygon-backgrounds-7.jpg);
+  background-position: center center;
+  background-size: cover;
+  font-family: "Lato", Arial;
+  color: #fff;
+}
+
+/*.HomePage {
+  min-width: 100%;
+  min-height: 100%;
+  
+  background-position: center center;
+
+}*/
+/*.mainDiv{
 	margin-top: 18%;
 	color: #999;
 }
 .mainDiv h3{
 	color: #ccc;
 	text-transform: uppercase;
-	/*text-shadow: -0px 0px hsla(0,0%,100%,0.03333), 0px -0px hsla(0,0%,0%,0.2), -0.5px 0.5px hsla(0,0%,100%,0.03333), 0.5px -0.5px hsla(0,0%,0%,0.2), -1px 1px hsla(0,0%,100%,0.03333), 1px -1px hsla(0,0%,0%,0.2), -1.5px 1.5px hsla(0,0%,100%,0.03333), 1.5px -1.5px hsla(0,0%,0%,0.2), -2px 2px hsla(0,0%,100%,0.03333), 2px -2px hsla(0,0%,0%,0.2), 0px 0px 40px hsla(0,0%,100%,0.1);*/
+	/*text-shadow: -0px 0px hsla(0,0%,100%,0.03333), 0px -0px hsla(0,0%,0%,0.2), -0.5px 0.5px hsla(0,0%,100%,0.03333), 0.5px -0.5px hsla(0,0%,0%,0.2), -1px 1px hsla(0,0%,100%,0.03333), 1px -1px hsla(0,0%,0%,0.2), -1.5px 1.5px hsla(0,0%,100%,0.03333), 1.5px -1.5px hsla(0,0%,0%,0.2), -2px 2px hsla(0,0%,100%,0.03333), 2px -2px hsla(0,0%,0%,0.2), 0px 0px 40px hsla(0,0%,100%,0.1);*
 }
 
 
@@ -89,7 +116,7 @@ export default {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  /*background: #ef5350;*/
+  /*background: #ef5350;*
   font-family: "Lato", Arial;
   color: #fff;
 }
@@ -111,7 +138,7 @@ export default {
           align-items: center;
   border-radius: 8px;
   box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
-  /*background: #01BBD4;*/
+  /*background: #01BBD4;*
   background: linear-gradient(to right, #AB64F6 0%, #61DBF7 100%);
 }
 .HomePage .container .block {
@@ -150,6 +177,6 @@ export default {
     width: 95%;
     margin-left: 5px;
   }
-}
+}*/
 
 </style>
