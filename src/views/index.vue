@@ -1161,6 +1161,51 @@
 
           this.editableTabsValue = activeName;
           this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+          if(this.editableTabs.length != 0){
+            this.$store.state.fileUrl = this.editableTabs[0].filepath
+            console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
+            let componentId = this.editableTabs[0].componentId;
+            this.componentId = this.editableTabs[0].componentId;
+            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+            let newContent
+            switch (this.componentId) {
+              case 'GrapesComponent':
+                await this.$refs.contentComponent[myIndex].getSavedHtml();
+                newContent = this.$store.state.content;
+                break;
+              case 'json-viewer':
+                newContent = JSON.stringify(this.$store.state.content);
+                break;
+              case 'GridManager':
+                await this.$refs.contentComponent[myIndex].getSavedHtml();
+                newContent = this.$store.state.content;
+                break;
+              case 'MenuBuilder':
+
+              let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+              let tempurlparts = configFileUrl.split("/");
+              let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+              console.log('fileName', fileName)
+              var folderUrl = fileName
+
+              let urlparts = this.$store.state.fileUrl.split("/");
+              let fileNameOrginal = urlparts[urlparts.length - 1];
+              let fileNameParts = fileNameOrginal.split('.');
+              let actualFileNameOnly = fileNameParts[0];
+              let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+              console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
+              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
+              });
+              console.log('response.data', response.data)
+              this.$store.state.content = response.data
+              newContent = this.$store.state.content
+                // this.saveJsonFile('else');
+                break;
+              default:
+                  newContent = this.$store.state.content;
+            }
+          }
+
           // this.editableTabs
         }
       },
