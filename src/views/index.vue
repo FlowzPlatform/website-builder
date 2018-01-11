@@ -781,6 +781,8 @@
 
           let url = data.path;
           let compId = this.componentId;
+          this.tabIndex = 0
+          this.editableTabs = []
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
           let editableTabValue = this.editableTabsValue
@@ -845,6 +847,8 @@
 
           let url = data.path;
           let compId = this.componentId;
+          this.tabIndex = 0
+          this.editableTabs = []
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
@@ -1198,6 +1202,8 @@
         }
 
         let compId = this.componentId;
+        this.tabIndex = 0
+        this.editableTabs = []
         let newTabName = ++this.tabIndex + '';
         let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
