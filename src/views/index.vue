@@ -710,7 +710,7 @@
             setTimeout(function(){
               for (let i = 0; i < response.data.children.length; i++) {
                 response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-                  return !(child.name == 'public' || child.name == '.git')
+                  return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
                   // return !(child.name == '.git')
                 })
               }
@@ -781,8 +781,12 @@
 
           let url = data.path;
           let compId = this.componentId;
+
+          //   remove this
           this.tabIndex = 0
           this.editableTabs = []
+          //////////////////
+
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
           let editableTabValue = this.editableTabsValue
@@ -847,8 +851,12 @@
 
           let url = data.path;
           let compId = this.componentId;
+          
+          //   remove this
           this.tabIndex = 0
           this.editableTabs = []
+          //////////////////
+     
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
@@ -1202,8 +1210,12 @@
         }
 
         let compId = this.componentId;
+
+        //   remove this
         this.tabIndex = 0
         this.editableTabs = []
+        //////////////////
+
         let newTabName = ++this.tabIndex + '';
         let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
