@@ -1,7 +1,8 @@
 // Change baseURL when going live
 // const baseURL = 'http://localhost:3032';
 // const baseURL = 'http://devapi.flowz.com/serverapi';
-const baseURL = 'http://api.flowz.com/serverapi';
+// const baseURL = 'http://api.flowz.com/serverapi';
+const baseURL = 'http://api.flowzcluster.tk/serverapi';
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;
@@ -108,65 +109,65 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Bootstrap-Block'
   });
 
-  bm.add('g-form-template', {
-    label: 'Form Full',
-    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
-    attributes: {
-      class: 'fa fa-html5',
-      title: 'G-Form Full'
-    },
-    category: 'Custom Form Controls'
-  });
+  // bm.add('g-form-template', {
+  //   label: 'Form Full',
+  //   content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
+  //   attributes: {
+  //     class: 'fa fa-html5',
+  //     title: 'G-Form Full'
+  //   },
+  //   category: 'Custom Form Controls'
+  // });
 
-  bm.add('g-form', {
-    label: 'G-Form',
-    content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
-    attributes: {
-      class: 'fa fa-html5',
-      title: 'G-Form'
-    },
-    category: 'Custom Form Controls'
-  });
+  // bm.add('g-form', {
+  //   label: 'G-Form',
+  //   content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
+  //   attributes: {
+  //     class: 'fa fa-html5',
+  //     title: 'G-Form'
+  //   },
+  //   category: 'Custom Form Controls'
+  // });
 
-  bm.add('gformpanel', {
-    label: 'G-Form Panel',
-    content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
-    attributes: {
-      class: 'fa fa-html5',
-      title: 'G-Form Panel'
-    },
-    category: 'Custom Form Controls'
-  });
+  // bm.add('gformpanel', {
+  //   label: 'G-Form Panel',
+  //   content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
+  //   attributes: {
+  //     class: 'fa fa-html5',
+  //     title: 'G-Form Panel'
+  //   },
+  //   category: 'Custom Form Controls'
+  // });
 
-  bm.add('g-form-add-btn', {
-    label: 'G-Form Add Button',
-    content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
-    attributes: {
-      class: 'fa fa-html5',
-      title: 'G-Form Add Button'
-    },
-    category: 'Custom Form Controls'
-  });
+  // bm.add('g-form-add-btn', {
+  //   label: 'G-Form Add Button',
+  //   content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
+  //   attributes: {
+  //     class: 'fa fa-html5',
+  //     title: 'G-Form Add Button'
+  //   },
+  //   category: 'Custom Form Controls'
+  // });
 
-  bm.add('g-form-delete-btn', {
-    label: 'G-Form Delete Button',
-    content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
-    attributes: {
-      class: 'fa fa-html5',
-      title: 'G-Form Delete Button'
-    },
-    category: 'Custom Form Controls'
-  });
+  // bm.add('g-form-delete-btn', {
+  //   label: 'G-Form Delete Button',
+  //   content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
+  //   attributes: {
+  //     class: 'fa fa-html5',
+  //     title: 'G-Form Delete Button'
+  //   },
+  //   category: 'Custom Form Controls'
+  // });
 
-  bm.add('formpartial', {
-    label: 'G-Form-Partial',
-    content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
-    attributes: {
-      class: 'fa fa-html5',
-      title: 'G-Form-Partial'
-    },
-    category: 'Custom Form Controls'
-  });
+  // bm.add('formpartial', {
+  //   label: 'G-Form-Partial',
+  //   content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
+  //   attributes: {
+  //     class: 'fa fa-html5',
+  //     title: 'G-Form-Partial'
+  //   },
+  //   category: 'Custom Form Controls'
+  // });
 
 
   // Sections
@@ -464,15 +465,15 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   });
 
   // VueComponent
-  bm.add('VueComponent', {
-    label: 'Vue Component',
-    content: '<VueComponent style="display: block; width: 100%; min-height:20px"><div style="border:solid black 2px"></div></VueComponent>',
-    attributes: {
-      class: 'fa fa-home',
-      title: 'Vue Component'
-    },
-    category: 'Special Component'
-  });
+  // bm.add('VueComponent', {
+  //   label: 'Vue Component',
+  //   content: '<VueComponent style="display: block; width: 100%; min-height:20px"><div style="border:solid black 2px"></div></VueComponent>',
+  //   attributes: {
+  //     class: 'fa fa-home',
+  //     title: 'Vue Component'
+  //   },
+  //   category: 'Special Component'
+  // });
 
   bm.add('progressBar', {
     label: 'Progress Bar',
@@ -578,56 +579,56 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  // dataField component
-  bm.add('DataFieldGroup', {
-    label: 'Data Field Group',
-    content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
-    attributes: {
-      class: 'fa fa-database',
-      title: 'Data Field',
-    },
-    category: 'Data Field Group'
-  });
+  // // dataField component
+  // bm.add('DataFieldGroup', {
+  //   label: 'Data Field Group',
+  //   content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
+  //   attributes: {
+  //     class: 'fa fa-database',
+  //     title: 'Data Field',
+  //   },
+  //   category: 'Data Field Group'
+  // });
   
-  bm.add('DataFieldObject', {
-    label: 'Data Field Object',
-    content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
-    attributes: {
-      class: 'fa fa-database',
-      title: 'Data Field',
-    },
-    category: 'Data Field Group'
-  });
+  // bm.add('DataFieldObject', {
+  //   label: 'Data Field Object',
+  //   content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
+  //   attributes: {
+  //     class: 'fa fa-database',
+  //     title: 'Data Field',
+  //   },
+  //   category: 'Data Field Group'
+  // });
 
-  bm.add('DataFieldText', {
-    label: 'Data Field Text',
-    content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
-    attributes: {
-      class: 'fa fa-database',
-      title: 'Data Field',
-    },
-    category: 'Data Field Group'
-  });
+  // bm.add('DataFieldText', {
+  //   label: 'Data Field Text',
+  //   content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
+  //   attributes: {
+  //     class: 'fa fa-database',
+  //     title: 'Data Field',
+  //   },
+  //   category: 'Data Field Group'
+  // });
 
-  bm.add('DataFieldList', {
-    label: 'Data Field List',
-    content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
-    attributes: {
-      class: 'fa fa-database',
-      title: 'Data Field',
-    },
-    category: 'Data Field Group'
-  });
+  // bm.add('DataFieldList', {
+  //   label: 'Data Field List',
+  //   content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
+  //   attributes: {
+  //     class: 'fa fa-database',
+  //     title: 'Data Field',
+  //   },
+  //   category: 'Data Field Group'
+  // });
 
-  bm.add('DataFieldImage', {
-      label: 'Data Field Image',
-      content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
-      attributes: {
-          class: 'fa fa-database',
-          title: 'Progress Bar',
-      },
-      category: 'Data Field Group'
-  });
+  // bm.add('DataFieldImage', {
+  //     label: 'Data Field Image',
+  //     content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
+  //     attributes: {
+  //         class: 'fa fa-database',
+  //         title: 'Progress Bar',
+  //     },
+  //     category: 'Data Field Group'
+  // });
 
 
   bm.add('ShoppingCart', {
@@ -1807,7 +1808,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
           {
             label: 'API URL',
-            name: 'apiurl'
+            name: 'apiurl',
+            type: 'select',
+            options: urlVarValue
           }, {
             label: 'Username',
             name: 'apiusername',
@@ -1942,207 +1945,207 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   // dataField components
 
   //http://172.16.230.176:3034/connectiondata
-  let arr_collection = new Array();
-  let arr_schema = []
-  let arr_coll_schema = new Array()
-  $.getJSON("http://172.16.230.80:3080/settings",
-    // $.getJSON("http://localhost:3080/settings",
-    function (data) {
-      //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
-      for (let index = 0; index < data.rethink.dbinstance.length; index++) {
-        //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-        arr_collection.push(data.rethink.dbinstance[index].connection_name)
-        $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
-          // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
-          function (data_) {
-            // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-            let collection_name = data.rethink.dbinstance[index].connection_name
-            for (let index_ = 0; index_ < data_.length; index_++) {
-              if (data_[index_].t_name != undefined) {
-                let schema_name = data_[index_].t_name
-                arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
-              }
-            }
-            arr_coll_schema.push("''")
-            $.each(arr_schema, function (index, value) {
-              arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
-            });
-          });
-      }
-    });
+  // let arr_collection = new Array();
+  // let arr_schema = []
+  // let arr_coll_schema = new Array()
+  // $.getJSON("http://172.16.230.80:3080/settings",
+  //   // $.getJSON("http://localhost:3080/settings",
+  //   function (data) {
+  //     //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
+  //     for (let index = 0; index < data.rethink.dbinstance.length; index++) {
+  //       //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+  //       arr_collection.push(data.rethink.dbinstance[index].connection_name)
+  //       $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
+  //         // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
+  //         function (data_) {
+  //           // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+  //           let collection_name = data.rethink.dbinstance[index].connection_name
+  //           for (let index_ = 0; index_ < data_.length; index_++) {
+  //             if (data_[index_].t_name != undefined) {
+  //               let schema_name = data_[index_].t_name
+  //               arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
+  //             }
+  //           }
+  //           arr_coll_schema.push("''")
+  //           $.each(arr_schema, function (index, value) {
+  //             arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
+  //           });
+  //         });
+  //     }
+  //   });
 
-    comps.addType('DataFieldGroup', {
-      // Define the Model
-      model: defaultModel.extend({
-        init() {
-          this.listenTo(this, 'change:connectiondata', this.doStuff);
-        },
-        doStuff() {
-        },
-        // Extend default properties
-        defaults: Object.assign({}, defaultModel.prototype.defaults, {
-          editable: true,
-          droppable: true,
-          traits: [
-            {
-              type: 'select',
-              label: 'data-schema',
-              name: ':data_schema',
-              options: arr_coll_schema,
-            },
-            {
-              type: 'text',
-              label: 'API_URL',
-              name: ':data_api'
-            }
-          ]
-        }),
+  //   comps.addType('DataFieldGroup', {
+  //     // Define the Model
+  //     model: defaultModel.extend({
+  //       init() {
+  //         this.listenTo(this, 'change:connectiondata', this.doStuff);
+  //       },
+  //       doStuff() {
+  //       },
+  //       // Extend default properties
+  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //         editable: true,
+  //         droppable: true,
+  //         traits: [
+  //           {
+  //             type: 'select',
+  //             label: 'data-schema',
+  //             name: ':data_schema',
+  //             options: arr_coll_schema,
+  //           },
+  //           {
+  //             type: 'text',
+  //             label: 'API_URL',
+  //             name: ':data_api'
+  //           }
+  //         ]
+  //       }),
 
-      }, {
-          isComponent: function (el) {
-            if (el.tagName == 'DATAFIELDGROUP') {
-              return {
-                type: 'DataFieldGroup'
-              };
-            }
-          },
-        }),
+  //     }, {
+  //         isComponent: function (el) {
+  //           if (el.tagName == 'DATAFIELDGROUP') {
+  //             return {
+  //               type: 'DataFieldGroup'
+  //             };
+  //           }
+  //         },
+  //       }),
 
-      view: defaultType.view,
+  //     view: defaultType.view,
 
-      // The render() should return 'this'
-      render: function () {
-        // Extend the original render method
-        defaultType.view.prototype.render.apply(this, arguments);
-        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-        return this;
-      },
-    });
-
-
-    comps.addType('DataFieldObject', {
-      // Define the Model
-      model: defaultModel.extend({
-        init() {
-          this.listenTo(this, 'change:connectiondata', this.doStuff);
-        },
-        doStuff() {
-        },
-        // Extend default properties
-        defaults: Object.assign({}, defaultModel.prototype.defaults, {
-          editable: true,
-          droppable: true,
-          traits: [
-            {
-              type: 'select',
-              label: 'data-schema',
-              name: ':data_schema',
-              options: arr_coll_schema,
-            },
-            {
-              type: 'text',
-              label: 'API_URL',
-              name: ':data_api'
-            }
-          ]
-        }),
-
-      }, {
-          isComponent: function (el) {
-            if (el.tagName == 'DATAFIELDOBJECT') {
-              return {
-                type: 'DataFieldObject'
-              };
-            }
-          },
-        }),
-
-      view: defaultType.view,
-
-      // The render() should return 'this'
-      render: function () {
-        // Extend the original render method
-        defaultType.view.prototype.render.apply(this, arguments);
-        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-        return this;
-      },
-    });
+  //     // The render() should return 'this'
+  //     render: function () {
+  //       // Extend the original render method
+  //       defaultType.view.prototype.render.apply(this, arguments);
+  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+  //       return this;
+  //     },
+  //   });
 
 
+  //   comps.addType('DataFieldObject', {
+  //     // Define the Model
+  //     model: defaultModel.extend({
+  //       init() {
+  //         this.listenTo(this, 'change:connectiondata', this.doStuff);
+  //       },
+  //       doStuff() {
+  //       },
+  //       // Extend default properties
+  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //         editable: true,
+  //         droppable: true,
+  //         traits: [
+  //           {
+  //             type: 'select',
+  //             label: 'data-schema',
+  //             name: ':data_schema',
+  //             options: arr_coll_schema,
+  //           },
+  //           {
+  //             type: 'text',
+  //             label: 'API_URL',
+  //             name: ':data_api'
+  //           }
+  //         ]
+  //       }),
 
-    comps.addType('DataFieldText', {
-      // Define the Model
-      model: defaultModel.extend({
-        // Extend default properties
-        defaults: Object.assign({}, defaultModel.prototype.defaults, {
-          editable: true,
-          droppable: true,
-          traits: [
-            {
-              label: 'Data text field',
-              name: ':text',
-              type: 'text'
-            }
-          ]
-        }),
+  //     }, {
+  //         isComponent: function (el) {
+  //           if (el.tagName == 'DATAFIELDOBJECT') {
+  //             return {
+  //               type: 'DataFieldObject'
+  //             };
+  //           }
+  //         },
+  //       }),
 
-      }, {
-          isComponent: function (el) {
-            if (el.tagName == 'DATAFIELDTEXT') {
-              return {
-                type: 'DataFieldText'
-              };
-            }
-          },
-        }),
+  //     view: defaultType.view,
 
-      view: defaultType.view,
+  //     // The render() should return 'this'
+  //     render: function () {
+  //       // Extend the original render method
+  //       defaultType.view.prototype.render.apply(this, arguments);
+  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+  //       return this;
+  //     },
+  //   });
 
-      // The render() should return 'this'
-      render: function () {
-        // Extend the original render method
-        defaultType.view.prototype.render.apply(this, arguments);
-        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-        return this;
-      },
-    });
 
-    comps.addType('DataFieldList', {
-      // Define the Model
-      model: defaultModel.extend({
-        // Extend default properties
-        defaults: Object.assign({}, defaultModel.prototype.defaults, {
-          editable: true,
-          droppable: true,
-          traits: [
-            {
-              label: 'Data list field',
-              name: ':items',
-              type: 'text'
-            }
-          ]
-        }),
 
-      }, {
-          isComponent: function (el) {
-            if (el.tagName == 'DATAFIELDLIST') {
-              return {
-                type: 'DataFieldList'
-              };
-            }
-          },
-        }),
+  //   comps.addType('DataFieldText', {
+  //     // Define the Model
+  //     model: defaultModel.extend({
+  //       // Extend default properties
+  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //         editable: true,
+  //         droppable: true,
+  //         traits: [
+  //           {
+  //             label: 'Data text field',
+  //             name: ':text',
+  //             type: 'text'
+  //           }
+  //         ]
+  //       }),
 
-      view: defaultType.view,
+  //     }, {
+  //         isComponent: function (el) {
+  //           if (el.tagName == 'DATAFIELDTEXT') {
+  //             return {
+  //               type: 'DataFieldText'
+  //             };
+  //           }
+  //         },
+  //       }),
 
-      // The render() should return 'this'
-      render: function () {
-        // Extend the original render method
-        defaultType.view.prototype.render.apply(this, arguments);
-        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-        return this;
-      },
-    });
+  //     view: defaultType.view,
+
+  //     // The render() should return 'this'
+  //     render: function () {
+  //       // Extend the original render method
+  //       defaultType.view.prototype.render.apply(this, arguments);
+  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+  //       return this;
+  //     },
+  //   });
+
+  //   comps.addType('DataFieldList', {
+  //     // Define the Model
+  //     model: defaultModel.extend({
+  //       // Extend default properties
+  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //         editable: true,
+  //         droppable: true,
+  //         traits: [
+  //           {
+  //             label: 'Data list field',
+  //             name: ':items',
+  //             type: 'text'
+  //           }
+  //         ]
+  //       }),
+
+  //     }, {
+  //         isComponent: function (el) {
+  //           if (el.tagName == 'DATAFIELDLIST') {
+  //             return {
+  //               type: 'DataFieldList'
+  //             };
+  //           }
+  //         },
+  //       }),
+
+  //     view: defaultType.view,
+
+  //     // The render() should return 'this'
+  //     render: function () {
+  //       // Extend the original render method
+  //       defaultType.view.prototype.render.apply(this, arguments);
+  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+  //       return this;
+  //     },
+  //   });
 
 
     comps.addType('img', {
