@@ -883,15 +883,17 @@
         // If ProjectSettings is clicked
         else if(this.isProjectEditing) {
 
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
+          if(this.componentId == 'GrapesComponent'){
+            if(this.$store.state.tabChange != null) {
+              if(this.$store.state.tabChange != ''){
+                this.saveFile('getFileContent')
+              }
             }
-          }
-          if(this.componentId == 'GridManager'){
-            // this.$refs.contentComponent[0].getHtml()
-            this.saveFile('getFileContent')
-          }
+          } else {this.saveFile('getFileContent')}
+          // if(this.componentId == 'GridManager'){
+          //   // this.$refs.contentComponent[0].getHtml()
+          //   this.saveFile('getFileContent')
+          // }
 
           this.isProjectEditing = false;
           this.$store.state.fileUrl = data.path;
@@ -950,6 +952,13 @@
         }
         // If Clicked in ProjectName
         else if(this.isProjectStats) {
+          if(this.componentId == 'GrapesComponent'){
+            if(this.$store.state.tabChange != null) {
+              if(this.$store.state.tabChange != ''){
+                this.saveFile('getFileContent')
+              }
+            }
+          } else {this.saveFile('getFileContent')}
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
@@ -960,14 +969,16 @@
         }
         // If Clicked in Partials Folder
         else if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))) {
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
+          if(this.componentId == 'GrapesComponent'){
+            if(this.$store.state.tabChange != null) {
+              if(this.$store.state.tabChange != ''){
+                this.saveFile('getFileContent')
+              }
             }
-          }
-          if(this.componentId == 'GridManager'){
-            this.saveFile('getFileContent')
-          }
+          } else {this.saveFile('getFileContent')}
+          // if(this.componentId == 'GridManager'){
+          //   this.saveFile('getFileContent')
+          // }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
@@ -978,15 +989,16 @@
         }
         // If Clicked in Layouts Folder
         else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
-
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
+          if(this.componentId == 'GrapesComponent'){
+            if(this.$store.state.tabChange != null) {
+              if(this.$store.state.tabChange != ''){
+                this.saveFile('getFileContent')
+              }
             }
-          }
-          if(this.componentId == 'GridManager'){
-            this.saveFile('getFileContent')
-          }
+          } else {this.saveFile('getFileContent')}
+          // if(this.componentId == 'GridManager'){
+          //   this.saveFile('getFileContent')
+          // }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
@@ -997,15 +1009,16 @@
         }
         // If Clicked in Pages Folder
         else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
-
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
+          if(this.componentId == 'GrapesComponent'){
+            if(this.$store.state.tabChange != null) {
+              if(this.$store.state.tabChange != ''){
+                this.saveFile('getFileContent')
+              }
             }
-          }
-          if(this.componentId == 'GridManager'){
-            this.saveFile('getFileContent')
-          }
+          } else {this.saveFile('getFileContent')}
+          // if(this.componentId == 'GridManager'){
+          //   this.saveFile('getFileContent')
+          // }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
