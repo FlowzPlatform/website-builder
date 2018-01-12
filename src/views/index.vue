@@ -814,11 +814,13 @@
         this.$store.state.fileUrl = data.path;
         // If PageSettings Clicked
         if(this.isPageEditing){
-
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
-            }
+          // // if(this.$store.state.tabChange != null) {
+          // //   if(this.$store.state.tabChange != ''){
+          //     this.saveFile('getFileContent')
+          // //   }
+          // // }
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+            this.saveFile('getFileContent')
           }
 
           this.isPageEditing = false;
@@ -883,13 +885,16 @@
         // If ProjectSettings is clicked
         else if(this.isProjectEditing) {
 
-          if(this.componentId == 'GrapesComponent'){
-            if(this.$store.state.tabChange != null) {
-              if(this.$store.state.tabChange != ''){
-                this.saveFile('getFileContent')
-              }
-            }
-          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          // if(this.componentId == 'GrapesComponent'){
+          //   // if(this.$store.state.tabChange != null) {
+          //   //   if(this.$store.state.tabChange != ''){
+          //       this.saveFile('getFileContent')
+          //   //   }
+          //   // }
+          // } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          //   this.saveFile('getFileContent')
+          // }
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
             this.saveFile('getFileContent')
           }
           // if(this.componentId == 'GridManager'){
@@ -954,13 +959,16 @@
         }
         // If Clicked in ProjectName
         else if(this.isProjectStats) {
-          if(this.componentId == 'GrapesComponent'){
-            if(this.$store.state.tabChange != null) {
-              if(this.$store.state.tabChange != ''){
-                this.saveFile('getFileContent')
-              }
-            }
-          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          // if(this.componentId == 'GrapesComponent'){
+          //   // if(this.$store.state.tabChange != null) {
+          //   //   if(this.$store.state.tabChange != ''){
+          //       this.saveFile('getFileContent')
+          //   //   }
+          //   // }
+          // } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          //   this.saveFile('getFileContent')
+          // }
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
             this.saveFile('getFileContent')
           }
           this.isProjectEditing = false;
@@ -973,13 +981,16 @@
         }
         // If Clicked in Partials Folder
         else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && (!(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu')) )) {
-          if(this.componentId == 'GrapesComponent'){
-            if(this.$store.state.tabChange != null) {
-              if(this.$store.state.tabChange != ''){
-                this.saveFile('getFileContent')
-              }
-            }
-          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          // if(this.componentId == 'GrapesComponent'){
+          //   // if(this.$store.state.tabChange != null) {
+          //   //   if(this.$store.state.tabChange != ''){
+          //       this.saveFile('getFileContent')
+          //   //   }
+          //   // }
+          // } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          //   this.saveFile('getFileContent')
+          // }
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
             this.saveFile('getFileContent')
           }
           // if(this.componentId == 'GridManager'){
@@ -995,13 +1006,16 @@
         }
         // If Clicked in Layouts Folder
         else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
-          if(this.componentId == 'GrapesComponent'){
-            if(this.$store.state.tabChange != null) {
-              if(this.$store.state.tabChange != ''){
-                this.saveFile('getFileContent')
-              }
-            }
-          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          // if(this.componentId == 'GrapesComponent'){
+          //   // if(this.$store.state.tabChange != null) {
+          //   //   if(this.$store.state.tabChange != ''){
+          //       this.saveFile('getFileContent')
+          //   //   }
+          //   // }
+          // } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          //   this.saveFile('getFileContent')
+          // }
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
             this.saveFile('getFileContent')
           }
           // if(this.componentId == 'GridManager'){
@@ -1017,13 +1031,16 @@
         }
         // If Clicked in Pages Folder
         else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
-          if(this.componentId == 'GrapesComponent'){
-            if(this.$store.state.tabChange != null) {
-              if(this.$store.state.tabChange != ''){
-                this.saveFile('getFileContent')
-              }
-            }
-          } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          // if(this.componentId == 'GrapesComponent'){
+          //   // if(this.$store.state.tabChange != null) {
+          //   //   if(this.$store.state.tabChange != ''){
+          //       this.saveFile('getFileContent')
+          //   //   }
+          //   // }
+          // } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+          //   this.saveFile('getFileContent')
+          // }
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
             this.saveFile('getFileContent')
           }
           // if(this.componentId == 'GridManager'){
@@ -1050,13 +1067,17 @@
           if(data.type == "file"){
             this.display = false;
             if(this.flag != true && this.editableTabs.length > 0){
-              if(this.componentId == 'GrapesComponent'){
-                if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
-                  if(this.$store.state.tabChange != ''){
-                    this.saveFile('getFileContent')
-                  }
-                }
-              } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+              // if(this.componentId == 'GrapesComponent'){
+              //   // if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
+              //     if(this.editableTabs.length > 0) {
+              //     // if(this.$store.state.tabChange != ''){
+              //       this.saveFile('getFileContent')
+              //     // }
+              //   }
+              // } else if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+              //   this.saveFile('getFileContent')
+              // }
+              if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
                 this.saveFile('getFileContent')
               }
             }
@@ -1070,15 +1091,16 @@
 
       // If Tabs is clicked
       tabClicked : async function(targetName, action) {
-        if(this.componentId == 'GrapesComponent'){
-          if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('tabClicked')
-            }
-          }
-        } else {
+        // if(this.componentId == 'GrapesComponent'){
+        //   // if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
+        //     if(this.editableTabs.length > 0) {
+        //     // if(this.$store.state.tabChange != ''){
+        //       this.saveFile('tabClicked')
+        //     // }
+        //   }
+        // } else {
           this.saveFile('tabClicked')
-        }
+        // }
 
         let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
         this.$store.state.fileUrl = findingValue[0].filepath;
@@ -1124,7 +1146,7 @@
           tabs = this.editableTabs;
           activeName = this.editableTabsValue;
           if (activeName === targetName) {
-            this.saveFile(2);
+            this.saveFile('void');
             tabs.forEach((tab, index) => {
               if (tab.name === targetName) {
                 let nextTab = tabs[index + 1] || tabs[index - 1];
@@ -2715,15 +2737,14 @@
         let newContent;
 
         if (arg == 'getFileContent') {
-          console.log('getFileContentgetFileContentgetFileContent')
           var componentId = this.componentId
           let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
           this.saveFileLoading = true
-          var tempContent = this.$store.state.tabChange
+          // var tempContent = this.$store.state.tabChange
           switch (this.componentId) {
             case 'GrapesComponent':
               this.$refs.contentComponent[myIndex].getHtml();
-              newContent = tempContent;
+              newContent = this.$store.state.content;
               this.saveFileData(newContent)
               break;
             case 'json-viewer':
@@ -2746,7 +2767,7 @@
               newContent = this.$store.state.content;
               this.saveFileLoading = false;
           }
-          this.$store.state.tabChange = '';
+          // this.$store.state.tabChange = '';
         } else {
           console.log('elseelseelseelseelseelseelseelseelseelseelseelse')
           var componentId = this.componentId
@@ -2772,7 +2793,7 @@
                 newContent = this.$store.state.content;
           }
 
-          this.$store.state.tabChange = ''
+          // this.$store.state.tabChange = ''
 
 
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");

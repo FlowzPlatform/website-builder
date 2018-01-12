@@ -398,15 +398,15 @@ export default {
 
   		});
 
-        let self = this;
-        editor.on("component:update", function() {
-          let gethtml = beautify(editor.getHtml(), { format: 'html'});
-          let getcss =  beautify(editor.getCss(), { format: 'css'});
-
-          let fullhtml= "<style>\n" + getcss + "\n</style>\n"+
-              "\n\n\n\n" + gethtml;
-            self.$store.state.tabChange = fullhtml
-        });
+        // let self = this;
+        // editor.on("component:update", function() {
+        //   let gethtml = beautify(editor.getHtml(), { format: 'html'});
+        //   let getcss =  beautify(editor.getCss(), { format: 'css'});
+        //
+        //   let fullhtml= "<style>\n" + getcss + "\n</style>\n"+
+        //       "\n\n\n\n" + gethtml;
+        //     self.$store.state.tabChange = fullhtml
+        // });
 
         const categories = editor.BlockManager.getCategories();
         categories.each(category => {
