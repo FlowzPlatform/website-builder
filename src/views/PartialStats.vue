@@ -77,7 +77,7 @@ export default {
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
+        //console.log('Config file found! Updating fields..');
 
         this.settings = this.configData.data.data[0].configData;
 
@@ -86,7 +86,7 @@ export default {
         let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
         partialItems.splice(partialItems.indexOf('Layout'), 1);
 
-        console.log('All Parts:', this.settings[2].layoutOptions[0]);
+        //console.log('All Parts:', this.settings[2].layoutOptions[0]);
         this.tablePagesData = [];
 
         for(var i = 0; i < partialItems.length; i++){
@@ -101,10 +101,10 @@ export default {
           });
         }
 
-        console.log('Partials List:', this.tablePagesData)
+        //console.log('Partials List:', this.tablePagesData)
 
       } else {
-        console.log('Cannot get config file!');
+        //console.log('Cannot get config file!');
       } 
   	}
   },

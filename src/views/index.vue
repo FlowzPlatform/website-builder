@@ -565,7 +565,7 @@
     },
     mounted () {
 
-      console.log('Index Page: ', Cookies.get('email'));
+      //console.log('Index Page: ', Cookies.get('email'));
 
       // Sidemenu Toggle
       $(document).ready(function() {
@@ -632,7 +632,7 @@
       app.service("flows-dir-listing").on("removed", (response) => {
           if (response['errno'] == undefined) {
               var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
-              console.log(s);
+              //console.log(s);
               let objCopy = self.directoryTree
               let evalStr = 'self.directoryTree'
               let $eval = eval(evalStr)
@@ -705,7 +705,7 @@
       // Get directory listing data
       getData() {
         // let username_session = this.$session.get('username');
-        // console.log("username_session", username_session)
+        //// console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
         axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId'))
           .then(response => {
@@ -737,7 +737,7 @@
               message: 'Some error while getting tree data',
               type: 'error'
             });
-            console.log(e);
+            //console.log(e);
           });
       },
 
@@ -912,7 +912,7 @@
         }
         // If Clicked in Partials Folder 
         else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
-          console.log('Data Path: ', data.path);
+          //console.log('Data Path: ', data.path);
           if(this.$store.state.tabChange != null) {
             if(this.$store.state.tabChange != ''){
               this.saveFile('getFileContent')
@@ -1304,7 +1304,7 @@
                   message: 'Failed! Please try again.',
                   type: 'error'
               });
-              console.log(e)
+              //console.log(e)
           });
 
           } else {
@@ -1342,7 +1342,7 @@
                   }
                 }
                 if (checkfilename==true) {
-                  // console.log('file already exists')
+                  //// console.log('file already exists')
                   this.addNewFolderLoading = false;
                   this.$message({
                     showClose: true,
@@ -1388,12 +1388,12 @@
                   for(let i=0;i<Object.keys(this.globalConfigData[2].layoutOptions[0]).length;i++){
                     var temp=Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
                     if(temp==this.formAddFolder.foldername){
-                      console.log("File already exists");
+                      //console.log("File already exists");
                       checkfolder=true
                     }
                   }
                   if(checkfolder!=true){
-                    console.log("As, folder not found in config file. We are adding this folder inside config file:")
+                    //console.log("As, folder not found in config file. We are adding this folder inside config file:")
                     var obj={value:'default',label:'default'}
                     this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername]=[]
                     this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
@@ -1402,7 +1402,7 @@
                   this.saveConfigFile(folderUrl)
 
                   }).catch((e)=>{
-                    console.log(e)
+                    //console.log(e)
                   })
                   
                 }
@@ -1413,7 +1413,7 @@
                   message: 'Folder creation failed. Try again.',
                   type: 'error'
                 });
-                console.log(e)
+                //console.log(e)
               })
                 }
             
@@ -1483,7 +1483,7 @@
                   }
                 }
                 if (checkfilename==true) {
-                  console.log('file already exists')
+                  //console.log('file already exists')
                   this.addNewFileLoading=false
                   this.$message({
                     showClose: true,
@@ -1537,7 +1537,7 @@
                     
                       })
                       .catch((e) => {
-                          console.log(e)
+                          //console.log(e)
                       })
                     }
                     else if(newfilename.search('/Partials')!=-1 && newfilename.search('/Menu')!=-1){
@@ -1586,7 +1586,7 @@
                         
                           })
                           .catch((e) => {
-                              console.log(e)
+                              //console.log(e)
                           })
                     }
                     else if(newfilename.search('/Pages')!=-1){
@@ -1612,24 +1612,24 @@
                         namefolder=namefolder[namefolder.length - 1 ];
                         
                         if(namefolder=='Pages'){
-                          // console.log('inside pages')
+                          //// console.log('inside pages')
                           var totpartial=[]
                           for(let k=0;k<this.globalConfigData[2].layoutOptions[0].Layout.length;k++){
                             if(this.globalConfigData[2].layoutOptions[0].Layout[k].label=='default'){
-                              console.log('inside default layout');
+                              //console.log('inside default layout');
                               if(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList.length>0){
-                                // console.log('defaultList:',this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList)
+                                //// console.log('defaultList:',this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList)
                                 totpartial=JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList))
-                                // console.log('found some default partial')
+                                //// console.log('found some default partial')
 
                               }
-                              // console.log('totpartial:',totpartial);
+                              //// console.log('totpartial:',totpartial);
                               if(this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length>0){
 
                                 for(let j=0;j<this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length;j++){
                                   let checklayoutvalue=false;
                                   for(let r=0;r<totpartial.length;r++){
-                                    // console.log('totpartial[r]:',Object.keys(totpartial[r])[0])
+                                    //// console.log('totpartial[r]:',Object.keys(totpartial[r])[0])
                                   if(Object.keys(totpartial[r])[0]==this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]){
                                     checklayoutvalue=true;
                                     totpartial[r][Object.keys(totpartial[r])[0]]=totpartial[r][Object.keys(totpartial[r])[0]].split('.')[0]
@@ -1667,7 +1667,7 @@
                         }
                       })
                       .catch((e) => {
-                          console.log(e)
+                          //console.log(e)
                       })
                     }
                     else if(newfilename.search('/Layout')!=-1){
@@ -1716,13 +1716,13 @@
                         
                       })
                       .catch((e) => {
-                          console.log(e)
+                          //console.log(e)
                       })
                     }
                 }
                 
             } else {
-                console.log('error submit!!');
+                //console.log('error submit!!');
                 return false;
             }
         });
@@ -1768,7 +1768,7 @@
                         localStorage.setItem("listOfTempaltes", JSON.stringify(response.data));
                       })
                       .catch((e) => {
-                        console.log(e)
+                        //console.log(e)
                       })
 
                       this.newRepoId = response.data.id;
@@ -1790,7 +1790,7 @@
                       //         message: 'Successfully done.',
                       //         type: 'success'
                       //     });
-                      //     console.log(res.data);
+                      ////     console.log(res.data);
                       // })
                       // .catch((e) => {
                       //     this.$message({
@@ -1798,7 +1798,7 @@
                       //         message: 'Failed! Please try again.',
                       //         type: 'error'
                       //     });
-                      //     console.log(e)
+                      ////     console.log(e)
                       // });
 
                       this.formAddProjectFolder.projectName = null;
@@ -1815,26 +1815,26 @@
                       .then((res) => {
                       })
                       .catch((e) => {
-                        console.log(e)
+                        //console.log(e)
                       })
                       return;
                     }
 
                 })
                 .catch((e) => {
-                  console.log(e);
+                  //console.log(e);
                   this.newProjectFolderDialog = false;
                   this.fullscreenLoading = false;
                 });
 
               })
               .catch((e) => {
-                console.log(e);
+                //console.log(e);
                 // this.componentId = 'buyPage';
                 this.newProjectFolderDialog = false;
                 this.fullscreenLoading = false;
                 // this.buyNowDialog = true;
-                console.log(e)
+                //console.log(e)
               });
           }
         });
@@ -1864,11 +1864,11 @@
             .then((res) => {
             })
             .catch((e)=>{
-              console.log("Error from Client-Plugins"+res)
+              //console.log("Error from Client-Plugins"+res)
             }); 
           })
           .catch((e)=>{
-            console.log("Error from Assests"+res)
+            //console.log("Error from Assests"+res)
           });
 
           // Create Main-Files Folder
@@ -1879,12 +1879,12 @@
           .then((res) => {
           })
           .catch((e)=>{
-            console.log("Error from pages"+res)
+            //console.log("Error from pages"+res)
           });
 
         })
         .catch((e)=>{
-          console.log("Error from Assests"+res)
+          //console.log("Error from Assests"+res)
         });
 
         // Create Partials Folder
@@ -1901,7 +1901,7 @@
             .then((res) => {
             })
             .catch((e)=>{
-              console.log("Error From Headers"+res)
+              //console.log("Error From Headers"+res)
             });
 
             // Create menus Folder
@@ -1913,7 +1913,7 @@
             .then((res) => {
             })
             .catch((e)=>{
-              console.log("Error from Menu"+res)
+              //console.log("Error from Menu"+res)
             });
 
             // Create Footers Folder
@@ -1924,7 +1924,7 @@
             .then((res) => {
             })
             .catch((e)=>{
-              console.log("Error from Footers"+res)
+              //console.log("Error from Footers"+res)
             });
 
             // Create Templates Folder
@@ -1933,10 +1933,10 @@
             //   type : 'folder'
             // })
             // .then((res) => {
-            //   console.log('Templates Folder created!');
+            ////   console.log('Templates Folder created!');
             // })
             // .catch((e)=>{
-            //   console.log("Error from pages"+res)
+            ////   console.log("Error from pages"+res)
             // });
 
             // Create Sidebars Folder
@@ -1947,13 +1947,13 @@
             .then((res) => {
             })
             .catch((e)=>{
-              console.log("Error from pages"+res)
+              //console.log("Error from pages"+res)
             });
 
 
         })
         .catch((e)=>{
-          console.log("Error From Headers"+res)
+          //console.log("Error From Headers"+res)
         });
 
         // Create Layouts Folder
@@ -1965,7 +1965,7 @@
         .then((res) => {
         })
         .catch((e)=>{
-          console.log("Error From Layout"+res)
+          //console.log("Error From Layout"+res)
         });
 
         // Create Pages Folder
@@ -1976,7 +1976,7 @@
         .then((res) => {
         })
         .catch((e)=>{
-          console.log("Error from pages"+res)
+          //console.log("Error from pages"+res)
         });
 
         let self = this;
@@ -2154,7 +2154,7 @@
             type: 'error'
           });
           return;
-          console.log(e)
+          //console.log(e)
         })
 
         // Create project-details.json file
@@ -2170,7 +2170,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Create main.css file
@@ -2183,7 +2183,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Create main.js file
@@ -2196,7 +2196,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Create default.json for menu file
@@ -2209,7 +2209,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Brand Logo
@@ -2223,7 +2223,7 @@
         .then((res) => {   
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         })
 
         // Create index.html file
@@ -2247,7 +2247,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Create metalsmith file
@@ -2258,7 +2258,7 @@
 
         // let projectUrl = config.ipAddress + '/websites/' + projectName;
 
-        var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+        var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName//+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
          axios.post(config.baseURL + '/flows-dir-listing', {
             filename : mainMetal,
@@ -2268,7 +2268,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
 
@@ -2285,7 +2285,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
 
@@ -2303,7 +2303,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Create demo header file
@@ -2319,7 +2319,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Create demo footer file
@@ -2335,7 +2335,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Create default sidebar file file
@@ -2348,7 +2348,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
 
@@ -2367,11 +2367,11 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         })
       })
       .catch((e) => {
-          console.log(e)
+          //console.log(e)
       })
 
 
@@ -2385,7 +2385,7 @@
         .then((res) => {
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // // Product Listing Plugin
@@ -2405,14 +2405,14 @@
         //       type : 'file'
         //   })
         //   .then((res) => {
-        //     console.log(listingPlugin + ' file created');
+        ////     console.log(listingPlugin + ' file created');
         //   })
         //   .catch((e) => {
-        //       console.log(e)
+        ////       console.log(e)
         //   })
         // })
         // .catch((e) => {
-        //     console.log(e)
+        ////     console.log(e)
         // });
 
         // Flowz Engine JS
@@ -2430,11 +2430,11 @@
           .then((res) => {   
           })
           .catch((e) => {
-              console.log(e)
+              //console.log(e)
           })
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Slider Plugin
@@ -2452,11 +2452,11 @@
           .then((res) => {  
           })
           .catch((e) => {
-              console.log(e)
+              //console.log(e)
           })
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Shopping cart js
@@ -2474,11 +2474,11 @@
           .then((res) => {   
           })
           .catch((e) => {
-              console.log(e)
+              //console.log(e)
           })
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
 
         // Client Global variables Plugin
@@ -2516,17 +2516,17 @@
                 },1000);  
               }
             }).catch(error => {
-              console.log("Some error occured: ", error);
+              //console.log("Some error occured: ", error);
             }) 
 
             
           })
           .catch((e) => {
-              console.log(e)
+              //console.log(e)
           })
         })
         .catch((e) => {
-            console.log(e)
+            //console.log(e)
         });
       },
 
@@ -2547,7 +2547,7 @@
             type: 'error'
           });
           this.saveFileLoading = false;
-          console.log(e)
+          //console.log(e)
         })
       },
 
@@ -2689,12 +2689,12 @@
                 content = content.data
                 var result = (getFromBetween.get(content, "{{>", "}}"));
                 var changeresult=JSON.parse(JSON.stringify(result))
-                // console.log("changeresult:",changeresult)
+                //// console.log("changeresult:",changeresult)
                 
                 for(let s=0;s<changeresult.length;s++){
                   content=content.replace(changeresult[s],changeresult[s].replace(/&nbsp;/g,'').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g,"").replace(/\s*=\s*/g,'='))
                 }
-                // console.log('content:',content)
+                //// console.log('content:',content)
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                  filename:  folderUrl + '/Layout/' + name + '.layout',
                  text: content,
@@ -2712,7 +2712,7 @@
                     temp = resultParam[i].trim()
                     result[i] = result[i].trim()
                     temp = temp.split(' ')
-                    // console.log('temp:',temp)
+                    //// console.log('temp:',temp)
                     for (let j = 0; j < temp.length; j++) {
                        temp[j] = temp[j].trim();
                       if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
@@ -2740,7 +2740,7 @@
                         }
                     }
                         else{
-                          console.log('error while finding id in layout');
+                          //console.log('error while finding id in layout');
                         }
                     }
                   }
@@ -2757,7 +2757,7 @@
                             let checkdefaultvalue = false;
                             for (let x = 0; x < this.globalConfigData[1].pageSettings[j].partials.length; x++) {
                               if (Object.keys(this.globalConfigData[1].pageSettings[j].partials[x])[0] == result[i]) {
-                                // console.log('partials[x]:', this.globalConfigData[1].pageSettings[j].partials[x])
+                                //// console.log('partials[x]:', this.globalConfigData[1].pageSettings[j].partials[x])
                                 var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
                                 defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
                                 this.globalConfigData[1].pageSettings[j].partials[x] = defaulttemp
@@ -2767,7 +2767,7 @@
                             if (checkdefaultvalue != true) {
                               var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
                               defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
-                              // console.log('push for DefaultParams:')
+                              //// console.log('push for DefaultParams:')
                               this.globalConfigData[1].pageSettings[j].partials.push(defaulttemp)
                             }
                           }
@@ -2839,7 +2839,7 @@
                             let checkdefault = false;
                             for (let a = 0; a < this.globalConfigData[2].layoutOptions[0][foldernameKey[j]].length; a++) {
                               if (this.globalConfigData[2].layoutOptions[0][foldernameKey[j]][a].value == DefaultParams[k][foldernameKey[j]].split('.')[0]) {
-                                console.log('File already exists')
+                                //console.log('File already exists')
                                 checkdefault = true
 
                               }
@@ -2905,7 +2905,7 @@
                                   let checkdefault = false;
                                   for (let a = 0; a < this.globalConfigData[2].layoutOptions[0][newName].length; a++) {
                                     if (this.globalConfigData[2].layoutOptions[0][newName][a].value == DefaultParams[k][newName].split('.')[0]) {
-                                      console.log('File already exists')
+                                      //console.log('File already exists')
                                       checkdefault = true
 
                                     }
@@ -2930,11 +2930,11 @@
 
                           })
                           .catch((e) => {
-                            console.log(e)
+                            //console.log(e)
                           })
                       })
                       .catch((e) => {
-                        console.log(e)
+                        //console.log(e)
                       })
                   }
                   //now change pagesetting where ever this layout is being used.
@@ -3022,7 +3022,7 @@
                       }
                       this.saveConfigFile(folderUrl);
                     } else {
-                      console.log('File doesnt exists');
+                      //console.log('File doesnt exists');
                     }
                   } else {
                     let namefile = fileNameOrginal.split('.')[0];
@@ -3053,7 +3053,7 @@
                       }
                       this.saveConfigFile(folderUrl);
                     } else {
-                      console.log('File doesnt exists');
+                      //console.log('File doesnt exists');
                     }
                   }
                 } else if (fileName.search('.vue') != -1 && fileName.search('/Pages') == -1) {
@@ -3109,7 +3109,7 @@
                           }
                         }
                         if (checkValue == true) {
-                          console.log("File already exists")
+                          //console.log("File already exists")
                           this.saveConfigFile(folderUrl);
                         } else {
                           this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
@@ -3147,7 +3147,7 @@
                           }
                         }
                         if (checkValue == true) {
-                          console.log("File already exists")
+                          //console.log("File already exists")
                           this.saveConfigFile(folderUrl);
                         } else {
                           this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
@@ -3221,7 +3221,7 @@
                         var partials = this.globalConfigData[1].pageSettings[i].partials
                         for (let k = 0; k < result1.length; k++) {
                           let checkpartial = false
-                            // console.log("result[k]:", result[k])
+                            //// console.log("result[k]:", result[k])
                           for (var r = 0; r < partials.length; r++) {
                             if (Object.keys(partials[r])[0] == result1[k]) {
 
@@ -3263,7 +3263,7 @@
                           }
                         }
                       } else if (name != temp) {
-                        console.log("File not found in configData")
+                        //console.log("File not found in configData")
                       }
                     }
                   }
@@ -3430,7 +3430,7 @@
                 message: 'File not saved! Please try again.',
                 type: 'error'
               });
-              console.log(e)
+              //console.log(e)
             })
           this.form.checked = [];
           this.form.namearray = [];
@@ -3716,11 +3716,11 @@
 
                     })
                     .catch((e) => {
-                      console.log(e)
+                      //console.log(e)
                     })
                 })
                 .catch((e) => {
-                  console.log(e)
+                  //console.log(e)
                 })
             }
           }
@@ -3731,7 +3731,7 @@
                 type: 'file'
               })
               .catch((e) => {
-                console.log("Error while blank file creation")
+                //console.log("Error while blank file creation")
               })
           }
 
@@ -3797,7 +3797,7 @@
                   text: responsepartials,
                   type: 'file'
                 }).catch((e) => {
-                  console.log(e)
+                  //console.log(e)
                 })
               }
 
@@ -3841,7 +3841,7 @@
                         }
                       }
                       else{
-                        console.log('Error while finding ID in layout');
+                        //console.log('Error while finding ID in layout');
                       }
                     }
                   }
@@ -3863,7 +3863,7 @@
                         layoutdata.data = layoutdata.data.split(temp1).join(temp2)
                         break;
                       } else {
-                        console.log('Replacing in layout file failed')
+                        //console.log('Replacing in layout file failed')
                       }
                     }
                   }
@@ -3872,7 +3872,7 @@
 
             })
             .catch((e) => {
-              console.log(e)
+              //console.log(e)
             })
 
           let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmith.js');
@@ -3915,7 +3915,7 @@
           responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
           self.form.partials = back_partials
 
-          console.log("Final metalsmith:", responseMetal.data);
+          //console.log("Final metalsmith:", responseMetal.data);
 
           var mainMetal = folderUrl + '/public/assets/metalsmith.js'
           axios.post(config.baseURL + '/flows-dir-listing', {
@@ -3929,10 +3929,10 @@
                 foldername: newFolderName1,
                 type: 'folder'
               }).then(async (res) => {
-                console.log(res)
+                //console.log(res)
 
               }).catch((e) => {
-                console.log(e)
+                //console.log(e)
               })
 
               let vueBodyStart = '';
@@ -3943,12 +3943,12 @@
                     "<title>" + pageSeoTitle + "</title>\n" +
                     "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                    '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
+                    "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js' defer='defer' ><\/script>\n" +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
                     "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js' defer='defer'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous' defer='defer'><\/script>\n" +
                     '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
@@ -3960,13 +3960,13 @@
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                     "<link rel='stylesheet' href='./main-files/main.css'/>\n"+
-                    "<script src=\"./main-files/main.js\"><\/script>\n" +
-                    '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
+                    "<script src=\"./main-files/main.js\" defer='defer'><\/script>\n" +
+                    '<script src="./assets/client-plugins/client-cart.js" defer="defer"><\/script>\n' +
                     endhead + "\n</head>\n<body>\n" + vueBodyStart +
                     layoutdata.data + topbody +
                     '\n'+vueBodyEnd+
-                    '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
-                    '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
+                    '<script src="./assets/client-plugins/client-slider-plugin.js" defer="defer"><\/script>\n' +
+                    '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js" defer="defer"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                     '\n</div>\n<script src="./../public/assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                     endbody +
@@ -3999,7 +3999,7 @@
 
                       self.saveFileLoading = false;
                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
-                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "///Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                           axios.post(config.baseURL + '/flows-dir-listing', {
                               filename: folderUrl + '/public/assets/metalsmith.js',
@@ -4028,14 +4028,14 @@
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
                                   }).catch((e) => {
-                                    console.log(e)
+                                    //console.log(e)
                                   })
                                   if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                     for (let x = 0; x < self.form.vuepartials.length; x++) {
                                       axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
                                         })
                                         .catch((e) => {
-                                          console.log(e)
+                                          //console.log(e)
                                         })
                                     }
                                   }
@@ -4043,21 +4043,21 @@
                                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
                                       .catch((e) => {
                                         self.fullscreenLoading = false;
-                                        console.log("Error while deleting blank.layout file")
+                                        //console.log("Error while deleting blank.layout file")
                                       })
                                   }
 
                                 })
                                 .catch((e) => {
                                   self.fullscreenLoading = false;
-                                  console.log(e)
+                                  //console.log(e)
                                 })
 
                             })
                             .catch((e) => {
                               self.fullscreenLoading = false;
                               window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-                              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\n//console.log(err)\n}});"
 
                               axios.post(config.baseURL + '/flows-dir-listing', {
                                 filename: mainMetal,
@@ -4067,18 +4067,18 @@
 
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
                               }).catch((e) => {
-                                console.log(e)
+                                //console.log(e)
                               })
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                              console.log(e)
+                              //console.log(e)
                             })
 
                         })
                         .catch((err) => {
                           self.fullscreenLoading = false;
                           window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "///Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                           axios.post(config.baseURL + '/flows-dir-listing', {
                             filename: mainMetal,
@@ -4088,11 +4088,11 @@
 
                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
                           }).catch((e) => {
-                            console.log(e)
+                            //console.log(e)
                           })
                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                          console.log('Error while creating MetalSmith JS file' + err)
+                          //console.log('Error while creating MetalSmith JS file' + err)
 
                         })
 
@@ -4101,7 +4101,7 @@
                       self.fullscreenLoading = false;
                       window.open('http://' + config.ipAddress + '/plugins/public/error.html');
 
-                      var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                      var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n//{if(err){\nconsole.log(err)\n}});"
 
                       axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: mainMetal,
@@ -4111,18 +4111,18 @@
 
                       axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
                       }).catch((e) => {
-                        console.log(e)
+                        //console.log(e)
                       })
                       // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                       // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                       self.saveFileLoading = false
-                      console.log(e)
+                      //console.log(e)
                     })
                 })
                 .catch((e) => {
                   self.fullscreenLoading = false;
                   window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-                  var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                  var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\n//console.log(err)\n}});"
                   axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                   axios.post(config.baseURL + '/flows-dir-listing', {
                     filename: mainMetal,
@@ -4133,15 +4133,15 @@
                   axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
                     
                   }).catch((e) => {
-                    console.log(e)
+                    //console.log(e)
                   })
-                  console.log(e);
+                  //console.log(e);
                 })
             })
             .catch((e) => {
               self.fullscreenLoading = false;
               window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(//layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
               axios.post(config.baseURL + '/flows-dir-listing', {
                 filename: mainMetal,
@@ -4151,10 +4151,10 @@
               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
                 
               }).catch((e) => {
-                console.log(e)
+                //console.log(e)
               })
 
-              console.log('Error while creating MetalSmith JS file' + e)
+              //console.log('Error while creating MetalSmith JS file' + e)
             })
 
         }, 2000);
@@ -4202,7 +4202,7 @@
                   message: 'File not saved! Please try again.',
                   type: 'error'
               });
-              console.log(e)
+              //console.log(e)
           })
       },
 
@@ -4328,12 +4328,12 @@
 
             })
             .catch((e) => {
-              console.log(e)
+              //console.log(e)
             })
           this.componentId = 'Dashboard';
           this.isHomePage = true;
         }).catch((dismiss) => {
-          console.log('error', dismiss)
+          //console.log('error', dismiss)
         })
       },
 
@@ -4390,7 +4390,7 @@
                       delete this.globalConfigData[2].layoutOptions[0][foldername];
                       this.saveConfigFile(folderUrl);
                   } else {
-                      console.log("Folder not found in config file.")
+                      //console.log("Folder not found in config file.")
                   }
               }
 
@@ -4402,11 +4402,11 @@
 
           })
           .catch((e) => {
-            console.log(e)
+            //console.log(e)
           })
         })
         .catch((e)=>{
-          console.log(e)
+          //console.log(e)
         })
       },
 
@@ -4453,7 +4453,7 @@
                           message: 'Failed! Please try again.',
                           type: 'error'
                       });
-                      console.log(e)
+                      //console.log(e)
                   })
 
                   setTimeout(function() {
@@ -4461,19 +4461,19 @@
                   }, 500);
                 })
                 .catch((e) => {
-                  console.log(e)
+                  //console.log(e)
                 });
 
               this.currentFile = null
               this.componentId = 'Dashboard';
             })
             .catch((e) => {
-              console.log(e)
+              //console.log(e)
             })
           this.componentId = 'Dashboard';
           this.isHomePage = true;
         }).catch((dismiss) => {
-          console.log('error', dismiss)
+          //console.log('error', dismiss)
         })
       },
 

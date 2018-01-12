@@ -145,10 +145,10 @@ export default {
         //   //   type : 'folder'
         //   // })
         //   // .then((res) => {
-        //   //   console.log('user Folder created!');
+        ////   //   console.log('user Folder created!');
         //   // })
         //   // .catch((e)=>{
-        //   //   console.log("Error from pages"+res)
+        ////   //   console.log("Error from pages"+res)
         //   // });
         //   this.authen.status = true;
         //   let self = this;

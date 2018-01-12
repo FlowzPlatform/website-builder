@@ -218,16 +218,16 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
-      // console.log(this.commitsData[index].commitSHA);
+      //// console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         this.$message({
           message: 'Successfully reverted to selected commit.',
           type: 'success'
         });
       }).catch(error => {
-        console.log("Some error occured: ", error);
+        //console.log("Some error occured: ", error);
       })
     },
 
@@ -248,7 +248,7 @@ export default {
             configData: this.settings
         })
         .then(async(res) => {
-            console.log(res.data);
+            //console.log(res.data);
         })
         .catch((e) => {
             this.$message({
@@ -256,7 +256,7 @@ export default {
                 message: 'Failed! Please try again.',
                 type: 'error'
             });
-            console.log(e)
+            //console.log(e)
         });
 
       } else {
@@ -279,7 +279,7 @@ export default {
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
+        //console.log('Config file found! Updating fields..');
 
         this.settings = this.configData.data.data[0].configData;
 
@@ -313,7 +313,7 @@ export default {
         }
 
       } else {
-        console.log('Cannot get config file!');
+        //console.log('Cannot get config file!');
       } 
 
       // Get all commits list
@@ -328,7 +328,7 @@ export default {
           });
         }
       }).catch(error => {
-        console.log("Some error occured: ", error);
+        //console.log("Some error occured: ", error);
       });
       
 
@@ -460,7 +460,7 @@ export default {
 
         var rawSettings = responseConfigLoop.data.data[0].configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-        console.log('nameF:', nameF)
+        //console.log('nameF:', nameF)
         var Layout = ''
         var partialsPage = [];
         var vuepartials = [];
@@ -565,14 +565,14 @@ export default {
 
                 axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
                   .then((response) => {
-                    console.log("called webpack_file api successfully:")
+                    //console.log("called webpack_file api successfully:")
                   })
                   .catch((e) => {
-                    console.log(e)
+                    //console.log(e)
                   })
               })
               .catch((e) => {
-                console.log(e)
+                //console.log(e)
               })
 
           }
@@ -584,7 +584,7 @@ export default {
               type: 'file'
             })
             .catch((e) => {
-              console.log("error while blank file creation")
+              //console.log("error while blank file creation")
             })
         }
         layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
@@ -650,7 +650,7 @@ export default {
                 text: responsepartials,
                 type: 'file'
               }).catch((e) => {
-                console.log(e)
+                //console.log(e)
               })
             }
             let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
@@ -704,13 +704,13 @@ export default {
 
                       temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
                     }
-                    // console.log('temp1:', temp1)
-                    // console.log('temp2:', temp2)
+                    //// console.log('temp1:', temp1)
+                    //// console.log('temp2:', temp2)
                     if (layoutdata.data.split(temp1).join(temp2)) {
-                      // console.log('replacing in layout file successfully')
+                      //// console.log('replacing in layout file successfully')
                       layoutdata.data = layoutdata.data.split(temp1).join(temp2)
                     } else {
-                      // console.log('replacing in layout file failed')
+                      //// console.log('replacing in layout file failed')
                     }
                   }
                 }
@@ -720,10 +720,10 @@ export default {
 
           })
           .catch((e) => {
-            console.log(e)
+            //console.log(e)
           })
 
-        responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+        responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "///Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
         var index = responseMetal.search('.source')
 
@@ -736,15 +736,15 @@ export default {
 
           temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
 
-          // console.log('temp1:',temp1)
-          // console.log('temp2:',temp2)
+          //// console.log('temp1:',temp1)
+          //// console.log('temp2:',temp2)
           if (contentpartials.match(temp1)) {
             contentpartials = contentpartials.split(temp1).join(temp2)
           }
           var obj = {}
           var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
-          // console.log('key:',key)
-          // console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
+          //// console.log('key:',key)
+          //// console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
           obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
           partialsPage[j] = []
           partialsPage[j] = obj
@@ -765,7 +765,7 @@ export default {
         }
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-        console.log('final responseMetal:', responseMetal)
+        //console.log('final responseMetal:', responseMetal)
         var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
         await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -781,7 +781,7 @@ export default {
                 type: 'folder'
               })
               .then(async (res) => {
-                console.log(res);
+                //console.log(res);
                 let newContent = "<html>\n<head>\n" + tophead +
                 "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                 "<title>" + pageSeoTitle + "</title>\n" +
@@ -855,29 +855,29 @@ export default {
                             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               .then(async (res) => {
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                                  console.log(e)
+                                  //console.log(e)
                                 })
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
-                                  // console.log('deleted extra layout file:', res)
+                                  //// console.log('deleted extra layout file:', res)
                                 }).catch((e) => {
-                                  console.log(e)
+                                  //console.log(e)
                                 })
                                 if (vuepartials != undefined && vuepartials.length > 0) {
                                   for (let x = 0; x < vuepartials.length; x++) {
 
                                     await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                        console.log(res)
+                                        //console.log(res)
                                       })
                                       .catch((e) => {
-                                        console.log(e)
+                                        //console.log(e)
                                       })
                                   }
                                 }
-                                console.log("layout file reset")
+                                //console.log("layout file reset")
                                 if (Layout == 'Blank') {
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
                                     .catch((e) => {
-                                      console.log("error while deleting blank.layout file")
+                                      //console.log("error while deleting blank.layout file")
                                     })
                                 }
 
@@ -885,7 +885,7 @@ export default {
 
                               })
                               .catch((e) => {
-                                console.log(e)
+                                //console.log(e)
                               })
                           })
 
@@ -893,17 +893,17 @@ export default {
                       .catch((err) => {
                          this.saveFileLoading = false;
                           this.fullscreenLoading = false;
-                        console.log('error while creating metalsmithJSON file' + err)
+                        //console.log('error while creating metalsmithJSON file' + err)
                         axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: mainMetal,
                           text: responseMetal,
                           type: 'file'
                         })
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                          console.log(e)
+                          //console.log(e)
                         })
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                        console.log(e)
+                        //console.log(e)
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
                       })
                   })
@@ -917,17 +917,17 @@ export default {
                     })
                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                      console.log(e)
+                      //console.log(e)
                     })
                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                    console.log(e)
+                    //console.log(e)
                   })
 
               })
               .catch((e) => {
                  this.saveFileLoading = false;
                   this.fullscreenLoading = false;
-                console.log(e)
+                //console.log(e)
                 axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: mainMetal,
                   text: responseMetal,
@@ -935,7 +935,7 @@ export default {
                 })
                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                  console.log(e)
+                  //console.log(e)
                 })
                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
               })
@@ -944,7 +944,7 @@ export default {
           .catch((e) => {
              this.saveFileLoading = false;
               this.fullscreenLoading = false;
-            console.log('error while creating metalsmithJSON file' + e)
+            //console.log('error while creating metalsmithJSON file' + e)
             axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
               text: responseMetal,
@@ -952,7 +952,7 @@ export default {
             })
             axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
             axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-              console.log(e)
+              //console.log(e)
             })
 
           })
@@ -972,7 +972,7 @@ export default {
         //       message: 'Successfully Published.',
         //       type: 'success'
         //     });
-        //     console.log(res.data);
+        ////     console.log(res.data);
         //     this.previewLoader = false;
         //   })
         //   .catch((e) => {
@@ -981,7 +981,7 @@ export default {
         //       message: 'Failed! Please try again.',
         //       type: 'error'
         //     });
-        //     console.log(e);
+        ////     console.log(e);
         //     this.previewLoader = false;
         //   });
       }
@@ -1019,7 +1019,7 @@ export default {
     //       message: 'Successfully Published.',
     //       type: 'success'
     //     });
-    //     console.log(res.data);
+    ////     console.log(res.data);
     //     this.previewLoader = false;
     //   })
     //   .catch((e) => {
@@ -1028,7 +1028,7 @@ export default {
     //       message: 'Failed! Please try again.',
     //       type: 'error'
     //     });
-    //     console.log(e);
+    ////     console.log(e);
     //     this.previewLoader = false;
     //   });
 
@@ -1036,7 +1036,7 @@ export default {
   // },
   async mounted () {
 
-    // console.log('Folder Url: ', localStorage.getItem('folderUrl'));
+    //// console.log('Folder Url: ', localStorage.getItem('folderUrl'));
 
   	let response = await this.init();
 
