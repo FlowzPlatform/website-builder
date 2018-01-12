@@ -1,8 +1,8 @@
 // Change baseURL when going live
-// const baseURL = 'http://localhost:3032';
+const baseURL = 'http://localhost:3032';
 // const baseURL = 'http://devapi.flowz.com/serverapi';
 // const baseURL = 'http://api.flowz.com/serverapi';
-const baseURL = 'http://api.flowzcluster.tk/serverapi';
+// const baseURL = 'http://api.flowzcluster.tk/serverapi';
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;

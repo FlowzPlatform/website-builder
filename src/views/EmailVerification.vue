@@ -74,7 +74,7 @@ export default {
   methods: {
     async handleSubmit (name) {
       this.loading = true
-      console.log(this.formLogin)
+      //console.log(this.formLogin)
       var auth = await axios({
         method: 'post',
         url: config.socialUrl + '/verifyemail',
@@ -86,7 +86,7 @@ export default {
       })
       if (auth) {
 
-        console.log('Auth Reponse: ', auth);
+        //console.log('Auth Reponse: ', auth);
 
         // Store Token in Cookie
         let location = psl.parse(window.location.hostname)
