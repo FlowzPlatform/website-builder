@@ -809,6 +809,7 @@ Vue.use(VueSession);
 // import extract from 'extract-zip'
 import axios from 'axios';
 import _ from 'lodash';
+import Cookies from 'js-cookie';
 const config = require('../config');
 import fileSaver from 'file-saver';
 
@@ -1243,7 +1244,7 @@ export default {
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length-1)];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
         if(rethinkdbCheck.data.data){
 
@@ -1315,7 +1316,7 @@ export default {
       // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
       // Call Listings API and get Tree
-      await axios.get(config.baseURL + '/flows-dir-listing?website=' + this.$session.get('userDetailId') + '/' + this.repoName, {
+      await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '/' + this.repoName, {
       })
       .then(async (res) => {
         console.log(res);
@@ -1492,7 +1493,7 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
+      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
 
       configData=JSON.parse(JSON.stringify(configData.data.data[0].configData))
       // console.log('new config file:',configData);
@@ -1504,7 +1505,7 @@ export default {
            for(let p=0;p<configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length;p++){
             var namepartial=configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
             // console.log('name:',namepartial)
-             var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.$session.get('userDetailId') + '/' + this.repoName+'/Partials/'+Object.keys(configData[2].layoutOptions[0])[q]+'/'+namepartial+'.partial');
+             var contentpage=await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName+'/Partials/'+Object.keys(configData[2].layoutOptions[0])[q]+'/'+namepartial+'.partial');
              // console.log('content of partial:',contentpage.data)
              // console.log("inside !=pages directory")
                 var content=''
@@ -1964,7 +1965,7 @@ export default {
 
       this.settings[1].projectSettings = ProjectSettings;
 
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName );
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName );
 
       if(rethinkdbCheck.data.data){
         console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);
@@ -2003,7 +2004,7 @@ export default {
       this.currentSha = this.commitsData[index].commitSHA;
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'), {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(response => {
         this.saveProjectSettings();
       }).catch(error => {
@@ -2019,7 +2020,7 @@ export default {
       axios.post(config.baseURL + '/gitlab-add-repo', {
         commitMessage: this.commitMessage,
         repoName: this.repoName,
-        userDetailId: this.$session.get('userDetailId')
+        userDetailId: Cookies.get('userDetailId')
       }).then(response => {
         console.log(response);
         if(response.status == 200 || response.status == 201){
@@ -2048,7 +2049,7 @@ export default {
       await this.commitProject();
 
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
       var rawConfigs = responseConfig.data.data[0].configData;
       var partialstotal = []
       var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
@@ -2163,7 +2164,7 @@ export default {
           }
 
         var partials = ''
-        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
 
         var rawSettings = responseConfigLoop.data.data[0].configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
@@ -2699,7 +2700,7 @@ export default {
         console.log('Custom Domain')
         // Surge.sh API
         axios.post( config.baseURL + '/publish-surge', {
-            projectPath : this.$session.get('userDetailId') + '/' + this.repoName + '/public' ,
+            projectPath : Cookies.get('userDetailId') + '/' + this.repoName + '/public' ,
             domainName: this.customDomainName
         })
         .then((res) => {
@@ -2725,9 +2726,9 @@ export default {
 
         // Open in new window
         if(process.env.NODE_ENV !== 'development'){
-          window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+          window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
         } else {
-          window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
+          window.open(config.ipAddress +'/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
         }
       }
     },
@@ -2763,7 +2764,7 @@ export default {
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
-      this.userDetailId = this.$session.get('userDetailId');
+      this.userDetailId = Cookies.get('userDetailId');
 
       let splitUrl = url.split('/');
 
@@ -2772,7 +2773,7 @@ export default {
       console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + websiteName );
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
 
       if(this.configData.status == 200 || this.configData.status == 204){
 

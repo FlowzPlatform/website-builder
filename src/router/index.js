@@ -21,7 +21,8 @@ export default new Router({
     {
       path: '/user-dashboard',
       name: 'UserDashboard',
-      component: UserDashboard
+      component: UserDashboard,
+      meta: { description: 'User Dashboard', requiresAuth: true },
     },
     {
       path: '/editor',

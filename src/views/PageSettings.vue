@@ -298,7 +298,8 @@ import Vue from 'vue'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
 import draggable from 'vuedraggable'
-var daex = require('json-daex')
+var daex = require('json-daex');
+import Cookies from 'js-cookie';
 const config = require('../config');
 
 import axios from 'axios';
@@ -437,7 +438,7 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[(foldername.length - 1)];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
 
       this.AllData = [];
       // console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
@@ -496,7 +497,7 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[(foldername.length - 1)];
 
-      this.Data = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+      this.Data = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
 
       if (this.Data.status == 200 || this.Data.status == 204) {
         this.settingsData = this.Data.data.data[0].configData;
@@ -595,7 +596,7 @@ export default {
           this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
         }
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
 
         if (rethinkdbCheck.data.data) {
 
@@ -635,7 +636,7 @@ export default {
 
         this.settings[1].pageSettings.push(PageSettings);
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername);
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
 
         if (rethinkdbCheck.data.data) {
 
@@ -676,7 +677,7 @@ export default {
     let foldername = this.folderUrl.split('/');
     foldername = foldername[(foldername.length-1)];
 
-    this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+    this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
     if(this.configData.status == 200 || this.configData.status == 204){
       this.settings = this.configData.data.data[0].configData;

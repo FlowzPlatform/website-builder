@@ -179,7 +179,8 @@ import Vue from 'vue'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
 
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const config = require('../config');
 
@@ -218,7 +219,7 @@ export default {
       $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       // console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ this.$session.get('userDetailId'), {
+      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(response => {
         console.log(response.data);
         this.$message({
@@ -239,7 +240,7 @@ export default {
 
     async saveProjectSettings() {
       
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
 
       if (rethinkdbCheck.data.data) {
         // update existing data
@@ -275,7 +276,7 @@ export default {
       let foldername = folderUrl.split('/');
       foldername = foldername[(foldername.length-1)];
       
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
       if(this.configData.status == 200 || this.configData.status == 204){
         console.log('Config file found! Updating fields..');
@@ -340,7 +341,7 @@ export default {
     async publishMetalsmith() {
       this.fullscreenLoading = true;
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
       var rawConfigs = responseConfig.data.data[0].configData;
       var partialstotal = []
       var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
@@ -455,7 +456,7 @@ export default {
           }
 
         var partials = ''
-        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + this.repoName);
+        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
 
         var rawSettings = responseConfigLoop.data.data[0].configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
@@ -989,9 +990,9 @@ export default {
 
       // Open in new window
       if(process.env.NODE_ENV !== 'development'){
-        window.open('http://' + this.$session.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+        window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
       } else {
-        window.open(config.ipAddress +'/websites/' + this.$session.get('userDetailId') + '/' + this.repoName + '/public/');
+        window.open(config.ipAddress +'/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
       } 
     },
 

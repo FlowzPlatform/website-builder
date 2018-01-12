@@ -145,126 +145,127 @@ import domenu from 'domenu'
 			initMenu(){
 				// this.MenuJSON = responseConfig.data;
 
-			let montedself = this;
-			$(document).ready(function() {
-		    var $domenu            = $('#domenu-1'),
-		        domenu             = $('#domenu-1').domenu(),
-		        $outputContainer   = $('#domenu-1-output'),
-		        $jsonOutput        = $outputContainer.find('.jsonOutput'),
-		        $keepChanges       = $outputContainer.find('.keepChanges'),
-		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
+				let montedself = this;
+				$(document).ready(function() {
+				    var $domenu            = $('#domenu-1'),
+				        domenu             = $('#domenu-1').domenu(),
+				        $outputContainer   = $('#domenu-1-output'),
+				        $jsonOutput        = $outputContainer.find('.jsonOutput'),
+				        $keepChanges       = $outputContainer.find('.keepChanges'),
+				        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-		    $domenu.domenu({
-		        slideAnimationDuration: 0,
-		        allowListMerging: ['domenu-2'],
-		        select2:                {
-		          support: true,
-		          params:  {
-		            tags: true
-		          }
-		        },
-		        data: window.localStorage.getItem('domenu-1Json')
-		        // data: montedself.MenuJSON
-		      })
-		      // Example: initializing functionality of a custom button #21
-		      .onCreateItem(function(blueprint) {
-		        // We look with jQuery for our custom button we denoted with class "custom-button-example"
-		        // Note 1: blueprint holds a reference of the element which is about to be added the list
-		        var customButton = $(blueprint).find('.custom-button-example');
+				    $domenu.domenu({
+				        slideAnimationDuration: 0,
+				        allowListMerging: ['domenu-2'],
+				        select2:                {
+				          support: true,
+				          params:  {
+				            tags: true
+				          }
+				        },
+				        data: window.localStorage.getItem('domenu-1Json')
+				        // data: montedself.MenuJSON
+				      })
+				      // Example: initializing functionality of a custom button #21
+				      .onCreateItem(function(blueprint) {
+				        // We look with jQuery for our custom button we denoted with class "custom-button-example"
+				        // Note 1: blueprint holds a reference of the element which is about to be added the list
+				        var customButton = $(blueprint).find('.custom-button-example');
 
-		        // Here we define our custom functionality for the button,
-		        // we will forward the click to .dd3-content span and let
-		        // doMenu handle the rest
-		        customButton.click(function() {
-		          blueprint.find('.dd3-content span').first().click();
-		        });
-		      })
-		      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
-		      // initialize the functionality our custom button
-		      .parseJson()
-		      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
-		        $jsonOutput.val(domenu.toJson());
-		        montedself.outputJson = JSON.parse(domenu.toJson());
-		        if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1Json', domenu.toJson());
-		      })
-		      .onToJson(function() {
-		        if(window.localStorage.length) $clearLocalStorage.show();
-		      });
+				        // Here we define our custom functionality for the button,
+				        // we will forward the click to .dd3-content span and let
+				        // doMenu handle the rest
+				        customButton.click(function() {
+				          blueprint.find('.dd3-content span').first().click();
+				        });
+				      })
+				      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
+				      // initialize the functionality our custom button
+				      .parseJson()
+				      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
+				        $jsonOutput.val(domenu.toJson());
+				        montedself.outputJson = JSON.parse(domenu.toJson());
+				        if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1Json', domenu.toJson());
+				      })
+				      .onToJson(function() {
+				        if(window.localStorage.length) $clearLocalStorage.show();
+				      });
 
-		    // // Console event examples
-		    // domenu.on('*', function(a, b, c) {
-		    //     console.log('event:', '*', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onParseJson(function() {
-		    //     console.log('event: onFromJson', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onToJson(function() {
-		    //     console.log('event: onToJson', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onSaveEditBoxInput(function() {
-		    //     console.log('event: onSaveEditBoxInput', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemDrag(function() {
-		    //     console.log('event: onItemDrag', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemDrop(function() {
-		    //     console.log('event: onItemDrop', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAdded(function() {
-		    //     console.log('event: onItemAdded', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemCollapsed(function() {
-		    //     console.log('event: onItemCollapsed', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemExpanded(function() {
-		    //     console.log('event: onItemExpanded', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemRemoved(function() {
-		    //     console.log('event: onItemRemoved', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemStartEdit(function() {
-		    //     console.log('event: onItemStartEdit', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemEndEdit(function() {
-		    //     console.log('event: onItemEndEdit', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAddChildItem(function() {
-		    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAddChildItem(function() {
-		    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAddChildItem(function() {
-		    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAddChildItem(function() {
-		    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-		    //   });
+				    // // Console event examples
+				    // domenu.on('*', function(a, b, c) {
+				    //     console.log('event:', '*', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onParseJson(function() {
+				    //     console.log('event: onFromJson', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onToJson(function() {
+				    //     console.log('event: onToJson', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onSaveEditBoxInput(function() {
+				    //     console.log('event: onSaveEditBoxInput', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemDrag(function() {
+				    //     console.log('event: onItemDrag', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemDrop(function() {
+				    //     console.log('event: onItemDrop', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemAdded(function() {
+				    //     console.log('event: onItemAdded', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemCollapsed(function() {
+				    //     console.log('event: onItemCollapsed', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemExpanded(function() {
+				    //     console.log('event: onItemExpanded', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemRemoved(function() {
+				    //     console.log('event: onItemRemoved', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemStartEdit(function() {
+				    //     console.log('event: onItemStartEdit', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemEndEdit(function() {
+				    //     console.log('event: onItemEndEdit', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemAddChildItem(function() {
+				    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemAddChildItem(function() {
+				    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemAddChildItem(function() {
+				    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+				    //   })
+				    //   .onItemAddChildItem(function() {
+				    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+				    //   });
 
-		    if(window.localStorage.length) $clearLocalStorage.show();
+				    if(window.localStorage.length) $clearLocalStorage.show();
 
 
-		    $clearLocalStorage.click(function() {
-		      if(true) window.localStorage.clear();
-		      if(!window.localStorage.length) $clearLocalStorage.hide();
-		      // Part of the reset demo routine
-		      // window.location.reload();
-		      this.component.render();
-		    });
+				    $clearLocalStorage.click(function() {
+				      if(true) window.localStorage.clear();
+				      if(!window.localStorage.length) $clearLocalStorage.hide();
+				      // Part of the reset demo routine
+				      // window.location.reload();
+				      this.component.render();
+				    });
 
-		    // Init textarea
-		    $jsonOutput.val(domenu.toJson());
-		    // montedself.outputJson = JSON.parse(domenu.toJson());
-		    //montedself.outputJson = [{"abc":"test"}]
-		    //console.log(this.outputJson);
-		    $keepChanges.on('click', function() {
-		      if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
-		      if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
-		    });
+				    // Init textarea
+				    $jsonOutput.val(domenu.toJson());
+				    // montedself.outputJson = JSON.parse(domenu.toJson());
+				    //montedself.outputJson = [{"abc":"test"}]
+				    //console.log(this.outputJson);
+				    $keepChanges.on('click', function() {
+				      if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
+				      if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
+				    });
 
-		    if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
-		  });
+				    if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
+				  });
 			},
+			
 			getMenuJson: function () {
 				this.$store.state.content = $('.jsonOutput').val();
 			},
@@ -277,7 +278,7 @@ import domenu from 'domenu'
 
 				axios.get(this.apiUrl, {
 			    headers: {
-			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OTkxNDA1NTZjNzFkMTAwMWMwMjA3MjkiLCJpYXQiOjE1MTU2Nzk2MTksImV4cCI6MTUxNTY4MzI0OSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.VlpmR3tPfLudCto88ryuSYOzK6OxsV59rE9mukOJ9wk'
+			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YTU3NmVjMzhhYzU3MTAwMTEyNTc0ZTciLCJpYXQiOjE1MTU3MzI3NTMsImV4cCI6MTUxNTgxOTE4MywiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.nAIJ-zxB89CYxbL2Jz6L9-JB3FFRBdvJ8wrFsj0l4C0'
 			    }
 				})
 				.then((res) => {

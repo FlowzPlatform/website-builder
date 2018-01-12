@@ -254,6 +254,7 @@
 <script>
 
 import psl from 'psl';
+import Cookies from 'js-cookie';
 
 export default {
   name: 'UserDashboard',
@@ -278,8 +279,8 @@ export default {
       this.$session.remove('username');
       let location = psl.parse(window.location.hostname)
       location = location.domain === null ? location.input : location.domain
-      this.$cookie.delete('authUser', {domain: location});
-      this.$cookie.delete('auth_token', {domain: location});
+      
+      Cookies.remove('auth_token' ,{domain: location}) 
       this.$router.push('/login');
     }
   },
