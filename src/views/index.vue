@@ -5725,4 +5725,10 @@
 .el-tabs__new-tab {
   display: none !important;
 }
+.el-tree-node {
+  font-size: 14px !important;
+}
+.row {
+  padding: 0px !important;
+}
 </style>
