@@ -132,7 +132,7 @@
         <div class="row">
           <div class="col-md-12" align="right" style="margin-bottom: 10px;">
             <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
-              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time">Refresh</el-button> 
+              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" v-loading.fullscreen.lock="fullscreenLoading" type="warning" icon="time">Refresh</el-button> 
             </el-tooltip>
             <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
               <el-button size="small" type="primary">Click to upload</el-button>
@@ -1312,6 +1312,7 @@ export default {
 
     async refreshPlugins() {
       this.refreshPluginsLoading = true;
+       this.fullscreenLoading = true;
 
       //// console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
@@ -1803,7 +1804,7 @@ export default {
           this.saveConfigFile(this.repoName,configData);
         // }
       }
-
+       this.fullscreenLoading = false;
       window.location.reload();
     },
 
