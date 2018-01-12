@@ -88,11 +88,12 @@
 <script>
 import Vue from 'vue'
 import VueSession from 'vue-session'
-
+ 
 Vue.use(VueSession)
 
 import axios from 'axios';
 import psl from 'psl';
+import Cookies from 'js-cookie';
 
 
 
@@ -143,10 +144,7 @@ export default {
           this.$session.set('token', response.data.logintoken);
           // localStorage.setItem("auth_token", response.data.logintoken);
 
-          // Store Token in Cookie
-          let location = psl.parse(window.location.hostname)
-          location = location.domain === null ? location.input : location.domain
-          this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
+          
 
           // Set email Session
           console.log('User Details: ', response.data);
@@ -158,8 +156,15 @@ export default {
           .then(async (res) => {
             this.userDetailId = res.data.data._id;
 
-            this.$session.set('userDetailId', this.userDetailId);
+            // Store Token in Cookie
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.set('auth_token', response.data.logintoken, {domain: location});
+            Cookies.set('email', res.data.data.email, {domain: location});
+            Cookies.set('userDetailId',  this.userDetailId, {domain: location});
+            
             localStorage.setItem('userDetailId', this.userDetailId);
+            localStorage.setItem('email', res.data.data.email);
 
             await axios.post(config.baseURL+'/flows-dir-listing' , {
               foldername :'/var/www/html/websites/'+ this.userDetailId,
@@ -174,13 +179,8 @@ export default {
           .catch((e) => {
             console.log(e)
           })
-          this.$session.set('email', this.form.user);
-          localStorage.setItem('email', this.form.user);
+          
           // this.$router.push('/');
-
-          this.$session.set('privateToken', response.data.private_token);
-          this.$session.set('userId', response.data.id);
-          this.$session.set('username', response.data.username);
           this.authen.status = true;
 
           

@@ -357,6 +357,8 @@
 
   var daex = require('json-daex');
 
+  import Cookies from 'js-cookie';
+
   const config = require('../config');
   import Emitter from '../mixins/emitter';
 
@@ -563,6 +565,8 @@
     },
     mounted () {
 
+      console.log('Index Page: ', Cookies.get('email'));
+
       // Sidemenu Toggle
       $(document).ready(function() {
         var trigger = $('.hamburger'),
@@ -703,7 +707,7 @@
         // let username_session = this.$session.get('username');
         // console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
-        axios.get(config.baseURL + '/flows-dir-listing?website=' + this.$session.get('userDetailId'))
+        axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId'))
           .then(response => {
             response.data.children = this.getTreeData(response.data);
 
@@ -1272,7 +1276,7 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length - 1)];
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
         let rawConfigs = responseConfig.data.data[0].configData;
         return this.globalConfigData = rawConfigs;
       },
@@ -1283,7 +1287,7 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length-1)];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
         if(rethinkdbCheck.data.data){
 
@@ -1327,7 +1331,7 @@
             let foldername = folderUrl.split('/');
             foldername = foldername[(foldername.length - 1)];
             // this.getConfigFileData(folderUrl);
-            let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+            let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
             let rawConfigs = responseConfig.data.data[0].configData;
             let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
             let checkfilename=false
@@ -1366,7 +1370,7 @@
                 // let foldername = folderUrl.split('/');
                 // foldername = foldername[(foldername.length - 1)];
                 // // this.getConfigFileData(folderUrl);
-                // let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+                // let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
                 // let rawConfigs = responseConfig.data.data[0].configData;
                 this.globalConfigData = rawConfigs;
 
@@ -1452,7 +1456,7 @@
 
         // this.getConfigFileData(folderUrl);
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + projectName );
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
         
@@ -1750,7 +1754,7 @@
                 this.addNewProjectFolderLoading = false;
 
                 // Create repositoroty on GitLab
-                axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&userDetailId=' + this.$session.get('userDetailId'), {})
+                axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.formAddProjectFolder.projectName + '&userDetailId=' + Cookies.get('userDetailId'), {})
                   .then((response) => {
 
                     if (!(response.data.statusCode)) {
@@ -1994,7 +1998,8 @@
                               "repoSettings": [{
                                 "RepositoryId": this.newRepoId,
                                 "RepositoryName": projectRepoName,
-                                "CurrentHeadSHA": ''
+                                "CurrentHeadSHA": '',
+                                "BaseURL":newFolderName
                               }]
                             }, {
                               "projectSettings": [{
@@ -2135,7 +2140,7 @@
                               ];
 
         axios.post(config.baseURL + '/project-configuration', {
-          userEmail: this.$session.get('email'),
+          userEmail: Cookies.get('email'),
           websiteName: projectRepoName,
           configData: repoSettings,
           pluginsData: pluginSettingsData
@@ -2155,7 +2160,7 @@
         // Create project-details.json file
         let projectDetails = newFolderName + '/public/assets/project-details.json';
         let projectDetailsData = [{
-                                  "projectOwner" : this.$session.get('email'),
+                                  "projectOwner" : Cookies.get('email'),
                                   "projectName" : projectRepoName
                                   }];
         axios.post(config.baseURL + '/flows-dir-listing', {
@@ -2493,7 +2498,7 @@
             await axios.post(config.baseURL + '/gitlab-add-repo', {
               commitMessage: 'Initial Push',
               repoName: this.repoName,
-              userDetailId: this.$session.get('userDetailId')
+              userDetailId: Cookies.get('userDetailId')
             }).then(response => {
               if(response.status == 200 || response.status == 201){
                 this.fullscreenLoading = false;
@@ -2631,7 +2636,7 @@
           let folderUrl = configFileUrl.replace(fileName, '');
           let projectName = folderUrl.split('/');
           projectName = projectName[(projectName.length - 1)];
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName);
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + projectName);
           let rawConfigs = responseConfig.data.data[0].configData;
           this.globalConfigData = rawConfigs;
           axios.post(config.baseURL + '/flows-dir-listing', {
@@ -4017,7 +4022,7 @@
                               projName = projName.split('/')[2];
 
                               if(process.env.NODE_ENV !== 'development'){
-                                window.open('http://' + self.$session.get('userDetailId') + '.' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
+                                window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
                               } else {
                                 window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
                               } 
@@ -4235,7 +4240,7 @@
         let projectName = urlparts[6];
         
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + projectName );
 
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
@@ -4361,7 +4366,7 @@
 
         let projectName = urlparts[6];
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + projectName );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + projectName );
 
         let rawConfigs = responseConfig.data.data[0].configData;
         this.globalConfigData = rawConfigs;
@@ -4417,7 +4422,7 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length - 1)];
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
         let rawConfigs = responseConfig.data.data[0].configData;
         let repositoryId = rawConfigs[0].repoSettings[0].RepositoryId;
 
@@ -4437,7 +4442,7 @@
                 .then((response) => {
 
                   // delete project configuration from RethinkDB
-                  axios.delete(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername , {
+                  axios.delete(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername , {
                   })
                   .then((res) => {
                     this.$message({
@@ -4488,7 +4493,7 @@
 
       // previewWebsite () {
       //   if(process.env.NODE_ENV != 'development'){
-      //     window.open('http://' + this.$session.get('userDetailId') + '.' + projectName + '.' )
+      //     window.open('http://' + Cookies.get('userDetailId') + '.' + projectName + '.' )
       //   } else {
 
       //   }

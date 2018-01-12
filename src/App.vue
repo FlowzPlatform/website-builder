@@ -37,8 +37,8 @@
 <script>
 
 import psl from 'psl';
-
-import SiteFooter from './views/footer'
+import Cookies from 'js-cookie';
+import SiteFooter from './views/footer';
 export default {
   name: 'app',
   data () {
@@ -83,8 +83,8 @@ export default {
       this.$session.remove('username');
       let location = psl.parse(window.location.hostname)
       location = location.domain === null ? location.input : location.domain
-      this.$cookie.delete('authUser', {domain: location});
-      this.$cookie.delete('auth_token', {domain: location});
+                    
+      Cookies.remove('auth_token' ,{domain: location}) 
 
       this.isLoggedIn = false;
       this.$router.push('/login');

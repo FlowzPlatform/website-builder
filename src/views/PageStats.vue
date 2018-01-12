@@ -41,7 +41,8 @@ import Vue from 'vue'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
 
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const config = require('../config');
 
@@ -73,7 +74,7 @@ export default {
       let foldername = folderUrl.split('/');
       foldername = foldername[(foldername.length-1)];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
       if(this.configData.status == 200 || this.configData.status == 204){
         console.log('Config file found! Updating fields..');
 

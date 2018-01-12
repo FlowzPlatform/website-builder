@@ -9,6 +9,7 @@
 const beautify = require('beautify');
 import axios from 'axios';
 import _ from 'lodash';
+import Cookies from 'js-cookie';
 
 var daex = require('json-daex')
 
@@ -82,7 +83,7 @@ export default {
         // console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
         let rawConfigs = responseConfig.data.data[0].configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;

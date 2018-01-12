@@ -459,6 +459,16 @@
 </template>
 
 <script>
+    import Vue from 'vue'
+  import VueSession from 'vue-session'
+  Vue.use(VueSession)
+
+import psl from 'psl';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
+import config from '@/config';
+
 
 export default {
   name: 'Homepage',
@@ -477,10 +487,42 @@ export default {
   methods: {
     startNow () {
       this.$router.push('login');
+    },
+    init(){
+         let self = this;
+            if(Cookies.get('auth_token')){
+                axios({
+                    method: 'post',
+                    url: config.userDetail,
+                    headers: {'Authorization': Cookies.get('auth_token')}
+                })
+                .then(async function(result) {
+
+                    let location = psl.parse(window.location.hostname);
+
+                    location = location.domain === null ? location.input : location.domain;
+
+                    Cookies.set('email',  result.data.data.email  , {domain: location});
+                    Cookies.set('userDetailId',  result.data.data._id  , {domain: location});
+
+                    localStorage.setItem('userDetailId', result.data.data._id);
+                    localStorage.setItem('email', result.data.data.email);
+                    
+                    await axios.post(config.baseURL+'/flows-dir-listing' , {
+                      foldername :'/var/www/html/websites/'+ result.data.data._id,
+                      type : 'folder'
+                    })
+                    .then((res) => {
+                      self.$router.push('/editor');
+                    });
+
+                })
+
+            }
     }
   },
   mounted () {
-
+    this.init()
   }
 }
 </script>
