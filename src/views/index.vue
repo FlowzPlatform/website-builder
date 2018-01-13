@@ -10,7 +10,10 @@
         <!-- Sidebar Wrapper -->
         <nav id="sidebar-wrapper" role="navigation">
           <div class="treeViewBlock" style="transform: scaleX(-1);">
-            <el-tree style="transform: scaleX(-1);" :data="directoryTree" accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
+            <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
+              <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+            </div>
+            <el-tree style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
         </nav>
         <!-- /#sidebar-wrapper -->
@@ -537,7 +540,8 @@
         dialogFormVisible: false,
         previewLoading: false,
         dialogvalue: true,
-        buyNowDialog: false
+        buyNowDialog: false,
+        isDataLoading: true
       }
     },
     components: {
@@ -726,6 +730,7 @@
               this.directoryTree[0].children = response.data.children
             }
 
+            this.isDataLoading = false;
             this.loadingTree = false
             this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '');
 
@@ -3953,15 +3958,15 @@
                 '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"><\/script>\n' +
                 "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
                 "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js' defer='defer'><\/script>\n" +
-                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js' defer='defer'><\/script>\n" +
+                "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                 "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                "<link rel='stylesheet' href='./main-files/main.css'/>\n<script src=\"./main-files/main.js\" defer='defer'><\/script>\n" + endhead + "\n</head>\n<body>\n" + vueBodyStart +
+                "<link rel='stylesheet' href='./main-files/main.css'/>\n<script src=\"./main-files/main.js\"><\/script>\n" + endhead + "\n</head>\n<body>\n" + vueBodyStart +
                 layoutdata.data + topbody +
-                '\n'+vueBodyEnd+'<script src="./assets/client-plugins/global-variables-plugin.js" defer="defer"><\/script>\n' +
+                '\n'+vueBodyEnd+'<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                 '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                 '<script src="./assets/client-plugins/slider-plugin.js"><\/script>\n' +
-                '<script src="./assets/client-plugins/shopping-cart.js" defer="defer"><\/script>\n' +
+                '<script src="./assets/client-plugins/shopping-cart.js"><\/script>\n' +
                 '<script src="http://res.cloudinary.com/flowz/raw/upload/v1515677819/websites/js/search-plugin.js"><\/script>\n' +
                 '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                 '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
@@ -5426,6 +5431,11 @@
 
   .hamburger.is-open > .sideOpener > .fa-angle-left {
       display: table-cell;
+  }
+
+  .tree-data-spinner{
+    text-align: center;
+    margin: 15px 0px;
   }
 </style>
 <style>

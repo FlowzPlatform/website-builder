@@ -1,7 +1,7 @@
 <template>
   <div class="ProjectStats">
     <div class="page-buttons">
-      <el-button type="info" size="small" @click="publishMetalsmith" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button>
+      <el-button type="info" size="small" @click="previewWebsite" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button>
       <!-- <el-button type="success" size="small" @click="goToProjectSettings">Project Settings</el-button> -->
     </div>
   	<div class="container-fluid">
@@ -236,6 +236,16 @@ export default {
         return 'positive-row';
       }
       return '';
+    },
+
+    previewWebsite(){
+      // Open in new window
+      if(process.env.NODE_ENV !== 'development'){
+        window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
+      } else {
+        window.open(config.ipAddress +'/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
+      } 
+      // window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + this.ipAddress + '/');
     },
 
     async saveProjectSettings() {

@@ -70,7 +70,7 @@ export default {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  background-image: url(http://katiepellegrinphotography.com/wp-content/uploads/2013/09/clean-white-polygon-backgrounds-7.jpg);
+  background-image: url(../../static/img/bg.jpg);
   background-position: center center;
   background-size: cover;
   font-family: "Lato", Arial;
