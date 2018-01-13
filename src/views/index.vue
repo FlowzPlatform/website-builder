@@ -10,7 +10,10 @@
         <!-- Sidebar Wrapper -->
         <nav id="sidebar-wrapper" role="navigation">
           <div class="treeViewBlock" style="transform: scaleX(-1);">
-            <el-tree style="transform: scaleX(-1);" :data="directoryTree" accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
+            <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
+              <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+            </div>
+            <el-tree style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
         </nav>
         <!-- /#sidebar-wrapper -->
@@ -537,7 +540,8 @@
         dialogFormVisible: false,
         previewLoading: false,
         dialogvalue: true,
-        buyNowDialog: false
+        buyNowDialog: false,
+        isDataLoading: true
       }
     },
     components: {
@@ -726,6 +730,7 @@
               this.directoryTree[0].children = response.data.children
             }
 
+            this.isDataLoading = false;
             this.loadingTree = false
             this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '');
 
@@ -5422,6 +5427,11 @@
 
   .hamburger.is-open > .sideOpener > .fa-angle-left {
       display: table-cell;
+  }
+
+  .tree-data-spinner{
+    text-align: center;
+    margin: 15px 0px;
   }
 </style>
 <style>
