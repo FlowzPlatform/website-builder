@@ -734,7 +734,7 @@
             this.loadingTree = false;
             this.$message({
               showClose: true,
-              message: 'Some error while getting tree data',
+              message: 'Some internal error occured. Please try again later.',
               type: 'error'
             });
             console.log(e);

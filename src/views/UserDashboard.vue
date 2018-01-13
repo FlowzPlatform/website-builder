@@ -280,7 +280,10 @@ export default {
       let location = psl.parse(window.location.hostname)
       location = location.domain === null ? location.input : location.domain
       
-      Cookies.remove('auth_token' ,{domain: location}) 
+      Cookies.remove('auth_token' ,{domain: location});
+      Cookies.remove('email' ,{domain: location});
+      Cookies.remove('userDetailId' ,{domain: location}); 
+       
       this.$router.push('/login');
     }
   },
