@@ -128,7 +128,7 @@ import domenu from 'domenu'
 
 			try {
 			    let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json');
-				// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
+				//// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
 					window.localStorage.setItem('domenu-1Json', responseConfig.data);
 				}
@@ -193,52 +193,52 @@ import domenu from 'domenu'
 
 				    // // Console event examples
 				    // domenu.on('*', function(a, b, c) {
-				    //     console.log('event:', '*', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event:', '*', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onParseJson(function() {
-				    //     console.log('event: onFromJson', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onFromJson', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onToJson(function() {
-				    //     console.log('event: onToJson', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onToJson', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onSaveEditBoxInput(function() {
-				    //     console.log('event: onSaveEditBoxInput', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onSaveEditBoxInput', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemDrag(function() {
-				    //     console.log('event: onItemDrag', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemDrag', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemDrop(function() {
-				    //     console.log('event: onItemDrop', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemDrop', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemAdded(function() {
-				    //     console.log('event: onItemAdded', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemAdded', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemCollapsed(function() {
-				    //     console.log('event: onItemCollapsed', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemCollapsed', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemExpanded(function() {
-				    //     console.log('event: onItemExpanded', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemExpanded', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemRemoved(function() {
-				    //     console.log('event: onItemRemoved', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemRemoved', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemStartEdit(function() {
-				    //     console.log('event: onItemStartEdit', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemStartEdit', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemEndEdit(function() {
-				    //     console.log('event: onItemEndEdit', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemEndEdit', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemAddChildItem(function() {
-				    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemAddChildItem(function() {
-				    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemAddChildItem(function() {
-				    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
 				    //   })
 				    //   .onItemAddChildItem(function() {
-				    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+				    ////     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
 				    //   });
 
 				    if(window.localStorage.length) $clearLocalStorage.show();
@@ -256,7 +256,7 @@ import domenu from 'domenu'
 				    $jsonOutput.val(domenu.toJson());
 				    // montedself.outputJson = JSON.parse(domenu.toJson());
 				    //montedself.outputJson = [{"abc":"test"}]
-				    //console.log(this.outputJson);
+				    ////console.log(this.outputJson);
 				    $keepChanges.on('click', function() {
 				      if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
 				      if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
@@ -274,7 +274,7 @@ import domenu from 'domenu'
 
 				window.localStorage.removeItem('domenu-1Json');
 
-				console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'))
+				//console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'))
 
 				axios.get(this.apiUrl, {
 			    headers: {
@@ -311,7 +311,7 @@ import domenu from 'domenu'
 				        message: 'Failed! Please try again.',
 				        type: 'error'
 				    });
-				    console.log(e)
+				    //console.log(e)
 				})
 			}
 		}
