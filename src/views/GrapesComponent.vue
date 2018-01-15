@@ -78,7 +78,8 @@ export default {
         var folderUrl = configFileUrl.replace(fileName, '');
 
         let foldername = folderUrl.split('/');
-        foldername = foldername[(foldername.length -1)];
+        foldername = foldername[6];
+        // foldername = foldername[(foldername.length -1)];
 
         // console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
@@ -93,8 +94,6 @@ export default {
           'PageName': fileNameOrginal
         });
 
-        console.log('Page index out side;', pageIndex);
-
         // Fetch for existing cssImports
         let fileData = this.$store.state.content;
         let htmlObject = $('<div/>').append(fileData);
@@ -103,7 +102,6 @@ export default {
         let cssUrlString = '';
 
         if(pageIndex !== null){
-            console.log(pageIndex)
             this.pageCss = rawConfigs[1].pageSettings[pageIndex].PageCss;
 
             for (let i=0;  i<this.pageCss.length; i++) {
@@ -114,7 +112,6 @@ export default {
         } else {
             cssUrlString = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/flowz_blocks.css" type="text/css">';
         }
-        console.log('String ', cssUrlString);
         // let cssUrlLinks = '';
         // for(let i = 0; i < this.pageCss.length; i++){
         //     console.log(this.pageCss[i]);

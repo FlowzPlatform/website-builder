@@ -1242,7 +1242,7 @@ export default {
     async saveConfigFile(folderUrl,configData){
 
         let foldername = folderUrl.split('/');
-        foldername = foldername[(foldername.length-1)];
+        foldername = foldername[6];
 
         let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
@@ -2765,10 +2765,9 @@ export default {
       this.userDetailId = Cookies.get('userDetailId');
 
       let splitUrl = url.split('/');
+      let websiteName = splitUrl[6];
+      // let websiteName = splitUrl[(splitUrl.length -1)];
 
-      let websiteName = splitUrl[(splitUrl.length -1)];
-
-      console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );

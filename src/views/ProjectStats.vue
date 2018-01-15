@@ -284,12 +284,11 @@ export default {
       localStorage.setItem('folderUrl', folderUrl);
 
       let foldername = folderUrl.split('/');
-      foldername = foldername[(foldername.length-1)];
+      foldername = foldername[6];
       
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
 
         this.settings = this.configData.data.data[0].configData;
 
