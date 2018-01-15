@@ -1,5 +1,4 @@
 domainkey = process.env.domainkey;
-console.log('Domain Key: ', domainkey);
 
 if(process.env.baseURL == undefined){
     url = 'http://api.'+domainkey+'/serverapi'

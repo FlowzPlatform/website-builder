@@ -675,7 +675,7 @@ export default {
     this.folderUrl = url.replace(fileName, '');
 
     let foldername = this.folderUrl.split('/');
-    foldername = foldername[(foldername.length-1)];
+    foldername = foldername[6];
 
     this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
