@@ -26,7 +26,7 @@
     methods: {
       onJsonChange (value) {
           this.$store.state.content = value
-        // console.log('value:', value)
+        //// console.log('value:', value)
       }
     }
   }

@@ -188,7 +188,7 @@ export default {
             
           })
           .catch((e) => {
-            console.log(e)
+            //console.log(e)
           })
           
           // this.$router.push('/');
@@ -208,7 +208,7 @@ export default {
           //       //   type : 'folder'
           //       // })
           //       // .then((res) => {
-          //       //   console.log('user Folder created!');
+          ////       //   console.log('user Folder created!');
           //       // })
 
           //       let self = this;
@@ -218,7 +218,7 @@ export default {
                 
           //   }
           // }).catch(error => {
-          //   console.log(error);
+          ////   console.log(error);
           //   this.authen.status = false;
           //   // this.$notify.error({
           //   //   title: 'Error',
@@ -240,27 +240,27 @@ export default {
     },
 
     doFacebookLogin () {
-      console.log('Facebook Login');
+      //console.log('Facebook Login');
       document.getElementById('form-facebook').submit();
     },
 
     doGooglePlusLogin () {
-      console.log('Google Login');
+      //console.log('Google Login');
       document.getElementById('form-google').submit();
     },
 
     doTwitterLogin () {
-      console.log('Twitter Login');
+      //console.log('Twitter Login');
       document.getElementById('form-twitter').submit();
     },
 
     doGithubLogin () {
-      console.log('Github Login');
+      //console.log('Github Login');
       document.getElementById('form-github').submit();
     },
 
     doLinkedInLogin () {
-      console.log('LinkedIn Login');
+      //console.log('LinkedIn Login');
       document.getElementById('form-linkedIn').submit();
     },
 

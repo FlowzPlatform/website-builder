@@ -74,7 +74,7 @@ export default {
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
+        //console.log('Config file found! Updating fields..');
 
         this.settings = this.configData.data.data[0].configData;
 
@@ -96,7 +96,7 @@ export default {
         }
 
       } else {
-        console.log('Cannot get config file!');
+        //console.log('Cannot get config file!');
       } 
   	}
   },

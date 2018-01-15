@@ -383,13 +383,13 @@ export default {
     handleCheckAllChange(event) {
       this.checkedCss = event.target.checked ? cssOptions : [];
       this.isIndeterminate = false;
-      console.log('Checked items:', this.checkedCss);
+      //console.log('Checked items:', this.checkedCss);
     },
     handleCheckedCssChange(value) {
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.csses.length;
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.csses.length;
-      console.log('Checked items:', this.checkedCss);
+      //console.log('Checked items:', this.checkedCss);
     },
 
     addNewexternallinkJS() {
@@ -441,7 +441,7 @@ export default {
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
 
       this.AllData = [];
-      // console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
+      //// console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
       if (this.configData.status == 200 || this.configData.status == 204) {
 
         this.settings = this.configData.data.data[0].configData;
@@ -481,7 +481,7 @@ export default {
               change = false;
             }
           } else {
-            console.log("Partials not found in config file.")
+            //console.log("Partials not found in config file.")
           }
         }
       }
@@ -507,7 +507,7 @@ export default {
         this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout;
 
       } else {
-        console.log('Cannot get config file!');
+        //console.log('Cannot get config file!');
       }
       for (var i = 0; i < this.form.secondlayouts.length; i++) {
         if (this.form.secondlayouts[i].label === this.form.Layout) {
@@ -573,7 +573,7 @@ export default {
 
             if (this.form.parent_id[temp] != undefined) {
 
-              // console.log("no value defined, hence DEFAULT set:")
+              //// console.log("no value defined, hence DEFAULT set:")
               obj[temp] = this.form.parent_id[temp].value;
               change = false;
             } else {
@@ -605,7 +605,7 @@ export default {
               configData: this.settings
             })
             .then(async(res) => {
-              console.log(res.data);
+              //console.log(res.data);
             })
             .catch((e) => {
               this.$message({
@@ -613,7 +613,7 @@ export default {
                 message: 'Failed! Please try again.',
                 type: 'error'
               });
-              console.log(e)
+              //console.log(e)
             });
 
         } else {
@@ -645,7 +645,7 @@ export default {
               configData: this.settings
             })
             .then(async(res) => {
-              console.log(res.data);
+              //console.log(res.data);
             })
             .catch((e) => {
               this.$message({
@@ -653,7 +653,7 @@ export default {
                 message: 'Failed! Please try again.',
                 type: 'error'
               });
-              console.log(e)
+              //console.log(e)
             });
 
         } else {
@@ -695,7 +695,7 @@ export default {
       }
 
       if('PageLayout' in this.settings[1].pageSettings[this.currentFileIndex]){
-        console.log('Layout Found in config', this.settings[1].pageSettings[this.currentFileIndex].PageLayout)
+        //console.log('Layout Found in config', this.settings[1].pageSettings[this.currentFileIndex].PageLayout)
         this.form.Layout = this.settings[1].pageSettings[this.currentFileIndex].PageLayout;
         this.form.extrapartial= this.settings[1].pageSettings[this.currentFileIndex].partials;
       } else {
@@ -752,7 +752,7 @@ export default {
       }
 
       this.AllData = [];
-      // console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
+      //// console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
       if (this.configData.status == 200 || this.configData.status == 204) {
 
         this.settings = this.configData.data.data[0].configData;
@@ -786,18 +786,18 @@ export default {
             }
             if (change != true) {
               this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-              console.log("this.AllData["+i+"]:",this.AllData[i])
+              //console.log("this.AllData["+i+"]:",this.AllData[i])
               if (this.AllData[i].length === 1) {
-                console.log('only one element')
+                //console.log('only one element')
                 this.form.parent_id[nameP] = this.AllData[i][0]
               }
               else{
                 for(let j=0;j<this.AllData[i].length;j++){
-                  console.log('Object.keys(this.AllData[i][j]):',this.AllData[i][j].value)
+                  //console.log('Object.keys(this.AllData[i][j]):',this.AllData[i][j].value)
                   for(let k=0;k<this.form.extrapartial.length;k++){
                     if(Object.keys(this.form.extrapartial[k])==nameP){
                       if(this.form.extrapartial[k][Object.keys(this.form.extrapartial[k])]==this.AllData[i][j].value){
-                        console.log("inside")
+                        //console.log("inside")
                         this.form.parent_id[nameP]=this.AllData[i][j]
                         break;
                       }
@@ -808,13 +808,13 @@ export default {
               change = false;
             }
           } else {
-            console.log("Partials not found in config file.")
+            //console.log("Partials not found in config file.")
           }
         }
       }
 
     } else {
-      console.log('Cannot get config file!');
+      //console.log('Cannot get config file!');
     }      
   },
   mounted () {
