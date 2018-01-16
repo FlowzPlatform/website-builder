@@ -77,7 +77,7 @@
               $(".gm-edit-mode").click().click();
             },
             getSavedHtml: async function(){
-              console.log('from GridManager')
+              //console.log('from GridManager')
               let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
               });
               this.$store.state.content = response.data
