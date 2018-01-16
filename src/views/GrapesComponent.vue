@@ -9,6 +9,7 @@
 const beautify = require('beautify');
 import axios from 'axios';
 import _ from 'lodash';
+import Cookies from 'js-cookie';
 
 var daex = require('json-daex')
 
@@ -79,10 +80,10 @@ export default {
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length -1)];
 
-        // console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
+        //// console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
         let rawConfigs = responseConfig.data.data[0].configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
@@ -92,7 +93,7 @@ export default {
           'PageName': fileNameOrginal
         });
 
-        console.log('Page index out side;', pageIndex);
+        //console.log('Page index out side;', pageIndex);
 
         // Fetch for existing cssImports
         let fileData = this.$store.state.content;
@@ -102,7 +103,7 @@ export default {
         let cssUrlString = '';
 
         if(pageIndex !== null){
-            console.log(pageIndex)
+            //console.log(pageIndex)
             this.pageCss = rawConfigs[1].pageSettings[pageIndex].PageCss;
 
             for (let i=0;  i<this.pageCss.length; i++) {
@@ -113,15 +114,15 @@ export default {
         } else {
             cssUrlString = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"><link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/flowz_blocks.css" type="text/css">';
         }
-        console.log('String ', cssUrlString);
+        //console.log('String ', cssUrlString);
         // let cssUrlLinks = '';
         // for(let i = 0; i < this.pageCss.length; i++){
-        //     console.log(this.pageCss[i]);
+        ////     console.log(this.pageCss[i]);
         //     for(let j = 0; j < cssUrls.length; j++){
         //         if(this.pageCss[i] == Object.keys(this.cssUrls[j])){
-        //             console.log('Match!', Object.keys(this.cssUrls[j]));
+        ////             console.log('Match!', Object.keys(this.cssUrls[j]));
         //         } else {
-        //             console.log('Not Match!', Object.keys(this.cssUrls[j]));
+        ////             console.log('Not Match!', Object.keys(this.cssUrls[j]));
         //         }
         //     }
         // }
@@ -129,7 +130,7 @@ export default {
         // Clear root element if already stored in file
         // let allContents = this.$store.state.content;
         // let fileContents = allContents.substr(allContents.search(':root{'), allContents.search('.'));
-        // console.log('File Sub Contents:', fileContents);
+        //// console.log('File Sub Contents:', fileContents);
 
         // Set CSS variable colors
         let variableCss = ':root{\n';
@@ -443,7 +444,7 @@ export default {
         
         // $('.gjs-frame').contents().find('body [id="brandLogo"]').attr('src', this.imageBlob);
 
-        // console.log('Global Variables length:', this.globalVariables.length);
+        //// console.log('Global Variables length:', this.globalVariables.length);
 
         for (var i = 0; i < this.globalVariables.length; i++){
 
@@ -465,18 +466,18 @@ export default {
                         
                         // Get all local images
                         if(this.globalVariables[i].isImageUrl == true){
-                            console.log('Image is URL link.');
+                            //console.log('Image is URL link.');
                             $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', _varValue);
                         } else {
                             let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + _varValue, {
                             })
                             .then((res) => {
                                 // If image is present in assets folder
-                                console.log('Image found in /assets folder.');
+                                //console.log('Image found in /assets folder.');
                                 $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', res.data);
                             })
                             .catch((e) => {
-                                console.log(e);
+                                //console.log(e);
                             }) 
                         }
                       
@@ -497,7 +498,7 @@ export default {
                     break;
 
                 default:
-                    console.log('No Variables Found'); 
+                    //console.log('No Variables Found'); 
             }
 
         }

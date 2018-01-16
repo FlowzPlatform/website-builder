@@ -88,11 +88,12 @@
 <script>
 import Vue from 'vue'
 import VueSession from 'vue-session'
-
+ 
 Vue.use(VueSession)
 
 import axios from 'axios';
 import psl from 'psl';
+import Cookies from 'js-cookie';
 
 
 
@@ -128,7 +129,7 @@ export default {
   },
   methods: {
     authenticate () {
-      console.log('Authenticating User');
+      //console.log('Authenticating User');
 
       axios.post(config.loginUrl, {
         password: this.form.pass,
@@ -143,13 +144,10 @@ export default {
           this.$session.set('token', response.data.logintoken);
           // localStorage.setItem("auth_token", response.data.logintoken);
 
-          // Store Token in Cookie
-          let location = psl.parse(window.location.hostname)
-          location = location.domain === null ? location.input : location.domain
-          this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
+          
 
           // Set email Session
-          console.log('User Details: ', response.data);
+          //console.log('User Details: ', response.data);
           axios.get(config.userDetail, {
             headers: {
               'Authorization' : response.data.logintoken
@@ -158,8 +156,15 @@ export default {
           .then(async (res) => {
             this.userDetailId = res.data.data._id;
 
-            this.$session.set('userDetailId', this.userDetailId);
+            // Store Token in Cookie
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.set('auth_token', response.data.logintoken, {domain: location});
+            Cookies.set('email', res.data.data.email, {domain: location});
+            Cookies.set('userDetailId',  this.userDetailId, {domain: location});
+            
             localStorage.setItem('userDetailId', this.userDetailId);
+            localStorage.setItem('email', res.data.data.email);
 
             await axios.post(config.baseURL+'/flows-dir-listing' , {
               foldername :'/var/www/html/websites/'+ this.userDetailId,
@@ -167,20 +172,15 @@ export default {
             })
             .then((res) => {
               this.$router.push('/editor');
-              console.log('user Folder created!');
+              //console.log('user Folder created!');
             });
             
           })
           .catch((e) => {
-            console.log(e)
+            //console.log(e)
           })
-          this.$session.set('email', this.form.user);
-          localStorage.setItem('email', this.form.user);
+          
           // this.$router.push('/');
-
-          this.$session.set('privateToken', response.data.private_token);
-          this.$session.set('userId', response.data.id);
-          this.$session.set('username', response.data.username);
           this.authen.status = true;
 
           
@@ -197,7 +197,7 @@ export default {
           //       //   type : 'folder'
           //       // })
           //       // .then((res) => {
-          //       //   console.log('user Folder created!');
+          ////       //   console.log('user Folder created!');
           //       // })
 
           //       let self = this;
@@ -207,7 +207,7 @@ export default {
                 
           //   }
           // }).catch(error => {
-          //   console.log(error);
+          ////   console.log(error);
           //   this.authen.status = false;
           //   // this.$notify.error({
           //   //   title: 'Error',
@@ -228,27 +228,27 @@ export default {
     },
 
     doFacebookLogin () {
-      console.log('Facebook Login');
+      //console.log('Facebook Login');
       document.getElementById('form-facebook').submit();
     },
 
     doGooglePlusLogin () {
-      console.log('Google Login');
+      //console.log('Google Login');
       document.getElementById('form-google').submit();
     },
 
     doTwitterLogin () {
-      console.log('Twitter Login');
+      //console.log('Twitter Login');
       document.getElementById('form-twitter').submit();
     },
 
     doGithubLogin () {
-      console.log('Github Login');
+      //console.log('Github Login');
       document.getElementById('form-github').submit();
     },
 
     doLinkedInLogin () {
-      console.log('LinkedIn Login');
+      //console.log('LinkedIn Login');
       document.getElementById('form-linkedIn').submit();
     },
 
