@@ -7,9 +7,6 @@
         <el-tab-pane label="Default Domain" name="first">
           Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
           <br>
-          <br>
-          <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
-          <br>
           <div align="right" style="margin-top: 15px;">
             <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
           </div>
@@ -1245,7 +1242,7 @@ export default {
     async saveConfigFile(folderUrl,configData){
 
         let foldername = folderUrl.split('/');
-        foldername = foldername[6];
+        foldername = foldername[(foldername.length-1)];
 
         let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
@@ -2301,7 +2298,9 @@ export default {
         }
         layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
         var responseMetal = '';
-        var backupMetalSmith = '';
+
+        let backupMetalSmith = '';
+
         let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
         contentpartials = contentpartials.data
         var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
@@ -2485,7 +2484,7 @@ export default {
         var value = true;
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename: mainMetal,
-            text: responseMetal,
+            text: backupMetalSmith,
             type: 'file'
           }).then(async (response) => {
             let vueBodyStart = '';
@@ -2774,9 +2773,10 @@ export default {
       this.userDetailId = Cookies.get('userDetailId');
 
       let splitUrl = url.split('/');
-      let websiteName = splitUrl[6];
-      // let websiteName = splitUrl[(splitUrl.length -1)];
 
+      let websiteName = splitUrl[(splitUrl.length -1)];
+
+      //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );

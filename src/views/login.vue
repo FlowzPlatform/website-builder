@@ -129,6 +129,7 @@ export default {
   },
   methods: {
     authenticate () {
+      //console.log('Authenticating User');
 
       axios.post(config.loginUrl, {
         password: this.form.pass,
@@ -146,6 +147,7 @@ export default {
           
 
           // Set email Session
+          //console.log('User Details: ', response.data);
           axios.get(config.userDetail, {
             headers: {
               'Authorization' : response.data.logintoken
@@ -153,8 +155,6 @@ export default {
           })
           .then(async (res) => {
             this.userDetailId = res.data.data._id;
-
-            this.authen.status = true;
 
             // Store Token in Cookie
             let location = psl.parse(window.location.hostname)
@@ -174,6 +174,7 @@ export default {
             })
             .then((res) => {
               this.$router.push('/editor');
+              //console.log('user Folder created!');
             });
             
           })
@@ -182,7 +183,7 @@ export default {
           })
           
           // this.$router.push('/');
-          
+          this.authen.status = true;
 
           
           // await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
@@ -220,6 +221,7 @@ export default {
         
       }).catch(error => {
         this.authen.status = false;
+
         let self = this;
         setTimeout(function(){
           $(".authent").fadeOut();
@@ -232,6 +234,7 @@ export default {
         }, 2000);
 
         console.log('Error: ', error);
+
         // this.$notify.error({
         //   title: 'Error',
         //   message: error.response.data,
@@ -302,6 +305,20 @@ export default {
                 $('.login').removeClass('test')
                 $('.login div').fadeOut(123);
               },2800);
+              setTimeout(function(){
+                if(self.authen.status == true){
+                  $('.success').fadeIn();  
+                } else {
+                  $(".authent").fadeOut();
+                  $('.login div').fadeIn();
+                  self.$message({
+                      showClose: true,
+                      message: 'Username Password did not matched..',
+                      type: 'error'
+                  });
+                }
+                
+              },3200);
             } else {
               self.$message({
                   showClose: true,

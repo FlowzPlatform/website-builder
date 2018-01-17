@@ -72,7 +72,7 @@ export default {
       let folderUrl = configFileUrl.replace(fileName, '');
 
       let foldername = folderUrl.split('/');
-      foldername = foldername[6];
+      foldername = foldername[(foldername.length-1)];
 
       this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
       if(this.configData.status == 200 || this.configData.status == 204){
