@@ -27,13 +27,16 @@
 		  			<div class="dd" id="domenu-1">
 					    <button id="domenu-add-item-btn" class="dd-new-item">+</button>
 					    <!-- .dd-item-blueprint is a template for all .dd-item's -->
+
 					    <li class="dd-item-blueprint">
+
 					      <!-- @migrating-from 0.48.59 button container -->
 					      <button class="collapse" data-action="collapse" type="button" style="display: none;">–</button>
 					      <button class="expand" data-action="expand" type="button" style="display: none;">+</button>
 					      <div class="dd-handle dd3-handle">Drag</div>
 					      <div class="dd3-content">
 					        <span class="item-name">[item_name]</span>
+					      	<!-- <span><input type="checkbox" name="" /></span> -->
 					        <!-- @migrating-from 0.13.29 button container-->
 					        <!-- .dd-button-container will hide once an item enters the edit mode -->
 					        <div class="dd-button-container">
@@ -278,7 +281,7 @@ import domenu from 'domenu'
 
 				axios.get(this.apiUrl, {
 			    headers: {
-			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YTU3NmVjMzhhYzU3MTAwMTEyNTc0ZTciLCJpYXQiOjE1MTU3MzI3NTMsImV4cCI6MTUxNTgxOTE4MywiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.nAIJ-zxB89CYxbL2Jz6L9-JB3FFRBdvJ8wrFsj0l4C0'
+			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YTU3NmVjMzhhYzU3MTAwMTEyNTc0ZTciLCJpYXQiOjE1MTYwOTczMDQsImV4cCI6MTUxODY4OTMzNCwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.4lvV3Zv1zyd_vXAXURzGvUhUS8D_fOL3N9fJVxq_KDo'
 			    }
 				})
 				.then((res) => {

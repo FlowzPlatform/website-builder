@@ -13,7 +13,7 @@
             <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
               <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
             </div>
-            <el-tree style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
+            <el-tree v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
         </nav>
         <!-- /#sidebar-wrapper -->
@@ -541,7 +541,8 @@
         previewLoading: false,
         dialogvalue: true,
         buyNowDialog: false,
-        isDataLoading: true
+        isDataLoading: true,
+        isTreeVisible: true
       }
     },
     components: {
@@ -614,24 +615,28 @@
       app.service("flows-dir-listing").on("created", (response) => {
           response.path = response.path.replace(/\//g, "\\")
           var s = response.path.replace(this.rootpath, '').split('\\');
-          let objCopy = self.directoryTree
-          let evalStr = 'self.directoryTree'
-          let $eval = eval(evalStr)
-          for (var i = 0; i < s.length; i++) {
-              let inx = _.findIndex($eval, function(d) {
-                  return d.name == s[i]
-              })
-              if (inx >= 0 && $eval[inx]["children"] != undefined) {
-                  evalStr += '[' + inx + ']["children"]'
-                  $eval = eval(evalStr)
-              }
+
+          if(s[5] == Cookies.get('userDetailId')){
+            let objCopy = self.directoryTree
+            let evalStr = 'self.directoryTree'
+            let $eval = eval(evalStr)
+            for (var i = 0; i < s.length; i++) {
+                let inx = _.findIndex($eval, function(d) {
+                    return d.name == s[i]
+                })
+                if (inx >= 0 && $eval[inx]["children"] != undefined) {
+                    evalStr += '[' + inx + ']["children"]'
+                    $eval = eval(evalStr)
+                }
+            }
+            let inx = _.findIndex($eval, function(d) {
+                return d.name == response.name
+            })
+            if (inx < 0) {
+                $eval.push(response)
+            }
           }
-          let inx = _.findIndex($eval, function(d) {
-              return d.name == response.name
-          })
-          if (inx < 0) {
-              $eval.push(response)
-          }
+          
       })
       app.service("flows-dir-listing").on("removed", (response) => {
           if (response['errno'] == undefined) {
@@ -696,8 +701,51 @@
 
       // Route to GrapesEditor page from code view
       goToGrapesEditor: function(){
+        this.saveFile('void')
         this.componentId = 'GrapesComponent';
         this.isPageCodeEditor = false;
+        this.display = false;
+        let url = this.$store.state.fileUrl;
+        let compId = this.componentId;
+        let newTabName = ++this.tabIndex + '';
+        let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+        let editableTabValue = this.editableTabsValue
+        let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
+        function checkIfExist(filepath,array) {  // The last one is array
+          console.log("checkIfExist is called")
+            var found = array.some(function (el) {
+              return el.filepath == url;
+            });
+            if (!found)
+            {
+              let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+              array = removedArray  ;
+              editableTabValue = newTabName;
+                array.push({
+                  title: tab_file_name,
+                  name: newTabName,
+                  content: newTabName,
+                  componentId : compId,
+                  filepath : url
+                });
+
+            }else{
+              let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+              array = removedArray  ;
+              editableTabValue = newTabName;
+              array.push({
+                  title: tab_file_name,
+                  name: newTabName,
+                  content: newTabName,
+                  componentId : compId,
+                  filepath : url
+                });
+            }
+            return array
+        }
+        this.editableTabs =  selectedPagePositionFirstArray ;
+        this.editableTabs.reverse();
+        this.editableTabsValue = newTabName;
       },
       
       // If clicked the root folder
@@ -731,15 +779,18 @@
             }
 
             this.isDataLoading = false;
-            this.loadingTree = false
+            this.loadingTree = false;
+            // this.isTreeVisible = false;
             this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '');
 
           })
           .catch(e => {
             this.loadingTree = false;
+            this.isDataLoading = false;
+            this.isTreeVisible = false;
             this.$message({
               showClose: true,
-              message: 'Some internal error occured. Please try again later.',
+              message: 'Services unreachable. Please try again later.',
               type: 'error'
             });
             //console.log(e);
@@ -1142,6 +1193,9 @@
                 var parentFolderName = pathParts[pathParts.length - 2];
                 if (parentFolderName == 'Pages') {
                   this.isPageCodeEditor = true;
+                  let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl, {
+                  });
+                  this.$store.state.content = response.data
                 } else {
                   this.isPageCodeEditor = false;
                 }
@@ -2357,29 +2411,6 @@
         });
 
 
-	// Carousel Slider Plugin
-      let sliderPlugin = newFolderName + '/assets/client-plugins/client-slider-plugin.js';
-      axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/client-slider-plugin.js', {
-
-      })
-      .then((res) => {
-        let sliderPluginData = res.data;
-        axios.post(config.baseURL + '/flows-dir-listing', {
-            filename : sliderPlugin,
-            text : sliderPluginData,
-            type : 'file'
-        })
-        .then((res) => {
-        })
-        .catch((e) => {
-            //console.log(e)
-        })
-      })
-      .catch((e) => {
-          //console.log(e)
-      })
-
-
         // Create default menu file
         let menu = newFolderName + '/Partials/Menu/default.menu'
         axios.post(config.baseURL + '/flows-dir-listing', {
@@ -2502,7 +2533,7 @@
             // Push repository changes
             await axios.post(config.baseURL + '/gitlab-add-repo', {
               commitMessage: 'Initial Push',
-              repoName: this.repoName,
+              repoName: projectRepoName,
               userDetailId: Cookies.get('userDetailId')
             }).then(response => {
               if(response.status == 200 || response.status == 201){
@@ -3920,7 +3951,7 @@
           responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
           self.form.partials = back_partials
 
-          //console.log("Final metalsmith:", responseMetal.data);
+          console.log("Final metalsmith:", responseMetal.data);
 
           var mainMetal = folderUrl + '/public/assets/metalsmith.js'
           axios.post(config.baseURL + '/flows-dir-listing', {
@@ -3973,7 +4004,7 @@
                     '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                    '\n</div>\n<script src="./../public/assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                    '\n</div>\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                     endbody +
                     '\n</body>\n</html>';
 
@@ -4003,6 +4034,7 @@
                     .then(async (res) => {
 
                       self.saveFileLoading = false;
+                      console.log('Metalsmith call FolderUrl: ', folderUrl);
                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                           var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
@@ -4278,6 +4310,8 @@
                 let indexOfPageName = _.findIndex(this.globalConfigData[1].pageSettings, function(o) {
                   return o.PageName == last_element;
                 });
+
+                console.log('Delte page index: ', indexOfPageName);
 
                 // Remove item from array
                 this.globalConfigData[1].pageSettings.splice(indexOfPageName, 1);
