@@ -166,17 +166,7 @@ export default {
             localStorage.setItem('userDetailId', this.userDetailId);
             localStorage.setItem('email', res.data.data.email);
 
-            if(this.authen.status == true){
-              $('.success').fadeIn();  
-            } else {
-              $(".authent").fadeOut();
-              $('.login div').fadeIn();
-              this.$message({
-                  showClose: true,
-                  message: 'Username Password did not matched..',
-                  type: 'error'
-              });
-            }
+            $('.success').fadeIn();  
 
             await axios.post(config.baseURL+'/flows-dir-listing' , {
               foldername :'/var/www/html/websites/'+ this.userDetailId,
@@ -230,6 +220,17 @@ export default {
         
       }).catch(error => {
         this.authen.status = false;
+        let self = this;
+        setTimeout(function(){
+          $(".authent").fadeOut();
+          $('.login div').fadeIn();
+          self.$message({
+              showClose: true,
+              message: 'Username Password did not matched..',
+              type: 'error'
+          });
+        }, 2000);
+
         console.log('Error: ', error);
         // this.$notify.error({
         //   title: 'Error',

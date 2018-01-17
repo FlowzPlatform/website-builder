@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== 'development') {
 
     loginUrl = 'http://auth.'+domainkey+'/api/login';
     registerUrl = 'http://auth.'+domainkey+'/api/setup';
+    forgotPasswordUrl = 'http://auth.'+domainkey+'/api/forgetpassword';
     userDetail = 'http://auth.'+domainkey+'/api/userdetails';
     socialUrl = 'http://auth.'+domainkey+'/api';
 
@@ -31,6 +32,7 @@ if (process.env.NODE_ENV !== 'development') {
 
     loginUrl = 'http://auth.flowzcluster.tk/api/login';
     registerUrl = 'http://auth.flowzcluster.tk/api/setup';
+    forgotPasswordUrl = 'http://auth.flowzcluster.tk/api/forgetpassword';
     userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
     socialUrl = 'http://auth.flowzcluster.tk/api';
 
