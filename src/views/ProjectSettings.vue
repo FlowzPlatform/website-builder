@@ -757,7 +757,30 @@
       <div id="toggleCommitsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
             <div class="col-md-12" style="margin-top: 2%">
-              <el-table
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Commit Date</th>
+                      <th>Commit Message</th>
+                      <th>Commit SHA</th>
+                      <th>Revert To Commit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(n, index) in commitsData">
+                      <td>{{n.commitDate}}</td>
+                      <td>{{n.commitsMessage}}</td>
+                      <td>{{n.commitSHA}}</td>
+                      <td>
+                        <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.commitSHA != currentSha" size="small">Restore</el-button>
+                        <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.commitSHA == currentSha">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- <el-table
                 :data="commitsData"
                 :row-class-name="tableRowClassName"
                 border
@@ -783,10 +806,11 @@
                   label="Revert To Commit"
                   width="180">
                   <template scope="scope">
+                    <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="(scope.$index, commitSHA) == currentSha">
                     <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
                   </template>
                 </el-table-column>
-              </el-table>
+              </el-table> -->
             </div>
         </div>
       </div>
@@ -1939,7 +1963,7 @@ export default {
       //                     "CurrentHeadSHA": this.currentSha
       //                   }];
 
-      this.settings[0].CurrentHeadSHA = this.currentSha;
+      // this.settings[0].CurrentHeadSHA = this.currentSha;
 
       let ProjectSettings = [{
                               "RepositoryId": this.newRepoId,
@@ -2007,6 +2031,9 @@ export default {
       //// console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(response => {
+
+        this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
+
         this.saveProjectSettings();
       }).catch(error => {
         //console.log("Some error occured: ", error);
@@ -2022,9 +2049,29 @@ export default {
         commitMessage: this.commitMessage,
         repoName: this.repoName,
         userDetailId: Cookies.get('userDetailId')
-      }).then(response => {
-        //console.log(response);
+      }).then(async response => {
+
         if(response.status == 200 || response.status == 201){
+
+          await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+          }).then(response => {
+            this.commitsData = [];
+            for(var i in response.data){
+              this.commitsData.push({
+                commitDate: response.data[i].created_at,
+                commitSHA: response.data[i].id,
+                commitsMessage: response.data[i].title, 
+              });
+            }
+
+            this.settings[0].repoSettings[0].CurrentHeadSHA = this.commitsData[0].commitSHA;
+            this.currentSha = this.commitsData[0].commitSHA;
+
+            this.saveProjectSettings();
+          }).catch(error => {
+            //console.log("Some error occured: ", error);
+          });
+
           this.commitMessage = '';
           //console.log(response.data);
           this.$message({
@@ -2833,7 +2880,11 @@ export default {
       }
 
       // Get all commits list
-      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
+      let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
+      let configData = responseConfig.data.data[0].configData;
+      let SHA = configData[0].repoSettings[0].CurrentHeadSHA;
+
+      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
       }).then(response => {
         this.commitsData = [];
         for(var i in response.data){
@@ -3342,5 +3393,9 @@ export default {
 
   .margin-50{
     margin: 50px;
+  }
+
+  .green-tick-img{
+    width: 15px;
   }
 </style>
