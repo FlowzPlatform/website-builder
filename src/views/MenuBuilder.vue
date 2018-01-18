@@ -107,6 +107,7 @@
 import axios from 'axios'
 
 const config = require('../config');
+import Cookies from 'js-cookie';
 
 import domenu from 'domenu'
 

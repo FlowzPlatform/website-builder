@@ -8,6 +8,8 @@ if(process.env.baseURL == undefined){
     // url = 'http://devapi.flowz.com/serverapi';
 }
 
+localStorage.setItem('baseURL', url);
+
 // If Production Environment
 if (process.env.NODE_ENV !== 'development') {
     ipAdd = domainkey;

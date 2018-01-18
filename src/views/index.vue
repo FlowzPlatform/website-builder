@@ -826,10 +826,8 @@
         // If PageSettings Clicked
         if(this.isPageEditing){
 
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
-            }
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+            this.saveFile('getFileContent')
           }
 
           this.isPageEditing = false;
@@ -843,8 +841,8 @@
           let compId = this.componentId;
 
           //   remove this
-          this.tabIndex = 0
-          this.editableTabs = []
+          // this.tabIndex = 0
+          // this.editableTabs = []
           //////////////////
 
           let newTabName = ++this.tabIndex + '';
@@ -892,13 +890,7 @@
         // If ProjectSettings is clicked 
         else if(this.isProjectEditing) {
 
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
-            }
-          }
-          if(this.componentId == 'GridManager'){
-            // this.$refs.contentComponent[0].getHtml()
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
           }
 
@@ -911,11 +903,6 @@
 
           let url = data.path;
           let compId = this.componentId;
-          
-          //   remove this
-          this.tabIndex = 0
-          this.editableTabs = []
-          //////////////////
      
           let newTabName = ++this.tabIndex + '';
           let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
@@ -969,12 +956,8 @@
         // If Clicked in Partials Folder 
         else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
           //console.log('Data Path: ', data.path);
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
-            }
-          }
-          if(this.componentId == 'GridManager'){
+          
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
           }
 
@@ -988,12 +971,7 @@
         // If Clicked in Layouts Folder 
         else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
 
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
-            }
-          }
-          if(this.componentId == 'GridManager'){
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
           }
 
@@ -1007,12 +985,7 @@
         // If Clicked in Pages Folder 
         else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
 
-          if(this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('getFileContent')
-            }
-          }
-          if(this.componentId == 'GridManager'){
+          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
           }
 
@@ -1036,33 +1009,24 @@
           if(data.type == "file"){
             this.display = false;
             if(this.flag != true && this.editableTabs.length > 0){
-              if(this.componentId == 'GrapesComponent'){
-                if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
-                  if(this.$store.state.tabChange != ''){
-                    this.saveFile('getFileContent')
-                  }
-                }
-              } else {
+              if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
                 this.saveFile('getFileContent')
               }
             }
             this.flag = false;
-            this.getFileContent(data.path);
+
+            let self = this;
+            setTimeout(function(){
+              self.getFileContent(data.path);
+            },50)
           }
         }
       },
 
       // If Tabs is clicked
       tabClicked : async function(targetName, action) {
-        if(this.componentId == 'GrapesComponent'){
-          if(this.editableTabs.length > 0 && this.$store.state.tabChange != null) {
-            if(this.$store.state.tabChange != ''){
-              this.saveFile('tabClicked')
-            }
-          }
-        } else {
-          this.saveFile('tabClicked')
-        }
+        
+        this.saveFile('tabClicked');
 
         let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
         this.$store.state.fileUrl = findingValue[0].filepath;
@@ -1085,7 +1049,7 @@
             newContent = this.$store.state.content;
             break;
           case 'MenuBuilder':
-            this.saveJsonFile('else');
+            // this.saveJsonFile('else');
             break;
           default:
               newContent = this.$store.state.content;
@@ -1108,17 +1072,109 @@
           tabs = this.editableTabs;
           activeName = this.editableTabsValue;
           if (activeName === targetName) {
+            this.saveFile('void');
             tabs.forEach((tab, index) => {
               if (tab.name === targetName) {
                 let nextTab = tabs[index + 1] || tabs[index - 1];
                 if (nextTab) {
                   activeName = nextTab.name;
+                  this.$store.state.fileUrl = nextTab.filepath
+                  this.flag = true
+                  this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
                 }
               }
             });
+          } else {
+            let componentId = findingValue[0].componentId;
+            this.componentId = findingValue[0].componentId;
+            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+            let newContent
+            switch (this.componentId) {
+              case 'GrapesComponent':
+                await this.$refs.contentComponent[myIndex].getSavedHtml();
+                newContent = this.$store.state.content;
+                break;
+              case 'json-viewer':
+                newContent = JSON.stringify(this.$store.state.content);
+                break;
+              case 'GridManager':
+                await this.$refs.contentComponent[myIndex].getSavedHtml();
+                newContent = this.$store.state.content;
+                break;
+              case 'MenuBuilder':
+ 
+              let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+              let tempurlparts = configFileUrl.split("/");
+              let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+              console.log('fileName', fileName)
+              var folderUrl = fileName
+ 
+              let urlparts = this.$store.state.fileUrl.split("/");
+              let fileNameOrginal = urlparts[urlparts.length - 1];
+              let fileNameParts = fileNameOrginal.split('.');
+              let actualFileNameOnly = fileNameParts[0];
+              let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+              console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
+              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
+              });
+              console.log('response.data', response.data)
+              this.$store.state.content = response.data
+              newContent = this.$store.state.content
+                // this.saveJsonFile('else');
+                break;
+              default:
+                  newContent = this.$store.state.content;
+            }
+            this.taburl = this.$store.state.fileUrl
+            this.saveFileData(newContent);
           }
           this.editableTabsValue = activeName;
           this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+
+          if(this.editableTabs.length != 0){
+            this.$store.state.fileUrl = this.editableTabs[0].filepath
+            console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
+            let componentId = this.editableTabs[0].componentId;
+            this.componentId = this.editableTabs[0].componentId;
+            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+            let newContent
+            switch (this.componentId) {
+              case 'GrapesComponent':
+                await this.$refs.contentComponent[myIndex].getSavedHtml();
+                newContent = this.$store.state.content;
+                break;
+              case 'json-viewer':
+                newContent = JSON.stringify(this.$store.state.content);
+                break;
+              case 'GridManager':
+                await this.$refs.contentComponent[myIndex].getSavedHtml();
+                newContent = this.$store.state.content;
+                break;
+              case 'MenuBuilder':
+ 
+              let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+              let tempurlparts = configFileUrl.split("/");
+              let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+              console.log('fileName', fileName)
+              var folderUrl = fileName
+ 
+              let urlparts = this.$store.state.fileUrl.split("/");
+              let fileNameOrginal = urlparts[urlparts.length - 1];
+              let fileNameParts = fileNameOrginal.split('.');
+              let actualFileNameOnly = fileNameParts[0];
+              let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+              console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
+              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
+              });
+              console.log('response.data', response.data)
+              this.$store.state.content = response.data
+              newContent = this.$store.state.content
+                // this.saveJsonFile('else');
+                break;
+              default:
+                  newContent = this.$store.state.content;
+            }
+          }
         }
       },
 
@@ -1273,11 +1329,6 @@
         }
 
         let compId = this.componentId;
-
-        //   remove this
-        this.tabIndex = 0
-        this.editableTabs = []
-        //////////////////
 
         let newTabName = ++this.tabIndex + '';
         let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
@@ -2053,169 +2104,6 @@
         let projectRepoName = newFolderName.split('/');
         projectRepoName = projectRepoName[(projectRepoName.length) - 1 ];
 
-        let repoSettings = [{
-                              "repoSettings": [{
-                                "RepositoryId": this.newRepoId,
-                                "RepositoryName": projectRepoName,
-                                "CurrentHeadSHA": '',
-                                "BaseURL":newFolderName
-                              }]
-                            }, {
-                              "projectSettings": [{
-                                "RepositoryId": this.newRepoId,
-                                "ProjectName": projectRepoName,
-                                "BrandName": '',
-                                "BrandLogoName": '',
-                                "ProjectLayout": '',
-                                "ProjectHeader": '',
-                                "ProjectFooter": '',
-                                "ProjectSEOTitle": '',
-                                "ProjectSEOKeywords": '',
-                                "ProjectSEODescription": '',
-                              }, {
-                                "GlobalVariables": [],
-                                "GlobalUrlVariables": [],
-                                "GlobalUrlHeaderVariables": [],
-                                "GlobalCssVariables": [],
-                                "ProjectExternalCss": [],
-                                "ProjectExternalJs": [],
-                                "ProjectMetaInfo": [],
-                                "ProjectMetacharset": '',
-                                "ProjectScripts":[],
-                                "ProjectStyles": [],
-                                "PaymentGateways":[]
-                              }],
-                              "pageSettings": [{
-                                "PageName": "index.html",
-                                "PageSEOTitle": "",
-                                "PageSEOKeywords": "",
-                                "PageSEODescription": "",
-                                "PageLayout": "default",
-                                "partials": [{
-                                  "Header": "default"
-                                }, {
-                                  "Footer": "default"
-                                }],
-                                "PageCss": ["Bootstrap 3", "Bootstrap 4", "Font Awesome", "Flowz Blocks", "Google Fonts"],
-                                "PageExternalCss": [],
-                                "PageExternalJs": [],
-                                "PageMetaInfo": [],
-                                "PageMetacharset":'',
-                                "PageScripts":[],
-                                "PageStyles": []
-                              }]
-                            }, {
-                              "layoutOptions": [{
-                                "Header": [{
-                                  "value": 'default',
-                                  "label": 'default'
-                                }],
-                                "Footer": [{
-                                  "value": 'default',
-                                  "label": 'default'
-                                }],
-                                "Sidebar": [{
-                                  "value": 'default',
-                                  "label": 'default'
-                                }],
-                                "Menu": [{
-                                  "value": 'default',
-                                  "label": 'default'
-                                }],
-                                "Layout": [{
-                                  "value": 'Blank',
-                                  "label": 'Blank',
-                                  "partialsList": [],
-                                  "defaultList": []
-                                }, {
-                                  "value": 'default',
-                                  "label": 'default',
-                                  "partialsList": ['Header', 'Footer'],
-                                  "defaultList": []
-                                }]
-                              }]
-                            }];
-
-        let pluginSettingsData = [{
-                                    "id":1,
-                                    "children":[
-                                       {
-                                          "id":2,
-                                          "children":[
-
-                                          ],
-                                          "label":"default",
-                                          "isActive": true
-                                       }
-                                    ],
-                                    "label":"Header",
-                                    "isActive": true
-                                 },
-                                 {
-                                    "id":3,
-                                    "children":[
-                                       {
-                                          "id":4,
-                                          "children":[
-
-                                          ],
-                                          "label":"default",
-                                          "isActive": true
-                                       }
-                                    ],
-                                    "label":"Footer",
-                                    "isActive": true
-                                 },
-                                 {
-                                    "id":5,
-                                    "children":[
-                                       {
-                                          "id":6,
-                                          "children":[
-
-                                          ],
-                                          "label":"default",
-                                          "isActive": true
-                                       }
-                                    ],
-                                    "label":"Sidebar",
-                                    "isActive": true
-                                 },
-                                 {
-                                    "id":7,
-                                    "children":[
-                                       {
-                                          "id":8,
-                                          "children":[
-
-                                          ],
-                                          "label":"default",
-                                          "isActive": true
-                                       }
-                                    ],
-                                    "label":"Menu",
-                                    "isActive": true
-                                 }
-                              ];
-
-        axios.post(config.baseURL + '/project-configuration', {
-          userEmail: Cookies.get('email'),
-          websiteName: projectRepoName,
-          configData: repoSettings,
-          pluginsData: pluginSettingsData
-        })
-        .then((res) => {
-        })
-        .catch((e) => {
-          this.$message({
-            showClose: true,
-            message: 'Failed! Please try again.',
-            type: 'error'
-          });
-          return;
-          //console.log(e)
-        })
-
         // Create project-details.json file
         let projectDetails = newFolderName + '/public/assets/project-details.json';
         let projectDetailsData = [{
@@ -2535,8 +2423,183 @@
               commitMessage: 'Initial Push',
               repoName: projectRepoName,
               userDetailId: Cookies.get('userDetailId')
-            }).then(response => {
+            }).then(async response => {
               if(response.status == 200 || response.status == 201){
+
+                // get Current SHA
+                let SHA;
+                await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                }).then(response => {
+                  SHA = response.data[0].id;
+                  console.log('SHA: ', SHA);
+                }).catch(error => {
+                  //console.log("Some error occured: ", error);
+                });
+
+                let repoSettings = [{
+                                      "repoSettings": [{
+                                        "RepositoryId": this.newRepoId,
+                                        "RepositoryName": projectRepoName,
+                                        "CurrentHeadSHA": SHA,
+                                        "BaseURL":newFolderName
+                                      }]
+                                    }, {
+                                      "projectSettings": [{
+                                        "RepositoryId": this.newRepoId,
+                                        "ProjectName": projectRepoName,
+                                        "BrandName": '',
+                                        "BrandLogoName": '',
+                                        "ProjectLayout": '',
+                                        "ProjectHeader": '',
+                                        "ProjectFooter": '',
+                                        "ProjectSEOTitle": '',
+                                        "ProjectSEOKeywords": '',
+                                        "ProjectSEODescription": '',
+                                      }, {
+                                        "GlobalVariables": [],
+                                        "GlobalUrlVariables": [],
+                                        "GlobalUrlHeaderVariables": [],
+                                        "GlobalCssVariables": [],
+                                        "ProjectExternalCss": [],
+                                        "ProjectExternalJs": [],
+                                        "ProjectMetaInfo": [],
+                                        "ProjectMetacharset": '',
+                                        "ProjectScripts":[],
+                                        "ProjectStyles": [],
+                                        "PaymentGateways":[]
+                                      }],
+                                      "pageSettings": [{
+                                        "PageName": "index.html",
+                                        "PageSEOTitle": "",
+                                        "PageSEOKeywords": "",
+                                        "PageSEODescription": "",
+                                        "PageLayout": "default",
+                                        "partials": [{
+                                          "Header": "default"
+                                        }, {
+                                          "Footer": "default"
+                                        }],
+                                        "PageCss": ["Bootstrap 3", "Bootstrap 4", "Font Awesome", "Flowz Blocks", "Google Fonts"],
+                                        "PageExternalCss": [],
+                                        "PageExternalJs": [],
+                                        "PageMetaInfo": [],
+                                        "PageMetacharset":'',
+                                        "PageScripts":[],
+                                        "PageStyles": []
+                                      }]
+                                    }, {
+                                      "layoutOptions": [{
+                                        "Header": [{
+                                          "value": 'default',
+                                          "label": 'default'
+                                        }],
+                                        "Footer": [{
+                                          "value": 'default',
+                                          "label": 'default'
+                                        }],
+                                        "Sidebar": [{
+                                          "value": 'default',
+                                          "label": 'default'
+                                        }],
+                                        "Menu": [{
+                                          "value": 'default',
+                                          "label": 'default'
+                                        }],
+                                        "Layout": [{
+                                          "value": 'Blank',
+                                          "label": 'Blank',
+                                          "partialsList": [],
+                                          "defaultList": []
+                                        }, {
+                                          "value": 'default',
+                                          "label": 'default',
+                                          "partialsList": ['Header', 'Footer'],
+                                          "defaultList": []
+                                        }]
+                                      }]
+                                    }];
+
+                let pluginSettingsData = [{
+                                            "id":1,
+                                            "children":[
+                                               {
+                                                  "id":2,
+                                                  "children":[
+
+                                                  ],
+                                                  "label":"default",
+                                                  "isActive": true
+                                               }
+                                            ],
+                                            "label":"Header",
+                                            "isActive": true
+                                         },
+                                         {
+                                            "id":3,
+                                            "children":[
+                                               {
+                                                  "id":4,
+                                                  "children":[
+
+                                                  ],
+                                                  "label":"default",
+                                                  "isActive": true
+                                               }
+                                            ],
+                                            "label":"Footer",
+                                            "isActive": true
+                                         },
+                                         {
+                                            "id":5,
+                                            "children":[
+                                               {
+                                                  "id":6,
+                                                  "children":[
+
+                                                  ],
+                                                  "label":"default",
+                                                  "isActive": true
+                                               }
+                                            ],
+                                            "label":"Sidebar",
+                                            "isActive": true
+                                         },
+                                         {
+                                            "id":7,
+                                            "children":[
+                                               {
+                                                  "id":8,
+                                                  "children":[
+
+                                                  ],
+                                                  "label":"default",
+                                                  "isActive": true
+                                               }
+                                            ],
+                                            "label":"Menu",
+                                            "isActive": true
+                                         }
+                                      ];
+
+                await axios.post(config.baseURL + '/project-configuration', {
+                  userEmail: Cookies.get('email'),
+                  websiteName: projectRepoName,
+                  configData: repoSettings,
+                  pluginsData: pluginSettingsData
+                })
+                .then((res) => {
+                })
+                .catch((e) => {
+                  this.$message({
+                    showClose: true,
+                    message: 'Failed! Please try again.',
+                    type: 'error'
+                  });
+                  return;
+                  //console.log(e)
+                })
+
+
                 this.fullscreenLoading = false;
                 let self = this;
                 setTimeout(function(){
@@ -2597,11 +2660,11 @@
           var componentId = this.componentId
           let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
           this.saveFileLoading = true
-          var tempContent = this.$store.state.tabChange
+          // var tempContent = this.$store.state.tabChange
           switch (this.componentId) {
             case 'GrapesComponent':
               this.$refs.contentComponent[myIndex].getHtml();
-              newContent = tempContent;
+              newContent = this.$store.state.content;
               this.saveFileData(newContent)
               break;
             case 'json-viewer':
@@ -2624,7 +2687,7 @@
               newContent = this.$store.state.content;
               this.saveFileLoading = false;
           }
-          this.$store.state.tabChange = '';
+          // this.$store.state.tabChange = '';
         } else {
           var componentId = this.componentId
           let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
@@ -2649,7 +2712,7 @@
                 newContent = this.$store.state.content;
           }
 
-          this.$store.state.tabChange = ''
+          // this.$store.state.tabChange = ''
 
 
           let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -4316,6 +4379,13 @@
                 // Remove item from array
                 this.globalConfigData[1].pageSettings.splice(indexOfPageName, 1);
 
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                     return o.title == last_element;
+                });
+
+                // Remove item from tab
+                this.editableTabs.splice(indexOfTabArray, 1);
+
                 // save config file
                 this.saveConfigFile(folderUrl);
 
@@ -4331,6 +4401,12 @@
                 // Remove item from array
                 this.globalConfigData[2].layoutOptions[0].Layout.splice(indexOfLayoutName, 1);
 
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                     return o.title == last_element;
+                });
+                // Remove item from tab
+                this.editableTabs.splice(indexOfTabArray, 1);
+
                 // save config file
                 this.saveConfigFile(folderUrl);
               }else if (_.includes(data.path, 'Partials')) {
@@ -4342,6 +4418,12 @@
                 let indexOfPartialName = _.findIndex(this.globalConfigData[2].layoutOptions[0][foldername], function(o) { return o.value == partialNameOnly });
 
                 this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
+
+                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                     return o.title == last_element;
+                });
+                // Remove item from tab
+                this.editableTabs.splice(indexOfTabArray, 1);
               
                 // save config file
                 this.saveConfigFile(folderUrl);
@@ -4359,6 +4441,12 @@
 
                   // Remove item from array
                   this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
+
+                  let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                     return o.title == last_element;
+                });
+                // Remove item from tab
+                this.editableTabs.splice(indexOfTabArray, 1);
 
                   // save config file
                 }
@@ -5471,5 +5559,14 @@
 <style>
 .el-tabs__new-tab {
   display: none !important;
+}
+.el-tree-node {
+  font-size: 14px !important;
+}
+.row {
+  padding: 0px !important;
+}
+el-tab-pane {
+  font-size: 18px !important;
 }
 </style>
