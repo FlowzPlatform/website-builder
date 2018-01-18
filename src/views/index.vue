@@ -309,7 +309,22 @@
               <component :is="componentId" ref="contentComponent"></component>
             </div> -->
 
-            <div v-if="!previewGrid && display != true" style="margin-left: 10px;">
+
+                  <div v-if="!previewGrid && display != true" style="margin-left: 10px;">
+                    <!-- <el-tooltip class="item" effect="dark" content="Bottom Center prompts info" placement="bottom"> -->
+                    <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  editable @tab-click="tabClicked" @edit="handleTabsEdit">
+                        <el-tab-pane
+                        v-for="(item, index) in editableTabs"
+                        :key="item.name"
+                        :label="item.title"
+                        :name="item.name">
+                        <component :is="item.componentId" ref="contentComponent"></component>
+                      </el-tab-pane>
+                    </el-tabs>
+                  <!-- </el-tooltip> -->
+                  </div>
+
+            <!-- <div v-if="!previewGrid && display != true" style="margin-left: 10px;">
               <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  editable @tab-click="tabClicked" @edit="handleTabsEdit">
                 <el-tab-pane
                   v-for="(item, index) in editableTabs"
@@ -319,7 +334,8 @@
                   <component :is="item.componentId" ref="contentComponent"></component>
                 </el-tab-pane>
               </el-tabs>
-            </div>
+            </div> -->
+
             <div v-if="!previewGrid && display == true" style="margin-left: 10px;">
               <component :is="componentId" ref="contentComponent"></component>
             </div>
@@ -407,7 +423,7 @@
   import SiteFooter from './footer'
 
 
-
+let myInterval;
   // New File creation validator
   let checkFileName = (rule, value, callback) => {
       if (!value) {
@@ -742,6 +758,7 @@
 
       // If clicked the root folder
       goToHomePage () {
+        clearInterval(myInterval);
         this.display = true
         this.componentId = 'Dashboard';
       },
@@ -814,6 +831,7 @@
         this.$store.state.fileUrl = data.path;
         // If PageSettings Clicked
         if(this.isPageEditing){
+          clearInterval(myInterval);
           // // if(this.$store.state.tabChange != null) {
           // //   if(this.$store.state.tabChange != ''){
           //     this.saveFile('getFileContent')
@@ -884,7 +902,7 @@
         }
         // If ProjectSettings is clicked
         else if(this.isProjectEditing) {
-
+          clearInterval(myInterval);
           // if(this.componentId == 'GrapesComponent'){
           //   // if(this.$store.state.tabChange != null) {
           //   //   if(this.$store.state.tabChange != ''){
@@ -959,6 +977,7 @@
         }
         // If Clicked in ProjectName
         else if(this.isProjectStats) {
+          clearInterval(myInterval);
           // if(this.componentId == 'GrapesComponent'){
           //   // if(this.$store.state.tabChange != null) {
           //   //   if(this.$store.state.tabChange != ''){
@@ -981,6 +1000,7 @@
         }
         // If Clicked in Partials Folder
         else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && (!(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu')) )) {
+          clearInterval(myInterval);
           // if(this.componentId == 'GrapesComponent'){
           //   // if(this.$store.state.tabChange != null) {
           //   //   if(this.$store.state.tabChange != ''){
@@ -1006,6 +1026,7 @@
         }
         // If Clicked in Layouts Folder
         else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
+          clearInterval(myInterval);
           // if(this.componentId == 'GrapesComponent'){
           //   // if(this.$store.state.tabChange != null) {
           //   //   if(this.$store.state.tabChange != ''){
@@ -1031,6 +1052,7 @@
         }
         // If Clicked in Pages Folder
         else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
+          clearInterval(myInterval);
           // if(this.componentId == 'GrapesComponent'){
           //   // if(this.$store.state.tabChange != null) {
           //   //   if(this.$store.state.tabChange != ''){
@@ -1455,7 +1477,17 @@
        this.editableTabs.reverse();
 
        this.editableTabsValue = newTabName;
-
+       var self = this
+       if(this.editableTabs[0].title){
+         console.log("myInterval",myInterval);
+         clearInterval(myInterval);
+         var title = this.editableTabs[0].title;
+         myInterval = setInterval(function(){
+           // alert(title);
+           console.log('componentId', self.componentId)
+           self.saveFile('void')
+          }, 3000);
+       }
 
         this.breadcrumbArr = url.replace(this.rootpath, '').split('\\')
         this.loadingContent = false
@@ -5720,6 +5752,17 @@
   .hamburger.is-open > .sideOpener > .fa-angle-left {
       display: table-cell;
   }
+  .box {
+    width: 400px;
+    .bottom {
+      clear: both;
+      text-align: center;
+    }
+
+    .item {
+      margin: 4px;
+    }
+  }
 </style>
 <style>
 .el-tabs__new-tab {
@@ -5730,5 +5773,8 @@
 }
 .row {
   padding: 0px !important;
+}
+el-tab-pane {
+  font-size: 18px !important;
 }
 </style>

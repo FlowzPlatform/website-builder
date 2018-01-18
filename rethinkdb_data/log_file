@@ -1,0 +1,34 @@
+2018-01-17T09:41:21.391931177 0.061541s notice: Recursively removing directory /home/software/Shraddha/github-flowzbuilder/New/develop_tab/website-builder/rethinkdb_data/tmp
+2018-01-17T09:41:21.406412035 0.076021s notice: Initializing directory /home/software/Shraddha/github-flowzbuilder/New/develop_tab/website-builder/rethinkdb_data
+2018-01-17T09:41:21.406501703 0.076111s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/software/Shraddha/github-flowzbuilder/New/develop_tab/website-builder/rethinkdb_data' did not already exist or is empty.)
+2018-01-17T09:41:21.406541770 0.076151s notice: Running rethinkdb 2.3.5~0xenial (GCC 5.3.1)...
+2018-01-17T09:41:21.408940056 0.078551s notice: Running on Linux 4.4.0-104-generic x86_64
+2018-01-17T09:41:21.408994277 0.078603s notice: Loading data from directory /home/software/Shraddha/github-flowzbuilder/New/develop_tab/website-builder/rethinkdb_data
+2018-01-17T09:41:21.575683670 0.245293s info: Automatically using cache size of 3590 MB
+2018-01-17T09:41:21.576614173 0.246224s notice: Listening for intracluster connections on port 29015
+2018-01-17T09:41:21.584711635 0.254321s notice: Listening for client driver connections on port 28015
+2018-01-17T09:41:21.585001445 0.254611s notice: Listening for administrative HTTP connections on port 8081
+2018-01-17T09:41:21.585012423 0.254621s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-01-17T09:41:21.585018998 0.254628s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-01-17T09:41:21.585029894 0.254639s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-01-17T09:41:21.585036227 0.254645s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-01-17T09:41:21.585046168 0.254655s notice: Server ready, "OBLAP_64_7sl" 2127052c-b9c6-46f7-abee-ce7e268fc9b1
+2018-01-17T09:41:22.777264254 1.446874s notice: A newer version of the RethinkDB server is available: 2.3.6. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
+2018-01-17T09:41:55.005466751 33.675076s info: Table 89565393-e214-47f1-95cb-8c27308b0410: Starting a new Raft election for term 1.
+2018-01-17T09:41:55.013994219 33.683604s info: Table 89565393-e214-47f1-95cb-8c27308b0410: Added replica on this server.
+2018-01-17T09:41:55.031696697 33.701306s info: Table 89565393-e214-47f1-95cb-8c27308b0410: This server is Raft leader for term 1. Latest log index is 0.
+2018-01-17T09:41:55.676504244 34.346114s info: Table 87ba1abf-e01d-4b95-ba29-64c67b1c8ee1: Starting a new Raft election for term 1.
+2018-01-17T09:41:55.676934563 34.346544s info: Table 87ba1abf-e01d-4b95-ba29-64c67b1c8ee1: Added replica on this server.
+2018-01-17T09:41:55.692632335 34.362242s info: Table 87ba1abf-e01d-4b95-ba29-64c67b1c8ee1: This server is Raft leader for term 1. Latest log index is 0.
+2018-01-17T09:41:56.328694416 34.998304s info: Table a0317642-a8c4-4cd7-a9ce-c00753402e07: Starting a new Raft election for term 1.
+2018-01-17T09:41:56.329154454 34.998764s info: Table a0317642-a8c4-4cd7-a9ce-c00753402e07: Added replica on this server.
+2018-01-17T09:41:56.344653576 35.014264s info: Table a0317642-a8c4-4cd7-a9ce-c00753402e07: This server is Raft leader for term 1. Latest log index is 0.
+2018-01-17T09:42:27.623168440 66.292778s info: Table c6c5eac2-3e47-48b2-9425-641f28e36cf1: Starting a new Raft election for term 1.
+2018-01-17T09:42:27.623325344 66.292935s info: Table c6c5eac2-3e47-48b2-9425-641f28e36cf1: Added replica on this server.
+2018-01-17T09:42:27.632513533 66.302123s info: Table 59007443-9bdb-478b-9f92-56c49ed6d5fa: Starting a new Raft election for term 1.
+2018-01-17T09:42:27.632729348 66.302339s info: Table 59007443-9bdb-478b-9f92-56c49ed6d5fa: Added replica on this server.
+2018-01-17T09:42:27.647141139 66.316751s info: Table c6c5eac2-3e47-48b2-9425-641f28e36cf1: This server is Raft leader for term 1. Latest log index is 0.
+2018-01-17T09:42:27.654313357 66.323923s info: Table 59007443-9bdb-478b-9f92-56c49ed6d5fa: This server is Raft leader for term 1. Latest log index is 0.
+2018-01-17T09:50:55.594406947 574.264016s info: Table 0889d90b-0c1f-4e26-958f-3a48cf41548b: Starting a new Raft election for term 1.
+2018-01-17T09:50:55.594880267 574.264490s info: Table 0889d90b-0c1f-4e26-958f-3a48cf41548b: Added replica on this server.
+2018-01-17T09:50:55.604198882 574.273808s info: Table 0889d90b-0c1f-4e26-958f-3a48cf41548b: This server is Raft leader for term 1. Latest log index is 0.
