@@ -309,7 +309,6 @@
               <component :is="componentId" ref="contentComponent"></component>
             </div> -->
 
-
                   <div v-if="!previewGrid && display != true" style="margin-left: 10px;">
                     <!-- <el-tooltip class="item" effect="dark" content="Bottom Center prompts info" placement="bottom"> -->
                     <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  editable @tab-click="tabClicked" @edit="handleTabsEdit">
@@ -318,6 +317,7 @@
                         :key="item.name"
                         :label="item.title"
                         :name="item.name">
+                        <el-tooltip slot="label" :content="item.filepath"><span>{{item.title}}</span></el-tooltip>
                         <component :is="item.componentId" ref="contentComponent"></component>
                       </el-tab-pane>
                     </el-tabs>
@@ -1270,6 +1270,8 @@ let myInterval;
               default:
                   newContent = this.$store.state.content;
             }
+          } else {
+            clearInterval(myInterval)
           }
 
           // this.editableTabs
@@ -1435,7 +1437,6 @@ let myInterval;
 
         let newTabName = ++this.tabIndex + '';
         let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
-
         let editableTabValue = this.editableTabsValue
         let selectedPagePositionFirstArray = await checkIfExist(url , this.editableTabs);
         var self = this
@@ -1479,12 +1480,9 @@ let myInterval;
        this.editableTabsValue = newTabName;
        var self = this
        if(this.editableTabs[0].title){
-         console.log("myInterval",myInterval);
          clearInterval(myInterval);
          var title = this.editableTabs[0].title;
          myInterval = setInterval(function(){
-           // alert(title);
-           console.log('componentId', self.componentId)
            self.saveFile('void')
           }, 3000);
        }
