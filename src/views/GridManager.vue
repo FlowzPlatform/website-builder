@@ -120,4 +120,16 @@
     #gm-canvas .row.gm-editing>.gm-tools a:hover, #gm-canvas .row-fluid.gm-editing>.gm-tools a:hover{
       float: right;
     }
+
+    .fa{
+      font-size: auto !important;
+      font-style: auto !important;
+      font-variant-ligatures: auto !important;
+      font-variant-caps: auto !important;
+      font-variant-numeric: auto !important;
+      font-variant-east-asian: auto !important;
+      font-weight: auto !important;
+      font-stretch: auto !important;
+      line-height: auto !important;
+    }
 </style>

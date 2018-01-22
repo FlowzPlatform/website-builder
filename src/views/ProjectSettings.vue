@@ -3,9 +3,12 @@
 
     <!-- Publish Site Modal -->
     <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="Default Domain" name="first">
+      <!--<el-tabs v-model="activeName">
+         <el-tab-pane label="Default Domain" name="first">
           Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
+          <br>
+          <br>
+            <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
           <br>
           <div align="right" style="margin-top: 15px;">
             <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
@@ -18,13 +21,13 @@
           </div>
           
         </el-tab-pane>
-      </el-tabs>
+      </el-tabs> -->
     </el-dialog>
     
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" size="small" @click="publishWebsite = true" >Publish Website</el-button>
+      <!-- <el-button type="info" size="small" @click="publishWebsite = true" >Publish Website</el-button> -->
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
@@ -33,23 +36,41 @@
 
     <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
 
-      <!-- Commit Section -->
-      <div class="well" id="new-commit-section">
+      <!-- Project Settings Section -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="tooglePublishWebsite" class="card color-div toggleableDivHeader">Publish Website</a>
+          </div>
+      </div>
+      <div id="togglePublishWebsiteContent" class="toggleableDivHeaderContent" style="">
         <div class="row">
-          <div class="col-md-9">
-            <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
-          </div>
-          <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
-          </div>
-          <div class="col-md-1">
-            <el-tooltip content="Download .zip" placement="top">
-              <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
-            </el-tooltip>
+          <div class="col-md-12">
+            
+            <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
+            <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
+
+            <div class="row">
+              <div class="col-md-12" v-if="publishType === 'default'">
+                Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
+                <br>
+                  <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
+                <br>
+                <div style="margin-top: 15px;">
+                  <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
+                </div>
+              </div>
+
+              <div class="col-md-12" v-else>
+                <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+                <div style="margin-top: 15px;">
+                  <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- Commit Section Ends -->
+      <!-- Project Settings section ends -->
 
       <!-- Project Settings Section -->
       <div class="collapsingDivWrapper row">
@@ -57,7 +78,7 @@
               <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Project Settings</a>
           </div>
       </div>
-      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="">
+      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
           <div class="col-md-12">
             <el-form ref="form" :model="form" label-width="180px">
@@ -756,6 +777,19 @@
       </div>
       <div id="toggleCommitsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
+          <div class="col-md-9">
+            <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
+          </div>
+          <div class="col-md-2">
+            <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
+          </div>
+          <div class="col-md-1">
+            <el-tooltip content="Download .zip" placement="top">
+              <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+            </el-tooltip>
+          </div>
+        </div>
+        <div class="row">
             <div class="col-md-12" style="margin-top: 2%">
               <div class="table-responsive">
                 <table class="table">
@@ -952,7 +986,8 @@ export default {
       paymentgateway: [],
       Paymentfields: [],
       Allgateway: [],
-      currentSha: ''
+      currentSha: '',
+      publishType: 'default'
     }
   },
   components: {
@@ -1266,7 +1301,7 @@ export default {
     async saveConfigFile(folderUrl,configData){
 
         let foldername = folderUrl.split('/');
-        foldername = foldername[(foldername.length-1)];
+        foldername = foldername[6];
 
         let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
 
@@ -1513,7 +1548,7 @@ export default {
 
       let splitUrl = url.split('/');
 
-      let websiteName = splitUrl[(splitUrl.length -1)];
+      let websiteName = splitUrl[6];
 
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
@@ -2346,7 +2381,7 @@ export default {
         layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
         var responseMetal = '';
 
-        let backupMetalSmith = '';
+        var backupMetalSmith = '';
 
         let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
         contentpartials = contentpartials.data
@@ -2821,7 +2856,7 @@ export default {
 
       let splitUrl = url.split('/');
 
-      let websiteName = splitUrl[(splitUrl.length -1)];
+      let websiteName = splitUrl[6];
 
       //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
@@ -2959,6 +2994,15 @@ export default {
 
     // Collapsing Divs
     $(document).ready(function($) {
+
+        $("#tooglePublishWebsite").click(function() {
+            $("#togglePublishWebsiteContent").slideToggle("slow");
+            if ($("#tooglePublishWebsite").text() == "Publish Website") {
+                $("#tooglePublishWebsite").html("Publish Website")
+            } else {
+                $("#tooglePublishWebsite").text("Publish Website")
+            }
+        });
         
         $("#toogleProjectSettings").click(function() {
             $("#toogleProjectSettingsContent").slideToggle("slow");

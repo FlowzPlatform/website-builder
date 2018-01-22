@@ -179,7 +179,14 @@ export default {
             
           })
           .catch((e) => {
-            //console.log(e)
+            console.log(e)
+            $(".authent").fadeOut();
+            $('.login div').fadeIn();
+            this.$message({
+                showClose: true,
+                message: 'Username Password did not matched..',
+                type: 'error'
+            });
           })
           
           // this.$router.push('/');
@@ -222,16 +229,18 @@ export default {
       }).catch(error => {
         this.authen.status = false;
 
-        let self = this;
-        setTimeout(function(){
-          $(".authent").fadeOut();
-          $('.login div').fadeIn();
-          self.$message({
-              showClose: true,
-              message: 'Username Password did not matched..',
-              type: 'error'
-          });
-        }, 2000);
+        $(".authent").fadeOut();
+        $('.login div').fadeIn();
+        this.$message({
+            showClose: true,
+            message: 'Username Password did not matched..',
+            type: 'error'
+        });
+
+        // let self = this;
+        // setTimeout(function(){
+          
+        // }, 2000);
 
         console.log('Error: ', error);
 
@@ -305,20 +314,20 @@ export default {
                 $('.login').removeClass('test')
                 $('.login div').fadeOut(123);
               },2800);
-              setTimeout(function(){
-                if(self.authen.status == true){
-                  $('.success').fadeIn();  
-                } else {
-                  $(".authent").fadeOut();
-                  $('.login div').fadeIn();
-                  self.$message({
-                      showClose: true,
-                      message: 'Username Password did not matched..',
-                      type: 'error'
-                  });
-                }
+              // setTimeout(function(){
+              //   if(self.authen.status == true){
+              //     $('.success').fadeIn();  
+              //   } else {
+              //     $(".authent").fadeOut();
+              //     $('.login div').fadeIn();
+              //     self.$message({
+              //         showClose: true,
+              //         message: 'Username Password did not matched..',
+              //         type: 'error'
+              //     });
+              //   }
                 
-              },3200);
+              // },3200);
             } else {
               self.$message({
                   showClose: true,
