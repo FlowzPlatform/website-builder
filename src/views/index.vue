@@ -1576,11 +1576,14 @@
                var name=this.formAddFile.filename;
                 var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
                 let checkfilename=false
-                for(let i=0;i<rawConfigs[1].pageSettings.length;i++){
+                if(newfilename.indexOf('Pages')>0){
+                  for(let i=0;i<rawConfigs[1].pageSettings.length;i++){
                   if(name==rawConfigs[1].pageSettings[i].PageName.split('.')[0]){
                     checkfilename=true
                   }
                 }
+                }
+                else{
 
                 for(let i=0;i<Object.keys(rawConfigs[2].layoutOptions[0]).length;i++){
                   if(Object.keys(rawConfigs[2].layoutOptions[0])[i]==newfilename.split('/')[newfilename.split('/').length-2])
@@ -1592,6 +1595,9 @@
                     }
                   }
                 }
+                }
+                
+
                 if (checkfilename==true) {
                   //console.log('file already exists')
                   this.addNewFileLoading=false
@@ -1766,7 +1772,7 @@
                                               "PageExternalCss": [],
                                               "PageExternalJs": [],
                                               "PageMetaInfo": [],
-                                              "PageMetacharset": [],
+                                              "PageMetacharset": 'UTF-8',
                                               "PageScripts":[],
                                               "PageStyles": [],
                                               "partials": totpartial
@@ -2463,7 +2469,7 @@
                                         "ProjectExternalCss": [],
                                         "ProjectExternalJs": [],
                                         "ProjectMetaInfo": [],
-                                        "ProjectMetacharset": '',
+                                        "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
                                         "PaymentGateways":[]
@@ -2483,7 +2489,7 @@
                                         "PageExternalCss": [],
                                         "PageExternalJs": [],
                                         "PageMetaInfo": [],
-                                        "PageMetacharset":'',
+                                        "PageMetacharset":'UTF-8',
                                         "PageScripts":[],
                                         "PageStyles": []
                                       }]
@@ -3635,6 +3641,7 @@
           var ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
           var projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
           var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles
+          var projectseotitle=self.globalConfigData[1].projectSettings[0].ProjectSEOTitle
           var tophead = '';
           var endhead = '';
           var topbody = '';
@@ -3645,9 +3652,14 @@
           var pagescripts = [];
           var pageexternalCss = [];
           var pageMetaInfo = [];
-          var pageSeoTitle;
+          var SeoTitle='';
           var PageMetacharset = ''
-          if (ProjectMetacharset != '') {
+          var pageSeoTitle=''
+          if(projectseotitle!=undefined && projectseotitle!=''){
+            SeoTitle=projectseotitle
+            // console.log(projectseotitle,SeoTitle)
+          }
+          if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
             tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
           }
           if (metaInfo != undefined && metaInfo.length > 0) {
@@ -3727,10 +3739,14 @@
               PageMetacharset = self.globalConfigData[1].pageSettings[i].PageMetacharset;
               pagescripts = self.globalConfigData[1].pageSettings[i].PageScripts;
               pagestyles = self.globalConfigData[1].pageSettings[i].PageStyles;
+              
             }
           }
-
-          if (PageMetacharset != undefined && PageMetacharset != '') {
+          if(pageSeoTitle!=undefined && pageSeoTitle!='' && !(projectseotitle!='')){
+            SeoTitle=pageSeoTitle
+          }
+          // console.log(SeoTitle)
+          if (PageMetacharset != undefined && PageMetacharset != '' && !(ProjectMetacharset!='')) {
             tophead = tophead + '<meta charset="' + PageMetacharset + '">'
           }
           if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
@@ -4039,7 +4055,7 @@
 
               let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                    "<title>" + pageSeoTitle + "</title>\n" +
+                    "<title>" + SeoTitle + "</title>\n" +
                     "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
                     "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
@@ -4551,7 +4567,7 @@
 
         this.$swal({
           title: 'Are you sure?',
-          text: 'You want you delete this file!',
+          text: 'You want you delete this Website!',
           type: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Yes, delete it!',
@@ -4570,7 +4586,7 @@
                   .then((res) => {
                     this.$message({
                       showClose: true,
-                      message: 'Project successfully deleted..!!',
+                      message: 'Website successfully deleted..!!',
                       type: 'success'
                     });
                   })

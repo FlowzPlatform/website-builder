@@ -74,15 +74,17 @@
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
                 </el-form-item> -->
 
-                <!-- <el-form-item label="Brand Logo">
-                  <div class="col6 valid"> 
+                <el-form-item label="Favicon Logo">
+                  <!-- <div class="col6 valid"> 
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label> 
                     <input type="file" name="" id="upload-validation">
-                    <span class="dis">(max 1 MB. .jpg or .png only)</span>
-                  </div>
-                </el-form-item> -->
+                    <span class="dis">( .ico only)</span>
+
+                  </div> -->
+                   <el-input v-model="favicon" placeholder="href" ></el-input>
+                </el-form-item>
 
                 <el-form-item label="Project SEO Title">
                   <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
@@ -861,6 +863,7 @@ export default {
         selectedFooter: ''
       },
       commitsData: [],
+      favicon:'',
       fileList3: [],
       pluginsData: [],
       commitMessage: '',
@@ -2141,7 +2144,7 @@ export default {
         }
       };
       
-      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+   for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
       var tophead = '';
       var endhead = '';
       var topbody = '';
