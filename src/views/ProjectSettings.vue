@@ -83,7 +83,7 @@
                     <span class="dis">( .ico only)</span>
 
                   </div> -->
-                   <el-input v-model="favicon" placeholder="href" ></el-input>
+                   <el-input v-model="faviconhref" placeholder="href" ></el-input>
                 </el-form-item>
 
                 <el-form-item label="Project SEO Title">
@@ -354,19 +354,52 @@
               <div v-for="(n, index) in urlVariables">
                 <el-form-item>
                   <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                       <el-input placeholder="URL ID" v-model="n.urlId"></el-input>
                     </div>
                     <div class="col-md-6">
                       <el-input placeholder="URL Value" v-model="n.urlValue"></el-input>
                     </div>
-
+                    <div class="col-md-1">
+                      <el-tooltip class="item" effect="dark" content="Add Headers" placement="top-start">
+                       <el-button type="primary" icon="plus"  @click="addNewHeader(n,index)"></el-button>
+                      </el-tooltip>
+                    </div>
                     <!-- Delete Variable -->
                     <div class="col-md-1">
                       <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>      
                     </div>
                   </div>
                 </el-form-item>
+                <div class="row">
+                  <div class="col-md-12">
+                   <!--  <el-form ref="form" :model="form"> -->
+                      <h5>Headers:-</h5>
+                      <div v-for="(m, indexH) in n.urlHeaderVariables">
+                        <el-form-item>
+                          <div class="row">
+                          
+                            <div class="col-md-5">
+                              <el-input placeholder="Header Name" v-model="m.headerName"></el-input>
+                            </div>
+                            <div class="col-md-6">
+                              <el-input placeholder="Header Value" v-model="m.headerValue"></el-input>
+                            </div>
+
+                            <!-- Delete Variable -->
+                            <div class="col-md-1">
+                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index,indexH)" icon="delete"></el-button>      
+                            </div>
+                          </div>
+                        </el-form-item>
+                      </div>
+
+                      <!-- Create new header variable -->
+                     <!--  <el-button type="primary" @click="addNewHeader">New Header</el-button> -->
+                    <!-- </el-form> -->
+                    <hr>
+                  </div>
+                </div>
               </div>
 
               <!-- Create new url variable -->
@@ -374,33 +407,8 @@
             </el-form>
           </div>
         </div>
-        <hr>
-        <div class="row">
-          <div class="col-md-12">
-            <el-form ref="form" :model="form">
-              <div v-for="(n, index) in urlHeaderVariables">
-                <el-form-item>
-                  <div class="row">
-                    <div class="col-md-5">
-                      <el-input placeholder="Header Name" v-model="n.headerName"></el-input>
-                    </div>
-                    <div class="col-md-6">
-                      <el-input placeholder="Header Value" v-model="n.headerValue"></el-input>
-                    </div>
-
-                    <!-- Delete Variable -->
-                    <div class="col-md-1">
-                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index)" icon="delete"></el-button>      
-                    </div>
-                  </div>
-                </el-form-item>
-              </div>
-
-              <!-- Create new header variable -->
-              <el-button type="primary" @click="addNewHeader">New Header</el-button>
-            </el-form>
-          </div>
-        </div>
+        <!-- <hr> -->
+        
       </div>
       <!-- URL Bucket section ends -->
 
@@ -863,7 +871,7 @@ export default {
         selectedFooter: ''
       },
       commitsData: [],
-      favicon:'',
+      faviconhref:'',
       fileList3: [],
       pluginsData: [],
       commitMessage: '',
@@ -1018,13 +1026,14 @@ export default {
     },
 
     addNewUrl() {
-      let newVariable = { urlId: '', urlValue: ''};
+      let newVariable = { urlId: '', urlValue: '', urlHeaderVariables:[]};
       this.urlVariables.push(newVariable);
     },
 
-    addNewHeader() {
+    addNewHeader(n,index) {
+      // console.log(n,index)
       let newVariable = { headerName: '', headerValue: ''};
-      this.urlHeaderVariables.push(newVariable);
+      this.urlVariables[index].urlHeaderVariables.push(newVariable);
     },
 
     addNewCssVariable() {
@@ -1045,7 +1054,7 @@ export default {
     addNewexternallinkMeta() {
       let newVariable = { name:'',content:''};
       this.externallinksMeta.push(newVariable);
-      this.editableInit();
+      // this.editableInit();
     },
 
     addNewlocalscripts(){
@@ -1872,8 +1881,8 @@ export default {
       this.urlVariables.splice(deleteIndex, 1);
     },
 
-    deleteUrlHeaderVariable(deleteIndex) {
-      this.urlHeaderVariables.splice(deleteIndex, 1);
+    deleteUrlHeaderVariable(index,deleteIndex) {
+      this.urlVariables[index].urlHeaderVariables.splice(deleteIndex, 1);
     },
 
     deleteCssVariable(deleteIndex) {
@@ -1975,11 +1984,11 @@ export default {
                               "BrandLogoName": this.form.brandLogoName,
                               "ProjectSEOTitle": this.form.seoTitle,
                               "ProjectSEOKeywords": this.form.seoKeywords,
-                              "ProjectSEODescription": this.form.seoDesc
+                              "ProjectSEODescription": this.form.seoDesc,
+                              "ProjectFaviconhref":this.faviconhref
                             }, {
                               "GlobalVariables": this.globalVariables,
                               "GlobalUrlVariables": this.urlVariables,
-                              "GlobalUrlHeaderVariables": this.urlHeaderVariables,
                               "GlobalCssVariables": this.globalCssVariables,
                               "EcommerceSettings": this.ecommerceSettings,
                               "ProjectExternalCss": this.externallinksCSS,
@@ -2326,7 +2335,7 @@ export default {
                   .then((response) => {
                     //console.log("called webpack_file api successfully:")
                   })
-                  .catch((e) => {
+                  .catch((e) => {pul
                     //console.log(e)
                   })
               })
@@ -2845,7 +2854,6 @@ export default {
         this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
-        this.urlHeaderVariables = this.settings[1].projectSettings[1].GlobalUrlHeaderVariables;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
         this.externallinksCSS = this.settings[1].projectSettings[1].ProjectExternalCss;
@@ -2855,6 +2863,7 @@ export default {
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
         this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
+        this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
       } else {
         //console.log('Cannot get configurations!');
       } 

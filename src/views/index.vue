@@ -2461,10 +2461,10 @@
                                         "ProjectSEOTitle": '',
                                         "ProjectSEOKeywords": '',
                                         "ProjectSEODescription": '',
+                                        "ProjectFaviconhref":''
                                       }, {
                                         "GlobalVariables": [],
                                         "GlobalUrlVariables": [],
-                                        "GlobalUrlHeaderVariables": [],
                                         "GlobalCssVariables": [],
                                         "ProjectExternalCss": [],
                                         "ProjectExternalJs": [],
@@ -3642,11 +3642,13 @@
           var projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
           var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles
           var projectseotitle=self.globalConfigData[1].projectSettings[0].ProjectSEOTitle
+          var projectfaviconhref=self.globalConfigData[1].projectSettings[0].ProjectFaviconhref
           var tophead = '';
           var endhead = '';
           var topbody = '';
           var endbody = '';
           var pagestyles = [];
+          var favicon=''
 
           var pageexternalJs = [];
           var pagescripts = [];
@@ -3658,6 +3660,9 @@
           if(projectseotitle!=undefined && projectseotitle!=''){
             SeoTitle=projectseotitle
             // console.log(projectseotitle,SeoTitle)
+          }
+          if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
+            favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
           }
           if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
             tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
@@ -3742,7 +3747,7 @@
               
             }
           }
-          if(pageSeoTitle!=undefined && pageSeoTitle!='' && !(projectseotitle!='')){
+          if(pageSeoTitle!=undefined && pageSeoTitle!=''){
             SeoTitle=pageSeoTitle
           }
           // console.log(SeoTitle)
@@ -4055,7 +4060,7 @@
 
               let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                    "<title>" + SeoTitle + "</title>\n" +
+                    "<title>" + SeoTitle + "</title>\n" + favicon+
                     "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
                     "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
