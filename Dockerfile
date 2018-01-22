@@ -37,7 +37,6 @@ RUN npm install
 RUN npm run build
 RUN cp -a -f /opt/app/dist/* /var/www/html/
 RUN cp /opt/app/.htaccess /var/www/html/
-RUN cp /opt/app/vhost.conf /etc/apache2/sites-enabled/
 RUN cp /opt/app/vhost_ssl_develop.conf /etc/apache2/sites-enabled/
 RUN cp /opt/app/vhost_ssl_master.conf /etc/apache2/sites-enabled/
 RUN cp /opt/app/vhost_ssl_qa.conf /etc/apache2/sites-enabled/
