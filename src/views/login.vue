@@ -32,6 +32,12 @@
           <a href="javascript:void(0)" class="social-button-twitter" v-on:click="doTwitterLogin()"><i class="fa fa-twitter"></i></a>
           <a href="javascript:void(0)" class="social-button-github" v-on:click="doGithubLogin()"><i class="fa fa-github"></i></a>
           <a href="javascript:void(0)" class="social-button-linked-in" v-on:click="doLinkedInLogin()"><i class="fa fa-linkedin"></i></a>
+          <!-- <a href="javascript:void(0)" class="social-button-linked-in"><i class="fa fa-lock-alt"></i></a> -->
+          <el-tooltip content="LDAP Login" placement="top">
+            <div class="ldap">
+              <input type="checkbox" name="ldapCheckbox" @change="checkLdapLogin" id="ldapCheckbox"><label for="ldapCheckbox" class="login-button-ldap"><i class="fa fa-lock"></i></label> 
+            </div>
+          </el-tooltip>
         </div>
       </div>
       <div>
@@ -122,7 +128,8 @@ export default {
       loginWithTwitterUrl: config.loginWithTwitterUrl,
       loginWithGithubUrl: config.loginWithGithubUrl,
       loginWithLinkedInUrl: config.loginWithLinkedInUrl,
-      userDetailId: ''
+      userDetailId: '',
+      isLdapLogin: false
     }
   },
   component: {
@@ -131,7 +138,17 @@ export default {
     authenticate () {
       //console.log('Authenticating User');
 
-      axios.post(config.loginUrl, {
+      let loginNowUrl;
+
+      if(this.isLdapLogin === true){
+        loginNowUrl = config.ldapUrl;
+      } else {
+        loginNowUrl = config.loginUrl;
+      }
+
+      console.log('Login URL: ', loginNowUrl);
+
+      axios.post(loginNowUrl, {
         password: this.form.pass,
         email: this.form.user
       }, {
@@ -233,7 +250,7 @@ export default {
         $('.login div').fadeIn();
         this.$message({
             showClose: true,
-            message: 'Username Password did not matched..',
+            message: 'Username Password did not matched.',
             type: 'error'
         });
 
@@ -275,6 +292,10 @@ export default {
     doLinkedInLogin () {
       //console.log('LinkedIn Login');
       document.getElementById('form-linkedIn').submit();
+    },
+
+    checkLdapLogin () {
+      this.isLdapLogin = $('#ldapCheckbox').prop('checked');
     },
 
     goToLandingPage () {
@@ -358,20 +379,20 @@ export default {
           $('.login').removeClass('test')
           $('.login div').fadeOut(123);
         },2800);
-        setTimeout(function(){
-          if(self.authen.status == true){
-            $('.success').fadeIn();  
-          } else {
-            $(".authent").fadeOut();
-            $('.login div').fadeIn();
-            self.$message({
-                showClose: true,
-                message: 'Username Password did not matched..',
-                type: 'error'
-            });
-          }
+        // setTimeout(function(){
+        //   if(self.authen.status == true){
+        //     $('.success').fadeIn();  
+        //   } else {
+        //     $(".authent").fadeOut();
+        //     $('.login div').fadeIn();
+        //     self.$message({
+        //         showClose: true,
+        //         message: 'Username Password did not matched..',
+        //         type: 'error'
+        //     });
+        //   }
           
-        },3200);
+        // },3200);
       } else {
         self.$message({
             showClose: true,
@@ -733,4 +754,51 @@ export default {
     background-color: #006FB7;
     transition: 0.2s all linear;
   }
+
+
+
+  div.ldap {
+    display: inline-block;
+  }
+  div.ldap label {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 500%;
+    padding: 6px 0px 0px 0px; 
+    background-color: #444;
+    transition: 0.2s all linear;
+    color: #fff;
+  }
+  div.ldap input:checked + label {
+    background: #4CB050;
+    color: #fff;
+  }
+  div.ldap input {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  div.ldap input:focus ~ label {
+    box-shadow: 0px 0px 6px 0px #008edb;
+    outline: 0 none;
+  }
+  div.ldap input:focus ~ .focus {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    margin: -10px;
+    padding: 10px 10px 0;
+    outline: 0;
+    border: 1px solid #35a3e8;
+    box-shadow: 0 0 10px #35a3e8;
+    z-index: -1;
+  }
+
 </style>

@@ -51,7 +51,7 @@
 
             <div class="row">
               <div class="col-md-12" v-if="publishType === 'default'">
-                Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
+                Your Default domain will be: {{repoName}}.{{ipAddress}}
                 <br>
                   <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
                 <br>
@@ -88,7 +88,9 @@
                 </el-form-item>
 
                 <el-form-item label="Project name">
-                  <el-input v-model="repoName" :disabled="true"></el-input>
+                  <!-- <el-input v-model="websitename"></el-input> -->
+                  <!-- {{websitename}} -->
+                  <a id="websiteName" data-title="Website Name">{{websitename}}</a>
                 </el-form-item>
 
                 <!-- <el-form-item label="Brand name">
@@ -987,7 +989,8 @@ export default {
       Paymentfields: [],
       Allgateway: [],
       currentSha: '',
-      publishType: 'default'
+      publishType: 'default',
+      websitename: ' '
     }
   },
   components: {
@@ -1303,12 +1306,12 @@ export default {
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername );
 
-        if(rethinkdbCheck.data.data){
+        if(rethinkdbCheck.data){
 
           // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
             configData: configData
           })
           .then(async (res) => {
@@ -1553,9 +1556,9 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
+      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
 
-      configData=JSON.parse(JSON.stringify(configData.data.data[0].configData))
+      configData=JSON.parse(JSON.stringify(configData.data.configData))
       //// console.log('new config file:',configData);
       //// console.log('now partial');
       for(let q=0;q<Object.keys(configData[2].layoutOptions[0]).length;q++){
@@ -2025,15 +2028,16 @@ export default {
 
       this.settings[1].projectSettings = ProjectSettings;
 
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName );
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName );
 
-      if(rethinkdbCheck.data.data){
+      if(rethinkdbCheck.data){
         //console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);
 
         // update existing data
-        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
           configData: this.settings,
-          pluginsData: this.pluginsTreedata
+          pluginsData: this.pluginsTreedata,
+          websiteName: this.websitename
         })
         .then(async (res) => {
           //console.log(res.data);
@@ -2132,8 +2136,8 @@ export default {
       await this.commitProject();
 
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
-      var rawConfigs = responseConfig.data.data[0].configData;
+      var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+      var rawConfigs = responseConfig.data.configData;
       var partialstotal = []
       var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
       var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
@@ -2247,9 +2251,9 @@ export default {
           }
 
         var partials = ''
-        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
+        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
 
-        var rawSettings = responseConfigLoop.data.data[0].configData;
+        var rawSettings = responseConfigLoop.data.configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
         //console.log('nameF:', nameF)
         var Layout = ''
@@ -2561,12 +2565,12 @@ export default {
         }
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-        //console.log('final responseMetal:', responseMetal)
+        console.log('final responseMetal:', responseMetal)
         var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename: mainMetal,
-            text: backupMetalSmith,
+            text: responseMetal,
             type: 'file'
           }).then(async (response) => {
             let vueBodyStart = '';
@@ -2861,12 +2865,14 @@ export default {
       //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
 
       if(this.configData.status == 200 || this.configData.status == 204){
 
-        this.settings = this.configData.data.data[0].configData;
-        this.pluginsTreedata = this.configData.data.data[0].pluginsData;
+        this.settings = this.configData.data.configData;
+        this.websitename = this.configData.data.websiteName;
+        this.pluginsTreedata = this.configData.data.pluginsData;
+
         this.currentSha = this.settings[0].repoSettings[0].CurrentHeadSHA;
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
@@ -2915,8 +2921,8 @@ export default {
       }
 
       // Get all commits list
-      let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
-      let configData = responseConfig.data.data[0].configData;
+      let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
+      let configData = responseConfig.data.configData;
       let SHA = configData[0].repoSettings[0].CurrentHeadSHA;
 
       await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
@@ -2965,6 +2971,17 @@ export default {
       }
     },
 
+    async updateProjectName() {
+      console.log('Saving ProjectName');
+      await this.saveProjectSettings();
+      this.$message({
+        showClose: true,
+        message: 'Project name changed. Please Wait...',
+        type: 'success'
+      });
+      location.reload();
+    },
+
     renderContent(h, { node, data, store }) {
       return (
         <span>
@@ -2986,14 +3003,23 @@ export default {
 
   },
 
-  created () {
-    this.init(); 
-  },
-
   async mounted () {
+
+    await this.init(); 
+
+    let self = this;    
+
+    $.fn.editable.defaults.mode = 'inline';
 
     // Collapsing Divs
     $(document).ready(function($) {
+
+        $('#websiteName').editable();
+
+        $('#websiteName').on('save', function(e, params) {
+          self.websitename = params.newValue;
+          self.updateProjectName();
+        });
 
         $("#tooglePublishWebsite").click(function() {
             $("#togglePublishWebsiteContent").slideToggle("slow");

@@ -677,10 +677,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   urlVarValue.push({name: 'Select', value: ''});
   menuNames.push({name: 'Select', value: ''});
 
-  let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
+  let configFileUrl = baseURL + '/project-configuration/' + foldername;
 
   $.getJSON(configFileUrl, function(data) {
-    configData = data.data[0].configData;
+    configData = data.configData;
     globalVariables = configData[1].projectSettings[1].GlobalVariables;
     urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
     menuOptions = configData[2].layoutOptions[0].Menu;
@@ -714,7 +714,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       let resp2 = []
       $.getJSON(configFileUrl, function(data) {
-        configData = data.data[0].configData;
+        configData = data.configData;
 
 
 

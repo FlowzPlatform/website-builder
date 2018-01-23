@@ -438,13 +438,13 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[6];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
       this.AllData = [];
       //// console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
       if (this.configData.status == 200 || this.configData.status == 204) {
 
-        this.settings = this.configData.data.data[0].configData;
+        this.settings = this.configData.data.configData;
 
         for (var i = 0; i < this.partialsList.length; i++) {
 
@@ -497,10 +497,10 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[6];
 
-      this.Data = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
+      this.Data = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
       if (this.Data.status == 200 || this.Data.status == 204) {
-        this.settingsData = this.Data.data.data[0].configData;
+        this.settingsData = this.Data.data.configData;
         this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
           'PageName': fileNameOrginal
         });
@@ -596,12 +596,12 @@ export default {
           this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
         }
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
-        if (rethinkdbCheck.data.data) {
+        if (rethinkdbCheck.data) {
 
           // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
               configData: this.settings
             })
             .then(async(res) => {
@@ -636,12 +636,12 @@ export default {
 
         this.settings[1].pageSettings.push(PageSettings);
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
-        if (rethinkdbCheck.data.data) {
+        if (rethinkdbCheck.data) {
 
           // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
               configData: this.settings
             })
             .then(async(res) => {
@@ -677,10 +677,10 @@ export default {
     let foldername = this.folderUrl.split('/');
     foldername = foldername[6];
 
-    this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
+    this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
 
     if(this.configData.status == 200 || this.configData.status == 204){
-      this.settings = this.configData.data.data[0].configData;
+      this.settings = this.configData.data.configData;
       
       // Get Current file index
       this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});

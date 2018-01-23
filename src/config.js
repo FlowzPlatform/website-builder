@@ -17,6 +17,7 @@ if (process.env.NODE_ENV !== 'development') {
     frontEndUrl = 'http://webbuilder.'+domainkey+'/editor';
 
     loginUrl = 'http://auth.'+domainkey+'/api/login';
+    ldapUrl = 'http://api.'+domainkey+'/auth/api/ldapauth';
     registerUrl = 'http://auth.'+domainkey+'/api/setup';
     forgotPasswordUrl = 'http://auth.'+domainkey+'/api/forgetpassword';
     userDetail = 'http://auth.'+domainkey+'/api/userdetails';
@@ -34,6 +35,7 @@ if (process.env.NODE_ENV !== 'development') {
     frontEndUrl = 'http://localhost:8080/editor';
 
     loginUrl = 'http://auth.flowzcluster.tk/api/login';
+    ldapUrl = 'http://api.flowzcluster.tk/auth/api/ldapauth';
     registerUrl = 'http://auth.flowzcluster.tk/api/setup';
     forgotPasswordUrl = 'http://auth.flowzcluster.tk/api/forgetpassword';
     userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
@@ -48,6 +50,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 module.exports = {
     loginUrl: loginUrl,
+    ldapUrl: ldapUrl,
     registerUrl: registerUrl,
     userDetail: userDetail,
     socialUrl: socialUrl,
