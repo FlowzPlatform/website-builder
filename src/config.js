@@ -13,11 +13,11 @@ localStorage.setItem('baseURL', url);
 // If Production Environment
 if (process.env.NODE_ENV !== 'development') {
     ipAdd = domainkey;
-    socketURL = 'ws://ws.'+domainkey+':4032';
+    socketURL = 'wss://ws.'+domainkey+':4032';
     frontEndUrl = 'https://webbuilder.'+domainkey+'/editor';
 
     loginUrl = 'https://auth.'+domainkey+'/api/login';
-    registerUrl = 'http://auth.'+domainkey+'/api/setup';
+    registerUrl = 'https://auth.'+domainkey+'/api/setup';
     forgotPasswordUrl = 'https://auth.'+domainkey+'/api/forgetpassword';
     userDetail = 'https://auth.'+domainkey+'/api/userdetails';
     socialUrl = 'https://auth.'+domainkey+'/api';
