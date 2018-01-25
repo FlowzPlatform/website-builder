@@ -16,12 +16,12 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'wss://ws.'+domainkey+':4032';
     frontEndUrl = 'https://webbuilder.'+domainkey+'/editor';
 
-    loginUrl = 'http://auth.'+domainkey+'/api/login';
-    ldapUrl = 'http://api.'+domainkey+'/auth/api/ldapauth';
-    registerUrl = 'http://auth.'+domainkey+'/api/setup';
-    forgotPasswordUrl = 'http://auth.'+domainkey+'/api/forgetpassword';
-    userDetail = 'http://auth.'+domainkey+'/api/userdetails';
-    socialUrl = 'http://auth.'+domainkey+'/api';
+    loginUrl = 'https://auth.'+domainkey+'/api/login';
+    ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
+    registerUrl = 'https://auth.'+domainkey+'/api/setup';
+    forgotPasswordUrl = 'https://auth.'+domainkey+'/api/forgetpassword';
+    userDetail = 'https://auth.'+domainkey+'/api/userdetails';
+    socialUrl = 'https://auth.'+domainkey+'/api';
 
     loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
     loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
