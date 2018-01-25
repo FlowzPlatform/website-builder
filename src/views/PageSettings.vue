@@ -4,9 +4,9 @@
       <div class="page-buttons">
          <el-button type="primary" size="small" @click="savePageSettings">Save</el-button>
       </div>
-      <div class="container">
+      <div class="container" style="margin-bottom: 100px;">
          <div class="row">
-            <div class="col-md-12" style="margin-top: 4%;">
+            <div class="col-md-12">
             <div class="collapsingDivWrapper row">
                    <div class="col-md-12">
                        <a href="javascript:void(0)" id="pageSettings" class="card color-div toggleableDivHeader">Page Settings</a>
@@ -57,7 +57,8 @@
             </div>
          </div>
          <div class="row">
-           <div class="col-md-12" style="margin-top: 4%;">
+           <div class="col-md-12">
+
               <div class="collapsingDivWrapper row">
                  <div class="col-md-12">
                      <a href="javascript:void(0)" id="add-meta-tag" class="card color-div toggleableDivHeader">External Meta Tags</a>
@@ -464,13 +465,13 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[6];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
       this.AllData = [];
       
       if (this.configData.status == 200 || this.configData.status == 204) {
 
-        this.settings = this.configData.data.data[0].configData;
+        this.settings = this.configData.data.configData;
 
         for (var i = 0; i < this.partialsList.length; i++) {
 
@@ -523,10 +524,10 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[6];
 
-      this.Data = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
+      this.Data = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
       if (this.Data.status == 200 || this.Data.status == 204) {
-        this.settingsData = this.Data.data.data[0].configData;
+        this.settingsData = this.Data.data.configData;
         this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
           'PageName': fileNameOrginal
         });
@@ -622,12 +623,12 @@ export default {
           this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
         }
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
-        if (rethinkdbCheck.data.data) {
+        if (rethinkdbCheck.data) {
 
           // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
               configData: this.settings
             })
             .then(async(res) => {
@@ -662,12 +663,12 @@ export default {
 
         this.settings[1].pageSettings.push(PageSettings);
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername);
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
-        if (rethinkdbCheck.data.data) {
+        if (rethinkdbCheck.data) {
 
           // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
               configData: this.settings
             })
             .then(async(res) => {
@@ -703,10 +704,10 @@ export default {
     let foldername = this.folderUrl.split('/');
     foldername = foldername[6];
 
-    this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
+    this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
 
     if(this.configData.status == 200 || this.configData.status == 204){
-      this.settings = this.configData.data.data[0].configData;
+      this.settings = this.configData.data.configData;
       
       // Get Current file index
       this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});
@@ -846,7 +847,6 @@ export default {
   mounted () {
      $(document).ready(function($) {
 
-
         $("#add-meta-tag").click(function() {
             $("#add-meta-tagContent").slideToggle("slow");
             if ($("#add-meta-tag").text() == "External Meta Tags") {
@@ -855,6 +855,7 @@ export default {
                 $("#add-meta-tag").text("External Meta Tags")
             }
         });
+
 
         $("#pageSettings").click(function() {
             $("#pageSettingsContent").slideToggle("slow");
@@ -895,7 +896,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.toggleableDivHeaderContent {
+
+  .toggleableDivHeaderContent {
       margin-top: 0px;
       margin-bottom: 30px;
       background: #eee;

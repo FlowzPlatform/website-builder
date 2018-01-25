@@ -51,7 +51,7 @@
 
             <div class="row">
               <div class="col-md-12" v-if="publishType === 'default'">
-                Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
+                Your Default domain will be: {{repoName}}.{{ipAddress}}
                 <br>
                   <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
                 <br>
@@ -81,14 +81,23 @@
       <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
           <div class="col-md-12">
-            <el-form ref="form" :model="form" label-width="180px">
+            <el-form ref="form" :model="form" label-width="180px" :rules="rulesProjectSettings">
 
               <el-form-item label="Repository Id:">
                   <el-input v-model="newRepoId" :disabled="true"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Project name">
-                  <el-input v-model="repoName" :disabled="true"></el-input>
+                <el-form-item label="Project name" prop="websitename">
+                  <!-- <el-input v-model="websitename"></el-input> -->
+                  <el-input placeholder="Please input" v-model="form.websitename">
+                    <el-button slot="append" @click="updateProjectName()" style="color: #4baf4f;"><i class="fa fa-save fa-fw"></i>Save</el-button>
+                  </el-input>
+                  <!-- {{websitename}} -->
+                  <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
+                </el-form-item>
+
+                <el-form-item label="Favicon Logo">
+                   <el-input v-model="faviconhref" placeholder="href" ></el-input>
                 </el-form-item>
 
                 <!-- <el-form-item label="Brand name">
@@ -372,7 +381,9 @@
         <div class="row">
           <div class="col-md-12">
             <el-form ref="form" :model="form">
+
               <div v-for="(n, index) in urlVariables">
+              <h5>URL {{ index +1}}:</h5>
                 <el-form-item>
                   <div class="row">
                     <div class="col-md-4">
@@ -395,7 +406,7 @@
                 <div class="row">
                   <div class="col-md-12">
                    <!--  <el-form ref="form" :model="form"> -->
-                      <h5>Headers:-</h5>
+                      <!-- <h5>Headers:-</h5> -->
                       <div v-for="(m, indexH) in n.urlHeaderVariables">
                         <el-form-item>
                           <div class="row">
@@ -883,6 +894,17 @@ import fileSaver from 'file-saver';
 
 import draggable from 'vuedraggable';
 
+// ProjectName Validator
+let checkProjectName = (rule, value, callback) => {
+    if (!value) {
+        return callback(new Error('Please enter Project Name.'));
+    }else if(!(/^[a-z0-9A-Z]+$/i.test(value))){
+        return callback(new Error('Please enter valid Project Name. (Project Name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
+    }else{
+        return callback();
+    }
+}
+
 export default {
   name: 'ProjectSettings',
   props: {
@@ -902,7 +924,8 @@ export default {
         Header: [],
         Footer: [],
         selectedHeader: '',
-        selectedFooter: ''
+        selectedFooter: '',
+        websitename: '',
       },
       commitsData: [],
       faviconhref:'',
@@ -949,7 +972,6 @@ export default {
 
       globalVariables: [],
       urlVariables: [],
-      urlHeaderVariables: [],
       globalCssVariables: [],
       ecommerceVariables: [],
       imageInputIsDisabled: false,
@@ -998,7 +1020,16 @@ export default {
       Paymentfields: [],
       Allgateway: [],
       currentSha: '',
-      publishType: 'default'
+      publishType: 'default',
+      faviconhref: '',
+
+      
+
+      rulesProjectSettings: {
+          websitename: [
+              { validator: checkProjectName, trigger: 'blur' }
+          ]
+      },
     }
   },
   components: {
@@ -1315,12 +1346,12 @@ export default {
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername );
 
-        if(rethinkdbCheck.data.data){
+        if(rethinkdbCheck.data){
 
           // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
             configData: configData
           })
           .then(async (res) => {
@@ -1565,9 +1596,9 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
+      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
 
-      configData=JSON.parse(JSON.stringify(configData.data.data[0].configData))
+      configData=JSON.parse(JSON.stringify(configData.data.configData))
       //// console.log('new config file:',configData);
       //// console.log('now partial');
       for(let q=0;q<Object.keys(configData[2].layoutOptions[0]).length;q++){
@@ -2020,7 +2051,7 @@ export default {
                               "ProjectSEOTitle": this.form.seoTitle,
                               "ProjectSEOKeywords": this.form.seoKeywords,
                               "ProjectSEODescription": this.form.seoDesc,
-                              "ProjectFaviconhref":this.faviconhref
+                              "ProjectFaviconhref": this.faviconhref
                             }, {
                               "GlobalVariables": this.globalVariables,
                               "GlobalUrlVariables": this.urlVariables,
@@ -2032,20 +2063,21 @@ export default {
                               "ProjectMetacharset":this.Metacharset,
                               "ProjectScripts":this.localscripts,
                               "ProjectStyles":this.localstyles,
-                               "PaymentGateways":this.paymentgateway
+                              "PaymentGateways":this.paymentgateway
                             }];
 
       this.settings[1].projectSettings = ProjectSettings;
 
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName );
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName );
 
-      if(rethinkdbCheck.data.data){
+      if(rethinkdbCheck.data){
         //console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);
 
         // update existing data
-        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
           configData: this.settings,
-          pluginsData: this.pluginsTreedata
+          pluginsData: this.pluginsTreedata,
+          websiteName: this.form.websitename
         })
         .then(async (res) => {
           //console.log(res.data);
@@ -2144,8 +2176,8 @@ export default {
       await this.commitProject();
 
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
-      var rawConfigs = responseConfig.data.data[0].configData;
+      var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+      var rawConfigs = responseConfig.data.configData;
       var partialstotal = []
       var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
       var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
@@ -2259,9 +2291,9 @@ export default {
           }
 
         var partials = ''
-        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
+        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
 
-        var rawSettings = responseConfigLoop.data.data[0].configData;
+        var rawSettings = responseConfigLoop.data.configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
         //console.log('nameF:', nameF)
         var Layout = ''
@@ -2573,12 +2605,12 @@ export default {
         }
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-        //console.log('final responseMetal:', responseMetal)
+        console.log('final responseMetal:', responseMetal)
         var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename: mainMetal,
-            text: backupMetalSmith,
+            text: responseMetal,
             type: 'file'
           }).then(async (response) => {
             let vueBodyStart = '';
@@ -2873,15 +2905,19 @@ export default {
       //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
 
       if(this.configData.status == 200 || this.configData.status == 204){
 
-        this.settings = this.configData.data.data[0].configData;
-        this.pluginsTreedata = this.configData.data.data[0].pluginsData;
+        this.settings = this.configData.data.configData;
+        this.form.websitename = this.configData.data.websiteName;
+        this.pluginsTreedata = this.configData.data.pluginsData;
+
         this.currentSha = this.settings[0].repoSettings[0].CurrentHeadSHA;
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+
+        this.faviconhref = this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
         this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
         this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
@@ -2927,8 +2963,8 @@ export default {
       }
 
       // Get all commits list
-      let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
-      let configData = responseConfig.data.data[0].configData;
+      let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
+      let configData = responseConfig.data.configData;
       let SHA = configData[0].repoSettings[0].CurrentHeadSHA;
 
       await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
@@ -2977,6 +3013,11 @@ export default {
       }
     },
 
+    async updateProjectName() {
+      await this.saveProjectSettings();
+      location.reload();
+    },
+
     renderContent(h, { node, data, store }) {
       return (
         <span>
@@ -2998,116 +3039,123 @@ export default {
 
   },
 
-  created () {
-    this.init(); 
-  },
-
   async mounted () {
 
     // Collapsing Divs
     $(document).ready(function($) {
 
-        $("#tooglePublishWebsite").click(function() {
-            $("#togglePublishWebsiteContent").slideToggle("slow");
-            if ($("#tooglePublishWebsite").text() == "Publish Website") {
-                $("#tooglePublishWebsite").html("Publish Website")
-            } else {
-                $("#tooglePublishWebsite").text("Publish Website")
-            }
-        });
-        
-        $("#toogleProjectSettings").click(function() {
-            $("#toogleProjectSettingsContent").slideToggle("slow");
-            if ($("#toogleProjectSettings").text() == "Project Settings") {
-                $("#toogleProjectSettings").html("Project Settings")
-            } else {
-                $("#toogleProjectSettings").text("Project Settings")
-            }
-        });
+      $('#websiteName').editable();
 
-        $("#toggleImportPlugin").click(function() {
-            $("#toggleImportPluginContent").slideToggle("slow");
-            if ($("#toggleImportPlugin").text() == "Import Plugin") {
-                $("#toggleImportPlugin").html("Import Plugin")
-            } else {
-                $("#toggleImportPlugin").text("Import Plugin")
-            }
-        });
+      // $('#websiteName').on('save', function(e, params) {
+      //   self.form.websitename = params.newValue;
+      //   self.updateProjectName();
+      // });
 
-        $("#toggleUrlBucket").click(function() {
-            $("#toggleUrlBucketContent").slideToggle("slow");
-            if ($("#toggleUrlBucket").text() == "URL Bucket") {
-                $("#toggleUrlBucket").html("URL Bucket")
-            } else {
-                $("#toggleUrlBucket").text("URL Bucket")
-            }
-        });
+      $("#tooglePublishWebsite").click(function() {
+          $("#togglePublishWebsiteContent").slideToggle("slow");
+          if ($("#tooglePublishWebsite").text() == "Publish Website") {
+              $("#tooglePublishWebsite").html("Publish Website")
+          } else {
+              $("#tooglePublishWebsite").text("Publish Website")
+          }
+      });
+      
+      $("#toogleProjectSettings").click(function() {
+          $("#toogleProjectSettingsContent").slideToggle("slow");
+          if ($("#toogleProjectSettings").text() == "Project Settings") {
+              $("#toogleProjectSettings").html("Project Settings")
+          } else {
+              $("#toogleProjectSettings").text("Project Settings")
+          }
+      });
 
-        $("#toggleGlobalVariables").click(function() {
-            $("#toggleGlobalVariablesContent").slideToggle("slow");
-            if ($("#toggleGlobalVariables").text() == "Global Variables") {
-                $("#toggleGlobalVariables").html("Global Variables")
-            } else {
-                $("#toggleGlobalVariables").text("Global Variables")
-            }
-        });
+      $("#toggleImportPlugin").click(function() {
+          $("#toggleImportPluginContent").slideToggle("slow");
+          if ($("#toggleImportPlugin").text() == "Import Plugin") {
+              $("#toggleImportPlugin").html("Import Plugin")
+          } else {
+              $("#toggleImportPlugin").text("Import Plugin")
+          }
+      });
 
-        $("#toggleExternalLinks").click(function() {
-            $("#toggleExternalLinksContent").slideToggle("slow");
-            if ($("#toggleExternalLinks").text() == "External Links") {
-                $("#toggleExternalLinks").html("External Links")
-            } else {
-                $("#toggleExternalLinks").text("External Links")
-            }
-        });
-        $("#toggleLocalscripts").click(function() {
-            $("#toggleLocalscriptsContent").slideToggle("slow");
-            if ($("#toggleLocalscripts").text() == "Global Scripts") {
-                $("#toggleLocalscripts").html("Global Scripts")
-            } else {
-                $("#toggleLocalscripts").text("Global Scripts")
-            }
-        });
-        $("#toggleLocalstyles").click(function() {
-            $("#toggleLocalstylesContent").slideToggle("slow");
-            if ($("#toggleLocalstyles").text() == "Global Styles") {
-                $("#toggleLocalstyles").html("Global Styles")
-            } else {
-                $("#toggleLocalstyles").text("Global Styles")
-            }
-        });
+      $("#toggleUrlBucket").click(function() {
+          $("#toggleUrlBucketContent").slideToggle("slow");
+          if ($("#toggleUrlBucket").text() == "URL Bucket") {
+              $("#toggleUrlBucket").html("URL Bucket")
+          } else {
+              $("#toggleUrlBucket").text("URL Bucket")
+          }
+      });
 
+      $("#toggleGlobalVariables").click(function() {
+          $("#toggleGlobalVariablesContent").slideToggle("slow");
+          if ($("#toggleGlobalVariables").text() == "Global Variables") {
+              $("#toggleGlobalVariables").html("Global Variables")
+          } else {
+              $("#toggleGlobalVariables").text("Global Variables")
+          }
+      });
 
-        $("#toggleMetaTags").click(function() {
-            $("#toggleMetaTagsContent").slideToggle("slow");
-            if ($("#toggleMetaTags").text() == "Meta Tags") {
-                $("#toggleMetaTags").html("Meta Tags")
-            } else {
-                $("#toggleMetaTags").text("Meta Tags")
-            }
-        });
-
-        $("#togglePaymentgateway").click(function() {
-            $("#togglePaymentgatewayContent").slideToggle("slow");
-            if ($("#togglePaymentgateway").text() == "Payment gateway") {
-                $("#togglePaymentgateway").html("Payment gateway")
-            } else {
-                $("#togglePaymentgateway").text("Payment gateway")
-            }
-        });
-
-        $("#toggleCommits").click(function() {
-            $("#toggleCommitsContent").slideToggle("slow");
-            if ($("#toggleCommits").text() == "List of Commits") {
-                $("#toggleCommits").html("List of Commits")
-            } else {
-                $("#toggleCommits").text("List of Commits")
-            }
-        });
+      $("#toggleExternalLinks").click(function() {
+          $("#toggleExternalLinksContent").slideToggle("slow");
+          if ($("#toggleExternalLinks").text() == "External Links") {
+              $("#toggleExternalLinks").html("External Links")
+          } else {
+              $("#toggleExternalLinks").text("External Links")
+          }
+      });
+      $("#toggleLocalscripts").click(function() {
+          $("#toggleLocalscriptsContent").slideToggle("slow");
+          if ($("#toggleLocalscripts").text() == "Global Scripts") {
+              $("#toggleLocalscripts").html("Global Scripts")
+          } else {
+              $("#toggleLocalscripts").text("Global Scripts")
+          }
+      });
+      $("#toggleLocalstyles").click(function() {
+          $("#toggleLocalstylesContent").slideToggle("slow");
+          if ($("#toggleLocalstyles").text() == "Global Styles") {
+              $("#toggleLocalstyles").html("Global Styles")
+          } else {
+              $("#toggleLocalstyles").text("Global Styles")
+          }
+      });
 
 
+      $("#toggleMetaTags").click(function() {
+          $("#toggleMetaTagsContent").slideToggle("slow");
+          if ($("#toggleMetaTags").text() == "Meta Tags") {
+              $("#toggleMetaTags").html("Meta Tags")
+          } else {
+              $("#toggleMetaTags").text("Meta Tags")
+          }
+      });
 
+      $("#togglePaymentgateway").click(function() {
+          $("#togglePaymentgatewayContent").slideToggle("slow");
+          if ($("#togglePaymentgateway").text() == "Payment gateway") {
+              $("#togglePaymentgateway").html("Payment gateway")
+          } else {
+              $("#togglePaymentgateway").text("Payment gateway")
+          }
+      });
+
+      $("#toggleCommits").click(function() {
+          $("#toggleCommitsContent").slideToggle("slow");
+          if ($("#toggleCommits").text() == "List of Commits") {
+              $("#toggleCommits").html("List of Commits")
+          } else {
+              $("#toggleCommits").text("List of Commits")
+          }
+      });
     });
+
+
+    await this.init(); 
+
+    let self = this;    
+
+    $.fn.editable.defaults.mode = 'inline';
 
     // Brand Image uploader
     let scope = this;

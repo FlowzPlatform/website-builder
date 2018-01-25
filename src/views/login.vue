@@ -32,6 +32,12 @@
           <a href="javascript:void(0)" class="social-button-twitter" v-on:click="doTwitterLogin()"><i class="fa fa-twitter"></i></a>
           <a href="javascript:void(0)" class="social-button-github" v-on:click="doGithubLogin()"><i class="fa fa-github"></i></a>
           <a href="javascript:void(0)" class="social-button-linked-in" v-on:click="doLinkedInLogin()"><i class="fa fa-linkedin"></i></a>
+          <!-- <a href="javascript:void(0)" class="social-button-linked-in"><i class="fa fa-lock-alt"></i></a> -->
+          <el-tooltip content="LDAP Login" placement="top">
+            <div class="ldap">
+              <input type="checkbox" name="ldapCheckbox" @change="checkLdapLogin" id="ldapCheckbox"><label for="ldapCheckbox" class="login-button-ldap"><i class="fa fa-lock"></i></label> 
+            </div>
+          </el-tooltip>
         </div>
       </div>
       <div>
@@ -122,7 +128,8 @@ export default {
       loginWithTwitterUrl: config.loginWithTwitterUrl,
       loginWithGithubUrl: config.loginWithGithubUrl,
       loginWithLinkedInUrl: config.loginWithLinkedInUrl,
-      userDetailId: ''
+      userDetailId: '',
+      isLdapLogin: false
     }
   },
   component: {
@@ -131,7 +138,32 @@ export default {
     authenticate () {
       //console.log('Authenticating User');
 
-      axios.post(config.loginUrl, {
+      $('.login').addClass('test')
+      setTimeout(function(){
+        $('.login').addClass('testtwo')
+      },300);
+      setTimeout(function(){
+        $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+      },500);
+      setTimeout(function(){
+        
+      },2500);
+      // setTimeout(function(){
+        
+      // },2800);
+
+      let loginNowUrl;
+
+      if(this.isLdapLogin === true){
+        loginNowUrl = config.ldapUrl;
+      } else {
+        loginNowUrl = config.loginUrl;
+      }
+
+      console.log('Login URL: ', loginNowUrl);
+
+      axios.post(loginNowUrl, {
         password: this.form.pass,
         email: this.form.user
       }, {
@@ -165,6 +197,13 @@ export default {
             
             localStorage.setItem('userDetailId', this.userDetailId);
             localStorage.setItem('email', res.data.data.email);
+
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
+
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
 
             $('.success').fadeIn();  
 
@@ -229,11 +268,18 @@ export default {
       }).catch(error => {
         this.authen.status = false;
 
+        $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+        $('.login').removeClass('testtwo')
+
+        $('.login').removeClass('test')
+        $('.login div').fadeOut(123);
+
         $(".authent").fadeOut();
         $('.login div').fadeIn();
         this.$message({
             showClose: true,
-            message: 'Username Password did not matched..',
+            message: 'Some Server error occured.',
             type: 'error'
         });
 
@@ -277,6 +323,10 @@ export default {
       document.getElementById('form-linkedIn').submit();
     },
 
+    checkLdapLogin () {
+      this.isLdapLogin = $('#ldapCheckbox').prop('checked');
+    },
+
     goToLandingPage () {
       this.$router.push('/');
     }
@@ -284,7 +334,45 @@ export default {
   created () {
     // Check if login token in cookie exist or not
     if(this.$cookie.get('auth_token')){
-      this.$router.push('/editor');
+      // Set email Session
+      axios.get(config.userDetail, {
+        headers: {
+          'Authorization' : this.$cookie.get('auth_token')
+        }   
+      })
+      .then(async (res) => {
+        this.userDetailId = res.data.data._id;
+
+        // Store Token in Cookie
+        let location = psl.parse(window.location.hostname)
+        location = location.domain === null ? location.input : location.domain
+
+        Cookies.set('email', res.data.data.email, {domain: location});
+        Cookies.set('userDetailId',  this.userDetailId, {domain: location});
+        
+        localStorage.setItem('userDetailId', this.userDetailId);
+        localStorage.setItem('email', res.data.data.email);
+
+        await axios.post(config.baseURL+'/flows-dir-listing' , {
+          foldername :'/var/www/html/websites/'+ this.userDetailId,
+          type : 'folder'
+        })
+        .then((res) => {
+          this.$router.push('/editor');
+          //console.log('user Folder created!');
+        });
+        
+      })
+      .catch((e) => {
+        console.log(e)
+        this.$message({
+            showClose: true,
+            message: 'Invalid Token',
+            type: 'error'
+        });
+      })
+    } else {
+      console.log('Token Not found. Please Login.')
     }
   },
   mounted () {
@@ -297,23 +385,7 @@ export default {
         if(code==32||code==13||code==188||code==186){
             if(self.form.user != '' && self.form.pass != ''){
               self.authenticate();
-              $('.login').addClass('test')
-              setTimeout(function(){
-                $('.login').addClass('testtwo')
-              },300);
-              setTimeout(function(){
-                $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-                $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-              },500);
-              setTimeout(function(){
-                $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-                $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-                $('.login').removeClass('testtwo')
-              },2500);
-              setTimeout(function(){
-                $('.login').removeClass('test')
-                $('.login div').fadeOut(123);
-              },2800);
+              
               // setTimeout(function(){
               //   if(self.authen.status == true){
               //     $('.success').fadeIn();  
@@ -342,36 +414,36 @@ export default {
       if(self.form.user != '' && self.form.pass != ''){
         self.authenticate();
         $('.login').addClass('test')
-        setTimeout(function(){
-          $('.login').addClass('testtwo')
-        },300);
-        setTimeout(function(){
-          $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-        },500);
-        setTimeout(function(){
-          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-          $('.login').removeClass('testtwo')
-        },2500);
-        setTimeout(function(){
-          $('.login').removeClass('test')
-          $('.login div').fadeOut(123);
-        },2800);
-        setTimeout(function(){
-          if(self.authen.status == true){
-            $('.success').fadeIn();  
-          } else {
-            $(".authent").fadeOut();
-            $('.login div').fadeIn();
-            self.$message({
-                showClose: true,
-                message: 'Username Password did not matched..',
-                type: 'error'
-            });
-          }
+        // setTimeout(function(){
+        //   $('.login').addClass('testtwo')
+        // },300);
+        // setTimeout(function(){
+        //   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        //   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+        // },500);
+        // setTimeout(function(){
+        //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+        //   $('.login').removeClass('testtwo')
+        // },2500);
+        // setTimeout(function(){
+        //   $('.login').removeClass('test')
+        //   $('.login div').fadeOut(123);
+        // },2800);
+        // setTimeout(function(){
+        //   if(self.authen.status == true){
+        //     $('.success').fadeIn();  
+        //   } else {
+        //     $(".authent").fadeOut();
+        //     $('.login div').fadeIn();
+        //     self.$message({
+        //         showClose: true,
+        //         message: 'Username Password did not matched..',
+        //         type: 'error'
+        //     });
+        //   }
           
-        },3200);
+        // },3200);
       } else {
         self.$message({
             showClose: true,
@@ -733,4 +805,51 @@ export default {
     background-color: #006FB7;
     transition: 0.2s all linear;
   }
+
+
+
+  div.ldap {
+    display: inline-block;
+  }
+  div.ldap label {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 500%;
+    padding: 6px 0px 0px 0px; 
+    background-color: #444;
+    transition: 0.2s all linear;
+    color: #fff;
+  }
+  div.ldap input:checked + label {
+    background: #4CB050;
+    color: #fff;
+  }
+  div.ldap input {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  div.ldap input:focus ~ label {
+    box-shadow: 0px 0px 6px 0px #008edb;
+    outline: 0 none;
+  }
+  div.ldap input:focus ~ .focus {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    margin: -10px;
+    padding: 10px 10px 0;
+    outline: 0;
+    border: 1px solid #35a3e8;
+    box-shadow: 0 0 10px #35a3e8;
+    z-index: -1;
+  }
+
 </style>

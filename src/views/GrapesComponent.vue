@@ -83,8 +83,8 @@ export default {
         //// console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
-        let rawConfigs = responseConfig.data.data[0].configData;
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+        let rawConfigs = responseConfig.data.configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
         this.globalCssVariables = rawConfigs[1].projectSettings[1].GlobalCssVariables;
