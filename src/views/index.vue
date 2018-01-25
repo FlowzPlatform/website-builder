@@ -346,8 +346,9 @@
   import VueSession from 'vue-session'
   Vue.use(VueSession)
 
-  import axios from 'axios'
-  import _ from 'lodash'
+  import axios from 'axios';
+  import psl from 'psl';
+  import _ from 'lodash';
 
   import HTML from 'vue-html'
   Vue.use(HTML)
@@ -466,7 +467,8 @@
         currentFile : null,
         defaultProps: {
           children: 'children',
-          label: 'name'
+          label: 'name',
+          websitename: 'websitename'
         },
         rootpath : '',
         backuplayout:'',
@@ -562,11 +564,58 @@
       SiteFooter
     },
     created () {
+
+      // Check if login token in cookie exist or not
       if(this.$cookie.get('auth_token')){
         this.getData();
+        // Set email Session
+        axios.get(config.userDetail, {
+          headers: {
+            'Authorization' : this.$cookie.get('auth_token')
+          }   
+        })
+        .then(async (res) => {
+          this.userDetailId = res.data.data._id;
+
+          // Store Token in Cookie
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+
+          Cookies.set('email', res.data.data.email, {domain: location});
+          Cookies.set('userDetailId',  this.userDetailId, {domain: location});
+          
+          localStorage.setItem('userDetailId', this.userDetailId);
+          localStorage.setItem('email', res.data.data.email);
+
+          await axios.post(config.baseURL+'/flows-dir-listing' , {
+            foldername :'/var/www/html/websites/'+ this.userDetailId,
+            type : 'folder'
+          })
+          .then((res) => {
+            this.getData();
+          });
+
+          this.getData();
+          
+        })
+        .catch((e) => {
+          console.log(e)
+          this.$message({
+              showClose: true,
+              message: 'Invalid Token',
+              type: 'error'
+          });
+        })
       } else {
+        console.log('Token Not found. Please Login.');
         this.$router.push('/login');
       }
+
+      // if(this.$cookie.get('auth_token')){
+      //   this.getData();
+      // } else {
+      //   this.$router.push('/login');
+      // }
     },
     mounted () {
 
@@ -760,22 +809,23 @@
         //// console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
         axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId'))
-          .then(response => {
+          .then(async response => {
             response.data.children = this.getTreeData(response.data);
 
-            setTimeout(async function(){
+            // setTimeout(async function(){
               for (let i = 0; i < response.data.children.length; i++) {
                 
                 // Map folder name and project id
-                let rethinkdbCheck =await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
-                response.data.children[i].name=rethinkdbCheck.data.websiteName;
+                let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
+
+                response.data.children[i].websitename = rethinkdbCheck.data.websiteName;
 
                 response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
                   return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
                   // return !(child.name == '.git')
                 })
               }
-            },1000);
+            // },1000);
 
             if (this.directoryTree.length == 0) {
               this.directoryTree = [response.data]
@@ -1407,7 +1457,7 @@
         if(rethinkdbCheck.data){
 
           // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
+          return await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
             configData: this.globalConfigData
           })
           .then(async (res) => {
@@ -1664,7 +1714,7 @@
                       .then( (res) => {
                         this.newFileDialog = false
                         this.addNewFileLoading = false
-                        this.formAddFile.filename = null
+                        this.formAddFile.filename = null;
                         
                         let temp = {
                             value: name,
@@ -1851,7 +1901,8 @@
              this.fullscreenLoading = true;
  
              // let username = this.$session.get('username');
-             let token = this.$session.get('token');
+             // let token = this.$session.get('token');
+             let token = Cookies.get('auth_token');
  
              this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
  
@@ -1892,8 +1943,8 @@
  
                            axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName, {
  
-                             }).then((response) => {
-                               localStorage.setItem("listOfTempaltes", JSON.stringify(response.data));
+                             }).then((resDir) => {
+                               localStorage.setItem("listOfTempaltes", JSON.stringify(resDir.data));
                              })
                              .catch((e) => {
                                //console.log(e)
@@ -1904,30 +1955,6 @@
  
                            // Create essential folders
                            this.addOtherFolder(newFolderName);
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  
                            this.formAddProjectFolder.projectName = null;
                          } else {
@@ -2475,10 +2502,10 @@
                                         "ProjectSEOTitle": '',
                                         "ProjectSEOKeywords": '',
                                         "ProjectSEODescription": '',
+                                        "ProjectFaviconhref": ''
                                       }, {
                                         "GlobalVariables": [],
                                         "GlobalUrlVariables": [],
-                                        "GlobalUrlHeaderVariables": [],
                                         "GlobalCssVariables": [],
                                         "ProjectExternalCss": [],
                                         "ProjectExternalJs": [],
@@ -3776,7 +3803,8 @@
           var metaInfo = self.globalConfigData[1].projectSettings[1].ProjectMetaInfo;
           var ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
           var projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
-          var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles
+          var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles;
+          var projectfaviconhref=self.globalConfigData[1].projectSettings[0].ProjectFaviconhref
           var tophead = '';
           var endhead = '';
           var topbody = '';
@@ -3788,7 +3816,13 @@
           var pageexternalCss = [];
           var pageMetaInfo = [];
           var pageSeoTitle;
-          var PageMetacharset = ''
+          var PageMetacharset = '';
+          var favicon = '';
+
+          if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
+            favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+          }
+
           if (ProjectMetacharset != '') {
             tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
           }
@@ -4184,7 +4218,7 @@
 
               let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                    "<title>" + pageSeoTitle + "</title>\n" +
+                    "<title>" + pageSeoTitle + "</title>\n" + favicon + '\n' +
                     "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
                     "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
@@ -4432,7 +4466,7 @@
             let actualFileNameOnly = fileNameParts[0];
             newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
           }
-          return axios.post(config.baseURL + '/flows-dir-listing', {
+          return axios.post(config.baseURL + '/save-menu', {
               filename : newJsonName ,
               text : newContent,
               type : 'file'
@@ -4696,7 +4730,7 @@
 
         this.$swal({
           title: 'Are you sure?',
-          text: 'You want you delete this file!',
+          text: 'You want you delete this Website!',
           type: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Yes, delete it!',
@@ -4761,39 +4795,266 @@
 
       previewWebsite (node, data) {
 
+        let projectName = this.$store.state.fileUrl;
+
+        projectName = projectName.split('/');
+        projectName = projectName[6];
+
         if(process.env.NODE_ENV !== 'development'){
-          window.open('http://' + Cookies.get('userDetailId') + '.' + node.data.name + '.'+ config.ipAddress);
+          window.open('http://' + Cookies.get('userDetailId') + '.' + projectName + '.'+ config.ipAddress);
         } else {
-          window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + node.data.name + '/public/');
+          window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + projectName + '/public/');
         }
 
       },
 
-      async cloneWebsite (node, data){
-        console.log('Cloning Website');
+      async cloneWebsite(node, data) {
+
         this.fullscreenLoading = true;
 
-        let sourceConfig = await this.getConfigFileData(node.data.data);
+        let clonedWebsiteTempName = node.data.name + '_copy'
 
-        console.log(sourceConfig);
+        let sourceConfig = await this.getConfigFileData(data.path);
 
-        // call API to clone website folder
-        // await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + node.data.name + '&userDetailId=' + Cookies.get('userDetailId'), {
-        // })
-        // .then((res) => {
-        //   console.log(res);
-        //   this.fullscreenLoading = false;
-        //   location.reload();
-        // })
-        // .catch((e) => {
-        //   this.$message({
-        //     showClose: true,
-        //     message: 'Server error',
-        //     type: 'error'
-        //   });
-        //   console.log(e)
-        // })
+        let pluginsData = [{
+                            "id":1,
+                            "children":[
+                               {
+                                  "id":2,
+                                  "children":[
 
+                                  ],
+                                  "label":"default",
+                                  "isActive": true
+                               }
+                            ],
+                            "label":"Header",
+                            "isActive": true
+                         },
+                         {
+                            "id":3,
+                            "children":[
+                               {
+                                  "id":4,
+                                  "children":[
+
+                                  ],
+                                  "label":"default",
+                                  "isActive": true
+                               }
+                            ],
+                            "label":"Footer",
+                            "isActive": true
+                         },
+                         {
+                            "id":5,
+                            "children":[
+                               {
+                                  "id":6,
+                                  "children":[
+
+                                  ],
+                                  "label":"default",
+                                  "isActive": true
+                               }
+                            ],
+                            "label":"Sidebar",
+                            "isActive": true
+                         },
+                         {
+                            "id":7,
+                            "children":[
+                               {
+                                  "id":8,
+                                  "children":[
+
+                                  ],
+                                  "label":"default",
+                                  "isActive": true
+                               }
+                            ],
+                            "label":"Menu",
+                            "isActive": true
+                         }
+                      ];
+
+        await axios.post(config.baseURL + '/project-configuration', {
+          userEmail: Cookies.get('email'),
+          websiteName: clonedWebsiteTempName,
+          configData: sourceConfig,
+          pluginsData: pluginsData
+        })
+        .then(async (res) => {
+          let newFolderName = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id
+            // let newFolderName=res.data.id 
+
+          let token = Cookies.get('auth_token');
+
+          await axios.post(config.baseURL + '/flows-dir-listing', {
+            foldername: newFolderName,
+            type: 'folder'
+          }, {
+            headers: {
+              'authorization': token
+            }
+          })
+          .then((resp) => {
+
+            // var response = resp
+            axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {})
+              .then(async (response) => {
+
+                if (!(response.data.statusCode)) {
+
+                  localStorage.setItem("folderUrl", newFolderName);
+                  var folder = localStorage.getItem("folderUrl");
+
+                  axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName, {
+
+                  }).then((response) => {
+                    localStorage.setItem("listOfTempaltes", JSON.stringify(response.data));
+                  })
+                  .catch((e) => {
+                    //console.log(e)
+                  })
+
+                  this.newRepoId = response.data.id;
+                  this.repoName = response.data.name;
+
+                  // Create essential folders
+                  // this.addOtherFolder(newFolderName);
+
+                  // get Current SHA
+                  let clonedSHA;
+                  await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                  }).then(response => {
+                    clonedSHA = response.data[0].id;
+                  }).catch(error => {
+                    //console.log("Some error occured: ", error);
+                  });
+
+                  console.log('Old Website Name:', node.data.name);
+
+                  // call API to clone website folder
+                  await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {
+                  })
+                  .then(async (cloneRes) => {
+                    console.log(res);
+
+                    await axios.post(config.baseURL + '/gitlab-add-repo', {
+                      commitMessage: 'Initial Push',
+                      repoName: this.repoName,
+                      userDetailId: Cookies.get('userDetailId')
+                    }).then(async response => {
+
+                    }).catch(error => {
+                      //console.log("Some error occured: ", error);
+                    });
+                    
+                    let clonedWebsiteData = await this.getConfigFileData(newFolderName);
+
+                    // Update Repo Settings
+                    clonedWebsiteData[0].repoSettings[0].BaseURL = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id;
+                    clonedWebsiteData[0].repoSettings[0].CurrentHeadSHA = clonedSHA;
+                    clonedWebsiteData[0].repoSettings[0].RepositoryId = this.newRepoId;
+                    clonedWebsiteData[0].repoSettings[0].RepositoryName = this.repoName;
+
+                    // Update Project Settings
+                    clonedWebsiteData[1].projectSettings[0].ProjectName = this.repoName;
+                    clonedWebsiteData[1].projectSettings[0].RepositoryId = this.newRepoId;
+
+
+                    // Save Updated Config
+                    await axios.patch(config.baseURL + '/project-configuration/' + this.repoName, {
+                      configData: clonedWebsiteData
+                    })
+                    .then(async (configRes) => {
+                      // Update Assets files
+
+                      // Create project-details.json file
+                      let projectDetails = newFolderName + '/public/assets/project-details.json';
+                      let projectDetailsData = [{
+                                                "projectOwner" : Cookies.get('email'),
+                                                "projectName" : this.repoName
+                                                }];
+                      await axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename : projectDetails,
+                          text : JSON.stringify(projectDetailsData)
+                      })
+                      .then(async (res) => {
+
+                        // Create metalsmith file
+                        let mainMetal = newFolderName + '/public/assets/metalsmith.js';
+
+                        let projectName = newFolderName.split('/');
+
+                        var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename : mainMetal,
+                            text : metalsmithJSON,
+                            type : 'file'
+                        })
+                        .then((res) => {
+                          this.fullscreenLoading = false;
+                          location.reload();
+                        })
+                        .catch((e) => {
+                            //console.log(e)
+                        });
+
+                      })
+                      .catch((e) => {
+                          //console.log(e)
+                      });
+
+                      
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                    });
+
+                  })
+                  .catch((e) => {
+                    this.$message({
+                      showClose: true,
+                      message: 'Server error',
+                      type: 'error'
+                    });
+                    console.log(e)
+                  })
+
+                  this.formAddProjectFolder.projectName = null;
+                } else {
+                  this.fullscreenLoading = false;
+                  this.$message({
+                    showClose: true,
+                    message: 'Error from server: ' + response.data.error.message,
+                    type: 'error'
+                  });
+
+                  // Delete folder from storage
+                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
+                    .then((res) => {})
+
+                  .catch((e) => {
+                    //console.log(e)
+                  })
+                  return;
+                }
+              })
+              .catch((e) => {
+                console.log(e)
+              });
+
+          })
+          .catch((e) => {
+            console.log(e)
+          });
+        })
+        .catch((e) => {
+          console.log(e)
+        });
       },
 
       // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
@@ -4807,7 +5068,7 @@
             return (<span>
                   <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
                       <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
-                      <span>{node.label}</span>
+                      <span>{data.websitename}</span>
                   </span>
                   <span class="action-button" style="float: right; padding-right: 5px;">
 

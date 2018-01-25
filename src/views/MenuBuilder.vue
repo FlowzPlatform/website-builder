@@ -133,18 +133,20 @@ import domenu from 'domenu'
 			let menuData;
 
 			try {
-		    let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json');
+		    	let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json');
 				//// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
 					menuData = responseConfig.data;
 					this.initMenu(menuData);
-					console.log('Init Menu')
 					// window.localStorage.setItem('domenu-1Json', responseConfig.data);
+				} else {
+					menuData = [{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}];
+					this.initMenu(menuData);	
 				}
 			}
 			catch(err) {
-			    // localStorage.removeItem('domenu-1Json');
-			    // window.localStorage.clear();
+				menuData = '[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]';
+				this.initMenu(menuData);
 			}
 
 			
@@ -152,12 +154,12 @@ import domenu from 'domenu'
 
 		methods: {
 			initMenu(menuData){
-				console.log('Menu Data: ', menuData);
+				// console.log('Menu Data: ', menuData);
 				// this.MenuJSON = responseConfig.data;
 
 				let montedself = this;
 
-				var $domenu            = $('#domenu-1'),
+				var $domenu        = $('#domenu-1'),
 		        domenu             = $('#domenu-1').domenu(),
 		        $outputContainer   = $('#domenu-1-output'),
 		        $jsonOutput        = $outputContainer.find('.jsonOutput'),

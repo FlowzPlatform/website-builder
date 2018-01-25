@@ -138,6 +138,21 @@ export default {
     authenticate () {
       //console.log('Authenticating User');
 
+      $('.login').addClass('test')
+      setTimeout(function(){
+        $('.login').addClass('testtwo')
+      },300);
+      setTimeout(function(){
+        $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+      },500);
+      setTimeout(function(){
+        
+      },2500);
+      // setTimeout(function(){
+        
+      // },2800);
+
       let loginNowUrl;
 
       if(this.isLdapLogin === true){
@@ -182,6 +197,13 @@ export default {
             
             localStorage.setItem('userDetailId', this.userDetailId);
             localStorage.setItem('email', res.data.data.email);
+
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
+
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
 
             $('.success').fadeIn();  
 
@@ -246,11 +268,18 @@ export default {
       }).catch(error => {
         this.authen.status = false;
 
+        $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+        $('.login').removeClass('testtwo')
+
+        $('.login').removeClass('test')
+        $('.login div').fadeOut(123);
+
         $(".authent").fadeOut();
         $('.login div').fadeIn();
         this.$message({
             showClose: true,
-            message: 'Username Password did not matched.',
+            message: 'Some Server error occured.',
             type: 'error'
         });
 
@@ -305,7 +334,45 @@ export default {
   created () {
     // Check if login token in cookie exist or not
     if(this.$cookie.get('auth_token')){
-      this.$router.push('/editor');
+      // Set email Session
+      axios.get(config.userDetail, {
+        headers: {
+          'Authorization' : this.$cookie.get('auth_token')
+        }   
+      })
+      .then(async (res) => {
+        this.userDetailId = res.data.data._id;
+
+        // Store Token in Cookie
+        let location = psl.parse(window.location.hostname)
+        location = location.domain === null ? location.input : location.domain
+
+        Cookies.set('email', res.data.data.email, {domain: location});
+        Cookies.set('userDetailId',  this.userDetailId, {domain: location});
+        
+        localStorage.setItem('userDetailId', this.userDetailId);
+        localStorage.setItem('email', res.data.data.email);
+
+        await axios.post(config.baseURL+'/flows-dir-listing' , {
+          foldername :'/var/www/html/websites/'+ this.userDetailId,
+          type : 'folder'
+        })
+        .then((res) => {
+          this.$router.push('/editor');
+          //console.log('user Folder created!');
+        });
+        
+      })
+      .catch((e) => {
+        console.log(e)
+        this.$message({
+            showClose: true,
+            message: 'Invalid Token',
+            type: 'error'
+        });
+      })
+    } else {
+      console.log('Token Not found. Please Login.')
     }
   },
   mounted () {
@@ -318,23 +385,7 @@ export default {
         if(code==32||code==13||code==188||code==186){
             if(self.form.user != '' && self.form.pass != ''){
               self.authenticate();
-              $('.login').addClass('test')
-              setTimeout(function(){
-                $('.login').addClass('testtwo')
-              },300);
-              setTimeout(function(){
-                $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-                $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-              },500);
-              setTimeout(function(){
-                $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-                $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-                $('.login').removeClass('testtwo')
-              },2500);
-              setTimeout(function(){
-                $('.login').removeClass('test')
-                $('.login div').fadeOut(123);
-              },2800);
+              
               // setTimeout(function(){
               //   if(self.authen.status == true){
               //     $('.success').fadeIn();  
@@ -363,22 +414,22 @@ export default {
       if(self.form.user != '' && self.form.pass != ''){
         self.authenticate();
         $('.login').addClass('test')
-        setTimeout(function(){
-          $('.login').addClass('testtwo')
-        },300);
-        setTimeout(function(){
-          $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-        },500);
-        setTimeout(function(){
-          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-          $('.login').removeClass('testtwo')
-        },2500);
-        setTimeout(function(){
-          $('.login').removeClass('test')
-          $('.login div').fadeOut(123);
-        },2800);
+        // setTimeout(function(){
+        //   $('.login').addClass('testtwo')
+        // },300);
+        // setTimeout(function(){
+        //   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        //   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+        // },500);
+        // setTimeout(function(){
+        //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+        //   $('.login').removeClass('testtwo')
+        // },2500);
+        // setTimeout(function(){
+        //   $('.login').removeClass('test')
+        //   $('.login div').fadeOut(123);
+        // },2800);
         // setTimeout(function(){
         //   if(self.authen.status == true){
         //     $('.success').fadeIn();  
