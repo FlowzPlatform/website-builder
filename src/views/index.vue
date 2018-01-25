@@ -1631,11 +1631,14 @@
                var name=this.formAddFile.filename;
                 var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
                 let checkfilename=false
-                for(let i=0;i<rawConfigs[1].pageSettings.length;i++){
+                if(newfilename.indexOf('Pages')>0){
+                  for(let i=0;i<rawConfigs[1].pageSettings.length;i++){
                   if(name==rawConfigs[1].pageSettings[i].PageName.split('.')[0]){
                     checkfilename=true
                   }
                 }
+                }
+                else{
 
                 for(let i=0;i<Object.keys(rawConfigs[2].layoutOptions[0]).length;i++){
                   if(Object.keys(rawConfigs[2].layoutOptions[0])[i]==newfilename.split('/')[newfilename.split('/').length-2])
@@ -1647,6 +1650,9 @@
                     }
                   }
                 }
+                }
+                
+
                 if (checkfilename==true) {
                   //console.log('file already exists')
                   this.addNewFileLoading=false
@@ -1821,7 +1827,7 @@
                                               "PageExternalCss": [],
                                               "PageExternalJs": [],
                                               "PageMetaInfo": [],
-                                              "PageMetacharset": [],
+                                              "PageMetacharset": 'UTF-8',
                                               "PageScripts":[],
                                               "PageStyles": [],
                                               "partials": totpartial
@@ -2510,7 +2516,7 @@
                                         "ProjectExternalCss": [],
                                         "ProjectExternalJs": [],
                                         "ProjectMetaInfo": [],
-                                        "ProjectMetacharset": '',
+                                        "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
                                         "PaymentGateways":[]
@@ -2530,7 +2536,7 @@
                                         "PageExternalCss": [],
                                         "PageExternalJs": [],
                                         "PageMetaInfo": [],
-                                        "PageMetacharset":'',
+                                        "PageMetacharset":'UTF-8',
                                         "PageScripts":[],
                                         "PageStyles": []
                                       }]
@@ -3810,6 +3816,7 @@
           var topbody = '';
           var endbody = '';
           var pagestyles = [];
+          var favicon=''
 
           var pageexternalJs = [];
           var pagescripts = [];
@@ -3903,10 +3910,14 @@
               PageMetacharset = self.globalConfigData[1].pageSettings[i].PageMetacharset;
               pagescripts = self.globalConfigData[1].pageSettings[i].PageScripts;
               pagestyles = self.globalConfigData[1].pageSettings[i].PageStyles;
+              
             }
           }
-
-          if (PageMetacharset != undefined && PageMetacharset != '') {
+          if(pageSeoTitle!=undefined && pageSeoTitle!=''){
+            SeoTitle=pageSeoTitle
+          }
+          // console.log(SeoTitle)
+          if (PageMetacharset != undefined && PageMetacharset != '' && !(ProjectMetacharset!='')) {
             tophead = tophead + '<meta charset="' + PageMetacharset + '">'
           }
           if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
@@ -4749,7 +4760,7 @@
                   .then((res) => {
                     this.$message({
                       showClose: true,
-                      message: 'Project successfully deleted..!!',
+                      message: 'Website successfully deleted..!!',
                       type: 'success'
                     });
                   })

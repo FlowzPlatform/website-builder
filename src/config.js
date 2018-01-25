@@ -2,7 +2,7 @@ domainkey = process.env.domainkey;
 console.log('Domain Key: ', domainkey);
 
 if(process.env.baseURL == undefined){
-    url = 'http://api.'+domainkey+'/serverapi'
+    url = 'https://api.'+domainkey+'/serverapi'
 } else {
     url = process.env.baseURL;
     // url = 'http://devapi.flowz.com/serverapi';
@@ -13,8 +13,8 @@ localStorage.setItem('baseURL', url);
 // If Production Environment
 if (process.env.NODE_ENV !== 'development') {
     ipAdd = domainkey;
-    socketURL = 'ws://ws.'+domainkey+':4032';
-    frontEndUrl = 'http://webbuilder.'+domainkey+'/editor';
+    socketURL = 'wss://ws.'+domainkey+':4032';
+    frontEndUrl = 'https://webbuilder.'+domainkey+'/editor';
 
     loginUrl = 'http://auth.'+domainkey+'/api/login';
     ldapUrl = 'http://api.'+domainkey+'/auth/api/ldapauth';
@@ -23,11 +23,11 @@ if (process.env.NODE_ENV !== 'development') {
     userDetail = 'http://auth.'+domainkey+'/api/userdetails';
     socialUrl = 'http://auth.'+domainkey+'/api';
 
-    loginWithFacebookUrl = 'http://auth.'+domainkey+'/auth/facebook';
-    loginWithGoogleUrl = 'http://auth.'+domainkey+'/auth/Gplus';
-    loginWithTwitterUrl = 'http://auth.'+domainkey+'/auth/twitter';
-    loginWithGithubUrl = 'http://auth.'+domainkey+'/auth/github';
-    loginWithLinkedInUrl = 'http://auth.'+domainkey+'/auth/linkedin';
+    loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
+    loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
+    loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';
+    loginWithGithubUrl = 'https://auth.'+domainkey+'/auth/github';
+    loginWithLinkedInUrl = 'https://auth.'+domainkey+'/auth/linkedin';
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -41,11 +41,11 @@ if (process.env.NODE_ENV !== 'development') {
     userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
     socialUrl = 'http://auth.flowzcluster.tk/api';
 
-    loginWithFacebookUrl = 'http://auth.flowzcluster.tk/auth/facebook';
-    loginWithGoogleUrl = 'http://auth.flowzcluster.tk/auth/Gplus';
-    loginWithTwitterUrl = 'http://auth.flowzcluster.tk/auth/twitter';
-    loginWithGithubUrl = 'http://auth.flowzcluster.tk/auth/github';
-    loginWithLinkedInUrl = 'http://auth.flowzcluster.tk/auth/linkedin';
+    loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
+    loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';
+    loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
+    loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
+    loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
 }
 
 module.exports = {

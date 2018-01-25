@@ -104,15 +104,17 @@
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
                 </el-form-item> -->
 
-                <!-- <el-form-item label="Brand Logo">
-                  <div class="col6 valid"> 
+                <el-form-item label="Favicon Logo">
+                  <!-- <div class="col6 valid"> 
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label> 
                     <input type="file" name="" id="upload-validation">
-                    <span class="dis">(max 1 MB. .jpg or .png only)</span>
-                  </div>
-                </el-form-item> -->
+                    <span class="dis">( .ico only)</span>
+
+                  </div> -->
+                   <el-input v-model="faviconhref" placeholder="href" ></el-input>
+                </el-form-item>
 
                 <el-form-item label="Project SEO Title">
                   <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
@@ -926,6 +928,7 @@ export default {
         websitename: '',
       },
       commitsData: [],
+      faviconhref:'',
       fileList3: [],
       pluginsData: [],
       commitMessage: '',
@@ -1117,7 +1120,7 @@ export default {
     addNewexternallinkMeta() {
       let newVariable = { name:'',content:''};
       this.externallinksMeta.push(newVariable);
-      this.editableInit();
+      // this.editableInit();
     },
 
     addNewlocalscripts(){
@@ -2217,7 +2220,7 @@ export default {
         }
       };
       
-      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+   for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
       var tophead = '';
       var endhead = '';
       var topbody = '';
@@ -2399,7 +2402,7 @@ export default {
                   .then((response) => {
                     //console.log("called webpack_file api successfully:")
                   })
-                  .catch((e) => {
+                  .catch((e) => {pul
                     //console.log(e)
                   })
               })
@@ -2931,6 +2934,7 @@ export default {
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
         this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
+        this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
       } else {
         //console.log('Cannot get configurations!');
       } 

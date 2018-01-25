@@ -58,6 +58,7 @@
          </div>
          <div class="row">
            <div class="col-md-12">
+
               <div class="collapsingDivWrapper row">
                  <div class="col-md-12">
                      <a href="javascript:void(0)" id="add-meta-tag" class="card color-div toggleableDivHeader">External Meta Tags</a>
@@ -427,7 +428,7 @@ export default {
       this.externallinksCSS.push(newVariable);
     },
     addNewexternallinkMeta() {
-      let newVariable = { name:'EditMe',content:'EditMe'};
+      let newVariable = { name:'',content:''};
       this.externallinksMeta.push(newVariable);
     },
     deletelinkJS(deleteIndex) {
@@ -467,7 +468,7 @@ export default {
       this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername);
 
       this.AllData = [];
-      //// console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
+      
       if (this.configData.status == 200 || this.configData.status == 204) {
 
         this.settings = this.configData.data.configData;
@@ -846,7 +847,6 @@ export default {
   mounted () {
      $(document).ready(function($) {
 
-
         $("#add-meta-tag").click(function() {
             $("#add-meta-tagContent").slideToggle("slow");
             if ($("#add-meta-tag").text() == "External Meta Tags") {
@@ -855,6 +855,7 @@ export default {
                 $("#add-meta-tag").text("External Meta Tags")
             }
         });
+
 
         $("#pageSettings").click(function() {
             $("#pageSettingsContent").slideToggle("slow");
