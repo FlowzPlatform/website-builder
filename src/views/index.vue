@@ -814,12 +814,15 @@
 
             // setTimeout(async function(){
               for (let i = 0; i < response.data.children.length; i++) {
-                
+                // console.log('--------', response.data.children[i].name)
+
                 // Map folder name and project id
                 let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
 
                 response.data.children[i].websitename = rethinkdbCheck.data.websiteName;
-
+                 if(response.data.children[i].websitename.length>20){
+                  response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
+                }
                 response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
                   return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
                   // return !(child.name == '.git')
@@ -3810,6 +3813,7 @@
           var ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
           var projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
           var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles;
+          var projectseotitle=self.globalConfigData[1].projectSettings[0].ProjectSEOTitle;
           var projectfaviconhref=self.globalConfigData[1].projectSettings[0].ProjectFaviconhref
           var tophead = '';
           var endhead = '';
@@ -3817,15 +3821,16 @@
           var endbody = '';
           var pagestyles = [];
           var favicon=''
-
+          var SeoTitle=''
           var pageexternalJs = [];
           var pagescripts = [];
           var pageexternalCss = [];
           var pageMetaInfo = [];
           var pageSeoTitle;
           var PageMetacharset = '';
-          var favicon = '';
-
+          if(projectseotitle!=undefined && projectseotitle!=''){
+            SeoTitle=projectseotitle
+          }
           if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
             favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
           }
@@ -4229,7 +4234,7 @@
 
               let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                    "<title>" + pageSeoTitle + "</title>\n" + favicon + '\n' +
+                    "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
                     "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
@@ -4289,6 +4294,7 @@
                       self.saveFileLoading = false;
                       console.log('Metalsmith call FolderUrl: ', folderUrl);
                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
+
                           var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                           axios.post(config.baseURL + '/flows-dir-listing', {
@@ -4313,7 +4319,7 @@
                                 window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
                               } 
 
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                 .then(async (res) => {
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
@@ -4826,7 +4832,7 @@
         let clonedWebsiteTempName = node.data.name + '_copy'
 
         let sourceConfig = await this.getConfigFileData(data.path);
-
+        // console.log(clonedWebsiteTempName,sourceConfig)
         let pluginsData = [{
                             "id":1,
                             "children":[
@@ -5021,7 +5027,7 @@
 
                       
                     })
-                    .catch((e) => {
+                    .catch((esourceConfig) => {
                         console.log(e)
                     });
 

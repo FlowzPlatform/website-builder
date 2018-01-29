@@ -81,7 +81,7 @@
       <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
           <div class="col-md-12">
-            <el-form ref="form" :model="form" label-width="180px" :rules="rulesProjectSettings">
+            <el-form ref="form1" :model="form" label-width="180px" :rules="rulesProjectSettings">
 
               <el-form-item label="Repository Id:">
                   <el-input v-model="newRepoId" :disabled="true"></el-input>
@@ -89,8 +89,8 @@
 
                 <el-form-item label="Project name" prop="websitename">
                   <!-- <el-input v-model="websitename"></el-input> -->
-                  <el-input placeholder="Please input" v-model="form.websitename">
-                    <el-button slot="append" @click="updateProjectName()" style="color: #4baf4f;"><i class="fa fa-save fa-fw"></i>Save</el-button>
+                  <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
+                    <el-button slot="append" @click="updateProjectName('form1')" style="color: #4baf4f;"><i class="fa fa-save fa-fw"></i>Save</el-button>
                   </el-input>
                   <!-- {{websitename}} -->
                   <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
@@ -104,7 +104,7 @@
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
                 </el-form-item> -->
 
-                <el-form-item label="Favicon Logo">
+                <!-- <el-form-item label="Favicon Logo"> -->
                   <!-- <div class="col6 valid"> 
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
@@ -113,8 +113,8 @@
                     <span class="dis">( .ico only)</span>
 
                   </div> -->
-                   <el-input v-model="faviconhref" placeholder="href" ></el-input>
-                </el-form-item>
+                 <!--   <el-input v-model="faviconhref" placeholder="href" ></el-input>
+                </el-form-item> -->
 
                 <el-form-item label="Project SEO Title">
                   <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
@@ -898,7 +898,7 @@ import draggable from 'vuedraggable';
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('Please enter Project Name.'));
-    }else if(!(/^[a-z0-9A-Z]+$/i.test(value))){
+    }else if(!(/^[a-z0-9A-Z_]+$/i.test(value))){
         return callback(new Error('Please enter valid Project Name. (Project Name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
     }else{
         return callback();
@@ -1022,9 +1022,6 @@ export default {
       currentSha: '',
       publishType: 'default',
       faviconhref: '',
-
-      
-
       rulesProjectSettings: {
           websitename: [
               { validator: checkProjectName, trigger: 'blur' }
@@ -2179,14 +2176,17 @@ export default {
       var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
       var rawConfigs = responseConfig.data.configData;
       var partialstotal = []
+      var pageSeoTitle;
       var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
       var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
       var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
       var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
       var projectscripts=rawConfigs[1].projectSettings[1].ProjectScripts
       var projectstyles=rawConfigs[1].projectSettings[1].ProjectStyles
-
-      
+      var projectseotitle=rawConfigs[1].projectSettings[0].ProjectSEOTitle;
+       var projectfaviconhref=rawConfigs[1].projectSettings[0].ProjectFaviconhref
+       var favicon=''
+       var SeoTitle=''
       var getFromBetween = {
         results: [],
         string: "",
@@ -2225,6 +2225,12 @@ export default {
       var endhead = '';
       var topbody = '';
       var endbody = '';
+      if(projectseotitle!=undefined && projectseotitle!=''){
+        SeoTitle=projectseotitle
+      }
+      if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
+        favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+      }
         if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
         tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
       }
@@ -2295,7 +2301,7 @@ export default {
 
         var rawSettings = responseConfigLoop.data.configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-        //console.log('nameF:', nameF)
+        console.log('nameF:', nameF)
         var Layout = ''
         var partialsPage = [];
         var vuepartials = [];
@@ -2305,8 +2311,9 @@ export default {
         var pageexternalJs = [];
         var pageexternalCss = [];
         var pageMetaInfo = [];
-        var pageSeoTitle;
+        
         var PageMetacharset = '';
+        
         Layout = rawSettings[1].pageSettings[i].PageLayout
         partialsPage = rawSettings[1].pageSettings[i].partials
         var back_partials = JSON.parse(JSON.stringify(partialsPage));
@@ -2319,7 +2326,9 @@ export default {
         pagescripts=rawSettings[1].pageSettings[i].PageScripts;
         pagestyles=rawSettings[1].pageSettings[i].PageStyles;
 
-
+        if(pageSeoTitle!=undefined && pageSeoTitle!=''){
+          SeoTitle=pageSeoTitle
+        }
         if (PageMetacharset!=undefined && PageMetacharset != '') {
           tophead = tophead + '<meta charset="' + PageMetacharset + '">'
         }
@@ -2450,7 +2459,7 @@ export default {
                   temp = temp.replace(/\s+/g, ' ');
                   temp = temp.trim();
                   temp = temp.split(' ')
-                  for (let j = 0; j < temp.length; j++) {
+                  for (let j = 0; j < temp.length; j++) { 
                     if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
                       if (temp[j + 1] != undefined) {
                         result[q] = temp[0];
@@ -2492,69 +2501,76 @@ export default {
               })
             }
             let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
+            var changeresult=JSON.parse(JSON.stringify(result))
+              for(let s=0;s<changeresult.length;s++){
+                layoutdata.data=layoutdata.data.replace(changeresult[s],changeresult[s].replace(/&nbsp;/g,'').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g,"").replace(/\s*=\s*/g,'='))
+              }
             DefaultParams = [];
             if (result.length > 0) {
-              var resultParam = result
-              for (let w = 0; w < resultParam.length; w++) {
-                var temp;
-                temp = resultParam[w].trim()
-                result[w] = result[w].trim()
-                temp = temp.replace(/&nbsp;/g, ' ')
-                temp = temp.replace(/\s+/g, ' ');
-                temp = temp.trim();
-                temp = temp.split(' ')
-                for (let j = 0; j < temp.length; j++) {
-                  if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                    if (temp[j + 1] != undefined) {
-                      result[w] = temp[0];
-                      if (temp[j + 1].indexOf('.') > -1) {
-                        let x = temp[j + 1]
-                        x = temp[j + 1].split(/'/)[1];
-                        let obj = {}
-                        obj[temp[0]] = x
-                        DefaultParams.push(obj)
-                        break;
+                var resultParam = result
+                for (let i = 0; i < resultParam.length; i++) {
+                  var temp;
+                  temp = resultParam[i].trim()
+                  result[i] = result[i].trim()
+                  
+                  temp = temp.split(' ')
+                  for (let j = 0; j < temp.length; j++) {
+                     temp[j] = temp[j].trim();
+                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                       if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'")>-1) {
+                        result[i] = temp[0];
+                        if (temp[j]) {
+                          let x = temp[j]
+                          x = temp[j].split("'")[1]+'.partial';
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
                       }
-                    } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                      result[w] = temp[0];
-                      if (temp[j]) {
-                        let x = temp[j]
-                        x = temp[j].split(/'/)[1];
-                        let obj = {}
-                        obj[temp[0]] = x
-                        DefaultParams.push(obj)
+                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"')>-1) {
+                        result[i] = temp[0];
+                        if (temp[j]) {
+                          let x = temp[j]
+                          x = temp[j].split('"')[1]+'.partial';
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
+                      }
+                      else{
+                        //console.log('Error while finding ID in layout');
+                      }
+                    }
+                  }
+                }
+                for (let j = 0; j < result.length; j++) {
+                  for (let i = 0; i < back_partials.length; i++) {
+                    if (Object.keys(back_partials[i])[0] == result[j]) {
+
+                      temp1 = '{{> ' + Object.keys(back_partials[i])[0] + '}}'
+                      if (layoutdata.data.search(temp1) > 0) {
+
+                        temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + '}}'
+                      } else {
+                        var indexdefault=_.findIndex(DefaultParams,function(o){
+                          return Object.keys(o)[0]==result[j]
+                        })
+                        temp1 = "{{> " + Object.keys(back_partials[i])[0] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
+
+                        temp2 = "{{> " + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
+                      }
+                      if (layoutdata.data.split(temp1).join(temp2)) {
+                        layoutdata.data = layoutdata.data.split(temp1).join(temp2)
                         break;
+                      } else {
+                        //console.log('Replacing in layout file failed')
                       }
                     }
                   }
                 }
               }
-              for (let j = 0; j < result.length; j++) {
-                for (let w = 0; w < back_partials.length; w++) {
-                  if (Object.keys(back_partials[w])[0] == result[j]) {
-
-                    temp1 = '{{> ' + Object.keys(back_partials[w])[0] + ' }}'
-                    if (layoutdata.data.search(temp1) > 0) {
-
-                      temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + ' }}'
-                    } else {
-                      temp1 = '{{> ' + Object.keys(back_partials[w])[0] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
-
-                      temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
-                    }
-                    //// console.log('temp1:', temp1)
-                    //// console.log('temp2:', temp2)
-                    if (layoutdata.data.split(temp1).join(temp2)) {
-                      //// console.log('replacing in layout file successfully')
-                      layoutdata.data = layoutdata.data.split(temp1).join(temp2)
-                    } else {
-                      //// console.log('replacing in layout file failed')
-                    }
-                  }
-                }
-
-              }
-            }
 
           })
           .catch((e) => {
@@ -2567,7 +2583,7 @@ export default {
 
         var index = responseMetal.search('.source')
 
-        responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
+        responseMetal = responseMetal.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.substr(index + 9)
         var indexPartial = responseMetal.search("handlebars");
 
         for (var j = 0; j < partialsPage.length; j++) {
@@ -2615,16 +2631,16 @@ export default {
           }).then(async (response) => {
             let vueBodyStart = '';
               let vueBodyEnd = ''
-            var newFolderName = folderUrl + '/Preview';
+            var newFolderName1 = folderUrl + '/Preview';
             await axios.post(config.baseURL + '/flows-dir-listing', {
-                foldername: newFolderName,
+                foldername: newFolderName1,
                 type: 'folder'
               })
               .then(async (res) => {
                 //console.log(res);
                 let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                    "<title>" + pageSeoTitle + "</title>\n" +
+                    "<title>" + SeoTitle + "</title>\n" +  favicon + '\n' +
                     "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
                     "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js' defer='defer' ><\/script>\n" +
@@ -2693,16 +2709,16 @@ export default {
                           .then(async (res) => {
                             var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                             previewFile = folderUrl.replace('/var/www/html', '');
-
+                            
                             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               .then(async (res) => {
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                                  //console.log(e)
+                                  console.log(e)
                                 })
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
                                   //// console.log('deleted extra layout file:', res)
                                 }).catch((e) => {
-                                  //console.log(e)
+                                  console.log(e)
                                 })
                                 if (vuepartials != undefined && vuepartials.length > 0) {
                                   for (let x = 0; x < vuepartials.length; x++) {
@@ -2745,7 +2761,7 @@ export default {
                           //console.log(e)
                         })
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                        //console.log(e)
+                        console.log(err)
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
                       })
                   })
@@ -2762,14 +2778,14 @@ export default {
                       //console.log(e)
                     })
                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                    //console.log(e)
+                    console.log(e)
                   })
 
               })
               .catch((e) => {
                  this.saveFileLoading = false;
                   this.fullscreenLoading = false;
-                //console.log(e)
+                console.log(e)
                 axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: mainMetal,
                   text: responseMetal,
@@ -2786,7 +2802,7 @@ export default {
           .catch((e) => {
              this.saveFileLoading = false;
               this.fullscreenLoading = false;
-            //console.log('error while creating metalsmithJSON file' + e)
+            console.log(e)
             axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
               text: responseMetal,
@@ -2798,34 +2814,6 @@ export default {
             })
 
           })
-
-        
-         
-        
-        // Publish with Zeit Now
-        // axios.post(config.baseURL + '/publish-now', {
-        //     projectName: this.repoName
-        //   })
-        //   .then((res) => {
-        //     let serverUrl = res.data;
-        //     // window.open( serverUrl + '/public/');
-        //     this.$message({
-        //       showClose: true,
-        //       message: 'Successfully Published.',
-        //       type: 'success'
-        //     });
-        ////     console.log(res.data);
-        //     this.previewLoader = false;
-        //   })
-        //   .catch((e) => {
-        //     this.$message({
-        //       showClose: true,
-        //       message: 'Failed! Please try again.',
-        //       type: 'error'
-        //     });
-        ////     console.log(e);
-        //     this.previewLoader = false;
-        //   });
       }
 
       if(publishType == 'custom'){
@@ -3013,9 +3001,17 @@ export default {
       }
     },
 
-    async updateProjectName() {
-      await this.saveProjectSettings();
-      location.reload();
+     updateProjectName(form) {
+     this.$refs[form].validate(async (valid) => {
+          if (valid) {
+           await this.saveProjectSettings();
+            location.reload();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+     
     },
 
     renderContent(h, { node, data, store }) {
