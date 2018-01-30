@@ -202,6 +202,39 @@
       </div>
       <!-- Plugins section ends -->
 
+      <!-- Image upload Section -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleAssetImages" class="card color-div toggleableDivHeader">Asset Images</a>
+          </div>
+      </div>
+      <div id="toggleAssetImagesContent" class="toggleableDivHeaderContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="row" style="margin-bottom: 15px; ">
+              <div class="col-md-12">
+                <el-button icon="upload2" @click="uploadAssetImage()">Upload</el-button>    
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3" v-for="(n, index) in assetsImages">
+                <div class="delete-icon">
+                  <a href="javascript:void(0)" @click="deleteAssetImage(index)"><i class="fa fa-times"></i></a>
+                </div>
+                <div class="thumbnail">
+                  <div class="deleteImage"></div>
+                  <img :src="n" class="asset-image" />
+                </div>
+              </div> 
+            </div>
+                        
+          </div>
+        </div>
+      </div>
+      <!-- Image Upload -->
+
       <!-- Global Variables Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -1032,12 +1065,30 @@ export default {
               { validator: checkProjectName, trigger: 'blur' }
           ]
       },
+      assetsImages: []
     }
   },
   components: {
     draggable
   },
   methods: {
+
+    uploadAssetImage() {
+      var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
+      
+      fsClient.pick({
+        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","video","audio","customsource"]
+      }).then( (response) => {
+        // declare this function to handle response
+        this.assetsImages.push(response.filesUploaded[0].url);
+        this.saveProjectSettings();
+      });
+
+    },
+
+    deleteAssetImage(index){
+      this.assetsImages.splice(index,1);
+    },
 
     handleTabClick(tab, event) {
       //console.log(tab, event);
@@ -2056,6 +2107,7 @@ export default {
                               "ProjectFaviconhref": this.faviconhref,
                               "ProjectVId":this.form.vid
                             }, {
+                              "AssetImages": this.assetsImages,
                               "GlobalVariables": this.globalVariables,
                               "GlobalUrlVariables": this.urlVariables,
                               "GlobalCssVariables": this.globalCssVariables,
@@ -2919,6 +2971,7 @@ export default {
         this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
+        this.assetsImages = this.settings[1].projectSettings[1].AssetImages;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
         this.externallinksCSS = this.settings[1].projectSettings[1].ProjectExternalCss;
@@ -3177,6 +3230,11 @@ export default {
               $("#toggleCommits").text("List of Commits")
           }
       });
+
+      $("#toggleAssetImages").click(function() {
+          $("#toggleAssetImagesContent").slideToggle("slow");
+      });
+
     });
 
 
@@ -3530,5 +3588,29 @@ export default {
 
   .green-tick-img{
     width: 15px;
+  }
+
+  .asset-image{
+    height: 100px;
+    width: 100%;
+  }
+
+  .delete-icon{
+    text-align: right;
+    position: absolute;
+    top: -5px;
+    right: 9px;
+    background-color: red;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+  }
+
+  .delete-icon a i{
+    margin-left: -15px;
+    top: 3px;
+    position: absolute;
+    color: #fff;
   }
 </style>

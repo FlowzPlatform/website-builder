@@ -2558,6 +2558,7 @@
                                         "ProjectFaviconhref": '',
                                         "ProjectVId":''
                                       }, {
+                                        "AssetImages": [],
                                         "GlobalVariables": [],
                                         "GlobalUrlVariables": [],
                                         "GlobalCssVariables": [],
