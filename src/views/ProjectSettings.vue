@@ -2440,7 +2440,7 @@ export default {
         layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
         var responseMetal = '';
 
-        var backupMetalSmith = '';
+        let backupMetalSmith = '';
 
         let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
         contentpartials = contentpartials.data
