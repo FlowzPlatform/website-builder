@@ -100,6 +100,10 @@
                    <el-input v-model="faviconhref" placeholder="href" ></el-input>
                 </el-form-item>
 
+                <el-form-item label="V Shop ID">
+                   <el-input v-model="form.vid" placeholder="enter vid" ></el-input>
+                </el-form-item>
+
                 <!-- <el-form-item label="Brand name">
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
                 </el-form-item> -->
@@ -926,6 +930,7 @@ export default {
         selectedHeader: '',
         selectedFooter: '',
         websitename: '',
+        vid:''
       },
       commitsData: [],
       faviconhref:'',
@@ -2031,7 +2036,7 @@ export default {
     },
 
     async saveProjectSettings() {
-
+      // this.updateProjectName()
       // let repoSettings = [{
       //                     "RepositoryId": this.newRepoId,
       //                     "RepositoryName": this.repoName,
@@ -2048,7 +2053,8 @@ export default {
                               "ProjectSEOTitle": this.form.seoTitle,
                               "ProjectSEOKeywords": this.form.seoKeywords,
                               "ProjectSEODescription": this.form.seoDesc,
-                              "ProjectFaviconhref": this.faviconhref
+                              "ProjectFaviconhref": this.faviconhref,
+                              "ProjectVId":this.form.vid
                             }, {
                               "GlobalVariables": this.globalVariables,
                               "GlobalUrlVariables": this.urlVariables,
@@ -2624,7 +2630,7 @@ export default {
         console.log('final responseMetal:', responseMetal)
         var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
-        await axios.post(config.baseURL + '/flows-dir-listing', {
+        await axios.post(config.baseURL + '/save-menu', {
             filename: mainMetal,
             text: responseMetal,
             type: 'file'
@@ -2701,7 +2707,7 @@ export default {
 
                     await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
 
-                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                        await axios.post(config.baseURL + '/save-menu', {
                             filename: mainMetal,
                             text: backupMetalSmith,
                             type: 'file'
@@ -2923,6 +2929,7 @@ export default {
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
         this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
         this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
+        this.form.vid=this.settings[1].projectSettings[0].ProjectVId;
       } else {
         //console.log('Cannot get configurations!');
       } 
@@ -3004,8 +3011,34 @@ export default {
      updateProjectName(form) {
      this.$refs[form].validate(async (valid) => {
           if (valid) {
-           await this.saveProjectSettings();
+            console.log('websiteName',this.form.websitename)
+            // console.log(this.folderUrl.split('/')[this.folderUrl.split('/').length-2])
+            var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
+            console.log('userid',userid)
+            var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
+            console.log('alldatauser:',alldatauser.data.data.length)
+            let checkdetail=true
+            for(let i=0;i<alldatauser.data.data.length;i++){
+              if(this.form.websitename==alldatauser.data.data[i].websiteName){
+                checkdetail=false
+
+              }
+            }
+            if(checkdetail!=false){
+              console.log('not same found')
+              await this.saveProjectSettings();
             location.reload();
+            }
+            else{
+              this.$message({
+              showClose: true,
+              message: 'Same name found.Try again!',
+              type: 'error'
+            });
+              console.log('same name found',this.configData.data.websiteName);
+              this.form.websiteName=this.configData.data.websiteName;
+
+            }
           } else {
             console.log('error submit!!');
             return false;
