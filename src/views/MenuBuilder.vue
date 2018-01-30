@@ -27,13 +27,16 @@
 		  			<div class="dd" id="domenu-1">
 					    <button id="domenu-add-item-btn" class="dd-new-item">+</button>
 					    <!-- .dd-item-blueprint is a template for all .dd-item's -->
+
 					    <li class="dd-item-blueprint">
+
 					      <!-- @migrating-from 0.48.59 button container -->
 					      <button class="collapse" data-action="collapse" type="button" style="display: none;">–</button>
 					      <button class="expand" data-action="expand" type="button" style="display: none;">+</button>
 					      <div class="dd-handle dd3-handle">Drag</div>
 					      <div class="dd3-content">
 					        <span class="item-name">[item_name]</span>
+					      	<!-- <span><input type="checkbox" name="" /></span> -->
 					        <!-- @migrating-from 0.13.29 button container-->
 					        <!-- .dd-button-container will hide once an item enters the edit mode -->
 					        <div class="dd-button-container">
@@ -104,6 +107,7 @@
 import axios from 'axios'
 
 const config = require('../config');
+import Cookies from 'js-cookie';
 
 import domenu from 'domenu'
 
@@ -117,7 +121,7 @@ import domenu from 'domenu'
 	    }),
 	    components: {
 	    },
-		async mounted () {
+		async created () {
 			let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
 			let urlparts = configFileUrl.split("/");
 			let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -126,144 +130,148 @@ import domenu from 'domenu'
 			let actualFileNameOnly = fileNameParts[0];
 			var folderUrl = configFileUrl.replace(fileName, '');
 
+			let menuData;
+
 			try {
-			    let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json');
+		    	let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json');
 				//// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
-					window.localStorage.setItem('domenu-1Json', responseConfig.data);
+					menuData = responseConfig.data;
+					this.initMenu(menuData);
+					// window.localStorage.setItem('domenu-1Json', responseConfig.data);
+				} else {
+					menuData = [{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}];
+					this.initMenu(menuData);	
 				}
 			}
 			catch(err) {
-			    localStorage.removeItem('domenu-1Json');
-			    // window.localStorage.clear();
+				menuData = '[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]';
+				this.initMenu(menuData);
 			}
 
-			this.initMenu();
+			
 		},
 
 		methods: {
-			initMenu(){
+			initMenu(menuData){
+				// console.log('Menu Data: ', menuData);
 				// this.MenuJSON = responseConfig.data;
 
 				let montedself = this;
-				$(document).ready(function() {
-				    var $domenu            = $('#domenu-1'),
-				        domenu             = $('#domenu-1').domenu(),
-				        $outputContainer   = $('#domenu-1-output'),
-				        $jsonOutput        = $outputContainer.find('.jsonOutput'),
-				        $keepChanges       = $outputContainer.find('.keepChanges'),
-				        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-				    $domenu.domenu({
-				        slideAnimationDuration: 0,
-				        allowListMerging: ['domenu-2'],
-				        select2:                {
-				          support: true,
-				          params:  {
-				            tags: true
-				          }
-				        },
-				        data: window.localStorage.getItem('domenu-1Json')
-				        // data: montedself.MenuJSON
-				      })
-				      // Example: initializing functionality of a custom button #21
-				      .onCreateItem(function(blueprint) {
-				        // We look with jQuery for our custom button we denoted with class "custom-button-example"
-				        // Note 1: blueprint holds a reference of the element which is about to be added the list
-				        var customButton = $(blueprint).find('.custom-button-example');
+				var $domenu        = $('#domenu-1'),
+		        domenu             = $('#domenu-1').domenu(),
+		        $outputContainer   = $('#domenu-1-output'),
+		        $jsonOutput        = $outputContainer.find('.jsonOutput'),
+		        $keepChanges       = $outputContainer.find('.keepChanges'),
+		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-				        // Here we define our custom functionality for the button,
-				        // we will forward the click to .dd3-content span and let
-				        // doMenu handle the rest
-				        customButton.click(function() {
-				          blueprint.find('.dd3-content span').first().click();
-				        });
-				      })
-				      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
-				      // initialize the functionality our custom button
-				      .parseJson()
-				      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
-				        $jsonOutput.val(domenu.toJson());
-				        montedself.outputJson = JSON.parse(domenu.toJson());
-				        if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1Json', domenu.toJson());
-				      })
-				      .onToJson(function() {
-				        if(window.localStorage.length) $clearLocalStorage.show();
-				      });
+		    $domenu.domenu({
+		        slideAnimationDuration: 0,
+		        allowListMerging: ['domenu-2'],
+		        select2:                {
+		          support: true,
+		          params:  {
+		            tags: true
+		          }
+		        },
+		        data: menuData
+		        // data: montedself.MenuJSON
+		      })
+		      // Example: initializing functionality of a custom button #21
+		      .onCreateItem(function(blueprint) {
+		        // We look with jQuery for our custom button we denoted with class "custom-button-example"
+		        // Note 1: blueprint holds a reference of the element which is about to be added the list
+		        var customButton = $(blueprint).find('.custom-button-example');
 
-				    // // Console event examples
-				    // domenu.on('*', function(a, b, c) {
-				    ////     console.log('event:', '*', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onParseJson(function() {
-				    ////     console.log('event: onFromJson', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onToJson(function() {
-				    ////     console.log('event: onToJson', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onSaveEditBoxInput(function() {
-				    ////     console.log('event: onSaveEditBoxInput', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemDrag(function() {
-				    ////     console.log('event: onItemDrag', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemDrop(function() {
-				    ////     console.log('event: onItemDrop', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemAdded(function() {
-				    ////     console.log('event: onItemAdded', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemCollapsed(function() {
-				    ////     console.log('event: onItemCollapsed', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemExpanded(function() {
-				    ////     console.log('event: onItemExpanded', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemRemoved(function() {
-				    ////     console.log('event: onItemRemoved', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemStartEdit(function() {
-				    ////     console.log('event: onItemStartEdit', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemEndEdit(function() {
-				    ////     console.log('event: onItemEndEdit', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemAddChildItem(function() {
-				    ////     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemAddChildItem(function() {
-				    ////     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemAddChildItem(function() {
-				    ////     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-				    //   })
-				    //   .onItemAddChildItem(function() {
-				    ////     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-				    //   });
+		        // Here we define our custom functionality for the button,
+		        // we will forward the click to .dd3-content span and let
+		        // doMenu handle the rest
+		        customButton.click(function() {
+		          blueprint.find('.dd3-content span').first().click();
+		        });
+		      })
+		      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
+		      // initialize the functionality our custom button
+		      .parseJson()
+		      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
+		        $jsonOutput.val(domenu.toJson());
+		        montedself.outputJson = JSON.parse(domenu.toJson());
+		        // if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1Json', domenu.toJson());
+		      })
+		      .onToJson(function() {
+		        // if(window.localStorage.length) $clearLocalStorage.show();
+		      });
 
-				    if(window.localStorage.length) $clearLocalStorage.show();
+		    // Init textarea
+		    $jsonOutput.val(domenu.toJson());
+		    // montedself.outputJson = JSON.parse(domenu.toJson());
+		    //montedself.outputJson = [{"abc":"test"}]
+		    ////console.log(this.outputJson);
+		    // $keepChanges.on('click', function() {
+		    //   if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
+		    //   if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
+		    // });
 
+		    // if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
 
-				    $clearLocalStorage.click(function() {
-				      if(true) window.localStorage.clear();
-				      if(!window.localStorage.length) $clearLocalStorage.hide();
-				      // Part of the reset demo routine
-				      // window.location.reload();
-				      this.component.render();
-				    });
+				// $(document).ready(function() {
+				//     var $domenu            = $('#domenu-1'),
+				//         domenu             = $('#domenu-1').domenu(),
+				//         $outputContainer   = $('#domenu-1-output'),
+				//         $jsonOutput        = $outputContainer.find('.jsonOutput'),
+				//         $keepChanges       = $outputContainer.find('.keepChanges'),
+				//         $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-				    // Init textarea
-				    $jsonOutput.val(domenu.toJson());
-				    // montedself.outputJson = JSON.parse(domenu.toJson());
-				    //montedself.outputJson = [{"abc":"test"}]
-				    ////console.log(this.outputJson);
-				    $keepChanges.on('click', function() {
-				      if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
-				      if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
-				    });
+				//     $domenu.domenu({
+				//         slideAnimationDuration: 0,
+				//         allowListMerging: ['domenu-2'],
+				//         select2:                {
+				//           support: true,
+				//           params:  {
+				//             tags: true
+				//           }
+				//         },
+				//         data: menuData
+				//         // data: montedself.MenuJSON
+				//       })
+				//       // Example: initializing functionality of a custom button #21
+				//       .onCreateItem(function(blueprint) {
+				//         // We look with jQuery for our custom button we denoted with class "custom-button-example"
+				//         // Note 1: blueprint holds a reference of the element which is about to be added the list
+				//         var customButton = $(blueprint).find('.custom-button-example');
 
-				    if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
-				  });
+				//         // Here we define our custom functionality for the button,
+				//         // we will forward the click to .dd3-content span and let
+				//         // doMenu handle the rest
+				//         customButton.click(function() {
+				//           blueprint.find('.dd3-content span').first().click();
+				//         });
+				//       })
+				//       // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
+				//       // initialize the functionality our custom button
+				//       .parseJson()
+				//       .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
+				//         $jsonOutput.val(domenu.toJson());
+				//         montedself.outputJson = JSON.parse(domenu.toJson());
+				//         // if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1Json', domenu.toJson());
+				//       })
+				//       .onToJson(function() {
+				//         // if(window.localStorage.length) $clearLocalStorage.show();
+				//       });
+
+				//     // Init textarea
+				//     $jsonOutput.val(domenu.toJson());
+				//     // montedself.outputJson = JSON.parse(domenu.toJson());
+				//     //montedself.outputJson = [{"abc":"test"}]
+				//     ////console.log(this.outputJson);
+				//     // $keepChanges.on('click', function() {
+				//     //   if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
+				//     //   if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
+				//     // });
+
+				//     // if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
+				//   });
 			},
 			
 			getMenuJson: function () {
@@ -272,22 +280,24 @@ import domenu from 'domenu'
 
 			updateMenuData () {
 
-				window.localStorage.removeItem('domenu-1Json');
+				// window.localStorage.setItem('domenu-1Json', []);
+
+				let menuData;
 
 				//console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'))
 
 				axios.get(this.apiUrl, {
 			    headers: {
-			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YTU3NmVjMzhhYzU3MTAwMTEyNTc0ZTciLCJpYXQiOjE1MTU3MzI3NTMsImV4cCI6MTUxNTgxOTE4MywiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.nAIJ-zxB89CYxbL2Jz6L9-JB3FFRBdvJ8wrFsj0l4C0'
+			    	Authorization: Cookies.get('auth_token')
 			    }
 				})
 				.then((res) => {
 					let menuJson = [];
-			    let categories = res.data.aggregations.group_by_category.buckets;
+				    let categories = res.data.aggregations.group_by_category.buckets;
 
-			    for(let i = 0; i < categories.length; i++){
-			    	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
-			    	let menuItem = {
+				    for(let i = 0; i < categories.length; i++){
+				    	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
+				    	let menuItem = {
 														    "id": i,
 														    "title": categories[i].key,
 														    "customSelect": this.menuBaseUrl + urlName,
@@ -296,14 +306,15 @@ import domenu from 'domenu'
 														    "select2ScrollPosition": {
 														        "x": 0, "y": 0
 														    }
-														};
+															};
 
 						menuJson.push(menuItem);								
-			    }
+			    	}
 
-			    window.localStorage.setItem('domenu-1Json', JSON.stringify(menuJson));
+			    	menuData = JSON.stringify(menuJson);
+			    	// window.localStorage.setItem('domenu-1Json', JSON.stringify(menuJson));
 
-			    this.initMenu();
+			    	this.initMenu(menuData);
 				})
 				.catch((e) => {
 				    this.$message({

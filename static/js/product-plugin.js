@@ -2,7 +2,10 @@
 // const baseURL = 'http://localhost:3032';
 // const baseURL = 'http://devapi.flowz.com/serverapi';
 // const baseURL = 'http://api.flowz.com/serverapi';
-const baseURL = 'http://api.flowzcluster.tk/serverapi';
+//const baseURL = 'http://api.flowzcluster.tk/serverapi';
+
+const baseURL = localStorage.getItem('baseURL');
+// console.log("URL: " + localStorage.getItem('baseURL'));
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;
@@ -109,65 +112,65 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Bootstrap-Block'
   });
 
-  // bm.add('g-form-template', {
-  //   label: 'Form Full',
-  //   content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form Full'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('g-form-template', {
+    label: 'Form Full',
+    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Full'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('g-form', {
-  //   label: 'G-Form',
-  //   content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('g-form', {
+    label: 'G-Form',
+    content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('gformpanel', {
-  //   label: 'G-Form Panel',
-  //   content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form Panel'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('gformpanel', {
+    label: 'G-Form Panel',
+    content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Panel'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('g-form-add-btn', {
-  //   label: 'G-Form Add Button',
-  //   content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form Add Button'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('g-form-add-btn', {
+    label: 'G-Form Add Button',
+    content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Add Button'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('g-form-delete-btn', {
-  //   label: 'G-Form Delete Button',
-  //   content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form Delete Button'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('g-form-delete-btn', {
+    label: 'G-Form Delete Button',
+    content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Delete Button'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('formpartial', {
-  //   label: 'G-Form-Partial',
-  //   content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form-Partial'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('formpartial', {
+    label: 'G-Form-Partial',
+    content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form-Partial'
+    },
+    category: 'Custom Form Controls'
+  });
 
 
   // Sections
@@ -316,7 +319,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   bm.add('navimenu', {
     label: 'Navbar Menu',
-    content:'<navimenu style="padding: 10px; display: block; min-height: 75px;"><nav class="navbar navbar-expand-sm bg-dark navbar-dark"><div class="container"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navigationDiv"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"> Dropdown link </a> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Link 1</a> <a class="dropdown-item" href="#">Link 2</a> <a class="dropdown-item" href="#">Link 3</a> </div></li></ul> </div></div></nav></navimenu>',
+    content:'<nav class="navbar navbar-expand-sm bg-dark navbar-dark customMenu"><div class="container"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navigationDiv"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"> Dropdown link </a> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Link 1</a> <a class="dropdown-item" href="#">Link 2</a> <a class="dropdown-item" href="#">Link 3</a> </div></li></ul> </div></div></nav>',
     attributes: {
       class: 'fa fa-bars',
       title: 'Navigation Menu'
@@ -674,10 +677,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   urlVarValue.push({name: 'Select', value: ''});
   menuNames.push({name: 'Select', value: ''});
 
-  let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
+  let configFileUrl = baseURL + '/project-configuration/' + foldername;
 
   $.getJSON(configFileUrl, function(data) {
-    configData = data.data[0].configData;
+    configData = data.configData;
     globalVariables = configData[1].projectSettings[1].GlobalVariables;
     urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
     menuOptions = configData[2].layoutOptions[0].Menu;
@@ -711,7 +714,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       let resp2 = []
       $.getJSON(configFileUrl, function(data) {
-        configData = data.data[0].configData;
+        configData = data.configData;
 
 
 
@@ -891,7 +894,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       }),
     }, {
       isComponent: function(el) {
-        if (el.tagName == 'NAVIMENU') {
+        if (el.tagName == 'NAV') {
           return {
             type: 'navimenu'
           };

@@ -8,6 +8,8 @@ if(process.env.baseURL == undefined){
     // url = 'http://devapi.flowz.com/serverapi';
 }
 
+localStorage.setItem('baseURL', url);
+
 // If Production Environment
 if (process.env.NODE_ENV !== 'development') {
     ipAdd = domainkey;
@@ -15,7 +17,9 @@ if (process.env.NODE_ENV !== 'development') {
     frontEndUrl = 'https://webbuilder.'+domainkey+'/editor';
 
     loginUrl = 'https://auth.'+domainkey+'/api/login';
+    ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
     registerUrl = 'https://auth.'+domainkey+'/api/setup';
+    forgotPasswordUrl = 'https://auth.'+domainkey+'/api/forgetpassword';
     userDetail = 'https://auth.'+domainkey+'/api/userdetails';
     socialUrl = 'https://auth.'+domainkey+'/api';
 
@@ -31,19 +35,22 @@ if (process.env.NODE_ENV !== 'development') {
     frontEndUrl = 'http://localhost:8080/editor';
 
     loginUrl = 'http://auth.flowzcluster.tk/api/login';
+    ldapUrl = 'http://api.flowzcluster.tk/auth/api/ldapauth';
     registerUrl = 'http://auth.flowzcluster.tk/api/setup';
+    forgotPasswordUrl = 'http://auth.flowzcluster.tk/api/forgetpassword';
     userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
     socialUrl = 'http://auth.flowzcluster.tk/api';
 
-    loginWithFacebookUrl = 'http://auth.flowzcluster.tk/auth/facebook';
-    loginWithGoogleUrl = 'http://auth.flowzcluster.tk/auth/Gplus';
-    loginWithTwitterUrl = 'http://auth.flowzcluster.tk/auth/twitter';
-    loginWithGithubUrl = 'http://auth.flowzcluster.tk/auth/github';
-    loginWithLinkedInUrl = 'http://auth.flowzcluster.tk/auth/linkedin';
+    loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
+    loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';
+    loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
+    loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
+    loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
 }
 
 module.exports = {
     loginUrl: loginUrl,
+    ldapUrl: ldapUrl,
     registerUrl: registerUrl,
     userDetail: userDetail,
     socialUrl: socialUrl,

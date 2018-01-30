@@ -65,7 +65,36 @@ export default {
   },
   methods: {
     authenticate () {
-      this.authen.status = true;
+
+      axios.post(config.forgotPasswordUrl, {
+        email : this.email,
+        url : config.frontEndUrl
+      })
+      .then((res) => {
+        if(response.status == 200 || response.status == 204){
+          this.authen.status = true;
+          $('.success').fadeIn();  
+        } else {
+          this.authen.status = false;
+          $(".authent").fadeOut();
+          $('.login div').fadeIn();
+          this.$message({
+              showClose: true,
+              message: 'Email not found...',
+              type: 'error'
+          });
+        }
+        console.log(res.data);
+      })
+      .catch((e) => {
+        this.$message({
+            showClose: true,
+            message: 'Some error occured. Please check log.',
+            type: 'success'
+        });
+        console.log(e);
+      })
+
     },
     goToLandingPage () {
       this.$router.push('/');
@@ -94,20 +123,6 @@ export default {
           $('.login').removeClass('test')
           $('.login div').fadeOut(123);
         },2800);
-        setTimeout(function(){
-          if(self.authen.status == true){
-            $('.success').fadeIn();  
-          } else {
-            $(".authent").fadeOut();
-            $('.login div').fadeIn();
-            self.$message({
-                showClose: true,
-                message: 'Email not found...',
-                type: 'error'
-            });
-          }
-          
-        },3200);
       } else {
         self.$message({
             showClose: true,

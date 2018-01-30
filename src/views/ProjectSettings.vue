@@ -3,9 +3,12 @@
 
     <!-- Publish Site Modal -->
     <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="Default Domain" name="first">
+      <!--<el-tabs v-model="activeName">
+         <el-tab-pane label="Default Domain" name="first">
           Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
+          <br>
+          <br>
+            <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
           <br>
           <div align="right" style="margin-top: 15px;">
             <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
@@ -18,13 +21,13 @@
           </div>
           
         </el-tab-pane>
-      </el-tabs>
+      </el-tabs> -->
     </el-dialog>
     
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
-      <el-button type="info" size="small" @click="publishWebsite = true" >Publish Website</el-button>
+      <!-- <el-button type="info" size="small" @click="publishWebsite = true" >Publish Website</el-button> -->
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
@@ -33,23 +36,41 @@
 
     <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
 
-      <!-- Commit Section -->
-      <div class="well" id="new-commit-section">
+      <!-- Project Settings Section -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="tooglePublishWebsite" class="card color-div toggleableDivHeader">Publish Website</a>
+          </div>
+      </div>
+      <div id="togglePublishWebsiteContent" class="toggleableDivHeaderContent" style="">
         <div class="row">
-          <div class="col-md-9">
-            <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
-          </div>
-          <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
-          </div>
-          <div class="col-md-1">
-            <el-tooltip content="Download .zip" placement="top">
-              <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
-            </el-tooltip>
+          <div class="col-md-12">
+            
+            <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
+            <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
+
+            <div class="row">
+              <div class="col-md-12" v-if="publishType === 'default'">
+                Your Default domain will be: {{repoName}}.{{ipAddress}}
+                <br>
+                  <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
+                <br>
+                <div style="margin-top: 15px;">
+                  <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
+                </div>
+              </div>
+
+              <div class="col-md-12" v-else>
+                <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+                <div style="margin-top: 15px;">
+                  <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- Commit Section Ends -->
+      <!-- Project Settings section ends -->
 
       <!-- Project Settings Section -->
       <div class="collapsingDivWrapper row">
@@ -57,31 +78,46 @@
               <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Project Settings</a>
           </div>
       </div>
-      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="">
+      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
           <div class="col-md-12">
-            <el-form ref="form" :model="form" label-width="180px">
+            <el-form ref="form1" :model="form" label-width="180px" :rules="rulesProjectSettings">
 
               <el-form-item label="Repository Id:">
                   <el-input v-model="newRepoId" :disabled="true"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Project name">
-                  <el-input v-model="repoName" :disabled="true"></el-input>
+                <el-form-item label="Project name" prop="websitename">
+                  <!-- <el-input v-model="websitename"></el-input> -->
+                  <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
+                    <el-button slot="append" @click="updateProjectName('form1')" style="color: #4baf4f;"><i class="fa fa-save fa-fw"></i>Save</el-button>
+                  </el-input>
+                  <!-- {{websitename}} -->
+                  <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
+                </el-form-item>
+
+                <el-form-item label="Favicon Logo">
+                   <el-input v-model="faviconhref" placeholder="href" ></el-input>
+                </el-form-item>
+
+                <el-form-item label="V Shop ID">
+                   <el-input v-model="form.vid" placeholder="enter vid" ></el-input>
                 </el-form-item>
 
                 <!-- <el-form-item label="Brand name">
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
                 </el-form-item> -->
 
-                <!-- <el-form-item label="Brand Logo">
-                  <div class="col6 valid"> 
+                <!-- <el-form-item label="Favicon Logo"> -->
+                  <!-- <div class="col6 valid"> 
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label> 
                     <input type="file" name="" id="upload-validation">
-                    <span class="dis">(max 1 MB. .jpg or .png only)</span>
-                  </div>
+                    <span class="dis">( .ico only)</span>
+
+                  </div> -->
+                 <!--   <el-input v-model="faviconhref" placeholder="href" ></el-input>
                 </el-form-item> -->
 
                 <el-form-item label="Project SEO Title">
@@ -349,22 +385,57 @@
         <div class="row">
           <div class="col-md-12">
             <el-form ref="form" :model="form">
+
               <div v-for="(n, index) in urlVariables">
+              <h5>URL {{ index +1}}:</h5>
                 <el-form-item>
                   <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                       <el-input placeholder="URL ID" v-model="n.urlId"></el-input>
                     </div>
                     <div class="col-md-6">
                       <el-input placeholder="URL Value" v-model="n.urlValue"></el-input>
                     </div>
-
+                    <div class="col-md-1">
+                      <el-tooltip class="item" effect="dark" content="Add Headers" placement="top-start">
+                       <el-button type="primary" icon="plus"  @click="addNewHeader(n,index)"></el-button>
+                      </el-tooltip>
+                    </div>
                     <!-- Delete Variable -->
                     <div class="col-md-1">
                       <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>      
                     </div>
                   </div>
                 </el-form-item>
+                <div class="row">
+                  <div class="col-md-12">
+                   <!--  <el-form ref="form" :model="form"> -->
+                      <!-- <h5>Headers:-</h5> -->
+                      <div v-for="(m, indexH) in n.urlHeaderVariables">
+                        <el-form-item>
+                          <div class="row">
+                          
+                            <div class="col-md-5">
+                              <el-input placeholder="Header Name" v-model="m.headerName"></el-input>
+                            </div>
+                            <div class="col-md-6">
+                              <el-input placeholder="Header Value" v-model="m.headerValue"></el-input>
+                            </div>
+
+                            <!-- Delete Variable -->
+                            <div class="col-md-1">
+                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index,indexH)" icon="delete"></el-button>      
+                            </div>
+                          </div>
+                        </el-form-item>
+                      </div>
+
+                      <!-- Create new header variable -->
+                     <!--  <el-button type="primary" @click="addNewHeader">New Header</el-button> -->
+                    <!-- </el-form> -->
+                    <hr>
+                  </div>
+                </div>
               </div>
 
               <!-- Create new url variable -->
@@ -372,33 +443,8 @@
             </el-form>
           </div>
         </div>
-        <hr>
-        <div class="row">
-          <div class="col-md-12">
-            <el-form ref="form" :model="form">
-              <div v-for="(n, index) in urlHeaderVariables">
-                <el-form-item>
-                  <div class="row">
-                    <div class="col-md-5">
-                      <el-input placeholder="Header Name" v-model="n.headerName"></el-input>
-                    </div>
-                    <div class="col-md-6">
-                      <el-input placeholder="Header Value" v-model="n.headerValue"></el-input>
-                    </div>
-
-                    <!-- Delete Variable -->
-                    <div class="col-md-1">
-                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index)" icon="delete"></el-button>      
-                    </div>
-                  </div>
-                </el-form-item>
-              </div>
-
-              <!-- Create new header variable -->
-              <el-button type="primary" @click="addNewHeader">New Header</el-button>
-            </el-form>
-          </div>
-        </div>
+        <!-- <hr> -->
+        
       </div>
       <!-- URL Bucket section ends -->
 
@@ -756,8 +802,44 @@
       </div>
       <div id="toggleCommitsContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
+          <div class="col-md-9">
+            <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
+          </div>
+          <div class="col-md-2">
+            <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
+          </div>
+          <div class="col-md-1">
+            <el-tooltip content="Download .zip" placement="top">
+              <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+            </el-tooltip>
+          </div>
+        </div>
+        <div class="row">
             <div class="col-md-12" style="margin-top: 2%">
-              <el-table
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Commit Date</th>
+                      <th>Commit Message</th>
+                      <th>Commit SHA</th>
+                      <th>Revert To Commit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(n, index) in commitsData">
+                      <td>{{n.commitDate}}</td>
+                      <td>{{n.commitsMessage}}</td>
+                      <td>{{n.commitSHA}}</td>
+                      <td>
+                        <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.commitSHA != currentSha" size="small">Restore</el-button>
+                        <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.commitSHA == currentSha">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- <el-table
                 :data="commitsData"
                 :row-class-name="tableRowClassName"
                 border
@@ -783,10 +865,11 @@
                   label="Revert To Commit"
                   width="180">
                   <template scope="scope">
+                    <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="(scope.$index, commitSHA) == currentSha">
                     <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
                   </template>
                 </el-table-column>
-              </el-table>
+              </el-table> -->
             </div>
         </div>
       </div>
@@ -815,6 +898,17 @@ import fileSaver from 'file-saver';
 
 import draggable from 'vuedraggable';
 
+// ProjectName Validator
+let checkProjectName = (rule, value, callback) => {
+    if (!value) {
+        return callback(new Error('Please enter Project Name.'));
+    }else if(!(/^[a-z0-9A-Z_]+$/i.test(value))){
+        return callback(new Error('Please enter valid Project Name. (Project Name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
+    }else{
+        return callback();
+    }
+}
+
 export default {
   name: 'ProjectSettings',
   props: {
@@ -834,9 +928,12 @@ export default {
         Header: [],
         Footer: [],
         selectedHeader: '',
-        selectedFooter: ''
+        selectedFooter: '',
+        websitename: '',
+        vid:''
       },
       commitsData: [],
+      faviconhref:'',
       fileList3: [],
       pluginsData: [],
       commitMessage: '',
@@ -880,7 +977,6 @@ export default {
 
       globalVariables: [],
       urlVariables: [],
-      urlHeaderVariables: [],
       globalCssVariables: [],
       ecommerceVariables: [],
       imageInputIsDisabled: false,
@@ -928,7 +1024,14 @@ export default {
       paymentgateway: [],
       Paymentfields: [],
       Allgateway: [],
-      currentSha: ''
+      currentSha: '',
+      publishType: 'default',
+      faviconhref: '',
+      rulesProjectSettings: {
+          websitename: [
+              { validator: checkProjectName, trigger: 'blur' }
+          ]
+      },
     }
   },
   components: {
@@ -991,13 +1094,14 @@ export default {
     },
 
     addNewUrl() {
-      let newVariable = { urlId: '', urlValue: ''};
+      let newVariable = { urlId: '', urlValue: '', urlHeaderVariables:[]};
       this.urlVariables.push(newVariable);
     },
 
-    addNewHeader() {
+    addNewHeader(n,index) {
+      // console.log(n,index)
       let newVariable = { headerName: '', headerValue: ''};
-      this.urlHeaderVariables.push(newVariable);
+      this.urlVariables[index].urlHeaderVariables.push(newVariable);
     },
 
     addNewCssVariable() {
@@ -1018,7 +1122,7 @@ export default {
     addNewexternallinkMeta() {
       let newVariable = { name:'',content:''};
       this.externallinksMeta.push(newVariable);
-      this.editableInit();
+      // this.editableInit();
     },
 
     addNewlocalscripts(){
@@ -1242,14 +1346,14 @@ export default {
     async saveConfigFile(folderUrl,configData){
 
         let foldername = folderUrl.split('/');
-        foldername = foldername[(foldername.length-1)];
+        foldername = foldername[6];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername );
 
-        if(rethinkdbCheck.data.data){
+        if(rethinkdbCheck.data){
 
           // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
             configData: configData
           })
           .then(async (res) => {
@@ -1489,14 +1593,14 @@ export default {
 
       let splitUrl = url.split('/');
 
-      let websiteName = splitUrl[(splitUrl.length -1)];
+      let websiteName = splitUrl[6];
 
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
+      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
 
-      configData=JSON.parse(JSON.stringify(configData.data.data[0].configData))
+      configData=JSON.parse(JSON.stringify(configData.data.configData))
       //// console.log('new config file:',configData);
       //// console.log('now partial');
       for(let q=0;q<Object.keys(configData[2].layoutOptions[0]).length;q++){
@@ -1845,8 +1949,8 @@ export default {
       this.urlVariables.splice(deleteIndex, 1);
     },
 
-    deleteUrlHeaderVariable(deleteIndex) {
-      this.urlHeaderVariables.splice(deleteIndex, 1);
+    deleteUrlHeaderVariable(index,deleteIndex) {
+      this.urlVariables[index].urlHeaderVariables.splice(deleteIndex, 1);
     },
 
     deleteCssVariable(deleteIndex) {
@@ -1932,14 +2036,14 @@ export default {
     },
 
     async saveProjectSettings() {
-
+      // this.updateProjectName()
       // let repoSettings = [{
       //                     "RepositoryId": this.newRepoId,
       //                     "RepositoryName": this.repoName,
       //                     "CurrentHeadSHA": this.currentSha
       //                   }];
 
-      this.settings[0].CurrentHeadSHA = this.currentSha;
+      // this.settings[0].CurrentHeadSHA = this.currentSha;
 
       let ProjectSettings = [{
                               "RepositoryId": this.newRepoId,
@@ -1948,11 +2052,12 @@ export default {
                               "BrandLogoName": this.form.brandLogoName,
                               "ProjectSEOTitle": this.form.seoTitle,
                               "ProjectSEOKeywords": this.form.seoKeywords,
-                              "ProjectSEODescription": this.form.seoDesc
+                              "ProjectSEODescription": this.form.seoDesc,
+                              "ProjectFaviconhref": this.faviconhref,
+                              "ProjectVId":this.form.vid
                             }, {
                               "GlobalVariables": this.globalVariables,
                               "GlobalUrlVariables": this.urlVariables,
-                              "GlobalUrlHeaderVariables": this.urlHeaderVariables,
                               "GlobalCssVariables": this.globalCssVariables,
                               "EcommerceSettings": this.ecommerceSettings,
                               "ProjectExternalCss": this.externallinksCSS,
@@ -1961,20 +2066,21 @@ export default {
                               "ProjectMetacharset":this.Metacharset,
                               "ProjectScripts":this.localscripts,
                               "ProjectStyles":this.localstyles,
-                               "PaymentGateways":this.paymentgateway
+                              "PaymentGateways":this.paymentgateway
                             }];
 
       this.settings[1].projectSettings = ProjectSettings;
 
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName );
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName );
 
-      if(rethinkdbCheck.data.data){
+      if(rethinkdbCheck.data){
         //console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);
 
         // update existing data
-        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.data[0].id, {
+        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
           configData: this.settings,
-          pluginsData: this.pluginsTreedata
+          pluginsData: this.pluginsTreedata,
+          websiteName: this.form.websitename
         })
         .then(async (res) => {
           //console.log(res.data);
@@ -2007,6 +2113,9 @@ export default {
       //// console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(response => {
+
+        this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
+
         this.saveProjectSettings();
       }).catch(error => {
         //console.log("Some error occured: ", error);
@@ -2022,9 +2131,29 @@ export default {
         commitMessage: this.commitMessage,
         repoName: this.repoName,
         userDetailId: Cookies.get('userDetailId')
-      }).then(response => {
-        //console.log(response);
+      }).then(async response => {
+
         if(response.status == 200 || response.status == 201){
+
+          await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+          }).then(response => {
+            this.commitsData = [];
+            for(var i in response.data){
+              this.commitsData.push({
+                commitDate: response.data[i].created_at,
+                commitSHA: response.data[i].id,
+                commitsMessage: response.data[i].title, 
+              });
+            }
+
+            this.settings[0].repoSettings[0].CurrentHeadSHA = this.commitsData[0].commitSHA;
+            this.currentSha = this.commitsData[0].commitSHA;
+
+            this.saveProjectSettings();
+          }).catch(error => {
+            //console.log("Some error occured: ", error);
+          });
+
           this.commitMessage = '';
           //console.log(response.data);
           this.$message({
@@ -2050,17 +2179,20 @@ export default {
       await this.commitProject();
 
       var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      var responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
-      var rawConfigs = responseConfig.data.data[0].configData;
+      var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+      var rawConfigs = responseConfig.data.configData;
       var partialstotal = []
+      var pageSeoTitle;
       var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
       var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
       var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
       var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
       var projectscripts=rawConfigs[1].projectSettings[1].ProjectScripts
       var projectstyles=rawConfigs[1].projectSettings[1].ProjectStyles
-
-      
+      var projectseotitle=rawConfigs[1].projectSettings[0].ProjectSEOTitle;
+       var projectfaviconhref=rawConfigs[1].projectSettings[0].ProjectFaviconhref
+       var favicon=''
+       var SeoTitle=''
       var getFromBetween = {
         results: [],
         string: "",
@@ -2094,11 +2226,17 @@ export default {
         }
       };
       
-      for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+   for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
       var tophead = '';
       var endhead = '';
       var topbody = '';
       var endbody = '';
+      if(projectseotitle!=undefined && projectseotitle!=''){
+        SeoTitle=projectseotitle
+      }
+      if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
+        favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+      }
         if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
         tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
       }
@@ -2165,11 +2303,11 @@ export default {
           }
 
         var partials = ''
-        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + this.repoName);
+        let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
 
-        var rawSettings = responseConfigLoop.data.data[0].configData;
+        var rawSettings = responseConfigLoop.data.configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-        //console.log('nameF:', nameF)
+        console.log('nameF:', nameF)
         var Layout = ''
         var partialsPage = [];
         var vuepartials = [];
@@ -2179,8 +2317,9 @@ export default {
         var pageexternalJs = [];
         var pageexternalCss = [];
         var pageMetaInfo = [];
-        var pageSeoTitle;
+        
         var PageMetacharset = '';
+        
         Layout = rawSettings[1].pageSettings[i].PageLayout
         partialsPage = rawSettings[1].pageSettings[i].partials
         var back_partials = JSON.parse(JSON.stringify(partialsPage));
@@ -2193,7 +2332,9 @@ export default {
         pagescripts=rawSettings[1].pageSettings[i].PageScripts;
         pagestyles=rawSettings[1].pageSettings[i].PageStyles;
 
-
+        if(pageSeoTitle!=undefined && pageSeoTitle!=''){
+          SeoTitle=pageSeoTitle
+        }
         if (PageMetacharset!=undefined && PageMetacharset != '') {
           tophead = tophead + '<meta charset="' + PageMetacharset + '">'
         }
@@ -2276,7 +2417,7 @@ export default {
                   .then((response) => {
                     //console.log("called webpack_file api successfully:")
                   })
-                  .catch((e) => {
+                  .catch((e) => {pul
                     //console.log(e)
                   })
               })
@@ -2298,7 +2439,9 @@ export default {
         }
         layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
         var responseMetal = '';
+
         let backupMetalSmith = '';
+
         let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
         contentpartials = contentpartials.data
         var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
@@ -2322,7 +2465,7 @@ export default {
                   temp = temp.replace(/\s+/g, ' ');
                   temp = temp.trim();
                   temp = temp.split(' ')
-                  for (let j = 0; j < temp.length; j++) {
+                  for (let j = 0; j < temp.length; j++) { 
                     if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
                       if (temp[j + 1] != undefined) {
                         result[q] = temp[0];
@@ -2364,69 +2507,76 @@ export default {
               })
             }
             let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
+            var changeresult=JSON.parse(JSON.stringify(result))
+              for(let s=0;s<changeresult.length;s++){
+                layoutdata.data=layoutdata.data.replace(changeresult[s],changeresult[s].replace(/&nbsp;/g,'').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g,"").replace(/\s*=\s*/g,'='))
+              }
             DefaultParams = [];
             if (result.length > 0) {
-              var resultParam = result
-              for (let w = 0; w < resultParam.length; w++) {
-                var temp;
-                temp = resultParam[w].trim()
-                result[w] = result[w].trim()
-                temp = temp.replace(/&nbsp;/g, ' ')
-                temp = temp.replace(/\s+/g, ' ');
-                temp = temp.trim();
-                temp = temp.split(' ')
-                for (let j = 0; j < temp.length; j++) {
-                  if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                    if (temp[j + 1] != undefined) {
-                      result[w] = temp[0];
-                      if (temp[j + 1].indexOf('.') > -1) {
-                        let x = temp[j + 1]
-                        x = temp[j + 1].split(/'/)[1];
-                        let obj = {}
-                        obj[temp[0]] = x
-                        DefaultParams.push(obj)
-                        break;
+                var resultParam = result
+                for (let i = 0; i < resultParam.length; i++) {
+                  var temp;
+                  temp = resultParam[i].trim()
+                  result[i] = result[i].trim()
+                  
+                  temp = temp.split(' ')
+                  for (let j = 0; j < temp.length; j++) {
+                     temp[j] = temp[j].trim();
+                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                       if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'")>-1) {
+                        result[i] = temp[0];
+                        if (temp[j]) {
+                          let x = temp[j]
+                          x = temp[j].split("'")[1]+'.partial';
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
                       }
-                    } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                      result[w] = temp[0];
-                      if (temp[j]) {
-                        let x = temp[j]
-                        x = temp[j].split(/'/)[1];
-                        let obj = {}
-                        obj[temp[0]] = x
-                        DefaultParams.push(obj)
+                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"')>-1) {
+                        result[i] = temp[0];
+                        if (temp[j]) {
+                          let x = temp[j]
+                          x = temp[j].split('"')[1]+'.partial';
+                          let obj = {}
+                          obj[temp[0]] = x
+                          DefaultParams.push(obj)
+                          break;
+                        }
+                      }
+                      else{
+                        //console.log('Error while finding ID in layout');
+                      }
+                    }
+                  }
+                }
+                for (let j = 0; j < result.length; j++) {
+                  for (let i = 0; i < back_partials.length; i++) {
+                    if (Object.keys(back_partials[i])[0] == result[j]) {
+
+                      temp1 = '{{> ' + Object.keys(back_partials[i])[0] + '}}'
+                      if (layoutdata.data.search(temp1) > 0) {
+
+                        temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + '}}'
+                      } else {
+                        var indexdefault=_.findIndex(DefaultParams,function(o){
+                          return Object.keys(o)[0]==result[j]
+                        })
+                        temp1 = "{{> " + Object.keys(back_partials[i])[0] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
+
+                        temp2 = "{{> " + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
+                      }
+                      if (layoutdata.data.split(temp1).join(temp2)) {
+                        layoutdata.data = layoutdata.data.split(temp1).join(temp2)
                         break;
+                      } else {
+                        //console.log('Replacing in layout file failed')
                       }
                     }
                   }
                 }
               }
-              for (let j = 0; j < result.length; j++) {
-                for (let w = 0; w < back_partials.length; w++) {
-                  if (Object.keys(back_partials[w])[0] == result[j]) {
-
-                    temp1 = '{{> ' + Object.keys(back_partials[w])[0] + ' }}'
-                    if (layoutdata.data.search(temp1) > 0) {
-
-                      temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + ' }}'
-                    } else {
-                      temp1 = '{{> ' + Object.keys(back_partials[w])[0] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
-
-                      temp2 = '{{> ' + Object.keys(back_partials[w])[0] + '_' + back_partials[w][Object.keys(back_partials[w])[0]] + " id='" + DefaultParams[j][Object.keys(back_partials[w])[0]] + "' }}"
-                    }
-                    //// console.log('temp1:', temp1)
-                    //// console.log('temp2:', temp2)
-                    if (layoutdata.data.split(temp1).join(temp2)) {
-                      //// console.log('replacing in layout file successfully')
-                      layoutdata.data = layoutdata.data.split(temp1).join(temp2)
-                    } else {
-                      //// console.log('replacing in layout file failed')
-                    }
-                  }
-                }
-
-              }
-            }
 
           })
           .catch((e) => {
@@ -2435,13 +2585,11 @@ export default {
 
         responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-        //backupMetalSmith = JSON.parse(JSON.stringify(responseMetal));
-
-        backupMetalSmith = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});";
+        backupMetalSmith = JSON.parse(JSON.stringify(responseMetal));
 
         var index = responseMetal.search('.source')
 
-        responseMetal = responseMetal.substr(0, index + 9) + this.$store.state.fileUrl.replace(/\\/g, "\/") + '/Preview' + responseMetal.substr(index + 9)
+        responseMetal = responseMetal.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.substr(index + 9)
         var indexPartial = responseMetal.search("handlebars");
 
         for (var j = 0; j < partialsPage.length; j++) {
@@ -2479,26 +2627,26 @@ export default {
         }
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-        //console.log('final responseMetal:', responseMetal)
+        console.log('final responseMetal:', responseMetal)
         var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
-        await axios.post(config.baseURL + '/flows-dir-listing', {
+        await axios.post(config.baseURL + '/save-menu', {
             filename: mainMetal,
             text: responseMetal,
             type: 'file'
           }).then(async (response) => {
             let vueBodyStart = '';
               let vueBodyEnd = ''
-            var newFolderName = folderUrl + '/Preview';
+            var newFolderName1 = folderUrl + '/Preview';
             await axios.post(config.baseURL + '/flows-dir-listing', {
-                foldername: newFolderName,
+                foldername: newFolderName1,
                 type: 'folder'
               })
               .then(async (res) => {
                 //console.log(res);
                 let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                    "<title>" + pageSeoTitle + "</title>\n" +
+                    "<title>" + SeoTitle + "</title>\n" +  favicon + '\n' +
                     "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
                     "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js' defer='defer' ><\/script>\n" +
@@ -2559,7 +2707,7 @@ export default {
 
                     await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
 
-                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                        await axios.post(config.baseURL + '/save-menu', {
                             filename: mainMetal,
                             text: backupMetalSmith,
                             type: 'file'
@@ -2567,16 +2715,16 @@ export default {
                           .then(async (res) => {
                             var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                             previewFile = folderUrl.replace('/var/www/html', '');
-
+                            
                             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               .then(async (res) => {
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                                  //console.log(e)
+                                  console.log(e)
                                 })
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
                                   //// console.log('deleted extra layout file:', res)
                                 }).catch((e) => {
-                                  //console.log(e)
+                                  console.log(e)
                                 })
                                 if (vuepartials != undefined && vuepartials.length > 0) {
                                   for (let x = 0; x < vuepartials.length; x++) {
@@ -2619,7 +2767,7 @@ export default {
                           //console.log(e)
                         })
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                        //console.log(e)
+                        console.log(err)
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
                       })
                   })
@@ -2636,14 +2784,14 @@ export default {
                       //console.log(e)
                     })
                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                    //console.log(e)
+                    console.log(e)
                   })
 
               })
               .catch((e) => {
                  this.saveFileLoading = false;
                   this.fullscreenLoading = false;
-                //console.log(e)
+                console.log(e)
                 axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: mainMetal,
                   text: responseMetal,
@@ -2660,7 +2808,7 @@ export default {
           .catch((e) => {
              this.saveFileLoading = false;
               this.fullscreenLoading = false;
-            //console.log('error while creating metalsmithJSON file' + e)
+            console.log(e)
             axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
               text: responseMetal,
@@ -2672,34 +2820,6 @@ export default {
             })
 
           })
-
-        
-         
-        
-        // Publish with Zeit Now
-        // axios.post(config.baseURL + '/publish-now', {
-        //     projectName: this.repoName
-        //   })
-        //   .then((res) => {
-        //     let serverUrl = res.data;
-        //     // window.open( serverUrl + '/public/');
-        //     this.$message({
-        //       showClose: true,
-        //       message: 'Successfully Published.',
-        //       type: 'success'
-        //     });
-        ////     console.log(res.data);
-        //     this.previewLoader = false;
-        //   })
-        //   .catch((e) => {
-        //     this.$message({
-        //       showClose: true,
-        //       message: 'Failed! Please try again.',
-        //       type: 'error'
-        //     });
-        ////     console.log(e);
-        //     this.previewLoader = false;
-        //   });
       }
 
       if(publishType == 'custom'){
@@ -2774,20 +2894,24 @@ export default {
 
       let splitUrl = url.split('/');
 
-      let websiteName = splitUrl[(splitUrl.length -1)];
+      let websiteName = splitUrl[6];
 
       //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + websiteName );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
 
       if(this.configData.status == 200 || this.configData.status == 204){
 
-        this.settings = this.configData.data.data[0].configData;
-        this.pluginsTreedata = this.configData.data.data[0].pluginsData;
+        this.settings = this.configData.data.configData;
+        this.form.websitename = this.configData.data.websiteName;
+        this.pluginsTreedata = this.configData.data.pluginsData;
+
         this.currentSha = this.settings[0].repoSettings[0].CurrentHeadSHA;
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+
+        this.faviconhref = this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
         this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
         this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
@@ -2795,7 +2919,6 @@ export default {
         this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
-        this.urlHeaderVariables = this.settings[1].projectSettings[1].GlobalUrlHeaderVariables;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
         this.externallinksCSS = this.settings[1].projectSettings[1].ProjectExternalCss;
@@ -2805,6 +2928,8 @@ export default {
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
         this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
+        this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
+        this.form.vid=this.settings[1].projectSettings[0].ProjectVId;
       } else {
         //console.log('Cannot get configurations!');
       } 
@@ -2833,7 +2958,11 @@ export default {
       }
 
       // Get all commits list
-      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
+      let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
+      let configData = responseConfig.data.configData;
+      let SHA = configData[0].repoSettings[0].CurrentHeadSHA;
+
+      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
       }).then(response => {
         this.commitsData = [];
         for(var i in response.data){
@@ -2879,6 +3008,45 @@ export default {
       }
     },
 
+     updateProjectName(form) {
+     this.$refs[form].validate(async (valid) => {
+          if (valid) {
+            console.log('websiteName',this.form.websitename)
+            // console.log(this.folderUrl.split('/')[this.folderUrl.split('/').length-2])
+            var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
+            console.log('userid',userid)
+            var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
+            console.log('alldatauser:',alldatauser.data.data.length)
+            let checkdetail=true
+            for(let i=0;i<alldatauser.data.data.length;i++){
+              if(this.form.websitename==alldatauser.data.data[i].websiteName){
+                checkdetail=false
+
+              }
+            }
+            if(checkdetail!=false){
+              console.log('not same found')
+              await this.saveProjectSettings();
+            location.reload();
+            }
+            else{
+              this.$message({
+              showClose: true,
+              message: 'Same name found.Try again!',
+              type: 'error'
+            });
+              console.log('same name found',this.configData.data.websiteName);
+              this.form.websiteName=this.configData.data.websiteName;
+
+            }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+     
+    },
+
     renderContent(h, { node, data, store }) {
       return (
         <span>
@@ -2900,107 +3068,123 @@ export default {
 
   },
 
-  created () {
-    this.init(); 
-  },
-
   async mounted () {
 
     // Collapsing Divs
     $(document).ready(function($) {
-        
-        $("#toogleProjectSettings").click(function() {
-            $("#toogleProjectSettingsContent").slideToggle("slow");
-            if ($("#toogleProjectSettings").text() == "Project Settings") {
-                $("#toogleProjectSettings").html("Project Settings")
-            } else {
-                $("#toogleProjectSettings").text("Project Settings")
-            }
-        });
 
-        $("#toggleImportPlugin").click(function() {
-            $("#toggleImportPluginContent").slideToggle("slow");
-            if ($("#toggleImportPlugin").text() == "Import Plugin") {
-                $("#toggleImportPlugin").html("Import Plugin")
-            } else {
-                $("#toggleImportPlugin").text("Import Plugin")
-            }
-        });
+      $('#websiteName').editable();
 
-        $("#toggleUrlBucket").click(function() {
-            $("#toggleUrlBucketContent").slideToggle("slow");
-            if ($("#toggleUrlBucket").text() == "URL Bucket") {
-                $("#toggleUrlBucket").html("URL Bucket")
-            } else {
-                $("#toggleUrlBucket").text("URL Bucket")
-            }
-        });
+      // $('#websiteName').on('save', function(e, params) {
+      //   self.form.websitename = params.newValue;
+      //   self.updateProjectName();
+      // });
 
-        $("#toggleGlobalVariables").click(function() {
-            $("#toggleGlobalVariablesContent").slideToggle("slow");
-            if ($("#toggleGlobalVariables").text() == "Global Variables") {
-                $("#toggleGlobalVariables").html("Global Variables")
-            } else {
-                $("#toggleGlobalVariables").text("Global Variables")
-            }
-        });
+      $("#tooglePublishWebsite").click(function() {
+          $("#togglePublishWebsiteContent").slideToggle("slow");
+          if ($("#tooglePublishWebsite").text() == "Publish Website") {
+              $("#tooglePublishWebsite").html("Publish Website")
+          } else {
+              $("#tooglePublishWebsite").text("Publish Website")
+          }
+      });
+      
+      $("#toogleProjectSettings").click(function() {
+          $("#toogleProjectSettingsContent").slideToggle("slow");
+          if ($("#toogleProjectSettings").text() == "Project Settings") {
+              $("#toogleProjectSettings").html("Project Settings")
+          } else {
+              $("#toogleProjectSettings").text("Project Settings")
+          }
+      });
 
-        $("#toggleExternalLinks").click(function() {
-            $("#toggleExternalLinksContent").slideToggle("slow");
-            if ($("#toggleExternalLinks").text() == "External Links") {
-                $("#toggleExternalLinks").html("External Links")
-            } else {
-                $("#toggleExternalLinks").text("External Links")
-            }
-        });
-        $("#toggleLocalscripts").click(function() {
-            $("#toggleLocalscriptsContent").slideToggle("slow");
-            if ($("#toggleLocalscripts").text() == "Global Scripts") {
-                $("#toggleLocalscripts").html("Global Scripts")
-            } else {
-                $("#toggleLocalscripts").text("Global Scripts")
-            }
-        });
-        $("#toggleLocalstyles").click(function() {
-            $("#toggleLocalstylesContent").slideToggle("slow");
-            if ($("#toggleLocalstyles").text() == "Global Styles") {
-                $("#toggleLocalstyles").html("Global Styles")
-            } else {
-                $("#toggleLocalstyles").text("Global Styles")
-            }
-        });
+      $("#toggleImportPlugin").click(function() {
+          $("#toggleImportPluginContent").slideToggle("slow");
+          if ($("#toggleImportPlugin").text() == "Import Plugin") {
+              $("#toggleImportPlugin").html("Import Plugin")
+          } else {
+              $("#toggleImportPlugin").text("Import Plugin")
+          }
+      });
 
+      $("#toggleUrlBucket").click(function() {
+          $("#toggleUrlBucketContent").slideToggle("slow");
+          if ($("#toggleUrlBucket").text() == "URL Bucket") {
+              $("#toggleUrlBucket").html("URL Bucket")
+          } else {
+              $("#toggleUrlBucket").text("URL Bucket")
+          }
+      });
 
-        $("#toggleMetaTags").click(function() {
-            $("#toggleMetaTagsContent").slideToggle("slow");
-            if ($("#toggleMetaTags").text() == "Meta Tags") {
-                $("#toggleMetaTags").html("Meta Tags")
-            } else {
-                $("#toggleMetaTags").text("Meta Tags")
-            }
-        });
+      $("#toggleGlobalVariables").click(function() {
+          $("#toggleGlobalVariablesContent").slideToggle("slow");
+          if ($("#toggleGlobalVariables").text() == "Global Variables") {
+              $("#toggleGlobalVariables").html("Global Variables")
+          } else {
+              $("#toggleGlobalVariables").text("Global Variables")
+          }
+      });
 
-        $("#togglePaymentgateway").click(function() {
-            $("#togglePaymentgatewayContent").slideToggle("slow");
-            if ($("#togglePaymentgateway").text() == "Payment gateway") {
-                $("#togglePaymentgateway").html("Payment gateway")
-            } else {
-                $("#togglePaymentgateway").text("Payment gateway")
-            }
-        });
-
-        $("#toggleCommits").click(function() {
-            $("#toggleCommitsContent").slideToggle("slow");
-            if ($("#toggleCommits").text() == "List of Commits") {
-                $("#toggleCommits").html("List of Commits")
-            } else {
-                $("#toggleCommits").text("List of Commits")
-            }
-        });
+      $("#toggleExternalLinks").click(function() {
+          $("#toggleExternalLinksContent").slideToggle("slow");
+          if ($("#toggleExternalLinks").text() == "External Links") {
+              $("#toggleExternalLinks").html("External Links")
+          } else {
+              $("#toggleExternalLinks").text("External Links")
+          }
+      });
+      $("#toggleLocalscripts").click(function() {
+          $("#toggleLocalscriptsContent").slideToggle("slow");
+          if ($("#toggleLocalscripts").text() == "Global Scripts") {
+              $("#toggleLocalscripts").html("Global Scripts")
+          } else {
+              $("#toggleLocalscripts").text("Global Scripts")
+          }
+      });
+      $("#toggleLocalstyles").click(function() {
+          $("#toggleLocalstylesContent").slideToggle("slow");
+          if ($("#toggleLocalstyles").text() == "Global Styles") {
+              $("#toggleLocalstyles").html("Global Styles")
+          } else {
+              $("#toggleLocalstyles").text("Global Styles")
+          }
+      });
 
 
+      $("#toggleMetaTags").click(function() {
+          $("#toggleMetaTagsContent").slideToggle("slow");
+          if ($("#toggleMetaTags").text() == "Meta Tags") {
+              $("#toggleMetaTags").html("Meta Tags")
+          } else {
+              $("#toggleMetaTags").text("Meta Tags")
+          }
+      });
 
+      $("#togglePaymentgateway").click(function() {
+          $("#togglePaymentgatewayContent").slideToggle("slow");
+          if ($("#togglePaymentgateway").text() == "Payment gateway") {
+              $("#togglePaymentgateway").html("Payment gateway")
+          } else {
+              $("#togglePaymentgateway").text("Payment gateway")
+          }
+      });
+
+      $("#toggleCommits").click(function() {
+          $("#toggleCommitsContent").slideToggle("slow");
+          if ($("#toggleCommits").text() == "List of Commits") {
+              $("#toggleCommits").html("List of Commits")
+          } else {
+              $("#toggleCommits").text("List of Commits")
+          }
+      });
     });
+
+
+    await this.init(); 
+
+    let self = this;    
+
+    $.fn.editable.defaults.mode = 'inline';
 
     // Brand Image uploader
     let scope = this;
@@ -3342,5 +3526,9 @@ export default {
 
   .margin-50{
     margin: 50px;
+  }
+
+  .green-tick-img{
+    width: 15px;
   }
 </style>

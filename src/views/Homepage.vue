@@ -403,7 +403,7 @@
                     <div class="col-md-12" align="center" style="margin-top: 50px">
                       <img src="../../static/img/Flowz-logo.png" class="footer-logo">
                       <h4 class="subtitle">The next generation open-source website builder</h4>
-                      <a href="https://github.com/FlowzPlatform/website-builder" class="btn btn-default btn-github" target="_blank"><i class="fa fa-github"></i> View on GitHub</a>
+                      <!-- <a href="https://github.com/FlowzPlatform/website-builder" class="btn btn-default btn-github" target="_blank"><i class="fa fa-github"></i> View on GitHub</a> -->
                     </div>
                   </div>
                   <div class="row text-center" style="margin: 2% 0;">
