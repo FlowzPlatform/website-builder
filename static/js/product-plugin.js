@@ -112,65 +112,65 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Bootstrap-Block'
   });
 
-  // bm.add('g-form-template', {
-  //   label: 'Form Full',
-  //   content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form Full'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('g-form-template', {
+    label: 'Form Full',
+    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Full'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('g-form', {
-  //   label: 'G-Form',
-  //   content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('g-form', {
+    label: 'G-Form',
+    content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('gformpanel', {
-  //   label: 'G-Form Panel',
-  //   content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form Panel'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('gformpanel', {
+    label: 'G-Form Panel',
+    content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Panel'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('g-form-add-btn', {
-  //   label: 'G-Form Add Button',
-  //   content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form Add Button'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('g-form-add-btn', {
+    label: 'G-Form Add Button',
+    content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Add Button'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('g-form-delete-btn', {
-  //   label: 'G-Form Delete Button',
-  //   content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form Delete Button'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('g-form-delete-btn', {
+    label: 'G-Form Delete Button',
+    content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Delete Button'
+    },
+    category: 'Custom Form Controls'
+  });
 
-  // bm.add('formpartial', {
-  //   label: 'G-Form-Partial',
-  //   content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
-  //   attributes: {
-  //     class: 'fa fa-html5',
-  //     title: 'G-Form-Partial'
-  //   },
-  //   category: 'Custom Form Controls'
-  // });
+  bm.add('formpartial', {
+    label: 'G-Form-Partial',
+    content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form-Partial'
+    },
+    category: 'Custom Form Controls'
+  });
 
 
   // Sections
