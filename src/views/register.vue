@@ -161,7 +161,7 @@ export default {
         // })
       }).catch(error => {
         this.authen.status = false;
-        this.authen.error = response.data;
+        this.authen.error = error.data;
       })
     },
     goToLandingPage () {

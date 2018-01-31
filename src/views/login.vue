@@ -372,7 +372,9 @@ export default {
         });
       })
     } else {
-      console.log('Token Not found. Please Login.')
+      console.log('Token Not found. Please Login.');
+      // $('.login div').fadeIn();
+      
     }
   },
   mounted () {
