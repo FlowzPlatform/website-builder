@@ -591,4 +591,8 @@ export default {
 .gjs-editor-cont{
   height: 95vh !important;
 }
+
+.gjs-mdl-dialog{
+    width: 50%;
+}
 </style>

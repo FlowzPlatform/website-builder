@@ -90,7 +90,7 @@
                 <el-form-item label="Project name" prop="websitename">
                   <!-- <el-input v-model="websitename"></el-input> -->
                   <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
-                    <el-button slot="append" @click="updateProjectName('form1')" style="color: #4baf4f;"><i class="fa fa-save fa-fw"></i>Save</el-button>
+                    <el-button slot="append" @click="updateProjectName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
                   </el-input>
                   <!-- {{websitename}} -->
                   <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
@@ -2174,50 +2174,108 @@ export default {
       })
     },
 
-    commitProject() {
-      this.isCommitLoading = true;
-      this.$store.state.currentIndex = 0;
+    async commitProject() {
 
-      // Push repository changes
-      axios.post(config.baseURL + '/gitlab-add-repo', {
-        commitMessage: this.commitMessage,
-        repoName: this.repoName,
-        userDetailId: Cookies.get('userDetailId')
-      }).then(async response => {
+      // If .git was successfull
+      if( this.settings[0].repoSettings[0].RepositoryId != undefined){
 
-        if(response.status == 200 || response.status == 201){
+        this.isCommitLoading = true;
+        this.$store.state.currentIndex = 0;
 
-          await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
-          }).then(response => {
-            this.commitsData = [];
-            for(var i in response.data){
-              this.commitsData.push({
-                commitDate: response.data[i].created_at,
-                commitSHA: response.data[i].id,
-                commitsMessage: response.data[i].title, 
+        // Push repository changes
+        axios.post(config.baseURL + '/gitlab-add-repo', {
+          commitMessage: this.commitMessage,
+          repoName: this.repoName,
+          userDetailId: Cookies.get('userDetailId')
+        }).then(async response => {
+
+          if(response.status == 200 || response.status == 201){
+
+            await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+            }).then(response => {
+              this.commitsData = [];
+              for(var i in response.data){
+                this.commitsData.push({
+                  commitDate: response.data[i].created_at,
+                  commitSHA: response.data[i].id,
+                  commitsMessage: response.data[i].title, 
+                });
+              }
+
+              this.settings[0].repoSettings[0].CurrentHeadSHA = this.commitsData[0].commitSHA;
+              this.currentSha = this.commitsData[0].commitSHA;
+
+              this.saveProjectSettings();
+            }).catch(error => {
+              //console.log("Some error occured: ", error);
+            });
+
+            this.commitMessage = '';
+            //console.log(response.data);
+            this.$message({
+              message: 'Successfully published the website.',
+              type: 'success'
+            });
+            this.isCommitLoading = false;
+            this.init();
+          }
+        }).catch(error => {
+          //console.log("Some error occured: ", error);
+        })
+      } else {
+        // If first commit was unsuccessfull
+
+        // add repo to git
+        let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.nameOfRepo + '&userDetailId=' + Cookies.get('userDetailId'), {});
+
+        if(!(gitResponse.data.statusCode)){
+          this.isCommitLoading = true;
+          this.$store.state.currentIndex = 0;
+
+          // Push repository changes
+          axios.post(config.baseURL + '/gitlab-add-repo', {
+            commitMessage: this.commitMessage,
+            repoName: this.repoName,
+            userDetailId: Cookies.get('userDetailId')
+          }).then(async response => {
+
+            if(response.status == 200 || response.status == 201){
+
+              await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+              }).then(response => {
+                this.commitsData = [];
+                for(var i in response.data){
+                  this.commitsData.push({
+                    commitDate: response.data[i].created_at,
+                    commitSHA: response.data[i].id,
+                    commitsMessage: response.data[i].title, 
+                  });
+                }
+
+                this.settings[0].repoSettings[0].CurrentHeadSHA = this.commitsData[0].commitSHA;
+                this.currentSha = this.commitsData[0].commitSHA;
+
+                this.saveProjectSettings();
+              }).catch(error => {
+                //console.log("Some error occured: ", error);
               });
+
+              this.commitMessage = '';
+              //console.log(response.data);
+              this.$message({
+                message: 'Successfully published the website.',
+                type: 'success'
+              });
+              this.isCommitLoading = false;
+              this.init();
             }
-
-            this.settings[0].repoSettings[0].CurrentHeadSHA = this.commitsData[0].commitSHA;
-            this.currentSha = this.commitsData[0].commitSHA;
-
-            this.saveProjectSettings();
           }).catch(error => {
             //console.log("Some error occured: ", error);
-          });
-
-          this.commitMessage = '';
-          //console.log(response.data);
-          this.$message({
-            message: 'Successfully published the website.',
-            type: 'success'
-          });
-          this.isCommitLoading = false;
-          this.init();
+          })
+        } else {
+          console.log('Error occured whit commiting your changes. ', gitResponse);
         }
-      }).catch(error => {
-        //console.log("Some error occured: ", error);
-      }) 
+      }
     },
 
     async publishMetalsmith(publishType) {
@@ -3064,34 +3122,41 @@ export default {
      updateProjectName(form) {
      this.$refs[form].validate(async (valid) => {
           if (valid) {
-            console.log('websiteName',this.form.websitename)
-            // console.log(this.folderUrl.split('/')[this.folderUrl.split('/').length-2])
-            var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
-            console.log('userid',userid)
-            var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
-            console.log('alldatauser:',alldatauser.data.data.length)
-            let checkdetail=true
-            for(let i=0;i<alldatauser.data.data.length;i++){
-              if(this.form.websitename==alldatauser.data.data[i].websiteName){
-                checkdetail=false
 
+            this.$swal({
+              title: 'Are you sure?',
+              text: 'You want you change the website name?',
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, change it!',
+              cancelButtonText: 'No, keep it'
+            }).then(async () => {
+            
+              var alldatauser = await axios.get( config.baseURL + '/project-configuration?userId='+Cookies.get('userDetailId'))
+              
+              let checkdetail=true
+              for(let i=0;i<alldatauser.data.data.length;i++){
+                if(this.form.websitename==alldatauser.data.data[i].websiteName){
+                  checkdetail=false
+
+                }
               }
-            }
-            if(checkdetail!=false){
-              console.log('not same found')
-              await this.saveProjectSettings();
-            location.reload();
-            }
-            else{
-              this.$message({
-              showClose: true,
-              message: 'Same name found.Try again!',
-              type: 'error'
-            });
-              console.log('same name found',this.configData.data.websiteName);
-              this.form.websiteName=this.configData.data.websiteName;
+              if(checkdetail!=false){
+                await this.saveProjectSettings();
+                location.reload();
+              }
+              else{
+                this.$message({
+                showClose: true,
+                message: 'Same name found. Try again!',
+                type: 'error'
+              });
+                this.form.websiteName=this.configData.data.websiteName;
+              }              
+            }).catch((dismiss) => {
+              //console.log('error', dismiss)
+            })
 
-            }
           } else {
             console.log('error submit!!');
             return false;
@@ -3612,5 +3677,12 @@ export default {
     top: 3px;
     position: absolute;
     color: #fff;
+  }
+
+  .save-project-name-btn{
+    background-color: #4baf4f !important;
+    color: #fff !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 </style>
