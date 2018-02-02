@@ -155,13 +155,13 @@
                   >
                 </el-table-column>
                 
-                <el-table-column
+                <!-- <el-table-column
                   label="Revert To Commit"
                   width="180">
                   <template scope="scope">
                     <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
                   </template>
-                </el-table-column>
+                </el-table-column> -->
               </el-table>
             </div>
           </div>

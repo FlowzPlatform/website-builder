@@ -673,9 +673,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let urlVarValue = [];
   let menuOptions = [];
   var menuNames = [];
+  var globalVariablesSelect = []
 
   urlVarValue.push({name: 'Select', value: ''});
   menuNames.push({name: 'Select', value: ''});
+  globalVariablesSelect.push({name: 'Select', value: ''});
 
   let configFileUrl = baseURL + '/project-configuration/' + foldername;
 
@@ -699,6 +701,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       let value = {name: menuOptions[j].label, value: menuOptions[j].label}
       menuNames.push(value);
     }
+
+    for(var j = 0; j < globalVariables.length; j++){
+      let value = {name: globalVariables[j].variableId, value: globalVariables[j].variableId}
+      globalVariablesSelect.push(value);
+    }
+
+    console.log(globalVariablesSelect);
 
     for(var j = 0; j < urlVariables.length; j++){
       let value = {name: urlVariables[j].urlId, value: urlVariables[j].urlValue}
@@ -1223,7 +1232,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1261,7 +1271,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1299,7 +1310,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1337,7 +1349,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -2000,6 +2013,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
               type: 'text',
               label: 'API_URL',
               name: ':data_api'
+            },
+            {
+              type: 'checkbox',
+              label: 'draggable',
+              name: 'draggable',
             }
           ]
         }),

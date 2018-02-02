@@ -91,6 +91,7 @@ export default {
         this.globalCssVariables = rawConfigs[1].projectSettings[1].GlobalCssVariables;
         var images = rawConfigs[1].projectSettings[1].AssetImages;
 
+
         let pageIndex = daex.indexFirst(rawConfigs[1].pageSettings, {
           'PageName': fileNameOrginal
         });
@@ -164,6 +165,15 @@ export default {
         //     plp+'c5d647/fff/image4.jpg', plp+'f28c33/fff/image5.jpg', plp+'e868a2/fff/image6.jpg', plp+'cc4360/fff/image7.jpg',
         //     'https://imgur.com/IbSijwv.jpg', 'https://imgur.com/181uTO9.png', 'https://i.imgur.com/XTo3DiU.png'
         // ];
+
+        images.push('http://placehold.it/350x250/78c5d6/fff/image1.jpg');
+        images.push('http://placehold.it/350x250/459ba8/fff/image2.jpg');
+        images.push('http://placehold.it/350x250/79c267/fff/image3.jpg');
+        images.push('http://placehold.it/350x250/c5d647/fff/image4.jpg');
+        images.push('http://placehold.it/350x250/f28c33/fff/image5.jpg');
+        images.push('http://placehold.it/350x250/e868a2/fff/image6.jpg');
+        images.push('http://placehold.it/350x250/cc4360/fff/image7.jpg');
+
 
         // 'gjs-plugin-ckeditor', 'grapesjs-blocks-bootstrap4', 'gjs-plugin-filestack'
 
@@ -594,5 +604,9 @@ export default {
 
 .gjs-mdl-dialog{
     width: 50%;
+}
+
+.gjs-am-preview-cont{
+    width: 15% !important;
 }
 </style>
