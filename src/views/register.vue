@@ -160,6 +160,7 @@ export default {
         //   this.authen.error = response.data;
         // })
       }).catch(error => {
+        console.log('Error: ', error);
         this.authen.status = false;
         this.authen.error = error.data;
       })

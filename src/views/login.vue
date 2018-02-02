@@ -207,20 +207,29 @@ export default {
 
             $('.success').fadeIn();  
 
+            // create user folder
             await axios.post(config.baseURL+'/flows-dir-listing' , {
               foldername :'/var/www/html/websites/'+ this.userDetailId,
               type : 'folder'
             })
             .then((res) => {
               this.$router.push('/editor');
-              //console.log('user Folder created!');
             });
             
           })
           .catch((e) => {
             console.log(e)
+            
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
+
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
+
             $(".authent").fadeOut();
             $('.login div').fadeIn();
+
             this.$message({
                 showClose: true,
                 message: 'Username Password did not matched..',
@@ -332,6 +341,7 @@ export default {
     }
   },
   created () {
+    $('.login div').fadeIn();
     // Check if login token in cookie exist or not
     if(this.$cookie.get('auth_token')){
       // Set email Session
@@ -373,8 +383,7 @@ export default {
       })
     } else {
       console.log('Token Not found. Please Login.');
-      // $('.login div').fadeIn();
-      
+      $('.login div').fadeIn();
     }
   },
   mounted () {
@@ -415,7 +424,7 @@ export default {
     $('input[type="submit"]').click(function(){
       if(self.form.user != '' && self.form.pass != ''){
         self.authenticate();
-        $('.login').addClass('test')
+        // $('.login').addClass('test')
         // setTimeout(function(){
         //   $('.login').addClass('testtwo')
         // },300);
@@ -476,6 +485,9 @@ export default {
     //     $(this).parent().animate({'left':'0'})
     //   });
     // });
+
+    $('.login div').fadeIn();
+    
   }
 }
 </script>

@@ -49,6 +49,9 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 module.exports = {
+
+    domainkey: domainkey,
+
     loginUrl: loginUrl,
     ldapUrl: ldapUrl,
     registerUrl: registerUrl,
@@ -75,5 +78,5 @@ module.exports = {
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
-    gitLabIpAddress: 'http://162.209.122.250/'
+    gitLabIpAddress: 'http://47.88.50.66/'
 }
