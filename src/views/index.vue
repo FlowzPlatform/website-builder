@@ -319,12 +319,12 @@
                   :key="item.name"
                   :label="item.title"
                   :name="item.name">
-                  <component :is="item.componentId" ref="contentComponent"></component>
+                  <component :is="item.componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
                 </el-tab-pane>
               </el-tabs>
             </div>
             <div v-if="display == true" style="margin-left: 10px;">
-              <component :is="componentId" ref="contentComponent"></component>
+              <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
             </div>
             
           </div>
@@ -566,9 +566,15 @@
     },
     created () {
 
+      // if(){
+
+      // } else {
+
+      // }
+
       // Check if login token in cookie exist or not
       if(this.$cookie.get('auth_token')){
-        this.getData();
+        // this.getData();
         // Set email Session
         axios.get(config.userDetail, {
           headers: {
@@ -666,7 +672,9 @@
           response.path = response.path.replace(/\//g, "\\")
           var s = response.path.replace(this.rootpath, '').split('\\');
 
-          if(s[5] == Cookies.get('userDetailId')){
+          console.log('S: ', s[5]);
+
+          if(s[5] == Cookies.get('userDetailId') || s[0] == Cookies.get('userDetailId')){
             let objCopy = self.directoryTree
             let evalStr = 'self.directoryTree'
             let $eval = eval(evalStr)
@@ -728,6 +736,7 @@
     },
 
     methods: {
+
       canceldialog(){
         this.newFileDialog = false
         console.log('&&&&')
@@ -1462,6 +1471,8 @@
       // Save config File
       async saveConfigFile(folderUrl){
 
+        console.log(folderUrl);
+
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
 
@@ -1507,11 +1518,15 @@
             }
             let folderUrl = configFileUrl.replace(fileName, '');
             let foldername = folderUrl.split('/');
-            foldername = foldername[(foldername.length - 1)];
+            foldername = foldername[6];
             // this.getConfigFileData(folderUrl);
             let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername );
             let rawConfigs = responseConfig.data.configData;
+
             let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
+
+            console.log('rawConfigs', rawConfigs);
+
             let checkfilename=false
                 for(let i=0;i<Object.keys(rawConfigs[2].layoutOptions[0]).length;i++){
                   if(Object.keys(rawConfigs[2].layoutOptions[0])[i]==newFolderName.split('/')[newFolderName.split('/').length-1]){
@@ -1529,70 +1544,68 @@
                 });
                 }else{
                   return axios.post(config.baseURL + '/flows-dir-listing', {
-                foldername: newFolderName,
-                type: 'folder'
-              })
-              .then(async(res) => {
-                var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-                storedTemplates.push(this.formAddFolder.foldername)
-                localStorage.setItem("listOfTempaltes", JSON.stringify(storedTemplates));
-
-                // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                // let urlparts = configFileUrl.split("/");
-                // let fileNameOrginal = urlparts[urlparts.length - 1];
-                // let fileName = '';
-                // if(_.includes(configFileUrl, 'Partials')){
-                //     fileName = '/' + urlparts[urlparts.length - 1];
-                // }
-                // let folderUrl = configFileUrl.replace(fileName, '');
-                // let foldername = folderUrl.split('/');
-                // foldername = foldername[(foldername.length - 1)];
-                // // this.getConfigFileData(folderUrl);
-                // let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
-                // let rawConfigs = responseConfig.data.data[0].configData;
-                this.globalConfigData = rawConfigs;
-
-                this.newFolderDialog = false;
-                this.addNewFolderLoading = false;
-                if(this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')){
-                  axios.post(config.baseURL + '/flows-dir-listing', {
-                      filename: newFolderName+'/default.partial',
-                      text: '',
-                      type: 'file'
+                    foldername: newFolderName,
+                    type: 'folder'
                   })
-                  .then((res)=>{
-                  
-                  let checkfolder=false
-                  for(let i=0;i<Object.keys(this.globalConfigData[2].layoutOptions[0]).length;i++){
-                    var temp=Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
-                    if(temp==this.formAddFolder.foldername){
-                      //console.log("File already exists");
-                      checkfolder=true
+                  .then(async(res) => {
+
+                    // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                    // let urlparts = configFileUrl.split("/");
+                    // let fileNameOrginal = urlparts[urlparts.length - 1];
+                    // let fileName = '';
+                    // if(_.includes(configFileUrl, 'Partials')){
+                    //     fileName = '/' + urlparts[urlparts.length - 1];
+                    // }
+                    // let folderUrl = configFileUrl.replace(fileName, '');
+                    // let foldername = folderUrl.split('/');
+                    // foldername = foldername[(foldername.length - 1)];
+                    // // this.getConfigFileData(folderUrl);
+                    // let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
+                    // let rawConfigs = responseConfig.data.data[0].configData;
+                    this.globalConfigData = rawConfigs;
+
+                    this.newFolderDialog = false;
+                    this.addNewFolderLoading = false;
+                    console.log('this.$store.state.fileUrl.replace()', this.$store.state.fileUrl.replace(/\\/g, "\/"))
+                    if(this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')){
+                      axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename: newFolderName+'/default.partial',
+                          text: '',
+                          type: 'file'
+                      })
+                      .then((res)=>{
+                      
+                      let checkfolder=false
+                      for(let i=0;i<Object.keys(this.globalConfigData[2].layoutOptions[0]).length;i++){
+                        var temp=Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
+                        if(temp==this.formAddFolder.foldername){
+                          //console.log("File already exists");
+                          checkfolder=true
+                        }
+                      }
+                      if(checkfolder!=true){
+                        //console.log("As, folder not found in config file. We are adding this folder inside config file:")
+                        var obj={value:'default',label:'default'}
+                        this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername]=[]
+                        this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
+                      }
+
+                      this.saveConfigFile(folderUrl)
+
+                      }).catch((e)=>{
+                        //console.log(e)
+                      })
+                      
                     }
-                  }
-                  if(checkfolder!=true){
-                    //console.log("As, folder not found in config file. We are adding this folder inside config file:")
-                    var obj={value:'default',label:'default'}
-                    this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername]=[]
-                    this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
-                  }
-
-                  this.saveConfigFile(folderUrl)
-
-                  }).catch((e)=>{
+                  })
+                  .catch((e) => {
+                    this.$message({
+                      showClose: true,
+                      message: 'Folder creation failed. Try again.',
+                      type: 'error'
+                    });
                     //console.log(e)
                   })
-                  
-                }
-              })
-              .catch((e) => {
-                this.$message({
-                  showClose: true,
-                  message: 'Folder creation failed. Try again.',
-                  type: 'error'
-                });
-                //console.log(e)
-              })
                 }
             
           }
@@ -2717,13 +2730,14 @@
                 setTimeout(function(){
                   self.$message({
                     showClose: true,
-                    message: 'Project Created. Please wait...',
+                    message: 'Project Created.',
                     type: 'success'
                   });
                 },500); 
 
                 setTimeout(function(){
-                  location.reload();
+                  // location.reload();
+                  self.getData();
                 },1000);  
               }
             }).catch(error => {
@@ -5332,7 +5346,7 @@
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
         let fileNameOrginal = urlparts[urlparts.length - 1];
-        let foldername = urlparts[urlparts.length - 2];
+        let foldername = urlparts[6];
         // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
         // var folderUrl = configFileUrl.replace(fileName, '');
    
@@ -5472,6 +5486,8 @@
                   this.saveConfigFile(folderUrl);
               }
 
+              this.getData();
+
             })
             .catch((e) => {
               //console.log(e)
@@ -5540,6 +5556,8 @@
                   }
               }
 
+              this.getData();
+
               this.$message({
                   showClose: true,
                   message: 'Folder deleted!',
@@ -5602,8 +5620,11 @@
                       //console.log(e)
                   })
 
+                  let self = this;
+
                   setTimeout(function() {
-                    location.reload();
+                    // location.reload();
+                    self.getData();
                   }, 500);
                 })
                 .catch((e) => {
@@ -5840,7 +5861,8 @@
                         })
                         .then((res) => {
                           this.fullscreenLoading = false;
-                          location.reload();
+                          // location.reload();
+                          this.getData();
                         })
                         .catch((e) => {
                             //console.log(e)
@@ -5944,7 +5966,8 @@
                       })
                       .then((res) => {
                         this.fullscreenLoading = false;
-                        location.reload();
+                        // location.reload();
+                        this.getData();
                       })
                       .catch((e) => {
                           //console.log(e)
@@ -6876,7 +6899,7 @@
   .editor-buttons {
       position: fixed;
       bottom: -8px;
-      right: 55px;
+      right: 75px;
       z-index: 15;
   }
 

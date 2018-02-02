@@ -232,7 +232,7 @@ export default {
 
             this.$message({
                 showClose: true,
-                message: 'Username Password did not matched..',
+                message: 'Error: ' + e.response.data,
                 type: 'error'
             });
           })
@@ -277,18 +277,31 @@ export default {
       }).catch(error => {
         this.authen.status = false;
 
-        $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-        $('.login').removeClass('testtwo')
+        let self = this;
 
-        $('.login').removeClass('test')
-        $('.login div').fadeOut(123);
+        setTimeout(function(){
+          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+          $('.login').removeClass('testtwo')
 
-        $(".authent").fadeOut();
+          $('.login').removeClass('test')
+          $('.login div').fadeOut(123);
+
+          $(".authent").fadeOut();
+          $('.login div').fadeIn();
+
+          self.$message({
+            showClose: true,
+            message: 'Error: ' + error.response.data,
+            type: 'error'
+          });
+        }, 500)
+
+        
         $('.login div').fadeIn();
         this.$message({
             showClose: true,
-            message: 'Some Server error occured.',
+            message: 'Error: ' + error.response.data,
             type: 'error'
         });
 
@@ -487,7 +500,7 @@ export default {
     // });
 
     $('.login div').fadeIn();
-    
+
   }
 }
 </script>

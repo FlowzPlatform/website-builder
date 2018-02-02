@@ -1090,6 +1090,8 @@ export default {
 
   async mounted () {
 
+
+
     // Collapsing Divs
     $(document).ready(function($) {
 
@@ -4177,7 +4179,8 @@ export default {
               if(checkdetail!=false){
                 console.log('not same found')
                 await this.saveProjectSettings();
-              location.reload();
+              // location.reload();
+                this.$emit('updateProjectName');
               }
               else{
               //   this.$message({

@@ -603,6 +603,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Data Field Group'
   });
 
+  bm.add('DataFieldTable', {
+    label: 'Data Field Table',
+    content: '<DataFieldTable style="display: block; width: 100%; min-height:350px"></DataFieldTable>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
+
   bm.add('DataFieldText', {
     label: 'Data Field Text',
     content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
@@ -632,6 +642,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       },
       category: 'Data Field Group'
   });
+
+
 
 
   bm.add('ShoppingCart', {
@@ -1960,35 +1972,56 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   // dataField components
 
-  //http://172.16.230.176:3034/connectiondata
+  var getCookiebyName = function (name) {
+  var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
+    return !!pair ? pair[1] : null;
+  };
+
+  let cookieValueFun =  getCookiebyName("auth_token")
   let arr_collection = new Array();
   let arr_schema = []
   let arr_coll_schema = new Array()
-  $.getJSON("http://172.16.230.86:3080/settings",
-    // $.getJSON("http://localhost:3080/settings",
-    function (data) {
-      //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
-      for (let index = 0; index < data.rethink.dbinstance.length; index++) {
-        //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-        arr_collection.push(data.rethink.dbinstance[index].connection_name)
-        $.getJSON("http://172.16.230.86:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
-          // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
-          function (data_) {
-            // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-            let collection_name = data.rethink.dbinstance[index].connection_name
-            for (let index_ = 0; index_ < data_.length; index_++) {
-              if (data_[index_].t_name != undefined) {
-                let schema_name = data_[index_].t_name
-                arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
-              }
-            }
-            arr_coll_schema.push("''")
-            $.each(arr_schema, function (index, value) {
-              arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
-            });
-          });
+  let settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://api.flowzcluster.tk/dbetl/databases",
+    "method": "GET",
+    "headers": {
+      "authorization": cookieValueFun
+    }
+  }
+
+  $.ajax(settings).done(function (response) {
+    for (let index = 0; index < response.data.length; index++) {
+      arr_collection.push(response.data[index].connection_name)
+      let settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://api.flowzcluster.tk/dbetl/schema/" + response.data[index].id,
+        "method": "GET",
+        "headers": {
+          "authorization": cookieValueFun
+        }
       }
-    });
+
+      $.ajax(settings).done(function (response2) {
+        for (let index2 = 0; index2 < response2.length; index2++) {
+          collection_name = response.data[index].connection_name
+          schema_name = response2[index2].name
+          arr_schema.push({ collection_name: collection_name, schema_name: schema_name })
+          console.log("arr_schema", arr_schema)
+        }
+        arr_coll_schema.push('');
+        $.each(arr_schema, function (index, value) {
+          arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
+        });
+        console.log("arr_coll_schema", typeof arr_coll_schema)
+      });
+    }
+  });
+
+
+
 
     comps.addType('DataFieldGroup', {
       // Define the Model
@@ -2006,13 +2039,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             {
               type: 'select',
               label: 'data-schema',
-              name: ':data_schema',
+              name: 'data_schema',
               options: arr_coll_schema,
             },
             {
               type: 'text',
               label: 'API_URL',
-              name: ':data_api'
+              name: 'data_api'
             },
             {
               type: 'checkbox',
@@ -2027,6 +2060,60 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             if (el.tagName == 'DATAFIELDGROUP') {
               return {
                 type: 'DataFieldGroup'
+              };
+            }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
+            }
+          },
+        }),
+
+      view: defaultView.extend({
+        // '<template>' can't be shown so in canvas use another tag
+        tagName: 'div'
+      }),
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+
+    comps.addType('DataFieldTable', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'text',
+              label: 'column_value',
+              name: 'column_value'
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: 'data_api'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDTABLE') {
+              return {
+                type: 'DataFieldTable'
               };
             }
             if (el.tagName == 'TEMPLATE') {
@@ -2066,13 +2153,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             {
               type: 'select',
               label: 'data-schema',
-              name: ':data_schema',
+              name: 'data_schema',
               options: arr_coll_schema,
             },
             {
               type: 'text',
               label: 'API_URL',
-              name: ':data_api'
+              name: 'data_api'
             }
           ]
         }),
