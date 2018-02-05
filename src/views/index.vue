@@ -830,6 +830,7 @@
                 await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {
                 })
                 .then((res) => {
+                  console.log(res);
                   response.data.children[i].websitename = res.data.websiteName;
 
                   if(response.data.children[i].websitename.length>20){
@@ -843,14 +844,6 @@
                 })
                 .catch((e) => {
                   console.log('Data Error.');  
-                  if(response.data.children[i].websitename.length>20){
-                    response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
-                  }
-
-                  response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-                    return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
-                    // return !(child.name == '.git')
-                  })
                 })
 
                 // let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
