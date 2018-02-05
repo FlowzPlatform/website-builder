@@ -319,12 +319,12 @@
                   :key="item.name"
                   :label="item.title"
                   :name="item.name">
-                  <component :is="item.componentId" ref="contentComponent"></component>
+                  <component :is="item.componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
                 </el-tab-pane>
               </el-tabs>
             </div>
             <div v-if="display == true" style="margin-left: 10px;">
-              <component :is="componentId" ref="contentComponent"></component>
+              <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
             </div>
             
           </div>
@@ -827,16 +827,39 @@
                 // console.log('--------', response.data.children[i].name)
 
                 // Map folder name and project id
-                let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
-
-                response.data.children[i].websitename = rethinkdbCheck.data.websiteName;
-                 if(response.data.children[i].websitename.length>20){
-                  response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
-                }
-                response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-                  return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
-                  // return !(child.name == '.git')
+                await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {
                 })
+                .then((res) => {
+                  response.data.children[i].websitename = res.data.websiteName;
+
+                  if(response.data.children[i].websitename.length>20){
+                    response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
+                  }
+
+                  response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
+                    return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
+                    // return !(child.name == '.git')
+                  })
+                })
+                .catch((e) => {
+                  console.log('Data Error.');  
+                  if(response.data.children[i].websitename.length>20){
+                    response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
+                  }
+
+                  response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
+                    return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
+                    // return !(child.name == '.git')
+                  })
+                })
+
+                // let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
+
+                // response.data.children[i].websitename = rethinkdbCheck.data.websiteName;
+                //  if(response.data.children[i].websitename.length>20){
+                //   response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
+                // }
+                
               }
             // },1000);
 
@@ -967,49 +990,49 @@
           this.isSettingsPage = true;
           this.componentId = 'ProjectSettings';
 
-          this.display = false;
+          this.display = true;
 
-          let url = data.path;
-          let compId = this.componentId;
+          // let url = data.path;
+          // let compId = this.componentId;
      
-          let newTabName = ++this.tabIndex + '';
-          let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+          // let newTabName = ++this.tabIndex + '';
+          // let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
-          let editableTabValue = this.editableTabsValue
+          // let editableTabValue = this.editableTabsValue
 
-          let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
-          function checkIfExist(filepath,array) {  // The last one is array
-              var found = array.some(function (el) {
-                return el.filepath == url;
-              });
-              if (!found)
-              {
-                  array.push({
-                    title: tab_file_name,
-                    name: newTabName,
-                    content: newTabName,
-                    componentId : compId,
-                    filepath : url
-                  });
+          // let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
+          // function checkIfExist(filepath,array) {  // The last one is array
+          //     var found = array.some(function (el) {
+          //       return el.filepath == url;
+          //     });
+          //     if (!found)
+          //     {
+          //         array.push({
+          //           title: tab_file_name,
+          //           name: newTabName,
+          //           content: newTabName,
+          //           componentId : compId,
+          //           filepath : url
+          //         });
 
-              }else{
-                let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                array = removedArray  ;
-                editableTabValue = newTabName;
-                array.push({
-                    title: tab_file_name,
-                    name: newTabName,
-                    content: newTabName,
-                    componentId : compId,
-                    filepath : url
-                  });
-              }
-              return array
-          }
+          //     }else{
+          //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+          //       array = removedArray  ;
+          //       editableTabValue = newTabName;
+          //       array.push({
+          //           title: tab_file_name,
+          //           name: newTabName,
+          //           content: newTabName,
+          //           componentId : compId,
+          //           filepath : url
+          //         });
+          //     }
+          //     return array
+          // }
 
-          this.editableTabs =  selectedPagePositionFirstArray ;
-          this.editableTabs.reverse();
-          this.editableTabsValue = newTabName;
+          // this.editableTabs =  selectedPagePositionFirstArray ;
+          // this.editableTabs.reverse();
+          // this.editableTabsValue = newTabName;
         }
         // If Clicked in ProjectName 
         else if(this.isProjectStats) {
@@ -2723,7 +2746,8 @@
                 },500); 
 
                 setTimeout(function(){
-                  location.reload();
+                  // location.reload();
+                  self.getData();
                 },1000);  
               }
             }).catch(error => {
@@ -5407,7 +5431,6 @@
 
                 // save config file
                 this.saveConfigFile(folderUrl);
-
               } else if (_.includes(data.path, 'Layout')) {
 
                 var layoutName = last_element.replace(".layout", "");
@@ -5428,7 +5451,7 @@
 
                 // save config file
                 this.saveConfigFile(folderUrl);
-              }else if (_.includes(data.path, 'Partials')) {
+              } else if (_.includes(data.path, 'Partials')) {
                 var foldername=arr_file[arr_file.length-2]           
                 var partialNameBreak = last_element.split('.');
                 var partialNameOnly = partialNameBreak[0];
@@ -5446,8 +5469,7 @@
               
                 // save config file
                 this.saveConfigFile(folderUrl);
-              } 
-              else {
+              } else {
                 let partialsArray = [];
                 var foldername=arr_file[arr_file.length-2]
                 partialsArray.push(Object.keys(this.globalConfigData[2].layoutOptions[0]));
@@ -5471,6 +5493,8 @@
                 }
                   this.saveConfigFile(folderUrl);
               }
+
+              this.getData();
 
             })
             .catch((e) => {
@@ -5534,11 +5558,13 @@
                   if (this.globalConfigData[2].layoutOptions[0][foldername] != undefined) {
 
                       delete this.globalConfigData[2].layoutOptions[0][foldername];
-                      this.saveConfigFile(folderUrl);
+                      this.saveConfigFile(configFileUrl);
                   } else {
                       //console.log("Folder not found in config file.")
                   }
               }
+
+              this.getData();
 
               this.$message({
                   showClose: true,
@@ -5602,8 +5628,11 @@
                       //console.log(e)
                   })
 
+                  let self = this;
+
                   setTimeout(function() {
-                    location.reload();
+                    // location.reload();
+                    self.getData();
                   }, 500);
                 })
                 .catch((e) => {
@@ -5840,7 +5869,8 @@
                         })
                         .then((res) => {
                           this.fullscreenLoading = false;
-                          location.reload();
+                          // location.reload();
+                          this.getData();
                         })
                         .catch((e) => {
                             //console.log(e)
@@ -5944,7 +5974,8 @@
                       })
                       .then((res) => {
                         this.fullscreenLoading = false;
-                        location.reload();
+                        // location.reload();
+                        this.getData();
                       })
                       .catch((e) => {
                           //console.log(e)
@@ -6876,7 +6907,7 @@
   .editor-buttons {
       position: fixed;
       bottom: -8px;
-      right: 55px;
+      right: 75px;
       z-index: 15;
   }
 
@@ -6954,7 +6985,8 @@
 
   .tree-data-spinner{
     text-align: center;
-    margin: 15px 0px;
+    margin-top: 15px;
+    margin-bottom: 0;
   }
 </style>
 <style>
