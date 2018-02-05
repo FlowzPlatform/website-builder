@@ -4023,7 +4023,7 @@ export default {
 
     async init () {
 
-      var gateways= await axios.get('http://api.flowzcluster.tk/payment/availablegateway');
+      var gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
 
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");

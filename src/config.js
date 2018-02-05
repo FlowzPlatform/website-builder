@@ -28,6 +28,8 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';
     loginWithGithubUrl = 'https://auth.'+domainkey+'/auth/github';
     loginWithLinkedInUrl = 'https://auth.'+domainkey+'/auth/linkedin';
+
+    paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -46,6 +48,7 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
     loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
     loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
+    paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
 }
 
 module.exports = {
@@ -69,6 +72,8 @@ module.exports = {
     loginWithTwitterUrl: loginWithTwitterUrl,
     loginWithGithubUrl: loginWithGithubUrl,
     loginWithLinkedInUrl: loginWithLinkedInUrl,
+
+    paymentApiGateway: paymentApiGateway,
 
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
