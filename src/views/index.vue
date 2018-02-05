@@ -139,7 +139,7 @@
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                 <el-form-item prop="projectName">
                   <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                  <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                  <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -172,7 +172,7 @@
               </el-form>
               <span slot="footer" class="dialog-footer">
                   <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                  <el-button type="primary" @click="addProjectFolder('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
+                  <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
               </span>
             </el-dialog>
           </div>
@@ -270,7 +270,7 @@
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
                     <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                    <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="addProjectFolder('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                    <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                   </el-form-item>
 
                   <el-form-item>
@@ -303,7 +303,7 @@
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
-                    <el-button type="primary" @click="addProjectFolder('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
+                    <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
                 </span>
               </el-dialog>
             </div>
@@ -1935,6 +1935,7 @@
         }
         // return boolvalue
       },
+
       // Create new Website
       async addProjectFolder(projectName) {
         // var boolvalue=this.checknameexist()
@@ -1946,108 +1947,101 @@
         //   this.addNewProjectFolderLoading = false;
         // }
         console.log(projectName)
-         this.$refs[projectName].validate((valid) => {
-           if (valid) {
-             this.fullscreenLoading = true;
-              
-             // let username = this.$session.get('username');
-             // let token = this.$session.get('token');
-             let token = Cookies.get('auth_token');
-               this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-            var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
-            // console.log('____',userid)
-             this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
- 
-             axios.post(config.baseURL + '/project-configuration', {
-                 userEmail: Cookies.get('email'),
-                 websiteName: this.formAddProjectFolder.projectName,
-                 userId:userid
-               })
-               .then((res) => {
-                 console.log(res)
-                 // this.newProjectFolderDialog = false
-                 // this.addNewProjectFolderLoading = false;
-                 // axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {})
-                 //   .then((response) => {
-                     // console.log(response)
-                     let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id 
-                     // let newFolderName=res.data.id 
-                     return axios.post(config.baseURL + '/flows-dir-listing', {
-                         foldername: newFolderName,
-                         type: 'folder'
-                       }, {
-                         headers: {
-                           'authorization': token
-                         }
-                       })
-                       .then((resp) => {
-                        console.log(resp)
-                        this.newProjectFolderDialog = false
-                        this.addNewProjectFolderLoading = false;
-                         
-                         // var response = resp
-                         axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {})
-                          .then((response) => {
- 
-                         if (!(response.data.statusCode)) {
- 
-                           localStorage.setItem("folderUrl", newFolderName);
-                           var folder = localStorage.getItem("folderUrl");
- 
-                           axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName, {
- 
-                             }).then((resDir) => {
-                               localStorage.setItem("listOfTempaltes", JSON.stringify(resDir.data));
-                             })
-                             .catch((e) => {
-                               //console.log(e)
-                             })
- 
-                           this.newRepoId = response.data.id;
-                           this.repoName = response.data.name;
- 
-                           // Create essential folders
-                           this.addOtherFolder(newFolderName);
- 
-                           this.formAddProjectFolder.projectName = null;
-                         } else {
-                           this.fullscreenLoading = false;
-                           this.$message({
-                             showClose: true,
-                             message: 'Error from server: ' + response.data.error.message.name,
-                             type: 'error'
-                           });
- 
-                           // Delete folder from storage
-                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
-                             .then((res) => {})
- 
-                             .catch((e) => {
-                               //console.log(e)
-                             })
-                           return;
-                         }
- 
-                       })
-                       })
-                       .catch((e) => {
-                         //console.log(e);
-                         // this.componentId = 'buyPage';
-                         this.newProjectFolderDialog = false;
-                         this.fullscreenLoading = false;
-                         // this.buyNowDialog = true;
-                         console.log(e)
-                       });
-                   // })
- 
+        this.$refs[projectName].validate((valid) => {
+          if (valid) {
+            this.fullscreenLoading = true;
+
+            // let username = this.$session.get('username');
+            // let token = this.$session.get('token');
+            let token = Cookies.get('auth_token');
+            this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+            var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
+              // console.log('____',userid)
+            this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+
+            axios.post(config.baseURL + '/project-configuration', {
+                userEmail: Cookies.get('email'),
+                websiteName: this.formAddProjectFolder.projectName,
+                userId: userid
+              })
+              .then((res) => {
+                console.log(res)
+                  // this.newProjectFolderDialog = false
+                  // this.addNewProjectFolderLoading = false;
+                  // axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {})
+                  //   .then((response) => {
+                  // console.log(response)
+                let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
+                  // let newFolderName=res.data.id 
+                return axios.post(config.baseURL + '/flows-dir-listing', {
+                    foldername: newFolderName,
+                    type: 'folder'
+                  }, {
+                    headers: {
+                      'authorization': token
+                    }
+                  })
+                  .then(async (resp) => {
+                    console.log(resp)
+                    this.newProjectFolderDialog = false
+                    this.addNewProjectFolderLoading = false;
+
+                    // var response = resp
+                    let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {});
+
+                    if (!(gitResponse.data.statusCode)) {
+
+                      localStorage.setItem("folderUrl", newFolderName);
+                      var folder = localStorage.getItem("folderUrl");
+
+                      this.newRepoId = gitResponse.data.id;
+                      this.repoName = gitResponse.data.name;
+
+                      // Create essential folders
+                      this.addOtherFolder(newFolderName);
+
+                      this.formAddProjectFolder.projectName = null;
+                    } else {
+
+                      localStorage.setItem("folderUrl", newFolderName);
+                      var folder = localStorage.getItem("folderUrl");
+
+                      this.newRepoId = undefined;
+                      this.repoName = res.data.id;
+
+                      // Create essential folders
+                      this.addOtherFolder(newFolderName);
+
+                      this.formAddProjectFolder.projectName = null;
+
+                      // Delete folder from storage
+                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
+                      // .then((res) => {
+                      // })
+                      // .catch((e) => {
+                      // })
+
+                      // return;
+                    }
+                    
+                  })
+                  .catch((e) => {
+                    //console.log(e);
+                    // this.componentId = 'buyPage';
+                    this.newProjectFolderDialog = false;
+                    this.fullscreenLoading = false;
+                    // this.buyNowDialog = true;
+                    console.log(e)
+                  });
+                // })
+
               })
               .catch((e) => {
-                //console.log(e);
+                console.log(e);
                 // this.componentId = 'buyPage';
                 this.newProjectFolderDialog = false;
                 this.fullscreenLoading = false;
                 // this.buyNowDialog = true;
-                //console.log(e)
               });
           }
         });
@@ -2204,11 +2198,16 @@
         let projectRepoName = newFolderName.split('/');
         projectRepoName = projectRepoName[(projectRepoName.length) - 1 ];
 
+        let userid = Cookies.get('userDetailId');
+
         // Create project-details.json file
         let projectDetails = newFolderName + '/public/assets/project-details.json';
         let projectDetailsData = [{
                                   "projectOwner" : Cookies.get('email'),
-                                  "projectName" : projectRepoName
+                                  "projectID" : projectRepoName,
+                                  "UserID":userid,
+                                  "BasePath":newFolderName,
+                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/public/'
                                   }];
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename : projectDetails,
@@ -2220,11 +2219,24 @@
             //console.log(e)
         });
 
+        // Create main.js file
+        let defaultIndex = newFolderName + '/public/index.html'
+        await axios.post(config.baseURL + '/flows-dir-listing', {
+            filename : defaultIndex,
+            text : '<!DOCTYPE html><html><head><title>Site Unpublished</title><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><style type="text/css">@charset "UTF-8";html, body{width: 100%; height: 100%; margin: 0; padding: 0; background: #f9f9f9; overflow: hidden;}.crazy-cat{display: flex; position: relative; width: 100%; height: 100%; z-index: 1;}.wrapper{display: flex; justify-content: center; align-items: center;}.message{width: 50%; padding: 25px;}.message h1{font-size: 56px; color: #5f5f5f; font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif; font-weight: 100; margin: 40px 0;}.message p{font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 20px; color: #808080; margin: 40px 0; line-height: 28px;}.message a{font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; display: inline-block; background: #c7c7c7; color: #696969; text-align: center; padding: 20px 40px; font-size: 20px; text-decoration: none; border-radius: 6px; transition: 0.3s;}.message a:hover{background: #333; color: #ccc;}.gear{content: ""; font-family: "FontAwesome"; position: absolute; animation: gear 50s infinite linear; transform-origin: center; top: -250px; right: -250px; font-size: 600px; z-index: 0; color: #eaeaea;}@keyframes gear{0%{transform: rotate(0deg);}100%{transform: rotate(360deg);}}@media (max-width: 760px){.message h1{font-size: 36px;}}</style></head><body><div class="crazy-cat"> <div class="wrapper"> <div class="message"> <h1>Site not published yet</h1> <p>We sincerely apologize for the inconvenience. Our site is currently not published, but will return shortly. Thank you for your patience.</p><a href="mailto:' + Cookies.get('email') + '">Contact us</a> </div></div></div><div class="gear"> <i class="fa fa-cog" aria-hidden="true"></i></div></body></html>',
+            type : 'file'
+        })
+        .then((res) => {
+        })
+        .catch((e) => {
+            //console.log(e)
+        });
+
         // Create main.css file
         let maincss = newFolderName + '/public/main-files/main.css'
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename : maincss,
-            text : '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;}',
+            text : '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;} .grid{position: relative;}.item{display: block; position: absolute; width: 100px; height: 100px; margin: 5px; z-index: 1; background: rgb(228, 29, 22); color: #fff;}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}',
             type : 'file'
         })
         .then((res) => {
@@ -2558,6 +2570,7 @@
                                         "ProjectFaviconhref": '',
                                         "ProjectVId":''
                                       }, {
+                                        "AssetImages": [],
                                         "GlobalVariables": [],
                                         "GlobalUrlVariables": [],
                                         "GlobalCssVariables": [],
@@ -3797,6 +3810,723 @@
       },
 
       // Generate Preview
+      // async generatePreview() {
+      //   this.previewLoading = true;
+      //   this.fullscreenLoading = true;
+      //   await this.saveFile('void');
+
+      //   let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
+
+      //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      //   let urlparts = configFileUrl.split("/");
+      //   let fileNameOrginal = urlparts[urlparts.length - 1];
+      //   let fileName = '';
+      //   if (_.includes(configFileUrl, 'Partials')) {
+      //     fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      //   } else if (_.includes(configFileUrl, 'Pages')) {
+      //     fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      //   } else {
+      //     fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+      //   }
+      //   let folderUrl = configFileUrl.replace(fileName, '');
+      //   await this.getConfigFileData(folderUrl);
+      //   var getFromBetween = {
+      //     results: [],
+      //     string: "",
+      //     getFromBetween: function(sub1, sub2) {
+      //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+      //       var SP = this.string.indexOf(sub1) + sub1.length;
+      //       var string1 = this.string.substr(0, SP);
+      //       var string2 = this.string.substr(SP);
+      //       var TP = string1.length + string2.indexOf(sub2);
+      //       return this.string.substring(SP, TP);
+      //     },
+      //     removeFromBetween: function(sub1, sub2) {
+      //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+      //       var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+      //       this.string = this.string.replace(removal, "");
+      //     },
+      //     getAllResults: function(sub1, sub2) {
+      //       if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+      //       var result = this.getFromBetween(sub1, sub2);
+      //       this.results.push(result);
+      //       this.removeFromBetween(sub1, sub2);
+      //       if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+      //         this.getAllResults(sub1, sub2);
+      //       } else return;
+      //     },
+      //     get: function(string, sub1, sub2) {
+      //       this.results = [];
+      //       this.string = string;
+      //       this.getAllResults(sub1, sub2);
+      //       return this.results;
+      //     }
+      //   };
+      //   let self = this;
+      //   setTimeout(async function() {
+
+      //     var externalJs = self.globalConfigData[1].projectSettings[1].ProjectExternalJs;
+      //     var externalCss = self.globalConfigData[1].projectSettings[1].ProjectExternalCss;
+      //     var metaInfo = self.globalConfigData[1].projectSettings[1].ProjectMetaInfo;
+      //     var ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
+      //     var projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
+      //     var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles;
+      //     var projectseotitle=self.globalConfigData[1].projectSettings[0].ProjectSEOTitle;
+      //     var projectfaviconhref=self.globalConfigData[1].projectSettings[0].ProjectFaviconhref
+      //     var tophead = '';
+      //     var endhead = '';
+      //     var topbody = '';
+      //     var endbody = '';
+      //     var pagestyles = [];
+      //     var favicon=''
+      //     var SeoTitle=''
+      //     var pageexternalJs = [];
+      //     var pagescripts = [];
+      //     var pageexternalCss = [];
+      //     var pageMetaInfo = [];
+      //     var pageSeoTitle;
+      //     var PageMetacharset = '';
+      //     if(projectseotitle!=undefined && projectseotitle!=''){
+      //       SeoTitle=projectseotitle
+      //     }
+      //     if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
+      //       favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+      //     }
+
+      //     if (ProjectMetacharset != '') {
+      //       tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
+      //     }
+      //     if (metaInfo != undefined && metaInfo.length > 0) {
+      //       for (let a = 0; a < metaInfo.length; a++) {
+      //         tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+      //       }
+      //     }
+      //     if (externalJs != undefined && externalJs.length > 0) {
+      //       for (let a = 0; a < externalJs.length; a++) {
+      //         if (externalJs[a].linkposition == 'starthead') {
+      //           tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+      //         } else if (externalJs[a].linkposition == 'endhead') {
+      //           endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+      //         } else if (externalJs[a].linkposition == 'startbody') {
+      //           topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+      //         } else if (externalJs[a].linkposition == 'endbody') {
+      //           endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+      //         }
+      //       }
+      //     }
+
+      //     if (externalCss != undefined && externalCss.length > 0) {
+      //       for (let a = 0; a < externalCss.length; a++) {
+      //         if (externalCss[a].linkposition == 'starthead') {
+      //           tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+      //         } else if (externalCss[a].linkposition == 'endhead') {
+      //           endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+      //         } else if (externalCss[a].linkposition == 'startbody') {
+      //           topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+      //         } else if (externalCss[a].linkposition == 'endbody') {
+      //           endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
+      //         }
+
+      //       }
+      //     }
+      //     if (projectscripts != undefined && projectscripts.length > 0) {
+      //       for (let a = 0; a < projectscripts.length; a++) {
+      //         if (projectscripts[a].linkposition == 'starthead') {
+      //           tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+      //         } else if (projectscripts[a].linkposition == 'endhead') {
+      //           endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+      //         } else if (projectscripts[a].linkposition == 'startbody') {
+      //           topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+      //         } else if (projectscripts[a].linkposition == 'endbody') {
+      //           endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+      //         }
+      //       }
+      //     }
+      //     if (projectstyles != undefined && projectstyles.length > 0) {
+      //       for (let a = 0; a < projectstyles.length; a++) {
+      //         if (projectstyles[a].linkposition == 'starthead') {
+      //           tophead = tophead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+      //         } else if (projectstyles[a].linkposition == 'endhead') {
+      //           endhead = endhead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+      //         } else if (projectstyles[a].linkposition == 'startbody') {
+      //           topbody = topbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+      //         } else if (projectstyles[a].linkposition == 'endbody') {
+      //           endbody = endbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+      //         }
+      //       }
+      //     }
+
+      //     let back_partials = new Array();
+      //     for (let i = 0; i < self.globalConfigData[1].pageSettings.length; i++) {
+      //       if (self.globalConfigData[1].pageSettings[i].PageName == (nameF + '.html')) {
+      //         let tempPartials = self.globalConfigData[1].pageSettings[i].partials;
+
+      //         self.form.Layout = self.globalConfigData[1].pageSettings[i].PageLayout
+
+      //         self.form.partials = tempPartials
+      //         back_partials = JSON.parse(JSON.stringify(tempPartials));
+      //         self.form.vuepartials = self.globalConfigData[1].pageSettings[i].VueComponents
+      //         pageexternalJs = self.globalConfigData[1].pageSettings[i].PageExternalJs;
+      //         pageexternalCss = self.globalConfigData[1].pageSettings[i].PageExternalCss;
+      //         pageMetaInfo = self.globalConfigData[1].pageSettings[i].PageMetaInfo;
+      //         pageSeoTitle = self.globalConfigData[1].pageSettings[i].PageSEOTitle;
+      //         PageMetacharset = self.globalConfigData[1].pageSettings[i].PageMetacharset;
+      //         pagescripts = self.globalConfigData[1].pageSettings[i].PageScripts;
+      //         pagestyles = self.globalConfigData[1].pageSettings[i].PageStyles;
+              
+      //       }
+      //     }
+      //     if(pageSeoTitle!=undefined && pageSeoTitle!=''){
+      //       SeoTitle=pageSeoTitle
+      //     }
+      //     // console.log(SeoTitle)
+      //     if (PageMetacharset != undefined && PageMetacharset != '' && !(ProjectMetacharset!='')) {
+      //       tophead = tophead + '<meta charset="' + PageMetacharset + '">'
+      //     }
+      //     if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
+      //       for (let a = 0; a < pageMetaInfo.length; a++) {
+      //         tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
+      //       }
+      //     }
+      //     if (pageexternalJs != undefined && pageexternalJs.length > 0) {
+      //       for (let a = 0; a < pageexternalJs.length; a++) {
+      //         if (pageexternalJs[a].linkposition == 'starthead') {
+      //           tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+      //         } else if (pageexternalJs[a].linkposition == 'endhead') {
+      //           endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+      //         } else if (pageexternalJs[a].linkposition == 'startbody') {
+      //           topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+      //         } else if (pageexternalJs[a].linkposition == 'endbody') {
+      //           endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+      //         }
+      //       }
+      //     }
+
+      //     if (pageexternalCss != undefined && pageexternalCss.length > 0) {
+      //       for (let a = 0; a < pageexternalCss.length; a++) {
+      //         if (pageexternalCss[a].linkposition == 'starthead') {
+      //           tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+      //         } else if (pageexternalCss[a].linkposition == 'endhead') {
+      //           endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+      //         } else if (pageexternalCss[a].linkposition == 'startbody') {
+      //           topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+      //         } else if (pageexternalCss[a].linkposition == 'endbody') {
+      //           endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
+      //         }
+      //       }
+      //     }
+      //     if (pagescripts != undefined && pagescripts.length > 0) {
+      //       for (let a = 0; a < pagescripts.length; a++) {
+      //         if (pagescripts[a].linkposition == 'starthead') {
+      //           tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+      //         } else if (pagescripts[a].linkposition == 'endhead') {
+      //           endhead = endhead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+      //         } else if (pagescripts[a].linkposition == 'startbody') {
+      //           topbody = topbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+      //         } else if (pagescripts[a].linkposition == 'endbody') {
+      //           endbody = endbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+      //         }
+      //       }
+      //     }
+      //     if (pagestyles != undefined && pagestyles.length > 0) {
+      //       for (let a = 0; a < pagestyles.length; a++) {
+      //         if (pagestyles[a].linkposition == 'starthead') {
+      //           tophead = tophead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+      //         } else if (pagestyles[a].linkposition == 'endhead') {
+      //           endhead = endhead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+      //         } else if (pagestyles[a].linkposition == 'startbody') {
+      //           topbody = topbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+      //         } else if (pagestyles[a].linkposition == 'endbody') {
+      //           endbody = endbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+      //         }
+      //       }
+      //     }
+
+
+      //     var contentpartials = self.$store.state.content;
+      //     if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
+
+      //       var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
+      //       mainVuefile = mainVuefile.data
+
+      //       for (let x = 0; x < self.form.vuepartials.length; x++) {
+      //         let temp = mainVuefile.replace(/@@vuecomponent@@/g, self.form.vuepartials[x].value.split('.')[0])
+      //         temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
+
+      //         await axios.post(config.baseURL + '/flows-dir-listing', {
+      //             filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
+      //             text: temp,
+      //             type: 'file'
+      //           }).then(async (res) => {
+      //             contentpartials = contentpartials + '<script src="./assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+
+      //             axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
+      //               .then((response) => {
+
+      //               })
+      //               .catch((e) => {
+      //                 //console.log(e)
+      //               })
+      //           })
+      //           .catch((e) => {
+      //             //console.log(e)
+      //           })
+      //       }
+      //     }
+      //     if (self.form.Layout == 'Blank') {
+      //       await axios.post(config.baseURL + '/flows-dir-listing', {
+      //           filename: folderUrl + '/Layout/Blank.layout',
+      //           text: '{{{ contents }}}',
+      //           type: 'file'
+      //         })
+      //         .catch((e) => {
+      //           //console.log("Error while blank file creation")
+      //         })
+      //     }
+
+      //     let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
+      //     var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
+      //     this.backuplayout = backlayoutdata.data;
+      //     let newFolderName = folderUrl + '/temp';
+      //     await axios.post(config.baseURL + '/flows-dir-listing', {
+      //         foldername: newFolderName,
+      //         type: 'folder'
+      //       }).then(async (res) => {
+      //         for (let i = 0; i < back_partials.length; i++) {
+      //           let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial');
+      //           responsepartials = responsepartials.data
+      //           let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
+      //           var DefaultParams = [];
+      //           if (result.length > 0) {
+      //             var resultParam = result
+      //             for (let i = 0; i < resultParam.length; i++) {
+      //               var temp;
+      //               temp = resultParam[i].trim()
+      //               result[i] = result[i].trim()
+      //               result[i] = result[i].replace(/&nbsp;/g, '').trim()
+      //               temp = temp.replace(/&nbsp;/g, '')
+      //               temp = temp.replace(/\s+/g, ' ');
+      //               temp = temp.trim();
+      //               temp = temp.split(' ')
+      //               for (let j = 0; j < temp.length; j++) {
+      //                 if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+      //                   if (temp[j + 1] != undefined) {
+      //                     result[i] = temp[0];
+      //                     if (temp[j + 1].indexOf('.') > -1) {
+      //                       let x = temp[j + 1]
+      //                       x = temp[j + 1].split(/'/)[1];
+      //                       let obj = {}
+      //                       obj[temp[0]] = x
+      //                       DefaultParams.push(obj)
+      //                       break;
+      //                     }
+      //                   } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+      //                     result[i] = temp[0];
+      //                     if (temp[j]) {
+      //                       let x = temp[j]
+      //                       x = temp[j].split(/'/)[1];
+      //                       let obj = {}
+      //                       obj[temp[0]] = x
+      //                       DefaultParams.push(obj)
+      //                       break;
+      //                     }
+      //                   }
+      //                 }
+      //               }
+      //             }
+      //             for (let j = 0; j < result.length; j++) {
+      //               temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+
+      //               temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+      //               responsepartials = responsepartials.split(temp1).join(temp2)
+      //             }
+      //           }
+      //           await axios.post(config.baseURL + '/flows-dir-listing', {
+      //             filename: folderUrl + '/temp/' + Object.keys(back_partials[i]) + '_' + back_partials[i][Object.keys(back_partials[i])] + '.html',
+      //             text: responsepartials,
+      //             type: 'file'
+      //           }).catch((e) => {
+      //             //console.log(e)
+      //           })
+      //         }
+
+      //         var result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
+      //         var changeresult=JSON.parse(JSON.stringify(result))
+      //         for(let s=0;s<changeresult.length;s++){
+      //           layoutdata.data=layoutdata.data.replace(changeresult[s],changeresult[s].replace(/&nbsp;/g,'').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g,"").replace(/\s*=\s*/g,'='))
+      //         }
+
+      //         if (result.length > 0) {
+      //           var resultParam = result
+      //           for (let i = 0; i < resultParam.length; i++) {
+      //             var temp;
+      //             temp = resultParam[i].trim()
+      //             result[i] = result[i].trim()
+                  
+      //             temp = temp.split(' ')
+      //             for (let j = 0; j < temp.length; j++) {
+      //                temp[j] = temp[j].trim();
+      //               if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+      //                  if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'")>-1) {
+      //                   result[i] = temp[0];
+      //                   if (temp[j]) {
+      //                     let x = temp[j]
+      //                     x = temp[j].split("'")[1]+'.partial';
+      //                     let obj = {}
+      //                     obj[temp[0]] = x
+      //                     DefaultParams.push(obj)
+      //                     break;
+      //                   }
+      //                 }
+      //                 if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"')>-1) {
+      //                   result[i] = temp[0];
+      //                   if (temp[j]) {
+      //                     let x = temp[j]
+      //                     x = temp[j].split('"')[1]+'.partial';
+      //                     let obj = {}
+      //                     obj[temp[0]] = x
+      //                     DefaultParams.push(obj)
+      //                     break;
+      //                   }
+      //                 }
+      //                 else{
+      //                   //console.log('Error while finding ID in layout');
+      //                 }
+      //               }
+      //             }
+      //           }
+      //           for (let j = 0; j < result.length; j++) {
+      //             for (let i = 0; i < back_partials.length; i++) {
+      //               if (Object.keys(back_partials[i])[0] == result[j]) {
+
+      //                 temp1 = '{{> ' + Object.keys(back_partials[i])[0] + '}}'
+      //                 if (layoutdata.data.search(temp1) > 0) {
+
+      //                   temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + '}}'
+      //                 } else {
+      //                   var indexdefault=_.findIndex(DefaultParams,function(o){
+      //                     return Object.keys(o)[0]==result[j]
+      //                   })
+      //                   temp1 = "{{> " + Object.keys(back_partials[i])[0] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
+
+      //                   temp2 = "{{> " + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
+      //                 }
+      //                 if (layoutdata.data.split(temp1).join(temp2)) {
+      //                   layoutdata.data = layoutdata.data.split(temp1).join(temp2)
+      //                   break;
+      //                 } else {
+      //                   //console.log('Replacing in layout file failed')
+      //                 }
+      //               }
+      //             }
+      //           }
+      //         }
+
+      //       })
+      //       .catch((e) => {
+      //         //console.log(e)
+      //       })
+
+      //     let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmith.js');
+
+      //     var index = responseMetal.data.search('.source')
+
+      //     responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
+      //     var indexPartial = responseMetal.data.search("handlebars");
+
+      //     for (var j = 0; j < self.form.partials.length; j++) {
+      //       var temp1, temp2;
+      //       temp1 = '{{> ' + Object.keys(self.form.partials[j])[0] + " id='" + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + ".partial' }}"
+
+      //       temp2 = '{{> ' + Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + " id='" + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + ".partial' }}"
+      //       if (contentpartials.match(temp1)) {
+
+      //         contentpartials = contentpartials.split(temp1).join(temp2)
+      //       }
+      //       var obj = {}
+      //       var key = Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]]
+      //       obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
+      //       self.form.partials[j] = []
+      //       self.form.partials[j] = obj
+      //     }
+      //     // self.$store.state.content = contentpartials;
+      //     var partials = '';
+      //     for (var i = 0; i < self.form.partials.length; i++) {
+      //       let key = Object.keys(self.form.partials[i])[0];
+      //       let value = self.form.partials[i]
+      //       let key2 = key;
+      //       key = key.trim();
+      //       if (value[key2].match('partial')) {
+      //         key = key.split('.')[0]
+      //         var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + "').toString())\n"
+      //       } else {
+      //         var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[i])[0] + "_" + value[key2] + ".html').toString())\n"
+      //       }
+      //       partials = partials + temp;
+      //     }
+      //     responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
+      //     self.form.partials = back_partials
+
+      //     console.log("Final metalsmith:", responseMetal.data);
+
+      //     var mainMetal = folderUrl + '/public/assets/metalsmith.js'
+      //     axios.post(config.baseURL + '/save-menu', {
+      //         filename: mainMetal,
+      //         text: responseMetal.data,
+      //         type: 'file'
+      //       })
+      //       .then(async (response) => {
+      //         let newFolderName1 = folderUrl + '/Preview';
+      //         await axios.post(config.baseURL + '/flows-dir-listing', {
+      //           foldername: newFolderName1,
+      //           type: 'folder'
+      //         }).then(async (res) => {
+      //           //console.log(res)
+
+      //         }).catch((e) => {
+      //           //console.log(e)
+      //         })
+
+      //         let datadivscript = ''
+      //         let divappstart=''
+      //         let divappend=''
+      //         if(contentpartials.indexOf('datafieldgroup')>0){
+      //           datadivscript= "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
+      //               "<script type='text/javascript' src='http://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
+      //               "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n" +
+      //               "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
+      //           divappstart='<div id="app">'
+      //           divappend='</div>'
+      //         }
+
+      //         let newContent = "<html>\n<head>\n" + tophead +
+      //               "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+      //               "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
+      //               "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+      //               "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+      //               "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
+      //               "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+      //               "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+      //               "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+      //               "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+      //               "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+      //               '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
+      //               '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+      //               '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
+      //               '<script src="https://cdn.jsdelivr.net/npm/y-memory@8.0.9/dist/y-memory.js"><\/script>\n' +
+      //               '<script src="https://cdn.jsdelivr.net/npm/y-webrtc@8.0.7/dist/y-webrtc.js"><\/script>\n' +
+      //               '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
+      //               '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
+      //               '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+      //               '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
+      //               datadivscript +
+      //               "<link rel='stylesheet' href='./main-files/main.css'/>\n"+
+      //               "<script src=\"./main-files/main.js\"><\/script>\n" +
+      //               '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
+      //               endhead + "\n</head>\n<body>\n" + divappstart +
+      //               layoutdata.data + topbody +
+      //               '\n'+ divappend +
+      //               '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+      //               '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
+      //               '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
+      //               '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
+      //               '\n</div>\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+      //               endbody +
+      //               '\n</body>\n</html>';
+
+      //           axios.post(config.baseURL + '/flows-dir-listing', {
+      //             filename: folderUrl + '/Layout/' + self.form.Layout + '_temp.layout',
+      //             text: newContent,
+      //             type: 'file'
+      //           })
+      //           .then(async (res) => {
+
+      //             var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
+
+      //             if (self.form.Layout == 'Blank') {
+      //               rawContent = '---\nlayout: ' + self.form.Layout + '_temp.layout\n---\n' + rawContent
+
+      //             } else {
+      //               var tempValueLayout = '---\nlayout: ' + self.form.Layout + '_temp.layout\n---\n';
+      //               rawContent = tempValueLayout + rawContent
+      //             }
+      //             self.PageLayout = JSON.parse(JSON.stringify(self.form.Layout));
+      //             var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
+      //             await axios.post(config.baseURL + '/flows-dir-listing', {
+      //                 filename: previewFileName,
+      //                 text: rawContent,
+      //                 type: 'file'
+      //               })
+      //               .then(async (res) => {
+
+      //                 self.saveFileLoading = false;
+      //                 console.log('Metalsmith call FolderUrl: ', folderUrl);
+      //                 await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
+
+      //                     var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+      //                     axios.post(config.baseURL + '/save-menu', {
+      //                         filename: folderUrl + '/public/assets/metalsmith.js',
+      //                         text: metalsmithJSON,
+      //                         type: 'file'
+      //                       })
+      //                       .then(async (res) => {
+      //                         self.fullscreenLoading = false;
+      //                         self.previewLoading = false;
+
+      //                         let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
+      //                         previewFile = folderUrl.replace('/var/www/html', '');
+
+      //                         let projName = previewFile.replace('websites/', '');
+
+      //                         projName = projName.split('/')[2];
+
+      //                         if(process.env.NODE_ENV !== 'development'){
+      //                           window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
+      //                         } else {
+      //                           window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+      //                         } 
+
+      //                         await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+      //                           .then(async (res) => {
+      //                             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+      //                             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
+      //                             }).catch((e) => {
+      //                               //console.log(e)
+      //                             })
+      //                             if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
+      //                               for (let x = 0; x < self.form.vuepartials.length; x++) {
+      //                                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+      //                                   })
+      //                                   .catch((e) => {
+      //                                     //console.log(e)
+      //                                   })
+      //                               }
+      //                             }
+      //                             if (self.form.Layout == 'Blank') {
+      //                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+      //                                 .catch((e) => {
+      //                                   self.fullscreenLoading = false;
+      //                                   //console.log("Error while deleting blank.layout file")
+      //                                 })
+      //                             }
+
+      //                           })
+      //                           .catch((e) => {
+      //                             self.fullscreenLoading = false;
+      //                             //console.log(e)
+      //                           })
+
+      //                       })
+      //                       .catch((e) => {
+      //                         self.fullscreenLoading = false;
+      //                         window.open('http://' + config.ipAddress + '/plugins/public/error.html');
+      //                         var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+      //                         axios.post(config.baseURL + '/flows-dir-listing', {
+      //                           filename: mainMetal,
+      //                           text: metalsmithJSON,
+      //                           type: 'file'
+      //                         })
+
+      //                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+      //                         }).catch((e) => {
+      //                           //console.log(e)
+      //                         })
+      //                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+      //                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+      //                         //console.log(e)
+      //                       })
+
+      //                   })
+      //                   .catch((err) => {
+      //                     self.fullscreenLoading = false;
+      //                     window.open('http://' + config.ipAddress + '/plugins/public/error.html');
+      //                     var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+      //                     axios.post(config.baseURL + '/flows-dir-listing', {
+      //                       filename: mainMetal,
+      //                       text: metalsmithJSON,
+      //                       type: 'file'
+      //                     })
+
+      //                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+      //                     }).catch((e) => {
+      //                       //console.log(e)
+      //                     })
+      //                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+      //                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+      //                     //console.log('Error while creating MetalSmith JS file' + err)
+
+      //                   })
+
+      //               })
+      //               .catch((e) => {
+      //                 self.fullscreenLoading = false;
+      //                 window.open('http://' + config.ipAddress + '/plugins/public/error.html');
+
+      //                 var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+      //                 axios.post(config.baseURL + '/flows-dir-listing', {
+      //                   filename: mainMetal,
+      //                   text: metalsmithJSON,
+      //                   type: 'file'
+      //                 })
+
+      //                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+      //                 }).catch((e) => {
+      //                   //console.log(e)
+      //                 })
+      //                 // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+      //                 // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+      //                 self.saveFileLoading = false
+      //                 //console.log(e)
+      //               })
+      //           })
+      //           .catch((e) => {
+      //             self.fullscreenLoading = false;
+      //             window.open('http://' + config.ipAddress + '/plugins/public/error.html');
+      //             var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+      //             axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+      //             axios.post(config.baseURL + '/flows-dir-listing', {
+      //               filename: mainMetal,
+      //               text: metalsmithJSON,
+      //               type: 'file'
+      //             })
+
+      //             axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                    
+      //             }).catch((e) => {
+      //               //console.log(e)
+      //             })
+      //             //console.log(e);
+      //           })
+      //       })
+      //       .catch((e) => {
+      //         self.fullscreenLoading = false;
+      //         window.open('http://' + config.ipAddress + '/plugins/public/error.html');
+      //         var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+      //         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+      //         axios.post(config.baseURL + '/flows-dir-listing', {
+      //           filename: mainMetal,
+      //           text: metalsmithJSON,
+      //           type: 'file'
+      //         })
+      //         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                
+      //         }).catch((e) => {
+      //           //console.log(e)
+      //         })
+
+      //         //console.log('Error while creating MetalSmith JS file' + e)
+      //       })
+
+      //   }, 2000);
+      // },
+      
+
+
+
       async generatePreview() {
         this.previewLoading = true;
         this.fullscreenLoading = true;
@@ -3858,45 +4588,49 @@
           var ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
           var projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
           var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles;
-          var projectseotitle=self.globalConfigData[1].projectSettings[0].ProjectSEOTitle;
-          var projectfaviconhref=self.globalConfigData[1].projectSettings[0].ProjectFaviconhref
+          var projectseotitle = self.globalConfigData[1].projectSettings[0].ProjectSEOTitle;
+          var projectfaviconhref = self.globalConfigData[1].projectSettings[0].ProjectFaviconhref
           var tophead = '';
           var endhead = '';
           var topbody = '';
           var endbody = '';
           var pagestyles = [];
-          var favicon=''
-          var SeoTitle=''
+          var favicon = ''
+          var SeoTitle = ''
           var pageexternalJs = [];
           var pagescripts = [];
           var pageexternalCss = [];
           var pageMetaInfo = [];
           var pageSeoTitle;
           var PageMetacharset = '';
-          if(projectseotitle!=undefined && projectseotitle!=''){
-            SeoTitle=projectseotitle
+          if (projectseotitle != undefined && projectseotitle != '') {
+            SeoTitle = projectseotitle
           }
-          if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
-            favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+          if (projectfaviconhref != undefined && projectfaviconhref != '') {
+            favicon = '<link rel="icon" type="image/png/gif" href="' + projectfaviconhref + '">'
           }
 
-          if (ProjectMetacharset != '') {
+          if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
             tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
           }
           if (metaInfo != undefined && metaInfo.length > 0) {
             for (let a = 0; a < metaInfo.length; a++) {
-              tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+
+              if ((metaInfo[a].name != '' && metaInfo[a].name.trim().length > 0) && (metaInfo[a].content != '' && metaInfo[a].content.trim().length > 0)) {
+                console.log('metainfo', a)
+                tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+              }
             }
           }
           if (externalJs != undefined && externalJs.length > 0) {
             for (let a = 0; a < externalJs.length; a++) {
-              if (externalJs[a].linkposition == 'starthead') {
+              if (externalJs[a].linkposition == 'starthead' && externalJs[a].linkurl.trim().length > 0) {
                 tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-              } else if (externalJs[a].linkposition == 'endhead') {
+              } else if (externalJs[a].linkposition == 'endhead' && externalJs[a].linkurl.trim().length > 0) {
                 endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-              } else if (externalJs[a].linkposition == 'startbody') {
+              } else if (externalJs[a].linkposition == 'startbody' && externalJs[a].linkurl.trim().length > 0) {
                 topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-              } else if (externalJs[a].linkposition == 'endbody') {
+              } else if (externalJs[a].linkposition == 'endbody' && externalJs[a].linkurl.trim().length > 0) {
                 endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
               }
             }
@@ -3904,13 +4638,13 @@
 
           if (externalCss != undefined && externalCss.length > 0) {
             for (let a = 0; a < externalCss.length; a++) {
-              if (externalCss[a].linkposition == 'starthead') {
+              if (externalCss[a].linkposition == 'starthead' && externalCss[a].linkurl.trim().length > 0) {
                 tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-              } else if (externalCss[a].linkposition == 'endhead') {
+              } else if (externalCss[a].linkposition == 'endhead' && externalCss[a].linkurl.trim().length > 0) {
                 endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-              } else if (externalCss[a].linkposition == 'startbody') {
+              } else if (externalCss[a].linkposition == 'startbody' && externalCss[a].linkurl.trim().length > 0) {
                 topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-              } else if (externalCss[a].linkposition == 'endbody') {
+              } else if (externalCss[a].linkposition == 'endbody' && externalCss[a].linkurl.trim().length > 0) {
                 endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
               }
 
@@ -3918,26 +4652,26 @@
           }
           if (projectscripts != undefined && projectscripts.length > 0) {
             for (let a = 0; a < projectscripts.length; a++) {
-              if (projectscripts[a].linkposition == 'starthead') {
+              if (projectscripts[a].linkposition == 'starthead' && projectscripts[a].script.trim().length > 0) {
                 tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'endhead') {
+              } else if (projectscripts[a].linkposition == 'endhead' && projectscripts[a].script.trim().length > 0) {
                 endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'startbody') {
+              } else if (projectscripts[a].linkposition == 'startbody' && projectscripts[a].script.trim().length > 0) {
                 topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'endbody') {
+              } else if (projectscripts[a].linkposition == 'endbody' && projectscripts[a].script.trim().length > 0) {
                 endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
               }
             }
           }
           if (projectstyles != undefined && projectstyles.length > 0) {
             for (let a = 0; a < projectstyles.length; a++) {
-              if (projectstyles[a].linkposition == 'starthead') {
+              if (projectstyles[a].linkposition == 'starthead' && projectstyles[a].style.trim().length > 0) {
                 tophead = tophead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
-              } else if (projectstyles[a].linkposition == 'endhead') {
+              } else if (projectstyles[a].linkposition == 'endhead' && projectstyles[a].style.trim().length > 0) {
                 endhead = endhead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
-              } else if (projectstyles[a].linkposition == 'startbody') {
+              } else if (projectstyles[a].linkposition == 'startbody' && projectstyles[a].style.trim().length > 0) {
                 topbody = topbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
-              } else if (projectstyles[a].linkposition == 'endbody') {
+              } else if (projectstyles[a].linkposition == 'endbody' && projectstyles[a].style.trim().length > 0) {
                 endbody = endbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
               }
             }
@@ -3960,30 +4694,33 @@
               PageMetacharset = self.globalConfigData[1].pageSettings[i].PageMetacharset;
               pagescripts = self.globalConfigData[1].pageSettings[i].PageScripts;
               pagestyles = self.globalConfigData[1].pageSettings[i].PageStyles;
-              
+
             }
           }
-          if(pageSeoTitle!=undefined && pageSeoTitle!=''){
-            SeoTitle=pageSeoTitle
+          if (pageSeoTitle != undefined && pageSeoTitle != '') {
+            SeoTitle = pageSeoTitle
           }
           // console.log(SeoTitle)
-          if (PageMetacharset != undefined && PageMetacharset != '' && !(ProjectMetacharset!='')) {
+          if (PageMetacharset != undefined && PageMetacharset != '' && !(ProjectMetacharset != '')) {
             tophead = tophead + '<meta charset="' + PageMetacharset + '">'
           }
           if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
             for (let a = 0; a < pageMetaInfo.length; a++) {
-              tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
+              if ((pageMetaInfo[a].name != '' && pageMetaInfo[a].name.trim().length > 0) && (pageMetaInfo[a].content != '' && pageMetaInfo[a].content.trim().length > 0)) {
+
+                tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
+              }
             }
           }
           if (pageexternalJs != undefined && pageexternalJs.length > 0) {
             for (let a = 0; a < pageexternalJs.length; a++) {
-              if (pageexternalJs[a].linkposition == 'starthead') {
+              if (pageexternalJs[a].linkposition == 'starthead' && pageexternalJs[a].linkurl.trim().length > 0) {
                 tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-              } else if (pageexternalJs[a].linkposition == 'endhead') {
+              } else if (pageexternalJs[a].linkposition == 'endhead' && pageexternalJs[a].linkurl.trim().length > 0) {
                 endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-              } else if (pageexternalJs[a].linkposition == 'startbody') {
+              } else if (pageexternalJs[a].linkposition == 'startbody' && pageexternalJs[a].linkurl.trim().length > 0) {
                 topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-              } else if (pageexternalJs[a].linkposition == 'endbody') {
+              } else if (pageexternalJs[a].linkposition == 'endbody' && pageexternalJs[a].linkurl.trim().length > 0) {
                 endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
               }
             }
@@ -3991,39 +4728,39 @@
 
           if (pageexternalCss != undefined && pageexternalCss.length > 0) {
             for (let a = 0; a < pageexternalCss.length; a++) {
-              if (pageexternalCss[a].linkposition == 'starthead') {
+              if (pageexternalCss[a].linkposition == 'starthead' && pageexternalCss[a].linkurl.trim().length > 0) {
                 tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-              } else if (pageexternalCss[a].linkposition == 'endhead') {
+              } else if (pageexternalCss[a].linkposition == 'endhead' && pageexternalCss[a].linkurl.trim().length > 0) {
                 endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-              } else if (pageexternalCss[a].linkposition == 'startbody') {
+              } else if (pageexternalCss[a].linkposition == 'startbody' && pageexternalCss[a].linkurl.trim().length > 0) {
                 topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-              } else if (pageexternalCss[a].linkposition == 'endbody') {
+              } else if (pageexternalCss[a].linkposition == 'endbody' && pageexternalCss[a].linkurl.trim().length > 0) {
                 endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
               }
             }
           }
           if (pagescripts != undefined && pagescripts.length > 0) {
             for (let a = 0; a < pagescripts.length; a++) {
-              if (pagescripts[a].linkposition == 'starthead') {
+              if (pagescripts[a].linkposition == 'starthead' && pagescripts[a].script.trim().length > 0) {
                 tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
-              } else if (pagescripts[a].linkposition == 'endhead') {
+              } else if (pagescripts[a].linkposition == 'endhead' && pagescripts[a].script.trim().length > 0) {
                 endhead = endhead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
-              } else if (pagescripts[a].linkposition == 'startbody') {
+              } else if (pagescripts[a].linkposition == 'startbody' && pagescripts[a].script.trim().length > 0) {
                 topbody = topbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
-              } else if (pagescripts[a].linkposition == 'endbody') {
+              } else if (pagescripts[a].linkposition == 'endbody' && pagescripts[a].script.trim().length > 0) {
                 endbody = endbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
               }
             }
           }
           if (pagestyles != undefined && pagestyles.length > 0) {
             for (let a = 0; a < pagestyles.length; a++) {
-              if (pagestyles[a].linkposition == 'starthead') {
+              if (pagestyles[a].linkposition == 'starthead' && pagestyles[a].style.trim().length > 0) {
                 tophead = tophead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
-              } else if (pagestyles[a].linkposition == 'endhead') {
+              } else if (pagestyles[a].linkposition == 'endhead' && pagestyles[a].style.trim().length > 0) {
                 endhead = endhead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
-              } else if (pagestyles[a].linkposition == 'startbody') {
+              } else if (pagestyles[a].linkposition == 'startbody' && pagestyles[a].style.trim().length > 0) {
                 topbody = topbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
-              } else if (pagestyles[a].linkposition == 'endbody') {
+              } else if (pagestyles[a].linkposition == 'endbody' && pagestyles[a].style.trim().length > 0) {
                 endbody = endbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
               }
             }
@@ -4044,7 +4781,7 @@
                   filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
                   text: temp,
                   type: 'file'
-                }).then(async (res) => {
+                }).then(async(res) => {
                   contentpartials = contentpartials + '<script src="./assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
                   axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
@@ -4078,7 +4815,7 @@
           await axios.post(config.baseURL + '/flows-dir-listing', {
               foldername: newFolderName,
               type: 'folder'
-            }).then(async (res) => {
+            }).then(async(res) => {
               for (let i = 0; i < back_partials.length; i++) {
                 let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial');
                 responsepartials = responsepartials.data
@@ -4138,9 +4875,9 @@
               }
 
               var result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
-              var changeresult=JSON.parse(JSON.stringify(result))
-              for(let s=0;s<changeresult.length;s++){
-                layoutdata.data=layoutdata.data.replace(changeresult[s],changeresult[s].replace(/&nbsp;/g,'').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g,"").replace(/\s*=\s*/g,'='))
+              var changeresult = JSON.parse(JSON.stringify(result))
+              for (let s = 0; s < changeresult.length; s++) {
+                layoutdata.data = layoutdata.data.replace(changeresult[s], changeresult[s].replace(/&nbsp;/g, '').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g, "").replace(/\s*=\s*/g, '='))
               }
 
               if (result.length > 0) {
@@ -4149,34 +4886,33 @@
                   var temp;
                   temp = resultParam[i].trim()
                   result[i] = result[i].trim()
-                  
+
                   temp = temp.split(' ')
                   for (let j = 0; j < temp.length; j++) {
-                     temp[j] = temp[j].trim();
+                    temp[j] = temp[j].trim();
                     if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                       if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'")>-1) {
+                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'") > -1) {
                         result[i] = temp[0];
                         if (temp[j]) {
                           let x = temp[j]
-                          x = temp[j].split("'")[1]+'.partial';
+                          x = temp[j].split("'")[1] + '.partial';
                           let obj = {}
                           obj[temp[0]] = x
                           DefaultParams.push(obj)
                           break;
                         }
                       }
-                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"')>-1) {
+                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"') > -1) {
                         result[i] = temp[0];
                         if (temp[j]) {
                           let x = temp[j]
-                          x = temp[j].split('"')[1]+'.partial';
+                          x = temp[j].split('"')[1] + '.partial';
                           let obj = {}
                           obj[temp[0]] = x
                           DefaultParams.push(obj)
                           break;
                         }
-                      }
-                      else{
+                      } else {
                         //console.log('Error while finding ID in layout');
                       }
                     }
@@ -4191,8 +4927,8 @@
 
                         temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + '}}'
                       } else {
-                        var indexdefault=_.findIndex(DefaultParams,function(o){
-                          return Object.keys(o)[0]==result[j]
+                        var indexdefault = _.findIndex(DefaultParams, function(o) {
+                          return Object.keys(o)[0] == result[j]
                         })
                         temp1 = "{{> " + Object.keys(back_partials[i])[0] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
 
@@ -4262,20 +4998,29 @@
               text: responseMetal.data,
               type: 'file'
             })
-            .then(async (response) => {
+            .then(async(response) => {
               let newFolderName1 = folderUrl + '/Preview';
               await axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName1,
                 type: 'folder'
-              }).then(async (res) => {
+              }).then(async(res) => {
                 //console.log(res)
 
               }).catch((e) => {
                 //console.log(e)
               })
 
-              let vueBodyStart = '';
-              let vueBodyEnd = ''
+              let datadivscript = ''
+              let divappstart=''
+              let divappend=''
+              if(contentpartials.indexOf('datafieldgroup')>0){
+                datadivscript= "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
+                    "<script type='text/javascript' src='http://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
+                    "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n" +
+                    "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
+                divappstart='<div id="app">'
+                divappend='</div>'
+              }
 
               let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
@@ -4297,13 +5042,14 @@
                     '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
-                    '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                    datadivscript +
                     "<link rel='stylesheet' href='./main-files/main.css'/>\n"+
                     "<script src=\"./main-files/main.js\"><\/script>\n" +
                     '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
-                    endhead + "\n</head>\n<body>\n" + vueBodyStart +
+                    endhead + "\n</head>\n<body>\n" + divappstart +
                     layoutdata.data + topbody +
-                    '\n'+vueBodyEnd+
+                    '\n'+ divappend +
+                    '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
@@ -4311,12 +5057,49 @@
                     endbody +
                     '\n</body>\n</html>';
 
-                axios.post(config.baseURL + '/flows-dir-listing', {
+              // let vueBodyStart = '';
+              // let vueBodyEnd = ''
+
+              // let newContent = "<html>\n<head>\n" + tophead +
+              //   "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+              //   "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
+              //   "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+              //   "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
+              //   "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
+              //   "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+              //   "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+              //   "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+              //   "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+              //   "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+              //   '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
+              //   '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+              //   '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
+              //   '<script src="https://cdn.jsdelivr.net/npm/y-memory@8.0.9/dist/y-memory.js"><\/script>\n' +
+              //   '<script src="https://cdn.jsdelivr.net/npm/y-webrtc@8.0.7/dist/y-webrtc.js"><\/script>\n' +
+              //   '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
+              //   '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
+              //   '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
+              //   '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
+              //   '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+              //   "<link rel='stylesheet' href='./main-files/main.css'/>\n" +
+              //   "<script src=\"./main-files/main.js\"><\/script>\n" +
+              //   '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
+              //   endhead + "\n</head>\n<body>\n" + vueBodyStart +
+              //   layoutdata.data + topbody +
+              //   '\n' + vueBodyEnd +
+              //   '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
+              //   '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
+              //   '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
+              //   '\n</div>\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+              //   endbody +
+              //   '\n</body>\n</html>';
+
+              axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: folderUrl + '/Layout/' + self.form.Layout + '_temp.layout',
                   text: newContent,
                   type: 'file'
                 })
-                .then(async (res) => {
+                .then(async(res) => {
 
                   var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
 
@@ -4334,7 +5117,7 @@
                       text: rawContent,
                       type: 'file'
                     })
-                    .then(async (res) => {
+                    .then(async(res) => {
 
                       self.saveFileLoading = false;
                       console.log('Metalsmith call FolderUrl: ', folderUrl);
@@ -4347,7 +5130,7 @@
                               text: metalsmithJSON,
                               type: 'file'
                             })
-                            .then(async (res) => {
+                            .then(async(res) => {
                               self.fullscreenLoading = false;
                               self.previewLoading = false;
 
@@ -4358,23 +5141,21 @@
 
                               projName = projName.split('/')[2];
 
-                              if(process.env.NODE_ENV !== 'development'){
-                                window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.'+ config.ipAddress + '/' + nameF + '.html');
+                              if (process.env.NODE_ENV !== 'development') {
+                                window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/' + nameF + '.html');
                               } else {
                                 window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
-                              } 
+                              }
 
                               await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                .then(async (res) => {
+                                .then(async(res) => {
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
-                                  }).catch((e) => {
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                                     //console.log(e)
                                   })
                                   if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                     for (let x = 0; x < self.form.vuepartials.length; x++) {
-                                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                        })
+                                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {})
                                         .catch((e) => {
                                           //console.log(e)
                                         })
@@ -4406,13 +5187,12 @@
                                 type: 'file'
                               })
 
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                              }).catch((e) => {
+                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {}).catch((e) => {
                                 //console.log(e)
                               })
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                              //console.log(e)
+                                //console.log(e)
                             })
 
                         })
@@ -4427,13 +5207,12 @@
                             type: 'file'
                           })
 
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                          }).catch((e) => {
+                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {}).catch((e) => {
                             //console.log(e)
                           })
                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                          //console.log('Error while creating MetalSmith JS file' + err)
+                            //console.log('Error while creating MetalSmith JS file' + err)
 
                         })
 
@@ -4450,14 +5229,13 @@
                         type: 'file'
                       })
 
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                      }).catch((e) => {
-                        //console.log(e)
-                      })
-                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {}).catch((e) => {
+                          //console.log(e)
+                        })
+                        // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                       self.saveFileLoading = false
-                      //console.log(e)
+                        //console.log(e)
                     })
                 })
                 .catch((e) => {
@@ -4472,11 +5250,11 @@
                   })
 
                   axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                    
-                  }).catch((e) => {
-                    //console.log(e)
-                  })
-                  //console.log(e);
+
+                    }).catch((e) => {
+                      //console.log(e)
+                    })
+                    //console.log(e);
                 })
             })
             .catch((e) => {
@@ -4490,7 +5268,7 @@
                 type: 'file'
               })
               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
-                
+
               }).catch((e) => {
                 //console.log(e)
               })
@@ -4872,118 +5650,116 @@
 
       async cloneWebsite(node, data) {
 
-        this.fullscreenLoading = true;
+        this.$swal({
+          title: 'Are you sure?',
+          text: 'You want you clone this Website!',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, clone it!',
+          cancelButtonText: 'No, my bad.'
+        }).then(async () => {
+          this.fullscreenLoading = true;
 
-        let clonedWebsiteTempName = node.data.name + '_copy'
+          let clonedWebsiteTempName = node.data.name + '_copy'
 
-        let sourceConfig = await this.getConfigFileData(data.path);
-        // console.log(clonedWebsiteTempName,sourceConfig)
-        let pluginsData = [{
-                            "id":1,
-                            "children":[
-                               {
-                                  "id":2,
-                                  "children":[
+          let sourceConfig = await this.getConfigFileData(data.path);
+          // console.log(clonedWebsiteTempName,sourceConfig)
+          let pluginsData = [{
+                              "id":1,
+                              "children":[
+                                 {
+                                    "id":2,
+                                    "children":[
 
-                                  ],
-                                  "label":"default",
-                                  "isActive": true
-                               }
-                            ],
-                            "label":"Header",
-                            "isActive": true
-                         },
-                         {
-                            "id":3,
-                            "children":[
-                               {
-                                  "id":4,
-                                  "children":[
+                                    ],
+                                    "label":"default",
+                                    "isActive": true
+                                 }
+                              ],
+                              "label":"Header",
+                              "isActive": true
+                           },
+                           {
+                              "id":3,
+                              "children":[
+                                 {
+                                    "id":4,
+                                    "children":[
 
-                                  ],
-                                  "label":"default",
-                                  "isActive": true
-                               }
-                            ],
-                            "label":"Footer",
-                            "isActive": true
-                         },
-                         {
-                            "id":5,
-                            "children":[
-                               {
-                                  "id":6,
-                                  "children":[
+                                    ],
+                                    "label":"default",
+                                    "isActive": true
+                                 }
+                              ],
+                              "label":"Footer",
+                              "isActive": true
+                           },
+                           {
+                              "id":5,
+                              "children":[
+                                 {
+                                    "id":6,
+                                    "children":[
 
-                                  ],
-                                  "label":"default",
-                                  "isActive": true
-                               }
-                            ],
-                            "label":"Sidebar",
-                            "isActive": true
-                         },
-                         {
-                            "id":7,
-                            "children":[
-                               {
-                                  "id":8,
-                                  "children":[
+                                    ],
+                                    "label":"default",
+                                    "isActive": true
+                                 }
+                              ],
+                              "label":"Sidebar",
+                              "isActive": true
+                           },
+                           {
+                              "id":7,
+                              "children":[
+                                 {
+                                    "id":8,
+                                    "children":[
 
-                                  ],
-                                  "label":"default",
-                                  "isActive": true
-                               }
-                            ],
-                            "label":"Menu",
-                            "isActive": true
-                         }
-                      ];
-         this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
-        await axios.post(config.baseURL + '/project-configuration', {
-          userEmail: Cookies.get('email'),
-          websiteName: clonedWebsiteTempName,
-          configData: sourceConfig,
-          pluginsData: pluginsData,
-          userId:userid
-        })
-        .then(async (res) => {
-          let newFolderName = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id
-            // let newFolderName=res.data.id 
-
-          let token = Cookies.get('auth_token');
-
-          await axios.post(config.baseURL + '/flows-dir-listing', {
-            foldername: newFolderName,
-            type: 'folder'
-          }, {
-            headers: {
-              'authorization': token
-            }
+                                    ],
+                                    "label":"default",
+                                    "isActive": true
+                                 }
+                              ],
+                              "label":"Menu",
+                              "isActive": true
+                           }
+                        ];
+           this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
+          await axios.post(config.baseURL + '/project-configuration', {
+            userEmail: Cookies.get('email'),
+            websiteName: clonedWebsiteTempName,
+            configData: sourceConfig,
+            pluginsData: pluginsData,
+            userId:userid
           })
-          .then((resp) => {
+          .then(async (res) => {
+            let newFolderName = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id
+              // let newFolderName=res.data.id 
 
-            // var response = resp
-            axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {})
-              .then(async (response) => {
+            let token = Cookies.get('auth_token');
 
-                if (!(response.data.statusCode)) {
+            await axios.post(config.baseURL + '/flows-dir-listing', {
+              foldername: newFolderName,
+              type: 'folder'
+            }, {
+              headers: {
+                'authorization': token
+              }
+            })
+            .then(async (resp) => {
+
+              // var response = resp
+              let gitlabResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {});
+              
+              if (!(gitlabResponse.data.statusCode)) {
 
                   localStorage.setItem("folderUrl", newFolderName);
                   var folder = localStorage.getItem("folderUrl");
 
-                  axios.post(config.baseURL + '/get-directory-list?folderUrl=' + newFolderName, {
-
-                  }).then((response) => {
-                    localStorage.setItem("listOfTempaltes", JSON.stringify(response.data));
-                  })
-                  .catch((e) => {
-                    //console.log(e)
-                  })
-
-                  this.newRepoId = response.data.id;
-                  this.repoName = response.data.name;
+                  this.newRepoId = gitlabResponse.data.id;
+                  this.repoName = gitlabResponse.data.name;
 
                   // Create essential folders
                   // this.addOtherFolder(newFolderName);
@@ -5041,6 +5817,8 @@
                                                 "projectOwner" : Cookies.get('email'),
                                                 "projectName" : this.repoName
                                                 }];
+
+                      // Save Project Details.json
                       await axios.post(config.baseURL + '/flows-dir-listing', {
                           filename : projectDetails,
                           text : JSON.stringify(projectDetailsData)
@@ -5054,6 +5832,7 @@
 
                         var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
+                        // Save Metalsmith
                         await axios.post(config.baseURL + '/flows-dir-listing', {
                             filename : mainMetal,
                             text : metalsmithJSON,
@@ -5089,36 +5868,154 @@
                   })
 
                   this.formAddProjectFolder.projectName = null;
-                } else {
-                  this.fullscreenLoading = false;
-                  this.$message({
-                    showClose: true,
-                    message: 'Error from server: ' + response.data.error.message,
-                    type: 'error'
+              } else {
+                // Do same login but keep gitlab details undefined
+                localStorage.setItem("folderUrl", newFolderName);
+                var folder = localStorage.getItem("folderUrl");
+
+                this.newRepoId = undefined;
+                this.repoName = res.data.id;
+
+                // Create essential folders
+                // this.addOtherFolder(newFolderName);
+
+                // call API to clone website folder
+                await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {
+                })
+                .then(async (cloneRes) => {
+                  console.log(res);
+
+                  await axios.post(config.baseURL + '/gitlab-add-repo', {
+                    commitMessage: 'Initial Push',
+                    repoName: this.repoName,
+                    userDetailId: Cookies.get('userDetailId')
+                  }).then(async response => {
+
+                  }).catch(error => {
+                    //console.log("Some error occured: ", error);
+                  });
+                  
+                  let clonedWebsiteData = await this.getConfigFileData(newFolderName);
+
+                  // Update Repo Settings
+                  clonedWebsiteData[0].repoSettings[0].BaseURL = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id;
+                  clonedWebsiteData[0].repoSettings[0].CurrentHeadSHA = undefined;
+                  clonedWebsiteData[0].repoSettings[0].RepositoryId = undefined;
+                  clonedWebsiteData[0].repoSettings[0].RepositoryName = this.repoName;
+
+                  // Update Project Settings
+                  clonedWebsiteData[1].projectSettings[0].ProjectName = this.repoName;
+                  clonedWebsiteData[1].projectSettings[0].RepositoryId = undefined;
+
+
+                  // Save Updated Config
+                  await axios.patch(config.baseURL + '/project-configuration/' + this.repoName, {
+                    configData: clonedWebsiteData
+                  })
+                  .then(async (configRes) => {
+                    // Update Assets files
+
+                    // Create project-details.json file
+                    let projectDetails = newFolderName + '/public/assets/project-details.json';
+                    let projectDetailsData = [{
+                                              "projectOwner" : Cookies.get('email'),
+                                              "projectName" : this.repoName
+                                              }];
+
+                    // Save Project Details.json
+                    await axios.post(config.baseURL + '/flows-dir-listing', {
+                        filename : projectDetails,
+                        text : JSON.stringify(projectDetailsData)
+                    })
+                    .then(async (res) => {
+
+                      // Create metalsmith file
+                      let mainMetal = newFolderName + '/public/assets/metalsmith.js';
+
+                      let projectName = newFolderName.split('/');
+
+                      var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                      // Save Metalsmith
+                      await axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename : mainMetal,
+                          text : metalsmithJSON,
+                          type : 'file'
+                      })
+                      .then((res) => {
+                        this.fullscreenLoading = false;
+                        location.reload();
+                      })
+                      .catch((e) => {
+                          //console.log(e)
+                      });
+
+                    })
+                    .catch((e) => {
+                        //console.log(e)
+                    });
+
+                    
+                  })
+                  .catch((esourceConfig) => {
+                      console.log(e)
                   });
 
-                  // Delete folder from storage
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
-                    .then((res) => {})
+                })
+                .catch((e) => {
+                  this.$message({
+                    showClose: true,
+                    message: 'Server error',
+                    type: 'error'
+                  });
+                  console.log(e)
+                })
 
-                  .catch((e) => {
-                    //console.log(e)
-                  })
-                  return;
-                }
-              })
-              .catch((e) => {
-                console.log(e)
-              });
+                this.formAddProjectFolder.projectName = null;
+              }
 
+            })
+            .catch((e) => {
+              console.log(e)
+            });
           })
           .catch((e) => {
             console.log(e)
-          });
+          });          
+        }).catch((dismiss) => {
+          //console.log('error', dismiss)
         })
-        .catch((e) => {
-          console.log(e)
+
+      },
+
+      async checknameexist(projectName){
+        this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+        this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
+        console.log('userid',userid)
+        var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
+        let checkdetail=true
+        for(let i=0;i<alldatauser.data.data.length;i++){
+          if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
+            checkdetail=false
+
+          }
+        }
+        let boolvalue;
+        if(checkdetail!=false){
+          console.log('not same found')
+         boolvalue=true
+         this.addProjectFolder(projectName)
+        }
+        else{
+          this.$message({
+          showClose: true,
+          message: 'Same name found.Try again!',
+          type: 'error'
         });
+        boolvalue= false
+        }
+        // return boolvalue
       },
 
       // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
@@ -5287,6 +6184,8 @@
           return;
         }
       },
+
+
 
   },
   // Methods End

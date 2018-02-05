@@ -583,55 +583,55 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
   // // dataField component
-  // bm.add('DataFieldGroup', {
-  //   label: 'Data Field Group',
-  //   content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
-  //   attributes: {
-  //     class: 'fa fa-database',
-  //     title: 'Data Field',
-  //   },
-  //   category: 'Data Field Group'
-  // });
+  bm.add('DataFieldGroup', {
+    label: 'Data Field Group',
+    content: '<div class="grid12"><DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup></div>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
   
-  // bm.add('DataFieldObject', {
-  //   label: 'Data Field Object',
-  //   content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
-  //   attributes: {
-  //     class: 'fa fa-database',
-  //     title: 'Data Field',
-  //   },
-  //   category: 'Data Field Group'
-  // });
+  bm.add('DataFieldObject', {
+    label: 'Data Field Object',
+    content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
 
-  // bm.add('DataFieldText', {
-  //   label: 'Data Field Text',
-  //   content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
-  //   attributes: {
-  //     class: 'fa fa-database',
-  //     title: 'Data Field',
-  //   },
-  //   category: 'Data Field Group'
-  // });
+  bm.add('DataFieldText', {
+    label: 'Data Field Text',
+    content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
 
-  // bm.add('DataFieldList', {
-  //   label: 'Data Field List',
-  //   content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
-  //   attributes: {
-  //     class: 'fa fa-database',
-  //     title: 'Data Field',
-  //   },
-  //   category: 'Data Field Group'
-  // });
+  bm.add('DataFieldList', {
+    label: 'Data Field List',
+    content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
 
-  // bm.add('DataFieldImage', {
-  //     label: 'Data Field Image',
-  //     content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
-  //     attributes: {
-  //         class: 'fa fa-database',
-  //         title: 'Progress Bar',
-  //     },
-  //     category: 'Data Field Group'
-  // });
+  bm.add('DataFieldImage', {
+      label: 'Data Field Image',
+      content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
+      attributes: {
+          class: 'fa fa-database',
+          title: 'Progress Bar',
+      },
+      category: 'Data Field Group'
+  });
 
 
   bm.add('ShoppingCart', {
@@ -673,9 +673,11 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let urlVarValue = [];
   let menuOptions = [];
   var menuNames = [];
+  var globalVariablesSelect = []
 
   urlVarValue.push({name: 'Select', value: ''});
   menuNames.push({name: 'Select', value: ''});
+  globalVariablesSelect.push({name: 'Select', value: ''});
 
   let configFileUrl = baseURL + '/project-configuration/' + foldername;
 
@@ -699,6 +701,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       let value = {name: menuOptions[j].label, value: menuOptions[j].label}
       menuNames.push(value);
     }
+
+    for(var j = 0; j < globalVariables.length; j++){
+      let value = {name: globalVariables[j].variableId, value: globalVariables[j].variableId}
+      globalVariablesSelect.push(value);
+    }
+
+    console.log(globalVariablesSelect);
 
     for(var j = 0; j < urlVariables.length; j++){
       let value = {name: urlVariables[j].urlId, value: urlVariables[j].urlValue}
@@ -1223,7 +1232,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1261,7 +1271,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1299,7 +1310,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1337,7 +1349,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1948,207 +1961,224 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   // dataField components
 
   //http://172.16.230.176:3034/connectiondata
-  // let arr_collection = new Array();
-  // let arr_schema = []
-  // let arr_coll_schema = new Array()
-  // $.getJSON("http://172.16.230.80:3080/settings",
-  //   // $.getJSON("http://localhost:3080/settings",
-  //   function (data) {
-  //     //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
-  //     for (let index = 0; index < data.rethink.dbinstance.length; index++) {
-  //       //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-  //       arr_collection.push(data.rethink.dbinstance[index].connection_name)
-  //       $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
-  //         // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
-  //         function (data_) {
-  //           // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-  //           let collection_name = data.rethink.dbinstance[index].connection_name
-  //           for (let index_ = 0; index_ < data_.length; index_++) {
-  //             if (data_[index_].t_name != undefined) {
-  //               let schema_name = data_[index_].t_name
-  //               arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
-  //             }
-  //           }
-  //           arr_coll_schema.push("''")
-  //           $.each(arr_schema, function (index, value) {
-  //             arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
-  //           });
-  //         });
-  //     }
-  //   });
+  let arr_collection = new Array();
+  let arr_schema = []
+  let arr_coll_schema = new Array()
+  $.getJSON("http://172.16.230.86:3080/settings",
+    // $.getJSON("http://localhost:3080/settings",
+    function (data) {
+      //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
+      for (let index = 0; index < data.rethink.dbinstance.length; index++) {
+        //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+        arr_collection.push(data.rethink.dbinstance[index].connection_name)
+        $.getJSON("http://172.16.230.86:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
+          // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
+          function (data_) {
+            // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
+            let collection_name = data.rethink.dbinstance[index].connection_name
+            for (let index_ = 0; index_ < data_.length; index_++) {
+              if (data_[index_].t_name != undefined) {
+                let schema_name = data_[index_].t_name
+                arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
+              }
+            }
+            arr_coll_schema.push("''")
+            $.each(arr_schema, function (index, value) {
+              arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
+            });
+          });
+      }
+    });
 
-  //   comps.addType('DataFieldGroup', {
-  //     // Define the Model
-  //     model: defaultModel.extend({
-  //       init() {
-  //         this.listenTo(this, 'change:connectiondata', this.doStuff);
-  //       },
-  //       doStuff() {
-  //       },
-  //       // Extend default properties
-  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
-  //         editable: true,
-  //         droppable: true,
-  //         traits: [
-  //           {
-  //             type: 'select',
-  //             label: 'data-schema',
-  //             name: ':data_schema',
-  //             options: arr_coll_schema,
-  //           },
-  //           {
-  //             type: 'text',
-  //             label: 'API_URL',
-  //             name: ':data_api'
-  //           }
-  //         ]
-  //       }),
+    comps.addType('DataFieldGroup', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'select',
+              label: 'data-schema',
+              name: ':data_schema',
+              options: arr_coll_schema,
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: ':data_api'
+            },
+            {
+              type: 'checkbox',
+              label: 'draggable',
+              name: 'draggable',
+            }
+          ]
+        }),
 
-  //     }, {
-  //         isComponent: function (el) {
-  //           if (el.tagName == 'DATAFIELDGROUP') {
-  //             return {
-  //               type: 'DataFieldGroup'
-  //             };
-  //           }
-  //         },
-  //       }),
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDGROUP') {
+              return {
+                type: 'DataFieldGroup'
+              };
+            }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
+            }
+          },
+        }),
 
-  //     view: defaultType.view,
+      view: defaultView.extend({
+        // '<template>' can't be shown so in canvas use another tag
+        tagName: 'div'
+      }),
 
-  //     // The render() should return 'this'
-  //     render: function () {
-  //       // Extend the original render method
-  //       defaultType.view.prototype.render.apply(this, arguments);
-  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-  //       return this;
-  //     },
-  //   });
-
-
-  //   comps.addType('DataFieldObject', {
-  //     // Define the Model
-  //     model: defaultModel.extend({
-  //       init() {
-  //         this.listenTo(this, 'change:connectiondata', this.doStuff);
-  //       },
-  //       doStuff() {
-  //       },
-  //       // Extend default properties
-  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
-  //         editable: true,
-  //         droppable: true,
-  //         traits: [
-  //           {
-  //             type: 'select',
-  //             label: 'data-schema',
-  //             name: ':data_schema',
-  //             options: arr_coll_schema,
-  //           },
-  //           {
-  //             type: 'text',
-  //             label: 'API_URL',
-  //             name: ':data_api'
-  //           }
-  //         ]
-  //       }),
-
-  //     }, {
-  //         isComponent: function (el) {
-  //           if (el.tagName == 'DATAFIELDOBJECT') {
-  //             return {
-  //               type: 'DataFieldObject'
-  //             };
-  //           }
-  //         },
-  //       }),
-
-  //     view: defaultType.view,
-
-  //     // The render() should return 'this'
-  //     render: function () {
-  //       // Extend the original render method
-  //       defaultType.view.prototype.render.apply(this, arguments);
-  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-  //       return this;
-  //     },
-  //   });
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
 
 
+    comps.addType('DataFieldObject', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'select',
+              label: 'data-schema',
+              name: ':data_schema',
+              options: arr_coll_schema,
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: ':data_api'
+            }
+          ]
+        }),
 
-  //   comps.addType('DataFieldText', {
-  //     // Define the Model
-  //     model: defaultModel.extend({
-  //       // Extend default properties
-  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
-  //         editable: true,
-  //         droppable: true,
-  //         traits: [
-  //           {
-  //             label: 'Data text field',
-  //             name: ':text',
-  //             type: 'text'
-  //           }
-  //         ]
-  //       }),
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDOBJECT') {
+              return {
+                type: 'DataFieldObject'
+              };
+            }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
+            }
+          },
+        }),
 
-  //     }, {
-  //         isComponent: function (el) {
-  //           if (el.tagName == 'DATAFIELDTEXT') {
-  //             return {
-  //               type: 'DataFieldText'
-  //             };
-  //           }
-  //         },
-  //       }),
+      view: defaultView.extend({
+        // '<template>' can't be shown so in canvas use another tag
+        tagName: 'div'
+      }),
 
-  //     view: defaultType.view,
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
 
-  //     // The render() should return 'this'
-  //     render: function () {
-  //       // Extend the original render method
-  //       defaultType.view.prototype.render.apply(this, arguments);
-  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-  //       return this;
-  //     },
-  //   });
 
-  //   comps.addType('DataFieldList', {
-  //     // Define the Model
-  //     model: defaultModel.extend({
-  //       // Extend default properties
-  //       defaults: Object.assign({}, defaultModel.prototype.defaults, {
-  //         editable: true,
-  //         droppable: true,
-  //         traits: [
-  //           {
-  //             label: 'Data list field',
-  //             name: ':items',
-  //             type: 'text'
-  //           }
-  //         ]
-  //       }),
 
-  //     }, {
-  //         isComponent: function (el) {
-  //           if (el.tagName == 'DATAFIELDLIST') {
-  //             return {
-  //               type: 'DataFieldList'
-  //             };
-  //           }
-  //         },
-  //       }),
+    comps.addType('DataFieldText', {
+      // Define the Model
+      model: defaultModel.extend({
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              label: 'Data text field',
+              name: ':text',
+              type: 'text'
+            }
+          ]
+        }),
 
-  //     view: defaultType.view,
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDTEXT') {
+              return {
+                type: 'DataFieldText'
+              };
+            }
+          },
+        }),
 
-  //     // The render() should return 'this'
-  //     render: function () {
-  //       // Extend the original render method
-  //       defaultType.view.prototype.render.apply(this, arguments);
-  //       this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-  //       return this;
-  //     },
-  //   });
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+    comps.addType('DataFieldList', {
+      // Define the Model
+      model: defaultModel.extend({
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              label: 'Data list field',
+              name: ':items',
+              type: 'text'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDLIST') {
+              return {
+                type: 'DataFieldList'
+              };
+            }
+          },
+        }),
+
+      view: defaultType.view,
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
 
 
     comps.addType('img', {

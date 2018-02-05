@@ -38,7 +38,8 @@ export default {
       globalCssVariables: [],
       pageCss: [],
       savedFile: false,
-      fileUrl: ''
+      fileUrl: '',
+      assetImages: []
     }
   },
     async mounted () {
@@ -88,6 +89,8 @@ export default {
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
         this.globalCssVariables = rawConfigs[1].projectSettings[1].GlobalCssVariables;
+        var images = rawConfigs[1].projectSettings[1].AssetImages;
+
 
         let pageIndex = daex.indexFirst(rawConfigs[1].pageSettings, {
           'PageName': fileNameOrginal
@@ -157,16 +160,25 @@ export default {
         var blkStyle = '.blk-row::after{ content: ""; clear: both; display: block;} .blk-row{padding: 10px;}';
 
         var plp = 'http://placehold.it/350x250/';
-        var images = [
-            'https://imgur.com/XQuOMKc.png', 'https://imgur.com/fBuNwuy.jpg', 'https://imgur.com/GgCaYku.jpg', 'https://imgur.com/AGMTzXe.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
-            plp+'c5d647/fff/image4.jpg', plp+'f28c33/fff/image5.jpg', plp+'e868a2/fff/image6.jpg', plp+'cc4360/fff/image7.jpg',
-            'https://imgur.com/IbSijwv.jpg', 'https://imgur.com/181uTO9.png', 'https://i.imgur.com/XTo3DiU.png'
-        ];
+        // var images = ['https://cdn.filestackcontent.com/qbT0MlZLToqn6JTHPdBy', 
+        //     'https://imgur.com/XQuOMKc.png', 'https://imgur.com/fBuNwuy.jpg', 'https://imgur.com/GgCaYku.jpg', 'https://imgur.com/AGMTzXe.jpg', plp+'78c5d6/fff/image1.jpg', plp+'459ba8/fff/image2.jpg', plp+'79c267/fff/image3.jpg',
+        //     plp+'c5d647/fff/image4.jpg', plp+'f28c33/fff/image5.jpg', plp+'e868a2/fff/image6.jpg', plp+'cc4360/fff/image7.jpg',
+        //     'https://imgur.com/IbSijwv.jpg', 'https://imgur.com/181uTO9.png', 'https://i.imgur.com/XTo3DiU.png'
+        // ];
 
-        // 'gjs-plugin-ckeditor', 'grapesjs-blocks-bootstrap4',
+        images.push('http://placehold.it/350x250/78c5d6/fff/image1.jpg');
+        images.push('http://placehold.it/350x250/459ba8/fff/image2.jpg');
+        images.push('http://placehold.it/350x250/79c267/fff/image3.jpg');
+        images.push('http://placehold.it/350x250/c5d647/fff/image4.jpg');
+        images.push('http://placehold.it/350x250/f28c33/fff/image5.jpg');
+        images.push('http://placehold.it/350x250/e868a2/fff/image6.jpg');
+        images.push('http://placehold.it/350x250/cc4360/fff/image7.jpg');
+
+
+        // 'gjs-plugin-ckeditor', 'grapesjs-blocks-bootstrap4', 'gjs-plugin-filestack'
 
 		editor = grapesjs.init({
-			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'gjs-blocks-flexbox', 'product-plugin', 'flowz-blocks', 'gjs-plugin-filestack' ],
+			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'gjs-blocks-flexbox', 'product-plugin', 'flowz-blocks' ],
             pluginsOpts: {
                 'gjs-plugin-filestack': {
                     'key': 'AgfKKwgZjQ8iLBVKGVXMdz',
@@ -570,21 +582,31 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.navbar{
-    width: 100%;
-    float: none;
+<style>
+.gjs-am-file-uploader{
+    width: 0px !important;
+    display: none;
 }
 
-.navbar-menu-link{
-    color: #000;
+.gjs-am-assets-cont{
+    width: 100%;
 }
 
 .gjs-am-file-uploader>form{
-    min-height: 325px;
+    /*min-height: 325px;*/
+    
+    border: none !important;
 }
 
 .gjs-editor-cont{
   height: 95vh !important;
+}
+
+.gjs-mdl-dialog{
+    width: 50%;
+}
+
+.gjs-am-preview-cont{
+    width: 15% !important;
 }
 </style>
