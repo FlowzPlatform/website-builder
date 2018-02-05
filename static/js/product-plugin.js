@@ -114,7 +114,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   bm.add('g-form-template', {
     label: 'Form Full',
-    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
+    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div></div>',
     attributes: {
       class: 'fa fa-html5',
       title: 'G-Form Full'
@@ -162,12 +162,33 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Custom Form Controls'
   });
 
+  bm.add('g-form-submit-btn', {
+    label: 'G-Form Submit Button',
+    content: '<button class="button" onclick="getValues()" type="button">Submit</button>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Submit Button'
+    },
+    category: 'Custom Form Controls'
+  });
+
   bm.add('formpartial', {
     label: 'G-Form-Partial',
     content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
     attributes: {
       class: 'fa fa-html5',
       title: 'G-Form-Partial'
+    },
+    category: 'Custom Form Controls'
+  });
+
+
+  bm.add('g-form-template2', {
+    label: 'Form Full2',
+    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name" placeholder="name" /> <span class="error" data-validate-for="name"></span> <label>email</label> <input type="text" name="email" placeholder="email" /> <span class="error" data-validate-for="email"></span> <label>age</label> <input type="text" name="age" placeholder="age" /> <span class="error" data-validate-for="age"></span> <label>phone</label> <input type="text" name="phone" placeholder="phone" /> <span class="error" data-validate-for="phone"></span> <label>birthdate</label> <input type="date" name="birthdate" placeholder="birthdate" /> <span class="error" data-validate-for="birthdate"></span> </div> <div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div> </div> <button class="button" onclick="getValues()" type="button">Submit</button>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Full2'
     },
     category: 'Custom Form Controls'
   });
@@ -718,8 +739,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       let value = {name: globalVariables[j].variableId, value: globalVariables[j].variableId}
       globalVariablesSelect.push(value);
     }
-
-    console.log(globalVariablesSelect);
 
     for(var j = 0; j < urlVariables.length; j++){
       let value = {name: urlVariables[j].urlId, value: urlVariables[j].urlValue}

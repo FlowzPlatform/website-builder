@@ -3286,6 +3286,19 @@ export default {
     // },
 
     async publishMetalsmith(publishType) {
+
+      if(publishType == 'custom'){
+        //console.log('Custom Domain')
+        if(this.customDomainName == ''){
+          this.fullscreenLoading = false;
+          this.$swal({
+            text: 'Please enter your domain.',
+            type: 'error',
+          });
+          return;
+        }
+      }
+
       this.fullscreenLoading = true;
 
       var dt = new Date();
@@ -3948,6 +3961,7 @@ export default {
 
       if(publishType == 'custom'){
         //console.log('Custom Domain')
+        
         // Surge.sh API
         axios.post( config.baseURL + '/publish-surge', {
             projectPath : Cookies.get('userDetailId') + '/' + this.repoName + '/public' ,
@@ -3968,6 +3982,7 @@ export default {
           });
           //console.log(e)
         })
+        
 
       } else {
         //console.log('Default Publish');
@@ -4192,8 +4207,7 @@ export default {
                 text: 'Website with "'+this.form.websitename+'" already exists!!!!',
                 type: 'warning',
               })
-                console.log('same name found',this.configData.data.websiteName);
-                // this.form.websiteName=this.configData.data.websiteName;
+              // this.form.websiteName=this.configData.data.websiteName;
 
             }
             }

@@ -566,15 +566,9 @@
     },
     created () {
 
-      // if(){
-
-      // } else {
-
-      // }
-
       // Check if login token in cookie exist or not
       if(this.$cookie.get('auth_token')){
-        // this.getData();
+        this.getData();
         // Set email Session
         axios.get(config.userDetail, {
           headers: {
@@ -672,9 +666,7 @@
           response.path = response.path.replace(/\//g, "\\")
           var s = response.path.replace(this.rootpath, '').split('\\');
 
-          console.log('S: ', s[5]);
-
-          if(s[5] == Cookies.get('userDetailId') || s[0] == Cookies.get('userDetailId')){
+          if(s[5] == Cookies.get('userDetailId')){
             let objCopy = self.directoryTree
             let evalStr = 'self.directoryTree'
             let $eval = eval(evalStr)
@@ -736,7 +728,6 @@
     },
 
     methods: {
-
       canceldialog(){
         this.newFileDialog = false
         console.log('&&&&')
@@ -836,16 +827,39 @@
                 // console.log('--------', response.data.children[i].name)
 
                 // Map folder name and project id
-                let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
-
-                response.data.children[i].websitename = rethinkdbCheck.data.websiteName;
-                 if(response.data.children[i].websitename.length>20){
-                  response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
-                }
-                response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-                  return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
-                  // return !(child.name == '.git')
+                await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {
                 })
+                .then((res) => {
+                  response.data.children[i].websitename = res.data.websiteName;
+
+                  if(response.data.children[i].websitename.length>20){
+                    response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
+                  }
+
+                  response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
+                    return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
+                    // return !(child.name == '.git')
+                  })
+                })
+                .catch((e) => {
+                  console.log('Data Error.');  
+                  if(response.data.children[i].websitename.length>20){
+                    response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
+                  }
+
+                  response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
+                    return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
+                    // return !(child.name == '.git')
+                  })
+                })
+
+                // let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
+
+                // response.data.children[i].websitename = rethinkdbCheck.data.websiteName;
+                //  if(response.data.children[i].websitename.length>20){
+                //   response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
+                // }
+                
               }
             // },1000);
 
@@ -976,49 +990,49 @@
           this.isSettingsPage = true;
           this.componentId = 'ProjectSettings';
 
-          this.display = false;
+          this.display = true;
 
-          let url = data.path;
-          let compId = this.componentId;
+          // let url = data.path;
+          // let compId = this.componentId;
      
-          let newTabName = ++this.tabIndex + '';
-          let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+          // let newTabName = ++this.tabIndex + '';
+          // let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
-          let editableTabValue = this.editableTabsValue
+          // let editableTabValue = this.editableTabsValue
 
-          let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
-          function checkIfExist(filepath,array) {  // The last one is array
-              var found = array.some(function (el) {
-                return el.filepath == url;
-              });
-              if (!found)
-              {
-                  array.push({
-                    title: tab_file_name,
-                    name: newTabName,
-                    content: newTabName,
-                    componentId : compId,
-                    filepath : url
-                  });
+          // let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
+          // function checkIfExist(filepath,array) {  // The last one is array
+          //     var found = array.some(function (el) {
+          //       return el.filepath == url;
+          //     });
+          //     if (!found)
+          //     {
+          //         array.push({
+          //           title: tab_file_name,
+          //           name: newTabName,
+          //           content: newTabName,
+          //           componentId : compId,
+          //           filepath : url
+          //         });
 
-              }else{
-                let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                array = removedArray  ;
-                editableTabValue = newTabName;
-                array.push({
-                    title: tab_file_name,
-                    name: newTabName,
-                    content: newTabName,
-                    componentId : compId,
-                    filepath : url
-                  });
-              }
-              return array
-          }
+          //     }else{
+          //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+          //       array = removedArray  ;
+          //       editableTabValue = newTabName;
+          //       array.push({
+          //           title: tab_file_name,
+          //           name: newTabName,
+          //           content: newTabName,
+          //           componentId : compId,
+          //           filepath : url
+          //         });
+          //     }
+          //     return array
+          // }
 
-          this.editableTabs =  selectedPagePositionFirstArray ;
-          this.editableTabs.reverse();
-          this.editableTabsValue = newTabName;
+          // this.editableTabs =  selectedPagePositionFirstArray ;
+          // this.editableTabs.reverse();
+          // this.editableTabsValue = newTabName;
         }
         // If Clicked in ProjectName 
         else if(this.isProjectStats) {
@@ -1471,8 +1485,6 @@
       // Save config File
       async saveConfigFile(folderUrl){
 
-        console.log(folderUrl);
-
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
 
@@ -1518,15 +1530,11 @@
             }
             let folderUrl = configFileUrl.replace(fileName, '');
             let foldername = folderUrl.split('/');
-            foldername = foldername[6];
+            foldername = foldername[(foldername.length - 1)];
             // this.getConfigFileData(folderUrl);
             let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername );
             let rawConfigs = responseConfig.data.configData;
-
             let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
-
-            console.log('rawConfigs', rawConfigs);
-
             let checkfilename=false
                 for(let i=0;i<Object.keys(rawConfigs[2].layoutOptions[0]).length;i++){
                   if(Object.keys(rawConfigs[2].layoutOptions[0])[i]==newFolderName.split('/')[newFolderName.split('/').length-1]){
@@ -1544,68 +1552,70 @@
                 });
                 }else{
                   return axios.post(config.baseURL + '/flows-dir-listing', {
-                    foldername: newFolderName,
-                    type: 'folder'
+                foldername: newFolderName,
+                type: 'folder'
+              })
+              .then(async(res) => {
+                var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+                storedTemplates.push(this.formAddFolder.foldername)
+                localStorage.setItem("listOfTempaltes", JSON.stringify(storedTemplates));
+
+                // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                // let urlparts = configFileUrl.split("/");
+                // let fileNameOrginal = urlparts[urlparts.length - 1];
+                // let fileName = '';
+                // if(_.includes(configFileUrl, 'Partials')){
+                //     fileName = '/' + urlparts[urlparts.length - 1];
+                // }
+                // let folderUrl = configFileUrl.replace(fileName, '');
+                // let foldername = folderUrl.split('/');
+                // foldername = foldername[(foldername.length - 1)];
+                // // this.getConfigFileData(folderUrl);
+                // let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
+                // let rawConfigs = responseConfig.data.data[0].configData;
+                this.globalConfigData = rawConfigs;
+
+                this.newFolderDialog = false;
+                this.addNewFolderLoading = false;
+                if(this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')){
+                  axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: newFolderName+'/default.partial',
+                      text: '',
+                      type: 'file'
                   })
-                  .then(async(res) => {
-
-                    // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                    // let urlparts = configFileUrl.split("/");
-                    // let fileNameOrginal = urlparts[urlparts.length - 1];
-                    // let fileName = '';
-                    // if(_.includes(configFileUrl, 'Partials')){
-                    //     fileName = '/' + urlparts[urlparts.length - 1];
-                    // }
-                    // let folderUrl = configFileUrl.replace(fileName, '');
-                    // let foldername = folderUrl.split('/');
-                    // foldername = foldername[(foldername.length - 1)];
-                    // // this.getConfigFileData(folderUrl);
-                    // let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
-                    // let rawConfigs = responseConfig.data.data[0].configData;
-                    this.globalConfigData = rawConfigs;
-
-                    this.newFolderDialog = false;
-                    this.addNewFolderLoading = false;
-                    console.log('this.$store.state.fileUrl.replace()', this.$store.state.fileUrl.replace(/\\/g, "\/"))
-                    if(this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')){
-                      axios.post(config.baseURL + '/flows-dir-listing', {
-                          filename: newFolderName+'/default.partial',
-                          text: '',
-                          type: 'file'
-                      })
-                      .then((res)=>{
-                      
-                      let checkfolder=false
-                      for(let i=0;i<Object.keys(this.globalConfigData[2].layoutOptions[0]).length;i++){
-                        var temp=Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
-                        if(temp==this.formAddFolder.foldername){
-                          //console.log("File already exists");
-                          checkfolder=true
-                        }
-                      }
-                      if(checkfolder!=true){
-                        //console.log("As, folder not found in config file. We are adding this folder inside config file:")
-                        var obj={value:'default',label:'default'}
-                        this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername]=[]
-                        this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
-                      }
-
-                      this.saveConfigFile(folderUrl)
-
-                      }).catch((e)=>{
-                        //console.log(e)
-                      })
-                      
+                  .then((res)=>{
+                  
+                  let checkfolder=false
+                  for(let i=0;i<Object.keys(this.globalConfigData[2].layoutOptions[0]).length;i++){
+                    var temp=Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
+                    if(temp==this.formAddFolder.foldername){
+                      //console.log("File already exists");
+                      checkfolder=true
                     }
-                  })
-                  .catch((e) => {
-                    this.$message({
-                      showClose: true,
-                      message: 'Folder creation failed. Try again.',
-                      type: 'error'
-                    });
+                  }
+                  if(checkfolder!=true){
+                    //console.log("As, folder not found in config file. We are adding this folder inside config file:")
+                    var obj={value:'default',label:'default'}
+                    this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername]=[]
+                    this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
+                  }
+
+                  this.saveConfigFile(folderUrl)
+
+                  }).catch((e)=>{
                     //console.log(e)
                   })
+                  
+                }
+              })
+              .catch((e) => {
+                this.$message({
+                  showClose: true,
+                  message: 'Folder creation failed. Try again.',
+                  type: 'error'
+                });
+                //console.log(e)
+              })
                 }
             
           }
@@ -2730,7 +2740,7 @@
                 setTimeout(function(){
                   self.$message({
                     showClose: true,
-                    message: 'Project Created.',
+                    message: 'Project Created. Please wait...',
                     type: 'success'
                   });
                 },500); 
@@ -5346,7 +5356,7 @@
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
         let fileNameOrginal = urlparts[urlparts.length - 1];
-        let foldername = urlparts[6];
+        let foldername = urlparts[urlparts.length - 2];
         // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
         // var folderUrl = configFileUrl.replace(fileName, '');
    
@@ -5421,7 +5431,6 @@
 
                 // save config file
                 this.saveConfigFile(folderUrl);
-
               } else if (_.includes(data.path, 'Layout')) {
 
                 var layoutName = last_element.replace(".layout", "");
@@ -5442,7 +5451,7 @@
 
                 // save config file
                 this.saveConfigFile(folderUrl);
-              }else if (_.includes(data.path, 'Partials')) {
+              } else if (_.includes(data.path, 'Partials')) {
                 var foldername=arr_file[arr_file.length-2]           
                 var partialNameBreak = last_element.split('.');
                 var partialNameOnly = partialNameBreak[0];
@@ -5460,8 +5469,7 @@
               
                 // save config file
                 this.saveConfigFile(folderUrl);
-              } 
-              else {
+              } else {
                 let partialsArray = [];
                 var foldername=arr_file[arr_file.length-2]
                 partialsArray.push(Object.keys(this.globalConfigData[2].layoutOptions[0]));
@@ -5550,7 +5558,7 @@
                   if (this.globalConfigData[2].layoutOptions[0][foldername] != undefined) {
 
                       delete this.globalConfigData[2].layoutOptions[0][foldername];
-                      this.saveConfigFile(folderUrl);
+                      this.saveConfigFile(configFileUrl);
                   } else {
                       //console.log("Folder not found in config file.")
                   }
@@ -6977,7 +6985,8 @@
 
   .tree-data-spinner{
     text-align: center;
-    margin: 15px 0px;
+    margin-top: 15px;
+    margin-bottom: 0;
   }
 </style>
 <style>
