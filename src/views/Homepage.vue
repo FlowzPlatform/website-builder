@@ -492,7 +492,7 @@ export default {
          let self = this;
             if(Cookies.get('auth_token')){
                 axios({
-                    method: 'post',
+                    method: 'get',
                     url: config.userDetail,
                     headers: {'Authorization': Cookies.get('auth_token')}
                 })
