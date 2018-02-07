@@ -782,7 +782,7 @@ export default {
       //// console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
       if (this.configData.status == 200 || this.configData.status == 204) {
 
-        this.settings = this.configData.data.data[0].configData;
+        this.settings = this.configData.data.configData;
 
         for (var i = 0; i < this.partialsList.length; i++) {
 

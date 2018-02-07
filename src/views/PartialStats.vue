@@ -73,7 +73,7 @@ export default {
       // foldername = foldername[(foldername.length-1)];
 
       foldername = foldername[6];
-
+      
       this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
 
       if(this.configData.status == 200 || this.configData.status == 204){
@@ -109,6 +109,7 @@ export default {
   	}
   },
   async mounted () {
+
   	let response = await this.init();
   },
   watch: {
