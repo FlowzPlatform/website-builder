@@ -1549,9 +1549,9 @@
                 type: 'folder'
               })
               .then(async(res) => {
-                var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-                storedTemplates.push(this.formAddFolder.foldername)
-                localStorage.setItem("listOfTempaltes", JSON.stringify(storedTemplates));
+                //var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
+                //storedTemplates.push(this.formAddFolder.foldername)
+                //localStorage.setItem("listOfTempaltes", JSON.stringify(storedTemplates));
 
                 // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 // let urlparts = configFileUrl.split("/");
