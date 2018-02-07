@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';
     loginWithGithubUrl = 'https://auth.'+domainkey+'/auth/github';
     loginWithLinkedInUrl = 'https://auth.'+domainkey+'/auth/linkedin';
-
+    inviteAPI = 'https://api.flowzcluster.tk/crm/invite';
     paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
 } else {
     ipAdd = 'http://localhost';
@@ -36,18 +36,19 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'http://localhost:4032';
     frontEndUrl = 'http://localhost:8080/editor';
 
-    loginUrl = 'http://auth.flowzcluster.tk/api/login';
+    loginUrl = 'https://api.flowzcluster.tk/auth/api/login';
     ldapUrl = 'http://api.flowzcluster.tk/auth/api/ldapauth';
     registerUrl = 'http://auth.flowzcluster.tk/api/setup';
     forgotPasswordUrl = 'http://auth.flowzcluster.tk/api/forgetpassword';
-    userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
+    userDetail = 'https://api.flowzcluster.tk/auth/api/userdetails';
     socialUrl = 'http://auth.flowzcluster.tk/api';
-
-    loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
-    loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';
-    loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
-    loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
-    loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
+    subscriptionApi = 'https://api.flowzcluster.tk/subscription/user-subscription/';
+    loginWithFacebookUrl = 'http://auth.flowzcluster.tk/auth/facebook';
+    loginWithGoogleUrl = 'http://auth.flowzcluster.tk/auth/Gplus';
+    loginWithTwitterUrl = 'http://auth.flowzcluster.tk/auth/twitter';
+    loginWithGithubUrl = 'http://auth.flowzcluster.tk/auth/github';
+    loginWithLinkedInUrl = 'http://auth.flowzcluster.tk/auth/linkedin';
+    inviteAPI = 'https://api.flowzcluster.tk/crm/invite';
     paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
 }
 
@@ -60,7 +61,8 @@ module.exports = {
     registerUrl: registerUrl,
     userDetail: userDetail,
     socialUrl: socialUrl,
-
+    inviteAPI:inviteAPI,
+    subscriptionApi:subscriptionApi,
     facebookSuccessCallbackUrl: frontEndUrl,
     googleSuccessCallbackUrl: frontEndUrl,
     twitterSuccessCallbackUrl: frontEndUrl,
