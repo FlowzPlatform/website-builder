@@ -3163,12 +3163,12 @@ export default {
                             var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                             previewFile = folderUrl.replace('/var/www/html', '');
                             
-                            await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                            await axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Preview')
                               .then(async (res) => {
-                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                                await axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp').catch((e) => {
                                   console.log(e)
                                 })
-                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
+                                await axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
                                   //// console.log('deleted extra layout file:', res)
                                 }).catch((e) => {
                                   console.log(e)
@@ -3176,7 +3176,7 @@ export default {
                                 if (vuepartials != undefined && vuepartials.length > 0) {
                                   for (let x = 0; x < vuepartials.length; x++) {
 
-                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                    await axios.delete(config.baseURL + '/delete-service/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
                                         //console.log(res)
                                       })
                                       .catch((e) => {
@@ -3186,7 +3186,7 @@ export default {
                                 }
                                 //console.log("layout file reset")
                                 if (Layout == 'Blank') {
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                  await axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/Blank.layout')
                                     .catch((e) => {
                                       //console.log("error while deleting blank.layout file")
                                     })
@@ -3210,12 +3210,12 @@ export default {
                           text: backupMetalSmith,
                           type: 'file'
                         })
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                        axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp').catch((e) => {
                           //console.log(e)
                         })
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Preview')
                         console.log(err)
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                        axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
                       })
                   })
                   .catch((e) => {
@@ -3226,11 +3226,11 @@ export default {
                       text: backupMetalSmith,
                       type: 'file'
                     })
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                    axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                    axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp').catch((e) => {
                       //console.log(e)
                     })
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                    axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Preview')
                     console.log(e)
                   })
 
@@ -3244,11 +3244,11 @@ export default {
                   text: backupMetalSmith,
                   type: 'file'
                 })
-                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp').catch((e) => {
                   //console.log(e)
                 })
-                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Preview')
               })
 
           })
@@ -3261,8 +3261,8 @@ export default {
               text: backupMetalSmith,
               type: 'file'
             })
-            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+            axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+            axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp').catch((e) => {
               //console.log(e)
             })
 

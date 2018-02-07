@@ -9,10 +9,18 @@
     
         <!-- Sidebar Wrapper -->
         <nav id="sidebar-wrapper" role="navigation">
-          <div class="treeViewBlock" style="transform: scaleX(-1);">
+          <div class="treeViewBlock" style="transform: scaleX(-1); width: 100%">
             <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
               <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
             </div>
+            <el-select v-model="value" @change="changeSubscription()" placeholder="Select Your Subscription" style="transform: scaleX(-1); width: 100%">
+            <el-option style="width: 100%"
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+            </el-select>
             <el-tree v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
         </nav>
@@ -455,6 +463,8 @@
     },
     data () {
       return {
+        options:'',
+        value:'',
         display: true,
         flag: false,
         tabPosition: 'bottom',
@@ -591,6 +601,10 @@
           await axios.post(config.baseURL+'/flows-dir-listing' , {
             foldername :'/var/www/html/websites/'+ this.userDetailId,
             type : 'folder'
+          },{
+            headers: {
+              'Authorization' : Cookies.get('auth-token')
+            }   
           })
           .then((res) => {
             this.getData();
@@ -725,9 +739,45 @@
               }
           }
       });
+      this.getDataOfSubscriptionUser();
+      console.log("this.value", this.value)
+       if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
+                this.value = Cookies.get("subscriptionId")
+            }
     },
 
     methods: {
+      async getDataOfSubscriptionUser(){
+        let sub_id = []
+        await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+          .then(response => {
+            let obj_val = Object.values(response.data.data.package)
+            let obj_key = Object.keys(response.data.data.package)
+            for (let index = 0; index < obj_val.length; index++) {
+              sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].subscriptionId})
+            }
+            this.options = sub_id
+               console.log("sub_id", sub_id)
+             if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
+                            this.value = sub_id[0].value
+                            Cookies.set("subscriptionId" , this.value)
+                        }
+          })
+
+      },
+      changeSubscription(){
+        this.editableTabs = []
+        axios.get(config.subscriptionApi+ this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+          .then(response => {
+            console.log("res-->>>", response.data.userId)
+            console.log("this.value", this.value)
+            Cookies.set('subscriptionId', this.value);
+            axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
+            //axios.defaults.headers.common['subscriptionId'] =  this.value;
+            Cookies.set('userDetailId', response.data.userId);
+            this.getData();
+          })
+      },
       canceldialog(){
         this.newFileDialog = false
         console.log('&&&&')
@@ -1965,18 +2015,15 @@
             axios.post(config.baseURL + '/project-configuration', {
                 userEmail: Cookies.get('email'),
                 websiteName: this.formAddProjectFolder.projectName,
-                userId: userid
-              })
+                userId: userid,
+                subscriptionId: this.value
+              },{ headers: { 'subscriptionId': this.value}})
               .then((res) => {
                 let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
                   // let newFolderName=res.data.id 
                 return axios.post(config.baseURL + '/flows-dir-listing', {
                     foldername: newFolderName,
                     type: 'folder'
-                  }, {
-                    headers: {
-                      'authorization': token
-                    }
                   })
                   .then(async (resp) => {
                     // console.log(resp)
@@ -2034,11 +2081,12 @@
 
               })
               .catch((e) => {
-                console.log(e);
+                console.log("e", e);
+                console.log("e code", e.statuscode);
                 // this.componentId = 'buyPage';
+                alert('subscription is over!')
                 this.newProjectFolderDialog = false;
                 this.fullscreenLoading = false;
-                // this.buyNowDialog = true;
               });
           }
         });
@@ -4391,22 +4439,22 @@
                                 window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
                               }
 
-                              await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              await axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Preview',{ headers: { 'subscriptionId': this.value}})
                                 .then(async(res) => {
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
+                                  await axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp',{ headers: { 'subscriptionId': this.value}})
+                                  await axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout',{ headers: { 'subscriptionId': this.value}}).then((res) => {}).catch((e) => {
                                     //console.log(e)
                                   })
                                   if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                     for (let x = 0; x < self.form.vuepartials.length; x++) {
-                                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {})
+                                      axios.delete(config.baseURL + '/delete-service/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',{ headers: { 'subscriptionId': this.value}}).then((res) => {})
                                         .catch((e) => {
                                           //console.log(e)
                                         })
                                     }
                                   }
                                   if (self.form.Layout == 'Blank') {
-                                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                    axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/Blank.layout',{ headers: { 'subscriptionId': this.value}})
                                       .catch((e) => {
                                         self.fullscreenLoading = false;
                                         //console.log("Error while deleting blank.layout file")
@@ -4425,17 +4473,16 @@
                               window.open('http://' + config.ipAddress + '/plugins/public/error.html');
                               
 
-                              axios.post(config.baseURL + '/flows-dir-listing', {
+                              axios.post(config.baseURL + '/delete-service', {
                                 filename: mainMetal,
                                 text: backupmetalsmith,
                                 type: 'file'
                               })
-
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
+                        axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'subscriptionId': this.value}}).then((res) => {}).catch((e) => {
                                 //console.log(e)
                               })
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                              axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Preview',{ headers: { 'subscriptionId': this.value}})
+                              axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp',{ headers: { 'subscriptionId': this.value}})
                                 //console.log(e)
                             })
 
@@ -4449,12 +4496,11 @@
                             text: backupmetalsmith,
                             type: 'file'
                           })
-
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
+                    axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'subscriptionId': this.value}}).then((res) => {}).catch((e) => {
                             //console.log(e)
                           })
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                          axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Preview',{ headers: { 'subscriptionId': this.value}})
+                          axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp',{ headers: { 'subscriptionId': this.value}})
                             //console.log('Error while creating MetalSmith JS file' + err)
 
                         })
@@ -4471,11 +4517,12 @@
                         type: 'file'
                       })
 
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
+                      axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'subscriptionId': this.value}}).then((res) => {}).catch((e) => {
+
                           //console.log(e)
                         })
-                        // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                        // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                        // axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Preview')
+                        // axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp')
                       self.saveFileLoading = false
                         //console.log(e)
                     })
@@ -4483,15 +4530,17 @@
                 .catch((e) => {
                   self.fullscreenLoading = false;
                   window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-                  
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                  var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                  axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp',{ headers: { 'subscriptionId': this.value}})
+
                   axios.post(config.baseURL + '/flows-dir-listing', {
                     filename: mainMetal,
                     text: backupmetalsmith,
                     type: 'file'
                   })
 
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
+                  axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'subscriptionId': this.value}}).then((res) => {
+
 
                     }).catch((e) => {
                       //console.log(e)
@@ -4502,14 +4551,16 @@
             .catch((e) => {
               self.fullscreenLoading = false;
               window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-              
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+              axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/temp',{ headers: { 'subscriptionId': this.value}})
+
               axios.post(config.baseURL + '/flows-dir-listing', {
                 filename: mainMetal,
                 text: backupmetalsmith,
                 type: 'file'
               })
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
+              axios.delete(config.baseURL + '/delete-service/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout',{ headers: { 'subscriptionId': this.value}}).then((res) => {
+
 
               }).catch((e) => {
                 //console.log(e)
@@ -4610,7 +4661,7 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"),{ headers: { 'subscriptionId': this.value}})
             .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
@@ -4763,7 +4814,7 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"),{ headers: { 'subscriptionId': this.value}})
           .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
@@ -4820,7 +4871,7 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"),{ headers: { 'subscriptionId': this.value}})
             .then(async(res) => {
 
               // Delete Repository from GitLab Server
@@ -4828,8 +4879,7 @@
                 .then((response) => {
 
                   // delete project configuration from RethinkDB
-                  axios.delete(config.baseURL + '/project-configuration/' + foldername , {
-                  })
+                  axios.delete(config.baseURL + '/project-configuration/' + foldername,{ headers: { 'subscriptionId': this.value}})
                   .then((res) => {
                     this.$message({
                       showClose: true,
