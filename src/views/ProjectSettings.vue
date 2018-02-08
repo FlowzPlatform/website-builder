@@ -1887,7 +1887,7 @@ export default {
           }
 
           await this.saveProjectSettings();
-          this.init();
+          await this.init();
         })
         .catch((e) => {
           this.$message({
@@ -2252,8 +2252,9 @@ export default {
         this.saveConfigFile(this.repoName, configData);
         // }
       }
+
       this.fullscreenLoading = false;
-      this.init();
+      await this.init();
       this.$emit('updateProjectName');
       // window.location.reload();
     },
@@ -2272,6 +2273,19 @@ export default {
         })
         .then(async (res) => {
           await this.refreshPlugins();  
+
+          //Copy data of project_settings.json into project-details.json 
+
+          let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json');
+
+          this.projectDetailsJson[0].push(JSON.parse(projectSettingsFileData.data[0].project_settings));
+
+          console.log('this.projectDetailsJson', this.projectDetailsJson);
+
+          this.isProjectDetailsJsonUpdated = true;
+          this.saveProjectSettings();
+      
         })
         .catch((e) => {
           this.$message({
@@ -3362,6 +3376,8 @@ export default {
     },
 
     async init () {
+
+      console.log('Iniit called')
       
       var gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
