@@ -831,7 +831,7 @@
                 await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {
                 })
                 .then((res) => {
-                  console.log(res);
+                  // console.log(res);
                   response.data.children[i].websitename = res.data.websiteName;
 
                   if(response.data.children[i].websitename.length>20){
@@ -1202,7 +1202,7 @@
               console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
               let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
               });
-              console.log('response.data', response.data)
+              // console.log('response.data', response.data)
               this.$store.state.content = response.data
               newContent = this.$store.state.content
                 // this.saveJsonFile('else');
@@ -1218,7 +1218,7 @@
 
           if(this.editableTabs.length != 0){
             this.$store.state.fileUrl = this.editableTabs[0].filepath
-            console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
+            // console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
             let componentId = this.editableTabs[0].componentId;
             this.componentId = this.editableTabs[0].componentId;
             let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
@@ -1550,7 +1550,6 @@
                 type: 'folder'
               })
               .then(async(res) => {
-              
 
                 // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 // let urlparts = configFileUrl.split("/");
@@ -1953,26 +1952,15 @@
 
       // Create new Website
       async addProjectFolder(projectName) {
-        // var boolvalue=this.checknameexist()
-        // console.log(boolvalue)
-        // if(!boolvalue==true){
-        //   console.log('same name found')
-        //   return -1
-        //   this.newProjectFolderDialog = false
-        //   this.addNewProjectFolderLoading = false;
-        // }
-        console.log(projectName)
         this.$refs[projectName].validate((valid) => {
           if (valid) {
             this.fullscreenLoading = true;
-
-            // let username = this.$session.get('username');
-            // let token = this.$session.get('token');
             let token = Cookies.get('auth_token');
             this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
-              // console.log('____',userid)
-            // this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
+
+            // this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+
 
             axios.post(config.baseURL + '/project-configuration', {
                 userEmail: Cookies.get('email'),
@@ -1980,12 +1968,6 @@
                 userId: userid
               })
               .then((res) => {
-                console.log(res)
-                  // this.newProjectFolderDialog = false
-                  // this.addNewProjectFolderLoading = false;
-                  // axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {})
-                  //   .then((response) => {
-                  // console.log(response)
                 let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
                   // let newFolderName=res.data.id 
                 return axios.post(config.baseURL + '/flows-dir-listing', {
@@ -1997,7 +1979,7 @@
                     }
                   })
                   .then(async (resp) => {
-                    console.log(resp)
+                    // console.log(resp)
                     this.newProjectFolderDialog = false
                     this.addNewProjectFolderLoading = false;
 
@@ -2558,7 +2540,7 @@
                 await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
                 }).then(response => {
                   SHA = response.data[0].id;
-                  console.log('SHA: ', SHA);
+                  // console.log('SHA: ', SHA);
                 }).catch(error => {
                   //console.log("Some error occured: ", error);
                 });
@@ -4249,6 +4231,7 @@
             })
 
           let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmith.js');
+          let backupmetalsmith=JSON.parse(JSON.stringify(responseMetal.data))
 
           var index = responseMetal.data.search('.source')
 
@@ -4288,7 +4271,7 @@
           responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
           self.form.partials = back_partials
 
-          console.log("Final metalsmith:", responseMetal.data);
+          // console.log("Final metalsmith:", responseMetal.data);
 
           var mainMetal = folderUrl + '/public/assets/metalsmith.js'
           axios.post(config.baseURL + '/save-menu', {
@@ -4323,11 +4306,11 @@
               let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
-                    "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                    '<script src="http://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
                     "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                    "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
+                    '<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"><\/script>\n' +
                     "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                     "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
@@ -4344,53 +4327,18 @@
                     "<link rel='stylesheet' href='./main-files/main.css'/>\n"+
                     "<script src=\"./main-files/main.js\"><\/script>\n" +
                     '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
-                    endhead + "\n</head>\n<body>\n" + divappstart +
-                    layoutdata.data + topbody +
+                    endhead + "\n</head>\n<body>\n" + divappstart + topbody +
+                    layoutdata.data +
                     '\n'+ divappend +
                     '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                    '\n</div>\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                    '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                     endbody +
                     '\n</body>\n</html>';
 
-              // let vueBodyStart = '';
-              // let vueBodyEnd = ''
-
-              // let newContent = "<html>\n<head>\n" + tophead +
-              //   "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-              //   "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
-              //   "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
-              //   "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-              //   "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
-              //   "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-              //   "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-              //   "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-              //   "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-              //   "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-              //   '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
-              //   '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
-              //   '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
-              //   '<script src="https://cdn.jsdelivr.net/npm/y-memory@8.0.9/dist/y-memory.js"><\/script>\n' +
-              //   '<script src="https://cdn.jsdelivr.net/npm/y-webrtc@8.0.7/dist/y-webrtc.js"><\/script>\n' +
-              //   '<script src="https://cdn.jsdelivr.net/npm/y-indexeddb@8.1.9/dist/y-indexeddb.js"><\/script>\n' +
-              //   '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
-              //   '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
-              //   '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
-              //   '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-              //   "<link rel='stylesheet' href='./main-files/main.css'/>\n" +
-              //   "<script src=\"./main-files/main.js\"><\/script>\n" +
-              //   '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
-              //   endhead + "\n</head>\n<body>\n" + vueBodyStart +
-              //   layoutdata.data + topbody +
-              //   '\n' + vueBodyEnd +
-              //   '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
-              //   '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
-              //   '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-              //   '\n</div>\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-              //   endbody +
-              //   '\n</body>\n</html>';
+              
 
               axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: folderUrl + '/Layout/' + self.form.Layout + '_temp.layout',
@@ -4402,7 +4350,7 @@
                   var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';
 
                   if (self.form.Layout == 'Blank') {
-                    rawContent = '---\nlayout: ' + self.form.Layout + '.layout\n---\n' + rawContent
+                    rawContent = '---\nlayout: ' + self.form.Layout + '_temp.layout\n---\n' + rawContent
 
                   } else {
                     var tempValueLayout = '---\nlayout: ' + self.form.Layout + '_temp.layout\n---\n';
@@ -4418,14 +4366,12 @@
                     .then(async(res) => {
 
                       self.saveFileLoading = false;
-                      console.log('Metalsmith call FolderUrl: ', folderUrl);
+                      // console.log('Metalsmith call FolderUrl: ', folderUrl);
                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
-
-                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                           axios.post(config.baseURL + '/save-menu', {
                               filename: folderUrl + '/public/assets/metalsmith.js',
-                              text: metalsmithJSON,
+                              text: backupmetalsmith,
                               type: 'file'
                             })
                             .then(async(res) => {
@@ -4477,15 +4423,15 @@
                             .catch((e) => {
                               self.fullscreenLoading = false;
                               window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-                              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                              
 
                               axios.post(config.baseURL + '/flows-dir-listing', {
                                 filename: mainMetal,
-                                text: metalsmithJSON,
+                                text: backupmetalsmith,
                                 type: 'file'
                               })
 
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {}).catch((e) => {
+                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                                 //console.log(e)
                               })
                               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
@@ -4497,15 +4443,14 @@
                         .catch((err) => {
                           self.fullscreenLoading = false;
                           window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-                          var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
+                          
                           axios.post(config.baseURL + '/flows-dir-listing', {
                             filename: mainMetal,
-                            text: metalsmithJSON,
+                            text: backupmetalsmith,
                             type: 'file'
                           })
 
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {}).catch((e) => {
+                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                             //console.log(e)
                           })
                           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
@@ -4519,15 +4464,14 @@
                       self.fullscreenLoading = false;
                       window.open('http://' + config.ipAddress + '/plugins/public/error.html');
 
-                      var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
+               
                       axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: mainMetal,
-                        text: metalsmithJSON,
+                        text: backupmetalsmith,
                         type: 'file'
                       })
 
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {}).catch((e) => {
+                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                           //console.log(e)
                         })
                         // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
@@ -4539,15 +4483,15 @@
                 .catch((e) => {
                   self.fullscreenLoading = false;
                   window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-                  var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                  
                   axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                   axios.post(config.baseURL + '/flows-dir-listing', {
                     filename: mainMetal,
-                    text: metalsmithJSON,
+                    text: backupmetalsmith,
                     type: 'file'
                   })
 
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
 
                     }).catch((e) => {
                       //console.log(e)
@@ -4558,14 +4502,14 @@
             .catch((e) => {
               self.fullscreenLoading = false;
               window.open('http://' + config.ipAddress + '/plugins/public/error.html');
-              var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place');\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+              
               axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
               axios.post(config.baseURL + '/flows-dir-listing', {
                 filename: mainMetal,
-                text: metalsmithJSON,
+                text: backupmetalsmith,
                 type: 'file'
               })
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_metal.layout').then((res) => {
+              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
 
               }).catch((e) => {
                 //console.log(e)
@@ -5297,7 +5241,7 @@
         this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
         this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
-        console.log('userid',userid)
+        // console.log('userid',userid)
         var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
         let checkdetail=true
         for(let i=0;i<alldatauser.data.data.length;i++){
@@ -5308,14 +5252,14 @@
         }
         let boolvalue;
         if(checkdetail!=false){
-          console.log('not same found')
+          // console.log('not same found')
          boolvalue=true
          this.addProjectFolder(projectName)
         }
         else{
           this.$message({
           showClose: true,
-          message: 'Same name found.Try again!',
+          message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
           type: 'error'
         });
         boolvalue= false

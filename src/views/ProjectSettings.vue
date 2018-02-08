@@ -2355,11 +2355,11 @@ export default {
         if (checkdetail != false) {
           console.log('not same found')
         } else {
-          this.$message({
-            showClose: true,
-            message: 'Website with "' + this.form.websitename + '" already exists!!!!',
-            type: 'error'
-          });
+          this.$swal({
+            title:'Save Aborted.',
+            text: 'Website with "'+this.form.websitename+'" already exists!!!!',
+            type: 'warning',
+          })
           console.log('same name found', this.configData.data.websiteName);
           this.form.websitename = this.configData.data.websiteName;
           return
@@ -2541,7 +2541,7 @@ export default {
 
               this.saveProjectSettings();
             }).catch(error => {
-              //console.log("Some error occured: ", error);
+              console.log("error : ", error);
             });
 
             this.commitMessage = '';
@@ -2551,10 +2551,10 @@ export default {
               type: 'success'
             });
             this.isCommitLoading = false;
-            this.init();
+            await this.init();
           }
         }).catch(error => {
-          //console.log("Some error occured: ", error);
+          console.log("error : ", error);
         })
       } else {
         // If first commit was unsuccessfull
@@ -2702,7 +2702,7 @@ export default {
         for (let a = 0; a < metaInfo.length; a++) {
 
           if((metaInfo[a].name!='' && metaInfo[a].name.trim().length>0) && (metaInfo[a].content!=''&& metaInfo[a].content.trim().length>0)){
-            console.log('metainfo',a)
+            // console.log('metainfo',a)
           tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
           }
         }
@@ -2768,7 +2768,7 @@ export default {
 
         var rawSettings = responseConfigLoop.data.configData;
         var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-        console.log('nameF:', nameF)
+        // console.log('nameF:', nameF)
         var Layout = ''
         var partialsPage = [];
         var vuepartials = [];
@@ -2904,7 +2904,7 @@ export default {
         layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
         var responseMetal = '';
 
-        var backupMetalSmith = '';
+        let backupMetalSmith = '';
 
         let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
         contentpartials = contentpartials.data
@@ -3091,7 +3091,7 @@ export default {
         }
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-        console.log('final responseMetal:', responseMetal)
+        // console.log('final responseMetal:', responseMetal)
         var mainMetal = folderUrl + '/public/assets/metalsmith.js'
         var value = true;
         await axios.post(config.baseURL + '/save-menu', {
@@ -3108,17 +3108,29 @@ export default {
               })
               .then(async (res) => {
                 //console.log(res);
-                let newContent = "<html>\n<head>\n" + tophead +
+                  let datadivscript = ''
+                  let divappstart=''
+                  let divappend=''
+                  if(contentpartials.indexOf('datafieldgroup')>0){
+                    datadivscript= "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
+                        "<script type='text/javascript' src='http://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
+                        "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n" +
+                        "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
+                    divappstart='<div id="app">'
+                    divappend='</div>'
+                  }
+                  
+              let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
-                    "<title>" + SeoTitle + "</title>\n" +  favicon + '\n' +
-                    "<script src='https://code.jquery.com/jquery-3.2.1.js'><\/script>\n" +
+                    "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
+                    '<script src="http://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                    "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js' defer='defer' ><\/script>\n" +
+                    "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                    "<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js' crossorigin='anonymous'><\/script>\n" +
-                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js' defer='defer'><\/script>\n" +
+                    '<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"><\/script>\n' +
+                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous' defer='defer'><\/script>\n" +
+                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                     '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
@@ -3128,20 +3140,21 @@ export default {
                     '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
-                    '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                    datadivscript +
                     "<link rel='stylesheet' href='./main-files/main.css'/>\n"+
-                    "<script src=\"./main-files/main.js\" defer='defer'><\/script>\n" +
-                    '<script src="./assets/client-plugins/client-cart.js" defer="defer"><\/script>\n' +
-                    endhead + "\n</head>\n<body>\n" + vueBodyStart +
-                    layoutdata.data + topbody +
-                    '\n'+vueBodyEnd+
-                    '<script src="./assets/client-plugins/client-slider-plugin.js" defer="defer"><\/script>\n' +
-                    '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js" defer="defer"><\/script>\n' +
+                    "<script src=\"./main-files/main.js\"><\/script>\n" +
+                    '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
+                    endhead + "\n</head>\n<body>\n" + divappstart +
+                      topbody +layoutdata.data+
+                    '\n'+ divappend +
+                    '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                    '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
+                    '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                    '\n</div>\n<script src="./../public/assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                    '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                     endbody +
                     '\n</body>\n</html>';
-
+                    // console.log('folderUrl:',folderUrl)
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
                   text: newContent,
@@ -3152,7 +3165,7 @@ export default {
 
                 if (Layout == 'Blank') {
 
-                  rawContent = '---\nlayout: ' + Layout + '.layout\n---\n' + rawContent
+                  rawContent = '---\nlayout: ' + Layout + '_temp.layout\n---\n' + rawContent
 
                 } else {
                   let tempValueLayout = '---\nlayout: ' + Layout + '_temp.layout\n---\n';
@@ -3224,7 +3237,7 @@ export default {
                         //console.log('error while creating metalsmithJSON file' + err)
                         axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: mainMetal,
-                          text: responseMetal,
+                          text: backupMetalSmith,
                           type: 'file'
                         })
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
@@ -3240,7 +3253,7 @@ export default {
                      this.fullscreenLoading = false;
                     axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: mainMetal,
-                      text: responseMetal,
+                      text: backupMetalSmith,
                       type: 'file'
                     })
                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
@@ -3258,7 +3271,7 @@ export default {
                 console.log(e)
                 axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: mainMetal,
-                  text: responseMetal,
+                  text: backupMetalSmith,
                   type: 'file'
                 })
                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
@@ -3275,7 +3288,7 @@ export default {
             console.log(e)
             axios.post(config.baseURL + '/flows-dir-listing', {
               filename: mainMetal,
-              text: responseMetal,
+              text: backupMetalSmith,
               type: 'file'
             })
             axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
@@ -3349,7 +3362,7 @@ export default {
     },
 
     async init () {
-
+      
       var gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
 
@@ -3408,7 +3421,7 @@ export default {
       }
  
       
-      console.log('URL: ', this.projectPublicUrl);
+      // console.log('URL: ', this.projectPublicUrl);
 
       for(let i=0;i<this.paymentgateway.length;i++){
         var temp=[]
@@ -3456,7 +3469,7 @@ export default {
       }).then(response => {
         this.projectDetailsJson = JSON.parse(response.data);
       }).catch(error => {
-        console.log("Some error occured while project details json: ", error);
+        console.log("error occured while project details json: ", error);
       });
       
 
@@ -3498,13 +3511,12 @@ export default {
     updateProjectName(form) {
      this.$refs[form].validate(async (valid) => {
           if (valid) {
-            console.log('websiteName',this.form.websitename,this.configData.data.websiteName)
+            // console.log('websiteName',this.form.websitename,this.configData.data.websiteName)
             if(this.form.websitename==this.configData.data.websiteName){
-              this.$message({
-              showClose: true,
-              message: '"'+this.form.websitename+'" is the original name of website. ',
-              type: 'warning'
-            });
+              this.$swal({
+                text: 'Website with "'+this.form.websitename+'" already exists!!!!',
+                type: 'warning',
+              })
             }else{
               // console.log(this.folderUrl.split('/')[this.folderUrl.split('/').length-2])
               var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
@@ -3519,7 +3531,12 @@ export default {
                 }
               }
               if(checkdetail!=false){
-                console.log('not same found')
+                this.$message({
+                showClose: true,
+                message: 'Successfully Changed Websitename.',
+                type: 'success'
+              });
+                // console.log('not same found')
                 await this.saveProjectSettings();
                 await this.init();
                 // location.reload();
@@ -3531,6 +3548,7 @@ export default {
                   type: 'warning',
                 })
                 this.form.websitename=this.configData.data.websiteName;
+
 
               }
             }
