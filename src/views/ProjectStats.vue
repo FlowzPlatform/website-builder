@@ -279,7 +279,6 @@ export default {
     },
 
   	async init () {
-  console.log('in project stat')
       let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       localStorage.setItem('folderUrl', folderUrl);
 
