@@ -176,8 +176,6 @@ export default {
           this.$session.set('token', response.data.logintoken);
           // localStorage.setItem("auth_token", response.data.logintoken);
 
-          
-
           // Set email Session
           //console.log('User Details: ', response.data);
           axios.get(config.userDetail, {
