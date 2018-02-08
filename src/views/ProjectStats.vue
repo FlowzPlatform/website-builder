@@ -1,7 +1,7 @@
 <template>
   <div class="ProjectStats">
     <div class="page-buttons">
-      <el-button type="info" size="small" @click="previewWebsite" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button>
+      <!-- <el-button type="info" size="small" @click="previewWebsite" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button> -->
       <!-- <el-button type="success" size="small" @click="goToProjectSettings">Project Settings</el-button> -->
     </div>
   	<div class="container-fluid">
@@ -62,7 +62,7 @@
         <div class="col-md-12">
           <div class="creative-table">
             <div class="table-title title-style-1">
-              <h4>{{repoName}}</h4>
+              <h4>{{websiteName}}</h4>
               <p>Repository Id: {{newRepoId}}</p>
             </div>
             <div class="table-body">
@@ -135,7 +135,6 @@
             <div class="table-body">
               <el-table
                 :data="commitsData"
-                :row-class-name="tableRowClassName"
                 border
                 style="width: 100%">
                 <el-table-column
@@ -193,6 +192,7 @@ export default {
   },
   data () {
     return {
+      websiteName: '',
       newRepoId: '',
       repoName: '',
       seoTitle: '',
@@ -291,6 +291,8 @@ export default {
       if(this.configData.status == 200 || this.configData.status == 204){
         //console.log('Config file found! Updating fields..');
 
+        this.websiteName = this.configData.data.websiteName;
+
         this.settings = this.configData.data.configData;
 
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
@@ -342,9 +344,9 @@ export default {
       });
       
 
-      if(this.commitsData[0]){
-        return 'positive-row';
-      } 
+      // if(this.commitsData[0]){
+      //   return 'positive-row';
+      // } 
   	},
 
   },

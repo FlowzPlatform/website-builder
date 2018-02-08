@@ -16,12 +16,12 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'wss://ws.'+domainkey+':4032';
     frontEndUrl = 'https://webbuilder.'+domainkey+'/editor';
 
-    loginUrl = 'https://auth.'+domainkey+'/api/login';
+    loginUrl = 'https://api.'+domainkey+'/auth/api/login';
     ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
-    registerUrl = 'https://auth.'+domainkey+'/api/setup';
-    forgotPasswordUrl = 'https://auth.'+domainkey+'/api/forgetpassword';
-    userDetail = 'https://auth.'+domainkey+'/api/userdetails';
-    socialUrl = 'https://auth.'+domainkey+'/api';
+    registerUrl = 'https://api.'+domainkey+'/auth/api/setup';
+    forgotPasswordUrl = 'https://api.'+domainkey+'/auth/api/forgetpassword';
+    userDetail = 'https://api.'+domainkey+'/auth/api/userdetails';
+    socialUrl = 'https://api.'+domainkey+'/auth/api';
 
     loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
     loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
@@ -36,12 +36,12 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'http://localhost:4032';
     frontEndUrl = 'http://localhost:8080/editor';
 
-    loginUrl = 'http://auth.flowzcluster.tk/api/login';
-    ldapUrl = 'http://api.flowzcluster.tk/auth/api/ldapauth';
-    registerUrl = 'http://auth.flowzcluster.tk/api/setup';
-    forgotPasswordUrl = 'http://auth.flowzcluster.tk/api/forgetpassword';
-    userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
-    socialUrl = 'http://auth.flowzcluster.tk/api';
+    loginUrl = 'https://api.flowzcluster.tk/auth/api/login';
+    ldapUrl = 'https://api.flowzcluster.tk/auth/api/ldapauth';
+    registerUrl = 'https://api.flowzcluster.tk/auth/api/setup';
+    forgotPasswordUrl = 'https://api.flowzcluster.tk/auth/api/forgetpassword';
+    userDetail = 'https://api.flowzcluster.tk/auth/api/userdetails';
+    socialUrl = 'https://api.flowzcluster.tk/auth/api';
 
     loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
     loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';

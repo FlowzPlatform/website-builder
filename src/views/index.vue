@@ -37,9 +37,9 @@
               <!-- <div v-else class="col-md-4"></div> -->
               <div class="col-md-4 editor-buttons" align="right" v-if="componentId != null">
                   <div style="margin-right:10px; margin: 15px;">
-                      <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true" :loading="previewLoading">Preview</el-button>
+                      <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
                       <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                      <el-button type="primary" size="small" @click="saveFile('void')" :loading="saveFileLoading" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'">Save</el-button>
+                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'">Save</el-button>
                   </div>
               </div>
 
@@ -594,9 +594,10 @@
           })
           .then((res) => {
             this.getData();
+          })
+          .catch((err) => {
+            this.getData();
           });
-
-          this.getData();
           
         })
         .catch((e) => {
@@ -1549,9 +1550,6 @@
                 type: 'folder'
               })
               .then(async(res) => {
-                //var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-                //storedTemplates.push(this.formAddFolder.foldername)
-                //localStorage.setItem("listOfTempaltes", JSON.stringify(storedTemplates));
 
                 // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 // let urlparts = configFileUrl.split("/");
@@ -1923,7 +1921,7 @@
       // this.formAddFile.filename=''
       },
      async checknameexist(){
-      this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+      this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
         console.log('userid',userid)
@@ -1960,7 +1958,9 @@
             let token = Cookies.get('auth_token');
             this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
-            this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+
+            // this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+
 
             axios.post(config.baseURL + '/project-configuration', {
                 userEmail: Cookies.get('email'),
@@ -5238,7 +5238,7 @@
       },
 
       async checknameexist(projectName){
-        this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+        this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
         this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
         // console.log('userid',userid)
@@ -6213,6 +6213,7 @@
 }
 .el-tree-node {
   font-size: 14px !important;
+  white-space: inherit;
 }
 .row {
   padding: 0px !important;

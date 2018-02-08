@@ -740,10 +740,17 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       globalVariablesSelect.push(value);
     }
 
+    let urlHeaders = '';
+
     for(var j = 0; j < urlVariables.length; j++){
-      let value = {name: urlVariables[j].urlId, value: urlVariables[j].urlValue}
+      let value = {name: urlVariables[j].urlId, value: urlVariables[j].finalvalue};
+      // for(var jj = 0; j < urlVariables[j].urlHeaderVariables.length; jj++){
+      //   urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue + '" ';
+      // }
       urlVarValue.push(value);
     }
+
+    console.log(urlHeaders);
 
     for (var i = 0; i < storedTemplates.length; i++) {
       if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
