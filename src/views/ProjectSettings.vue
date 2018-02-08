@@ -836,6 +836,33 @@
       </div>
       <!-- Payment Block -->
 
+      <!-- Roles Block -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleRoles" class="card color-div toggleableDivHeader">Website Roles</a>
+          </div>
+      </div>
+      <div id="toggleRolesContent" class="toggleableDivHeaderContent" style="display: none;">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="row">
+                      <div class="col-md-4">
+                          <h3> Roles: </h3>
+                      </div>
+                  </div>
+                  <hr>
+                  
+                  <div v-for="(n, index) in websiteRoles">
+                    
+                  </div>
+
+                  <!-- Create new variable -->
+                  <el-button type="primary" @click="addNewWebsiteRole">New Role</el-button>
+              </div>
+          </div>
+      </div>
+      <!-- Roles Block -->
+
       <!-- List of Commits Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -1023,6 +1050,7 @@ export default {
       globalVariables: [],
       urlVariables: [],
       globalCssVariables: [],
+      websiteRoles: [],
       ecommerceVariables: [],
       imageInputIsDisabled: false,
       uploadedVariableJsonData: '',
@@ -1134,6 +1162,11 @@ export default {
 
       $("#togglePaymentgateway").click(function() {
         $("#togglePaymentgatewayContent").slideToggle("slow");
+
+      });
+
+      $("#toggleRoles").click(function() {
+        $("#toggleRolesContent").slideToggle("slow");
 
       });
 
@@ -1435,6 +1468,11 @@ export default {
       let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
       this.paymentgateway.push(newVariable);
       this.Paymentfields.push([])
+    },
+
+    addNewWebsiteRole(){
+      let newVariable = { roleName: '', isPrimary: true }
+      this.websiteRoles.push(newVariable);
     },
 
     deleteVariable(deleteIndex) {
@@ -2272,16 +2310,17 @@ export default {
             templateName : template
         })
         .then(async (res) => {
-          await this.refreshPlugins();  
+          // await this.refreshPlugins();  
 
           //Copy data of project_settings.json into project-details.json 
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json');
 
-          this.projectDetailsJson[0].push(JSON.parse(projectSettingsFileData.data[0].project_settings));
+          // console.log('projectSettingsFileData', projectSettingsFileData);
+          let data = JSON.parse(projectSettingsFileData.data);
 
-          console.log('this.projectDetailsJson', this.projectDetailsJson);
+          this.projectDetailsJson[0].project_settings = data.project_settings;
 
           this.isProjectDetailsJsonUpdated = true;
           this.saveProjectSettings();
@@ -3376,8 +3415,6 @@ export default {
     },
 
     async init () {
-
-      console.log('Iniit called')
       
       var gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
