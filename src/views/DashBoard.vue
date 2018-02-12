@@ -1,384 +1,71 @@
 <template>
-  <div class="UserDashboard">
-    <div class="flat-theme">
-        <section>
-            <header>
-                <nav class="hh-navigation">
-                    <div class="hh-logo-container">
-                        <a href="#" class="hh-logo"><img src="../../static/img/Flowz-logo.png"></a>
-                        <a href="#" class="hh-toggle-btn pull-right"><i class="fa fa-bars"></i></a>
-                    </div>
-                    <a href="#" class="hh-logo-hidden">Radar</a>
-                    <div class="hh-top-nav-container">
-                        <a href="" class="brand-icon"><i class="fa fa-recycle"></i></a>
-                        <ul class="pull-right links">
-                            <!-- <li class="hh-dropdown"><a class="hh-menu-item" href="#"><i class="fa fa-cog"></i></a>
-                                <ul class="hh-dropmenu-item hh-settings">
-                                    <li class="hh-dropmenu-header"><a href="#">Settings</a></li>
-                                    <li class="hh-notification-item text-left">
-                                        <div class="pull-left"><i class="fa fa-link"></i></div>
-                                        <div class="pull-right">
-                                            <label class="hh-chk-pin pull-right">
-                                                <input type="checkbox" /><span></span></label>
-                                        </div>
-                                        <div class="hh-notification-body">
-                                            <div class="lg-text">Change to Flat Theme</div>
-                                            <div class="sm-text">Flattify it</div>
-                                        </div>
-                                    </li>
-                                    <li id="hh-color-opts" class="hh-notification-item text-left hide">
-                                        <div class="pull-left"><i class="fa fa-puzzle-piece"></i></div>
-                                        <div class="pull-right">
-                                            <div class="hh-color-swatch">
-                                                <label class="colors hh-bg-crimson hh-option-selected">
-                                                    <input type="radio" checked name="color" value="crimson" />
-                                                </label>
-                                                <label class="colors hh-bg-teal">
-                                                    <input type="radio" name="color" value="teal" />
-                                                </label>
-                                                <label class="colors hh-bg-purple">
-                                                    <input type="radio" name="color" value="purple">
-                                                </label>
-                                                <label class="colors hh-bg-orange">
-                                                    <input type="radio" name="color" value="orange" />
-                                                </label>
-                                                <label class="colors hh-bg-twitter">
-                                                    <input type="radio" name="color" value="twitter" />
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="hh-notification-body">
-                                            <div class="lg-text">Choose a color</div>
-                                            <div class="sm-text">Make it colorful</div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li> -->
-                            <!-- <li class="hh-dropdown no-color">
-                                <a class="hh-menu-item" href="#">
-                                    <img class="hh-list-img sm-img" src="https://api.adorable.io/avatars/285/gaurav@adorable.io.png" alt="me" /></a>
-                                <ul class="hh-dropmenu-item sm-menu">
-                                    <li class="hh-notification-item">
-                                        <a class="hh-notification-content lg-text" href="#"><i class="fa fa-edit"></i>My Profile</a>
-                                    </li>
-                                    <li class="hh-notification-item">
-                                        <a class="hh-notification-content lg-text" href="#" @click="doLogout"><i class="fa fa-power-off"></i>Sign out</a>
-                                    </li>
-                                </ul>
-                            </li> -->
-                        </ul>
-                        <ul class="pull-right links">
-                            <!-- <li>
-                                <a class="hh-menu-item" href="#"><i class="fa fa-comment-o"><span class="hh-menu-badge hh-bg-success">0</span></i></a>
-                            </li> -->
-                            <!-- <li class="hh-dropdown"><a class="hh-menu-item" href="#"><i class="fa fa-envelope-o"><span class="hh-menu-badge hh-bg-primary">23</span></i></a>
-                                <ul class="hh-dropmenu-item">
-                                    <li class="hh-dropmenu-header"><a href="#">Your Notifications</a></li>
-                                    <li class="hh-notification-item text-left">
-                                        <a class="hh-notification-content" href="#">
-                                            <div class="pull-left">
-                                                <i class="fa fa-html5 fa-2x"></i>
-                                            </div>
-                                            <div class="hh-notification-body">
-                                                <div class="lg-text">Introduction to fetch()</div>
-                                                <div class="sm-text">The fetch API</div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="hh-notification-item text-left">
-                                        <a class="hh-notification-content" href="#">
-                                            <div class="pull-left">
-                                                <i class="fa fa-bitbucket fa-2x"></i>
-                                            </div>
-                                            <div class="hh-notification-body">
-                                                <div class="lg-text">Check your BitBucket</div>
-                                                <div class="sm-text">Last Chance</div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="hh-notification-item text-left">
-                                        <a class="hh-notification-content" href="#">
-                                            <div class="pull-left">
-                                                <i class="fa fa-google fa-2x"></i>
-                                            </div>
-                                            <div class="hh-notification-body">
-                                                <div class="lg-text">Google Account</div>
-                                                <div class="sm-text">sathishlxg@gmail.com</div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="hh-dropmenu-footer"><a href="#">See all notifications</a></li>
-                                </ul>
-                            </li>
-                            <li class="hh-dropdown"><a class="hh-menu-item" href="#"><i class="fa fa-bell-o"><span class="hh-menu-badge">49</span></i></a>
-                                <ul class="hh-dropmenu-item">
-                                    <li class="hh-dropmenu-header"><a href="#">Your Alerts</a></li>
-                                    <li class="hh-notification-item text-left">
-                                        <a class="hh-notification-content" href="#">
-                                            <div class="pull-left">
-                                                <i class="fa fa-html5 fa-2x"></i>
-                                            </div>
-                                            <div class="hh-notification-body">
-                                                <div class="lg-text">Introduction to fetch()</div>
-                                                <div class="sm-text">The fetch API</div>
-                                                <em class="pull-right sm-text"><i class="fa fa-clock-o"></i>2 sec ago</em>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="hh-notification-item text-left">
-                                        <a class="hh-notification-content" href="#">
-                                            <div class="pull-left">
-                                                <i class="fa fa-bitbucket fa-2x"></i>
-                                            </div>
-                                            <div class="hh-notification-body">
-                                                <div class="lg-text">Check your BitBucket</div>
-                                                <div class="sm-text">Last Chance</div>
-                                                <em class="pull-right sm-text"><i class="fa fa-clock-o"></i>49 mins ago</em>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="hh-notification-item text-left">
-                                        <a class="hh-notification-content" href="#">
-                                            <div class="pull-left">
-                                                <i class="fa fa-google fa-2x"></i>
-                                            </div>
-                                            <div class="hh-notification-body">
-                                                <div class="lg-text">Google Account</div>
-                                                <div class="sm-text">sathishlxg@gmail.com</div>
-                                                <em class="pull-right sm-text"><i class="fa fa-clock-o"></i>2 days ago</em>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="hh-dropmenu-footer"><a href="#">See all alerts</a></li>
-                                </ul>
-                            </li> -->
-                        </ul>
-                    </div>
-                </nav>
-            </header>
-        </section>
-        <aside>
-            <nav class="hh-sidebar">
-                <ul>
-                    <li>
-                        <a href="#" class="inbox" @click='goToDashboard()'>
-                            <i class="fa fa-dashboard">
-                                <span class="icon-bg hh-bg-success"></span>
-                            </i>
-                            <span class="hh-sidebar-item">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" @click='goToEditor()'>
-                            <i class="fa fa-globe">
-                                <span class="icon-bg hh-bg-danger"></span>
-                            </i>
-                            <span class="hh-sidebar-item">Website Builder</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" @click='goToInvite()'>
-                            <i class="fa fa-globe">
-                                <span class="icon-bg hh-bg-primary"></span>
-                            </i>
-                            <span class="hh-sidebar-item">Invite</span>
-                        </a>
-                    </li>
-                    <!-- <li>
-                        <a href="#" class="snooz">
-                            <i class="fa fa-line-chart">
-                                <span class="icon-bg hh-bg-primary"></span>
-                            </i>
-                            <span class="hh-sidebar-item">Transactions</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="done">
-                            <i class="fa fa-area-chart">
-                                <span class="icon-bg hh-bg-warning"></span>
-                            </i>
-                            <span class="hh-sidebar-item">Revenue</span>
-                        </a>
-                    </li> -->
-                    <li>
-                        <a href="javascript:void(0)" @click="doLogout">
-                            <i class="fa fa-sign-out">
-                                <span class="icon-bg hh-bg-violet"></span>
-                            </i>
-                            <span class="hh-sidebar-item">Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-       <section>
-            <div class="hh-body-wrapper">
+  <div class="hh-body-wrapper">
                 <div class="container-fluid">
-                    
+                    <header class="hh-page-title">
+                        <span>Dashboard</span>
+                    </header>
                     <div class="row">
-                        <div class="col-md-12">
-                            <component :is="componentId" ref="contentComponent"></component>
+                        <div class="col-lg-3 col-xs-6">
+                            <div class="hh-info-box hh-txt-success">
+                                <i class="fa fa-globe"></i>
+                                <span class="heading">Websites</span>
+                                <span class="value"><span>5</span></span>
+                            </div>
                         </div>
-                        
+                        <div class="col-lg-3 col-xs-6">
+                            <div class="hh-info-box hh-txt-primary">
+                                <i class="fa fa-server"></i>
+                                <span class="heading">Services</span>
+                                <span class="value"><span>1</span></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-xs-6">
+                            <div class="hh-info-box hh-txt-danger">
+                                <i class="fa fa-calendar-times-o"></i>
+                                <span class="heading">Expiration</span>
+                                <span class="value"><span>12-Dec-2018</span></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-xs-6">
+                            <div class="hh-info-box hh-txt-warning">
+                                <i class="fa fa-dollar"></i>
+                                <span class="heading">Revenue</span>
+                                <span class="value"><span>1009K</span></span>
+                            </div>
+                        </div>
                     </div>
                     
 
 
                 </div>
             </div>
-        </section>
-
-    </div>
-  </div>
 </template>
 
 <script>
-
-import psl from 'psl';
-import Cookies from 'js-cookie';
-
-import Invite from './invite';
-import DashBoard from './DashBoard';
-
-export default {
-  name: 'UserDashboard',
-  props: {
-    options: {
-      type: Object
-    }
-  },
-  data () {
-    return {
-        data: 'data',
-      componentId: ''
-    }
-  },
-  component: {
-  },
-  methods: {
-     goToEditor() {
-      this.$router.push('/editor');
-    },
-    goToInvite(){
-        this.componentId = Invite;
-    },
-    goToDashboard(){
-        this.componentId = DashBoard;
-    },
-    doLogout() {
-      // localStorage.removeItem("auth_token");
-      this.$session.remove('username');
-      let location = psl.parse(window.location.hostname)
-      location = location.domain === null ? location.input : location.domain
-      
-      Cookies.remove('auth_token' ,{domain: location});
-      Cookies.remove('email' ,{domain: location});
-      Cookies.remove('userDetailId' ,{domain: location}); 
-      Cookies.remove('subscriptionId' ,{domain: location}); 
-      
-      console.log('login1.........');
-      this.$router.push('/login');
-    }
-  },
-  mounted () {
-
-    $(function () {
-
-        $(window).on("scroll", function (e) {
-            if ($(window).scrollTop() > 50) {
-                $(".flat-theme").addClass("sticky");
-            } else {
-                $(".flat-theme").removeClass("sticky");
-            }
-        });
-
-        $(document).on("click", function (e) {
-            e.preventDefault();
-            var $item = $(".hh-dropmenu-item");
-            if ($item.hasClass("active")) {
-                $item.removeClass("active");
-            }
-        });
-
-        $('.hh-chat-body').slimScroll({
-            height: '450px',
-            color: "#c6c6c6"
-        });
-
-        $('.hh-timeline-body').slimScroll({
-            height: '450px',
-            color: '#c6c6c6'
-        });
-
-        $(".hh-toggle-btn").on('click', function () {
-            $(".hh-logo-container").toggleClass("hh-nav-min");
-            $(".hh-sidebar").toggleClass("hh-nav-min");
-            $(".hh-body-wrapper").toggleClass("hh-nav-min");
-        });
-
-        $("li.hh-dropdown > a.hh-menu-item").on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $(".hh-dropmenu-item").removeClass("active");
-            $(this).next(".hh-dropmenu-item").toggleClass("active");
-        });
-
-        $(".fa-chevron-down").on("click", function () {
-            var $ele = $(this).parents('.panel-heading');
-            $ele.siblings('.panel-footer').toggleClass("hh-collapse");
-            $ele.siblings('.panel-body').toggleClass("hh-collapse", function () {
-            });
-        });
-
-        $(".fa-close").on("click", function () {
-            var $ele = $(this).parents('.panel');
-            $ele.addClass('panel-close');
-            setTimeout(function () {
-                $ele.parent().remove();
-            }, 210);
-        });
-
-        $(".fa-rotate-right").on("click", function () {
-            var $ele = $(this).parents('.panel-heading').siblings('.panel-body');
-            $ele.append('<div class="overlay"><div class="overlay-content"><i class="fa fa-refresh fa-2x fa-spin"></i></div></div>');
-            setTimeout(function () {
-                $ele.find('.overlay').remove();
-            }, 2000);
-        });
-
-        $("#hh-chat-send").on("click", function () {
-            var value = $("#hh-chat-txt").val();
-            var $ele = $(".hh-chat-body");
-            var img = "https://lh4.googleusercontent.com/-GXmmnYTuWkg/AAAAAAAAAAI/AAAAAAAAAAA/oK6DEDS7grM/w56-h56/photo.jpg";
-            if (value) {
-                $("#hh-chat-txt").val('');
-                $ele.append(getTempl(img, value, 'left'));
-                setTimeout(function () {
-                    img = "http://www.gravatar.com/avatar/9099c2946891970eb4739e6455400913.png";
-                    $ele.append(getTempl(img, "Cool!!!", 'right'));
-                    $ele.slimScroll({
-                        scrollTo: $ele[0].scrollHeight
-                    });
-                }, 2000);
-
-                $ele.slimScroll({
-                    scrollTo: $ele[0].scrollHeight
-                });
-
-            }
-
-        });
-
-
-
-        $(".hh-notification-item").on("click", function (e) {
-            e.stopPropagation();
-        });
-
-    });
-  }
-}
+// export default {
+// data () {
+//     return {
+//       options: [{
+//           value: 'Option1',
+//           label: 'Option1'
+//         }, {
+//           value: 'Option2',
+//           label: 'Option2'
+//         }, {
+//           value: 'Option3',
+//           label: 'Option3'
+//         }, {
+//           value: 'Option4',
+//           label: 'Option4'
+//         }, {
+//           value: 'Option5',
+//           label: 'Option5'
+//         }],
+//         value: '',
+//         input: ''
+//     }
+//   }
+// }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -1967,3 +1654,4 @@ ul.hh-dropmenu-item {
 }
 
 </style>
+

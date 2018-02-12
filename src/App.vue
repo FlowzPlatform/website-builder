@@ -87,12 +87,14 @@ export default {
       Cookies.remove('auth_token' ,{domain: location});
       Cookies.remove('email' ,{domain: location});
       Cookies.remove('userDetailId' ,{domain: location}); 
+      Cookies.remove('subscriptionId' ,{domain: location}); 
 
       this.isLoggedIn = false;
       this.$router.push('/login');
     },
     goToDashboard(){
-      this.$router.push('/user-dashboard');
+      // this.$router.push('/user-dashboard');
+      window.location = "/user-dashboard"
     },
     checkDashboard(){
 
