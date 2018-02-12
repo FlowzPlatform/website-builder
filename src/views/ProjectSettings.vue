@@ -853,7 +853,18 @@
                   <hr>
                   
                   <div v-for="(n, index) in websiteRoles">
-                    
+                    <div class="row">
+                      <div class="col-md-7">
+                        <el-input v-model="n.roleName" placeholder="Enter Role Name"></el-input>
+                      </div>
+                      <div class="col-md-1">
+                        <!-- <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary  -->
+                        <el-radio class="radio" v-model="isPrimaryRole" @click="setPrimaryRole(index)" :label="index">Primary</el-radio>
+                      </div>
+                      <div class="col-md-1">
+                        <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteWebsiteRole(index)" icon="delete2"></el-button>
+                      </div>
+                    </div>
                   </div>
 
                   <!-- Create new variable -->
@@ -1108,7 +1119,8 @@ export default {
       assetsImages: [],
       projectDetailsJson: [],
       isProjectDetailsJsonUpdated: false,
-      projectPublicUrl: ''
+      projectPublicUrl: '',
+      isPrimaryRole: false
     }
   },
   components: {
@@ -1347,6 +1359,13 @@ export default {
 
   methods: {
 
+    setPrimaryRole(index){
+      for(var i = 0; i < this.websiteRoles.length ; i++){
+        this.websiteRoles[i].isPrimary = false;
+      }
+      this.websiteRoles[index].isPrimary = true;
+    },
+
     onJsonChange (value) {
       this.isProjectDetailsJsonUpdated = true;
     },
@@ -1473,6 +1492,10 @@ export default {
     addNewWebsiteRole(){
       let newVariable = { roleName: '', isPrimary: true }
       this.websiteRoles.push(newVariable);
+    },
+
+    deleteWebsiteRole(deleteIndex){
+      this.websiteRoles.splice(deleteIndex, 1);
     },
 
     deleteVariable(deleteIndex) {
@@ -2489,6 +2512,7 @@ export default {
         "ProjectMetacharset": this.Metacharset,
         "ProjectScripts": this.localscripts,
         "ProjectStyles": this.localstyles,
+        "WebsiteRoles": this.websiteRoles,
         "PaymentGateways": this.paymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;

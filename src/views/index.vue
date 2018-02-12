@@ -514,6 +514,7 @@
         formAddProjectFolder : {
             projectName : 'NewWebsite'
         },
+        currentProjectName: '',
         rulesProjectName: {
             projectName: [
                 { validator: checkProjectName, trigger: 'blur' }
@@ -1997,6 +1998,18 @@
                       // Create essential folders
                       this.addOtherFolder(newFolderName);
 
+                      await axios.post(config.baseURL + '/register-website-subscriptions', {
+                          websiteId: this.repoName
+                      })
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      })
+
+                      this.currentProjectName = this.formAddProjectFolder.projectName;
+
                       this.formAddProjectFolder.projectName = null;
                     } else {
 
@@ -2008,6 +2021,16 @@
 
                       // Create essential folders
                       this.addOtherFolder(newFolderName);
+
+                      await axios.post(config.baseURL + '/register-website-subscription', {
+                          websiteId: this.repoName
+                      })
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      })
 
                       this.formAddProjectFolder.projectName = null;
 
@@ -2204,7 +2227,12 @@
                                   "projectID" : projectRepoName,
                                   "UserID":userid,
                                   "BasePath":newFolderName,
-                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/public/'
+                                  "websiteName": this.currentProjectName,
+                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/public/',
+                                  "builder_service_api": config.baseURL,
+                                  "login_api": config.loginUrl,
+                                  "user_details_api": config.userDetail,
+                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/'
                                   }];
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename : projectDetails,
