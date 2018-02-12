@@ -2231,6 +2231,7 @@
                                   "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/public/',
                                   "builder_service_api": config.baseURL,
                                   "login_api": config.loginUrl,
+                                  "register_api": config.registerUrl,
                                   "user_details_api": config.userDetail,
                                   "social_login_api": 'https://auth.flowzcluster.tk/auth/'
                                   }];
