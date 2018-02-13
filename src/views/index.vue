@@ -1998,6 +1998,17 @@
                       // Create essential folders
                       this.addOtherFolder(newFolderName);
 
+                      // Init ldap for website subscription in ACL
+                      axios.post(config.initLdap, {
+                        "app":"aaa"
+                      })
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      });
+
                       await axios.post(config.baseURL + '/register-website-subscriptions', {
                           websiteId: this.repoName
                       })
@@ -2006,7 +2017,7 @@
                       })
                       .catch((e) => {
                         console.log(e)
-                      })
+                      });
 
                       this.currentProjectName = this.formAddProjectFolder.projectName;
 
@@ -2021,6 +2032,17 @@
 
                       // Create essential folders
                       this.addOtherFolder(newFolderName);
+
+                      // Init ldap for website subscription in ACL
+                      axios.post(config.initLdap, {
+                        "app":"aaa"
+                      })
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      });
 
                       await axios.post(config.baseURL + '/register-website-subscription', {
                           websiteId: this.repoName
@@ -2606,7 +2628,12 @@
                                         "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
-                                        "PaymentGateways":[]
+                                        "PaymentGateways":[],
+                                        "WebsiteRoles": [{
+                                          "roleName": "guest"
+                                        }, {
+                                          "roleName": "registered"
+                                        }]
                                       }],
                                       "pageSettings": [{
                                         "PageName": "index.html",
