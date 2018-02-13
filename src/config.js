@@ -16,6 +16,8 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'wss://ws.'+domainkey+':4032';
     frontEndUrl = 'https://webbuilder.'+domainkey+'/editor';
 
+    initLdap = 'https://api.' + domainkey + '/authldap/init';
+
     loginUrl = 'https://api.'+domainkey+'/auth/api/login';
     ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
     registerUrl = 'https://api.'+domainkey+'/auth/api/setup';
@@ -35,6 +37,8 @@ if (process.env.NODE_ENV !== 'development') {
     // socketURL = 'ws://devws.flowz.com:4032';
     socketURL = 'http://localhost:4032';
     frontEndUrl = 'http://localhost:8080/editor';
+
+    initLdap = 'https://api.flowzcluster.tk/authldap/init';
 
     loginUrl = 'https://api.flowzcluster.tk/auth/api/login';
     ldapUrl = 'https://api.flowzcluster.tk/auth/api/ldapauth';
@@ -60,6 +64,7 @@ module.exports = {
     registerUrl: registerUrl,
     userDetail: userDetail,
     socialUrl: socialUrl,
+    initLdap: initLdap,
     subscriptionApi: subscriptionApi,
     facebookSuccessCallbackUrl: frontEndUrl,
     googleSuccessCallbackUrl: frontEndUrl,

@@ -852,21 +852,22 @@
                   </div>
                   <hr>
                   
-                  <div v-for="(n, index) in websiteRoles">
+                  <div style="margin: 5px 0;" v-for="(n, index) in websiteRoles">
                     <div class="row">
-                      <div class="col-md-7">
-                        <el-input v-model="n.roleName" placeholder="Enter Role Name"></el-input>
+                      <div class="col-md-11">
+                        <el-input v-if="n.roleName != 'guest' && n.roleName != 'registered' " v-model="n.roleName" placeholder="Enter Role Name"></el-input>
+                        <el-input v-else v-model="n.roleName" placeholder="Enter Role Name" :disabled="true"></el-input>
                       </div>
-                      <div class="col-md-1">
-                        <!-- <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary  -->
+                      <!-- <div class="col-md-1">
+                        <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary 
                         <el-radio class="radio" v-model="isPrimaryRole" @click="setPrimaryRole(index)" :label="index">Primary</el-radio>
-                      </div>
+                      </div> -->
                       <div class="col-md-1">
-                        <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteWebsiteRole(index)" icon="delete2"></el-button>
+                        <el-button v-if="n.roleName != 'guest' && n.roleName != 'registered' " class="pull-right" style="min-width: 100%;" type="danger" @click="deleteWebsiteRole(index)" icon="delete2"></el-button>
                       </div>
                     </div>
                   </div>
-
+                  <br>
                   <!-- Create new variable -->
                   <el-button type="primary" @click="addNewWebsiteRole">New Role</el-button>
               </div>
@@ -1490,7 +1491,7 @@ export default {
     },
 
     addNewWebsiteRole(){
-      let newVariable = { roleName: '', isPrimary: true }
+      let newVariable = { roleName: '' }
       this.websiteRoles.push(newVariable);
     },
 
@@ -3487,6 +3488,7 @@ export default {
         this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
         this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId;
+        this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
       } else {
         //console.log('Cannot get configurations!');
       } 

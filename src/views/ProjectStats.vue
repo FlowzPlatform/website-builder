@@ -168,6 +168,51 @@
       </div>
 
 
+      <!-- List of website users -->
+      <div class="row" style="margin-top: 40px; margin-bottom: 50px;">
+        <div class="col-md-12">
+          <div class="creative-table">
+            <div class="table-title title-style-3">
+              <h4>Website Users</h4>
+              <p>List of all users registered with this website. You can change user role from here.</p>
+            </div>
+            <div class="table-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <td width="30%">User ID</td>
+                    <td>User Email ID</td>
+                    <td>User Role</td>
+                    <td width="20%">Actions</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(n, index) in websiteUsers">
+                    <td>{{n.UserId}}</td>
+                    <td>{{n.UserEmail}}</td>
+                    <td>
+                      <el-select v-model="n.UserRole" placeholder="Select">
+                        <el-option
+                          v-for="item in websiteRolesOptions"
+                          :key="item.roleName"
+                          :label="item.roleName"
+                          :value="item.roleName">
+                        </el-option>
+                      </el-select>
+                    </td>
+                    <td>
+                      <button class="btn btn-primary" @click="updateUserRole(index, n.UserId)"><i class="fa fa-save fa-fw"></i>Save</button>
+                      <button class="btn btn-danger" @click="deleteUser(n.UserId)"><i class="fa fa-trash fa-fw"></i>Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
   	</div>
   </div>
 </template>
@@ -207,12 +252,39 @@ export default {
       },
       commitsData: [],
       commitMessage: '',
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      websiteUsers: [],
+      websiteRolesOptions: [],
+      selectedRole: ''
     }
   },
   component: {
   },
   methods: {
+    updateUserRole(index, id){
+      
+      axios.patch(config.baseURL + '/website-users/' + id, {
+          role : this.websiteUsers[index].UserRole
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+
+    },
+    deleteUser(id){
+      axios.delete(config.baseURL + '/website-users/' + id, {
+      })
+      .then((res) => {
+        console.log(res.data);
+        this.init();
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
     revertCommit(index) {
       this.$store.state.currentIndex = index;
       $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
@@ -301,6 +373,8 @@ export default {
         this.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
         this.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
 
+        this.websiteRolesOptions = this.settings[1].projectSettings[1].WebsiteRoles;
+
         this.counts.layouts = 0;
         this.counts.pages = 0;
         this.counts.variables = 0;
@@ -336,6 +410,21 @@ export default {
             commitDate: response.data[i].created_at,
             commitSHA: response.data[i].id,
             commitsMessage: response.data[i].title, 
+          });
+        }
+      }).catch(error => {
+        //console.log("Some error occured: ", error);
+      });
+
+      // Get all website users
+      await axios.get( config.baseURL + '/website-users?websiteId='+foldername, {
+      }).then(response => {
+        this.websiteUsers = [];
+        for(var i in response.data.data){
+          this.websiteUsers.push({
+            UserId: response.data.data[i].id,
+            UserEmail: response.data.data[i].email,
+            UserRole: response.data.data[i].role, 
           });
         }
       }).catch(error => {
@@ -681,6 +770,10 @@ h3.subtitle{
 
 .title-style-2{
   background: linear-gradient(to right, #D20B54 0%, #FFB894 100%);
+}
+
+.title-style-3{
+  background: linear-gradient(to right, #2D266F 0%, #7C2289 100%);
 }
 
 .table-body{
