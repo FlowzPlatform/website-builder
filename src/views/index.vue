@@ -13,6 +13,14 @@
             <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
               <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
             </div>
+            <el-select v-model="value" @change="changeSubscription()" placeholder="Select Your Subscription" style="transform: scaleX(-1); width: 100%">
+            <el-option style="width: 100%"
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+            </el-select>
             <el-tree v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
         </nav>
@@ -462,7 +470,8 @@
         editableTabsValue: '0',
         editableTabs: [],
         tabIndex:0,
-
+        options: '',
+        value:'',
         autoFolders: true,
         directoryTree: [],
         currentFile : null,
@@ -571,6 +580,7 @@
       if(this.$cookie.get('auth_token')){
         this.getData();
         // Set email Session
+        console.log("hello")
         axios.get(config.userDetail, {
           headers: {
             'Authorization' : this.$cookie.get('auth_token')
@@ -727,9 +737,43 @@
               }
           }
       });
+    this.getDataOfSubscriptionUser();
+      console.log("this.value", this.value)
+       if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
+            this.value = Cookies.get("subscriptionId")
+        }
     },
 
     methods: {
+      async getDataOfSubscriptionUser(){
+        let sub_id = []
+        await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+          .then(response => {
+            let obj_val = Object.values(response.data.data.package)
+            let obj_key = Object.keys(response.data.data.package)
+            for (let index = 0; index < obj_val.length; index++) {
+              sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
+            }
+            this.options = sub_id
+               console.log("sub_id", sub_id)
+             if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
+                  this.value = sub_id[0].value
+                  Cookies.set("subscriptionId" , this.value)
+              }
+          })
+      },
+      changeSubscription(){
+        this.editableTabs = []
+        console.log("this.value", this.value)
+        axios.get(config.subscriptionApi  + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+          .then(response => {
+            console.log("response",response)
+            Cookies.set('userDetailId', response.data.userId);
+            axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
+            //axios.defaults.headers.common['subscriptionId'] =  this.value;
+            this.getData();
+          })
+      },
       canceldialog(){
         this.newFileDialog = false
         console.log('&&&&')
@@ -1966,8 +2010,9 @@
             axios.post(config.baseURL + '/project-configuration', {
                 userEmail: Cookies.get('email'),
                 websiteName: this.formAddProjectFolder.projectName,
-                userId: userid
-              })
+                userId: userid,
+                subscriptionId:this.value
+              },{ headers: { 'subscriptionId': this.value}})
               .then((res) => {
                 let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
                   // let newFolderName=res.data.id 
