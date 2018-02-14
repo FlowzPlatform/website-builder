@@ -90,12 +90,12 @@ export default {
       Cookies.remove('subscriptionId' ,{domain: location}); 
 
       this.isLoggedIn = false;
-     // this.$router.push('/');
-     window.location = "/login"
+      // this.$router.push('/login');
+      window.location = '/login';
     },
     goToDashboard(){
       // this.$router.push('/user-dashboard');
-      window.location = "/user-dashboard"
+      window.location = "/user-dashboard";
     },
     checkDashboard(){
 

@@ -82,8 +82,14 @@ export default {
 
         this.tablePagesData = [];
 
+        console.log(this.settings[2].layoutOptions[0].Layout);
+
         for(var i = 0; i < Object.keys(this.settings[2].layoutOptions[0].Layout).length; i++){
-          var partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
+          var partialsList;
+          if(this.settings[2].layoutOptions[0].Layout[i].partialsList != undefined){
+            partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
+          }
+          // var partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
           let partialsListString = '';
           for(let j = 0; j < partialsList.length; j++){
             partialsListString += '<span class="label label-info" style="padding: 0.7em .6em .6em; margin-right: 5px; ">' + partialsList[j] + '</span>';
