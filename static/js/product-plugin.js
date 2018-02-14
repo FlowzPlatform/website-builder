@@ -776,8 +776,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       urlVarValue.push(value);
     }
 
-    console.log(urlHeaders);
-
     for (var i = 0; i < storedTemplates.length; i++) {
       if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
         storedTemplates = storedTemplates.splice(i, 1)

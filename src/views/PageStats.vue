@@ -9,24 +9,26 @@
 	            <p>Project Name: {{repoName}}</p>
 	          </div>
 	          <div class="table-body">
-	            <table class="table table-hover">
-	              <thead>
-	                <tr>
-	                  <td width="100px">Sr. No.</td>
-	                  <td>Page Name</td>
-	                  <td>Layout Used</td>
-                    <td width="40%">Partials Used</td>
-	                </tr>
-	              </thead>
-	              <tbody>
-	                <tr v-for="item in tablePagesData">
-	                  <td>{{item.number}}</td>
-	                  <td>{{item.pageName}}</td>
-	                  <td>{{item.layoutName}}.layout</td>
-                    <td v-html="item.partialsList"></td>
-	                </tr>
-	              </tbody>
-	            </table>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <td width="100px">Sr. No.</td>
+                      <td>Page Name</td>
+                      <td>Layout Used</td>
+                      <td width="40%">Partials Used</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in tablePagesData">
+                      <td>{{item.number}}</td>
+                      <td>{{item.pageName}}</td>
+                      <td>{{item.layoutName}}.layout</td>
+                      <td v-html="item.partialsList"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 	          </div>
 	        </div>
 	      </div>

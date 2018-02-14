@@ -132,4 +132,8 @@
       font-stretch: auto !important;
       line-height: auto !important;
     }
+
+    #gm-right-control-btns{
+      display: none;
+    }
 </style>

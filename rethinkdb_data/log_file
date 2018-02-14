@@ -1,0 +1,16 @@
+2018-02-13T17:32:47.395272414 5.053489s notice: Recursively removing directory /home/software/AllProjects/FlowzBuilder/rethinkdb_data/tmp
+2018-02-13T17:32:47.409881595 5.068096s notice: Initializing directory /home/software/AllProjects/FlowzBuilder/rethinkdb_data
+2018-02-13T17:32:47.410103634 5.068318s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/software/AllProjects/FlowzBuilder/rethinkdb_data' did not already exist or is empty.)
+2018-02-13T17:32:47.410331642 5.068546s notice: Running rethinkdb 2.3.5~0xenial (GCC 5.3.1)...
+2018-02-13T17:32:47.417736267 5.075960s notice: Running on Linux 4.13.0-32-generic x86_64
+2018-02-13T17:32:47.418059269 5.076274s notice: Loading data from directory /home/software/AllProjects/FlowzBuilder/rethinkdb_data
+2018-02-13T17:32:47.533755670 5.191970s info: Automatically using cache size of 2803 MB
+2018-02-13T17:32:47.539441727 5.197656s notice: Listening for intracluster connections on port 29015
+2018-02-13T17:32:47.544776870 5.202991s notice: Listening for client driver connections on port 28015
+2018-02-13T17:32:47.545180653 5.203395s notice: Listening for administrative HTTP connections on port 8081
+2018-02-13T17:32:47.545189510 5.203403s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-02-13T17:32:47.545203751 5.203418s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-02-13T17:32:47.545211320 5.203425s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-02-13T17:32:47.545225598 5.203439s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-02-13T17:32:47.545241808 5.203456s notice: Server ready, "OBLAP_55_z3d" 2d09fad1-b0c1-4761-882e-fa5e4ce5898a
+2018-02-13T17:32:48.933372171 6.591587s notice: A newer version of the RethinkDB server is available: 2.3.6. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.

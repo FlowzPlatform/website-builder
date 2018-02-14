@@ -126,7 +126,7 @@ export default {
       } else {
         self.$message({
             showClose: true,
-            message: 'Please Enter all Fields',
+            message: 'Please enter your registered email',
             type: 'error'
         });
       }

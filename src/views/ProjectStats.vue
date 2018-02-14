@@ -385,7 +385,7 @@ export default {
         this.counts.variables = this.settings[1].projectSettings[1].GlobalVariables.length + this.settings[1].projectSettings[1].GlobalCssVariables.length;
 
         let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
-        this.counts.partials = (partialItems.length - 2);
+        this.counts.partials = (partialItems.length - 1);
 
         this.tablePagesData = [];
 

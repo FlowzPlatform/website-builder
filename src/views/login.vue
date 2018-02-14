@@ -27,13 +27,23 @@
       </form>
       <div class="social-buttons" align="center">
         <div>
-          <a href="javascript:void(0)" class="social-button-facebook" v-on:click="doFacebookLogin()"><i class="fa fa-facebook"></i></a>
-          <a href="javascript:void(0)" class="social-button-google-plus" v-on:click="doGooglePlusLogin()"><i class="fa fa-google-plus"></i></a>
-          <a href="javascript:void(0)" class="social-button-twitter" v-on:click="doTwitterLogin()"><i class="fa fa-twitter"></i></a>
-          <a href="javascript:void(0)" class="social-button-github" v-on:click="doGithubLogin()"><i class="fa fa-github"></i></a>
-          <a href="javascript:void(0)" class="social-button-linked-in" v-on:click="doLinkedInLogin()"><i class="fa fa-linkedin"></i></a>
+          <el-tooltip class="item" effect="light" content="Login with Facebook" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-facebook" v-on:click="doFacebookLogin()"><i class="fa fa-facebook"></i></a>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" content="Login with Google" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-google-plus" v-on:click="doGooglePlusLogin()"><i class="fa fa-google-plus"></i></a>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" content="Login with Twitter" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-twitter" v-on:click="doTwitterLogin()"><i class="fa fa-twitter"></i></a>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" content="Login with GitHub" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-github" v-on:click="doGithubLogin()"><i class="fa fa-github"></i></a>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" content="Login with LinkedIn" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-linked-in" v-on:click="doLinkedInLogin()"><i class="fa fa-linkedin"></i></a>
+          </el-tooltip>
           <!-- <a href="javascript:void(0)" class="social-button-linked-in"><i class="fa fa-lock-alt"></i></a> -->
-          <el-tooltip content="LDAP Login" placement="top">
+          <el-tooltip content="LDAP Login" effect="light" placement="top">
             <div class="ldap">
               <input type="checkbox" name="ldapCheckbox" @change="checkLdapLogin" id="ldapCheckbox"><label for="ldapCheckbox" class="login-button-ldap"><i class="fa fa-lock"></i></label> 
             </div>
