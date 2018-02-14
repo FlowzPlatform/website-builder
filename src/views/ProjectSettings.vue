@@ -836,6 +836,45 @@
       </div>
       <!-- Payment Block -->
 
+      <!-- Roles Block -->
+      <div class="collapsingDivWrapper row">
+          <div class="col-md-12">
+              <a href="javascript:void(0)" id="toggleRoles" class="card color-div toggleableDivHeader">Website Roles</a>
+          </div>
+      </div>
+      <div id="toggleRolesContent" class="toggleableDivHeaderContent" style="display: none;">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="row">
+                      <div class="col-md-4">
+                          <h3> Roles: </h3>
+                      </div>
+                  </div>
+                  <hr>
+                  
+                  <div style="margin: 5px 0;" v-for="(n, index) in websiteRoles">
+                    <div class="row">
+                      <div class="col-md-11">
+                        <el-input v-if="n.roleName != 'guest' && n.roleName != 'registered' " v-model="n.roleName" placeholder="Enter Role Name"></el-input>
+                        <el-input v-else v-model="n.roleName" placeholder="Enter Role Name" :disabled="true"></el-input>
+                      </div>
+                      <!-- <div class="col-md-1">
+                        <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary 
+                        <el-radio class="radio" v-model="isPrimaryRole" @click="setPrimaryRole(index)" :label="index">Primary</el-radio>
+                      </div> -->
+                      <div class="col-md-1">
+                        <el-button v-if="n.roleName != 'guest' && n.roleName != 'registered' " class="pull-right" style="min-width: 100%;" type="danger" @click="deleteWebsiteRole(index)" icon="delete2"></el-button>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <!-- Create new variable -->
+                  <el-button type="primary" @click="addNewWebsiteRole">New Role</el-button>
+              </div>
+          </div>
+      </div>
+      <!-- Roles Block -->
+
       <!-- List of Commits Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
@@ -1023,6 +1062,7 @@ export default {
       globalVariables: [],
       urlVariables: [],
       globalCssVariables: [],
+      websiteRoles: [],
       ecommerceVariables: [],
       imageInputIsDisabled: false,
       uploadedVariableJsonData: '',
@@ -1080,7 +1120,8 @@ export default {
       assetsImages: [],
       projectDetailsJson: [],
       isProjectDetailsJsonUpdated: false,
-      projectPublicUrl: ''
+      projectPublicUrl: '',
+      isPrimaryRole: false
     }
   },
   components: {
@@ -1134,6 +1175,11 @@ export default {
 
       $("#togglePaymentgateway").click(function() {
         $("#togglePaymentgatewayContent").slideToggle("slow");
+
+      });
+
+      $("#toggleRoles").click(function() {
+        $("#toggleRolesContent").slideToggle("slow");
 
       });
 
@@ -1314,6 +1360,13 @@ export default {
 
   methods: {
 
+    setPrimaryRole(index){
+      for(var i = 0; i < this.websiteRoles.length ; i++){
+        this.websiteRoles[i].isPrimary = false;
+      }
+      this.websiteRoles[index].isPrimary = true;
+    },
+
     onJsonChange (value) {
       this.isProjectDetailsJsonUpdated = true;
     },
@@ -1390,7 +1443,7 @@ export default {
     },
 
     addNewUrl() {
-      let newVariable = { urlId: '', urlValue: '', urlHeaderVariables:[]};
+      let newVariable = { urlId: '', urlValue: '', urlHeaderVariables:[], finalvalue: ''};
       this.urlVariables.push(newVariable);
     },
 
@@ -1435,6 +1488,15 @@ export default {
       let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
       this.paymentgateway.push(newVariable);
       this.Paymentfields.push([])
+    },
+
+    addNewWebsiteRole(){
+      let newVariable = { roleName: '' }
+      this.websiteRoles.push(newVariable);
+    },
+
+    deleteWebsiteRole(deleteIndex){
+      this.websiteRoles.splice(deleteIndex, 1);
     },
 
     deleteVariable(deleteIndex) {
@@ -1887,7 +1949,7 @@ export default {
           }
 
           await this.saveProjectSettings();
-          this.init();
+          await this.init();
         })
         .catch((e) => {
           this.$message({
@@ -2252,8 +2314,11 @@ export default {
         this.saveConfigFile(this.repoName, configData);
         // }
       }
+
       this.fullscreenLoading = false;
-      window.location.reload();
+      await this.init();
+      this.$emit('updateProjectName');
+      // window.location.reload();
     },
 
     revertToTemplate(template){
@@ -2269,7 +2334,21 @@ export default {
             templateName : template
         })
         .then(async (res) => {
-          await this.refreshPlugins();  
+          // await this.refreshPlugins();  
+
+          //Copy data of project_settings.json into project-details.json 
+
+          let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json');
+
+          // console.log('projectSettingsFileData', projectSettingsFileData);
+          let data = JSON.parse(projectSettingsFileData.data);
+
+          this.projectDetailsJson[0].project_settings = data.project_settings;
+
+          this.isProjectDetailsJsonUpdated = true;
+          this.saveProjectSettings();
+      
         })
         .catch((e) => {
           this.$message({
@@ -2340,123 +2419,152 @@ export default {
     },
 
     async saveProjectSettings() {
-
-      if(this.form.websitename==this.configData.data.websiteName){
-      
-      }
-      else{
-        var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
-        // console.log('userid',userid)
-        var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
-        // console.log('alldatauser:',alldatauser.data.data.length)
-        let checkdetail=true
-        for(let i=0;i<alldatauser.data.data.length;i++){
-          if(this.form.websitename==alldatauser.data.data[i].websiteName){
-            checkdetail=false
-
+      if (this.form.websitename == this.configData.data.websiteName) {
+      } else {
+        var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
+        var alldatauser = await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
+        let checkdetail = true
+        for (let i = 0; i < alldatauser.data.data.length; i++) {
+          if (this.form.websitename == alldatauser.data.data[i].websiteName) {
+            checkdetail = false
           }
         }
-        if(checkdetail!=false){
-          // console.log('not same found')
-        //   await this.saveProjectSettings();
-        // location.reload();
-        }
-        else{
-          // this.$message({
-          //    showClose: true,
-          //     message: 'Website with "'+this.form.websitename+'" already exists!!!!',
-          //     type: 'error'
-          //   });
-        this.$swal({
-          title:'Save Aborted.',
-          text: 'Website with "'+this.form.websitename+'" already exists!!!!',
-          type: 'warning',
-        })
-          // console.log('same name found',this.configData.data.websiteName);
-          this.form.websitename=this.configData.data.websiteName;
+        if (checkdetail != false) {
+          console.log('not same found')
+        } else {
+          this.$swal({
+            title:'Save Aborted.',
+            text: 'Website with "'+this.form.websitename+'" already exists!!!!',
+            type: 'warning',
+          })
+          console.log('same name found', this.configData.data.websiteName);
+          this.form.websitename = this.configData.data.websiteName;
           return
         }
       }
 
+      var getFromBetween = {
+        results: [],
+        string: "",
+        getFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var SP = this.string.indexOf(sub1) + sub1.length;
+          var string1 = this.string.substr(0, SP);
+          var string2 = this.string.substr(SP);
+          var TP = string1.length + string2.indexOf(sub2);
+          return this.string.substring(SP, TP);
+        },
+        removeFromBetween: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+          var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+          this.string = this.string.replace(removal, "");
+        },
+        getAllResults: function(sub1, sub2) {
+          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+          var result = this.getFromBetween(sub1, sub2);
+          this.results.push(result);
+          this.removeFromBetween(sub1, sub2);
+          if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+            this.getAllResults(sub1, sub2);
+          } else return;
+        },
+        get: function(string, sub1, sub2) {
+          this.results = [];
+          this.string = string;
+          this.getAllResults(sub1, sub2);
+          return this.results;
+        }
+      };
+      for(let i=0;i<this.urlVariables.length;i++){
+        console.log(this.urlVariables[i].urlValue)
+        var result=getFromBetween.get(this.urlVariables[i].urlValue, "{", "}")
+        var checkurl=false
+        this.urlVariables[i].finalvalue= this.urlVariables[i].urlValue
+        for(let j=0;j<result.length;j++){
+          var indexurl=_.findIndex(this.globalVariables,function(o){
+              return o.variableId==result[j] 
+          }) 
+          if(indexurl!=-1 && this.globalVariables[indexurl].variableType=='text'){
+          this.urlVariables[i].finalvalue=this.urlVariables[i].finalvalue.split('{'+result[j]+'}').join(this.globalVariables[indexurl].variableValue)  
+          }
+          // console.log(JSON.parse(JSON.stringify(this.urlVariables[i].finalvalue)))
+        }
+      }
+      
       let ProjectSettings = [{
-                              "RepositoryId": this.newRepoId,
-                              "ProjectName": this.repoName,
-                              "BrandName": this.form.brandName,
-                              "BrandLogoName": this.form.brandLogoName,
-                              "ProjectSEOTitle": this.form.seoTitle,
-                              "ProjectSEOKeywords": this.form.seoKeywords,
-                              "ProjectSEODescription": this.form.seoDesc,
-                              "ProjectFaviconhref": this.faviconhref,
-                              "ProjectVId":this.form.vid
-                            }, {
-                              "AssetImages": this.assetsImages,
-                              "GlobalVariables": this.globalVariables,
-                              "GlobalUrlVariables": this.urlVariables,
-                              "GlobalCssVariables": this.globalCssVariables,
-                              "EcommerceSettings": this.ecommerceSettings,
-                              "ProjectExternalCss": this.externallinksCSS,
-                              "ProjectExternalJs": this.externallinksJS,
-                              "ProjectMetaInfo": this.externallinksMeta,
-                              "ProjectMetacharset":this.Metacharset,
-                              "ProjectScripts":this.localscripts,
-                              "ProjectStyles":this.localstyles,
-                              "PaymentGateways":this.paymentgateway
-                            }];
-
+        "RepositoryId": this.newRepoId,
+        "ProjectName": this.repoName,
+        "BrandName": this.form.brandName,
+        "BrandLogoName": this.form.brandLogoName,
+        "ProjectSEOTitle": this.form.seoTitle,
+        "ProjectSEOKeywords": this.form.seoKeywords,
+        "ProjectSEODescription": this.form.seoDesc,
+        "ProjectFaviconhref": this.faviconhref,
+        "ProjectVId": this.form.vid
+      }, {
+        "AssetImages": this.assetsImages,
+        "GlobalVariables": this.globalVariables,
+        "GlobalUrlVariables": this.urlVariables,
+        "GlobalCssVariables": this.globalCssVariables,
+        "EcommerceSettings": this.ecommerceSettings,
+        "ProjectExternalCss": this.externallinksCSS,
+        "ProjectExternalJs": this.externallinksJS,
+        "ProjectMetaInfo": this.externallinksMeta,
+        "ProjectMetacharset": this.Metacharset,
+        "ProjectScripts": this.localscripts,
+        "ProjectStyles": this.localstyles,
+        "WebsiteRoles": this.websiteRoles,
+        "PaymentGateways": this.paymentgateway
+      }];
       this.settings[1].projectSettings = ProjectSettings;
-
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName );
-
-      if(rethinkdbCheck.data){
-        //console.log('Rethink Response: ', rethinkdbCheck.data.data[0].id);
-
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+      if (rethinkdbCheck.data) {
+        
         // update existing data
         await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
-          configData: this.settings,
-          pluginsData: this.pluginsTreedata,
-          websiteName: this.form.websitename
-        })
-        .then(async (res) => {
-          //console.log(res.data);
-        })
-        .catch((e) => {
-            this.$message({
-                showClose: true,
-                message: 'Failed! Please try again.',
-                type: 'error'
-            });
-            //console.log(e)
-        });
-
-        if(this.isProjectDetailsJsonUpdated == true){
-          let jsonFileName = this.folderUrl + '/public/assets/project-details.json';
-
-          await axios.post(config.baseURL + '/save-menu', {
-              filename : jsonFileName ,
-              text : JSON.stringify(this.projectDetailsJson),
-              type : 'file'
+            configData: this.settings,
+            pluginsData: this.pluginsTreedata,
+            websiteName: this.form.websitename
           })
-          .then((res) => {
-            this.isProjectDetailsJsonUpdated = false;
+          .then(async(res) => {
+            //console.log(res.data);
           })
           .catch((e) => {
             this.$message({
+              showClose: true,
+              message: 'Failed! Please try again.',
+              type: 'error'
+            });
+            //console.log(e)
+          });
+        if (this.isProjectDetailsJsonUpdated == true) {
+          let jsonFileName = this.folderUrl + '/public/assets/project-details.json';
+          await axios.post(config.baseURL + '/save-menu', {
+              filename: jsonFileName,
+              text: JSON.stringify(this.projectDetailsJson),
+              type: 'file'
+            })
+            .then((res) => {
+              this.isProjectDetailsJsonUpdated = false;
+            })
+            .catch((e) => {
+              this.$message({
                 showClose: true,
                 message: 'Failed saving project details! Please try again.',
                 type: 'error'
-            });
-            console.log(e)
-          })
+              });
+              console.log(e)
+            })
         }
-
       } else {
         this.$message({
-            showClose: true,
-            message: 'Data Error.',
-            type: 'error'
+          showClose: true,
+          message: 'Data Error.',
+          type: 'error'
         });
-      } 
-       this.$emit('updateProjectName');   
+      }
+      await this.init();
+      this.$emit('updateProjectName');
     },
 
     revertCommit(index) {
@@ -3380,6 +3488,7 @@ export default {
         this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
         this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId;
+        this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
       } else {
         //console.log('Cannot get configurations!');
       } 
@@ -3508,19 +3617,19 @@ export default {
               });
                 // console.log('not same found')
                 await this.saveProjectSettings();
-              // location.reload();
-                await this.init()
+                await this.init();
+                // location.reload();
                 this.$emit('updateProjectName');
               }
               else{
-              
-              this.$swal({
-                text: 'Website with "'+this.form.websitename+'" already exists!!!!',
-                type: 'warning',
-              })
-              this.form.websitename=this.configData.data.websiteName;
+                this.$swal({
+                  text: 'Website with "'+this.form.websitename+'" already exists!!!!',
+                  type: 'warning',
+                })
+                this.form.websitename=this.configData.data.websiteName;
 
-            }
+
+              }
             }
             
           } else {

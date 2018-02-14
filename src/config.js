@@ -16,13 +16,15 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'wss://ws.'+domainkey+':4032';
     frontEndUrl = 'https://webbuilder.'+domainkey+'/editor';
 
-    loginUrl = 'https://auth.'+domainkey+'/api/login';
-    ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
-    registerUrl = 'https://auth.'+domainkey+'/api/setup';
-    forgotPasswordUrl = 'https://auth.'+domainkey+'/api/forgetpassword';
-    userDetail = 'https://auth.'+domainkey+'/api/userdetails';
-    socialUrl = 'https://auth.'+domainkey+'/api';
+    initLdap = 'https://api.' + domainkey + '/authldap/init';
 
+    loginUrl = 'https://api.'+domainkey+'/auth/api/login';
+    ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
+    registerUrl = 'https://api.'+domainkey+'/auth/api/setup';
+    forgotPasswordUrl = 'https://api.'+domainkey+'/auth/api/forgetpassword';
+    userDetail = 'https://api.'+domainkey+'/auth/api/userdetails';
+    socialUrl = 'https://api.'+domainkey+'/auth/api';
+    subscriptionApi = 'https://api.flowzcluster.tk/subscription/user-subscription/';
     loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
     loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
     loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';
@@ -36,13 +38,15 @@ if (process.env.NODE_ENV !== 'development') {
     socketURL = 'http://localhost:4032';
     frontEndUrl = 'http://localhost:8080/editor';
 
-    loginUrl = 'http://auth.flowzcluster.tk/api/login';
-    ldapUrl = 'http://api.flowzcluster.tk/auth/api/ldapauth';
-    registerUrl = 'http://auth.flowzcluster.tk/api/setup';
-    forgotPasswordUrl = 'http://auth.flowzcluster.tk/api/forgetpassword';
-    userDetail = 'http://auth.flowzcluster.tk/api/userdetails';
-    socialUrl = 'http://auth.flowzcluster.tk/api';
+    initLdap = 'https://api.flowzcluster.tk/authldap/init';
 
+    loginUrl = 'https://api.flowzcluster.tk/auth/api/login';
+    ldapUrl = 'https://api.flowzcluster.tk/auth/api/ldapauth';
+    registerUrl = 'https://api.flowzcluster.tk/auth/api/setup';
+    forgotPasswordUrl = 'https://api.flowzcluster.tk/auth/api/forgetpassword';
+    userDetail = 'https://api.flowzcluster.tk/auth/api/userdetails';
+    socialUrl = 'https://api.flowzcluster.tk/auth/api';
+    subscriptionApi = 'https://api.flowzcluster.tk/subscription/user-subscription/';
     loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
     loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';
     loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
@@ -60,7 +64,8 @@ module.exports = {
     registerUrl: registerUrl,
     userDetail: userDetail,
     socialUrl: socialUrl,
-
+    initLdap: initLdap,
+    subscriptionApi: subscriptionApi,
     facebookSuccessCallbackUrl: frontEndUrl,
     googleSuccessCallbackUrl: frontEndUrl,
     twitterSuccessCallbackUrl: frontEndUrl,

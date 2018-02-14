@@ -13,6 +13,14 @@
             <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
               <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
             </div>
+            <el-select v-model="value" @change="changeSubscription()" placeholder="Select Your Subscription" style="transform: scaleX(-1); width: 100%">
+            <el-option style="width: 100%"
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+            </el-select>
             <el-tree v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
         </nav>
@@ -37,9 +45,9 @@
               <!-- <div v-else class="col-md-4"></div> -->
               <div class="col-md-4 editor-buttons" align="right" v-if="componentId != null">
                   <div style="margin-right:10px; margin: 15px;">
-                      <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true" :loading="previewLoading">Preview</el-button>
+                      <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
                       <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                      <el-button type="primary" size="small" @click="saveFile('void')" :loading="saveFileLoading" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'">Save</el-button>
+                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'">Save</el-button>
                   </div>
               </div>
 
@@ -462,7 +470,8 @@
         editableTabsValue: '0',
         editableTabs: [],
         tabIndex:0,
-
+        options: '',
+        value:'',
         autoFolders: true,
         directoryTree: [],
         currentFile : null,
@@ -514,6 +523,7 @@
         formAddProjectFolder : {
             projectName : 'NewWebsite'
         },
+        currentProjectName: '',
         rulesProjectName: {
             projectName: [
                 { validator: checkProjectName, trigger: 'blur' }
@@ -570,6 +580,7 @@
       if(this.$cookie.get('auth_token')){
         this.getData();
         // Set email Session
+        console.log("hello")
         axios.get(config.userDetail, {
           headers: {
             'Authorization' : this.$cookie.get('auth_token')
@@ -594,9 +605,10 @@
           })
           .then((res) => {
             this.getData();
+          })
+          .catch((err) => {
+            this.getData();
           });
-
-          this.getData();
           
         })
         .catch((e) => {
@@ -725,9 +737,43 @@
               }
           }
       });
+    this.getDataOfSubscriptionUser();
+       if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
+            this.value = Cookies.get("subscriptionId")
+        }
     },
 
     methods: {
+      async getDataOfSubscriptionUser(){
+        let sub_id = []
+        await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+          .then(response => {
+            let obj_val = Object.values(response.data.data.package)
+            let obj_key = Object.keys(response.data.data.package)
+            for (let index = 0; index < obj_val.length; index++) {
+              sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
+            }
+            this.options = sub_id
+               console.log("sub_id", sub_id)
+             if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
+                  this.value = sub_id[0].value
+                  Cookies.set("subscriptionId" , this.value)
+              }
+          })
+      },
+      changeSubscription(){
+        this.editableTabs = []
+        console.log("this.value", this.value)
+        axios.get(config.subscriptionApi  + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+          .then(response => {
+            console.log("response",response)
+            Cookies.set('userDetailId', response.data.userId);
+            Cookies.set('subscriptionId', response.data.sub_id);
+            axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
+            //axios.defaults.headers.common['subscriptionId'] =  this.value;
+            this.getData();
+          })
+      },
       canceldialog(){
         this.newFileDialog = false
         console.log('&&&&')
@@ -1549,9 +1595,6 @@
                 type: 'folder'
               })
               .then(async(res) => {
-                //var storedTemplates = JSON.parse(localStorage.getItem("listOfTempaltes"));
-                //storedTemplates.push(this.formAddFolder.foldername)
-                //localStorage.setItem("listOfTempaltes", JSON.stringify(storedTemplates));
 
                 // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 // let urlparts = configFileUrl.split("/");
@@ -1923,7 +1966,7 @@
       // this.formAddFile.filename=''
       },
      async checknameexist(){
-      this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+      this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
         console.log('userid',userid)
@@ -1960,13 +2003,16 @@
             let token = Cookies.get('auth_token');
             this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
-            this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+
+            // this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+
 
             axios.post(config.baseURL + '/project-configuration', {
                 userEmail: Cookies.get('email'),
                 websiteName: this.formAddProjectFolder.projectName,
-                userId: userid
-              })
+                userId: userid,
+                subscriptionId:this.value
+              },{ headers: { 'subscriptionId': this.value}})
               .then((res) => {
                 let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
                   // let newFolderName=res.data.id 
@@ -1997,6 +2043,29 @@
                       // Create essential folders
                       this.addOtherFolder(newFolderName);
 
+                      // Init ldap for website subscription in ACL
+                      axios.post(config.initLdap, {
+                        "app":"aaa"
+                      })
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      });
+
+                      await axios.post(config.baseURL + '/register-website-subscriptions', {
+                          websiteId: this.repoName
+                      })
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      });
+
+                      this.currentProjectName = this.formAddProjectFolder.projectName;
+
                       this.formAddProjectFolder.projectName = null;
                     } else {
 
@@ -2008,6 +2077,27 @@
 
                       // Create essential folders
                       this.addOtherFolder(newFolderName);
+
+                      // Init ldap for website subscription in ACL
+                      axios.post(config.initLdap, {
+                        "app":"aaa"
+                      })
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      });
+
+                      await axios.post(config.baseURL + '/register-website-subscription', {
+                          websiteId: this.repoName
+                      })
+                      .then((res) => {
+                        console.log(res.data);
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      })
 
                       this.formAddProjectFolder.projectName = null;
 
@@ -2034,11 +2124,15 @@
 
               })
               .catch((e) => {
-                console.log(e);
-                // this.componentId = 'buyPage';
+                if(e.response.status = 403){
+                  this.$message({
+                    showClose: true,
+                    message: e.response.data.message + '<a href="hello"> hello</a>',
+                    type: 'error'
+                  });
+                }
                 this.newProjectFolderDialog = false;
                 this.fullscreenLoading = false;
-                // this.buyNowDialog = true;
               });
           }
         });
@@ -2204,7 +2298,13 @@
                                   "projectID" : projectRepoName,
                                   "UserID":userid,
                                   "BasePath":newFolderName,
-                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/public/'
+                                  "websiteName": this.currentProjectName,
+                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/public/',
+                                  "builder_service_api": config.baseURL,
+                                  "login_api": config.loginUrl,
+                                  "register_api": config.registerUrl,
+                                  "user_details_api": config.userDetail,
+                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/'
                                   }];
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename : projectDetails,
@@ -2577,7 +2677,12 @@
                                         "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
-                                        "PaymentGateways":[]
+                                        "PaymentGateways":[],
+                                        "WebsiteRoles": [{
+                                          "roleName": "guest"
+                                        }, {
+                                          "roleName": "registered"
+                                        }]
                                       }],
                                       "pageSettings": [{
                                         "PageName": "index.html",
@@ -5238,7 +5343,7 @@
       },
 
       async checknameexist(projectName){
-        this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+        this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
         this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
         // console.log('userid',userid)
@@ -6213,6 +6318,7 @@
 }
 .el-tree-node {
   font-size: 14px !important;
+  white-space: inherit;
 }
 .row {
   padding: 0px !important;
@@ -6220,4 +6326,8 @@
 el-tab-pane {
   font-size: 18px !important;
 }
+ .el-select-dropdown{
+    max-width: 320px !important;
+  }
+
 </style>

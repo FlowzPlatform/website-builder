@@ -176,8 +176,6 @@ export default {
           this.$session.set('token', response.data.logintoken);
           // localStorage.setItem("auth_token", response.data.logintoken);
 
-          
-
           // Set email Session
           //console.log('User Details: ', response.data);
           axios.get(config.userDetail, {
@@ -356,11 +354,11 @@ export default {
   created () {
     $('.login div').fadeIn();
     // Check if login token in cookie exist or not
-    if(this.$cookie.get('auth_token')){
+    if(Cookies.get('auth_token')){
       // Set email Session
       axios.get(config.userDetail, {
         headers: {
-          'Authorization' : this.$cookie.get('auth_token')
+          'Authorization' : Cookies.get('auth_token')
         }   
       })
       .then(async (res) => {
@@ -389,7 +387,7 @@ export default {
       .catch((e) => {
         console.log(e)
         this.$message({
-            showClose: true,
+          showClose: true,
             message: 'Invalid Token',
             type: 'error'
         });

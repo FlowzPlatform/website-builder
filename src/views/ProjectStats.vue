@@ -1,7 +1,7 @@
 <template>
   <div class="ProjectStats">
     <div class="page-buttons">
-      <el-button type="info" size="small" @click="previewWebsite" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button>
+      <!-- <el-button type="info" size="small" @click="previewWebsite" v-loading.fullscreen.lock="fullscreenLoading">Preview Website</el-button> -->
       <!-- <el-button type="success" size="small" @click="goToProjectSettings">Project Settings</el-button> -->
     </div>
   	<div class="container-fluid">
@@ -62,7 +62,7 @@
         <div class="col-md-12">
           <div class="creative-table">
             <div class="table-title title-style-1">
-              <h4>{{repoName}}</h4>
+              <h4>{{websiteName}}</h4>
               <p>Repository Id: {{newRepoId}}</p>
             </div>
             <div class="table-body">
@@ -135,7 +135,6 @@
             <div class="table-body">
               <el-table
                 :data="commitsData"
-                :row-class-name="tableRowClassName"
                 border
                 style="width: 100%">
                 <el-table-column
@@ -169,6 +168,51 @@
       </div>
 
 
+      <!-- List of website users -->
+      <div class="row" style="margin-top: 40px; margin-bottom: 50px;">
+        <div class="col-md-12">
+          <div class="creative-table">
+            <div class="table-title title-style-3">
+              <h4>Website Users</h4>
+              <p>List of all users registered with this website. You can change user role from here.</p>
+            </div>
+            <div class="table-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <td width="30%">User ID</td>
+                    <td>User Email ID</td>
+                    <td>User Role</td>
+                    <td width="20%">Actions</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(n, index) in websiteUsers">
+                    <td>{{n.UserId}}</td>
+                    <td>{{n.UserEmail}}</td>
+                    <td>
+                      <el-select v-model="n.UserRole" placeholder="Select">
+                        <el-option
+                          v-for="item in websiteRolesOptions"
+                          :key="item.roleName"
+                          :label="item.roleName"
+                          :value="item.roleName">
+                        </el-option>
+                      </el-select>
+                    </td>
+                    <td>
+                      <button class="btn btn-primary" @click="updateUserRole(index, n.UserId)"><i class="fa fa-save fa-fw"></i>Save</button>
+                      <button class="btn btn-danger" @click="deleteUser(n.UserId)"><i class="fa fa-trash fa-fw"></i>Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
   	</div>
   </div>
 </template>
@@ -193,6 +237,7 @@ export default {
   },
   data () {
     return {
+      websiteName: '',
       newRepoId: '',
       repoName: '',
       seoTitle: '',
@@ -207,12 +252,39 @@ export default {
       },
       commitsData: [],
       commitMessage: '',
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      websiteUsers: [],
+      websiteRolesOptions: [],
+      selectedRole: ''
     }
   },
   component: {
   },
   methods: {
+    updateUserRole(index, id){
+      
+      axios.patch(config.baseURL + '/website-users/' + id, {
+          role : this.websiteUsers[index].UserRole
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+
+    },
+    deleteUser(id){
+      axios.delete(config.baseURL + '/website-users/' + id, {
+      })
+      .then((res) => {
+        console.log(res.data);
+        this.init();
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
     revertCommit(index) {
       this.$store.state.currentIndex = index;
       $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
@@ -279,7 +351,6 @@ export default {
     },
 
   	async init () {
-  console.log('in project stat')
       let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       localStorage.setItem('folderUrl', folderUrl);
 
@@ -291,6 +362,8 @@ export default {
       if(this.configData.status == 200 || this.configData.status == 204){
         //console.log('Config file found! Updating fields..');
 
+        this.websiteName = this.configData.data.websiteName;
+
         this.settings = this.configData.data.configData;
 
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
@@ -299,6 +372,8 @@ export default {
         this.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
         this.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
         this.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+
+        this.websiteRolesOptions = this.settings[1].projectSettings[1].WebsiteRoles;
 
         this.counts.layouts = 0;
         this.counts.pages = 0;
@@ -340,11 +415,26 @@ export default {
       }).catch(error => {
         //console.log("Some error occured: ", error);
       });
+
+      // Get all website users
+      await axios.get( config.baseURL + '/website-users?websiteId='+foldername, {
+      }).then(response => {
+        this.websiteUsers = [];
+        for(var i in response.data.data){
+          this.websiteUsers.push({
+            UserId: response.data.data[i].id,
+            UserEmail: response.data.data[i].email,
+            UserRole: response.data.data[i].role, 
+          });
+        }
+      }).catch(error => {
+        //console.log("Some error occured: ", error);
+      });
       
 
-      if(this.commitsData[0]){
-        return 'positive-row';
-      } 
+      // if(this.commitsData[0]){
+      //   return 'positive-row';
+      // } 
   	},
 
   },
@@ -680,6 +770,10 @@ h3.subtitle{
 
 .title-style-2{
   background: linear-gradient(to right, #D20B54 0%, #FFB894 100%);
+}
+
+.title-style-3{
+  background: linear-gradient(to right, #2D266F 0%, #7C2289 100%);
 }
 
 .table-body{
