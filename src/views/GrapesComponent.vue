@@ -91,7 +91,6 @@ export default {
         this.globalCssVariables = rawConfigs[1].projectSettings[1].GlobalCssVariables;
         var images = rawConfigs[1].projectSettings[1].AssetImages;
 
-
         let pageIndex = daex.indexFirst(rawConfigs[1].pageSettings, {
           'PageName': fileNameOrginal
         });
@@ -175,10 +174,10 @@ export default {
         images.push('http://placehold.it/350x250/cc4360/fff/image7.jpg');
 
 
-        // 'gjs-plugin-ckeditor', 'grapesjs-blocks-bootstrap4', 'gjs-plugin-filestack'
+        // 'gjs-plugin-ckeditor', 'grapesjs-blocks-bootstrap4', 'gjs-plugin-filestack', 'gjs-blocks-flexbox',
 
 		editor = grapesjs.init({
-			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'gjs-blocks-flexbox', 'product-plugin', 'flowz-blocks' ],
+			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks' ],
             pluginsOpts: {
                 'gjs-plugin-filestack': {
                     'key': 'AgfKKwgZjQ8iLBVKGVXMdz',
@@ -494,26 +493,30 @@ export default {
 
         //// console.log('Global Variables length:', this.globalVariables.length);
 
-        for (var i = 0; i < this.globalVariables.length; i++){
+        let self = this;
 
-            switch(this.globalVariables[i].variableType){
+        setTimeout(async function(){
+            for (var i = 0; i < self.globalVariables.length; i++){
+
+            switch(self.globalVariables[i].variableType){
 
                 case 'text':
-                    if(($('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
-                        // var encodeText = String(this.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-                        $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').text(this.globalVariables[i].variableValue);
+                    if(($('.gjs-frame').contents().find('body [data-global-id="' + self.globalVariables[i].variableId + '"]').length > 0)){
+                        // console.log('variable value: ', self.globalVariables[i].variableValue);
+                        // var encodeText = String(self.globalVariables[i].variableValue).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                        $('.gjs-frame').contents().find('body [data-global-id="' + self.globalVariables[i].variableId + '"]').text(self.globalVariables[i].variableValue);
                     } 
                     break;
 
                 case 'image':
 
-                    var _varId = this.globalVariables[i].variableId;
-                    var _varValue = this.globalVariables[i].variableValue;
+                    var _varId = self.globalVariables[i].variableId;
+                    var _varValue = self.globalVariables[i].variableValue;
 
                     if(($('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').length > 0)){
                         
                         // Get all local images
-                        if(this.globalVariables[i].isImageUrl == true){
+                        if(self.globalVariables[i].isImageUrl == true){
                             //console.log('Image is URL link.');
                             $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', _varValue);
                         } else {
@@ -533,15 +536,15 @@ export default {
                     break;
 
                 case 'hyperlink':
-                    if(($('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
-                        $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].text = this.globalVariables[i].variableTitle;
-                        $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').children('a')[0].href = this.globalVariables[i].variableValue;
+                    if(($('.gjs-frame').contents().find('body [data-global-id="' + self.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [data-global-id="' + self.globalVariables[i].variableId + '"]').children('a')[0].text = self.globalVariables[i].variableTitle;
+                        $('.gjs-frame').contents().find('body [data-global-id="' + self.globalVariables[i].variableId + '"]').children('a')[0].href = self.globalVariables[i].variableValue;
                     }
                     break; 
 
                 case 'html':
-                    if(($('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').length > 0)){
-                        $('.gjs-frame').contents().find('body [data-global-id="' + this.globalVariables[i].variableId + '"]').html(this.globalVariables[i].variableValue);
+                    if(($('.gjs-frame').contents().find('body [data-global-id="' + self.globalVariables[i].variableId + '"]').length > 0)){
+                        $('.gjs-frame').contents().find('body [data-global-id="' + self.globalVariables[i].variableId + '"]').html(self.globalVariables[i].variableValue);
                     } 
                     break;
 
@@ -550,6 +553,9 @@ export default {
             }
 
         }
+        },2000);
+
+        
 
         // Collapse all Category Blocks
         // $(".gjs-block-category").trigger("click");

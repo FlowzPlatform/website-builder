@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== 'development') {
     forgotPasswordUrl = 'https://api.'+domainkey+'/auth/api/forgetpassword';
     userDetail = 'https://api.'+domainkey+'/auth/api/userdetails';
     socialUrl = 'https://api.'+domainkey+'/auth/api';
-    subscriptionApi = 'https://api.flowzcluster.tk/subscription/user-subscription/';
+    subscriptionApi = 'https://api.'+domainkey+'/subscription/user-subscription/';
     loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
     loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
     loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';

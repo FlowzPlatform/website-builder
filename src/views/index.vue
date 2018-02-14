@@ -79,69 +79,6 @@
                   </span>
               </el-dialog>
 
-              <!-- Buy Now Modal if it's not dashboard page -->
-              <el-dialog title="SORRY! You have created Enough sites for choosen package. Want to Upgrade?" :visible.sync="buyNowDialog">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-                <link rel='stylesheet' href='https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css'/>
-
-                  <div class="container">
-                    <div class="row mt-5 align-items-center">
-                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center">
-                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 br">
-                          <h2 class="font-weight-light">Personal</h2>
-                          <p class="text-h2">
-                            <strong>$9 / month</strong>
-                          </p>
-                          <p class="text-h3">Offers you'll get for this package</p>
-                          <ul class="text-left mt-5 mb-5">
-                            <li>Website - 5</li>
-                            <li>Unlimited Storage</li>
-                          </ul>
-                          <p>
-                            <a href="#" class="btn mt-4">Buy</a>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0">
-                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 fdb-touch br">
-                          <h2 class="font-weight-light">Professional</h2>
-                          <p class="text-h2">
-                            <strong>$19 / month</strong>
-                          </p>
-                          <p class="text-h3">Offers you'll get for this package</p>
-                          <ul class="text-left mt-5 mb-5">
-                            <li>Website - 8</li>
-                            <li>Unlimited Storage</li>
-                          </ul>
-                          <p>
-                            <a href="#" class="btn mt-4">Buy</a>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0">
-                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 br">
-                          <h2 class="font-weight-light">Business</h2>
-                          <p class="text-h2">
-                            <strong>$49 / month</strong>
-                          </p>
-                          <p class="text-h3">Offers you'll get for this package</p>
-                          <ul class="text-left mt-5 mb-5">
-                            <li>Website - 13</li>
-                            <li>Unlimited Storage</li>
-                          </ul>
-                          <p>
-                            <a href="#" class="btn mt-4">Buy</a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-              <span slot="footer" class="dialog-footer">
-                  <el-button @click="buyNowDialog = false">Cancel</el-button>
-              </span>
-            </el-dialog>
-
             <!-- New Website Project Dialog if it's not dashboard page -->
             <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
@@ -179,7 +116,6 @@
                 </el-form-item>
               </el-form>
               <span slot="footer" class="dialog-footer">
-                  <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
                   <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
               </span>
             </el-dialog>
@@ -211,68 +147,6 @@
                       <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
                   </span>
               </el-dialog>
-
-              <el-dialog title="SORRY! You have created Enough sites for choosen package. Want to Upgrade?" :visible.sync="buyNowDialog">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-                <link rel='stylesheet' href='https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/css/froala_blocks.css'/>
-
-                  <div class="container">
-                    <div class="row mt-5 align-items-center">
-                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center">
-                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 br">
-                          <h2 class="font-weight-light">Personal</h2>
-                          <p class="text-h2">
-                            <strong>$9 / month</strong>
-                          </p>
-                          <p class="text-h3">Offers you'll get for this package</p>
-                          <ul class="text-left mt-5 mb-5">
-                            <li>Website - 5</li>
-                            <li>Unlimited Storage</li>
-                          </ul>
-                          <p>
-                            <a href="#" class="btn mt-4">Buy</a>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0">
-                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 fdb-touch br">
-                          <h2 class="font-weight-light">Professional</h2>
-                          <p class="text-h2">
-                            <strong>$19 / month</strong>
-                          </p>
-                          <p class="text-h3">Offers you'll get for this package</p>
-                          <ul class="text-left mt-5 mb-5">
-                            <li>Website - 8</li>
-                            <li>Unlimited Storage</li>
-                          </ul>
-                          <p>
-                            <a href="#" class="btn mt-4">Buy</a>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-10 col-md-8 col-md-8 m-auto col-lg-4 text-center pt-4 pt-lg-0">
-                        <div class="bg-dark pb-5 pt-5 pl-3 pr-3 br">
-                          <h2 class="font-weight-light">Business</h2>
-                          <p class="text-h2">
-                            <strong>$49 / month</strong>
-                          </p>
-                          <p class="text-h3">Offers you'll get for this package</p>
-                          <ul class="text-left mt-5 mb-5">
-                            <li>Website - 13</li>
-                            <li>Unlimited Storage</li>
-                          </ul>
-                          <p>
-                            <a href="#" class="btn mt-4">Buy</a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-              <span slot="footer" class="dialog-footer">
-                  <el-button @click="buyNowDialog = false">Cancel</el-button>
-              </span>
-            </el-dialog>
 
               <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
@@ -310,7 +184,6 @@
                   </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
                     <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
                 </span>
               </el-dialog>
@@ -2295,7 +2168,7 @@
                                   "UserID":userid,
                                   "BasePath":newFolderName,
                                   "websiteName": this.currentProjectName,
-                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/public/',
+                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/',
                                   "builder_service_api": config.baseURL,
                                   "login_api": config.loginUrl,
                                   "register_api": config.registerUrl,
@@ -5407,8 +5280,6 @@
                       <i title="Create New Partial" class="fa fa-plus" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
                   
                   
-                      <i title="Delete Partial" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
-                  
                 </span>
             </span>);
             } else if(_.includes(data.path, '/Partials/')){
@@ -5422,7 +5293,7 @@
                     <i title="Create New Variant" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
                   
                   
-                      <i title="Delete File" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
+                      <i title="Delete Folder" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
                   
                 </span>
             </span>);
@@ -5449,8 +5320,7 @@
                         <i title="Add File" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
                     
                     
-                        <i title="Delete File" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
-                    
+                        
                   </span>
               </span>);
             }
@@ -6261,7 +6131,7 @@
   /*Sidemenu opener*/
 
   .sideOpener {
-      width: 10px;
+      width: 17px;
       height: 100vh;
       background-color: #292929;
       margin-left: -6px;
@@ -6307,6 +6177,8 @@
     margin-top: 15px;
     margin-bottom: 0;
   }
+
+
 </style>
 <style>
 .el-tabs__new-tab {
@@ -6322,4 +6194,8 @@
 el-tab-pane {
   font-size: 18px !important;
 }
+
+.el-select-dropdown{
+    max-width: 320px !important;
+  }
 </style>

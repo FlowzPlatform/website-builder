@@ -239,7 +239,7 @@ import psl from 'psl';
 import Cookies from 'js-cookie';
 
 import Invite from './invite';
-import DashBoard from './DashBoard';
+import HomePage from './Dashboard';
 
 export default {
   name: 'UserDashboard',
@@ -258,13 +258,14 @@ export default {
   },
   methods: {
      goToEditor() {
-      this.$router.push('/editor');
+      // this.$router.push('/editor');
+      window.location = '/editor';
     },
     goToInvite(){
         this.componentId = Invite;
     },
     goToDashboard(){
-        this.componentId = DashBoard;
+        this.componentId = HomePage;
     },
     doLogout() {
       // localStorage.removeItem("auth_token");

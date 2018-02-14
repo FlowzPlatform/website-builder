@@ -184,6 +184,12 @@ export default {
         //   this.authen.error = response.data;
         // })
       }).catch(error => {
+        this.$message({
+            showClose: true,
+            message: 'Error: ' + error.response.data,
+            type: 'error'
+        });
+
         console.log('Error: ', error.response);
         this.authen.status = false;
         this.authen.error = error.response.data;
