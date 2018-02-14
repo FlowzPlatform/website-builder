@@ -738,7 +738,6 @@
           }
       });
     this.getDataOfSubscriptionUser();
-      console.log("this.value", this.value)
        if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
             this.value = Cookies.get("subscriptionId")
         }
