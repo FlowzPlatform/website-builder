@@ -2760,7 +2760,7 @@ export default {
           return this.results;
         }
       };
-      
+    await axios.get(config.baseURL + '/delete-publish-files', {}).then(async (response) => {console.log('deleted previous published files.')})
    for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
       var tophead = '';
       var endhead = '';
@@ -2940,35 +2940,6 @@ export default {
             }
           }
 
-        if (vuepartials != undefined && vuepartials.length > 0) {
-          var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
-          mainVuefile = mainVuefile.data
-
-          for (let x = 0; x < vuepartials.length; x++) {
-            let temp = mainVuefile.replace(/@@vuecomponent@@/g, vuepartials[x].value.split('.')[0])
-            temp = temp.replace('./' + vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + vuepartials[x].partialsName + '/' + vuepartials[x].value.split('.')[0])
-
-            await axios.post(config.baseURL + '/flows-dir-listing', {
-                filename: config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js',
-                text: temp,
-                type: 'file'
-              }).then(async (res) => {
-                contentpartials = contentpartials + '<script src="./assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
-
-                axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + vuepartials[x].value.split('.')[0] + '.js', {})
-                  .then((response) => {
-                    //console.log("called webpack_file api successfully:")
-                  })
-                  .catch((e) => {pul
-                    //console.log(e)
-                  })
-              })
-              .catch((e) => {
-                //console.log(e)
-              })
-
-          }
-        }
         if (Layout == 'Blank') {
           await axios.post(config.baseURL + '/flows-dir-listing', {
               filename: folderUrl + '/Layout/Blank.layout',
@@ -3170,7 +3141,7 @@ export default {
 
         responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
         // console.log('final responseMetal:', responseMetal)
-        var mainMetal = folderUrl + '/public/assets/metalsmith.js'
+        var mainMetal = folderUrl + '/public/assets/metalsmithPublish.js'
         var value = true;
         await axios.post(config.baseURL + '/save-menu', {
             filename: mainMetal,
@@ -3260,7 +3231,7 @@ export default {
                   .then(async (res) => {
                     this.saveFileLoading = false;
 
-                    await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then(async (response) => {
+                    await axios.get(config.baseURL + '/metalsmith-publish?path=' + folderUrl, {}).then(async (response) => {
 
                         await axios.post(config.baseURL + '/save-menu', {
                             filename: mainMetal,
