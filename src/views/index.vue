@@ -769,6 +769,7 @@
           .then(response => {
             console.log("response",response)
             Cookies.set('userDetailId', response.data.userId);
+            Cookies.set('subscriptionId', response.data.sub_id);
             axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             this.getData();
@@ -2124,11 +2125,15 @@
 
               })
               .catch((e) => {
-                console.log(e);
-                // this.componentId = 'buyPage';
+                if(e.response.status = 403){
+                  this.$message({
+                    showClose: true,
+                    message: e.response.data.message + '<a href="hello"> hello</a>',
+                    type: 'error'
+                  });
+                }
                 this.newProjectFolderDialog = false;
                 this.fullscreenLoading = false;
-                // this.buyNowDialog = true;
               });
           }
         });
@@ -6322,4 +6327,8 @@
 el-tab-pane {
   font-size: 18px !important;
 }
+ .el-select-dropdown{
+    max-width: 320px !important;
+  }
+
 </style>
