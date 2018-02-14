@@ -397,7 +397,7 @@ export default {
       .catch((e) => {
         console.log(e)
         this.$message({
-            showClose: true,
+          showClose: true,
             message: 'Invalid Token',
             type: 'error'
         });
