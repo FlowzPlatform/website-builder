@@ -90,7 +90,8 @@ export default {
       Cookies.remove('subscriptionId' ,{domain: location}); 
 
       this.isLoggedIn = false;
-      this.$router.push('/login');
+     // this.$router.push('/');
+     window.location = "/login"
     },
     goToDashboard(){
       // this.$router.push('/user-dashboard');
