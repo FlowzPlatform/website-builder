@@ -36,11 +36,6 @@ Vue.use(ElementUI, { locale });
 var VueCookie = require('vue-cookie')
 Vue.use(VueCookie);
 
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
-import locale1 from 'iview/dist/locale/en-US';
-Vue.use(iView, { locale1 });
-
 // Routing logic
 Vue.use(VueRouter)
 import psl from 'psl'
