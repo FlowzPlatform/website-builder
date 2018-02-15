@@ -4330,20 +4330,20 @@
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
                     datadivscript +
-                    "<link rel='stylesheet' href='./main-files/main.css'/>\n" +
+                    "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
                     endhead + "\n</head>\n<body>\n" + divappstart + topbody +
                     layoutdata.data +
                     '\n'+ divappend +
-                    "<script src=\"./main-files/main.js\"><\/script>\n" +
-                    '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
+                    "<script src=\"./../main-files/main.js\"><\/script>\n" +
+                    '<script src="./../assets/client-plugins/client-cart.js"><\/script>\n' +
                     "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                     "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                    '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                    '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
-                    '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
+                    '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                    '<script src="./../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
+                    '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                    '\n<script src="../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                    '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                     endbody +
                     '\n</body>\n</html>';
 
@@ -5293,7 +5293,7 @@
                   </span>
                   <span class="action-button" style="float: right; padding-right: 5px;">
 
-                        <i title="Preview Website" class="fa fa-eye" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+                        <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
 
                         <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
                     
