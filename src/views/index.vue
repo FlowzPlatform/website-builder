@@ -627,21 +627,23 @@
               sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
             }
             this.options = sub_id
-               console.log("sub_id", sub_id)
              if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
-                  this.value = sub_id[0].value
-                  Cookies.set("subscriptionId" , this.value)
+                  this.value = sub_id[0].value;
+                  let location = psl.parse(window.location.hostname);
+                  location = location.domain === null ? location.input : location.domain;
+
+                  Cookies.set("subscriptionId" , this.value, {domain: location});
               }
           })
       },
       changeSubscription(){
         this.editableTabs = []
-        console.log("this.value", this.value)
         axios.get(config.subscriptionApi  + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(response => {
-            console.log("response",response)
-            Cookies.set('userDetailId', response.data.userId);
-            Cookies.set('subscriptionId', response.data.sub_id);
+            let location = psl.parse(window.location.hostname);
+            location = location.domain === null ? location.input : location.domain;
+            Cookies.set('userDetailId', response.data.userId, {domain: location});
+            Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
             axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             this.getData();
@@ -649,7 +651,6 @@
       },
       canceldialog(){
         this.newFileDialog = false
-        console.log('&&&&')
         this.formAddFile.filename=''
       },
       canceldialogfolder(){
@@ -5411,11 +5412,9 @@
 
 
 
-  },
-  // Methods End
-}
-
-  
+    },
+    // Methods End
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -6181,26 +6180,24 @@
     margin-top: 15px;
     margin-bottom: 0;
   }
-
-
 </style>
-<style>
-.el-tabs__new-tab {
-  display: none !important;
-}
-.el-tree-node {
-  font-size: 14px !important;
-  white-space: inherit;
-}
-.row {
-  padding: 0px !important;
-}
-el-tab-pane {
-  font-size: 18px !important;
-}
 
-.el-select-dropdown{
-    max-width: 320px !important;
+<style>
+  .el-tabs__new-tab {
+    display: none !important;
+  }
+  .el-tree-node {
+    font-size: 14px !important;
+    white-space: inherit;
+  }
+  .row {
+    padding: 0px !important;
+  }
+  el-tab-pane {
+    font-size: 18px !important;
   }
 
+  .el-select-dropdown{
+      max-width: 320px !important;
+  }
 </style>
