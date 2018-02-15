@@ -79,9 +79,6 @@
                   </span>
               </el-dialog>
 
-             
-             
-
             <!-- New Website Project Dialog if it's not dashboard page -->
             <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
@@ -119,7 +116,6 @@
                 </el-form-item>
               </el-form>
               <span slot="footer" class="dialog-footer">
-                  <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
                   <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
               </span>
             </el-dialog>
@@ -152,7 +148,6 @@
                   </span>
               </el-dialog>
 
-             
 
               <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
@@ -190,7 +185,6 @@
                   </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="newProjectFolderDialog = false">Cancel</el-button>
                     <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
                 </span>
               </el-dialog>
@@ -460,7 +454,7 @@
       if(this.$cookie.get('auth_token')){
         this.getData();
         // Set email Session
-        
+
         axios.get(config.userDetail, {
           headers: {
             'Authorization' : this.$cookie.get('auth_token')
@@ -618,7 +612,7 @@
           }
       });
     this.getDataOfSubscriptionUser();
-      // console.log("this.value", this.value)
+
        if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
             this.value = Cookies.get("subscriptionId")
         }
@@ -635,20 +629,25 @@
               sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
             }
             this.options = sub_id
-               // console.log("sub_id", sub_id)
+
              if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
-                  this.value = sub_id[0].value
-                  Cookies.set("subscriptionId" , this.value)
+                  this.value = sub_id[0].value;
+                  let location = psl.parse(window.location.hostname);
+                  location = location.domain === null ? location.input : location.domain;
+
+                  Cookies.set("subscriptionId" , this.value, {domain: location});
               }
           })
       },
       changeSubscription(){
         this.editableTabs = []
-        // console.log("this.value", this.value)
-        axios.get(config.subscriptionApi  + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+
+        axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(response => {
-            // console.log("response",response)
-            Cookies.set('userDetailId', response.data.userId);
+            let location = psl.parse(window.location.hostname);
+            location = location.domain === null ? location.input : location.domain;
+            Cookies.set('userDetailId', response.data.userId, {domain: location});
+            Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
             axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             this.getData();
@@ -656,7 +655,7 @@
       },
       canceldialog(){
         this.newFileDialog = false
-        // console.log('&&&&')
+
         this.formAddFile.filename=''
       },
       canceldialogfolder(){
@@ -2004,11 +2003,15 @@
 
               })
               .catch((e) => {
-                console.log(e);
-                // this.componentId = 'buyPage';
+                if(e.response.status = 403){
+                  this.$message({
+                    showClose: true,
+                    message: e.response.data.message,
+                    type: 'error'
+                  });
+                }
                 this.newProjectFolderDialog = false;
                 this.fullscreenLoading = false;
-                // this.buyNowDialog = true;
               });
           }
         });
@@ -2183,7 +2186,7 @@
                                   "UserID":userid,
                                   "BasePath":newFolderName,
                                   "websiteName": this.currentProjectName,
-                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/public/',
+                                  "BaseURL":'http://'+userid+'.'+projectRepoName+'.'+config.domainkey+'/',
                                   "builder_service_api": config.baseURL,
                                   "login_api": config.loginUrl,
                                   "register_api": config.registerUrl,
@@ -4317,13 +4320,6 @@
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     '<script src="http://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
-                    "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                    "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
-                    "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                    '<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"><\/script>\n' +
-                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                    "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                     '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
@@ -4334,15 +4330,18 @@
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
                     datadivscript +
-                    "<link rel='stylesheet' href='../main-files/main.css'/>\n"+
-                    "<script src=\"../main-files/main.js\"><\/script>\n" +
-                    '<script src="../assets/client-plugins/client-cart.js"><\/script>\n' +
+                    "<link rel='stylesheet' href='./main-files/main.css'/>\n" +
                     endhead + "\n</head>\n<body>\n" + divappstart + topbody +
                     layoutdata.data +
                     '\n'+ divappend +
-                    '<script src="../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                    '<script src="../assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
-                    '<script src="../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
+                    "<script src=\"./main-files/main.js\"><\/script>\n" +
+                    '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
+                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                    "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                    '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                    '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
+                    '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                     '\n<script src="../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                     endbody +
@@ -5318,8 +5317,6 @@
                       <i title="Create New Partial" class="fa fa-plus" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
                   
                   
-                      <i title="Delete Partial" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
-                  
                 </span>
             </span>);
             } else if(_.includes(data.path, '/Partials/')){
@@ -5333,7 +5330,7 @@
                     <i title="Create New Variant" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
                   
                   
-                      <i title="Delete File" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
+                      <i title="Delete Folder" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
                   
                 </span>
             </span>);
@@ -5360,8 +5357,7 @@
                         <i title="Add File" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
                     
                     
-                        <i title="Delete File" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
-                    
+                        
                   </span>
               </span>);
             }
@@ -5448,11 +5444,9 @@
 
 
 
-  },
-  // Methods End
-}
-
-  
+    },
+    // Methods End
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -6172,7 +6166,7 @@
   /*Sidemenu opener*/
 
   .sideOpener {
-      width: 10px;
+      width: 17px;
       height: 100vh;
       background-color: #292929;
       margin-left: -6px;
@@ -6219,18 +6213,23 @@
     margin-bottom: 0;
   }
 </style>
+
 <style>
-.el-tabs__new-tab {
-  display: none !important;
-}
-.el-tree-node {
-  font-size: 14px !important;
-  white-space: inherit;
-}
-.row {
-  padding: 0px !important;
-}
-el-tab-pane {
-  font-size: 18px !important;
-}
+  .el-tabs__new-tab {
+    display: none !important;
+  }
+  .el-tree-node {
+    font-size: 14px !important;
+    white-space: inherit !important;
+  }
+  .row {
+    padding: 0px !important;
+  }
+  el-tab-pane {
+    font-size: 18px !important;
+  }
+
+  .el-select-dropdown{
+      max-width: 320px !important;
+  }
 </style>

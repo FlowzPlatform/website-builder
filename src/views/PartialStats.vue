@@ -81,7 +81,7 @@ export default {
 
         this.settings = this.configData.data.configData;
 
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.websiteName;
 
         let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
         partialItems.splice(partialItems.indexOf('Layout'), 1);
