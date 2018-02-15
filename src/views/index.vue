@@ -637,7 +637,7 @@
       },
       changeSubscription(){
         this.editableTabs = []
-        axios.get(config.subscriptionApi  + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+        axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(response => {
             let location = psl.parse(window.location.hostname);
             location = location.domain === null ? location.input : location.domain;
