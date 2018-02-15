@@ -743,7 +743,7 @@
         // let username_session = this.$session.get('username');
         //// console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
-        axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId'))
+        axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
           .then(async response => {
             response.data.children = this.getTreeData(response.data);
 
@@ -5338,7 +5338,7 @@
               return(<span>
                   <span class="nodelabel" on-click={ () => this.goToHomePage() }>
                       <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
-                      <span>websites</span>
+                      <span>Websites</span>
                   </span>
                   <span class="">
                       <el-tooltip content="Create New Website" placement="top">
