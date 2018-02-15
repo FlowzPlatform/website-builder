@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== 'development') {
     forgotPasswordUrl = 'https://api.'+domainkey+'/auth/api/forgetpassword';
     userDetail = 'https://api.'+domainkey+'/auth/api/userdetails';
     socialUrl = 'https://api.'+domainkey+'/auth/api';
-    subscriptionApi = 'https://api.'+domainkey+'/subscription/user-subscription/';
+    subscriptionApi = 'https://api.'+domainkey+'/subscription/';
     loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
     loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
     loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';
@@ -46,7 +46,7 @@ if (process.env.NODE_ENV !== 'development') {
     forgotPasswordUrl = 'https://api.flowzcluster.tk/auth/api/forgetpassword';
     userDetail = 'https://api.flowzcluster.tk/auth/api/userdetails';
     socialUrl = 'https://api.flowzcluster.tk/auth/api';
-    subscriptionApi = 'https://api.flowzcluster.tk/subscription/user-subscription/';
+    subscriptionApi = 'https://api.flowzcluster.tk/subscription/';
     loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
     loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';
     loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
