@@ -56,7 +56,6 @@
 <script src="https://vuejs.org/js/vue.min.js"></script>
 <script src="https://unpkg.com/iview/dist/iview.min.js"></script>
 <script>
-    import iView from 'iview';
     //import locale1 from 'iview/dist/locale/en-US';
     import axios from 'axios'
     import Cookies from 'js-cookie';
@@ -67,7 +66,12 @@
     import expandRow from './assigned_invite_table-expand.vue';
     import moment from 'moment';
     import _ from 'lodash'
-    Vue.use(iView);
+    
+    import iView from 'iview';
+    import 'iview/dist/styles/iview.css';
+    import locale1 from 'iview/dist/locale/en-US';
+    Vue.use(iView, { locale1 });
+    
     Vue.use(ElementUI);
     
     export default {

@@ -148,6 +148,7 @@
                   </span>
               </el-dialog>
 
+
               <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
@@ -453,6 +454,7 @@
       if(this.$cookie.get('auth_token')){
         this.getData();
         // Set email Session
+
         axios.get(config.userDetail, {
           headers: {
             'Authorization' : this.$cookie.get('auth_token')
@@ -610,6 +612,7 @@
           }
       });
     this.getDataOfSubscriptionUser();
+
        if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
             this.value = Cookies.get("subscriptionId")
         }
@@ -626,6 +629,7 @@
               sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
             }
             this.options = sub_id
+
              if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
                   this.value = sub_id[0].value;
                   let location = psl.parse(window.location.hostname);
@@ -637,7 +641,8 @@
       },
       changeSubscription(){
         this.editableTabs = []
-        axios.get(config.subscriptionApi  + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+
+        axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(response => {
             let location = psl.parse(window.location.hostname);
             location = location.domain === null ? location.input : location.domain;
@@ -650,6 +655,7 @@
       },
       canceldialog(){
         this.newFileDialog = false
+
         this.formAddFile.filename=''
       },
       canceldialogfolder(){
@@ -1838,41 +1844,41 @@
       // this.form.formName=''
       // this.formAddFile.filename=''
       },
-     async checknameexist(){
-      this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
-      this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
-        console.log('userid',userid)
-        var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
-        let checkdetail=true
-        for(let i=0;i<alldatauser.data.data.length;i++){
-          if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
-            checkdetail=false
+     // async checknameexist(){
+     //  this.fullscreenLoading = true;
+     //  this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
+     //  this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+     //    var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
+     //    // console.log('userid',userid)
+     //    var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
+     //    let checkdetail=true
+     //    for(let i=0;i<alldatauser.data.data.length;i++){
+     //      if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
+     //        checkdetail=false
 
-          }
-        }
-        let boolvalue;
-        if(checkdetail!=false){
-          console.log('not same found')
-         boolvalue=true
-         this.addProjectFolder()
-        }
-        else{
-          this.$message({
-          showClose: true,
-          message: 'Same name found.Try again!',
-          type: 'error'
-        });
-        boolvalue= false
-        }
-        // return boolvalue
-      },
+     //      }
+     //    }
+     //    if(checkdetail!=false){
+     //      // console.log('not same found')
+         
+     //     this.addProjectFolder()
+     //    }
+     //    else{
+     //      this.fullscreenLoading = false;
+     //      this.$message({
+     //      showClose: true,
+     //      message: 'Same name found.Try again!',
+     //      type: 'error'
+     //    });
+     //    }
+     //    // return boolvalue
+     //  },
 
       // Create new Website
       async addProjectFolder(projectName) {
         this.$refs[projectName].validate((valid) => {
           if (valid) {
-            this.fullscreenLoading = true;
+            
             let token = Cookies.get('auth_token');
             this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
@@ -2057,7 +2063,15 @@
         .catch((e)=>{
           //console.log("Error from Assests"+res)
         });
+        //Create Preview Folder
+        await axios.post(config.baseURL+'/flows-dir-listing' , {
+          foldername : newFolderName+'/public/Preview',
+          type : 'folder'
+        }).then(async (res) => {
 
+        }).catch((e)=>{
+          console.log(e)
+        })
         // Create Partials Folder
         await axios.post(config.baseURL+'/flows-dir-listing' , {
           foldername : newFolderName+'/Partials',
@@ -2280,7 +2294,7 @@
         });
 
         // Create metalsmith file
-        let mainMetal = newFolderName + '/public/assets/metalsmith.js';
+        let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
 
         let projectName = newFolderName.split('/');
         projectName = projectName[6];
@@ -2297,7 +2311,28 @@
         .then((res) => {
         })
         .catch((e) => {
-            //console.log(e)
+            console.log(e)
+        });
+
+        // Create metalsmith file for preview
+         mainMetal = newFolderName + '/public/assets/metalsmithPreview.js';
+
+         projectName = newFolderName.split('/');
+        projectName = projectName[6];
+
+        // let projectUrl = config.ipAddress + '/websites/' + projectName;
+
+        var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+        await axios.post(config.baseURL + '/flows-dir-listing', {
+            filename : mainMetal,
+            text : metalsmithJSON,
+            type : 'file'
+        })
+        .then((res) => {
+        })
+        .catch((e) => {
+            console.log(e)
         });
 
 
@@ -3686,7 +3721,7 @@
                                     }
                                    
                                   }else{
-                                    if(this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]]=='default'){
+                                    if(this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]]!=''){
                                       checklayoutp = true
                                     }
                                   }
@@ -4208,7 +4243,7 @@
               //console.log(e)
             })
 
-          let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmith.js');
+          let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmithPreview.js');
           let backupmetalsmith=JSON.parse(JSON.stringify(responseMetal.data))
 
           var index = responseMetal.data.search('.source')
@@ -4251,7 +4286,7 @@
 
           // console.log("Final metalsmith:", responseMetal.data);
 
-          var mainMetal = folderUrl + '/public/assets/metalsmith.js'
+          var mainMetal = folderUrl + '/public/assets/metalsmithPreview.js'
           axios.post(config.baseURL + '/save-menu', {
               filename: mainMetal,
               text: responseMetal.data,
@@ -4308,7 +4343,7 @@
                     '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                    '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                    '\n<script src="../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                     endbody +
                     '\n</body>\n</html>';
 
@@ -4344,7 +4379,7 @@
                       await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
 
                           axios.post(config.baseURL + '/save-menu', {
-                              filename: folderUrl + '/public/assets/metalsmith.js',
+                              filename: folderUrl + '/public/assets/metalsmithPreview.js',
                               text: backupmetalsmith,
                               type: 'file'
                             })
@@ -4362,7 +4397,7 @@
                               if (process.env.NODE_ENV !== 'development') {
                                 window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/' + nameF + '.html');
                               } else {
-                                window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+                                window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
                               }
 
                               await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
@@ -4603,13 +4638,13 @@
               localStorage.setItem("Templates", JSON.stringify(Templates));
 
               if (_.includes(data.path, 'Pages')) {
-
+                console.log('delete from pages ')
                 // get index of file to be deleted
                 let indexOfPageName = _.findIndex(this.globalConfigData[1].pageSettings, function(o) {
                   return o.PageName == last_element;
                 });
 
-                console.log('Delte page index: ', indexOfPageName);
+                // console.log('Delte page index: ', indexOfPageName);
 
                 // Remove item from array
                 this.globalConfigData[1].pageSettings.splice(indexOfPageName, 1);
@@ -4644,6 +4679,7 @@
                 // save config file
                 this.saveConfigFile(folderUrl);
               } else if (_.includes(data.path, 'Partials')) {
+                // console.log('removing partials')
                 var foldername=arr_file[arr_file.length-2]           
                 var partialNameBreak = last_element.split('.');
                 var partialNameOnly = partialNameBreak[0];
@@ -4690,7 +4726,7 @@
 
             })
             .catch((e) => {
-              //console.log(e)
+              console.log(e)
             })
           this.componentId = 'Dashboard';
           this.isHomePage = true;
@@ -5212,6 +5248,7 @@
       },
 
       async checknameexist(projectName){
+        this.fullscreenLoading = true;
         this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
         this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
@@ -5224,21 +5261,21 @@
 
           }
         }
-        let boolvalue;
+        
         if(checkdetail!=false){
           // console.log('not same found')
-         boolvalue=true
+         
          this.addProjectFolder(projectName)
         }
         else{
+          this.fullscreenLoading=false
           this.$message({
           showClose: true,
           message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
           type: 'error'
         });
-        boolvalue= false
+        
         }
-        // return boolvalue
       },
 
       // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
