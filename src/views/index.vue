@@ -453,7 +453,6 @@
       if(this.$cookie.get('auth_token')){
         this.getData();
         // Set email Session
-        console.log("hello")
         axios.get(config.userDetail, {
           headers: {
             'Authorization' : this.$cookie.get('auth_token')
@@ -4286,13 +4285,6 @@
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     '<script src="http://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
-                    "<link rel='stylesheet' href='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css'/>\n" +
-                    "<script src='https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'><\/script>\n" +
-                    "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                    '<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"><\/script>\n' +
-                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                    "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                     '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
@@ -4303,12 +4295,15 @@
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
                     datadivscript +
-                    "<link rel='stylesheet' href='./main-files/main.css'/>\n"+
-                    "<script src=\"./main-files/main.js\"><\/script>\n" +
-                    '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
+                    "<link rel='stylesheet' href='./main-files/main.css'/>\n" +
                     endhead + "\n</head>\n<body>\n" + divappstart + topbody +
                     layoutdata.data +
                     '\n'+ divappend +
+                    "<script src=\"./main-files/main.js\"><\/script>\n" +
+                    '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
+                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                    "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                     '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/client-slider-plugin.js"><\/script>\n' +
                     '<script src="./assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
@@ -6188,7 +6183,7 @@
   }
   .el-tree-node {
     font-size: 14px !important;
-    white-space: inherit;
+    white-space: inherit !important;
   }
   .row {
     padding: 0px !important;

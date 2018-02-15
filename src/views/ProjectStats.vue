@@ -742,7 +742,6 @@ h3.subtitle{
 .table-title{
   box-shadow: 0px 0px 10px #999;
   padding: 20px;
-  padding-bottom: 5px;
   margin: 10px;
   border-radius: 5px;
   z-index: 6;
