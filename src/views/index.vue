@@ -4395,7 +4395,7 @@
                               projName = projName.split('/')[2];
 
                               if (process.env.NODE_ENV !== 'development') {
-                                window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/' + nameF + '.html');
+                                window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
                               } else {
                                 window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
                               }
