@@ -178,7 +178,7 @@
                     </li>
                     <li>
                         <a href="#" @click='goToInvite()'>
-                            <i class="fa fa-globe">
+                            <i class="fa fa-handshake-o">
                                 <span class="icon-bg hh-bg-primary"></span>
                             </i>
                             <span class="hh-sidebar-item">Invite</span>
