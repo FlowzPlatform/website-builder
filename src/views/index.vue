@@ -201,6 +201,7 @@
                   :key="item.name"
                   :label="item.title"
                   :name="item.name">
+                  <el-tooltip slot="label" :content="item.filepath"><span>{{item.title}}</span></el-tooltip>
                   <component :is="item.componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
                 </el-tab-pane>
               </el-tabs>
@@ -294,7 +295,7 @@
   // Footer Bar
   import SiteFooter from './footer'
 
-
+  // let myInterval;
 
   // New File creation validator
   let checkFileName = (rule, value, callback) => {
@@ -839,6 +840,8 @@
         // If PageSettings Clicked
         if(this.isPageEditing){
 
+          clearInterval(myInterval);
+
           if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
           }
@@ -902,7 +905,7 @@
         }
         // If ProjectSettings is clicked 
         else if(this.isProjectEditing) {
-
+          // clearInterval(myInterval);
           if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
           }
@@ -958,6 +961,7 @@
         }
         // If Clicked in ProjectName 
         else if(this.isProjectStats) {
+          // clearInterval(myInterval);
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
@@ -968,6 +972,7 @@
         }
         // If Clicked in Partials Folder 
         else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
+          // clearInterval(myInterval);
           //console.log('Data Path: ', data.path);
           
           if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
@@ -983,6 +988,7 @@
         }
         // If Clicked in Layouts Folder 
         else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
+          // clearInterval(myInterval);
 
           if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
@@ -997,7 +1003,7 @@
         }
         // If Clicked in Pages Folder 
         else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
-
+          // clearInterval(myInterval);
           if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
           }
@@ -1038,7 +1044,7 @@
 
       // If Tabs is clicked
       tabClicked : async function(targetName, action) {
-        
+        this.fullscreenLoading = true;
         this.saveFile('tabClicked');
 
         let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
@@ -1049,24 +1055,24 @@
         var componentId = this.componentId
         let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
         let newContent
-        switch (this.componentId) {
-          case 'GrapesComponent':
-            this.$refs.contentComponent[myIndex].getSavedHtml();
-            newContent = this.$store.state.content;
-            break;
-          case 'json-viewer':
-            newContent = JSON.stringify(this.$store.state.content);
-            break;
-          case 'GridManager':
-            await this.$refs.contentComponent[myIndex].getSavedHtml();
-            newContent = this.$store.state.content;
-            break;
-          case 'MenuBuilder':
-            // this.saveJsonFile('else');
-            break;
-          default:
-              newContent = this.$store.state.content;
-        }
+        // switch (this.componentId) {
+        //   case 'GrapesComponent':
+        //     this.$refs.contentComponent[myIndex].getSavedHtml();
+        //     newContent = this.$store.state.content;
+        //     break;
+        //   case 'json-viewer':
+        //     newContent = JSON.stringify(this.$store.state.content);
+        //     break;
+        //   case 'GridManager':
+        //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+        //     newContent = this.$store.state.content;
+        //     break;
+        //   case 'MenuBuilder':
+        //     // this.saveJsonFile('else');
+        //     break;
+        //   default:
+        //       newContent = this.$store.state.content;
+        // }
       },
 
       // Closing a tab
@@ -1098,95 +1104,97 @@
               }
             });
           } else {
-            let componentId = findingValue[0].componentId;
-            this.componentId = findingValue[0].componentId;
-            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            let newContent
-            switch (this.componentId) {
-              case 'GrapesComponent':
-                await this.$refs.contentComponent[myIndex].getSavedHtml();
-                newContent = this.$store.state.content;
-                break;
-              case 'json-viewer':
-                newContent = JSON.stringify(this.$store.state.content);
-                break;
-              case 'GridManager':
-                await this.$refs.contentComponent[myIndex].getSavedHtml();
-                newContent = this.$store.state.content;
-                break;
-              case 'MenuBuilder':
+            // let componentId = findingValue[0].componentId;
+            // this.componentId = findingValue[0].componentId;
+            // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+            // let newContent
+            // switch (this.componentId) {
+            //   case 'GrapesComponent':
+            //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+            //     newContent = this.$store.state.content;
+            //     break;
+            //   case 'json-viewer':
+            //     newContent = JSON.stringify(this.$store.state.content);
+            //     break;
+            //   case 'GridManager':
+            //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+            //     newContent = this.$store.state.content;
+            //     break;
+            //   case 'MenuBuilder':
  
-              let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-              let tempurlparts = configFileUrl.split("/");
-              let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
-              console.log('fileName', fileName)
-              var folderUrl = fileName
+            //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+            //   let tempurlparts = configFileUrl.split("/");
+            //   let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+            //   console.log('fileName', fileName)
+            //   var folderUrl = fileName
  
-              let urlparts = this.$store.state.fileUrl.split("/");
-              let fileNameOrginal = urlparts[urlparts.length - 1];
-              let fileNameParts = fileNameOrginal.split('.');
-              let actualFileNameOnly = fileNameParts[0];
-              let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
-              console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
-              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
-              });
-              // console.log('response.data', response.data)
-              this.$store.state.content = response.data
-              newContent = this.$store.state.content
-                // this.saveJsonFile('else');
-                break;
-              default:
-                  newContent = this.$store.state.content;
-            }
-            this.taburl = this.$store.state.fileUrl
-            this.saveFileData(newContent);
+            //   let urlparts = this.$store.state.fileUrl.split("/");
+            //   let fileNameOrginal = urlparts[urlparts.length - 1];
+            //   let fileNameParts = fileNameOrginal.split('.');
+            //   let actualFileNameOnly = fileNameParts[0];
+            //   let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+            //   console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
+            //   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
+            //   });
+            //   // console.log('response.data', response.data)
+            //   this.$store.state.content = response.data
+            //   newContent = this.$store.state.content
+            //     // this.saveJsonFile('else');
+            //     break;
+            //   default:
+            //       newContent = this.$store.state.content;
+            // }
+            // this.taburl = this.$store.state.fileUrl
+            // this.saveFileData(newContent);
           }
           this.editableTabsValue = activeName;
           this.editableTabs = tabs.filter(tab => tab.name !== targetName);
 
           if(this.editableTabs.length != 0){
-            this.$store.state.fileUrl = this.editableTabs[0].filepath
-            // console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
-            let componentId = this.editableTabs[0].componentId;
-            this.componentId = this.editableTabs[0].componentId;
-            let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            let newContent
-            switch (this.componentId) {
-              case 'GrapesComponent':
-                await this.$refs.contentComponent[myIndex].getSavedHtml();
-                newContent = this.$store.state.content;
-                break;
-              case 'json-viewer':
-                newContent = JSON.stringify(this.$store.state.content);
-                break;
-              case 'GridManager':
-                await this.$refs.contentComponent[myIndex].getSavedHtml();
-                newContent = this.$store.state.content;
-                break;
-              case 'MenuBuilder':
+            // this.$store.state.fileUrl = this.editableTabs[0].filepath
+            // // console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
+            // let componentId = this.editableTabs[0].componentId;
+            // this.componentId = this.editableTabs[0].componentId;
+            // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+            // let newContent
+            // switch (this.componentId) {
+            //   case 'GrapesComponent':
+            //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+            //     newContent = this.$store.state.content;
+            //     break;
+            //   case 'json-viewer':
+            //     newContent = JSON.stringify(this.$store.state.content);
+            //     break;
+            //   case 'GridManager':
+            //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+            //     newContent = this.$store.state.content;
+            //     break;
+            //   case 'MenuBuilder':
  
-              let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-              let tempurlparts = configFileUrl.split("/");
-              let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
-              console.log('fileName', fileName)
-              var folderUrl = fileName
+            //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+            //   let tempurlparts = configFileUrl.split("/");
+            //   let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+            //   console.log('fileName', fileName)
+            //   var folderUrl = fileName
  
-              let urlparts = this.$store.state.fileUrl.split("/");
-              let fileNameOrginal = urlparts[urlparts.length - 1];
-              let fileNameParts = fileNameOrginal.split('.');
-              let actualFileNameOnly = fileNameParts[0];
-              let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
-              console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
-              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
-              });
-              console.log('response.data', response.data)
-              this.$store.state.content = response.data
-              newContent = this.$store.state.content
-                // this.saveJsonFile('else');
-                break;
-              default:
-                  newContent = this.$store.state.content;
-            }
+            //   let urlparts = this.$store.state.fileUrl.split("/");
+            //   let fileNameOrginal = urlparts[urlparts.length - 1];
+            //   let fileNameParts = fileNameOrginal.split('.');
+            //   let actualFileNameOnly = fileNameParts[0];
+            //   let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+            //   console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
+            //   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
+            //   });
+            //   console.log('response.data', response.data)
+            //   this.$store.state.content = response.data
+            //   newContent = this.$store.state.content
+            //     // this.saveJsonFile('else');
+            //     break;
+            //   default:
+            //       newContent = this.$store.state.content;
+            // }
+          } else {
+            // clearInterval(myInterval);
           }
         }
       },
@@ -1388,10 +1396,20 @@
        this.editableTabs.reverse();
 
        this.editableTabsValue = newTabName;
+       var self = this
+       // if(this.editableTabs[0].title){
+       //   // clearInterval(myInterval);
+       //   var title = this.editableTabs[0].title;
+       //   myInterval = setInterval(function(){
+       //     self.saveFile('void')
+       //    }, 3000);
+       // }
+
 
 
         this.breadcrumbArr = url.replace(this.rootpath, '').split('\\')
         this.loadingContent = false
+        this.fullscreenLoading = false
       },
 
       // Get particular project's config.json file
@@ -4850,6 +4868,7 @@
                       message: 'Website successfully deleted..!!',
                       type: 'success'
                     });
+                    this.editableTabs = [];
                   })
                   .catch((e) => {
                       this.$message({
