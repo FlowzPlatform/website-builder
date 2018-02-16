@@ -3415,17 +3415,6 @@ export default {
 
     async init () {
 
-      let Allvshopid = await axios.get(config.vshopApi, {
-        headers: {
-          'Authorization': Cookies.get('auth_token')
-        }
-      });
-
-      this.vshopcategory = Allvshopid.data;
-      
-      var gateways= await axios.get(config.paymentApiGateway);
-      this.Allgateway = gateways.data.gateways;
-
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
@@ -3532,6 +3521,17 @@ export default {
       }).catch(error => {
         console.log("error occured while project details json: ", error);
       });
+
+      let Allvshopid = await axios.get(config.vshopApi, {
+        headers: {
+          'Authorization': Cookies.get('auth_token')
+        }
+      });
+
+      this.vshopcategory = Allvshopid.data;
+      
+      var gateways= await axios.get(config.paymentApiGateway);
+      this.Allgateway = gateways.data.gateways;
       
 
       if(this.commitsData[0]){
