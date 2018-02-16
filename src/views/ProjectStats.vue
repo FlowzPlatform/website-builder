@@ -275,15 +275,23 @@ export default {
 
     },
     deleteUser(id){
-      axios.delete(config.baseURL + '/website-users/' + id, {
-      })
-      .then((res) => {
-        console.log(res.data);
-        this.init();
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+      this.$confirm('This will permanently delete the user. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        axios.delete(config.baseURL + '/website-users/' + id, {
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.init();
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+      }).catch(() => {
+                 
+      });
     },
     revertCommit(index) {
       this.$store.state.currentIndex = index;
@@ -423,8 +431,8 @@ export default {
         for(var i in response.data.data){
           this.websiteUsers.push({
             UserId: response.data.data[i].id,
-            UserEmail: response.data.data[i].email,
-            UserRole: response.data.data[i].role, 
+            UserEmail: response.data.data[i].userEmail,
+            UserRole: response.data.data[i].userRole, 
           });
         }
       }).catch(error => {
