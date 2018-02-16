@@ -101,7 +101,14 @@
                 </el-form-item>
 
                 <el-form-item label="V Shop ID">
-                   <el-input v-model="form.vid" placeholder="enter vid" ></el-input>
+                   <el-select v-model="form.vid" placeholder="Select vid">
+                    <el-option
+                      v-for="item in vshopcategory"
+                      :key="item.id"
+                      :label="item.virtualShopName"
+                      :value="item.id">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
 
                 <!-- <el-form-item label="Brand name">
@@ -1119,7 +1126,8 @@ export default {
       projectDetailsJson: [],
       isProjectDetailsJsonUpdated: false,
       projectPublicUrl: '',
-      isPrimaryRole: false
+      isPrimaryRole: false,
+      vshopcategory: []
     }
   },
   components: {
@@ -1814,12 +1822,12 @@ export default {
       this.refreshPluginsLoading = true;
       this.fullscreenLoading = true;
 
-      //// console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
-
+      // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
+      
       // Call Listings API and get Tree
       await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '/' + this.repoName, {})
         .then(async(res) => {
-          //console.log(res);
+          console.log(res);
           this.refreshPluginsLoading = false;
 
           let directoryListing = res.data.children;
@@ -1956,9 +1964,9 @@ export default {
             type: 'error'
           });
           this.refreshPluginsLoading = false;
-          //console.log(e)
+          console.log(e)
         });
-
+        console.log('updated rethinkdb')
       var getFromBetween = {
         results: [],
         string: "",
@@ -2006,7 +2014,7 @@ export default {
 
       configData = JSON.parse(JSON.stringify(configData.data.configData))
         //// console.log('new config file:',configData);
-        //// console.log('now partial');
+        console.log('now partial');
       for (let q = 0; q < Object.keys(configData[2].layoutOptions[0]).length; q++) {
         //// console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
         if (Object.keys(configData[2].layoutOptions[0])[q] != ('Layout')) {
@@ -2131,7 +2139,7 @@ export default {
 
         }
       }
-      //// console.log('now pages');
+      console.log('now pages');
       for (let r = 0; r < configData[1].pageSettings.length; r++) {
         var namepage = configData[1].pageSettings[r].PageName
           //// console.log('namepage:',namepage)
@@ -3406,6 +3414,14 @@ export default {
     },
 
     async init () {
+
+      let Allvshopid = await axios.get(config.vshopApi, {
+        headers: {
+          'Authorization': Cookies.get('auth_token')
+        }
+      });
+
+      this.vshopcategory = Allvshopid.data;
       
       var gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
