@@ -572,6 +572,8 @@
                 $eval.push(response)
             }
           }
+
+          this.getData();
           
       })
       app.service("flows-dir-listing").on("removed", (response) => {
@@ -610,6 +612,8 @@
                   }
               }
           }
+
+          this.getData();
       });
     this.getDataOfSubscriptionUser();
 
@@ -2727,7 +2731,7 @@
                 setTimeout(function(){
                   self.$message({
                     showClose: true,
-                    message: 'Project Created. Please wait...',
+                    message: 'Project Created.',
                     type: 'success'
                   });
                 },500); 

@@ -766,13 +766,23 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       globalVariablesSelect.push(value);
     }
 
-    let urlHeaders = '';
-
     for(var j = 0; j < urlVariables.length; j++){
-      let value = {name: urlVariables[j].urlId, value: urlVariables[j].finalvalue};
-      // for(var jj = 0; j < urlVariables[j].urlHeaderVariables.length; jj++){
-      //   urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue + '" ';
-      // }
+
+      let urlHeaders = '';
+
+      for(var jj = 0; jj < urlVariables[j].urlHeaderVariables.length; jj++){
+        if( jj == (urlVariables[j].urlHeaderVariables.length - 1) ){
+          urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue;  
+        } else {
+          urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue + '" ';  
+        }
+        
+      }
+
+      // console.log(urlVariables[j].finalvalue + '" ' + urlHeaders);
+
+      let value = {name: urlVariables[j].urlId, value: urlVariables[j].finalvalue + '" ' + urlHeaders};
+
       urlVarValue.push(value);
     }
 
@@ -1889,14 +1899,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             name: 'apiurl',
             type: 'select',
             options: urlVarValue
-          }, {
-            label: 'Username',
-            name: 'apiusername',
-            type: 'text'
-          }, {
-            label: 'Password',
-            name: 'apipassword',
-            type: 'password'
           }, {
             label: 'Search',
             name: 'selectadvance_search_filter',

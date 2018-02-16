@@ -32,6 +32,7 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithLinkedInUrl = 'https://auth.'+domainkey+'/auth/linkedin';
 
     paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
+    vshopApi = 'https://api.' + domainkey + '/pdmnew/vshop-list';
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -53,6 +54,7 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
     loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
     paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
+    vshopApi = 'https://api.flowzcluster.tk/pdmnew/vshop-list';
 }
 
 module.exports = {
@@ -79,6 +81,8 @@ module.exports = {
     loginWithLinkedInUrl: loginWithLinkedInUrl,
 
     paymentApiGateway: paymentApiGateway,
+
+    vshopApi : vshopApi,
 
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
