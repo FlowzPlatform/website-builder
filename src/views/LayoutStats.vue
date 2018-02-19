@@ -20,7 +20,7 @@
 	              <tbody>
 	                <tr v-for="item in tablePagesData">
 	                  <td>{{item.number}}</td>
-	                  <td>{{item.layoutName}}.layout</td>
+	                  <td>{{item.layoutName}}</td>
 	                  <td v-html="item.partialsName"></td>
 	                </tr>
 	              </tbody>
@@ -78,11 +78,11 @@ export default {
 
         this.settings = this.configData.data.configData;
 
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.websiteName;
 
         this.tablePagesData = [];
 
-        console.log(this.settings[2].layoutOptions[0].Layout);
+        // console.log(this.settings[2].layoutOptions[0].Layout);
 
         for(var i = 0; i < Object.keys(this.settings[2].layoutOptions[0].Layout).length; i++){
           var partialsList;

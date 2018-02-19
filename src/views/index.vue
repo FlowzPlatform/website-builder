@@ -505,7 +505,7 @@
       //   this.$router.push('/login');
       // }
     },
-    mounted () {
+   async mounted () {
 
       //console.log('Index Page: ', Cookies.get('email'));
 
@@ -574,7 +574,7 @@
             }
           }
 
-          this.getData();
+          // this.getData();
           
       })
       app.service("flows-dir-listing").on("removed", (response) => {
@@ -616,16 +616,7 @@
 
           this.getData();
       });
-    this.getDataOfSubscriptionUser();
-
-       if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
-            this.value = Cookies.get("subscriptionId")
-        }
-    },
-
-    methods: {
-      async getDataOfSubscriptionUser(){
-        let sub_id = []
+      let sub_id = []
         await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(response => {
             let obj_val = Object.values(response.data.data.package)
@@ -634,16 +625,36 @@
               sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
             }
             this.options = sub_id
+            this.value  = sub_id[0].value;
+            localStorage.set("current_sub_id",this.value)
+    //this.getDataOfSubscriptionUser();
 
-             if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
-                  this.value = sub_id[0].value;
-                  let location = psl.parse(window.location.hostname);
-                  location = location.domain === null ? location.input : location.domain;
+       // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
+       //      this.value = Cookies.get("subscriptionId")
+        })
+    },
 
-                  Cookies.set("subscriptionId" , this.value, {domain: location});
-              }
-          })
-      },
+    methods: {
+      // async getDataOfSubscriptionUser(){
+      //   let sub_id = []
+      //   await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+      //     .then(response => {
+      //       let obj_val = Object.values(response.data.data.package)
+      //       let obj_key = Object.keys(response.data.data.package)
+      //       for (let index = 0; index < obj_val.length; index++) {
+      //         sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
+      //       }
+      //       this.options = sub_id
+
+      //        if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
+      //             this.value = sub_id[0].value;
+      //             let location = psl.parse(window.location.hostname);
+      //             location = location.domain === null ? location.input : location.domain;
+
+      //             Cookies.set("subscriptionId" , this.value, {domain: location});
+      //         }
+      //     })
+      // },
       changeSubscription(){
         this.editableTabs = []
 
@@ -651,8 +662,9 @@
           .then(response => {
             let location = psl.parse(window.location.hostname);
             location = location.domain === null ? location.input : location.domain;
-            Cookies.set('userDetailId', response.data.userId, {domain: location});
-            Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
+            localStorage.set("current_sub_id", this.value)
+            // Cookies.set('userDetailId', response.data.userId, {domain: location});
+            // Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
             axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             this.getData();
@@ -1424,20 +1436,21 @@
 
       // Save config File
       async saveConfigFile(folderUrl){
-
+        // console.log('inside saveConfigFile')
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
-
+        // console.log('folderUrl:',folderUrl)
+        // console.log('foldername:',foldername)
         let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername );
 
         if(rethinkdbCheck.data){
-
+          // console.log('data checked')
           // update existing data
-          return await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
+          return await axios.patch(config.baseURL + '/project-configuration/' + foldername, {
             configData: this.globalConfigData
           })
           .then(async (res) => {
-
+            // console.log('successfully patched:')
           })
           .catch((e) => {
               this.$message({
@@ -1445,7 +1458,7 @@
                   message: 'Failed! Please try again.',
                   type: 'error'
               });
-              //console.log(e)
+              console.log(e)
           });
 
           } else {
@@ -1540,7 +1553,7 @@
                   this.saveConfigFile(folderUrl)
 
                   }).catch((e)=>{
-                    //console.log(e)
+                    console.log(e)
                   })
                   
                 }
@@ -1806,7 +1819,7 @@
                     }
                   })
                   .catch((e) => {
-                    //console.log(e)
+                    console.log(e)
                   })
               } else if (newfilename.search('/Layout') != -1) {
                 return axios.post(config.baseURL + '/flows-dir-listing', {
@@ -1859,7 +1872,7 @@
             }
 
           } else {
-            //console.log('error submit!!');
+            // console.log('error submit!!');
             return false;
           }
         });
@@ -3300,112 +3313,114 @@
                       //console.log('File doesnt exists');
                     }
                   }
-                } else if (fileName.search('.vue') != -1 && fileName.search('/Pages') == -1) {
-                  var content = this.$store.state.content;
+                }
+                //  else if (fileName.search('.vue') != -1 && fileName.search('/Pages') == -1) {
+                //   var content = this.$store.state.content;
 
 
-                  // let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length + 1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
+                //   // let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length + 1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
 
-                  let name = fileName.split('/')[2];
-                  name = name.split('.')[0];
+                //   let name = fileName.split('/')[2];
+                //   name = name.split('.')[0];
 
-                  var substr = (getFromBetween.get(content, "<script>", "<\/script>"));
+                //   var substr = (getFromBetween.get(content, "<script>", "<\/script>"));
 
-                  substr = substr[0].replace('export', '').replace('default', '').replace('data()', '').trim()
-                  var obj1 = []
-                  if (substr.search('props') > 0) {
-                    substr = substr.replace(/([a-z]+)/ig, '"$1"')
-                    var contentJSON = JSON.parse(substr);
+                //   substr = substr[0].replace('export', '').replace('default', '').replace('data()', '').trim()
+                //   var obj1 = []
+                //   if (substr.search('props') > 0) {
+                //     substr = substr.replace(/([a-z]+)/ig, '"$1"')
+                //     var contentJSON = JSON.parse(substr);
 
-                    for (let k = 0; k < Object.keys(contentJSON.props).length; k++) {
-                      obj1.push(Object.keys(contentJSON.props)[k])
-                    }
-                    let temp = {
-                      value: name + '.vue',
-                      label: name + '.vue',
-                      props: obj1
-                    }
-                    let checkValue = false;
-                    if (foldername != 'Pages') {
-                      if (this.globalConfigData[2].layoutOptions[0][foldername]) {
-                        for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][foldername].length; i++) {
-                          var obj = this.globalConfigData[2].layoutOptions[0][foldername][i];
-                          if ((obj.label) == name) {
-                            checkValue = true;
-                            if (Object.keys(contentJSON.props).length > 0) {
-                              if (this.globalConfigData[2].layoutOptions[0][foldername][i].props != undefined) {
+                //     for (let k = 0; k < Object.keys(contentJSON.props).length; k++) {
+                //       obj1.push(Object.keys(contentJSON.props)[k])
+                //     }
+                //     let temp = {
+                //       value: name + '.vue',
+                //       label: name + '.vue',
+                //       props: obj1
+                //     }
+                //     let checkValue = false;
+                //     if (foldername != 'Pages') {
+                //       if (this.globalConfigData[2].layoutOptions[0][foldername]) {
+                //         for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][foldername].length; i++) {
+                //           var obj = this.globalConfigData[2].layoutOptions[0][foldername][i];
+                //           if ((obj.label) == name) {
+                //             checkValue = true;
+                //             if (Object.keys(contentJSON.props).length > 0) {
+                //               if (this.globalConfigData[2].layoutOptions[0][foldername][i].props != undefined) {
 
-                                this.globalConfigData[2].layoutOptions[0][foldername][i].props = (obj1)
+                //                 this.globalConfigData[2].layoutOptions[0][foldername][i].props = (obj1)
 
-                              } else {
+                //               } else {
 
-                                this.globalConfigData[2].layoutOptions[0][foldername][i]['props'] = []
-                                this.globalConfigData[2].layoutOptions[0][foldername][i].props = (obj1)
-                              }
-                            } else {
-                              if (this.globalConfigData[2].layoutOptions[0][foldername][i].props != undefined) {
+                //                 this.globalConfigData[2].layoutOptions[0][foldername][i]['props'] = []
+                //                 this.globalConfigData[2].layoutOptions[0][foldername][i].props = (obj1)
+                //               }
+                //             } else {
+                //               if (this.globalConfigData[2].layoutOptions[0][foldername][i].props != undefined) {
 
-                                delete this.globalConfigData[2].layoutOptions[0][foldername][i].props
+                //                 delete this.globalConfigData[2].layoutOptions[0][foldername][i].props
 
-                              }
-                            }
+                //               }
+                //             }
 
-                          }
-                        }
-                        if (checkValue == true) {
-                          //console.log("File already exists")
-                          this.saveConfigFile(folderUrl);
-                        } else {
-                          this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
-                          this.saveConfigFile(folderUrl);
+                //           }
+                //         }
+                //         if (checkValue == true) {
+                //           //console.log("File already exists")
+                //           this.saveConfigFile(folderUrl);
+                //         } else {
+                //           this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
+                //           this.saveConfigFile(folderUrl);
 
-                        }
-                      } else {
-                        this.globalConfigData[2].layoutOptions[0][foldername] = [];
-                        this.globalConfigData[2].layoutOptions[0][foldername].push(temp)
-                        this.saveConfigFile(folderUrl);
-                      }
-                    }
-                  } else {
-                    let temp = {
-                      value: name + '.vue',
-                      label: name + '.vue',
-                      props: obj1
-                    }
-                    let checkValue = false;
-                    if (foldername != 'Pages') {
-                      if (this.globalConfigData[2].layoutOptions[0][foldername]) {
-                        for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][foldername].length; i++) {
-                          var obj = this.globalConfigData[2].layoutOptions[0][foldername][i];
-                          if ((obj.label) == name) {
-                            checkValue = true;
-                            if (this.globalConfigData[2].layoutOptions[0][foldername][i].props != undefined) {
-
-
+                //         }
+                //       } else {
+                //         this.globalConfigData[2].layoutOptions[0][foldername] = [];
+                //         this.globalConfigData[2].layoutOptions[0][foldername].push(temp)
+                //         this.saveConfigFile(folderUrl);
+                //       }
+                //     }
+                //   } else {
+                //     let temp = {
+                //       value: name + '.vue',
+                //       label: name + '.vue',
+                //       props: obj1
+                //     }
+                //     let checkValue = false;
+                //     if (foldername != 'Pages') {
+                //       if (this.globalConfigData[2].layoutOptions[0][foldername]) {
+                //         for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][foldername].length; i++) {
+                //           var obj = this.globalConfigData[2].layoutOptions[0][foldername][i];
+                //           if ((obj.label) == name) {
+                //             checkValue = true;
+                //             if (this.globalConfigData[2].layoutOptions[0][foldername][i].props != undefined) {
 
 
-                              this.globalConfigData[2].layoutOptions[0][foldername][i].props = []
 
-                            }
 
-                          }
-                        }
-                        if (checkValue == true) {
-                          //console.log("File already exists")
-                          this.saveConfigFile(folderUrl);
-                        } else {
-                          this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
-                          this.saveConfigFile(folderUrl);
+                //               this.globalConfigData[2].layoutOptions[0][foldername][i].props = []
 
-                        }
-                      } else {
-                        this.globalConfigData[2].layoutOptions[0][foldername] = [];
-                        this.globalConfigData[2].layoutOptions[0][foldername].push(temp)
-                        this.saveConfigFile(folderUrl);
-                      }
-                    }
-                  }
-                } else if (fileName.search('/Pages') != -1) {
+                //             }
+
+                //           }
+                //         }
+                //         if (checkValue == true) {
+                //           //console.log("File already exists")
+                //           this.saveConfigFile(folderUrl);
+                //         } else {
+                //           this.globalConfigData[2].layoutOptions[0][foldername].push(temp);
+                //           this.saveConfigFile(folderUrl);
+
+                //         }
+                //       } else {
+                //         this.globalConfigData[2].layoutOptions[0][foldername] = [];
+                //         this.globalConfigData[2].layoutOptions[0][foldername].push(temp)
+                //         this.saveConfigFile(folderUrl);
+                //       }
+                //     }
+                //   }
+                // }
+                 else if (fileName.search('/Pages') != -1) {
                   var content1 = ''
                     // content = this.$store.state.content;
                   // let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length + 1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
@@ -3416,7 +3431,7 @@
                   content1 = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + name + '.html');
                   content1 = content1.data
                   var result1 = [];
-                  var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
+                  // var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
                   result1 = (getFromBetween.get(content1, "{{>", "}}"));
 
                   var DefaultParams = [];
@@ -3552,67 +3567,67 @@
                   }
                   this.saveConfigFile(folderUrl);
                   // var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
-                  if (vueresult.length > 0) {
-                    for (let i = 0; i < vueresult.length; i++) {
-                      var tempvue = vueresult[i]
-                      var tempvue = tempvue.trim().split(' ')
-                      if (tempvue[2] != undefined) {
-                        var vuetemp = {
-                          partialsName: tempvue[0].replace(/"/g, ''),
-                          value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue',
-                          options: tempvue[2].split('=')[1].replace(/"/g, '')
-                        }
-                      } else {
-                        var vuetemp = {
-                          partialsName: tempvue[0].replace(/"/g, ''),
-                          value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue'
-                        }
-                      }
+                  // if (vueresult.length > 0) {
+                  //   for (let i = 0; i < vueresult.length; i++) {
+                  //     var tempvue = vueresult[i]
+                  //     var tempvue = tempvue.trim().split(' ')
+                  //     if (tempvue[2] != undefined) {
+                  //       var vuetemp = {
+                  //         partialsName: tempvue[0].replace(/"/g, ''),
+                  //         value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue',
+                  //         options: tempvue[2].split('=')[1].replace(/"/g, '')
+                  //       }
+                  //     } else {
+                  //       var vuetemp = {
+                  //         partialsName: tempvue[0].replace(/"/g, ''),
+                  //         value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue'
+                  //       }
+                  //     }
 
-                      for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
-                        let temp = this.globalConfigData[1].pageSettings[i].PageName
-                        temp = temp.split('.')[0]
-                        if (name == temp) {
-                          if (this.globalConfigData[1].pageSettings[i].VueComponents != undefined) {
-                            let checkvue = false
-                            for (let j = 0; j < this.globalConfigData[1].pageSettings[i].VueComponents.length; j++) {
-                              if (this.globalConfigData[1].pageSettings[i].VueComponents[j].partialsName == tempvue[0].replace(/"/g, '')) {
-                                if (this.globalConfigData[1].pageSettings[i].VueComponents[j].value.split('.')[0] == tempvue[1].split('=')[1].replace(/"/g, '')) {
-                                  checkvue = true;
-                                  if (this.globalConfigData[1].pageSettings[i].VueComponents[j].options != '') {
-                                    if (tempvue[2] != undefined) {
+                  //     for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
+                  //       let temp = this.globalConfigData[1].pageSettings[i].PageName
+                  //       temp = temp.split('.')[0]
+                  //       if (name == temp) {
+                  //         if (this.globalConfigData[1].pageSettings[i].VueComponents != undefined) {
+                  //           let checkvue = false
+                  //           for (let j = 0; j < this.globalConfigData[1].pageSettings[i].VueComponents.length; j++) {
+                  //             if (this.globalConfigData[1].pageSettings[i].VueComponents[j].partialsName == tempvue[0].replace(/"/g, '')) {
+                  //               if (this.globalConfigData[1].pageSettings[i].VueComponents[j].value.split('.')[0] == tempvue[1].split('=')[1].replace(/"/g, '')) {
+                  //                 checkvue = true;
+                  //                 if (this.globalConfigData[1].pageSettings[i].VueComponents[j].options != '') {
+                  //                   if (tempvue[2] != undefined) {
 
-                                      this.globalConfigData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
-                                    } else {
-                                      this.globalConfigData[1].pageSettings[i].VueComponents[j].options = ''
-                                    }
-                                  } else {
-                                    if (tempvue[2] != undefined) {
+                  //                     this.globalConfigData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
+                  //                   } else {
+                  //                     this.globalConfigData[1].pageSettings[i].VueComponents[j].options = ''
+                  //                   }
+                  //                 } else {
+                  //                   if (tempvue[2] != undefined) {
 
-                                      this.globalConfigData[1].pageSettings[i].VueComponents[j]['options'] = ''
-                                      this.globalConfigData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
-                                    } else {
+                  //                     this.globalConfigData[1].pageSettings[i].VueComponents[j]['options'] = ''
+                  //                     this.globalConfigData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
+                  //                   } else {
 
-                                    }
-                                  }
-                                } else {
-                                }
+                  //                   }
+                  //                 }
+                  //               } else {
+                  //               }
 
-                              }
-                            }
-                            if (checkvue != true) {
+                  //             }
+                  //           }
+                  //           if (checkvue != true) {
 
-                              this.globalConfigData[1].pageSettings[i].VueComponents.push(vuetemp)
-                            }
-                          } else {
-                            this.globalConfigData[1].pageSettings[i]['VueComponents'] = []
-                            this.globalConfigData[1].pageSettings[i].VueComponents.push(vuetemp)
-                          }
-                        }
-                      }
-                    }
-                  }
-                  this.saveConfigFile(folderUrl);
+                  //             this.globalConfigData[1].pageSettings[i].VueComponents.push(vuetemp)
+                  //           }
+                  //         } else {
+                  //           this.globalConfigData[1].pageSettings[i]['VueComponents'] = []
+                  //           this.globalConfigData[1].pageSettings[i].VueComponents.push(vuetemp)
+                  //         }
+                  //       }
+                  //     }
+                  //   }
+                  // }
+                  // this.saveConfigFile(folderUrl);
 
                   let temp = {
                     value: name,
@@ -3625,12 +3640,12 @@
                       temp = temp.split('.')[0]
                       if (name == temp) {
                         checkValue = true;
-                        if (vueresult.length <= 0) {
-                          if (this.globalConfigData[1].pageSettings[i].VueComponents != undefined && this.globalConfigData[1].pageSettings[i].VueComponents.length > 0) {
-                            this.globalConfigData[1].pageSettings[i].VueComponents = [];
-                            this.saveConfigFile(folderUrl);
-                          }
-                        }
+                        // if (vueresult.length <= 0) {
+                        //   if (this.globalConfigData[1].pageSettings[i].VueComponents != undefined && this.globalConfigData[1].pageSettings[i].VueComponents.length > 0) {
+                        //     this.globalConfigData[1].pageSettings[i].VueComponents = [];
+                        //     this.saveConfigFile(folderUrl);
+                        //   }
+                        // }
                         if (result1.length <= 0) {
                             // var layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + this.globalConfigData[1].pageSettings[i].PageLayout + '.layout');
                             // layoutdata = layoutdata.data
@@ -3723,9 +3738,9 @@
    
                             }
    
-                            // }
+                            
                           }
-                        // }
+                       
                           if (layoutresult.length > 0) {
                             for (let k = 0; k < this.globalConfigData[1].pageSettings[i].partials.length; k++) {
                               let checklayoutp = false
@@ -3743,6 +3758,7 @@
                                     }
                                    
                                   }else{
+                                    console.log('!!!!!!!!!!!!!!!!!!!:',this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]])
                                     if(this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]]!=''){
                                       checklayoutp = true
                                     }
@@ -4083,35 +4099,35 @@
 
 
           var contentpartials = self.$store.state.content;
-          if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
+          // if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
 
-            var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
-            mainVuefile = mainVuefile.data
+          //   var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
+          //   mainVuefile = mainVuefile.data
 
-            for (let x = 0; x < self.form.vuepartials.length; x++) {
-              let temp = mainVuefile.replace(/@@vuecomponent@@/g, self.form.vuepartials[x].value.split('.')[0])
-              temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
+          //   for (let x = 0; x < self.form.vuepartials.length; x++) {
+          //     let temp = mainVuefile.replace(/@@vuecomponent@@/g, self.form.vuepartials[x].value.split('.')[0])
+          //     temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
 
-              await axios.post(config.baseURL + '/flows-dir-listing', {
-                  filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
-                  text: temp,
-                  type: 'file'
-                }).then(async(res) => {
-                  contentpartials = contentpartials + '<script src="./assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
+          //     await axios.post(config.baseURL + '/flows-dir-listing', {
+          //         filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
+          //         text: temp,
+          //         type: 'file'
+          //       }).then(async(res) => {
+          //         contentpartials = contentpartials + '<script src="./assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
 
-                  axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
-                    .then((response) => {
+          //         axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
+          //           .then((response) => {
 
-                    })
-                    .catch((e) => {
-                      //console.log(e)
-                    })
-                })
-                .catch((e) => {
-                  //console.log(e)
-                })
-            }
-          }
+          //           })
+          //           .catch((e) => {
+          //             //console.log(e)
+          //           })
+          //       })
+          //       .catch((e) => {
+          //         //console.log(e)
+          //       })
+          //   }
+          // }
           if (self.form.Layout == 'Blank') {
             await axios.post(config.baseURL + '/flows-dir-listing', {
                 filename: folderUrl + '/Layout/Blank.layout',
@@ -4119,7 +4135,7 @@
                 type: 'file'
               })
               .catch((e) => {
-                //console.log("Error while blank file creation")
+                console.log("Error while blank file creation")
               })
           }
 
@@ -4185,7 +4201,7 @@
                   text: responsepartials,
                   type: 'file'
                 }).catch((e) => {
-                  //console.log(e)
+                  console.log(e)
                 })
               }
 
@@ -4262,7 +4278,7 @@
 
             })
             .catch((e) => {
-              //console.log(e)
+              console.log(e)
             })
 
           let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmithPreview.js');
@@ -4306,7 +4322,7 @@
           responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
           self.form.partials = back_partials
 
-          // console.log("Final metalsmith:", responseMetal.data);
+          console.log("Final metalsmith:", responseMetal.data);
 
           var mainMetal = folderUrl + '/public/assets/metalsmithPreview.js'
           axios.post(config.baseURL + '/save-menu', {
@@ -4323,12 +4339,13 @@
                 //console.log(res)
 
               }).catch((e) => {
-                //console.log(e)
+                console.log(e)
               })
 
               let datadivscript = ''
               let divappstart=''
               let divappend=''
+              let dfscript=''
               if(contentpartials.indexOf('datafieldgroup')>0){
                 datadivscript= "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
                     "<script type='text/javascript' src='http://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
@@ -4336,6 +4353,7 @@
                     "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
                 divappstart='<div id="app">'
                 divappend='</div>'
+                dfscript="<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n"
               }
 
               let newContent = "<html>\n<head>\n" + tophead +
@@ -4351,12 +4369,12 @@
                     '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
+                    "<script src=\"./../main-files/main.js\"><\/script>\n" +
                     datadivscript +
                     "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
                     endhead + "\n</head>\n<body>\n" + divappstart + topbody +
                     layoutdata.data +
                     '\n'+ divappend +
-                    "<script src=\"./../main-files/main.js\"><\/script>\n" +
                     '<script src="./../assets/client-plugins/client-cart.js"><\/script>\n' +
                     "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
@@ -4366,7 +4384,7 @@
                     '<script src="./../assets/client-plugins/client-popular-product-slider-plugin.js"><\/script>\n' +
                     '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                     '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                    endbody +
+                    endbody +dfscript+
                     '\n</body>\n</html>';
 
               
@@ -4430,123 +4448,123 @@
                                   })
                                   if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                     for (let x = 0; x < self.form.vuepartials.length; x++) {
-                                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {})
+                                      await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {})
                                         .catch((e) => {
                                           //console.log(e)
                                         })
                                     }
                                   }
                                   if (self.form.Layout == 'Blank') {
-                                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
                                       .catch((e) => {
                                         self.fullscreenLoading = false;
-                                        //console.log("Error while deleting blank.layout file")
+                                        console.log("Error while deleting blank.layout file")
                                       })
                                   }
 
                                 })
                                 .catch((e) => {
                                   self.fullscreenLoading = false;
-                                  //console.log(e)
+                                  console.log(e)
                                 })
 
                             })
-                            .catch((e) => {
+                            .catch(async (e) => {
                               self.fullscreenLoading = false;
                               window.open('http://' + config.ipAddress + '/plugins/public/error.html');
                               
 
-                              axios.post(config.baseURL + '/flows-dir-listing', {
+                              await axios.post(config.baseURL + '/flows-dir-listing', {
                                 filename: mainMetal,
                                 text: backupmetalsmith,
                                 type: 'file'
                               })
 
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
+                              await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                                 //console.log(e)
                               })
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                                //console.log(e)
+                              await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                              await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                                console.log(e)
                             })
 
                         })
-                        .catch((err) => {
+                        .catch(async(err) => {
                           self.fullscreenLoading = false;
                           window.open('http://' + config.ipAddress + '/plugins/public/error.html');
                           
-                          axios.post(config.baseURL + '/flows-dir-listing', {
+                          await axios.post(config.baseURL + '/flows-dir-listing', {
                             filename: mainMetal,
                             text: backupmetalsmith,
                             type: 'file'
                           })
 
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
+                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                             //console.log(e)
                           })
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                            //console.log('Error while creating MetalSmith JS file' + err)
+                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                          console.log(err)
 
                         })
 
                     })
-                    .catch((e) => {
+                    .catch(async (e) => {
                       self.fullscreenLoading = false;
                       window.open('http://' + config.ipAddress + '/plugins/public/error.html');
 
                
-                      axios.post(config.baseURL + '/flows-dir-listing', {
+                      await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: mainMetal,
                         text: backupmetalsmith,
                         type: 'file'
                       })
 
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
+                      await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                           //console.log(e)
                         })
-                        // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                        // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                        await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
                       self.saveFileLoading = false
-                        //console.log(e)
+                        console.log(e)
                     })
                 })
-                .catch((e) => {
+                .catch(async(e) => {
                   self.fullscreenLoading = false;
                   window.open('http://' + config.ipAddress + '/plugins/public/error.html');
                   
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-                  axios.post(config.baseURL + '/flows-dir-listing', {
+                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                 await axios.post(config.baseURL + '/flows-dir-listing', {
                     filename: mainMetal,
                     text: backupmetalsmith,
                     type: 'file'
                   })
 
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
+                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
 
                     }).catch((e) => {
                       //console.log(e)
                     })
-                    //console.log(e);
+                    console.log(e);
                 })
             })
-            .catch((e) => {
+            .catch(async(e) => {
               self.fullscreenLoading = false;
               window.open('http://' + config.ipAddress + '/plugins/public/error.html');
               
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
-              axios.post(config.baseURL + '/flows-dir-listing', {
+             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+             await axios.post(config.baseURL + '/flows-dir-listing', {
                 filename: mainMetal,
                 text: backupmetalsmith,
                 type: 'file'
               })
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
+             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
 
               }).catch((e) => {
                 //console.log(e)
               })
 
-              //console.log('Error while creating MetalSmith JS file' + e)
+              console.log(e)
             })
 
         }, 2000);
@@ -4600,7 +4618,7 @@
 
       // Remove File
       async remove(store, data) {
-
+        // console.log('remove called:')
         // Get Config.json file data
         let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         let urlparts = configFileUrl.split("/");
@@ -4626,7 +4644,7 @@
         // projectName = projectName[(projectName.length-1)];
         
         let projectName = urlparts[6];
-        
+        // console.log('projectName:',projectName)
         // this.getConfigFileData(folderUrl);
         let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName );
 
@@ -4642,13 +4660,14 @@
           cancelButtonText: 'No, keep it'
         }).then(() => {
           axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
-            .then((res) => {
+            .then(async (res) => {
+              // console.log('file deleted:')
               this.currentFile = null
               this.componentId = 'Dashboard';
 
               let file_path_ = data.path.replace(/\\/g, "/")
               let arr_file = file_path_.split('/')
-
+              // console.log('file_path_:',file_path_)
               var last_element = arr_file[arr_file.length - 1];
 
               var Templates = JSON.parse(localStorage.getItem("Templates"));
@@ -4660,7 +4679,7 @@
               localStorage.setItem("Templates", JSON.stringify(Templates));
 
               if (_.includes(data.path, 'Pages')) {
-                console.log('delete from pages ')
+                // console.log('delete from pages ')
                 // get index of file to be deleted
                 let indexOfPageName = _.findIndex(this.globalConfigData[1].pageSettings, function(o) {
                   return o.PageName == last_element;
@@ -4677,9 +4696,9 @@
 
                 // Remove item from tab
                 this.editableTabs.splice(indexOfTabArray, 1);
-
+                // console.log('url:',folderUrl)
                 // save config file
-                this.saveConfigFile(folderUrl);
+               await this.saveConfigFile(file_path_);
               } else if (_.includes(data.path, 'Layout')) {
 
                 var layoutName = last_element.replace(".layout", "");
@@ -4699,7 +4718,7 @@
                 this.editableTabs.splice(indexOfTabArray, 1);
 
                 // save config file
-                this.saveConfigFile(folderUrl);
+                this.saveConfigFile(file_path_);
               } else if (_.includes(data.path, 'Partials')) {
                 // console.log('removing partials')
                 var foldername=arr_file[arr_file.length-2]           
@@ -4718,7 +4737,7 @@
                 this.editableTabs.splice(indexOfTabArray, 1);
               
                 // save config file
-                this.saveConfigFile(folderUrl);
+                this.saveConfigFile(file_path_);
               } else {
                 let partialsArray = [];
                 var foldername=arr_file[arr_file.length-2]
@@ -4741,7 +4760,7 @@
 
                   // save config file
                 }
-                  this.saveConfigFile(folderUrl);
+                  this.saveConfigFile(file_path_);
               }
 
               this.getData();
@@ -4753,7 +4772,7 @@
           this.componentId = 'Dashboard';
           this.isHomePage = true;
         }).catch((dismiss) => {
-          //console.log('error', dismiss)
+          console.log('error', dismiss)
         })
       },
 
