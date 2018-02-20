@@ -626,7 +626,7 @@
             }
             this.options = sub_id
             this.value  = sub_id[0].value;
-            localStorage.set("current_sub_id",this.value)
+            localStorage.setItem("current_sub_id",this.value)
     //this.getDataOfSubscriptionUser();
 
        // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
@@ -662,7 +662,7 @@
           .then(response => {
             let location = psl.parse(window.location.hostname);
             location = location.domain === null ? location.input : location.domain;
-            localStorage.set("current_sub_id", this.value)
+            localStorage.setItem("current_sub_id", this.value)
             // Cookies.set('userDetailId', response.data.userId, {domain: location});
             // Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
             axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
