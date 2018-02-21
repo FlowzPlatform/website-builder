@@ -82,7 +82,7 @@ export default {
 
         this.settings = this.configData.data.configData;
 
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.websiteName;
 
         this.tablePagesData = [];
 
