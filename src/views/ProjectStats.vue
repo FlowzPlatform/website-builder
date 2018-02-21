@@ -432,7 +432,7 @@ export default {
           this.websiteUsers.push({
             UserId: response.data.data[i].id,
             UserEmail: response.data.data[i].userEmail,
-            UserRole: response.data.data[i].userRole, 
+            UserRole: response.data.data[i].role, 
           });
         }
       }).catch(error => {

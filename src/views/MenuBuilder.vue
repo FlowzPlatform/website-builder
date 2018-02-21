@@ -284,46 +284,61 @@ import domenu from 'domenu'
 
 				let menuData;
 
-				//console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'))
+				//console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'));
 
-				axios.get(this.apiUrl, {
-			    headers: {
-			    	Authorization: Cookies.get('auth_token')
-			    }
+				let folderPath = this.$store.state.fileUrl.replace(/\\/g, "\/");
+				let folderName = folderPath.split('/')[6];
+
+				let fullUrl = '/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + folderName + '/public/assets/project-details.json';
+
+				axios.get(config.baseURL + '/flows-dir-listing/0?path=' + fullUrl, {
 				})
 				.then((res) => {
-					let menuJson = [];
-				    let categories = res.data.aggregations.group_by_category.buckets;
-
-				    for(let i = 0; i < categories.length; i++){
-				    	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
-				    	let menuItem = {
-														    "id": i,
-														    "title": categories[i].key,
-														    "customSelect": this.menuBaseUrl + urlName,
-														    "__domenu_params": {}
-														    ,
-														    "select2ScrollPosition": {
-														        "x": 0, "y": 0
-														    }
-															};
-
-						menuJson.push(menuItem);								
-			    	}
-
-			    	menuData = JSON.stringify(menuJson);
-			    	// window.localStorage.setItem('domenu-1Json', JSON.stringify(menuJson));
-
-			    	this.initMenu(menuData);
+					let configs = JSON.parse(res.data);
+					console.log(configs[0].Projectvid[0].vid);
 				})
 				.catch((e) => {
-				    this.$message({
-				        showClose: true,
-				        message: 'Failed! Please try again.',
-				        type: 'error'
-				    });
 				    //console.log(e)
 				})
+
+				// axios.get(this.apiUrl, {
+			 //    headers: {
+			 //    	Authorization: Cookies.get('auth_token')
+			 //    }
+				// })
+				// .then((res) => {
+				// 	let menuJson = [];
+				//     let categories = res.data.aggregations.group_by_category.buckets;
+
+				//     for(let i = 0; i < categories.length; i++){
+				//     	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
+				//     	let menuItem = {
+				// 										    "id": i,
+				// 										    "title": categories[i].key,
+				// 										    "customSelect": this.menuBaseUrl + urlName,
+				// 										    "__domenu_params": {}
+				// 										    ,
+				// 										    "select2ScrollPosition": {
+				// 										        "x": 0, "y": 0
+				// 										    }
+				// 											};
+
+				// 		menuJson.push(menuItem);								
+			 //    	}
+
+			 //    	menuData = JSON.stringify(menuJson);
+			 //    	// window.localStorage.setItem('domenu-1Json', JSON.stringify(menuJson));
+
+			 //    	this.initMenu(menuData);
+				// })
+				// .catch((e) => {
+				//     this.$message({
+				//         showClose: true,
+				//         message: 'Failed! Please try again.',
+				//         type: 'error'
+				//     });
+				//     //console.log(e)
+				// })
 			}
 		}
 	}
