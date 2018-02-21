@@ -655,11 +655,12 @@
       //         }
       //     })
       // },
-      changeSubscription(){
+       changeSubscription(){
+        this.fullscreenLoading=true
         this.editableTabs = []
 
         axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
-          .then(response => {
+          .then(async response => {
             let location = psl.parse(window.location.hostname);
             location = location.domain === null ? location.input : location.domain;
             localStorage.setItem("current_sub_id", this.value)
@@ -667,7 +668,8 @@
             // Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
             axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
-            this.getData();
+            await this.getData();
+            this.fullscreenLoading=false
           })
       },
       canceldialog(){
@@ -852,10 +854,10 @@
         // If PageSettings Clicked
         if(this.isPageEditing){
 
-          clearInterval(myInterval);
+          // clearInterval(myInterval);
 
           if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-            this.saveFile('getFileContent')
+            this.saveFile('getFileCmyIntervalontent')
           }
 
           this.isPageEditing = false;
@@ -2226,7 +2228,9 @@
                                   "login_api": config.loginUrl,
                                   "register_api": config.registerUrl,
                                   "user_details_api": config.userDetail,
-                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/'
+                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/',
+                                  "CrmSettingId":'',
+                                  "Projectvid":{"vid":'',"userId":'',"password":''}
                                   }];
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename : projectDetails,
@@ -2608,7 +2612,8 @@
                                         "ProjectSEOKeywords": '',
                                         "ProjectSEODescription": '',
                                         "ProjectFaviconhref": '',
-                                        "ProjectVId":''
+                                        "ProjectVId":{'vid':'','userId':'','password':''},
+                                        "CrmSettingId":''
                                       }, {
                                         "AssetImages": [],
                                         "GlobalVariables": [],
@@ -3085,13 +3090,18 @@
                   this.saveConfigFile(folderUrl);
                 }
                 var foldernameKey = Object.keys(this.globalConfigData[2].layoutOptions[0])
+                // console.log('result:::::::',result)
+                // console.log('foldernameKey:::::::',foldernameKey)
+                // console.log('DefaultParams::::::::',DefaultParams)
                 for (var i = 0; i < result.length; i++) {
+                  // console.log('result:',result[i])
                   var check = false;
                   for (var j = 0; j < foldernameKey.length; j++) {
                     if (result[i] == foldernameKey[j]) {
                       check = true
                       if (DefaultParams.length > 0) {
                         for (let k = 0; k < DefaultParams.length; k++) {
+                          // console.log('Object.keys(DefaultParams[k])',Object.keys(DefaultParams[k]),foldernameKey[j])
                           if (Object.keys(DefaultParams[k]) == foldernameKey[j]) {
                             let checkdefault = false;
                             for (let a = 0; a < this.globalConfigData[2].layoutOptions[0][foldernameKey[j]].length; a++) {
@@ -3102,6 +3112,7 @@
                               }
                             }
                             if (checkdefault != true) {
+                              // console.log('new create@@@@@@@')
                               let newFolderName = folderUrl + '/Partials/';
                               await axios.post(config.baseURL + '/flows-dir-listing', {
                                 filename: newFolderName + foldernameKey[j] + "/" + DefaultParams[k][foldernameKey[j]],
@@ -3126,7 +3137,8 @@
 
                   }
                   if (check == false) {
-                    var newName = result[i]
+                    // console.log('inside false')
+                    let newName = result[i]
                     let newFolderName = folderUrl + '/Partials/' + result[i];
                     axios.post(config.baseURL + '/flows-dir-listing', {
                         foldername: newFolderName,
@@ -3135,7 +3147,7 @@
                       .then((res) => {
                         this.newFolderDialog = false
                         this.addNewFolderLoading = false
-                        let x = newName
+                        // let x = newName
 
                         this.addNewFileLoading = true
 
@@ -3149,13 +3161,15 @@
                             this.newFileDialog = false
                             this.addNewFileLoading = false
                             this.formAddFile.filename = null
-                            this.globalConfigData[2].layoutOptions[0][x] = [];
+                            this.globalConfigData[2].layoutOptions[0][newName] = [];
                             let temp = {
                               value: "default",
                               label: "default"
                             }
-                            this.globalConfigData[2].layoutOptions[0][x].push(temp)
-                            this.saveConfigFile(folderUrl);
+                            // console.log(newName)
+                            this.globalConfigData[2].layoutOptions[0][newName].push(temp)
+                            await this.saveConfigFile(folderUrl);
+                            // console.log(JSON.parse(JSON.stringify( this.globalConfigData[2].layoutOptions[0])))
                             if (DefaultParams.length > 0) {
                               for (let k = 0; k < DefaultParams.length; k++) {
                                 if (DefaultParams[k][newName].split('.')[0] != 'default') {
@@ -3187,21 +3201,16 @@
 
                           })
                           .catch((e) => {
-                            //console.log(e)
+                            console.log(e)
                           })
                       })
                       .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                       })
                   }
                   //now change pagesetting where ever this layout is being used.
 
                 }
-                // for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
-                //   if(this.globalConfigData[1].pageSettings[i].PageLayout==name){
-
-                //   }
-                // }
               } else {
                 let checkValue = false;
                 if (fileName.search('.partial') != -1 && fileName.search('/Pages') == -1) {

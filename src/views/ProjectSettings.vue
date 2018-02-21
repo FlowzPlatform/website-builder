@@ -96,9 +96,9 @@
                   <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
                 </el-form-item>
 
-                <el-form-item label="Favicon Logo">
+                <!-- <el-form-item label="Favicon Logo">
                    <el-input v-model="faviconhref" placeholder="href" ></el-input>
-                </el-form-item>
+                </el-form-item> -->
 
                 <el-form-item label="V Shop ID">
                    <el-select v-model="form.vid" placeholder="Select vid">
@@ -109,6 +109,20 @@
                       :value="item.id">
                     </el-option>
                   </el-select>
+                </el-form-item>
+                 <el-form-item label="CRM Setting ID">
+                 <el-row><el-col :span='20'>
+                   <el-select v-model="form.crmid" placeholder="Select crm id">
+                    <el-option
+                      v-for="item in crmdata"
+                      :key="item.id"
+                      :label="item.configName"
+                      :value="item.id">
+                    </el-option>
+                  </el-select></el-col>
+                  <el-col :span='4'>
+                  <el-button type="primary" icon='setting'>CRM Setting</el-button></el-col>
+                  </el-row>
                 </el-form-item>
 
                 <!-- <el-form-item label="Brand name">
@@ -121,11 +135,11 @@
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label>
                     <input type="file" name="" id="upload-validation">
-                    <span class="dis">( .ico only)</span>
+                    <span class="dis">( .png/ico only)</span>
 
-                  </div> -->
-                 <!--   <el-input v-model="faviconhref" placeholder="href" ></el-input>
-                </el-form-item> -->
+                  </div>
+                   <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
+                </el-form-item>
 
                 <el-form-item label="Project SEO Title">
                   <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
@@ -1019,9 +1033,11 @@ export default {
         selectedHeader: '',
         selectedFooter: '',
         websitename: '',
-        vid:''
+        vid:'',
+        crmid:''
       },
       commitsData: [],
+      crmdata:[],
       faviconhref:'',
       fileList3: [],
       pluginsData: [],
@@ -1243,7 +1259,7 @@ export default {
 
       var fileName = e.target.files[0].name;
       var ext = $(this).val().split('.').pop().toLowerCase();
-      if($.inArray(ext, ['png', 'jpg']) == -1 && ext != ''){
+      if($.inArray(ext, ['png', 'ico']) == -1 && ext != ''){
         $('#text2').text('Invalid image file.');
         $('.valid').addClass('error').removeClass('correct');
         $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
@@ -2410,25 +2426,28 @@ export default {
     uploadImage(fileData, fileBlob) {
 
       this.form.brandLogoName = fileData.name;
-
+      console.log(fileData)
       axios.post( config.baseURL + '/image-upload', {
-          filename : this.folderUrl + '/public/assets/' + this.form.brandLogoName,
+          filename : this.folderUrl + '/public/assets/favicon.'+fileData.name.split('.')[1]  ,
           text : fileBlob,
           type : 'file'
       })
       .then((res) => {
-        //console.log('Brand Logo Uploaded: ', res.data);
+        // console.log('Brand Logo Uploaded: ', res.data);
       })
-      .catch((e) => {
-        //console.log('Some error occured. Here is full log: ', e)
+      .catch((e) => { 
+        console.log(' error occured: ', e)
       });
     },
 
     async saveProjectSettings() {
+      // console.log('form.websitename',this.form.websitename )
+      // console.log('configdata.websitename',this.configData.data.websiteName )
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
         var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
         var alldatauser = await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
+        // console.log(config.baseURL + '/project-configuration?userId=' + userid)
         let checkdetail = true
         for (let i = 0; i < alldatauser.data.data.length; i++) {
           if (this.form.websitename == alldatauser.data.data[i].websiteName) {
@@ -2436,14 +2455,14 @@ export default {
           }
         }
         if (checkdetail != false) {
-          console.log('not same found')
+          // console.log('not same found')
         } else {
           this.$swal({
             title:'Save Aborted.',
             text: 'Website with "'+this.form.websitename+'" already exists!!!!',
             type: 'warning',
           })
-          console.log('same name found', this.configData.data.websiteName);
+          // console.log('same name found', this.configData.data.websiteName);
           this.form.websitename = this.configData.data.websiteName;
           return
         }
@@ -2482,7 +2501,7 @@ export default {
         }
       };
       for(let i=0;i<this.urlVariables.length;i++){
-        console.log(this.urlVariables[i].urlValue)
+        // console.log(this.urlVariables[i].urlValue)
         var result=getFromBetween.get(this.urlVariables[i].urlValue, "{", "}")
         var checkurl=false
         this.urlVariables[i].finalvalue= this.urlVariables[i].urlValue
@@ -2496,7 +2515,15 @@ export default {
           // console.log(JSON.parse(JSON.stringify(this.urlVariables[i].finalvalue)))
         }
       }
-
+      
+      // console.log('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid)
+      if(this.form.vid!=''){
+        var projectviddetail=await axios.get('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
+        // console.log(projectviddetail)
+        var uservid=projectviddetail.data.userId  
+        var passvid=projectviddetail.data.password  
+      }
+      
       let ProjectSettings = [{
         "RepositoryId": this.newRepoId,
         "ProjectName": this.repoName,
@@ -2506,7 +2533,8 @@ export default {
         "ProjectSEOKeywords": this.form.seoKeywords,
         "ProjectSEODescription": this.form.seoDesc,
         "ProjectFaviconhref": this.faviconhref,
-        "ProjectVId": this.form.vid
+        "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid},
+        "CrmSettingId":this.form.crmid
       }, {
         "AssetImages": this.assetsImages,
         "GlobalVariables": this.globalVariables,
@@ -2533,7 +2561,11 @@ export default {
             websiteName: this.form.websitename
           })
           .then(async(res) => {
-            //console.log(res.data);
+            this.$message({
+              showClose: true,
+              message: 'Successfully Saved.',
+              type: 'success'
+            });
           })
           .catch((e) => {
             this.$message({
@@ -2541,17 +2573,27 @@ export default {
               message: 'Failed! Please try again.',
               type: 'error'
             });
-            //console.log(e)
+            console.log(e)
           });
-        if (this.isProjectDetailsJsonUpdated == true) {
+        // if (this.isProjectDetailsJsonUpdated == true) {
+         await this.init();
+          // console.log(' this.projectDetailsJson.Projectvid', this.projectDetailsJson[0].Projectvid)
+          this.projectDetailsJson[0].websiteName=this.form.websitename;
+          this.projectDetailsJson[0].Projectvid.vid  = this.form.vid; 
+          this.projectDetailsJson[0].Projectvid.userId = uservid;
+          this.projectDetailsJson[0].Projectvid.password = passvid;
+          this.projectDetailsJson[0].CrmSettingId=this.form.crmid;
+          // console.log({"vid":this.form.vid, "userId":uservid, "password":passvid})
           let jsonFileName = this.folderUrl + '/public/assets/project-details.json';
+          // console.log(JSON.parse(JSON.stringify(this.projectDetailsJson)))
           await axios.post(config.baseURL + '/save-menu', {
               filename: jsonFileName,
               text: JSON.stringify(this.projectDetailsJson),
               type: 'file'
             })
             .then((res) => {
-              this.isProjectDetailsJsonUpdated = false;
+              // console.log('success json file')
+              // this.isProjectDetailsJsonUpdated = false;
             })
             .catch((e) => {
               this.$message({
@@ -2561,7 +2603,9 @@ export default {
               });
               console.log(e)
             })
-        }
+           await this.init();
+          this.$emit('updateProjectName');
+        // }
       } else {
         this.$message({
           showClose: true,
@@ -2569,8 +2613,7 @@ export default {
           type: 'error'
         });
       }
-      await this.init();
-      this.$emit('updateProjectName');
+      
     },
 
     revertCommit(index) {
@@ -3188,13 +3231,12 @@ export default {
                     '<script src="https://cdn.jsdelivr.net/npm/y-text@9.5.1/dist/y-text.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
-                    datadivscript +
                     "<script src=\"./main-files/main.js\"><\/script>\n" +
+                    datadivscript +
                     "<link rel='stylesheet' href='./main-files/main.css'/>\n"+
                     endhead + "\n</head>\n<body>\n" + divappstart +
                       topbody +layoutdata.data+
                     '\n'+ divappend +
-
                     '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
                     "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
@@ -3459,7 +3501,8 @@ export default {
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
         this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
         this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
-        this.form.vid=this.settings[1].projectSettings[0].ProjectVId;
+        this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
+        this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
       } else {
         //console.log('Cannot get configurations!');
@@ -3530,18 +3573,18 @@ export default {
       });
 
       this.vshopcategory = Allvshopid.data;
-
-      var gateways= await axios.get(config.paymentApiGateway);
+      
+      let gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
-
+      // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
+      let crm=await axios.get('https://api.flowzcluster.tk/crm/settings',{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      this.crmdata=crm.data.data
+      // console.log(this.crmdata)
+      // console.log('+++++++++++++++',crmdata.data)
 
       if(this.commitsData[0]){
         return 'positive-row';
       }
-
-
-
-
     },
 
     changePluginStatus(index, value){
@@ -3593,11 +3636,11 @@ export default {
                 }
               }
               if(checkdetail!=false){
-                this.$message({
-                showClose: true,
-                message: 'Successfully Changed Websitename.',
-                type: 'success'
-              });
+              //   this.$message({
+              //   showClose: true,
+              //   message: 'Successfully Changed Websitename.',
+              //   type: 'success'
+              // });
                 // console.log('not same found')
                 await this.saveProjectSettings();
                 await this.init();
