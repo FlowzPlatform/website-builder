@@ -11,7 +11,7 @@
             <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
           <br>
           <div align="right" style="margin-top: 15px;">
-            <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
+            <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>
           </div>
         </el-tab-pane>
         <el-tab-pane label="Custom Domain" name="second">
@@ -19,11 +19,11 @@
           <div align="right" style="margin-top: 15px;">
             <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
           </div>
-          
+
         </el-tab-pane>
       </el-tabs> -->
     </el-dialog>
-    
+
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
@@ -45,7 +45,7 @@
       <div id="togglePublishWebsiteContent" class="toggleableDivHeaderContent" style="">
         <div class="row">
           <div class="col-md-12">
-            
+
             <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
             <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
 
@@ -56,7 +56,7 @@
                   <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
                 <br>
                 <div style="margin-top: 15px;">
-                  <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>  
+                  <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>
                 </div>
               </div>
 
@@ -116,10 +116,10 @@
                 </el-form-item> -->
 
                 <!-- <el-form-item label="Favicon Logo"> -->
-                  <!-- <div class="col6 valid"> 
+                  <!-- <div class="col6 valid">
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
-                    </label> 
+                    </label>
                     <input type="file" name="" id="upload-validation">
                     <span class="dis">( .ico only)</span>
 
@@ -134,12 +134,12 @@
                 <el-form-item label="Project SEO Keywords">
                   <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
                 </el-form-item>
-                
+
                 <el-form-item label="Project SEO Description">
                   <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
-                </el-form-item>    
+                </el-form-item>
 
-            </el-form> 
+            </el-form>
           </div>
         </div>
 
@@ -149,7 +149,7 @@
             <vue-json-editor style="background-color: #fff; margin-top: 2%;" v-model="projectDetailsJson" :showBtns="false" @json-change="onJsonChange"></vue-json-editor>
           </div>
         </div>
-        
+
       </div>
       <!-- Project Settings section ends -->
 
@@ -182,11 +182,11 @@
         <div class="row">
           <div class="col-md-12" align="right" style="margin-bottom: 10px;">
             <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
-              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" v-loading.fullscreen.lock="fullscreenLoading" type="warning" icon="time">Refresh</el-button> 
+              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" v-loading.fullscreen.lock="fullscreenLoading" type="warning" icon="time">Refresh</el-button>
             </el-tooltip>
             <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
               <el-button size="small" type="primary">Click to upload</el-button>
-              
+
             </el-upload> -->
           </div>
           <div class="col-md-12">
@@ -208,7 +208,7 @@
                 <input type="file" name="uploaderPluginJson">
               </div>
               <div class="col-md-6" align="right">
-                
+
               </div>
             </div>
           </div>
@@ -228,10 +228,10 @@
 
             <div class="row" style="margin-bottom: 15px; ">
               <div class="col-md-12">
-                <el-button icon="upload2" @click="uploadAssetImage()">Upload</el-button>    
+                <el-button icon="upload2" @click="uploadAssetImage()">Upload</el-button>
               </div>
             </div>
-            
+
             <div class="row">
               <div class="col-md-3" v-for="(n, index) in assetsImages">
                 <div class="delete-icon">
@@ -241,9 +241,9 @@
                   <div class="deleteImage"></div>
                   <img :src="n" class="asset-image" />
                 </div>
-              </div> 
+              </div>
             </div>
-                        
+
           </div>
         </div>
       </div>
@@ -306,10 +306,10 @@
                         <el-input placeholder="Link URL" v-model="n.variableValue"></el-input>
                       </div>
                     </div>
-                    
+
                     <!-- If type is Image -->
                     <div class="col-md-7" v-if="n.variableType === 'image'" style="margin: 0; padding-left: 10px">
-                      
+
                       <div class="row">
 
                         <!-- Image Value as Name -->
@@ -332,21 +332,21 @@
                                 <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
                             </div>
                           </el-tooltip>
-                        </div> 
+                        </div>
 
                       </div>
 
                     </div>
-                    
+
                     <!-- Delete Variable -->
                     <div class="col-md-1">
-                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>      
+                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>
                     </div>
                   </div>
                 </el-form-item>
               </div>
               <!-- Ends V-FOR looping -->
-              
+
               <!-- Create new variable -->
               <el-button type="primary" @click="addNewVariable">New Variable</el-button>
             </el-form>
@@ -403,16 +403,16 @@
                     <div class="col-md-4" v-if="n.variableType === 'custom'">
                       <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
                     </div>
-                    
+
                     <!-- Delete Variable -->
                     <div class="col-md-1">
-                      <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>      
+                      <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>
                     </div>
                   </div>
                 </el-form-item>
               </div>
               <!-- Ends V-FOR looping -->
-              
+
               <!-- Create new variable -->
               <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
 
@@ -450,7 +450,7 @@
                     </div>
                     <!-- Delete Variable -->
                     <div class="col-md-1">
-                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>      
+                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>
                     </div>
                   </div>
                 </el-form-item>
@@ -461,7 +461,7 @@
                       <div v-for="(m, indexH) in n.urlHeaderVariables">
                         <el-form-item>
                           <div class="row">
-                          
+
                             <div class="col-md-5">
                               <el-input placeholder="Header Name" v-model="m.headerName"></el-input>
                             </div>
@@ -471,7 +471,7 @@
 
                             <!-- Delete Variable -->
                             <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index,indexH)" icon="delete"></el-button>      
+                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index,indexH)" icon="delete"></el-button>
                             </div>
                           </div>
                         </el-form-item>
@@ -491,7 +491,7 @@
           </div>
         </div>
         <!-- <hr> -->
-        
+
       </div>
       <!-- URL Bucket section ends -->
 
@@ -511,7 +511,7 @@
                </div>
                <hr>
                <el-form ref="form" :model="form">
-               
+
                   <div >
                      <el-form-item>
                         <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
@@ -537,14 +537,14 @@
                              </div>
                              <div class="col-md-1">
                                 <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
-                              
+
                              </div>
 
                           </div>
                         </draggable>
                      </el-form-item>
                   </div>
-                 
+
                   <!-- Create new variable -->
                   <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
                </el-form>
@@ -582,7 +582,7 @@
                            </div>
                            <div class="col-md-1">
                               <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
-                            
+
                            </div>
                         </div>
                      </el-form-item>
@@ -662,7 +662,7 @@
                </div>
                <hr>
                <el-form ref="form" :model="form">
-               
+
                   <div >
                      <el-form-item>
                         <draggable v-model='localstyles' @start="drag=true" @end="drag=false">
@@ -688,21 +688,21 @@
                              </div>
                              <div class="col-md-1">
                                 <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
-                              
+
                              </div>
-                             
+
 
                           </div>
                         </draggable>
                      </el-form-item>
                   </div>
-                 
+
                   <!-- Create new variable -->
                   <el-button type="primary" @click="addNewlocalstyles">New Style</el-button>
                </el-form>
             </div>
         </div>
-      </div> 
+      </div>
 
       <!-- Local script-->
       <div class="collapsingDivWrapper row">
@@ -720,7 +720,7 @@
                </div>
                <hr>
                <el-form ref="form" :model="form">
-               
+
                   <div >
                      <el-form-item>
                         <draggable v-model='localscripts' @start="drag=true" @end="drag=false">
@@ -746,15 +746,15 @@
                              </div>
                              <div class="col-md-1">
                                 <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
-                              
+
                              </div>
-                             
+
 
                           </div>
                         </draggable>
                      </el-form-item>
                   </div>
-                 
+
                   <!-- Create new variable -->
                   <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
                </el-form>
@@ -856,7 +856,7 @@
                       </div>
                   </div>
                   <hr>
-                  
+
                   <div style="margin: 5px 0;" v-for="(n, index) in websiteRoles">
                     <div class="row">
                       <div class="col-md-11">
@@ -864,7 +864,7 @@
                         <el-input v-else v-model="n.roleName" placeholder="Enter Role Name" :disabled="true"></el-input>
                       </div>
                       <!-- <div class="col-md-1">
-                        <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary 
+                        <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary
                         <el-radio class="radio" v-model="isPrimaryRole" @click="setPrimaryRole(index)" :label="index">Primary</el-radio>
                       </div> -->
                       <div class="col-md-1">
@@ -946,7 +946,7 @@
                   label="Commit SHA"
                   >
                 </el-table-column>
-                
+
                 <el-table-column
                   label="Revert To Commit"
                   width="180">
@@ -962,9 +962,9 @@
       <!-- List of Commits Ends -->
 
       <div class="margin-50"></div>
-      
+
     </div>
-    
+
   </div>
 </template>
 
@@ -1205,7 +1205,7 @@ export default {
     });
 
 
-    await this.init(); 
+    await this.init();
 
     let self = this;
 
@@ -1254,11 +1254,11 @@ export default {
       }else{
         $('.valid').removeClass('error').addClass('correct');
         $('.valid i').removeClass('fa-exclamation').addClass('fa-paperclip');
-        
+
         setTimeout(function(){
           scope.uploadImage(file, fileData);
         },2000);
-        
+
         if (fileName.length > 18) {
              $('#text2').text(fileName.substr(0, 10)+'...'+fileName.substr(fileName.length-8, fileName.length));
          }else{
@@ -1379,7 +1379,7 @@ export default {
 
     uploadAssetImage() {
       var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
-      
+
       fsClient.pick({
         fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","video","audio","customsource"]
       }).then( (response) => {
@@ -1408,14 +1408,14 @@ export default {
     },
 
     async globalImageUploading(currentImageVariableIndex, file) {
-      
+
       this.imageInputIsDisabled = true;
 
       var fileParts = file.target.value.split('\\');
       var imageName = fileParts[fileParts.length-1];
 
       var scope = this;
-      
+
       var globalFileData = '';
       // readFile
       var reader = new FileReader();
@@ -1424,7 +1424,7 @@ export default {
           $('[name = '+currentImageVariableIndex+']').attr('src', e.target.result);
           // browser completed reading file - display it
           globalFileData = e.target.result;
-          
+
           axios.post( config.baseURL + '/image-upload', {
               filename : scope.folderUrl + '/public/assets/' + imageName,
               text : globalFileData,
@@ -1433,7 +1433,7 @@ export default {
           .then((res) => {
             //console.log(res.data);
           })
-          .catch((e) => { 
+          .catch((e) => {
             //console.log(e)
           })
       };
@@ -1551,7 +1551,7 @@ export default {
 
      for(let i=0;i<this.Allgateway.length;i++){
       if(this.Allgateway[i].name==n.gateway){
-        
+
         for(let j=0;j<this.Allgateway[i].keys.length;j++){
           var temp={}
         temp[this.Allgateway[i].keys[j]]=''
@@ -1618,11 +1618,11 @@ export default {
                                     label: pluginName,
                                     isActive: true
                                   };
-        
+
           this.pluginsTreedata.push(pluginsParentObject);
         }
 
-        
+
         //console.log('Plugins tree data: ', this.pluginsTreedata);
 
         // Loop through all partial variants
@@ -1701,7 +1701,7 @@ export default {
 
             this.globalVariables.push(newVariable);
 
-          } 
+          }
 
           // Generate Js Script Tag
           let scriptTag = '';
@@ -1778,7 +1778,7 @@ export default {
               message: 'Data Error.',
               type: 'error'
           });
-        }   
+        }
     },
 
     recursivecall(name, partials, defaultListtemp,configData) {
@@ -1823,7 +1823,7 @@ export default {
       this.fullscreenLoading = true;
 
       // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
-      
+
       // Call Listings API and get Tree
       await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '/' + this.repoName, {})
         .then(async(res) => {
@@ -1867,7 +1867,7 @@ export default {
 
               // Only Save file when there are any new files found in already registered partials
               // if(updates){
-              //   await this.saveProjectSettings();  
+              //   await this.saveProjectSettings();
               // }
 
               // this.init();
@@ -2340,9 +2340,9 @@ export default {
             templateName : template
         })
         .then(async (res) => {
-          // await this.refreshPlugins();  
+          // await this.refreshPlugins();
 
-          //Copy data of project_settings.json into project-details.json 
+          //Copy data of project_settings.json into project-details.json
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json');
@@ -2354,7 +2354,7 @@ export default {
 
           this.isProjectDetailsJsonUpdated = true;
           this.saveProjectSettings();
-      
+
         })
         .catch((e) => {
           this.$message({
@@ -2381,7 +2381,7 @@ export default {
           message: 'Delete completed'
         });
       }).catch(() => {
-        
+
       });
     },
 
@@ -2392,7 +2392,7 @@ export default {
       let textToSave = JSON.stringify(exportVariables);
       let saveFileName = 'globalVariablesData.json';
       let jsonData = new Blob([textToSave], {type: "application/json;charset=utf-8"});
-    
+
       fileSaver.saveAs(jsonData, saveFileName);
     },
 
@@ -2403,12 +2403,12 @@ export default {
       let textToSave = JSON.stringify(exportConfigFile);
       let saveFileName = 'config.json';
       let jsonData = new Blob([textToSave], {type: "application/json;charset=utf-8"});
-    
+
       fileSaver.saveAs(jsonData, saveFileName);
     },
 
     uploadImage(fileData, fileBlob) {
-      
+
       this.form.brandLogoName = fileData.name;
 
       axios.post( config.baseURL + '/image-upload', {
@@ -2419,7 +2419,7 @@ export default {
       .then((res) => {
         //console.log('Brand Logo Uploaded: ', res.data);
       })
-      .catch((e) => { 
+      .catch((e) => {
         //console.log('Some error occured. Here is full log: ', e)
       });
     },
@@ -2488,15 +2488,15 @@ export default {
         this.urlVariables[i].finalvalue= this.urlVariables[i].urlValue
         for(let j=0;j<result.length;j++){
           var indexurl=_.findIndex(this.globalVariables,function(o){
-              return o.variableId==result[j] 
-          }) 
+              return o.variableId==result[j]
+          })
           if(indexurl!=-1 && this.globalVariables[indexurl].variableType=='text'){
-          this.urlVariables[i].finalvalue=this.urlVariables[i].finalvalue.split('{'+result[j]+'}').join(this.globalVariables[indexurl].variableValue)  
+          this.urlVariables[i].finalvalue=this.urlVariables[i].finalvalue.split('{'+result[j]+'}').join(this.globalVariables[indexurl].variableValue)
           }
           // console.log(JSON.parse(JSON.stringify(this.urlVariables[i].finalvalue)))
         }
       }
-      
+
       let ProjectSettings = [{
         "RepositoryId": this.newRepoId,
         "ProjectName": this.repoName,
@@ -2525,7 +2525,7 @@ export default {
       this.settings[1].projectSettings = ProjectSettings;
       let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
       if (rethinkdbCheck.data) {
-        
+
         // update existing data
         await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
             configData: this.settings,
@@ -2616,7 +2616,7 @@ export default {
                 this.commitsData.push({
                   commitDate: response.data[i].created_at,
                   commitSHA: response.data[i].id,
-                  commitsMessage: response.data[i].title, 
+                  commitsMessage: response.data[i].title,
                 });
               }
 
@@ -2666,7 +2666,7 @@ export default {
                   this.commitsData.push({
                     commitDate: response.data[i].created_at,
                     commitSHA: response.data[i].id,
-                    commitsMessage: response.data[i].title, 
+                    commitsMessage: response.data[i].title,
                   });
                 }
 
@@ -2862,9 +2862,9 @@ export default {
         var pageexternalJs = [];
         var pageexternalCss = [];
         var pageMetaInfo = [];
-        
+
         var PageMetacharset = '';
-        
+
         Layout = rawSettings[1].pageSettings[i].PageLayout
         partialsPage = rawSettings[1].pageSettings[i].partials
         var back_partials = JSON.parse(JSON.stringify(partialsPage));
@@ -2984,7 +2984,7 @@ export default {
                   temp = temp.replace(/\s+/g, ' ');
                   temp = temp.trim();
                   temp = temp.split(' ')
-                  for (let j = 0; j < temp.length; j++) { 
+                  for (let j = 0; j < temp.length; j++) {
                     if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
                       if (temp[j + 1] != undefined) {
                         result[q] = temp[0];
@@ -3037,7 +3037,7 @@ export default {
                   var temp;
                   temp = resultParam[i].trim()
                   result[i] = result[i].trim()
-                  
+
                   temp = temp.split(' ')
                   for (let j = 0; j < temp.length; j++) {
                      temp[j] = temp[j].trim();
@@ -3170,11 +3170,11 @@ export default {
                     datadivscript= "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
                         "<script type='text/javascript' src='http://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
                         "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n" +
-                        "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
+                        "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n"
                     divappstart='<div id="app">'
                     divappend='</div>'
                   }
-                  
+
               let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
@@ -3189,11 +3189,12 @@ export default {
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-websockets-client@8.0.16/dist/y-websockets-client.js"><\/script>\n' +
                     datadivscript +
+                    "<script src=\"./main-files/main.js\"><\/script>\n" +
                     "<link rel='stylesheet' href='./main-files/main.css'/>\n"+
                     endhead + "\n</head>\n<body>\n" + divappstart +
                       topbody +layoutdata.data+
                     '\n'+ divappend +
-                    "<script src=\"./main-files/main.js\"><\/script>\n" +
+
                     '<script src="./assets/client-plugins/client-cart.js"><\/script>\n' +
                     "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
                     "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
@@ -3205,7 +3206,7 @@ export default {
                     '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                     endbody +
                     '\n</body>\n</html>';
-                    
+
                     // console.log('folderUrl:',folderUrl)
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                   filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
@@ -3244,7 +3245,7 @@ export default {
                           .then(async (res) => {
                             var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
                             previewFile = folderUrl.replace('/var/www/html', '');
-                            
+
                             await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                               .then(async (res) => {
                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
@@ -3353,7 +3354,7 @@ export default {
 
       if(publishType == 'custom'){
         //console.log('Custom Domain')
-        
+
         // Surge.sh API
         axios.post( config.baseURL + '/publish-surge', {
             projectPath : Cookies.get('userDetailId') + '/' + this.repoName + '/public' ,
@@ -3374,7 +3375,7 @@ export default {
           });
           //console.log(e)
         })
-        
+
 
       } else {
         //console.log('Default Publish');
@@ -3393,11 +3394,11 @@ export default {
     handleRemove(file, fileList) {
       //console.log(file, fileList);
     },
-    
+
     handlePreview(file) {
       //console.log(file);
     },
-    
+
     globalImagePreview(file) {
       //console.log(file);
     },
@@ -3462,15 +3463,15 @@ export default {
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
       } else {
         //console.log('Cannot get configurations!');
-      } 
+      }
 
       if(!(process.env.NODE_ENV == 'development')){
         this.projectPublicUrl = 'http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.domainkey + '/';
       } else {
         this.projectPublicUrl = 'http://localhost/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/';
       }
- 
-      
+
+
       // console.log('URL: ', this.projectPublicUrl);
 
       for(let i=0;i<this.paymentgateway.length;i++){
@@ -3482,7 +3483,7 @@ export default {
       }
 
       // replace all image tag source with index as name attribute to get the image file preview
-      
+
       for (var i = 0; i < this.globalVariables.length; i++){
         if(this.globalVariables[i].variableType == 'image'){
           let _imageIndex = i;
@@ -3508,7 +3509,7 @@ export default {
           this.commitsData.push({
             commitDate: response.data[i].created_at,
             commitSHA: response.data[i].id,
-            commitsMessage: response.data[i].title, 
+            commitsMessage: response.data[i].title,
           });
         }
       }).catch(error => {
@@ -3529,43 +3530,43 @@ export default {
       });
 
       this.vshopcategory = Allvshopid.data;
-      
+
       var gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
-      
+
 
       if(this.commitsData[0]){
         return 'positive-row';
-      } 
+      }
 
-      
 
-      
+
+
     },
 
     changePluginStatus(index, value){
       //console.log('Change index: ', index);
-      //console.log('Change value: ', value);  
+      //console.log('Change value: ', value);
     },
 
     removePluginFromTree(store, data) {
       store.remove(data);
 
-      var ids = getRemove(this.pluginsTreedata, data.id) 
+      var ids = getRemove(this.pluginsTreedata, data.id)
 
-      function getRemove (ma, idm) { 
-        if (ma instanceof Array) { 
-          let k = _.findIndex(ma, {id:idm}) 
-          if (k >= 0) { 
-            ma.splice(k,1) 
-            return true 
-          } 
-          for (let i in ma) { 
-            let ii = getRemove(ma[i].children, idm) 
-            if (ii) return true 
-          } 
-        } 
-        return false 
+      function getRemove (ma, idm) {
+        if (ma instanceof Array) {
+          let k = _.findIndex(ma, {id:idm})
+          if (k >= 0) {
+            ma.splice(k,1)
+            return true
+          }
+          for (let i in ma) {
+            let ii = getRemove(ma[i].children, idm)
+            if (ii) return true
+          }
+        }
+        return false
       }
     },
 
@@ -3613,13 +3614,13 @@ export default {
 
               }
             }
-            
+
           } else {
             console.log('error submit!!');
             return false;
           }
         });
-     
+
     },
 
     renderContent(h, { node, data, store }) {
@@ -3796,7 +3797,7 @@ export default {
       margin: 0px 5px;
       padding: 15px;
   }
-  
+
   .toggleableDivHeader {
       height: 35px;
       line-height: 15px;
@@ -3805,19 +3806,19 @@ export default {
       font-weight: bold;
       text-decoration: none;
   }
-  
+
   .card {
       padding: 15px;
       box-shadow: 0px 0px 10px #999;
       transition: 0.2s all linear;
       margin: 20px;
   }
-  
+
   .card:hover {
       box-shadow: 2px 2px 20px #999;
       transition: 0.2s all linear;
   }
-  
+
   .color-div {
       height: 45px;
       display: block;
@@ -3836,7 +3837,7 @@ export default {
       background: linear-gradient(to right, #eef2f3, #8e9eab);
       /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   }
-  
+
   .color-div:hover {
       box-shadow: 2px 2px 10px #aaa;
       transition: 0.2s all linear;
