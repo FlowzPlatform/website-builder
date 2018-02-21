@@ -655,11 +655,12 @@
       //         }
       //     })
       // },
-      changeSubscription(){
+       changeSubscription(){
+        this.fullscreenLoading=true
         this.editableTabs = []
 
         axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
-          .then(response => {
+          .then(async response => {
             let location = psl.parse(window.location.hostname);
             location = location.domain === null ? location.input : location.domain;
             localStorage.setItem("current_sub_id", this.value)
@@ -667,7 +668,8 @@
             // Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
             axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
-            this.getData();
+            await this.getData();
+            this.fullscreenLoading=false
           })
       },
       canceldialog(){
@@ -2226,7 +2228,9 @@
                                   "login_api": config.loginUrl,
                                   "register_api": config.registerUrl,
                                   "user_details_api": config.userDetail,
-                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/'
+                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/',
+                                  "CrmSettingId":'',
+                                  "Projectvid":{"vid":'',"userId":'',"password":''}
                                   }];
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename : projectDetails,
@@ -2608,7 +2612,8 @@
                                         "ProjectSEOKeywords": '',
                                         "ProjectSEODescription": '',
                                         "ProjectFaviconhref": '',
-                                        "ProjectVId":''
+                                        "ProjectVId":{'vid':'','userId':'','password':''},
+                                        "CrmSettingId":''
                                       }, {
                                         "AssetImages": [],
                                         "GlobalVariables": [],
@@ -3089,14 +3094,14 @@
                 // console.log('foldernameKey:::::::',foldernameKey)
                 // console.log('DefaultParams::::::::',DefaultParams)
                 for (var i = 0; i < result.length; i++) {
-                  console.log('result:',result[i])
+                  // console.log('result:',result[i])
                   var check = false;
                   for (var j = 0; j < foldernameKey.length; j++) {
                     if (result[i] == foldernameKey[j]) {
                       check = true
                       if (DefaultParams.length > 0) {
                         for (let k = 0; k < DefaultParams.length; k++) {
-                          console.log('Object.keys(DefaultParams[k])',Object.keys(DefaultParams[k]),foldernameKey[j])
+                          // console.log('Object.keys(DefaultParams[k])',Object.keys(DefaultParams[k]),foldernameKey[j])
                           if (Object.keys(DefaultParams[k]) == foldernameKey[j]) {
                             let checkdefault = false;
                             for (let a = 0; a < this.globalConfigData[2].layoutOptions[0][foldernameKey[j]].length; a++) {
@@ -3107,7 +3112,7 @@
                               }
                             }
                             if (checkdefault != true) {
-                              console.log('new create@@@@@@@')
+                              // console.log('new create@@@@@@@')
                               let newFolderName = folderUrl + '/Partials/';
                               await axios.post(config.baseURL + '/flows-dir-listing', {
                                 filename: newFolderName + foldernameKey[j] + "/" + DefaultParams[k][foldernameKey[j]],
@@ -3132,7 +3137,7 @@
 
                   }
                   if (check == false) {
-                    console.log('inside false')
+                    // console.log('inside false')
                     let newName = result[i]
                     let newFolderName = folderUrl + '/Partials/' + result[i];
                     axios.post(config.baseURL + '/flows-dir-listing', {
