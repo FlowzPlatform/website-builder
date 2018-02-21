@@ -242,8 +242,6 @@
                         params : {isDeleted : true}
                     })
                     .then(response => {
-                        console.log(response)
-                        
                         // this.data2 = this.assigned_Arr2 ;
                          this.data4 = response.data.data;
                         // this.options2 = sub_id;
@@ -255,7 +253,6 @@
                 let Role_id = [];
                 
                // axios.get('http://api.flowzcluster.tk/subscription/register-roles', {
-                    console.log("subscriptionURL", subscriptionUrl)
                     axios.get(subscriptionUrl + 'register-roles', {
                         // headers: {
                         //     'Authorization': Cookies.get('auth_token')
@@ -267,7 +264,6 @@
                         let new_data = response.data.data;
                          //console.log(new_data.length)
                         for (let index = 0; index < new_data.length; index++) {
-                            console.log("data.........", new_data[index].role)
                             
                             Role_id.push({
                                 "value1": new_data[index].role,
@@ -284,7 +280,6 @@
                         }
                     })
                     .then(response => {
-                        console.log("res.................------>>>>", response)
                         let new_data = response.data.data.package;
                         for (var key in new_data) {
                             if (new_data.hasOwnProperty(key)) {
@@ -296,16 +291,11 @@
                                     })
                                     this.assigned_Arr3.push(new_data[key])
                                 }else{
-                                    console.log( "new_data[key].subscriptionId " ,  new_data[key]);
                                     this.assigned_Arr2.push(new_data[key])
-                                    
-                                    console.log(this.assigned_Arr2) 
                                 }
                                 
                             }
                         }
-                        console.log("sub_id..........", sub_id)
-                                    console.log(this.assigned_Arr3) 
                         
                         this.data2 = this.assigned_Arr2 ;
                         this.data3 = this.assigned_Arr3;
@@ -315,8 +305,6 @@
 
             },
             async inviteNow() {
-                console.log("this.value1", this.value1)
-                console.log("this.value2",this.value2)
                 if(this.value2 == undefined || this.value2 == '' || this.value1 == ''){
                     this.$message.warning("Please select both subscription & role for invitation");
                     this.$message({
@@ -359,7 +347,6 @@
                     })
                     .then(function(response) {
                         self.loading = false
-                        console.log('response------------------------>', response)
                         if(response.data.status == 404 ){
                              //alert(response.data.data)
                             self.$message.warning(response.data.data);

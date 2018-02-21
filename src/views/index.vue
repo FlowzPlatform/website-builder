@@ -713,7 +713,6 @@
         let editableTabValue = this.editableTabsValue
         let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
         function checkIfExist(filepath,array) {  // The last one is array
-          console.log("checkIfExist is called")
             var found = array.some(function (el) {
               return el.filepath == url;
             });
@@ -852,7 +851,7 @@
         // If PageSettings Clicked
         if(this.isPageEditing){
 
-          clearInterval(myInterval);
+          // clearInterval(myInterval);
 
           if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
             this.saveFile('getFileContent')
@@ -1029,6 +1028,7 @@
         }
         // Every other clicks
         else {
+          this.fullscreenLoading = true;
           this.display = true;
           this.isProjectStats = false;
           this.isPartialStats = false;
@@ -1047,10 +1047,14 @@
             this.flag = false;
 
             let self = this;
-            setTimeout(function(){
-              self.getFileContent(data.path);
+            setTimeout(async function(){
+              await self.getFileContent(data.path);
+              self.fullscreenLoading = false;
             },50)
           }
+
+          this.fullscreenLoading = false;
+
         }
       },
 
@@ -2226,7 +2230,8 @@
                                   "login_api": config.loginUrl,
                                   "register_api": config.registerUrl,
                                   "user_details_api": config.userDetail,
-                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/'
+                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/',
+                                  "domainkey": config.domainkey
                                   }];
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename : projectDetails,
@@ -3758,7 +3763,6 @@
                                     }
                                    
                                   }else{
-                                    console.log('!!!!!!!!!!!!!!!!!!!:',this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]])
                                     if(this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]]!=''){
                                       checklayoutp = true
                                     }
@@ -4358,7 +4362,7 @@
               let newContent = "<html>\n<head>\n" + tophead +
                     "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
-                    '<script src="http://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
+                    '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/yjs@12.3.3/dist/y.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-array@10.1.4/dist/y-array.js"><\/script>\n' +
                     '<script src="https://cdn.jsdelivr.net/npm/y-map@10.1.3/dist/y-map.js"><\/script>\n' +
