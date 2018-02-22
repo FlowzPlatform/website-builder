@@ -21,7 +21,7 @@
               :value="item.value">
             </el-option>
             </el-select>
-            <el-tree v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
+            <el-tree v-loading="treeLoading" element-loading-text="Loading..." v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
           </div>
         </nav>
         <!-- /#sidebar-wrapper -->
@@ -361,7 +361,6 @@
         addNewFileLoading : false,
         addNewFolderLoading : false,
         addNewProjectFolderLoading : false,
-        loadingTree : true,
         loadingContent : false,
         saveFileLoading : false,
         fullscreenLoading: false,
@@ -430,7 +429,8 @@
         dialogvalue: true,
         buyNowDialog: false,
         isDataLoading: true,
-        isTreeVisible: true
+        isTreeVisible: true,
+        treeLoading: false
       }
     },
     components: {
@@ -758,6 +758,7 @@
 
       // Get directory listing data
       getData() {
+        this.treeLoading = true;
         // let username_session = this.$session.get('username');
         //// console.log("username_session", username_session)
         // axios.get(config.baseURL + '/flows-dir-listing')
@@ -784,9 +785,12 @@
                     return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
                     // return !(child.name == '.git')
                   })
+
+                  this.treeLoading = false;
                 })
                 .catch((e) => {
                   console.log('Data Error.');  
+                  this.treeLoading = false;
                 })
 
                 // let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
@@ -800,19 +804,20 @@
             // },1000);
 
             if (this.directoryTree.length == 0) {
-              this.directoryTree = [response.data]
+              this.directoryTree = [response.data];
+              this.treeLoading = false;
             } else {
-              this.directoryTree[0].children = response.data.children
+              this.directoryTree[0].children = response.data.children;
+              this.treeLoading = false;
             }
 
             this.isDataLoading = false;
-            this.loadingTree = false;
             // this.isTreeVisible = false;
             this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '');
 
           })
           .catch(e => {
-            this.loadingTree = false;
+            this.treeLoading = false;
             this.isDataLoading = false;
             this.isTreeVisible = false;
             this.$message({
@@ -6273,5 +6278,9 @@
 
   .el-select-dropdown{
       max-width: 320px !important;
+  }
+
+  .treeViewBlock{
+    min-height: 100%;
   }
 </style>
