@@ -1140,7 +1140,7 @@ export default {
       },
       assetsImages: [],
       projectDetailsJson: [],
-      isProjectDetailsJsonUpdated: false,
+      // isProjectDetailsJsonUpdated: false,
       projectPublicUrl: '',
       isPrimaryRole: false,
       vshopcategory: []
@@ -1390,7 +1390,7 @@ export default {
     },
 
     onJsonChange (value) {
-      this.isProjectDetailsJsonUpdated = true;
+      // this.isProjectDetailsJsonUpdated = true;
     },
 
     uploadAssetImage() {
@@ -2030,7 +2030,6 @@ export default {
 
       configData = JSON.parse(JSON.stringify(configData.data.configData))
         //// console.log('new config file:',configData);
-        console.log('now partial');
       for (let q = 0; q < Object.keys(configData[2].layoutOptions[0]).length; q++) {
         //// console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
         if (Object.keys(configData[2].layoutOptions[0])[q] != ('Layout')) {
@@ -2155,7 +2154,6 @@ export default {
 
         }
       }
-      console.log('now pages');
       for (let r = 0; r < configData[1].pageSettings.length; r++) {
         var namepage = configData[1].pageSettings[r].PageName
           //// console.log('namepage:',namepage)
@@ -2366,9 +2364,13 @@ export default {
           // console.log('projectSettingsFileData', projectSettingsFileData);
           let data = JSON.parse(projectSettingsFileData.data);
 
+          console.log('Custom Json DATA: ', data);
+
           this.projectDetailsJson[0].project_settings = data.project_settings;
 
-          this.isProjectDetailsJsonUpdated = true;
+          console.log('Json data: ', this.projectDetailsJson);
+
+          // this.isProjectDetailsJsonUpdated = true;
           this.saveProjectSettings();
 
         })

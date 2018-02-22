@@ -353,6 +353,7 @@ h3.subtitle{
   border-radius: 10px;
   padding-top: 75px;
   margin-top: 0px;
+  margin-bottom: 100px;
   position: relative;
   width: 100%;
   z-index: 5;
