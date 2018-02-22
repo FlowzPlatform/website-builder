@@ -2576,7 +2576,7 @@ export default {
             console.log(e)
           });
         // if (this.isProjectDetailsJsonUpdated == true) {
-         await this.init();
+         // await this.init();
           // console.log(' this.projectDetailsJson.Projectvid', this.projectDetailsJson[0].Projectvid)
           this.projectDetailsJson[0].websiteName=this.form.websitename;
           this.projectDetailsJson[0].Projectvid.vid  = this.form.vid; 
