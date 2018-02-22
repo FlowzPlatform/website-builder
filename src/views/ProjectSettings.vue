@@ -3584,7 +3584,7 @@ export default {
       let gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-      let crm=await axios.get('https://api.flowzcluster.tk/crm/settings',{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      let crm=await axios.get('https://api.flowzqa.tk/crm/settings',{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
       this.crmdata=crm.data.data
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
