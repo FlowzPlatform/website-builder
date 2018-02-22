@@ -82,7 +82,7 @@ export default {
 
         this.settings = this.configData.data.configData;
 
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.websiteName;
 
         this.tablePagesData = [];
 
@@ -352,6 +352,7 @@ h3.subtitle{
   border-radius: 10px;
   padding-top: 75px;
   margin-top: 0px;
+  margin-bottom: 100px;
   position: relative;
   width: 100%;
   z-index: 5;

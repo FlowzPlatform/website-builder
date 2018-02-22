@@ -278,20 +278,41 @@ import domenu from 'domenu'
 				this.$store.state.content = $('.jsonOutput').val();
 			},
 
-			updateMenuData () {
+			async updateMenuData () {
 
 				// window.localStorage.setItem('domenu-1Json', []);
 
-				let menuData;
 
-				//console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'))
+				let menuData;
+				let vid = '';
+
+				//console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'));
+
+				let folderPath = this.$store.state.fileUrl.replace(/\\/g, "\/");
+				let folderName = folderPath.split('/')[6];
+
+				let fullUrl = '/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + folderName + '/public/assets/project-details.json';
+
+				await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + fullUrl, {
+				})
+				.then((res) => {
+					let configs = JSON.parse(res.data);
+					// console.log(configs);
+					// console.log(configs[0].Projectvid.vid);
+					vid = configs[0].Projectvid.vid;
+				})
+				.catch((e) => {
+				    console.log(e)
+				})
 
 				axios.get(this.apiUrl, {
 			    headers: {
-			    	Authorization: Cookies.get('auth_token')
+			    	Authorization: Cookies.get('auth_token'),
+			    	vid: vid
 			    }
 				})
 				.then((res) => {
+					console.log(res);
 					let menuJson = [];
 				    let categories = res.data.aggregations.group_by_category.buckets;
 

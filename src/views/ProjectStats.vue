@@ -432,7 +432,7 @@ export default {
           this.websiteUsers.push({
             UserId: response.data.data[i].id,
             UserEmail: response.data.data[i].userEmail,
-            UserRole: response.data.data[i].userRole, 
+            UserRole: response.data.data[i].role, 
           });
         }
       }).catch(error => {
@@ -789,6 +789,7 @@ h3.subtitle{
   border-radius: 10px;
   padding-top: 75px;
   margin-top: 0px;
+  margin-bottom: 100px;
   position: relative;
   width: 100%;
   z-index: 5;
