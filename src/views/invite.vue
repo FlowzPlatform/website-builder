@@ -37,13 +37,13 @@
         </div>
         <Tabs  style="margin-top: 20px">
             <TabPane label="Own Subscription">
-                <Table :columns="columns3" :data="data3" stripe></Table>
+                <Table :columns="columns3" :data="data3" no-data-text="No Data" stripe></Table>
             </TabPane>
             <TabPane label="Assigned Subscription">
-                <Table :columns="columns2" :data="data2" stripe></Table>
+                <Table :columns="columns2" :data="data2" no-data-text="No Data" stripe></Table>
             </TabPane>
             <TabPane label="Assigned History">
-                <Table :columns="columns4" :data="data4" stripe></Table>
+                <Table :columns="columns4" :data="data4" no-data-text="No Data" stripe></Table>
             </TabPane>
         </Tabs>
     </div>
@@ -56,11 +56,10 @@
 <script src="https://vuejs.org/js/vue.min.js"></script>
 <script src="https://unpkg.com/iview/dist/iview.min.js"></script>
 <script>
-    //import locale1 from 'iview/dist/locale/en-US';
+    
     import axios from 'axios'
     import Cookies from 'js-cookie';
     import Vue from 'vue';
-    import ElementUI from 'element-ui';
     const config = require('../config');
     let subscriptionUrl = config.subscriptionApi
     import expandRow from './assigned_invite_table-expand.vue';
@@ -71,8 +70,6 @@
     import 'iview/dist/styles/iview.css';
     import locale1 from 'iview/dist/locale/en-US';
     Vue.use(iView, { locale1 });
-    
-    Vue.use(ElementUI);
     
     export default {
         components: { expandRow },
@@ -306,12 +303,8 @@
             },
             async inviteNow() {
                 if(this.value2 == undefined || this.value2 == '' || this.value1 == ''){
+                    console.log("here")
                     this.$message.warning("Please select both subscription & role for invitation");
-                    this.$message({
-                        showClose: true,
-                        message: 'Please select both subscription & role for invitation.',
-                        type: 'error'
-                        });
                 }else{
                     this.loading = true;
                     let new_data;
@@ -320,9 +313,9 @@
                 let obj =_.find(this.options2, {value2:this.value2});
                
                 
-                // console.log(this.input)
-                // console.log(this.value1)
-                // console.log(this.value2)
+                console.log(this.input)
+                console.log(this.value1)
+                console.log(this.value2)
                 let userId;
                 let previous_packages;
                 let params = {
@@ -332,9 +325,9 @@
                     "role": {
                         "webbuilder": this.value1
                     },
-                    "fromEmail" : Cookies.get('user')
+                    "fromEmail" : Cookies.get('email')
                 }
-
+                console.log(params)
                 await axios({
                         method: 'POST',
                           url: subscriptionUrl + 'invite',

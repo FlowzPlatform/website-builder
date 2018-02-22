@@ -1967,4 +1967,9 @@ ul.hh-dropmenu-item {
     color: #fff !important;
 }
 
+.flat-theme .hh-navigation[data-v-c2fe13ce] {
+    z-index: -1;
+    text-align: left;
+}
+
 </style>
