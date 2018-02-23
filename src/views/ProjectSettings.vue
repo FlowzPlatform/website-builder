@@ -2520,7 +2520,7 @@ export default {
       
       // console.log('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid)
       if(this.form.vid!=''){
-        var projectviddetail=await axios.get('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
+        var projectviddetail=await axios.get('https://api.flowzqa.tk/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
         // console.log(projectviddetail)
         var uservid=projectviddetail.data.userId  
         var passvid=projectviddetail.data.password  
