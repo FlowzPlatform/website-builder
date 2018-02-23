@@ -366,7 +366,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   bm.add('navimenu', {
     label: 'Navbar Menu',
-    content:'<nav class="navbar navbar-expand-sm bg-dark navbar-dark customMenu"><div class="container"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navigationDiv"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"> Dropdown link </a> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Link 1</a> <a class="dropdown-item" href="#">Link 2</a> <a class="dropdown-item" href="#">Link 3</a> </div></li></ul> </div></div></nav>',
+    content:'<style type="text/css">#navigationDiv a { text-transform: uppercase; }</style><nav class="navbar navbar-expand-sm bg-dark navbar-dark customMenu"><div class="container"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navigationDiv"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"> Dropdown link </a> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Link 1</a> <a class="dropdown-item" href="#">Link 2</a> <a class="dropdown-item" href="#">Link 3</a> </div></li></ul> </div></div></nav>',
     attributes: {
       class: 'fa fa-bars',
       title: 'Navigation Menu'
@@ -1988,6 +1988,22 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             }, {
               value: 'landscape',
               name: 'Landscape'
+            }]
+          },
+          {
+            label: 'Price For Anonymous User',
+            name: 'select_anonymousUser_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{
+              value: 'select',
+              name: 'Select Filter'
+            }, {
+              value: 'yes',
+              name: 'Yes'
+            }, {
+              value: 'no',
+              name: 'No'
             }]
           }
         ],
