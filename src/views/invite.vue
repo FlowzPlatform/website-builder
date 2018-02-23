@@ -332,7 +332,7 @@
                     "role": {
                         "webbuilder": this.value1
                     },
-                    "fromEmail" : Cookies.get('user')
+                    "fromEmail" : Cookies.get('email')
                 }
 
                 await axios({
@@ -1959,4 +1959,8 @@
         background: #55acee !important;
         color: #fff !important;
     }
+    .flat-theme .hh-navigation[data-v-febe3a5e] {
+    text-align: left;
+    z-index: -1;
+}
 </style>
