@@ -2578,7 +2578,7 @@ export default {
             console.log(e)
           });
         // if (this.isProjectDetailsJsonUpdated == true) {
-         await this.init();
+         // await this.init();
           // console.log(' this.projectDetailsJson.Projectvid', this.projectDetailsJson[0].Projectvid)
           this.projectDetailsJson[0].websiteName=this.form.websitename;
           this.projectDetailsJson[0].Projectvid.vid  = this.form.vid; 
@@ -2746,7 +2746,8 @@ export default {
 
     async publishMetalsmith(publishType) {
 
-      if(publishType == 'custom'){
+    if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined){
+        if(publishType == 'custom'){
         //console.log('Custom Domain')
         if(this.customDomainName == ''){
           this.fullscreenLoading = false;
@@ -3423,6 +3424,23 @@ export default {
           window.open(config.ipAddress +'/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
         }
       }
+    }else{
+          this.newProjectFolderDialog = false;
+          this.fullscreenLoading = false;
+          this.$session.remove('username');
+          localStorage.removeItem('current_sub_id');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+                        
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.$swal("You're Logged Out From System. Please login again!")
+          .then((value) => {
+            window.location = '/login'
+          });
+        }
     },
 
     handleRemove(file, fileList) {
