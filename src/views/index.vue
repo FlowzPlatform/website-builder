@@ -1241,6 +1241,8 @@
       // Get File content Locally
       getFileContent: async function(url) {
 
+        this.fullscreenLoading = true;
+
         // let configFileUrl = url.replace(/\\/g, "\/");
         // let urlparts = configFileUrl.split("/");
         // let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -1266,6 +1268,7 @@
               this.isHomePage = false;
               this.componentId = 'GridManager'
               this.isGridPreview = true;
+              this.fullscreenLoading = false;
               break;
             case 'json':
               this.isPageCodeEditor = false;
@@ -1282,6 +1285,7 @@
                 }
               }
               this.componentId = 'json-viewer'
+              this.fullscreenLoading = false;
               break;
             case 'layout':
               this.isGridPreview = false;
@@ -1295,7 +1299,7 @@
               } else {
                 this.componentId = 'GridManager'
               }
-
+              this.fullscreenLoading = false;
               break;
             case 'html':
               this.isGridPreview = false;
@@ -1334,6 +1338,7 @@
                 this.componentId = 'GrapesComponent';
                 // this.getConfigFileData();
               }
+              this.fullscreenLoading = false;
               break;
             case 'partial':
               this.isGridPreview = false;
@@ -1369,13 +1374,15 @@
                 this.componentId = 'GrapesComponent';
                 // this.getConfigFileData();
               }
+              this.fullscreenLoading = false;
               break;
             case 'menu':
               this.isGridPreview = false;
               this.isMenuBuilder = true;
               this.isHomePage = false;
               this.isPageCodeEditor = false;
-              this.componentId = 'MenuBuilder'
+              this.componentId = 'MenuBuilder';
+              this.fullscreenLoading = false;
               break;
             default:
               this.isGridPreview = false;
@@ -1383,7 +1390,7 @@
               this.isHomePage = false;
               this.isPageCodeEditor = false;
               this.componentId = 'MonacoEditorChild';
-
+              this.fullscreenLoading = false;
               break;
           }
         }
@@ -1395,6 +1402,8 @@
 
         let editableTabValue = this.editableTabsValue
         let selectedPagePositionFirstArray = await checkIfExist(url , this.editableTabs);
+
+        this.fullscreenLoading = false;
 
         var self = this
         function checkIfExist(filepath,array) {  // The last one is array
@@ -1429,8 +1438,11 @@
                });
            }
 
+           
            return array
        }
+
+       this.fullscreenLoading = false;
        this.editableTabs =  selectedPagePositionFirstArray ;
        this.editableTabs.reverse();
 
