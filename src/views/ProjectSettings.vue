@@ -2620,14 +2620,17 @@ export default {
 
     revertCommit(index) {
       this.$store.state.currentIndex = index;
-      $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
-      $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
+      // $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
+      // $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       this.currentSha = this.commitsData[index].commitSHA;
 
       //// console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(response => {
+
+
+        console.log(response);
 
         this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
 
