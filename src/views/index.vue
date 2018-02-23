@@ -52,30 +52,30 @@
               </div>
 
               <!-- New File Dialog if it's not dashboard page -->
-              <el-dialog title="File name" :visible.sync="newFileDialog" size="tiny">
+              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny">
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
-                        <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter Filename"></el-input>
+                        <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter File Name"></el-input>
                       </el-form-item> 
                   </el-form>
                   <span slot="footer" class="dialog-footer">
-                      <el-button @click="canceldialog()">Cancel</el-button>
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
+                      <el-button @click="canceldialog()">Cancel</el-button>
                   </span>
               </el-dialog>
 
               <!-- New Folder Dialog if it's not dashboard page -->
-              <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
+              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny">
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
-                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Folder Name"></el-input>
+                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
                       </el-form-item>
                   </el-form>
                   <span slot="footer" class="dialog-footer">
-                      <el-button @click="canceldialogfolder()">Cancel</el-button>
                       <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
+                      <el-button @click="canceldialogfolder()">Cancel</el-button>
                   </span>
               </el-dialog>
 
@@ -122,29 +122,29 @@
           </div>
 
             <div v-if="isHomePage === true">
-              <el-dialog title="File name" :visible.sync="newFileDialog" size="tiny">
+              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny">
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
-                        <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter Filename"></el-input>
+                        <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter File Name"></el-input>
                       </el-form-item>
                        
                   </el-form>
                   <span slot="footer" class="dialog-footer">
-                      <el-button  @click="canceldialog()">Cancel</el-button>
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
+                      <el-button  @click="canceldialog()">Cancel</el-button>
                   </span>
                 </el-dialog>
-                <el-dialog title="Folder name" :visible.sync="newFolderDialog" size="tiny">
+                <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny">
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
-                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Folder Name"></el-input>
+                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
                       </el-form-item>
                   </el-form>
                   <span slot="footer" class="dialog-footer">
-                      <el-button @click="canceldialogfolder()">Cancel</el-button>
                       <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
+                      <el-button @click="canceldialogfolder()">Cancel</el-button>
                   </span>
               </el-dialog>
 
@@ -300,9 +300,9 @@
   // New File creation validator
   let checkFileName = (rule, value, callback) => {
       if (!value) {
-          return callback(new Error('Please enter filename.'));
+          return callback(new Error('Please Enter File Name.'));
       }else if(!(/^[a-z0-9A-Z]+$/i.test(value))){
-          return callback(new Error('Please enter valid filename. (file name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
+          return callback(new Error('Please Enter valid File Name. (File name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
       }else{
           return callback();
       }
@@ -311,9 +311,9 @@
   // New Folder creation validator
   let checkFolderName = (rule, value, callback) => {
       if (!value) {
-          return callback(new Error('Please enter Folder Name.'));
+          return callback(new Error('Please Enter Folder Name.'));
       }else if(!(/^[a-z0-9A-Z]+$/i.test(value))){
-          return callback(new Error('Please enter valid Foldername. (Folder name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
+          return callback(new Error('Please Enter valid Folder Name. (Folder name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
       }else{
           return callback();
       }
@@ -322,9 +322,9 @@
   // New Project creation validator
   let checkProjectName = (rule, value, callback) => {
       if (!value) {
-          return callback(new Error('Please enter Project Name.'));
+          return callback(new Error('Please Enter Project Name.'));
       }else if(!(/^[a-z0-9A-Z]+$/i.test(value))){
-          return callback(new Error('Please enter valid Project Name. (Project name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
+          return callback(new Error('Please Enter valid Project Name. (Project name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
       }else{
           // this.checknameexist()
           return callback();
@@ -655,7 +655,7 @@
       //         }
       //     })
       // },
-       changeSubscription(){
+     changeSubscription(){
         this.fullscreenLoading=true
         this.editableTabs = []
 
@@ -670,6 +670,15 @@
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             await this.getData();
             this.fullscreenLoading=false
+          }).catch((e)=>{
+             this.$message({
+              showClose: true,
+              duration:0,
+              message: 'Servers are down please try again later.',
+              type: 'error'
+            });
+            // console.log(e)
+            this.fullscreenLoading=false;
           })
       },
       canceldialog(){
@@ -823,7 +832,7 @@
               message: 'Services unreachable. Please try again later.',
               type: 'error'
             });
-            //console.log(e);
+            console.log(e);
           });
         }else{
           this.treeLoading = false;
@@ -1997,166 +2006,191 @@
 
       // Create new Website
       async addProjectFolder(projectName) {
-        if(Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined){
-          this.$refs[projectName].validate((valid) => {
-          if (valid) {
-            
-            let token = Cookies.get('auth_token');
-            this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-            var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
-
-            // this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
-
-            // console.log("'subscriptionId': this.value,'authorization': token",  this.value, token)
-            axios.post(config.baseURL + '/project-configuration', {
-                userEmail: Cookies.get('email'),
-                websiteName: this.formAddProjectFolder.projectName,
-                userId: userid,
-                subscriptionId:this.value
-              },{ headers: { 'subscriptionId': this.value,'authorization': token }})
-              .then((res) => {
-                // console.log('##############')
-                let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
-                  // let newFolderName=res.data.id 
-                return axios.post(config.baseURL + '/flows-dir-listing', {
-                    foldername: newFolderName,
-                    type: 'folder'
-                  }, {
-                    headers: {
-                      'authorization': token
-                    }
-                  })
-                  .then(async (resp) => {
-                    // console.log(resp)
-                    this.newProjectFolderDialog = false
-                    this.addNewProjectFolderLoading = false;
-
-                    // var response = resp
-                    let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {});
-
-                    if (!(gitResponse.data.statusCode)) {
-
-                      localStorage.setItem("folderUrl", newFolderName);
-                      var folder = localStorage.getItem("folderUrl");
-
-                      this.newRepoId = gitResponse.data.id;
-                      this.repoName = gitResponse.data.name;
-
-                      // Create essential folders
-                      this.addOtherFolder(newFolderName);
-
-                      // Init ldap for website subscription in ACL
-                      axios.post(config.initLdap, {
-                        "app":"aaa"
-                      })
-                      .then((res) => {
-                        console.log(res.data);
-                      })
-                      .catch((e) => {
-                        console.log(e)
-                      });
-
-                      await axios.post(config.baseURL + '/register-website-subscriptions', {
-                          websiteId: this.repoName
-                      })
-                      .then((res) => {
-                        console.log(res.data);
-                      })
-                      .catch((e) => {
-                        console.log(e)
-                      });
-
-                      this.currentProjectName = this.formAddProjectFolder.projectName;
-
-                      this.formAddProjectFolder.projectName = null;
-                    } else {
-
-                      localStorage.setItem("folderUrl", newFolderName);
-                      var folder = localStorage.getItem("folderUrl");
-
-                      this.newRepoId = undefined;
-                      this.repoName = res.data.id;
-
-                      // Create essential folders
-                      this.addOtherFolder(newFolderName);
-
-                      // Init ldap for website subscription in ACL
-                      axios.post(config.initLdap, {
-                        "app":"aaa"
-                      })
-                      .then((res) => {
-                        console.log(res.data);
-                      })
-                      .catch((e) => {
-                        console.log(e)
-                      });
-
-                      await axios.post(config.baseURL + '/register-website-subscription', {
-                          websiteId: this.repoName
-                      })
-                      .then((res) => {
-                        console.log(res.data);
-                      })
-                      .catch((e) => {
-                        console.log(e)
-                      })
-
-                      this.formAddProjectFolder.projectName = null;
-
-                      // Delete folder from storage
-                      // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
-                      // .then((res) => {
-                      // })
-                      // .catch((e) => {
-                      // })
-
-                      // return;
-                    }
-                    
-                  })
-                  .catch((e) => {
-                    //console.log(e);
-                    // this.componentId = 'buyPage';
-                    this.newProjectFolderDialog = false;
-                    this.fullscreenLoading = false;
-                    // this.buyNowDialog = true;
-                    console.log(e)
-                  });
-                // })
-
-              })
-              .catch((e) => {
-                console.log(e)
-                if(e.response.status = 403){
-                  this.$message({
-                    showClose: true,
-                    message: e.response.data.message,
-                    type: 'error'
-                  });
-                }
-                this.newProjectFolderDialog = false;
-                this.fullscreenLoading = false;
+        // console.log('this.value:',this.value)
+          if (this.value == '') {
+            this.newProjectFolderDialog = false;
+              this.fullscreenLoading = false;
+              this.$message({
+                  showClose: true,
+                  duration:0,
+                  message: 'Subscription not selected.',
+                  type: 'error'
               });
+
+          } else {
+              if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+                  this.$refs[projectName].validate((valid) => {
+                      if (valid) {
+
+                          let token = Cookies.get('auth_token');
+                          this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                          var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
+
+                          // this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
+
+                          // console.log("'subscriptionId': this.value,'authorization': token",  this.value, token)
+                          axios.post(config.baseURL + '/project-configuration', {
+                                  userEmail: Cookies.get('email'),
+                                  websiteName: this.formAddProjectFolder.projectName,
+                                  userId: userid,
+                                  subscriptionId: this.value
+                              }, {
+                                  headers: {
+                                      'subscriptionId': this.value,
+                                      'authorization': token
+                                  }
+                              })
+                              .then((res) => {
+                                  // console.log('##############')
+                                  let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
+                                      // let newFolderName=res.data.id 
+                                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                                          foldername: newFolderName,
+                                          type: 'folder'
+                                      }, {
+                                          headers: {
+                                              'authorization': token
+                                          }
+                                      })
+                                      .then(async(resp) => {
+                                          // console.log(resp)
+                                          this.newProjectFolderDialog = false
+                                          this.addNewProjectFolderLoading = false;
+
+                                          // var response = resp
+                                          let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {});
+
+                                          if (!(gitResponse.data.statusCode)) {
+
+                                              localStorage.setItem("folderUrl", newFolderName);
+                                              var folder = localStorage.getItem("folderUrl");
+
+                                              this.newRepoId = gitResponse.data.id;
+                                              this.repoName = gitResponse.data.name;
+
+                                              // Create essential folders
+                                              this.addOtherFolder(newFolderName);
+
+                                              // Init ldap for website subscription in ACL
+                                              axios.post(config.initLdap, {
+                                                      "app": "aaa"
+                                                  })
+                                                  .then((res) => {
+                                                      // console.log(res.data);
+                                                  })
+                                                  .catch((e) => {
+                                                      console.log(e)
+                                                  });
+
+                                              await axios.post(config.baseURL + '/register-website-subscriptions', {
+                                                      websiteId: this.repoName
+                                                  })
+                                                  .then((res) => {
+                                                      // console.log(res.data);
+                                                  })
+                                                  .catch((e) => {
+                                                      console.log(e)
+                                                  });
+
+                                              this.currentProjectName = this.formAddProjectFolder.projectName;
+
+                                              this.formAddProjectFolder.projectName = null;
+                                          } else {
+
+                                              localStorage.setItem("folderUrl", newFolderName);
+                                              var folder = localStorage.getItem("folderUrl");
+
+                                              this.newRepoId = undefined;
+                                              this.repoName = res.data.id;
+
+                                              // Create essential folders
+                                              this.addOtherFolder(newFolderName);
+
+                                              // Init ldap for website subscription in ACL
+                                              axios.post(config.initLdap, {
+                                                      "app": "aaa"
+                                                  })
+                                                  .then((res) => {
+                                                      // console.log(res.data);
+                                                  })
+                                                  .catch((e) => {
+                                                      console.log(e)
+                                                  });
+
+                                              await axios.post(config.baseURL + '/register-website-subscription', {
+                                                      websiteId: this.repoName
+                                                  })
+                                                  .then((res) => {
+                                                      // console.log(res.data);
+                                                  })
+                                                  .catch((e) => {
+                                                      console.log(e)
+                                                  })
+
+                                              this.formAddProjectFolder.projectName = null;
+
+                                              // Delete folder from storage
+                                              // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
+                                              // .then((res) => {
+                                              // })
+                                              // .catch((e) => {
+                                              // })
+
+                                              // return;
+                                          }
+
+                                      })
+                                      .catch((e) => {
+                                          //console.log(e);
+                                          // this.componentId = 'buyPage';
+                                          this.newProjectFolderDialog = false;
+                                          this.fullscreenLoading = false;
+                                          // this.buyNowDialog = true;
+                                          console.log(e)
+                                      });
+                                  // })
+
+                              })
+                              .catch((e) => {
+                                  console.log(e)
+                                  if (e.response.status = 403) {
+                                      this.$message({
+                                          showClose: true,
+                                          message: e.response.data.message,
+                                          type: 'error'
+                                      });
+                                  }
+                                  this.newProjectFolderDialog = false;
+                                  this.fullscreenLoading = false;
+                              });
+                      }
+                  });
+              } else {
+                  this.newProjectFolderDialog = false;
+                  this.fullscreenLoading = false;
+                  this.$session.remove('username');
+                  localStorage.removeItem('current_sub_id');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+
+                  Cookies.remove('auth_token', {
+                      domain: location
+                  });
+                  Cookies.remove('email', {
+                      domain: location
+                  });
+                  Cookies.remove('userDetailId', {
+                      domain: location
+                  });
+                  Cookies.remove('subscriptionId', {
+                      domain: location
+                  });
+                  this.$swal("You're Logged Out From System. Please login again!")
+                      .then((value) => {
+                          window.location = '/login'
+                      });
+              }
           }
-        });
-        } else{
-          this.newProjectFolderDialog = false;
-          this.fullscreenLoading = false;
-          this.$session.remove('username');
-          localStorage.removeItem('current_sub_id');
-          let location = psl.parse(window.location.hostname)
-          location = location.domain === null ? location.input : location.domain
-                        
-          Cookies.remove('auth_token' ,{domain: location});
-          Cookies.remove('email' ,{domain: location});
-          Cookies.remove('userDetailId' ,{domain: location}); 
-          Cookies.remove('subscriptionId' ,{domain: location}); 
-          this.$swal("You're Logged Out From System. Please login again!")
-          .then((value) => {
-            window.location = '/login'
-          });
-        }
-        
       },
 
       // Create neccessary folders for project
@@ -2335,7 +2369,7 @@
                                   "login_api": config.loginUrl,
                                   "register_api": config.registerUrl,
                                   "user_details_api": config.userDetail,
-                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/',
+                                  "social_login_api": 'https://auth.'+config.domainkey+'/auth/',
                                   "domainkey": config.domainkey,
                                   "CrmSettingId":'',
                                   "Projectvid":{"vid":'',"userId":'',"password":'',"esUser":'',"virtualShopName":''}
@@ -3148,7 +3182,7 @@
                                           }
                                       }
                                       if (checktvalue != true) {
-                                          console.log('!true')
+                                          // console.log('!true')
                                           for (let j = 0; j < this.globalConfigData[1].pageSettings.length; j++) {
                                               if (this.globalConfigData[1].pageSettings[j].PageLayout == name) {
                                                   let doublecheckvalue = false
@@ -4388,7 +4422,7 @@
           responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
           self.form.partials = back_partials
 
-          console.log("Final metalsmith:", responseMetal.data);
+          // console.log("Final metalsmith:", responseMetal.data);
 
           var mainMetal = folderUrl + '/public/assets/metalsmithPreview.js'
           axios.post(config.baseURL + '/save-menu', {
@@ -4397,7 +4431,7 @@
               type: 'file'
             })
             .then(async(response) => {
-              console.log('folderUrl:',folderUrl)
+              // console.log('folderUrl:',folderUrl)
               let newFolderName1 = folderUrl + '/Preview';
               await axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName1,
@@ -5147,7 +5181,7 @@
                   await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {
                   })
                   .then(async (cloneRes) => {
-                    console.log(res);
+                    // console.log(res);
 
                     await axios.post(config.baseURL + '/gitlab-add-repo', {
                       commitMessage: 'Initial Push',
@@ -5252,7 +5286,7 @@
                 await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {
                 })
                 .then(async (cloneRes) => {
-                  console.log(res);
+                  // console.log(res);
 
                   await axios.post(config.baseURL + '/gitlab-add-repo', {
                     commitMessage: 'Initial Push',

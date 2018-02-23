@@ -122,7 +122,7 @@
                   </el-select></el-col>
                   <el-col :span='4'>
                   <el-tooltip content="To change/add CRM Setting" placement="top">
-                  <el-button type="primary" icon='setting' href='https://www.crm.flowzcluster.tk/'>CRM Setting</el-button></el-tooltip></el-col>
+                  <el-button type="primary" icon='setting' @click='linktocrm()'>CRM Setting</el-button></el-tooltip></el-col>
                   </el-row>
                 </el-form-item>
 
@@ -1382,6 +1382,9 @@ export default {
   },
 
   methods: {
+    linktocrm(){
+      window.open('https://crm.'+config.domainkey);
+    },
 
     setPrimaryRole(index){
       for(var i = 0; i < this.websiteRoles.length ; i++){
@@ -2641,7 +2644,7 @@ export default {
 
         this.saveProjectSettings();
       }).catch(error => {
-        //console.log("Some error occured: ", error);
+        console.log( error);
       })
     },
 
@@ -2728,7 +2731,7 @@ export default {
 
                 this.saveProjectSettings();
               }).catch(error => {
-                //console.log("Some error occured: ", error);
+                console.log(error);
               });
 
               this.commitMessage = '';
@@ -2820,7 +2823,9 @@ export default {
           return this.results;
         }
       };
+
    // await axios.get(config.baseURL + '/delete-publish-files', {}).then(async (response) => {console.log('deleted previous published files.')})
+
    for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
       var tophead = '';
       var endhead = '';
@@ -3076,7 +3081,7 @@ export default {
                 text: responsepartials,
                 type: 'file'
               }).catch((e) => {
-                //console.log(e)
+                console.log(e)
               })
             }
             let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
@@ -3153,7 +3158,7 @@ export default {
 
           })
           .catch((e) => {
-            //console.log(e)
+            console.log(e)
           })
 
         responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
@@ -3304,7 +3309,7 @@ export default {
                                         //console.log(res)
                                       })
                                       .catch((e) => {
-                                        //console.log(e)
+                                        console.log(e)
                                       })
                                   }
                                 }
@@ -3335,7 +3340,7 @@ export default {
                           type: 'file'
                         })
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                          //console.log(e)
+                          console.log(e)
                         })
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                         console.log(err)
@@ -3414,7 +3419,7 @@ export default {
             message: 'Failed! Please try again.',
             type: 'error'
           });
-          //console.log(e)
+          console.log(e)
         })
 
 
@@ -3572,7 +3577,7 @@ export default {
           });
         }
       }).catch(error => {
-        //console.log("Some error occured: ", error);
+        console.log( error);
       });
 
       await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/public/assets/project-details.json', {
