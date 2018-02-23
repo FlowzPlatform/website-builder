@@ -22,6 +22,10 @@
     let subscriptionUrl = config.subscriptionApi
     import Cookies from 'js-cookie';
     import moment from 'moment'
+    import Vue from 'vue';
+    import iView from 'iview';
+    import locale from 'iview/dist/locale/en-US';
+    Vue.use(iView, { locale });
     export default {
         props: {
             row: Object,
@@ -128,6 +132,7 @@
                         axios({
                             method:'delete',
                             url: subscriptionUrl+'invite',
+                            // url: 'http://localhost:3030/invite',
                             params : paramss,
                             headers : {
                                 "Authorization": Cookies.get('auth_token'),
@@ -151,7 +156,18 @@
                 let self = this
                 console.log(this.row)
                  //axios.get(subscriptionUrl + "subscription-invitation?subscriptionId="+this.row.subscriptionId).then(function(result){
-                    axios.get(subscriptionUrl + "subscription-invitation?subscriptionId="+this.row.subscriptionId).then(function(result){
+                    //axios.get(subscriptionUrl + "subscription-invitation?subscriptionId="+this.row.subscriptionId).then(function(result){
+                        // axios.get( "http://172.16.230.86:3030/" + "subscription-invitation?subscriptionId="+this.row.subscriptionId)
+                        axios.get(subscriptionUrl +'subscription-invitation', {
+                        params: {
+                            subscriptionId: this.row.subscriptionId
+                           // own : true
+                        },
+                        headers : {
+                            Authorization : Cookies.get('auth_token')
+                        }
+                    })
+                        .then(function(result){
                     if(result.data.data.length == 0){
                         self.assignee = "No assignee found for this subscription"
                     }else{

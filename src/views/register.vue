@@ -217,37 +217,6 @@ export default {
       if(self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != ''){
         if(self.form.pass == self.form.checkPass){
           self.registerUser();
-          // $('.login').addClass('test')
-          // setTimeout(function(){
-          //   $('.login').addClass('testtwo')
-          // },300);
-          // setTimeout(function(){
-          //   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          //   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-          // },500);
-          // setTimeout(function(){
-          //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-          //   $('.login').removeClass('testtwo')
-          // },2500);
-          // setTimeout(function(){
-          //   $('.login').removeClass('test')
-          //   $('.login div').fadeOut(123);
-          // },2800);
-          // setTimeout(function(){
-          //   if(self.authen.status == true){
-          //     $('.success').fadeIn();  
-          //   } else {
-          //     $(".authent").fadeOut();
-          //     $('.login div').fadeIn();
-          //     self.$message({
-          //         showClose: true,
-          //         message: self.authen.error,
-          //         type: 'error'
-          //     });
-          //   }
-            
-          // },3200);
         } else{
           self.$message({
               showClose: true,

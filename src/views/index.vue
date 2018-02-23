@@ -2013,7 +2013,7 @@
                 websiteName: this.formAddProjectFolder.projectName,
                 userId: userid,
                 subscriptionId:this.value
-              },{ headers: { 'subscriptionId': this.value,'authorization': token }})
+              },{ headers: { 'subscriptionId': this.value, 'authorization': token }})
               .then((res) => {
                 // console.log('##############')
                 let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
