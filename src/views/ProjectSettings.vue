@@ -2628,14 +2628,17 @@ export default {
 
     revertCommit(index) {
       this.$store.state.currentIndex = index;
-      $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
-      $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
+      // $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
+      // $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       this.currentSha = this.commitsData[index].commitSHA;
 
       //// console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(response => {
+
+
+        console.log(response);
 
         this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
 
@@ -2820,7 +2823,9 @@ export default {
           return this.results;
         }
       };
-    await axios.get(config.baseURL + '/delete-publish-files', {}).then(async (response) => {})
+
+   // await axios.get(config.baseURL + '/delete-publish-files', {}).then(async (response) => {console.log('deleted previous published files.')})
+
    for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
       var tophead = '';
       var endhead = '';
@@ -3234,7 +3239,7 @@ export default {
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                    "<link rel='stylesheet' href='./main-files/main.css' />\n" +
+                    "<link rel='stylesheet' href='./main-files/main.css'/>\n" +
                     datadivscript +
                     endhead + "\n</head>\n<body>\n" + divappstart +
                       topbody +layoutdata.data+
