@@ -255,7 +255,9 @@
                                         <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
                                      </div>
                                      <div class="col-md-1">
-                                        <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                                        <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                          <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                      </el-tooltip>
                                      </div>
                                   </div>
                                </draggable>
@@ -306,7 +308,9 @@
                                         <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
                                      </div>
                                      <div class="col-md-1">
-                                        <el-button style="min-width: 100%;"><i class="fa fa-arrows"></i></el-button>
+                                      <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                      </el-tooltip>
                                      </div>
                                   </div>
                                </draggable>

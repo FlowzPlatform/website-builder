@@ -122,7 +122,7 @@
                   </el-select></el-col>
                   <el-col :span='4'>
                   <el-tooltip content="To change/add CRM Setting" placement="top">
-                  <el-button type="primary" icon='setting' href='https://www.crm.flowzcluster.tk/'>CRM Setting</el-button></el-tooltip></el-col>
+                  <el-button type="primary" icon='setting' @click='linktocrm()'>CRM Setting</el-button></el-tooltip></el-col>
                   </el-row>
                 </el-form-item>
 
@@ -1382,6 +1382,9 @@ export default {
   },
 
   methods: {
+    linktocrm(){
+      window.open('https://crm.'+config.domainkey);
+    },
 
     setPrimaryRole(index){
       for(var i = 0; i < this.websiteRoles.length ; i++){
