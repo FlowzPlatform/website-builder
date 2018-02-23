@@ -35,7 +35,7 @@
               <div class='icon'>
                   <i class="fa fa-envelope-o"></i>
               </div>
-              <input placeholder='Email Address' type='text' v-model="form.email" required>
+              <input placeholder='Email Address' type='text' v-model="form.email" id="txtEmail" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -110,101 +110,112 @@ export default {
         status: false,
         success: 'Registration Success',
         error: 'Registration Failed'
-      }
+      },
+      validEmail: false
     }
   },
   methods: {
     registerUser () {
 
-      $('.login').addClass('test')
-      setTimeout(function(){
-        $('.login').addClass('testtwo')
-      },300);
-      setTimeout(function(){
-        $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-      },500);
-      setTimeout(function(){
-        
-      },2500);
+      if(this.validEmail == true){
+        $('.login').addClass('test')
+        setTimeout(function(){
+          $('.login').addClass('testtwo')
+        },300);
+        setTimeout(function(){
+          $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+        },500);
+        setTimeout(function(){
+          
+        },2500);
 
 
-      axios.post(config.registerUrl, {
-        username: this.form.Uname,
-        password: this.form.pass,
-        email: this.form.email,
-        fullname: this.form.Name
-      }, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        }
-      }).then(response => {
-        this.authen.status = true;
-        let self = this;
+        axios.post(config.registerUrl, {
+          username: this.form.Uname,
+          password: this.form.pass,
+          email: this.form.email,
+          fullname: this.form.Name
+        }, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+          }
+        }).then(response => {
+          this.authen.status = true;
+          let self = this;
 
-        $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-        $('.login').removeClass('testtwo')
+          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+          $('.login').removeClass('testtwo')
 
-        $('.login').removeClass('test')
-        $('.login div').fadeOut(123);
+          $('.login').removeClass('test')
+          $('.login div').fadeOut(123);
 
-        $('.success').fadeIn();
+          $('.success').fadeIn();
 
-        setTimeout(function () {
-          self.$router.push('/login');
-        }, 2000);
-        // window.location = '/login'
-        // axios.post( config.baseURL + '/user-service', {
-        //     username : this.form.Uname,
-        //     password : this.form.pass,
-        //     email : this.form.email,
-        //     name : this.form.name                  
-        // }).then(response => {
-        //   // window.location = '/login';
-        //   // Create user Folder
-        //   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-        //   // axios.post(config.baseURL+'/flows-dir-listing' , {
-        //   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
-        //   //   type : 'folder'
-        //   // })
-        //   // .then((res) => {
-        ////   //   console.log('user Folder created!');
-        //   // })
-        //   // .catch((e)=>{
-        ////   //   console.log("Error from pages"+res)
-        //   // });
-        //   this.authen.status = true;
-        //   let self = this;
-        //   setTimeout(function () {
-        //     self.$router.push('/login');
-        //   }, 2000);
-        // }).catch(error => {
-        //   this.authen.status = false;
-        //   this.authen.error = response.data;
-        // })
-      }).catch(error => {
+          setTimeout(function () {
+            self.$router.push('/login');
+          }, 2000);
+          // window.location = '/login'
+          // axios.post( config.baseURL + '/user-service', {
+          //     username : this.form.Uname,
+          //     password : this.form.pass,
+          //     email : this.form.email,
+          //     name : this.form.name                  
+          // }).then(response => {
+          //   // window.location = '/login';
+          //   // Create user Folder
+          //   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+          //   // axios.post(config.baseURL+'/flows-dir-listing' , {
+          //   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
+          //   //   type : 'folder'
+          //   // })
+          //   // .then((res) => {
+          ////   //   console.log('user Folder created!');
+          //   // })
+          //   // .catch((e)=>{
+          ////   //   console.log("Error from pages"+res)
+          //   // });
+          //   this.authen.status = true;
+          //   let self = this;
+          //   setTimeout(function () {
+          //     self.$router.push('/login');
+          //   }, 2000);
+          // }).catch(error => {
+          //   this.authen.status = false;
+          //   this.authen.error = response.data;
+          // })
+        }).catch(error => {
+          this.$message({
+              showClose: true,
+              message: 'Error: ' + error.response.data,
+              type: 'error'
+          });
+
+          console.log('Error: ', error.response);
+          this.authen.status = false;
+          this.authen.error = error.response.data;
+
+          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+          $('.login').removeClass('testtwo')
+
+          $('.login').removeClass('test')
+          $('.login div').fadeOut(123);
+
+          $(".authent").fadeOut();
+          $('.login div').fadeIn();
+
+        })
+      } else {
         this.$message({
             showClose: true,
-            message: 'Error: ' + error.response.data,
+            message: 'Please enter valid email',
             type: 'error'
         });
+      }
 
-        console.log('Error: ', error.response);
-        this.authen.status = false;
-        this.authen.error = error.response.data;
-
-        $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-        $('.login').removeClass('testtwo')
-
-        $('.login').removeClass('test')
-        $('.login div').fadeOut(123);
-
-        $(".authent").fadeOut();
-        $('.login div').fadeIn();
-
-      })
+      
     },
     goToLandingPage () {
       this.$router.push('/');
@@ -325,6 +336,28 @@ export default {
     });
     $('input[type="text"],input[type="password"]').blur(function(){
       $(this).prev().animate({'opacity':'.5'},200)
+    });
+
+    $('#txtEmail').blur(function(){
+      var userinput = $(this).val();
+      var pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
+
+      if(!pattern.test(userinput)){
+        self.$message({
+            showClose: true,
+            message: 'Please enter valid email',
+            type: 'error'
+        });
+        self.validEmail = false;
+        $(this).val("");
+        // $(this).focus();
+      }
+
+
+      // if(!pattern.test(userinput))
+      // {
+      //   alert('not a valid e-mail address');
+      // }​
     });
 
     $('input[type="text"],input[type="password"]').keyup(function(){
