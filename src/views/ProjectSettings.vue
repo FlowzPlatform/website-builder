@@ -121,7 +121,8 @@
                     </el-option>
                   </el-select></el-col>
                   <el-col :span='4'>
-                  <el-button type="primary" icon='setting'>CRM Setting</el-button></el-col>
+                  <el-tooltip content="To change/add CRM Setting" placement="top">
+                  <el-button type="primary" icon='setting' href='https://www.crm.flowzcluster.tk/'>CRM Setting</el-button></el-tooltip></el-col>
                   </el-row>
                 </el-form-item>
 
@@ -2520,9 +2521,11 @@ export default {
       
       // console.log('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid)
       if(this.form.vid!=''){
-        var projectviddetail=await axios.get('https://api.flowzqa.tk/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
-        // console.log(projectviddetail)
-        var uservid=projectviddetail.data.userId  
+        var projectviddetail=await axios.get('https://api.'+config.domainkey+'/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
+        // console.log(projectviddetail.data)
+        var uservid=projectviddetail.data.userId
+        var esuser=projectviddetail.data.esUser
+        var virtualShopName=projectviddetail.data.virtualShopName
         var passvid=projectviddetail.data.password  
       }
       
@@ -2535,7 +2538,7 @@ export default {
         "ProjectSEOKeywords": this.form.seoKeywords,
         "ProjectSEODescription": this.form.seoDesc,
         "ProjectFaviconhref": this.faviconhref,
-        "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid},
+        "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid, "esUser":esuser,"virtualShopName":virtualShopName},
         "CrmSettingId":this.form.crmid
       }, {
         "AssetImages": this.assetsImages,
@@ -2585,6 +2588,8 @@ export default {
           this.projectDetailsJson[0].Projectvid.userId = uservid;
           this.projectDetailsJson[0].Projectvid.password = passvid;
           this.projectDetailsJson[0].CrmSettingId=this.form.crmid;
+          this.projectDetailsJson[0].Projectvid.esUser=esuser
+          this.projectDetailsJson[0].Projectvid.virtualShopName=virtualShopName
           // console.log({"vid":this.form.vid, "userId":uservid, "password":passvid})
           let jsonFileName = this.folderUrl + '/public/assets/project-details.json';
           // console.log(JSON.parse(JSON.stringify(this.projectDetailsJson)))
@@ -2620,14 +2625,17 @@ export default {
 
     revertCommit(index) {
       this.$store.state.currentIndex = index;
-      $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
-      $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
+      // $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
+      // $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       this.currentSha = this.commitsData[index].commitSHA;
 
       //// console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(response => {
+
+
+        console.log(response);
 
         this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
 
@@ -3226,6 +3234,7 @@ export default {
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                    "<link rel='stylesheet' href='./main-files/main.css' />\n" +
                     datadivscript +
                     endhead + "\n</head>\n<body>\n" + divappstart +
                       topbody +layoutdata.data+
@@ -3487,7 +3496,7 @@ export default {
 
         this.currentSha = this.settings[0].repoSettings[0].CurrentHeadSHA;
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.id;
 
         this.faviconhref = this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
@@ -3580,11 +3589,12 @@ export default {
       });
 
       this.vshopcategory = Allvshopid.data;
+      // console.log('vshopcategory:',this.vshopcategory)
       
       let gateways= await axios.get(config.paymentApiGateway);
       this.Allgateway = gateways.data.gateways;
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-      let crm=await axios.get('https://api.flowzqa.tk/crm/settings',{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      let crm=await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
       this.crmdata=crm.data.data
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
