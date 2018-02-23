@@ -4427,7 +4427,7 @@
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                    "<link rel='stylesheet' href='./../main-files/main.css' />\n" +
+                    "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
                     datadivscript +
                     endhead + "\n</head>\n<body>\n" + divappstart + topbody +
                     layoutdata.data +
