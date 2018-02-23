@@ -132,6 +132,7 @@
                         axios({
                             method:'delete',
                             url: subscriptionUrl+'invite',
+                            // url: 'http://localhost:3030/invite',
                             params : paramss,
                             headers : {
                                 "Authorization": Cookies.get('auth_token'),

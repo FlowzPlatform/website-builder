@@ -330,11 +330,10 @@
                 console.log(params)
                 await axios({
                         method: 'POST',
-                          url: subscriptionUrl + 'invite',
-                       // url: "http://172.16.230.86:3030/" + 'invite',
+                        url: subscriptionUrl + 'invite',
+                        // url: "http://172.16.230.86:3030/" + 'invite',
                         headers: {
                             "Authorization": Cookies.get('auth_token'),
-
                         },
                         data: params
                     })
@@ -1952,4 +1951,9 @@
         background: #55acee !important;
         color: #fff !important;
     }
+
+    .flat-theme .hh-navigation[data-v-febe3a5e] {
+    text-align: left;
+    z-index: -1;
+}
 </style>

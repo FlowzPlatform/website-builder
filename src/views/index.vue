@@ -666,7 +666,7 @@
             localStorage.setItem("current_sub_id", this.value)
             // Cookies.set('userDetailId', response.data.userId, {domain: location});
             // Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
-            axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
+            //axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             await this.getData();
             this.fullscreenLoading=false
@@ -1984,7 +1984,7 @@
                 websiteName: this.formAddProjectFolder.projectName,
                 userId: userid,
                 subscriptionId:this.value
-              },{ headers: { 'subscriptionId': this.value,'authorization': token }})
+              },{ headers: { 'subscriptionId': this.value, 'authorization': token }})
               .then((res) => {
                 
                 let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
