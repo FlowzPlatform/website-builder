@@ -306,7 +306,6 @@
             },
             async inviteNow() {
                 if(this.value2 == undefined || this.value2 == '' || this.value1 == ''){
-                    this.$message.warning("Please select both subscription & role for invitation");
                     this.$message({
                         showClose: true,
                         message: 'Please select both subscription & role for invitation.',
@@ -428,6 +427,7 @@
     }
 
     .hh-navigation {
+        z-index: -1;
         position: fixed;
         left: 0;
         right: 0;
@@ -435,7 +435,6 @@
         -webkit-box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
         box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
         background: white;
-        z-index: 10000;
         text-align: center;
     }
 
