@@ -10,7 +10,7 @@
             <el-input placeholder="Please enter email id" v-model="input"></el-input>
         </div>  
         <div class="col-md-2" >
-            <el-select v-model="value1" placeholder="Select Role" style="width:38   0px">
+            <el-select v-model="value1" placeholder="Select Role">
             <el-option
             v-for="item in options"
             :key="item.value1"
@@ -37,13 +37,13 @@
         </div>
         <Tabs  style="margin-top: 20px">
             <TabPane label="Own Subscription">
-                <Table :columns="columns3" :data="data3" stripe></Table>
+                <Table :columns="columns3" :data="data3" no-text-data="No Data" stripe></Table>
             </TabPane>
             <TabPane label="Assigned Subscription">
-                <Table :columns="columns2" :data="data2" stripe></Table>
+                <Table :columns="columns2" :data="data2" no-text-data="No Data" stripe></Table>
             </TabPane>
             <TabPane label="Assigned History">
-                <Table :columns="columns4" :data="data4" stripe></Table>
+                <Table :columns="columns4" :data="data4" no-text-data="No Data" stripe></Table>
             </TabPane>
         </Tabs>
     </div>
@@ -56,23 +56,18 @@
 <script src="https://vuejs.org/js/vue.min.js"></script>
 <script src="https://unpkg.com/iview/dist/iview.min.js"></script>
 <script>
-    //import locale1 from 'iview/dist/locale/en-US';
     import axios from 'axios'
     import Cookies from 'js-cookie';
-    import Vue from 'vue';
-    import ElementUI from 'element-ui';
     const config = require('../config');
     let subscriptionUrl = config.subscriptionApi
     import expandRow from './assigned_invite_table-expand.vue';
     import moment from 'moment';
     import _ from 'lodash'
-    
+    import Vue from 'vue';
     import iView from 'iview';
     import 'iview/dist/styles/iview.css';
-    import locale1 from 'iview/dist/locale/en-US';
-    Vue.use(iView, { locale1 });
-    
-    Vue.use(ElementUI);
+    import locale from 'iview/dist/locale/en-US';
+    Vue.use(iView, { locale });
     
     export default {
         components: { expandRow },
@@ -1959,8 +1954,8 @@
         background: #55acee !important;
         color: #fff !important;
     }
-    .flat-theme .hh-navigation[data-v-febe3a5e] {
-    text-align: left;
-    z-index: -1;
-}
+    .flat-theme .hh-navigation[data-v-c2fe13ce] {
+        text-align: left;
+        z-index: -1;
+    }
 </style>
