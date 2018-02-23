@@ -655,7 +655,7 @@
       //         }
       //     })
       // },
-       changeSubscription(){
+     changeSubscription(){
         this.fullscreenLoading=true
         this.editableTabs = []
 
@@ -2038,7 +2038,7 @@
                         "app":"aaa"
                       })
                       .then((res) => {
-                        console.log(res.data);
+                        // console.log(res.data);
                       })
                       .catch((e) => {
                         console.log(e)
@@ -2048,7 +2048,7 @@
                           websiteId: this.repoName
                       })
                       .then((res) => {
-                        console.log(res.data);
+                        // console.log(res.data);
                       })
                       .catch((e) => {
                         console.log(e)
@@ -2073,7 +2073,7 @@
                         "app":"aaa"
                       })
                       .then((res) => {
-                        console.log(res.data);
+                        // console.log(res.data);
                       })
                       .catch((e) => {
                         console.log(e)
@@ -2083,7 +2083,7 @@
                           websiteId: this.repoName
                       })
                       .then((res) => {
-                        console.log(res.data);
+                        // console.log(res.data);
                       })
                       .catch((e) => {
                         console.log(e)
@@ -2323,7 +2323,7 @@
                                   "login_api": config.loginUrl,
                                   "register_api": config.registerUrl,
                                   "user_details_api": config.userDetail,
-                                  "social_login_api": 'https://auth.flowzcluster.tk/auth/',
+                                  "social_login_api": 'https://auth.'+config.domainkey+'/auth/',
                                   "domainkey": config.domainkey,
                                   "CrmSettingId":'',
                                   "Projectvid":{"vid":'',"userId":'',"password":'',"esUser":'',"virtualShopName":''}
@@ -3136,7 +3136,7 @@
                                           }
                                       }
                                       if (checktvalue != true) {
-                                          console.log('!true')
+                                          // console.log('!true')
                                           for (let j = 0; j < this.globalConfigData[1].pageSettings.length; j++) {
                                               if (this.globalConfigData[1].pageSettings[j].PageLayout == name) {
                                                   let doublecheckvalue = false
@@ -4376,7 +4376,7 @@
           responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
           self.form.partials = back_partials
 
-          console.log("Final metalsmith:", responseMetal.data);
+          // console.log("Final metalsmith:", responseMetal.data);
 
           var mainMetal = folderUrl + '/public/assets/metalsmithPreview.js'
           axios.post(config.baseURL + '/save-menu', {
@@ -4385,7 +4385,7 @@
               type: 'file'
             })
             .then(async(response) => {
-              console.log('folderUrl:',folderUrl)
+              // console.log('folderUrl:',folderUrl)
               let newFolderName1 = folderUrl + '/Preview';
               await axios.post(config.baseURL + '/flows-dir-listing', {
                 foldername: newFolderName1,
@@ -5135,7 +5135,7 @@
                   await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {
                   })
                   .then(async (cloneRes) => {
-                    console.log(res);
+                    // console.log(res);
 
                     await axios.post(config.baseURL + '/gitlab-add-repo', {
                       commitMessage: 'Initial Push',
@@ -5240,7 +5240,7 @@
                 await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {
                 })
                 .then(async (cloneRes) => {
-                  console.log(res);
+                  // console.log(res);
 
                   await axios.post(config.baseURL + '/gitlab-add-repo', {
                     commitMessage: 'Initial Push',
