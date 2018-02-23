@@ -1989,6 +1989,22 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
               value: 'landscape',
               name: 'Landscape'
             }]
+          },
+          {
+            label: 'Price For Anonymous User',
+            name: 'select_anonymousUser_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{
+              value: 'select',
+              name: 'Select Filter'
+            }, {
+              value: 'yes',
+              name: 'Yes'
+            }, {
+              value: 'no',
+              name: 'No'
+            }]
           }
         ],
       }),

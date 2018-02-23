@@ -116,6 +116,10 @@
                                 h('strong', params.row.role[Object.keys(params.row.role)])
                             ]);
                         }
+                    },
+                    {
+                        title : 'Assigned By',
+                        key: 'invitedBy'
                     }
                 ],
                  columns3: [
