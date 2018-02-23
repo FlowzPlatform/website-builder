@@ -2024,57 +2024,57 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   // dataField components
 
-  var getCookiebyName = function (name) {
-  var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
-    return !!pair ? pair[1] : null;
-  };
+//   var getCookiebyName = function (name) {
+//   var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
+//     return !!pair ? pair[1] : null;
+//   };
 
-  let cookieValueFun =  getCookiebyName("auth_token")
-  let arr_collection = new Array();
-  let arr_schema = []
-  let arr_coll_schema = new Array()
-  let settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://api.flowzcluster.tk/dbetl/databases",
-    "method": "GET",
-    "headers": {
-      "authorization": cookieValueFun
-    }
-  }
+//   let cookieValueFun =  getCookiebyName("auth_token")
+//   let arr_collection = new Array();
+//   let arr_schema = []
+//   let arr_coll_schema = new Array()
+//   let settings = {
+//     "async": true,
+//     "crossDomain": true,
+//     "url": "https://api.flowzcluster.tk/dbetl/databases",
+//     "method": "GET",
+//     "headers": {
+//       "authorization": cookieValueFun
+//     }
+//   }
 
-  $.ajax(settings).done(function (response) {
-    for (let index = 0; index < response.data.length; index++) {
-      arr_collection.push(response.data[index].connection_name)
-      let settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "https://api.flowzcluster.tk/dbetl/schema/" + response.data[index].id,
-        "method": "GET",
-        "headers": {
-          "authorization": cookieValueFun
-        }
-      }
+//   $.ajax(settings).done(function (response) {
+//     for (let index = 0; index < response.data.length; index++) {
+//       arr_collection.push(response.data[index].connection_name)
+//       let settings = {
+//         "async": true,
+//         "crossDomain": true,
+//         "url": "https://api.flowzcluster.tk/dbetl/schema/" + response.data[index].id,
+//         "method": "GET",
+//         "headers": {
+//           "authorization": cookieValueFun
+//         }
+//       }
 
-      $.ajax(settings).done(function (response2) {
-        for (let index2 = 0; index2 < response2.length; index2++) {
-          collection_name = response.data[index].connection_name
-          schema_name = response2[index2].name
-          arr_schema.push({ collection_name: collection_name, schema_name: schema_name })
-          console.log("arr_schema", arr_schema)
-        }
-        arr_coll_schema.push('');
-        $.each(arr_schema, function (index, value) {
-          arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
-        });
-        console.log("arr_coll_schema", typeof arr_coll_schema)
-      });
-    }
-  });
-
-
+//       $.ajax(settings).done(function (response2) {
+//         for (let index2 = 0; index2 < response2.length; index2++) {
+//           collection_name = response.data[index].connection_name
+//           schema_name = response2[index2].name
+//           arr_schema.push({ collection_name: collection_name, schema_name: schema_name })
+//           console.log("arr_schema", arr_schema)
+//         }
+//         arr_coll_schema.push('');
+//         $.each(arr_schema, function (index, value) {
+//           arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
+//         });
+//         console.log("arr_coll_schema", typeof arr_coll_schema)
+//       });
+//     }
+//   });
 
 
+
+    let arr_coll_schema = []
     comps.addType('DataFieldGroup', {
       // Define the Model
       model: defaultModel.extend({
