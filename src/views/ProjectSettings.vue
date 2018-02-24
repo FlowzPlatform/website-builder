@@ -130,11 +130,13 @@
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
                 </el-form-item> -->
 
-                <!-- <el-form-item label="Favicon Logo"> -->
-                  <!-- <div class="col6 valid">
+                <el-form-item label="Favicon Logo">
+                  <div class="col6 valid">
                     <label for="upload-validation" class="brandLogoUploadLabel">
-                      <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
+                      <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id=" ">Upload image</span>
                     </label>
+                    <span><b>Current file:</b><i> {{form.brandLogoName}}</i></span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
+
                     <input type="file" name="" id="upload-validation">
                     <span class="dis">( .png/ico only)</span>
 
@@ -166,7 +168,7 @@
         </div>
 
       </div>
-      <!-- Project Settings section ends -->
+      <!-- Project Settings section ends
 
       <!-- Plugins Section -->
       <div class="collapsingDivWrapper row">
@@ -1039,7 +1041,7 @@ export default {
       },
       commitsData: [],
       crmdata:[],
-      faviconhref:'',
+      faviconhName:'',
       fileList3: [],
       pluginsData: [],
       commitMessage: '',
@@ -1133,7 +1135,7 @@ export default {
       Allgateway: [],
       currentSha: '',
       publishType: 'default',
-      faviconhref: '',
+      // faviconhref: '',
       rulesProjectSettings: {
           websitename: [
               { validator: checkProjectName, trigger: 'blur' }
@@ -1260,7 +1262,7 @@ export default {
 
       var fileName = e.target.files[0].name;
       var ext = $(this).val().split('.').pop().toLowerCase();
-      if($.inArray(ext, ['png', 'ico']) == -1 && ext != ''){
+      if($.inArray(ext, ['ico','png']) == -1 && ext != ''){
         $('#text2').text('Invalid image file.');
         $('.valid').addClass('error').removeClass('correct');
         $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
@@ -1382,6 +1384,9 @@ export default {
   },
 
   methods: {
+    deletefaviconimage(){
+      this.form.brandLogoName='!!! No file uploaded !!!'
+    },
     linktocrm(){
       window.open('https://crm.'+config.domainkey);
     },
@@ -2368,11 +2373,11 @@ export default {
           // console.log('projectSettingsFileData', projectSettingsFileData);
           let data = JSON.parse(projectSettingsFileData.data);
 
-          console.log('Custom Json DATA: ', data);
+          // console.log('Custom Json DATA: ', data);
 
           this.projectDetailsJson[0].project_settings = data.project_settings;
 
-          console.log('Json data: ', this.projectDetailsJson);
+          // console.log('Json data: ', this.projectDetailsJson);
 
           // this.isProjectDetailsJsonUpdated = true;
           this.saveProjectSettings();
@@ -2432,9 +2437,10 @@ export default {
     uploadImage(fileData, fileBlob) {
 
       this.form.brandLogoName = fileData.name;
-      console.log(fileData)
+      // console.log(fileData)
+      // this.faviconName=fileData.name
       axios.post( config.baseURL + '/image-upload', {
-          filename : this.folderUrl + '/public/assets/favicon.'+fileData.name.split('.')[1]  ,
+          filename : this.folderUrl + '/public/favicon.'+this.form.brandLogoName.split('.')[1]  ,
           text : fileBlob,
           type : 'file'
       })
@@ -2540,7 +2546,7 @@ export default {
         "ProjectSEOTitle": this.form.seoTitle,
         "ProjectSEOKeywords": this.form.seoKeywords,
         "ProjectSEODescription": this.form.seoDesc,
-        "ProjectFaviconhref": this.faviconhref,
+        // "ProjectFaviconName": this.faviconName,
         "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid, "esUser":esuser,"virtualShopName":virtualShopName},
         "CrmSettingId":this.form.crmid
       }, {
@@ -2788,7 +2794,7 @@ export default {
       var projectscripts=rawConfigs[1].projectSettings[1].ProjectScripts
       var projectstyles=rawConfigs[1].projectSettings[1].ProjectStyles
       var projectseotitle=rawConfigs[1].projectSettings[0].ProjectSEOTitle;
-       var projectfaviconhref=rawConfigs[1].projectSettings[0].ProjectFaviconhref
+       var ProjectFaviconName=rawConfigs[1].projectSettings[0].BrandLogoName
        var favicon=''
        var SeoTitle=''
       var getFromBetween = {
@@ -2834,9 +2840,12 @@ export default {
       if(projectseotitle!=undefined && projectseotitle!=''){
         SeoTitle=projectseotitle
       }
-      if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
-        favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+      if(ProjectFaviconName!=''){
+       favicon=' <link rel="icon" type="image/png" href="./favicon.'+ProjectFaviconName.split('.')[1]+'">'
       }
+      // if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
+      //   favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+      // }
         if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
         tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
       }
@@ -3504,7 +3513,7 @@ export default {
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.configData.data.id;
 
-        this.faviconhref = this.settings[1].projectSettings[0].ProjectFaviconhref;
+        // this.faviconName = this.settings[1].projectSettings[0].ProjectFaviconName;
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
         this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
         this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
@@ -3522,12 +3531,16 @@ export default {
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
         this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
-        this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
+        // this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
         this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
       } else {
         //console.log('Cannot get configurations!');
+      }
+
+      if(this.form.brandLogoName==''){
+        this.form.brandLogoName='!!!No file uploaded!!!'
       }
 
       if(!(process.env.NODE_ENV == 'development')){
@@ -3736,7 +3749,7 @@ export default {
   input[type="file"]{
     display: none;
   }
-  .brandLogoUploadLabel label{
+   label.brandLogoUploadLabel{
     display: inline-block;
     border: 1px dashed #1a1a1a;
     background: #f1f1f1;
@@ -3748,11 +3761,11 @@ export default {
     cursor: pointer;
     transition:300ms;
   }
-  .brandLogoUploadLabel label i{
+   label.brandLogoUploadLabel i{
     vertical-align: middle;
     margin-right:10px;
   }
-  .brandLogoUploadLabel label:hover{
+   label.brandLogoUploadLabel:hover{
     border-style: solid;
   }
 
@@ -3765,12 +3778,12 @@ export default {
     margin-top:6px;
     color:#a9a9a9;
   }
-  .error .brandLogoUploadLabel label{
+  .error  label.brandLogoUploadLabel{
     color:red;
     border-color:red;
     background:#fcd0d0;
   }
-  .correct .brandLogoUploadLabel label{
+  .correct  label.brandLogoUploadLabel{
     background:#cff5c5;
   }
 
