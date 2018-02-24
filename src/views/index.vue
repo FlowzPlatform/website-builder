@@ -2010,7 +2010,6 @@
       // Create new Website
       async addProjectFolder(projectName) {
         // console.log('this.value:',this.value)
-         this.fullscreenLoading = true;
           if (this.value == '') {
             this.newProjectFolderDialog = false;
               this.fullscreenLoading = false;
@@ -2023,10 +2022,7 @@
 
           } else {
               if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                  this.$refs[projectName].validate((valid) => {
-                      if (valid) {
-
-                          let token = Cookies.get('auth_token');
+                         let token = Cookies.get('auth_token');
                           this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                           var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
 
@@ -2166,9 +2162,7 @@
                                   }
                                   this.newProjectFolderDialog = false;
                                   this.fullscreenLoading = false;
-                              });
-                      }
-                  });
+                              });                  
               } else {
                   this.newProjectFolderDialog = false;
                   this.fullscreenLoading = false;
@@ -5397,35 +5391,39 @@
       },
 
       async checknameexist(projectName){
+        this.$refs[projectName].validate(async (valid) => {
+        if(valid){
+          this.fullscreenLoading = true;
+          this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
+          this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
+          // console.log('userid',userid)
+          var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
+          let checkdetail=true
+          for(let i=0;i<alldatauser.data.data.length;i++){
+            if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
+              checkdetail=false
 
-        // this.fullscreenLoading = true;
-        this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
-        this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
-        // console.log('userid',userid)
-        var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
-        let checkdetail=true
-        for(let i=0;i<alldatauser.data.data.length;i++){
-          if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
-            checkdetail=false
-
+            }
           }
-        }
-        
-        if(checkdetail!=false){
-          // console.log('not same found')
-         
-         this.addProjectFolder(projectName)
-        }
-        else{
-          // this.fullscreenLoading=false
-          this.$message({
-          showClose: true,
-          message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
-          type: 'error'
-        });
-        
-        }
+          
+          if(checkdetail!=false){
+            // console.log('not same found')
+           
+           this.addProjectFolder(projectName)
+          }
+          else{
+            this.fullscreenLoading=false
+            this.$message({
+            showClose: true,
+            message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
+            type: 'error'
+          });
+          
+          }
+          }
+       
+      })
       },
 
       // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
