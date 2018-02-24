@@ -7,7 +7,7 @@
 const baseURL = localStorage.getItem('baseURL');
 // console.log("URL: " + localStorage.getItem('baseURL'));
 
-grapesjs.plugins.add('product-plugin', function(editor, options) {
+ grapesjs.plugins.add('product-plugin', async function(editor, options) {
   var bm = editor.BlockManager;
 
   // bm.add('scriptingTag', {
@@ -740,7 +740,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   let configFileUrl = baseURL + '/project-configuration/' + foldername;
 
-  $.getJSON(configFileUrl, function(data) {
+  await $.getJSON(configFileUrl, function(data) {
     configData = data.configData;
     globalVariables = configData[1].projectSettings[1].GlobalVariables;
     urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
@@ -752,11 +752,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   var partialOptions = {};
 
-
-  setTimeout(function() {
-
-
-    for(var j = 0; j < menuOptions.length; j++){
+  for(var j = 0; j < menuOptions.length; j++){
       let value = {name: menuOptions[j].label, value: menuOptions[j].label}
       menuNames.push(value);
     }
@@ -850,7 +846,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         }
       });
     }
-  }, 2000);
+
+
+  // setTimeout(function() {
+
+
+    
+  // }, 2000);
 
   // The `input` will be the Component type ID
   comps.addType('productListing', {
