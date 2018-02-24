@@ -395,7 +395,7 @@
             ]
         },
         formAddProjectFolder : {
-            projectName : 'NewWebsite'
+            projectName : ''
         },
         currentProjectName: '',
         rulesProjectName: {
