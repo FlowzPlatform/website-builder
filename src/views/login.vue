@@ -27,11 +27,27 @@
       </form>
       <div class="social-buttons" align="center">
         <div>
-          <a href="javascript:void(0)" class="social-button-facebook" v-on:click="doFacebookLogin()"><i class="fa fa-facebook"></i></a>
-          <a href="javascript:void(0)" class="social-button-google-plus" v-on:click="doGooglePlusLogin()"><i class="fa fa-google-plus"></i></a>
-          <a href="javascript:void(0)" class="social-button-twitter" v-on:click="doTwitterLogin()"><i class="fa fa-twitter"></i></a>
-          <a href="javascript:void(0)" class="social-button-github" v-on:click="doGithubLogin()"><i class="fa fa-github"></i></a>
-          <a href="javascript:void(0)" class="social-button-linked-in" v-on:click="doLinkedInLogin()"><i class="fa fa-linkedin"></i></a>
+          <el-tooltip class="item" effect="light" content="Login with Facebook" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-facebook" v-on:click="doFacebookLogin()"><i class="fa fa-facebook"></i></a>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" content="Login with Google" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-google-plus" v-on:click="doGooglePlusLogin()"><i class="fa fa-google-plus"></i></a>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" content="Login with Twitter" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-twitter" v-on:click="doTwitterLogin()"><i class="fa fa-twitter"></i></a>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" content="Login with GitHub" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-github" v-on:click="doGithubLogin()"><i class="fa fa-github"></i></a>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" content="Login with LinkedIn" placement="top-start">
+            <a href="javascript:void(0)" class="social-button-linked-in" v-on:click="doLinkedInLogin()"><i class="fa fa-linkedin"></i></a>
+          </el-tooltip>
+          <!-- <a href="javascript:void(0)" class="social-button-linked-in"><i class="fa fa-lock-alt"></i></a> -->
+          <el-tooltip content="LDAP Login" effect="light" placement="top">
+            <div class="ldap">
+              <input type="checkbox" name="ldapCheckbox" @change="checkLdapLogin" id="ldapCheckbox"><label for="ldapCheckbox" class="login-button-ldap"><i class="fa fa-lock"></i></label> 
+            </div>
+          </el-tooltip>
         </div>
       </div>
       <div>
@@ -42,7 +58,7 @@
               <div class='icon'>
                   <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Email Id' class="input-fields" type='text' v-model="form.user" required>
+              <input placeholder='Email Id' class="input-fields" type='text' maxlength="100" v-model="form.user" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -52,7 +68,7 @@
               <div class='icon'>
                   <img src='../assets/images/lock_icon_copy.png'>
               </div>
-              <input placeholder='Password' class="input-fields" type='password' v-model="form.pass" required>
+              <input placeholder='Password' class="input-fields" type='password' maxlength="20" v-model="form.pass" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -88,11 +104,12 @@
 <script>
 import Vue from 'vue'
 import VueSession from 'vue-session'
-
+ 
 Vue.use(VueSession)
 
 import axios from 'axios';
 import psl from 'psl';
+import Cookies from 'js-cookie';
 
 
 
@@ -121,16 +138,42 @@ export default {
       loginWithTwitterUrl: config.loginWithTwitterUrl,
       loginWithGithubUrl: config.loginWithGithubUrl,
       loginWithLinkedInUrl: config.loginWithLinkedInUrl,
-      userDetailId: ''
+      userDetailId: '',
+      isLdapLogin: false
     }
   },
   component: {
   },
   methods: {
     authenticate () {
-      console.log('Authenticating User');
+      //console.log('Authenticating User');
 
-      axios.post(config.loginUrl, {
+      $('.login').addClass('test')
+      setTimeout(function(){
+        $('.login').addClass('testtwo')
+      },300);
+      setTimeout(function(){
+        $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+      },500);
+      setTimeout(function(){
+        
+      },2500);
+      // setTimeout(function(){
+        
+      // },2800);
+
+      let loginNowUrl;
+
+      if(this.isLdapLogin === true){
+        loginNowUrl = config.ldapUrl;
+      } else {
+        loginNowUrl = config.loginUrl;
+      }
+
+      console.log('Login URL: ', loginNowUrl);
+
+      axios.post(loginNowUrl, {
         password: this.form.pass,
         email: this.form.user
       }, {
@@ -143,13 +186,8 @@ export default {
           this.$session.set('token', response.data.logintoken);
           // localStorage.setItem("auth_token", response.data.logintoken);
 
-          // Store Token in Cookie
-          let location = psl.parse(window.location.hostname)
-          location = location.domain === null ? location.input : location.domain
-          this.$cookie.set('auth_token', response.data.logintoken, {expires: 1, domain: location});
-
           // Set email Session
-          console.log('User Details: ', response.data);
+          //console.log('User Details: ', response.data);
           axios.get(config.userDetail, {
             headers: {
               'Authorization' : response.data.logintoken
@@ -158,29 +196,56 @@ export default {
           .then(async (res) => {
             this.userDetailId = res.data.data._id;
 
-            this.$session.set('userDetailId', this.userDetailId);
+            // Store Token in Cookie
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.set('auth_token', response.data.logintoken, {domain: location});
+            Cookies.set('email', res.data.data.email, {domain: location});
+            Cookies.set('userDetailId',  this.userDetailId, {domain: location});
+            
             localStorage.setItem('userDetailId', this.userDetailId);
+            localStorage.setItem('email', res.data.data.email);
 
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
+
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
+
+            $('.success').fadeIn();  
+
+            // create user folder
             await axios.post(config.baseURL+'/flows-dir-listing' , {
               foldername :'/var/www/html/websites/'+ this.userDetailId,
               type : 'folder'
             })
             .then((res) => {
               this.$router.push('/editor');
-              console.log('user Folder created!');
             });
             
           })
           .catch((e) => {
             console.log(e)
-          })
-          this.$session.set('email', this.form.user);
-          localStorage.setItem('email', this.form.user);
-          // this.$router.push('/');
+            
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
 
-          this.$session.set('privateToken', response.data.private_token);
-          this.$session.set('userId', response.data.id);
-          this.$session.set('username', response.data.username);
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
+
+            $(".authent").fadeOut();
+            $('.login div').fadeIn();
+
+            this.$message({
+                showClose: true,
+                message: 'Error: ' + e.response.data,
+                type: 'error'
+            });
+          })
+          
+          // this.$router.push('/');
           this.authen.status = true;
 
           
@@ -197,7 +262,7 @@ export default {
           //       //   type : 'folder'
           //       // })
           //       // .then((res) => {
-          //       //   console.log('user Folder created!');
+          ////       //   console.log('user Folder created!');
           //       // })
 
           //       let self = this;
@@ -207,7 +272,7 @@ export default {
                 
           //   }
           // }).catch(error => {
-          //   console.log(error);
+          ////   console.log(error);
           //   this.authen.status = false;
           //   // this.$notify.error({
           //   //   title: 'Error',
@@ -219,6 +284,42 @@ export default {
         
       }).catch(error => {
         this.authen.status = false;
+
+        let self = this;
+
+        setTimeout(function(){
+          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+          $('.login').removeClass('testtwo')
+
+          $('.login').removeClass('test')
+          $('.login div').fadeOut(123);
+
+          $(".authent").fadeOut();
+          $('.login div').fadeIn();
+
+          self.$message({
+            showClose: true,
+            message: 'Error: ' + error.response.data,
+            type: 'error'
+          });
+        }, 500)
+
+        
+        $('.login div').fadeIn();
+        this.$message({
+            showClose: true,
+            message: 'Error: ' + error.response.data,
+            type: 'error'
+        });
+
+        // let self = this;
+        // setTimeout(function(){
+          
+        // }, 2000);
+
+        console.log('Error: ', error);
+
         // this.$notify.error({
         //   title: 'Error',
         //   message: error.response.data,
@@ -228,28 +329,32 @@ export default {
     },
 
     doFacebookLogin () {
-      console.log('Facebook Login');
+      //console.log('Facebook Login');
       document.getElementById('form-facebook').submit();
     },
 
     doGooglePlusLogin () {
-      console.log('Google Login');
+      //console.log('Google Login');
       document.getElementById('form-google').submit();
     },
 
     doTwitterLogin () {
-      console.log('Twitter Login');
+      //console.log('Twitter Login');
       document.getElementById('form-twitter').submit();
     },
 
     doGithubLogin () {
-      console.log('Github Login');
+      //console.log('Github Login');
       document.getElementById('form-github').submit();
     },
 
     doLinkedInLogin () {
-      console.log('LinkedIn Login');
+      //console.log('LinkedIn Login');
       document.getElementById('form-linkedIn').submit();
+    },
+
+    checkLdapLogin () {
+      this.isLdapLogin = $('#ldapCheckbox').prop('checked');
     },
 
     goToLandingPage () {
@@ -257,9 +362,49 @@ export default {
     }
   },
   created () {
+    $('.login div').fadeIn();
     // Check if login token in cookie exist or not
-    if(this.$cookie.get('auth_token')){
-      this.$router.push('/editor');
+    if(Cookies.get('auth_token')){
+      // Set email Session
+      axios.get(config.userDetail, {
+        headers: {
+          'Authorization' : Cookies.get('auth_token')
+        }   
+      })
+      .then(async (res) => {
+        this.userDetailId = res.data.data._id;
+
+        // Store Token in Cookie
+        let location = psl.parse(window.location.hostname)
+        location = location.domain === null ? location.input : location.domain
+
+        Cookies.set('email', res.data.data.email, {domain: location});
+        Cookies.set('userDetailId',  this.userDetailId, {domain: location});
+        
+        localStorage.setItem('userDetailId', this.userDetailId);
+        localStorage.setItem('email', res.data.data.email);
+
+        await axios.post(config.baseURL+'/flows-dir-listing' , {
+          foldername :'/var/www/html/websites/'+ this.userDetailId,
+          type : 'folder'
+        })
+        .then((res) => {
+          this.$router.push('/editor');
+          //console.log('user Folder created!');
+        });
+        
+      })
+      .catch((e) => {
+        console.log(e)
+        this.$message({
+          showClose: true,
+            message: 'Invalid Token',
+            type: 'error'
+        });
+      })
+    } else {
+      console.log('Token Not found. Please Login.');
+      $('.login div').fadeIn();
     }
   },
   mounted () {
@@ -272,37 +417,21 @@ export default {
         if(code==32||code==13||code==188||code==186){
             if(self.form.user != '' && self.form.pass != ''){
               self.authenticate();
-              $('.login').addClass('test')
-              setTimeout(function(){
-                $('.login').addClass('testtwo')
-              },300);
-              setTimeout(function(){
-                $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-                $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-              },500);
-              setTimeout(function(){
-                $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-                $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-                $('.login').removeClass('testtwo')
-              },2500);
-              setTimeout(function(){
-                $('.login').removeClass('test')
-                $('.login div').fadeOut(123);
-              },2800);
-              setTimeout(function(){
-                if(self.authen.status == true){
-                  $('.success').fadeIn();  
-                } else {
-                  $(".authent").fadeOut();
-                  $('.login div').fadeIn();
-                  self.$message({
-                      showClose: true,
-                      message: 'Username Password did not matched..',
-                      type: 'error'
-                  });
-                }
+              
+              // setTimeout(function(){
+              //   if(self.authen.status == true){
+              //     $('.success').fadeIn();  
+              //   } else {
+              //     $(".authent").fadeOut();
+              //     $('.login div').fadeIn();
+              //     self.$message({
+              //         showClose: true,
+              //         message: 'Username Password did not matched..',
+              //         type: 'error'
+              //     });
+              //   }
                 
-              },3200);
+              // },3200);
             } else {
               self.$message({
                   showClose: true,
@@ -316,37 +445,37 @@ export default {
     $('input[type="submit"]').click(function(){
       if(self.form.user != '' && self.form.pass != ''){
         self.authenticate();
-        $('.login').addClass('test')
-        setTimeout(function(){
-          $('.login').addClass('testtwo')
-        },300);
-        setTimeout(function(){
-          $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-        },500);
-        setTimeout(function(){
-          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-          $('.login').removeClass('testtwo')
-        },2500);
-        setTimeout(function(){
-          $('.login').removeClass('test')
-          $('.login div').fadeOut(123);
-        },2800);
-        setTimeout(function(){
-          if(self.authen.status == true){
-            $('.success').fadeIn();  
-          } else {
-            $(".authent").fadeOut();
-            $('.login div').fadeIn();
-            self.$message({
-                showClose: true,
-                message: 'Username Password did not matched..',
-                type: 'error'
-            });
-          }
+        // $('.login').addClass('test')
+        // setTimeout(function(){
+        //   $('.login').addClass('testtwo')
+        // },300);
+        // setTimeout(function(){
+        //   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        //   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+        // },500);
+        // setTimeout(function(){
+        //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+        //   $('.login').removeClass('testtwo')
+        // },2500);
+        // setTimeout(function(){
+        //   $('.login').removeClass('test')
+        //   $('.login div').fadeOut(123);
+        // },2800);
+        // setTimeout(function(){
+        //   if(self.authen.status == true){
+        //     $('.success').fadeIn();  
+        //   } else {
+        //     $(".authent").fadeOut();
+        //     $('.login div').fadeIn();
+        //     self.$message({
+        //         showClose: true,
+        //         message: 'Username Password did not matched..',
+        //         type: 'error'
+        //     });
+        //   }
           
-        },3200);
+        // },3200);
       } else {
         self.$message({
             showClose: true,
@@ -377,6 +506,9 @@ export default {
     //     $(this).parent().animate({'left':'0'})
     //   });
     // });
+
+    $('.login div').fadeIn();
+
   }
 }
 </script>
@@ -708,4 +840,51 @@ export default {
     background-color: #006FB7;
     transition: 0.2s all linear;
   }
+
+
+
+  div.ldap {
+    display: inline-block;
+  }
+  div.ldap label {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 500%;
+    padding: 6px 0px 0px 0px; 
+    background-color: #444;
+    transition: 0.2s all linear;
+    color: #fff;
+  }
+  div.ldap input:checked + label {
+    background: #4CB050;
+    color: #fff;
+  }
+  div.ldap input {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  div.ldap input:focus ~ label {
+    box-shadow: 0px 0px 6px 0px #008edb;
+    outline: 0 none;
+  }
+  div.ldap input:focus ~ .focus {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    margin: -10px;
+    padding: 10px 10px 0;
+    outline: 0;
+    border: 1px solid #35a3e8;
+    box-shadow: 0 0 10px #35a3e8;
+    z-index: -1;
+  }
+
 </style>

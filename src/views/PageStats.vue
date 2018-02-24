@@ -9,24 +9,26 @@
 	            <p>Project Name: {{repoName}}</p>
 	          </div>
 	          <div class="table-body">
-	            <table class="table table-hover">
-	              <thead>
-	                <tr>
-	                  <td width="100px">Sr. No.</td>
-	                  <td>Page Name</td>
-	                  <td>Layout Used</td>
-                    <td width="40%">Partials Used</td>
-	                </tr>
-	              </thead>
-	              <tbody>
-	                <tr v-for="item in tablePagesData">
-	                  <td>{{item.number}}</td>
-	                  <td>{{item.pageName}}</td>
-	                  <td>{{item.layoutName}}.layout</td>
-                    <td v-html="item.partialsList"></td>
-	                </tr>
-	              </tbody>
-	            </table>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <td width="100px">Sr. No.</td>
+                      <td>Page Name</td>
+                      <td>Layout Used</td>
+                      <td width="40%">Partials Used</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in tablePagesData">
+                      <td>{{item.number}}</td>
+                      <td>{{item.pageName}}</td>
+                      <td>{{item.layoutName}}.layout</td>
+                      <td v-html="item.partialsList"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 	          </div>
 	        </div>
 	      </div>
@@ -41,7 +43,8 @@ import Vue from 'vue'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
 
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const config = require('../config');
 
@@ -71,15 +74,15 @@ export default {
       let folderUrl = configFileUrl.replace(fileName, '');
 
       let foldername = folderUrl.split('/');
-      foldername = foldername[(foldername.length-1)];
+      foldername = foldername[6];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
+        //console.log('Config file found! Updating fields..');
 
-        this.settings = this.configData.data.data[0].configData;
+        this.settings = this.configData.data.configData;
 
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.websiteName;
 
         this.tablePagesData = [];
 
@@ -98,7 +101,7 @@ export default {
         }
 
       } else {
-        console.log('Cannot get config file!');
+        //console.log('Cannot get config file!');
       } 
   	}
   },
@@ -349,6 +352,7 @@ h3.subtitle{
   border-radius: 10px;
   padding-top: 75px;
   margin-top: 0px;
+  margin-bottom: 100px;
   position: relative;
   width: 100%;
   z-index: 5;

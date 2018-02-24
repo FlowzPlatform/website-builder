@@ -403,7 +403,7 @@
                     <div class="col-md-12" align="center" style="margin-top: 50px">
                       <img src="../../static/img/Flowz-logo.png" class="footer-logo">
                       <h4 class="subtitle">The next generation open-source website builder</h4>
-                      <a href="https://github.com/FlowzPlatform/website-builder" class="btn btn-default btn-github" target="_blank"><i class="fa fa-github"></i> View on GitHub</a>
+                      <!-- <a href="https://github.com/FlowzPlatform/website-builder" class="btn btn-default btn-github" target="_blank"><i class="fa fa-github"></i> View on GitHub</a> -->
                     </div>
                   </div>
                   <div class="row text-center" style="margin: 2% 0;">
@@ -459,6 +459,16 @@
 </template>
 
 <script>
+    import Vue from 'vue'
+  import VueSession from 'vue-session'
+  Vue.use(VueSession)
+
+import psl from 'psl';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
+import config from '@/config';
+
 
 export default {
   name: 'Homepage',
@@ -477,10 +487,42 @@ export default {
   methods: {
     startNow () {
       this.$router.push('login');
+    },
+    init(){
+         let self = this;
+            if(Cookies.get('auth_token')){
+                axios({
+                    method: 'get',
+                    url: config.userDetail,
+                    headers: {'Authorization': Cookies.get('auth_token')}
+                })
+                .then(async function(result) {
+
+                    let location = psl.parse(window.location.hostname);
+
+                    location = location.domain === null ? location.input : location.domain;
+
+                    Cookies.set('email',  result.data.data.email  , {domain: location});
+                    Cookies.set('userDetailId',  result.data.data._id  , {domain: location});
+
+                    localStorage.setItem('userDetailId', result.data.data._id);
+                    localStorage.setItem('email', result.data.data.email);
+                    
+                    await axios.post(config.baseURL+'/flows-dir-listing' , {
+                      foldername :'/var/www/html/websites/'+ result.data.data._id,
+                      type : 'folder'
+                    })
+                    .then((res) => {
+                      self.$router.push('/editor');
+                    });
+
+                })
+
+            }
     }
   },
   mounted () {
-
+    this.init()
   }
 }
 </script>

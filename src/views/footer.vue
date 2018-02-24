@@ -1,7 +1,7 @@
 <template>
   <div class="SiteFooter">
     <footer>
-        <p>© 2017<a style="color:#0a93a6; text-decoration:none;" href="/"> Flowz</a>, All rights reserved 2016-2017.</p>
+        <p>© 2017<a style="color:#0a93a6; text-decoration:none;" href="http://flowz.com" target="_blank"> Flowz</a>, All rights reserved 2017-2018.</p>
     </footer>
   </div>
 </template>
