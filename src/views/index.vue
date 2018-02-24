@@ -94,22 +94,22 @@
                       <li>
                           <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
                           <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
-                          <img src="http://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
+                          <img src="https://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
                       </li>
                       <li>
                           <input type="radio" name="layout" value="template1" id="myCheckbox1" />
                           <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                          <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
+                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
                       </li>
                       <li>
                           <input type="radio" name="layout" value="template2" id="myCheckbox2" />
                           <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                          <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
+                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
                       </li>
                       <li>
                           <input type="radio" name="layout" value="template3" id="myCheckbox3" />
                           <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                          <img src="http://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
+                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
                       </li>
                     </ul>
                   </div>
@@ -163,22 +163,22 @@
                         <li>
                             <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
                             <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
-                            <img src="http://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
+                            <img src="https://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
                         </li>
                         <li>
                             <input type="radio" name="layout" value="template1" id="myCheckbox1" />
                             <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                            <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
+                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
                         </li>
                         <li>
                             <input type="radio" name="layout" value="template2" id="myCheckbox2" />
                             <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                            <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
+                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
                         </li>
                         <li>
                             <input type="radio" name="layout" value="template3" id="myCheckbox3" />
                             <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                            <img src="http://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
+                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
                         </li>
                       </ul>
                     </div>
@@ -2022,10 +2022,7 @@
 
           } else {
               if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                  this.$refs[projectName].validate((valid) => {
-                      if (valid) {
-
-                          let token = Cookies.get('auth_token');
+                         let token = Cookies.get('auth_token');
                           this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                           var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
 
@@ -2165,9 +2162,7 @@
                                   }
                                   this.newProjectFolderDialog = false;
                                   this.fullscreenLoading = false;
-                              });
-                      }
-                  });
+                              });                  
               } else {
                   this.newProjectFolderDialog = false;
                   this.fullscreenLoading = false;
@@ -4456,7 +4451,7 @@
                     "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
                 divappstart='<div id="app">'
                 divappend='</div>'
-                dfscript="<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + "<script type='text/javascript' src=' http://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
+                dfscript="<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
               }
 
               let newContent = "<html>\n<head>\n" + tophead +
@@ -5396,34 +5391,39 @@
       },
 
       async checknameexist(projectName){
-        this.fullscreenLoading = true;
-        this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
-        this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
-        // console.log('userid',userid)
-        var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
-        let checkdetail=true
-        for(let i=0;i<alldatauser.data.data.length;i++){
-          if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
-            checkdetail=false
+        this.$refs[projectName].validate(async (valid) => {
+        if(valid){
+          this.fullscreenLoading = true;
+          this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
+          this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
+          // console.log('userid',userid)
+          var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
+          let checkdetail=true
+          for(let i=0;i<alldatauser.data.data.length;i++){
+            if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
+              checkdetail=false
 
+            }
           }
-        }
-        
-        if(checkdetail!=false){
-          // console.log('not same found')
-         
-         this.addProjectFolder(projectName)
-        }
-        else{
-          this.fullscreenLoading=false
-          this.$message({
-          showClose: true,
-          message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
-          type: 'error'
-        });
-        
-        }
+          
+          if(checkdetail!=false){
+            // console.log('not same found')
+           
+           this.addProjectFolder(projectName)
+          }
+          else{
+            this.fullscreenLoading=false
+            this.$message({
+            showClose: true,
+            message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
+            type: 'error'
+          });
+          
+          }
+          }
+       
+      })
       },
 
       // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
