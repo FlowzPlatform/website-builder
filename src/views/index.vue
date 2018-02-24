@@ -84,7 +84,7 @@
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                 <el-form-item prop="projectName">
                   <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                  <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                  <el-input maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -99,12 +99,12 @@
                       <li>
                           <input type="radio" name="layout" value="template1" id="myCheckbox1" />
                           <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                          <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
+                          <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
                       </li>
                       <li>
                           <input type="radio" name="layout" value="template2" id="myCheckbox2" />
                           <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                          <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
+                          <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
                       </li>
                       <li>
                           <input type="radio" name="layout" value="template3" id="myCheckbox3" />
@@ -153,7 +153,7 @@
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
                     <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                    <el-input v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                    <el-input maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                   </el-form-item>
 
                   <el-form-item>
@@ -168,12 +168,12 @@
                         <li>
                             <input type="radio" name="layout" value="template1" id="myCheckbox1" />
                             <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                            <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
+                            <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
                         </li>
                         <li>
                             <input type="radio" name="layout" value="template2" id="myCheckbox2" />
                             <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                            <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
+                            <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
                         </li>
                         <li>
                             <input type="radio" name="layout" value="template3" id="myCheckbox3" />
@@ -671,13 +671,13 @@
             await this.getData();
             this.fullscreenLoading=false
           }).catch((e)=>{
-            //  this.$message({
-            //   showClose: true,
-            //   duration:0,
-            //   message: 'Servers are down please try again later.',
-            //   type: 'error'
-            // });
-            console.log(e)
+             this.$message({
+              showClose: true,
+              duration:0,
+              message: 'Servers are down please try again later.',
+              type: 'error'
+            });
+            // console.log(e)
             this.fullscreenLoading=false;
           })
       },
@@ -1523,9 +1523,6 @@
         if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
           this.$refs[foldername].validate(async (valid) => {
             if (valid) {
-              this.newFolderDialog = false;
-              this.addNewFolderLoading = false;
-              
               let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
               let urlparts = configFileUrl.split("/");
               let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -1577,7 +1574,8 @@
                     // let rawConfigs = responseConfig.data.data[0].configData;
                     this.globalConfigData = rawConfigs;
 
-                    
+                    this.newFolderDialog = false;
+                    this.addNewFolderLoading = false;
                     if (this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')) {
                       axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: newFolderName + '/default.partial',
@@ -1884,7 +1882,7 @@
                         "PageSEOKeywords": "",
                         "PageSEODescription": "",
                         "PageLayout": "default",
-                        "PageCss": [],
+                        "PageCss": ["Bootstrap 3", "Bootstrap 4", "Font Awesome", "Flowz Blocks", "Google Fonts"],
                         "PageExternalCss": [],
                         "PageExternalJs": [],
                         "PageMetaInfo": [],
@@ -2756,7 +2754,7 @@
                                         "ProjectSEOTitle": '',
                                         "ProjectSEOKeywords": '',
                                         "ProjectSEODescription": '',
-                                        // "ProjectFaviconName": '',
+                                        "ProjectFaviconhref": '',
                                         "ProjectVId":{'vid':'','userId':'','password':''},
                                         "CrmSettingId":''
                                       }, {
@@ -2788,7 +2786,7 @@
                                         }, {
                                           "Footer": "default"
                                         }],
-                                        "PageCss": [],
+                                        "PageCss": ["Bootstrap 3", "Bootstrap 4", "Font Awesome", "Flowz Blocks", "Google Fonts"],
                                         "PageExternalCss": [],
                                         "PageExternalJs": [],
                                         "PageMetaInfo": [],
