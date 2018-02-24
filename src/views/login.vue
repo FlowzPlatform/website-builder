@@ -58,7 +58,7 @@
               <div class='icon'>
                   <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Email Id' class="input-fields" type='text' v-model="form.user" required>
+              <input placeholder='Email Id' class="input-fields" maxlength="100" type='text' v-model="form.user" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -68,7 +68,7 @@
               <div class='icon'>
                   <img src='../assets/images/lock_icon_copy.png'>
               </div>
-              <input placeholder='Password' class="input-fields" type='password' v-model="form.pass" required>
+              <input placeholder='Password' class="input-fields" maxlength="20" type='password' v-model="form.pass" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
