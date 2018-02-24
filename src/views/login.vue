@@ -285,33 +285,62 @@ export default {
       }).catch(error => {
         this.authen.status = false;
 
-        let self = this;
+        // let self = this;
 
-        setTimeout(function(){
-          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-          $('.login').removeClass('testtwo')
+        // setTimeout(function(){
+        //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+        //   $('.login').removeClass('testtwo')
 
-          $('.login').removeClass('test')
-          $('.login div').fadeOut(123);
+        //   $('.login').removeClass('test')
+        //   $('.login div').fadeOut(123);
 
-          $(".authent").fadeOut();
-          $('.login div').fadeIn();
+        //   $(".authent").fadeOut();
+        //   $('.login div').fadeIn();
 
-          self.$message({
-            showClose: true,
-            message: 'Error: ' + error.response.data,
-            type: 'error'
+        //   if(error.response.status == 404){
+        //     self.$message({
+        //         showClose: true,
+        //         message: 'Invalid Credentials',
+        //         type: 'error'
+        //     });
+        //   } else {
+        //     self.$message({
+        //         showClose: true,
+        //         message: 'Error: ' + error.response.data,
+        //         type: 'error'
+        //     });
+        //   }
+        // }, 500)
+
+        $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+        $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+        $('.login').removeClass('testtwo')
+
+        $('.login').removeClass('test')
+        $('.login div').fadeOut(123);
+
+        $(".authent").fadeOut();
+        $('.login div').fadeIn();
+        // $('.login div').fadeIn();
+
+        // console.log(error.response);
+
+        if(error.response.status == 404){
+          this.$message({
+              showClose: true,
+              message: 'Invalid Credentials',
+              type: 'error'
           });
-        }, 500)
+        } else {
+          this.$message({
+              showClose: true,
+              message: 'Error: ' + error.response.data,
+              type: 'error'
+          });
+        }
 
         
-        $('.login div').fadeIn();
-        this.$message({
-            showClose: true,
-            message: 'Error: ' + error.response.data,
-            type: 'error'
-        });
 
         // let self = this;
         // setTimeout(function(){
