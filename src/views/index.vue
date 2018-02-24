@@ -2753,7 +2753,7 @@
                                         "ProjectSEOTitle": '',
                                         "ProjectSEOKeywords": '',
                                         "ProjectSEODescription": '',
-                                        "ProjectFaviconhref": '',
+                                        // "ProjectFaviconName": '',
                                         "ProjectVId":{'vid':'','userId':'','password':''},
                                         "CrmSettingId":''
                                       }, {
