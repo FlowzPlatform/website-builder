@@ -47,5 +47,5 @@ Start rethinkdb: rethinkdb --http-port 8081
 Start the FlowzServiceApi by npm start
 
 #Changelog
-coming soon very
+
 
