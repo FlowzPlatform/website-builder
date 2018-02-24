@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'development') {
     loginUrl = 'https://api.'+domainkey+'/auth/api/login';
     ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
     registerUrl = 'https://api.'+domainkey+'/auth/api/setup';
-    forgotPasswordUrl = 'https://api.'+domainkey+'/auth/api/forgetpassword';
+    forgotPasswordUrl = 'https://api.' + domainkey + '/auth/api/forgetpassword';
     userDetail = 'https://api.'+domainkey+'/auth/api/userdetails';
     socialUrl = 'https://api.'+domainkey+'/auth/api';
     subscriptionApi = 'https://api.'+domainkey+'/subscription/';
@@ -60,11 +60,14 @@ if (process.env.NODE_ENV !== 'development') {
 
 module.exports = {
 
+    frontEndUrl: frontEndUrl,
+
     domainkey: domainkey,
     crmsettingapi:crmsettingapi,
     loginUrl: loginUrl,
     ldapUrl: ldapUrl,
     registerUrl: registerUrl,
+    forgotPasswordUrl: forgotPasswordUrl,
     userDetail: userDetail,
     socialUrl: socialUrl,
     initLdap: initLdap,
