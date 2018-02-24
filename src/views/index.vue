@@ -1523,6 +1523,9 @@
         if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
           this.$refs[foldername].validate(async (valid) => {
             if (valid) {
+              this.newFolderDialog = false;
+              this.addNewFolderLoading = false;
+              
               let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
               let urlparts = configFileUrl.split("/");
               let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -1574,8 +1577,7 @@
                     // let rawConfigs = responseConfig.data.data[0].configData;
                     this.globalConfigData = rawConfigs;
 
-                    this.newFolderDialog = false;
-                    this.addNewFolderLoading = false;
+                    
                     if (this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')) {
                       axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: newFolderName + '/default.partial',
