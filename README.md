@@ -1,5 +1,4 @@
-# Flowz Website Builder [![Build Status](https://travis-ci.org/FlowzPlatform/website-builder.svg?branch=master)](https://travis-ci.org/FlowzPlatform/website-builder) [![Dependencies Status](https://david-dm.org/FlowzPlatform/website-builder.svg)](https://david-dm.org/FlowzPlatform/website-builder.svg) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/FlowzPlatform/website-builder/issues) [![HitCount](https://hits.dwyl.com/FlowzPlatform/website-builder.svg)](http://hits.dwyl.com/FlowzPlatform/website-builder)
-
+# Flowz Website Builder [![Build Status](https://travis-ci.org/FlowzPlatform/website-builder.svg?branch=master)](https://travis-ci.org/FlowzPlatform/website-builder) [![Dependencies Status](https://david-dm.org/FlowzPlatform/website-builder.svg)](https://david-dm.org/FlowzPlatform/website-builder.svg) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/FlowzPlatform/website-builder/issues) [![HitCount](http://hits.dwyl.io/FlowzPlatform/website-builder.svg)](http://hits.dwyl.io/FlowzPlatform/website-builder)
 
 
 > A Vue.js project using [GrapesJS](https://github.com/artf/grapesjs)
@@ -48,5 +47,5 @@ Start rethinkdb: rethinkdb --http-port 8081
 Start the FlowzServiceApi by npm start
 
 #Changelog
-coming soon
+coming soon very
 

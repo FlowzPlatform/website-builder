@@ -1,7 +1,11 @@
 // Change baseURL when going live
 // const baseURL = 'http://localhost:3032';
 // const baseURL = 'http://devapi.flowz.com/serverapi';
-const baseURL = 'http://api.flowz.com/serverapi';
+// const baseURL = 'http://api.flowz.com/serverapi';
+//const baseURL = 'http://api.flowzcluster.tk/serverapi';
+
+const baseURL = localStorage.getItem('baseURL');
+// console.log("URL: " + localStorage.getItem('baseURL'));
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
   var bm = editor.BlockManager;
@@ -17,6 +21,32 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   //         class: 'gjs-fonts gjs-f-hero'
   //     }
   // });
+
+  bm.add('LoginComponent', {
+    label: 'Login Component',
+    content: {
+        script : 'let projectID="";let loginUrl="";let userDetailsUrl="";let socialLoginUrl="";let baseURL="";$(document).ready(function(){if($.cookie("auth_token") !=null){window.location="index.html";}else{$.getJSON( "./../assets/project-details.json", function( data ){projectID=data[0].projectID; loginUrl=data[0].login_api; userDetailsUrl=data[0].user_details_api; socialLoginUrl=data[0].social_login_api; baseURL=data[0].builder_service_api;});}}); $(".input-fields").keyup(function(e){var code=e.which; if(code==13)e.preventDefault(); if(code==32||code==13||code==188||code==186){authenticateUser();}});$(".login-submit").click(function(){authenticateUser();});$(".socialMedCls").on("click",function(){var action_url=$(this).attr("title");$("#form-social-icons").attr("action", socialLoginUrl + action_url);$( "#form-social-icons" ).submit();});function authenticateUser(){if($(".user_email").val() !="" && $(".user_pass").val() !=""){axios.post(loginUrl,{email: $(".user_email").val(), password: $(".user_pass").val()}).then(function (response){$.cookie("auth_token", response.data.logintoken,{path: window.location.hostname}); axios.get(userDetailsUrl,{headers:{"Authorization": response.data.logintoken}}) .then(async (resp)=>{$.cookie("user_id", resp.data.data._id,{path: window.location.hostname}); axios.get(baseURL + "/website-users?userEmail=" + resp.data.data.email,{}) .then((res)=>{if(res.data.data.length > 0){console.log("User already exist");}else{console.log("New User"); axios.post(baseURL + "/website-users",{userEmail : resp.data.data.email, role : "registered", websiteId: projectID}) .then((respo)=>{console.log(respo.data);}) .catch((e)=>{console.log(e)});}}) .catch((e)=>{console.log(e);});if(document.referrer.trim() !=""){if (document.referrer.indexOf(baseURL) >=0){window.location=document.referrer;}else{window.location="index.html";}}else{window.location="index.html";}}) .catch((e)=>{console.log(e)})}).catch(function (error){$(".alert-box").css("display", "block");$("#error-message").text(error.response.data);});}else if($(".user_email").val()=="" && $(".user_pass").val() !=""){$(".alert-box").css("display", "block");$("#error-message").text("Please enter your email");}else if( $(".user_email").val() !="" && $(".user_pass").val()==""){$(".alert-box").css("display", "block");$("#error-message").text("Please enter password");}else{$(".alert-box").css("display", "block");$("#error-message").text("Please enter login credentials");}}',
+        content : '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"/><link rel="stylesheet" href="http://res.cloudinary.com/flowz/raw/upload/v1515673729/builder/css/flowz_blocks.css"/><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><style type="text/css">input[type="text"]{padding-top: 0.5rem; padding-right: 0.75rem; padding-bottom: 0.5rem; padding-left: 0.75rem; font-size: 1rem; font-family: sans-serif; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgba(0, 0, 0, 0.15); border-right-color: rgba(0, 0, 0, 0.15); border-bottom-color: rgba(0, 0, 0, 0.15); border-left-color: rgba(0, 0, 0, 0.15); border-image-source: initial; border-image-slice: initial; border-image-width: initial; border-image-outset: initial; border-image-repeat: initial;}ul.social-network{list-style-type: none; list-style-position: initial; list-style-image: initial; display: inline; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-left: 0px !important;}ul.social-network li{display: inline; margin-top: 0px; margin-right: 5px; margin-bottom: 0px; margin-left: 5px;}.social-network a.icoRss:hover{background-color: #292929;}.social-network a.icoFacebook:hover{background-color: rgb(59, 89, 152);}.social-network a.icoTwitter:hover{background-color: rgb(51, 204, 255);}.social-network a.icoGoogle:hover{background-color: rgb(189, 53, 24);}.social-network a.icoVimeo:hover{background-color: rgb(5, 144, 184);}.social-network a.icoLinkedin:hover{background-color: rgb(0, 123, 183);}.social-network a.icoRss:hover i, .social-network a.icoFacebook:hover i, .social-network a.icoTwitter:hover i, .social-network a.icoGoogle:hover i, .social-network a.icoVimeo:hover i, .social-network a.icoLinkedin:hover i{color: rgb(255, 255, 255);}.socialHoverClass, a.socialIcon:hover{color: rgb(68, 188, 221);}.social-circle li a{display: inline-block; position: relative; margin-top: 0px; margin-right: auto; margin-bottom: 0px; margin-left: auto; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; text-align: center; width: 50px; height: 50px; font-size: 20px;}.social-circle li i{margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; line-height: 50px; text-align: center;}.triggeredHover, .social-circle li a:hover i{transform: rotate(360deg); transition-duration: 0.2s; transition-timing-function: initial; transition-delay: initial; transition-property: all;}.social-circle i{color: rgb(0, 0, 0); transition-duration: 0.8s; transition-timing-function: initial; transition-delay: initial; transition-property: all;}a.socialMedCls{background-color: rgb(211, 211, 211);}.row.mt-4.signup-message{text-align: right;}.alert-box{display: none;}.login-section{padding: 15px;}</style><div> <div class="login-section"> <div class="innerpage"> <div class="row justify-content-center"> <div class="col-md-12 text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Log In</h1> </div></div><div class="row"> <div class="col-md-12"> <div class="alert alert-danger alert-dismissible alert-box"> <strong>Error!</strong> <span id="error-message"></span></div></div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields user_email" type="text" placeholder="Email" required="true"/> </div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields mb-1 user_pass" type="password" placeholder="Password" required="true"/> <p class="text-right"><a href="signup.html">New User?</a> </p></div></div><div class="row mt-4"> <div class="col"> <button class="btn login-submit" type="button">Submit</button> </div></div><div class="col-md-12 mt-4"> <form id="form-social-icons" name="form-google" method="post"> <input type="hidden" name="success_url" id="success_url"/> <ul class="social-network social-circle"> <li><a class="icoFacebook socialMedCls" href="javascript:;" title="facebook"><i class="fa fa-facebook"></i></a> </li><li><a class="icoTwitter socialMedCls" href="javascript:;" title="twitter"><i class="fa fa-twitter"></i></a> </li><li><a class="icoGoogle socialMedCls" href="javascript:;" title="Gplus"><i class="fa fa-google-plus"></i></a> </li><li><a class="icoLinkedin socialMedCls" href="javascript:;" title="linkedin"><i class="fa fa-linkedin"></i></a> </li><li><a class="icoRss socialMedCls" href="javascript:;" title="github"><i class="fa fa-github"></i></a> </li></ul> </form> </div></div></div></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"></script>'
+    },
+    attributes: {
+       class:'fa fa-sign-in',
+       title: 'Login',
+    },
+    category: 'Ecommerce Blocks'
+  });
+
+  bm.add('RegisterComponent', {
+    label: 'Register Component',
+    content: {
+        script : 'let projectID="";let registerURL="";let userDetailsUrl="";let baseURL="";$(document).ready(function(){if ($.cookie("auth_token") !=null){window.location="index.html";}else{$.getJSON("./../assets/project-details.json", function(data){projectID=data[0].projectID; registerURL=data[0].register_api; userDetailsUrl=data[0].user_details_api; baseURL=data[0].builder_service;});}});$(".input-fields").keyup(function(e){var code=e.which; if (code==13) e.preventDefault(); if (code==32 || code==13 || code==188 || code==186){authenticateUser();}});$(".login-submit").click(function(){authenticateUser();});function authenticateUser(){if(($(".user_full_name").val() !="") && ($(".user_username").val() !="") && ($(".user_email").val() !="") && ($(".user_pass").val() !="") && ($(".c_user_pass").val() !="")){if($(".user_pass").val()==$(".c_user_pass").val()){ axios.post(registerURL,{fullname: $(".user_full_name").val(), username: $(".user_username").val(), email: $(".user_email").val(), password: $(".user_pass").val()}) .then((res)=>{window.location="index.html";}) .catch((e)=>{console.log(e); $(".alert-box").css("display", "block"); $("#error-message").text(e.response.data);})}else{$(".alert-box").css("display", "block"); $("#error-message").text("Password and confirm password did not matched");}}else{$(".alert-box").css("display", "block"); $("#error-message").text("Please enter all credentials");}}',
+        content : ' <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"/> <link rel="stylesheet" href="http://res.cloudinary.com/flowz/raw/upload/v1515673729/builder/css/flowz_blocks.css"/> <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> <style type="text/css"> input[type="text"]{padding-top: 0.5rem; padding-right: 0.75rem; padding-bottom: 0.5rem; padding-left: 0.75rem; font-size: 1rem; font-family: sans-serif; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgba(0, 0, 0, 0.15); border-right-color: rgba(0, 0, 0, 0.15); border-bottom-color: rgba(0, 0, 0, 0.15); border-left-color: rgba(0, 0, 0, 0.15); border-image-source: initial; border-image-slice: initial; border-image-width: initial; border-image-outset: initial; border-image-repeat: initial;}ul.social-network{list-style-type: none; list-style-position: initial; list-style-image: initial; display: inline; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-left: 0px !important;}ul.social-network li{display: inline; margin-top: 0px; margin-right: 5px; margin-bottom: 0px; margin-left: 5px;}.social-network a.icoRss:hover{background-color: #292929;}.social-network a.icoFacebook:hover{background-color: rgb(59, 89, 152);}.social-network a.icoTwitter:hover{background-color: rgb(51, 204, 255);}.social-network a.icoGoogle:hover{background-color: rgb(189, 53, 24);}.social-network a.icoVimeo:hover{background-color: rgb(5, 144, 184);}.social-network a.icoLinkedin:hover{background-color: rgb(0, 123, 183);}.social-network a.icoRss:hover i, .social-network a.icoFacebook:hover i, .social-network a.icoTwitter:hover i, .social-network a.icoGoogle:hover i, .social-network a.icoVimeo:hover i, .social-network a.icoLinkedin:hover i{color: rgb(255, 255, 255);}.socialHoverClass, a.socialIcon:hover{color: rgb(68, 188, 221);}.social-circle li a{display: inline-block; position: relative; margin-top: 0px; margin-right: auto; margin-bottom: 0px; margin-left: auto; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; text-align: center; width: 50px; height: 50px; font-size: 20px;}.social-circle li i{margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; line-height: 50px; text-align: center;}.triggeredHover, .social-circle li a:hover i{transform: rotate(360deg); transition-duration: 0.2s; transition-timing-function: initial; transition-delay: initial; transition-property: all;}.social-circle i{color: rgb(0, 0, 0); transition-duration: 0.8s; transition-timing-function: initial; transition-delay: initial; transition-property: all;}a.socialMedCls{background-color: rgb(211, 211, 211);}.row.mt-4.signup-message{text-align: right;}.alert-box{display: none;}.login-section{padding: 15px;}</style> <div> <div class="login-section"> <div class="innerpage"> <div class="row justify-content-center"> <div class="col-md-12 text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Signup </h1> </div></div><div class="row"> <div class="col-md-12"> <div class="alert alert-danger alert-dismissible alert-box"> <strong>Error! </strong> <span id="error-message"> </span> </div></div></div><form> <div class="row mt-4"> <div class="col"> <input class="form-control input-fields user_full_name" type="text" placeholder="Full Name" required/> </div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields user_username" type="text" placeholder="Username" required/> </div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields user_email" type="email" placeholder="Email" required/> </div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields mb-1 user_pass" type="password" placeholder="Password" required/> </div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields mb-1 c_user_pass" type="password" placeholder="Confirm Password" required/> <p class="text-right"> <a href="login.html">Already Registered? </a> </p></div></div><div class="row mt-4"> <div class="col"> <button class="btn login-submit" type="button">Submit </button> </div></div></form> </div></div></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"> </script> <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"> </script>'
+    },
+    attributes: {
+       class:'fa fa-sign-in',
+       title: 'Register',
+    },
+    category: 'Ecommerce Blocks'
+  });
 
   bm.add('PaymentGateway', {
     label: 'PaymentGateway',
@@ -110,7 +140,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   bm.add('g-form-template', {
     label: 'Form Full',
-    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div>',
+    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div></div>',
     attributes: {
       class: 'fa fa-html5',
       title: 'G-Form Full'
@@ -158,12 +188,33 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     category: 'Custom Form Controls'
   });
 
+  bm.add('g-form-submit-btn', {
+    label: 'G-Form Submit Button',
+    content: '<button class="button" onclick="getValues()" type="button">Submit</button>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Submit Button'
+    },
+    category: 'Custom Form Controls'
+  });
+
   bm.add('formpartial', {
     label: 'G-Form-Partial',
     content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
     attributes: {
       class: 'fa fa-html5',
       title: 'G-Form-Partial'
+    },
+    category: 'Custom Form Controls'
+  });
+
+
+  bm.add('g-form-template2', {
+    label: 'Form Full2',
+    content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name" placeholder="name" /> <span class="error" data-validate-for="name"></span> <label>email</label> <input type="text" name="email" placeholder="email" /> <span class="error" data-validate-for="email"></span> <label>age</label> <input type="text" name="age" placeholder="age" /> <span class="error" data-validate-for="age"></span> <label>phone</label> <input type="text" name="phone" placeholder="phone" /> <span class="error" data-validate-for="phone"></span> <label>birthdate</label> <input type="date" name="birthdate" placeholder="birthdate" /> <span class="error" data-validate-for="birthdate"></span> </div> <div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div> </div> <button class="button" onclick="getValues()" type="button">Submit</button>',
+    attributes: {
+      class: 'fa fa-html5',
+      title: 'G-Form Full2'
     },
     category: 'Custom Form Controls'
   });
@@ -315,7 +366,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   bm.add('navimenu', {
     label: 'Navbar Menu',
-    content:'<navimenu style="padding: 10px; display: block; min-height: 75px;"><nav class="navbar navbar-expand-sm bg-dark navbar-dark"><div class="container"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navigationDiv"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"> Dropdown link </a> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Link 1</a> <a class="dropdown-item" href="#">Link 2</a> <a class="dropdown-item" href="#">Link 3</a> </div></li></ul> </div></div></nav></navimenu>',
+    content:'<style type="text/css">#navigationDiv a { text-transform: uppercase; }</style><nav class="navbar navbar-expand-sm bg-dark navbar-dark customMenu"><div class="container"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navigationDiv"> <ul class="navbar-nav"> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item"> <a class="nav-link" href="#">Link</a> </li><li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"> Dropdown link </a> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Link 1</a> <a class="dropdown-item" href="#">Link 2</a> <a class="dropdown-item" href="#">Link 3</a> </div></li></ul> </div></div></nav>',
     attributes: {
       class: 'fa fa-bars',
       title: 'Navigation Menu'
@@ -464,15 +515,15 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   });
 
   // VueComponent
-  bm.add('VueComponent', {
-    label: 'Vue Component',
-    content: '<VueComponent style="display: block; width: 100%; min-height:20px"><div style="border:solid black 2px"></div></VueComponent>',
-    attributes: {
-      class: 'fa fa-home',
-      title: 'Vue Component'
-    },
-    category: 'Special Component'
-  });
+  // bm.add('VueComponent', {
+  //   label: 'Vue Component',
+  //   content: '<VueComponent style="display: block; width: 100%; min-height:20px"><div style="border:solid black 2px"></div></VueComponent>',
+  //   attributes: {
+  //     class: 'fa fa-home',
+  //     title: 'Vue Component'
+  //   },
+  //   category: 'Special Component'
+  // });
 
   bm.add('progressBar', {
     label: 'Progress Bar',
@@ -578,10 +629,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-  // dataField component
+  // // dataField component
   bm.add('DataFieldGroup', {
     label: 'Data Field Group',
-    content: '<DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup>',
+    content: '<div class="grid12"><DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup></div>',
     attributes: {
       class: 'fa fa-database',
       title: 'Data Field',
@@ -592,6 +643,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   bm.add('DataFieldObject', {
     label: 'Data Field Object',
     content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field',
+    },
+    category: 'Data Field Group'
+  });
+
+  bm.add('DataFieldTable', {
+    label: 'Data Field Table',
+    content: '<DataFieldTable style="display: block; width: 100%; min-height:350px"></DataFieldTable>',
     attributes: {
       class: 'fa fa-database',
       title: 'Data Field',
@@ -628,6 +689,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       },
       category: 'Data Field Group'
   });
+
+
 
 
   bm.add('ShoppingCart', {
@@ -669,14 +732,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
   let urlVarValue = [];
   let menuOptions = [];
   var menuNames = [];
+  var globalVariablesSelect = []
 
   urlVarValue.push({name: 'Select', value: ''});
   menuNames.push({name: 'Select', value: ''});
+  globalVariablesSelect.push({name: 'Select', value: ''});
 
-  let configFileUrl = baseURL + '/project-configuration?userEmail=' + useremail + '&websiteName=' + foldername;
+  let configFileUrl = baseURL + '/project-configuration/' + foldername;
 
   $.getJSON(configFileUrl, function(data) {
-    configData = data.data[0].configData;
+    configData = data.configData;
     globalVariables = configData[1].projectSettings[1].GlobalVariables;
     urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
     menuOptions = configData[2].layoutOptions[0].Menu;
@@ -696,8 +761,28 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       menuNames.push(value);
     }
 
+    for(var j = 0; j < globalVariables.length; j++){
+      let value = {name: globalVariables[j].variableId, value: globalVariables[j].variableId}
+      globalVariablesSelect.push(value);
+    }
+
     for(var j = 0; j < urlVariables.length; j++){
-      let value = {name: urlVariables[j].urlId, value: urlVariables[j].urlValue}
+
+      let urlHeaders = '';
+
+      for(var jj = 0; jj < urlVariables[j].urlHeaderVariables.length; jj++){
+        if( jj == (urlVariables[j].urlHeaderVariables.length - 1) ){
+          urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue;  
+        } else {
+          urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue + '" ';  
+        }
+        
+      }
+
+      // console.log(urlVariables[j].finalvalue + '" ' + urlHeaders);
+
+      let value = {name: urlVariables[j].urlId, value: urlVariables[j].finalvalue + '" ' + urlHeaders};
+
       urlVarValue.push(value);
     }
 
@@ -710,7 +795,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     for (var i = 0; i <= storedTemplates.length - 1; i++) {
       let resp2 = []
       $.getJSON(configFileUrl, function(data) {
-        configData = data.data[0].configData;
+        configData = data.configData;
 
 
 
@@ -890,7 +975,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
       }),
     }, {
       isComponent: function(el) {
-        if (el.tagName == 'NAVIMENU') {
+        if (el.tagName == 'NAV') {
           return {
             type: 'navimenu'
           };
@@ -1219,7 +1304,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1257,7 +1343,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1295,7 +1382,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1333,7 +1421,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         traits: [{
           label: 'Data Id',
           name: 'data-global-id',
-          type: 'text'
+          type: 'select',
+          options: globalVariablesSelect
         }],
       }),
 
@@ -1807,15 +1896,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
           {
             label: 'API URL',
-            name: 'apiurl'
-          }, {
-            label: 'Username',
-            name: 'apiusername',
-            type: 'text'
-          }, {
-            label: 'Password',
-            name: 'apipassword',
-            type: 'password'
+            name: 'apiurl',
+            type: 'select',
+            options: urlVarValue
           }, {
             label: 'Search',
             name: 'selectadvance_search_filter',
@@ -1906,6 +1989,22 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
               value: 'landscape',
               name: 'Landscape'
             }]
+          },
+          {
+            label: 'Price For Anonymous User',
+            name: 'select_anonymousUser_filter',
+            type: 'select',
+            // changeProp: 1,
+            options: [{
+              value: 'select',
+              name: 'Select Filter'
+            }, {
+              value: 'yes',
+              name: 'Yes'
+            }, {
+              value: 'no',
+              name: 'No'
+            }]
           }
         ],
       }),
@@ -1941,36 +2040,57 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
   // dataField components
 
-  //http://172.16.230.176:3034/connectiondata
-  let arr_collection = new Array();
-  let arr_schema = []
-  let arr_coll_schema = new Array()
-  $.getJSON("http://172.16.230.80:3080/settings",
-    // $.getJSON("http://localhost:3080/settings",
-    function (data) {
-      //console.log("data.rethink.dbinstance[0].connection_name", data.rethink.dbinstance.length);
-      for (let index = 0; index < data.rethink.dbinstance.length; index++) {
-        //console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-        arr_collection.push(data.rethink.dbinstance[index].connection_name)
-        $.getJSON("http://172.16.230.80:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name,
-          // $.getJSON("http://localhost:3080/connectiondata/" + data.rethink.dbinstance[index].connection_name ,
-          function (data_) {
-            // console.log("data.rethink.dbinstance[0].connection_name",data.rethink.dbinstance[index].connection_name);
-            let collection_name = data.rethink.dbinstance[index].connection_name
-            for (let index_ = 0; index_ < data_.length; index_++) {
-              if (data_[index_].t_name != undefined) {
-                let schema_name = data_[index_].t_name
-                arr_schema.push({ collection_name: "'"+collection_name, schema_name: schema_name+"'" })
-              }
-            }
-            arr_coll_schema.push("''")
-            $.each(arr_schema, function (index, value) {
-              arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
-            });
-          });
-      }
-    });
+//   var getCookiebyName = function (name) {
+//   var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
+//     return !!pair ? pair[1] : null;
+//   };
 
+//   let cookieValueFun =  getCookiebyName("auth_token")
+//   let arr_collection = new Array();
+//   let arr_schema = []
+//   let arr_coll_schema = new Array()
+//   let settings = {
+//     "async": true,
+//     "crossDomain": true,
+//     "url": "https://api.flowzcluster.tk/dbetl/databases",
+//     "method": "GET",
+//     "headers": {
+//       "authorization": cookieValueFun
+//     }
+//   }
+
+//   $.ajax(settings).done(function (response) {
+//     for (let index = 0; index < response.data.length; index++) {
+//       arr_collection.push(response.data[index].connection_name)
+//       let settings = {
+//         "async": true,
+//         "crossDomain": true,
+//         "url": "https://api.flowzcluster.tk/dbetl/schema/" + response.data[index].id,
+//         "method": "GET",
+//         "headers": {
+//           "authorization": cookieValueFun
+//         }
+//       }
+
+//       $.ajax(settings).done(function (response2) {
+//         for (let index2 = 0; index2 < response2.length; index2++) {
+//           collection_name = response.data[index].connection_name
+//           schema_name = response2[index2].name
+//           arr_schema.push({ collection_name: collection_name, schema_name: schema_name })
+//           console.log("arr_schema", arr_schema)
+//         }
+//         arr_coll_schema.push('');
+//         $.each(arr_schema, function (index, value) {
+//           arr_coll_schema.push(value.collection_name + ' : ' + value.schema_name);
+//         });
+//         console.log("arr_coll_schema", typeof arr_coll_schema)
+//       });
+//     }
+//   });
+
+
+
+    let arr_coll_schema = []
     comps.addType('DataFieldGroup', {
       // Define the Model
       model: defaultModel.extend({
@@ -1987,13 +2107,18 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             {
               type: 'select',
               label: 'data-schema',
-              name: ':data_schema',
+              name: 'data_schema',
               options: arr_coll_schema,
             },
             {
               type: 'text',
               label: 'API_URL',
-              name: ':data_api'
+              name: 'data_api'
+            },
+            {
+              type: 'checkbox',
+              label: 'draggable',
+              name: 'draggable',
             }
           ]
         }),
@@ -2005,10 +2130,70 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 type: 'DataFieldGroup'
               };
             }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
+            }
           },
         }),
 
-      view: defaultType.view,
+      view: defaultView.extend({
+        // '<template>' can't be shown so in canvas use another tag
+        tagName: 'div'
+      }),
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+
+    comps.addType('DataFieldTable', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'text',
+              label: 'column_value',
+              name: 'column_value'
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: 'data_api'
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDTABLE') {
+              return {
+                type: 'DataFieldTable'
+              };
+            }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
+            }
+          },
+        }),
+
+      view: defaultView.extend({
+        // '<template>' can't be shown so in canvas use another tag
+        tagName: 'div'
+      }),
 
       // The render() should return 'this'
       render: function () {
@@ -2036,13 +2221,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             {
               type: 'select',
               label: 'data-schema',
-              name: ':data_schema',
+              name: 'data_schema',
               options: arr_coll_schema,
             },
             {
               type: 'text',
               label: 'API_URL',
-              name: ':data_api'
+              name: 'data_api'
             }
           ]
         }),
@@ -2054,10 +2239,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 type: 'DataFieldObject'
               };
             }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
+            }
           },
         }),
 
-      view: defaultType.view,
+      view: defaultView.extend({
+        // '<template>' can't be shown so in canvas use another tag
+        tagName: 'div'
+      }),
 
       // The render() should return 'this'
       render: function () {

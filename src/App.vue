@@ -37,8 +37,8 @@
 <script>
 
 import psl from 'psl';
-
-import SiteFooter from './views/footer'
+import Cookies from 'js-cookie';
+import SiteFooter from './views/footer';
 export default {
   name: 'app',
   data () {
@@ -80,17 +80,23 @@ export default {
     },
     doLogout() {
       // localStorage.removeItem("auth_token");
+       localStorage.removeItem('current_sub_id');
       this.$session.remove('username');
       let location = psl.parse(window.location.hostname)
       location = location.domain === null ? location.input : location.domain
-      this.$cookie.delete('authUser', {domain: location});
-      this.$cookie.delete('auth_token', {domain: location});
+                    
+      Cookies.remove('auth_token' ,{domain: location});
+      Cookies.remove('email' ,{domain: location});
+      Cookies.remove('userDetailId' ,{domain: location}); 
+      Cookies.remove('subscriptionId' ,{domain: location}); 
 
       this.isLoggedIn = false;
-      this.$router.push('/login');
+      // this.$router.push('/login');
+      window.location = '/login';
     },
     goToDashboard(){
-      this.$router.push('/user-dashboard');
+      // this.$router.push('/user-dashboard');
+      window.location = "/user-dashboard";
     },
     checkDashboard(){
 
