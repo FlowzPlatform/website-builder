@@ -1541,37 +1541,37 @@ grapesjs.plugins.add('flowz-blocks', function(editor, options) {
   });
 
   // Style 8
-  bm.add('froala-footers-style-8', {
-    label: 'Style 8',
-    content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <footer class="fdb-block footer-small"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-6"> <ul class="nav justify-content-center justify-content-md-start"> <li class="nav-item"> <a class="nav-link active" href="https://www.flowz.com">Home</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">About</a> </li></ul> </div><div class="col mt-4 mt-md-0 text-center text-md-right"> <a href="https://www.flowz.com" class="btn">Contact Us</a> </div></div></div></footer>',
-    attributes: {
-      class: 'custom-icon froala-footers-style-8',
-      title: 'Style 8'
-    },
-    category: 'Footers'
-  });
+  // bm.add('froala-footers-style-8', {
+  //   label: 'Style 8',
+  //   content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>  <footer class="fdb-block footer-small"> <div class="container"> <div class="row align-items-center"> <div class="col-12 col-md-6"> <ul class="nav justify-content-center justify-content-md-start"> <li class="nav-item"> <a class="nav-link active" href="https://www.flowz.com">Home</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Terms</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">About</a> </li></ul> </div><div class="col mt-4 mt-md-0 text-center text-md-right"> <a href="https://www.flowz.com" class="btn">Contact Us</a> </div></div></div></footer>',
+  //   attributes: {
+  //     class: 'custom-icon froala-footers-style-8',
+  //     title: 'Style 8'
+  //   },
+  //   category: 'Footers'
+  // });
 
   // Style 9
-  bm.add('froala-footers-style-9', {
-    label: 'Style 9',
-    content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-large"> <div class="container"> <div class="row align-items-top text-center"> <div class="col-12 col-sm-6 col-md-4 col-lg-3 text-sm-left"> <h3><strong>Group 1</strong></h3> <nav class="nav flex-column"> <a class="nav-link active" href="https://www.flowz.com">Home</a> <a class="nav-link" href="https://www.flowz.com">Features</a> <a class="nav-link" href="https://www.flowz.com">Pricing</a> <a class="nav-link" href="https://www.flowz.com">Team</a> <a class="nav-link" href="https://www.flowz.com">Contact Us</a> </nav> </div><div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-5 mt-sm-0 text-sm-left"> <h3><strong>Group 2</strong></h3> <nav class="nav flex-column"> <a class="nav-link active" href="https://www.flowz.com">Privacy Policy</a> <a class="nav-link" href="https://www.flowz.com">Terms</a> <a class="nav-link" href="https://www.flowz.com">FAQ</a> <a class="nav-link" href="https://www.flowz.com">Support</a> </nav> </div><div class="col-12 col-md-4 col-lg-3 text-md-left mt-5 mt-md-0"> <h3><strong>About Us</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div><div class="col-12 col-lg-2 ml-auto text-lg-left mt-4 mt-lg-0"> <h3><strong>Follow Us</strong></h3> <p class="text-h3"> <a href="https://www.flowz.com"><i class="fa fa-twitter" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.flowz.com"><i class="fa fa-facebook" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.flowz.com"><i class="fa fa-instagram" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.flowz.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.flowz.com"><i class="fa fa-google" aria-hidden="true"></i></a> </p></div></div><div class="row mt-3"> <div class="col text-center"> &copy; 2017 Flowz. All Rights Reserved </div></div></div></footer>',
-    attributes: {
-      class: 'custom-icon froala-footers-style-9',
-      title: 'Style 9'
-    },
-    category: 'Footers'
-  });
+  // bm.add('froala-footers-style-9', {
+  //   label: 'Style 9',
+  //   content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-large"> <div class="container"> <div class="row align-items-top text-center"> <div class="col-12 col-sm-6 col-md-4 col-lg-3 text-sm-left"> <h3><strong>Group 1</strong></h3> <nav class="nav flex-column"> <a class="nav-link active" href="https://www.flowz.com">Home</a> <a class="nav-link" href="https://www.flowz.com">Features</a> <a class="nav-link" href="https://www.flowz.com">Pricing</a> <a class="nav-link" href="https://www.flowz.com">Team</a> <a class="nav-link" href="https://www.flowz.com">Contact Us</a> </nav> </div><div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-5 mt-sm-0 text-sm-left"> <h3><strong>Group 2</strong></h3> <nav class="nav flex-column"> <a class="nav-link active" href="https://www.flowz.com">Privacy Policy</a> <a class="nav-link" href="https://www.flowz.com">Terms</a> <a class="nav-link" href="https://www.flowz.com">FAQ</a> <a class="nav-link" href="https://www.flowz.com">Support</a> </nav> </div><div class="col-12 col-md-4 col-lg-3 text-md-left mt-5 mt-md-0"> <h3><strong>About Us</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div><div class="col-12 col-lg-2 ml-auto text-lg-left mt-4 mt-lg-0"> <h3><strong>Follow Us</strong></h3> <p class="text-h3"> <a href="https://www.flowz.com"><i class="fa fa-twitter" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.flowz.com"><i class="fa fa-facebook" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.flowz.com"><i class="fa fa-instagram" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.flowz.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a>&nbsp;&nbsp; <a href="https://www.flowz.com"><i class="fa fa-google" aria-hidden="true"></i></a> </p></div></div><div class="row mt-3"> <div class="col text-center"> &copy; 2017 Flowz. All Rights Reserved </div></div></div></footer>',
+  //   attributes: {
+  //     class: 'custom-icon froala-footers-style-9',
+  //     title: 'Style 9'
+  //   },
+  //   category: 'Footers'
+  // });
 
   // Style 10
-  bm.add('froala-footers-style-10', {
-    label: 'Style 10',
-    content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-large bg-dark"> <div class="container"> <div class="row align-items-top text-center text-md-left"> <div class="col-12 col-sm-6 col-md-4"> <h3><strong>Country A</strong></h3> <p>Street Address 52<br>Contact Name</p><p>+44 827 312 5002</p><p><a href="https://www.flowz.com">countrya@amazing.com</a></p></div><div class="col-12 col-sm-6 col-md-4 mt-4 mt-sm-0"> <h3><strong>Country B</strong></h3> <p>Street Address 100<br>Contact Name</p><p>+13 827 312 5002</p><p><a href="https://www.flowz.com">countryb@amazing.com</a></p></div><div class="col-12 col-md-4 mt-5 mt-md-0 text-md-left"> <h3><strong>About Us</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div></div><div class="row mt-5"> <div class="col text-center"> &copy; 2017 Flowz. All Rights Reserved </div></div></div></footer>',
-    attributes: {
-      class: 'custom-icon froala-footers-style-10',
-      title: 'Style 10'
-    },
-    category: 'Footers'
-  });
+  // bm.add('froala-footers-style-10', {
+  //   label: 'Style 10',
+  //   content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <footer class="fdb-block footer-large bg-dark"> <div class="container"> <div class="row align-items-top text-center text-md-left"> <div class="col-12 col-sm-6 col-md-4"> <h3><strong>Country A</strong></h3> <p>Street Address 52<br>Contact Name</p><p>+44 827 312 5002</p><p><a href="https://www.flowz.com">countrya@amazing.com</a></p></div><div class="col-12 col-sm-6 col-md-4 mt-4 mt-sm-0"> <h3><strong>Country B</strong></h3> <p>Street Address 100<br>Contact Name</p><p>+13 827 312 5002</p><p><a href="https://www.flowz.com">countryb@amazing.com</a></p></div><div class="col-12 col-md-4 mt-5 mt-md-0 text-md-left"> <h3><strong>About Us</strong></h3> <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p></div></div><div class="row mt-5"> <div class="col text-center"> &copy; 2017 Flowz. All Rights Reserved </div></div></div></footer>',
+  //   attributes: {
+  //     class: 'custom-icon froala-footers-style-10',
+  //     title: 'Style 10'
+  //   },
+  //   category: 'Footers'
+  // });
 
   // Style 11
   bm.add('froala-footers-style-11', {
