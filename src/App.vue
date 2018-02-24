@@ -79,20 +79,29 @@ export default {
       this.$router.push('/');
     },
     doLogout() {
-      // localStorage.removeItem("auth_token");
-       localStorage.removeItem('current_sub_id');
-      this.$session.remove('username');
-      let location = psl.parse(window.location.hostname)
-      location = location.domain === null ? location.input : location.domain
-                    
-      Cookies.remove('auth_token' ,{domain: location});
-      Cookies.remove('email' ,{domain: location});
-      Cookies.remove('userDetailId' ,{domain: location}); 
-      Cookies.remove('subscriptionId' ,{domain: location}); 
+      this.$confirm('Do you want to logout?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+             localStorage.removeItem('current_sub_id');
+            this.$session.remove('username');
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.remove('auth_token' ,{domain: location});
+            Cookies.remove('email' ,{domain: location});
+            Cookies.remove('userDetailId' ,{domain: location}); 
+            Cookies.remove('subscriptionId' ,{domain: location}); 
 
-      this.isLoggedIn = false;
-      // this.$router.push('/login');
-      window.location = '/login';
+            this.isLoggedIn = false;
+            // this.$router.push('/login');
+            window.location = '/login';
+        }).catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: 'Delete canceled'
+          // });          
+        });
     },
     goToDashboard(){
       // this.$router.push('/user-dashboard');
