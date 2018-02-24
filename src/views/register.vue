@@ -351,6 +351,8 @@ export default {
         self.validEmail = false;
         $(this).val("");
         // $(this).focus();
+      } else {
+        self.validEmail = true;
       }
 
 
