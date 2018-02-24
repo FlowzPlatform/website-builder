@@ -1314,15 +1314,15 @@ grapesjs.plugins.add('flowz-blocks', function(editor, options) {
   });
 
   //Style 9 
-  bm.add('froala-header-style-9', {
-    label: 'Style 9',
-    content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.flowz.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav9" aria-controls="navbarNav9" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav9"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.flowz.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end d-none d-lg-flex ml-md-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.flowz.com"><i class="fa fa-slack"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com"><i class="fa fa-github"></i></a> </li></ul> <a class="btn btn-white btn-empty ml-md-3" href="https://www.flowz.com">Button</a> </div></nav> </div></header>',
-    attributes: {
-      class: 'custom-icon headers-icon froala-headers-style-9',
-      title: 'Flowz-Header-layout-9'
-    },
-    category: 'Headers'
-  });
+  // bm.add('froala-header-style-9', {
+  //   label: 'Style 9',
+  //   content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style> <header class="bg-dark"> <div class="container"> <nav class="navbar navbar-expand-md"> <a class="navbar-brand" href="https://www.flowz.com"> <img src="https://s3-us-west-2.amazonaws.com/airflowbucket1/flowz-builder/imgs/img_logo.png" height="30" alt="image"> </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav9" aria-controls="navbarNav9" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNav9"> <ul class="navbar-nav mr-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.flowz.com">Home <span class="sr-only">(current)</span></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Features</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Pricing</a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com">Team</a> </li></ul> <ul class="navbar-nav justify-content-end d-none d-lg-flex ml-md-auto"> <li class="nav-item active"> <a class="nav-link" href="https://www.flowz.com"><i class="fa fa-slack"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com"><i class="fa fa-twitter"></i></a> </li><li class="nav-item"> <a class="nav-link" href="https://www.flowz.com"><i class="fa fa-github"></i></a> </li></ul> <a class="btn btn-white btn-empty ml-md-3" href="https://www.flowz.com">Button</a> </div></nav> </div></header>',
+  //   attributes: {
+  //     class: 'custom-icon headers-icon froala-headers-style-9',
+  //     title: 'Flowz-Header-layout-9'
+  //   },
+  //   category: 'Headers'
+  // });
 
   //Style 10 
   // bm.add('froala-header-style-10', {

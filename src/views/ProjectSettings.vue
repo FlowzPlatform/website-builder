@@ -3474,6 +3474,7 @@ export default {
     },
 
     exportWebsite(){
+      // console.log(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
       window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
     },
 
