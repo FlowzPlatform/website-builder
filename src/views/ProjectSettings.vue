@@ -2824,7 +2824,7 @@ export default {
         }
       };
 
-   // await axios.get(config.baseURL + '/delete-publish-files', {}).then(async (response) => {console.log('deleted previous published files.')})
+   await axios.get(config.baseURL + '/delete-publish-files', {}).then(async (response) => {console.log('deleted previous published files.')})
 
    for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
       var tophead = '';
