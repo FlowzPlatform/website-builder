@@ -109,7 +109,7 @@
                       <li>
                           <input type="radio" name="layout" value="template3" id="myCheckbox3" />
                           <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                          <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
+                          <img src="http://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
                       </li>
                     </ul>
                   </div>
@@ -178,7 +178,7 @@
                         <li>
                             <input type="radio" name="layout" value="template3" id="myCheckbox3" />
                             <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                            <img src="https://uicookies.com/wp-content/uploads/edd/2016/05/thumb-x-corporation.jpg" class="templateThumbnail">
+                            <img src="http://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
                         </li>
                       </ul>
                     </div>
