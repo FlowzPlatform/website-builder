@@ -279,7 +279,8 @@ export default {
       Cookies.remove('subscriptionId' ,{domain: location}); 
       
       console.log('login1.........');
-      this.$router.push('/login');
+      // this.$router.push('/login');
+      window.location = '/login';
     }
   },
   mounted () {
