@@ -15,7 +15,7 @@
               <div class='icon'>
                   <i class="fa fa-address-book-o"></i>
               </div>
-              <input placeholder='Full Name' type='text' v-model="form.name" required>
+              <input placeholder='Full Name' type='text' maxlength="20" v-model="form.name" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -25,7 +25,7 @@
               <div class='icon'>
                   <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Username' type='text' v-model="form.Uname" required>
+              <input placeholder='Username' type='text' maxlength="20" v-model="form.Uname" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -35,7 +35,7 @@
               <div class='icon'>
                   <i class="fa fa-envelope-o"></i>
               </div>
-              <input placeholder='Email Address' type='text' v-model="form.email" id="txtEmail" required>
+              <input placeholder='Email Address' type='text' maxlength="100" v-model="form.email" id="txtEmail" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -45,7 +45,7 @@
               <div class='icon'>
                   <img src='../assets/images/lock_icon_copy.png'>
               </div>
-              <input placeholder='Password' type='password' v-model="form.pass" required>
+              <input placeholder='Password' type='password' maxlength="20" v-model="form.pass" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -54,7 +54,7 @@
               <div class='icon'>
                   <img src='../assets/images/lock_icon_copy.png'>
               </div>
-              <input placeholder='Confirm Password' class="input-fields" type='password' v-model="form.checkPass" required>
+              <input placeholder='Confirm Password' class="input-fields" type='password' maxlength="20" v-model="form.checkPass" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
