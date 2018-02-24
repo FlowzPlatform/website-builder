@@ -1974,6 +1974,7 @@
           });
         }
       },
+      
      // async checknameexist(){
      //  this.fullscreenLoading = true;
      //  this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
