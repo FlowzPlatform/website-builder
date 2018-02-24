@@ -99,12 +99,12 @@
                       <li>
                           <input type="radio" name="layout" value="template1" id="myCheckbox1" />
                           <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                          <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
+                          <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
                       </li>
                       <li>
                           <input type="radio" name="layout" value="template2" id="myCheckbox2" />
                           <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                          <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
+                          <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
                       </li>
                       <li>
                           <input type="radio" name="layout" value="template3" id="myCheckbox3" />
@@ -168,12 +168,12 @@
                         <li>
                             <input type="radio" name="layout" value="template1" id="myCheckbox1" />
                             <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                            <img src="http://aamaratex.com/wp-content/uploads/2016/04/coming-soon-Website-300x196.jpg" class="templateThumbnail">
+                            <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
                         </li>
                         <li>
                             <input type="radio" name="layout" value="template2" id="myCheckbox2" />
                             <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                            <img src="https://freetemplates.pro/wp-content/uploads/edd/2016/06/Personal-Portfolio-HTML-Template-1.jpg" class="templateThumbnail">
+                            <img src="http://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
                         </li>
                         <li>
                             <input type="radio" name="layout" value="template3" id="myCheckbox3" />
