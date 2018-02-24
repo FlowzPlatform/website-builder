@@ -671,13 +671,13 @@
             await this.getData();
             this.fullscreenLoading=false
           }).catch((e)=>{
-             this.$message({
-              showClose: true,
-              duration:0,
-              message: 'Servers are down please try again later.',
-              type: 'error'
-            });
-            // console.log(e)
+            //  this.$message({
+            //   showClose: true,
+            //   duration:0,
+            //   message: 'Servers are down please try again later.',
+            //   type: 'error'
+            // });
+            console.log(e)
             this.fullscreenLoading=false;
           })
       },
@@ -1882,7 +1882,7 @@
                         "PageSEOKeywords": "",
                         "PageSEODescription": "",
                         "PageLayout": "default",
-                        "PageCss": ["Bootstrap 3", "Bootstrap 4", "Font Awesome", "Flowz Blocks", "Google Fonts"],
+                        "PageCss": [],
                         "PageExternalCss": [],
                         "PageExternalJs": [],
                         "PageMetaInfo": [],
@@ -2786,7 +2786,7 @@
                                         }, {
                                           "Footer": "default"
                                         }],
-                                        "PageCss": ["Bootstrap 3", "Bootstrap 4", "Font Awesome", "Flowz Blocks", "Google Fonts"],
+                                        "PageCss": [],
                                         "PageExternalCss": [],
                                         "PageExternalJs": [],
                                         "PageMetaInfo": [],

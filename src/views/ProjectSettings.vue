@@ -2373,11 +2373,11 @@ export default {
           // console.log('projectSettingsFileData', projectSettingsFileData);
           let data = JSON.parse(projectSettingsFileData.data);
 
-          console.log('Custom Json DATA: ', data);
+          // console.log('Custom Json DATA: ', data);
 
           this.projectDetailsJson[0].project_settings = data.project_settings;
 
-          console.log('Json data: ', this.projectDetailsJson);
+          // console.log('Json data: ', this.projectDetailsJson);
 
           // this.isProjectDetailsJsonUpdated = true;
           this.saveProjectSettings();
