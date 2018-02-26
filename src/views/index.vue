@@ -52,7 +52,7 @@
               </div>
 
               <!-- New File Dialog if it's not dashboard page -->
-              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" @close='canceldialog("formAddFile")'>
+              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" >
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
@@ -66,10 +66,10 @@
               </el-dialog>
 
               <!-- New Folder Dialog if it's not dashboard page -->
-              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" @close='canceldialogfolder("formAddFolder")' >
+              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
-                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
+                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
                         <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
                       </el-form-item>
                   </el-form>
@@ -83,7 +83,7 @@
             <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                 <el-form-item prop="projectName">
-                  <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
+                  <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
                   <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                 </el-form-item>
 
@@ -122,7 +122,7 @@
           </div>
 
             <div v-if="isHomePage === true">
-              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" @close='canceldialog("formAddFile")'>
+              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" >
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
@@ -135,10 +135,10 @@
                       <el-button  @click="canceldialog('formAddFile')">Cancel</el-button>
                   </span>
                 </el-dialog>
-                <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" @close='canceldialogfolder("formAddFolder")'>
+                <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
-                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
+                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
                         <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
                       </el-form-item>
                   </el-form>
@@ -152,7 +152,7 @@
               <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
-                    <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
+                    <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
                     <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                   </el-form-item>
 
@@ -1613,7 +1613,7 @@
                             this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername] = []
                             this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
                           }
-
+                          this.formAddFolder.foldername=''
                           this.saveConfigFile(folderUrl)
 
                         }).catch((e) => {
@@ -1663,6 +1663,7 @@
 
       // Create new File
       async addFile(formName) {
+        // console.log('adfile')
       if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined){
           // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
         // let urlparts = configFileUrl.split("/");
