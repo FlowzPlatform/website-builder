@@ -7,6 +7,7 @@ import ForgotPassword from '@/views/ForgotPassword'
 import Homepage from '@/views/Homepage'
 import UserDashboard from '@/views/UserDashboard'
 import EmailVerification from '@/views/EmailVerification'
+import resetPassword from '@/views/resetPassword'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/reset',
+      name: 'reset',
+      component: resetPassword
     },
     {
       path: '/email-verification',
