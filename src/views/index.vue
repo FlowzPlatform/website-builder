@@ -4465,13 +4465,13 @@
               let divappstart=''
               let divappend=''
               let dfscript=''
-              if(contentpartials.indexOf('datafieldgroup')>0){
+              if(contentpartials.indexOf('datafieldgroup')>0 || contentpartials.indexOf('datafieldtable')>0 ){
                 datadivscript= "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
                     "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
-                    "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
+                    "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n" 
                 divappstart='<div id="app">'
                 divappend='</div>'
-                dfscript="<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
+                dfscript="<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' + "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
               }
 
               let newContent = "<html>\n<head>\n" + tophead +
@@ -5265,12 +5265,35 @@
                       })
                       .then(async (res) => {
 
-                        // Create metalsmith file
-                        let mainMetal = newFolderName + '/public/assets/metalsmith.js';
+                        // Create metalsmithPublish file
+                        let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
 
                         let projectName = newFolderName.split('/');
 
                         var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                        // Save Metalsmith
+                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename : mainMetal,
+                            text : metalsmithJSON,
+                            type : 'file'
+                        })
+                        .then((res) => {
+                          // this.fullscreenLoading = false;
+                          // location.reload();
+                          // this.getData();
+                        })
+                        .catch((e) => {
+                            console.log(e)
+                        });
+
+
+                        // Create metalsmithPreview file
+                         mainMetal = newFolderName + '/public/assets/metalsmithPreview.js';
+
+                         projectName = newFolderName.split('/');
+
+                        var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                         // Save Metalsmith
                         await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -5284,12 +5307,11 @@
                           this.getData();
                         })
                         .catch((e) => {
-                            //console.log(e)
+                            console.log(e)
                         });
-
                       })
                       .catch((e) => {
-                          //console.log(e)
+                          console.log(e)
                       });
 
                       
