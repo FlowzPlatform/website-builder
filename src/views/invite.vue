@@ -37,13 +37,13 @@
         </div>
         <Tabs  style="margin-top: 20px">
             <TabPane label="Own Subscription">
-                <Table :columns="columns3" :data="data3" no-text-data="No Data" stripe></Table>
+                <Table :columns="columns3" :data="data3" stripe></Table>
             </TabPane>
             <TabPane label="Assigned Subscription">
-                <Table :columns="columns2" :data="data2" no-text-data="No Data" stripe></Table>
+                <Table :columns="columns2" :data="data2" stripe></Table>
             </TabPane>
             <TabPane label="Assigned History">
-                <Table :columns="columns4" :data="data4" no-text-data="No Data" stripe></Table>
+                <Table :columns="columns4" :data="data4" stripe></Table>
             </TabPane>
         </Tabs>
     </div>
@@ -69,7 +69,7 @@
     import locale from 'iview/dist/locale/en-US';
     Vue.use(iView, { locale });
     
-    export default {
+   export default {
         components: { expandRow },
         data() {
             return {
@@ -101,8 +101,7 @@
                         key: 'role',
                         render: (h, params) => {
                             return h('div', [
-                               // console.log(params)
-                                h('p', Object.keys(params.row.role))
+                                h('p', this.capitalize(Object.keys(params.row.role)[0]))
                             ]);
                         }
                     },
@@ -113,13 +112,13 @@
                             return h('div', [
                                 //console.log(params)
                                 //let obj= Object.keys(params.row.role);
-                                h('strong', params.row.role[Object.keys(params.row.role)])
+                                h('strong',this.capitalize(params.row.role[Object.keys(params.row.role)]))
                             ]);
                         }
                     },
                     {
-                        title : 'Assigned By',
-                        key: 'invitedBy'
+                        title : 'Assigned By' ,
+                        key : 'invitedBy'
                     }
                 ],
                  columns3: [
@@ -145,6 +144,17 @@
                     {
                         title: 'Role',
                         key: 'role',
+                         render: (h, params) => {
+                            return h('div', [
+                                //console.log(params)
+                                //let obj= Object.keys(params.row.role);
+                                // console.log("Object.keys(params.row.role)",Object.keys(params.row.role))
+                                // console.log(">>>>>>>>>>>>>>>>>>>>> " , params.row.role)
+                                // h('strong',params)
+                                h('p', this.capitalize(params.row.role))
+                                //h('strong',this.capitalize(params.row.role[Object.keys(params.row.role)]))
+                            ]);
+                        }
                         
                     }
                 ],
@@ -165,7 +175,7 @@
                             return h('div', [
                                 //console.log(params)
                                 //let obj= Object.keys(params.row.role);
-                                h('strong', params.row.role[Object.keys(params.row.role)])
+                                h('strong', this.capitalize(params.row.role[Object.keys(params.row.role)]))
                             ]);
                         }
                         
@@ -176,7 +186,7 @@
                         render: (h, params) => {
                             return h('div', [
                                // console.log(params)
-                                h('p', Object.keys(params.row.role))
+                                h('p', this.capitalize(Object.keys(params.row.role)[0]))
                             ]);
                         }
                         
@@ -228,19 +238,32 @@
             }
         },
         mounted() {
+            
             this.getDataOfSubscriptionUser();
             this.getHistory();
+            
         },
+       
         methods: {
-
+            capitalize (str) {
+                console.log("str before",str)
+                str = str[0].toUpperCase() + str.slice(1)
+                console.log("str after",str)                
+                return str;
+            },
             async getHistory(){
-                axios.get(subscriptionUrl+'subscription-invitation', {
+                 axios.get(subscriptionUrl+'subscription-invitation', {
+
+                   // axios.get('http://172.16.230.86:3030/subscription-invitation', {
                         headers: {
                             'Authorization': Cookies.get('auth_token')
                         },
-                        params : {isDeleted : true}
+                        params : {isDeleted : true, own : false},
+                       
                     })
                     .then(response => {
+                        console.log(response)
+                        
                         // this.data2 = this.assigned_Arr2 ;
                          this.data4 = response.data.data;
                         // this.options2 = sub_id;
@@ -248,11 +271,13 @@
                     })
             },
             async getDataOfSubscriptionUser() {
+                this.$Loading.start();
                 let sub_id = [];
                 let Role_id = [];
                 
                // axios.get('http://api.flowzcluster.tk/subscription/register-roles', {
-                    axios.get(subscriptionUrl + 'register-roles', {
+                    
+                    await axios.get(subscriptionUrl + 'register-roles', {
                         // headers: {
                         //     'Authorization': Cookies.get('auth_token')
                         // },
@@ -263,6 +288,7 @@
                         let new_data = response.data.data;
                          //console.log(new_data.length)
                         for (let index = 0; index < new_data.length; index++) {
+                            console.log("data.........", new_data[index].role)
                             
                             Role_id.push({
                                 "value1": new_data[index].role,
@@ -279,6 +305,7 @@
                         }
                     })
                     .then(response => {
+                        console.log("res.................------>>>>", response)
                         let new_data = response.data.data.package;
                         for (var key in new_data) {
                             if (new_data.hasOwnProperty(key)) {
@@ -290,26 +317,28 @@
                                     })
                                     this.assigned_Arr3.push(new_data[key])
                                 }else{
+                                    console.log( "new_data[key].subscriptionId " ,  new_data[key]);
                                     this.assigned_Arr2.push(new_data[key])
+                                    
+                                    console.log(this.assigned_Arr2) 
                                 }
                                 
                             }
                         }
+                        console.log("sub_id..........", sub_id)
+                                    console.log(this.assigned_Arr2) 
                         
                         this.data2 = this.assigned_Arr2 ;
                         this.data3 = this.assigned_Arr3;
                         this.options2 = sub_id;
                         
+                        this.$Loading.finish();
                     })
-
             },
             async inviteNow() {
+                
                 if(this.value2 == undefined || this.value2 == '' || this.value1 == ''){
-                    this.$message({
-                        showClose: true,
-                        message: 'Please select both subscription & role for invitation.',
-                        type: 'error'
-                        });
+                    this.$message.warning("Please select both subscription & role for invitation");
                 }else{
                     this.loading = true;
                     let new_data;
@@ -345,6 +374,7 @@
                     })
                     .then(function(response) {
                         self.loading = false
+                        console.log('response------------------------>', response)
                         if(response.data.status == 404 ){
                              //alert(response.data.data)
                             self.$message.warning(response.data.data);
@@ -367,6 +397,7 @@
             }
         }
     }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
