@@ -2573,52 +2573,52 @@ const baseURL = localStorage.getItem('baseURL');
 
 
 
-  comps.addType('VueComponent', {
-    model: defaultModel.extend({
-      init() {
-        this.listenTo(this, 'change:selectPartial', this.doStuff);
-      },
-      doStuff() {
-        var label, selected_value;
-        var folderUrlVue = localStorage.getItem("folderUrl");
-        $('#Div1').on('click', function() {
-          label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-          selected_value = $("#Div1 option:selected").text();
-          let model = editor.getSelected();
-          var split_selected_value = selected_value.split(".");
-          if (split_selected_value[1] == "vue") {
-            model.components('<div id="' + split_selected_value[0] + '"><component athname="' + label + '" :is="' + split_selected_value[0] + '">' + selected_value + '</component></div>');
-          }
-        });
-      },
-      defaults: Object.assign({}, defaultModel.prototype.defaults, {
-        editable: true,
-        droppable: true,
-        traits: [{
-          label: 'PartialName',
-          name: 'selectPartial',
-          type: 'customConent1',
-          changeProp: 1,
-        }],
-      }),
-    }, {
-      isComponent: function(el) {
-        if (el.tagName == 'VUECOMPONENT') {
-          return {
-            type: 'VueComponent'
-          };
-        }
-      },
-    }),
-    view: defaultType.view,
-    render: function() {
-      defaultType.view.prototype.render.apply(this, arguments);
-      this.el.placeholder = 'Text here';
-      return this;
-    },
-  });
+  // comps.addType('VueComponent', {
+  //   model: defaultModel.extend({
+  //     init() {
+  //       this.listenTo(this, 'change:selectPartial', this.doStuff);
+  //     },
+  //     doStuff() {
+  //       var label, selected_value;
+  //       var folderUrlVue = localStorage.getItem("folderUrl");
+  //       $('#Div1').on('click', function() {
+  //         label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+  //         selected_value = $("#Div1 option:selected").text();
+  //         let model = editor.getSelected();
+  //         var split_selected_value = selected_value.split(".");
+  //         if (split_selected_value[1] == "vue") {
+  //           model.components('<div id="' + split_selected_value[0] + '"><component athname="' + label + '" :is="' + split_selected_value[0] + '">' + selected_value + '</component></div>');
+  //         }
+  //       });
+  //     },
+  //     defaults: Object.assign({}, defaultModel.prototype.defaults, {
+  //       editable: true,
+  //       droppable: true,
+  //       traits: [{
+  //         label: 'PartialName',
+  //         name: 'selectPartial',
+  //         type: 'customConent1',
+  //         changeProp: 1,
+  //       }],
+  //     }),
+  //   }, {
+  //     isComponent: function(el) {
+  //       if (el.tagName == 'VUECOMPONENT') {
+  //         return {
+  //           type: 'VueComponent'
+  //         };
+  //       }
+  //     },
+  //   }),
+  //   view: defaultType.view,
+  //   render: function() {
+  //     defaultType.view.prototype.render.apply(this, arguments);
+  //     this.el.placeholder = 'Text here';
+  //     return this;
+  //   },
+  // });
 
-comps.addType('ShoppingCart', {
+  comps.addType('ShoppingCart', {
     model: defaultModel.extend({
 
             init() {
