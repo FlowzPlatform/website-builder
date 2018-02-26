@@ -2759,7 +2759,7 @@ export default {
             //console.log("Some error occured: ", error);
           })
         } else {
-          console.log('Error occured whit commiting your changes. ', gitResponse);
+          console.log('Error occured while commiting your changes. ', gitResponse);
         }
       }
     },
