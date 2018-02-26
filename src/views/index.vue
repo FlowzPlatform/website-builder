@@ -5259,12 +5259,35 @@
                       })
                       .then(async (res) => {
 
-                        // Create metalsmith file
-                        let mainMetal = newFolderName + '/public/assets/metalsmith.js';
+                        // Create metalsmithPublish file
+                        let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
 
                         let projectName = newFolderName.split('/');
 
                         var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                        // Save Metalsmith
+                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                            filename : mainMetal,
+                            text : metalsmithJSON,
+                            type : 'file'
+                        })
+                        .then((res) => {
+                          // this.fullscreenLoading = false;
+                          // location.reload();
+                          // this.getData();
+                        })
+                        .catch((e) => {
+                            console.log(e)
+                        });
+
+
+                        // Create metalsmithPreview file
+                         mainMetal = newFolderName + '/public/assets/metalsmithPreview.js';
+
+                         projectName = newFolderName.split('/');
+
+                        var metalsmithJSON="var Metalsmith=require('"+config.metalpath+"metalsmith');\nvar markdown=require('"+config.metalpath+"metalsmith-markdown');\nvar layouts=require('"+config.metalpath+"metalsmith-layouts');\nvar permalinks=require('"+config.metalpath+"metalsmith-permalinks');\nvar inPlace = require('"+config.metalpath+"metalsmith-in-place')\nvar fs=require('"+config.metalpath+"file-system');\nvar Handlebars=require('"+config.metalpath+"handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('"+newFolderName+"/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'"+newFolderName+"/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                         // Save Metalsmith
                         await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -5278,12 +5301,11 @@
                           this.getData();
                         })
                         .catch((e) => {
-                            //console.log(e)
+                            console.log(e)
                         });
-
                       })
                       .catch((e) => {
-                          //console.log(e)
+                          console.log(e)
                       });
 
                       
