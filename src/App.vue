@@ -23,7 +23,7 @@
         <el-tooltip class="item" effect="dark" content="Go To Dashboard" placement="bottom" v-if="isLoggedIn === true && ifDashboard === false">
           <el-button type="warning" class="dashboard-btn" @click="goToDashboard"><i class="fa fa-tachometer"></i></el-button>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="Logout" placement="bottom" v-if="isLoggedIn === true && ifDashboard === false">
+        <el-tooltip class="item" effect="dark" :content="useremailID" placement="bottom" v-if="isLoggedIn === true && ifDashboard === false">
           <el-button type="danger" class="logout-btn" @click="doLogout"><i class="fa fa-sign-out"></i></el-button>
         </el-tooltip>
         <div class="layout-content">
@@ -45,7 +45,8 @@ export default {
     return {
       isLoggedIn: false,
       username : '',
-      ifDashboard: false
+      ifDashboard: false,
+      useremailID: ''
     }
 	},
   components: {
@@ -69,6 +70,7 @@ export default {
       } else {
         this.isLoggedIn = false;
       }
+      this.useremailID = 'Logout: ' + Cookies.get('email');
     },
   	handleSelect() {
     },

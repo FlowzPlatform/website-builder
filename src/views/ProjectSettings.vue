@@ -2381,6 +2381,12 @@ export default {
 
           // this.isProjectDetailsJsonUpdated = true;
           this.saveProjectSettings();
+          this.$notify({
+            title: 'Success',
+            message: 'Please press "Refresh button" to import all its Settings.',
+            type: 'info',
+            offset: 100
+          });
 
         })
         .catch((e) => {

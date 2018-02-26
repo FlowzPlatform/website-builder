@@ -52,7 +52,7 @@
               </div>
 
               <!-- New File Dialog if it's not dashboard page -->
-              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny">
+              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" @close='canceldialog("formAddFile")'>
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
@@ -61,12 +61,12 @@
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
-                      <el-button @click="canceldialog()">Cancel</el-button>
+                      <el-button @click="canceldialog('formAddFile')">Cancel</el-button>
                   </span>
               </el-dialog>
 
               <!-- New Folder Dialog if it's not dashboard page -->
-              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny">
+              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" @close='canceldialogfolder("formAddFolder")' >
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
@@ -75,16 +75,16 @@
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
-                      <el-button @click="canceldialogfolder()">Cancel</el-button>
+                      <el-button @click="canceldialogfolder('formAddFolder')">Cancel</el-button>
                   </span>
               </el-dialog>
 
             <!-- New Website Project Dialog if it's not dashboard page -->
-            <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
+            <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                 <el-form-item prop="projectName">
                   <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                  <el-input maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                  <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -122,7 +122,7 @@
           </div>
 
             <div v-if="isHomePage === true">
-              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny">
+              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" @close='canceldialog("formAddFile")'>
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
@@ -132,10 +132,10 @@
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
-                      <el-button  @click="canceldialog()">Cancel</el-button>
+                      <el-button  @click="canceldialog('formAddFile')">Cancel</el-button>
                   </span>
                 </el-dialog>
-                <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny">
+                <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" @close='canceldialogfolder("formAddFolder")'>
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
@@ -144,16 +144,16 @@
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
-                      <el-button @click="canceldialogfolder()">Cancel</el-button>
+                      <el-button @click="canceldialogfolder('formAddFolder')">Cancel</el-button>
                   </span>
               </el-dialog>
 
 
-              <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog">
+              <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
                     <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                    <el-input maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                    <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                   </el-form-item>
 
                   <el-form-item>
@@ -326,7 +326,7 @@
       }else if(!(/^[a-z0-9A-Z]+$/i.test(value))){
           return callback(new Error('Please Enter valid Project Name. (Project name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
       }else{
-          // this.checknameexist()
+          
           return callback();
       }
   }
@@ -681,15 +681,27 @@
             this.fullscreenLoading=false;
           })
       },
-      canceldialog(){
+      canceldialogproject(formAddProjectFolder){
+       this.$refs[formAddProjectFolder].resetFields();
+        // console.log('cancel')
+         this.newProjectFolderDialog = false;
+         // this.formAddProjectFolder.projectName=''
+
+
+      },
+      canceldialog(formAddFile){
+        this.$refs[formAddFile].resetFields();
+
         this.newFileDialog = false
 
-        this.formAddFile.filename=''
+        // this.formAddFile.filename=''
       },
-      canceldialogfolder(){
+      canceldialogfolder(formAddFolder){
+        this.$refs[formAddFolder].resetFields();
+
         this.newFolderDialog = false
         // console.log('&&&&')
-        this.formAddFolder.foldername=''
+        // this.formAddFolder.foldername=''
       },
       // Set template if selected in creating new project
       setTemplate(template) {
@@ -2752,7 +2764,7 @@
                                         "ProjectSEOKeywords": '',
                                         "ProjectSEODescription": '',
                                         // "ProjectFaviconName": '',
-                                        "ProjectVId":{'vid':'','userId':'','password':''},
+                                        "ProjectVId":{"vid":'',"userId":'',"password":'',"esUser":'',"virtualShopName":''},
                                         "CrmSettingId":''
                                       }, {
                                         "AssetImages": [],
@@ -5060,7 +5072,9 @@
         }).then(async () => {
           this.fullscreenLoading = true;
 
-          let clonedWebsiteTempName = node.data.name + '_copy'
+          // console.log(node);
+
+          let clonedWebsiteTempName = node.data.websitename + '_copy'
 
           let sourceConfig = await this.getConfigFileData(data.path);
           // console.log(clonedWebsiteTempName,sourceConfig)
@@ -5132,7 +5146,13 @@
             websiteName: clonedWebsiteTempName,
             configData: sourceConfig,
             pluginsData: pluginsData,
-            userId:userid
+            userId:userid,
+            subscriptionId: this.value
+          },{
+            headers: {
+              Authorization: Cookies.get('auth_token'),
+              subscriptionId: this.value
+            }
           })
           .then(async (res) => {
             let newFolderName = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id
@@ -5215,7 +5235,19 @@
                       let projectDetails = newFolderName + '/public/assets/project-details.json';
                       let projectDetailsData = [{
                                                 "projectOwner" : Cookies.get('email'),
-                                                "projectName" : this.repoName
+                                                "projectID" : this.repoName,
+                                                "UserID":Cookies.get('userDetailId'),
+                                                "BasePath":newFolderName,
+                                                "websiteName": node.data.name + '_copy',
+                                                "BaseURL":'http://'+Cookies.get('userDetailId')+'.'+this.repoName+'.'+config.domainkey+'/',
+                                                "builder_service_api": config.baseURL,
+                                                "login_api": config.loginUrl,
+                                                "register_api": config.registerUrl,
+                                                "user_details_api": config.userDetail,
+                                                "social_login_api": 'https://auth.'+config.domainkey+'/auth/',
+                                                "domainkey": config.domainkey,
+                                                "CrmSettingId":'',
+                                                "Projectvid":{"vid":'',"userId":'',"password":'',"esUser":'',"virtualShopName":''}
                                                 }];
 
                       // Save Project Details.json
@@ -5394,7 +5426,7 @@
         this.$refs[projectName].validate(async (valid) => {
         if(valid){
           this.fullscreenLoading = true;
-          this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
+          // this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
           this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
           // console.log('userid',userid)
