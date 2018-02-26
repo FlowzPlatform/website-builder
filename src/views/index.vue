@@ -61,7 +61,7 @@
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
-                      <el-button @click="canceldialog("formAddFile")">Cancel</el-button>
+                      <el-button @click="canceldialog('formAddFile')">Cancel</el-button>
                   </span>
               </el-dialog>
 
@@ -75,7 +75,7 @@
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
-                      <el-button @click="canceldialogfolder("formAddFolder")">Cancel</el-button>
+                      <el-button @click="canceldialogfolder('formAddFolder')">Cancel</el-button>
                   </span>
               </el-dialog>
 
@@ -132,7 +132,7 @@
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
-                      <el-button  @click="canceldialog("formAddFile")">Cancel</el-button>
+                      <el-button  @click="canceldialog('formAddFile')">Cancel</el-button>
                   </span>
                 </el-dialog>
                 <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" @close='canceldialogfolder("formAddFolder")'>
@@ -144,7 +144,7 @@
                   </el-form>
                   <span slot="footer" class="dialog-footer">
                       <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
-                      <el-button @click="canceldialogfolder("formAddFolder")">Cancel</el-button>
+                      <el-button @click="canceldialogfolder('formAddFolder')">Cancel</el-button>
                   </span>
               </el-dialog>
 
