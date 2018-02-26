@@ -955,7 +955,6 @@
           this.editableTabs =  selectedPagePositionFirstArray ;
 
           this.editableTabs.reverse();
-
           this.editableTabsValue = newTabName;
         }
         // If ProjectSettings is clicked 
@@ -1466,7 +1465,6 @@
        this.fullscreenLoading = false;
        this.editableTabs =  selectedPagePositionFirstArray ;
        this.editableTabs.reverse();
-
        this.editableTabsValue = newTabName;
        var self = this
        // if(this.editableTabs[0].title){
@@ -2025,6 +2023,7 @@
           if (this.value == '') {
             this.newProjectFolderDialog = false;
               this.fullscreenLoading = false;
+               this.$refs[projectName].resetFields();
               this.$message({
                   showClose: true,
                   duration:0,
@@ -2157,6 +2156,7 @@
                                           // this.componentId = 'buyPage';
                                           this.newProjectFolderDialog = false;
                                           this.fullscreenLoading = false;
+                                          this.$refs[projectName].resetFields();
                                           // this.buyNowDialog = true;
                                           console.log(e)
                                       });
@@ -2174,10 +2174,12 @@
                                   }
                                   this.newProjectFolderDialog = false;
                                   this.fullscreenLoading = false;
+                                  this.$refs[projectName].resetFields();
                               });                  
               } else {
                   this.newProjectFolderDialog = false;
                   this.fullscreenLoading = false;
+                   this.$refs[projectName].resetFields();
                   this.$session.remove('username');
                   localStorage.removeItem('current_sub_id');
                   let location = psl.parse(window.location.hostname)
@@ -5446,6 +5448,7 @@
           }
           else{
             this.fullscreenLoading=false
+             this.$refs[projectName].resetFields();
             this.$message({
             showClose: true,
             message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
