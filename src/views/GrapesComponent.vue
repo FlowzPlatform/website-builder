@@ -177,7 +177,7 @@ export default {
         // 'gjs-plugin-ckeditor', 'grapesjs-blocks-bootstrap4', 'gjs-plugin-filestack', 'gjs-blocks-flexbox',
 
 		editor = grapesjs.init({
-			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'product-plugin', 'flowz-blocks' ],
+			plugins: ['gjs-blocks-basic', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-navbar', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'global-variables-plugin', 'product-plugin', 'flowz-blocks' ],
             pluginsOpts: {
                 'gjs-plugin-filestack': {
                     'key': 'AgfKKwgZjQ8iLBVKGVXMdz',

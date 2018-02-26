@@ -955,7 +955,6 @@
           this.editableTabs =  selectedPagePositionFirstArray ;
 
           this.editableTabs.reverse();
-
           this.editableTabsValue = newTabName;
         }
         // If ProjectSettings is clicked 
@@ -1466,7 +1465,6 @@
        this.fullscreenLoading = false;
        this.editableTabs =  selectedPagePositionFirstArray ;
        this.editableTabs.reverse();
-
        this.editableTabsValue = newTabName;
        var self = this
        // if(this.editableTabs[0].title){
@@ -2025,6 +2023,7 @@
           if (this.value == '') {
             this.newProjectFolderDialog = false;
               this.fullscreenLoading = false;
+               this.$refs[projectName].resetFields();
               this.$message({
                   showClose: true,
                   duration:0,
@@ -2157,6 +2156,7 @@
                                           // this.componentId = 'buyPage';
                                           this.newProjectFolderDialog = false;
                                           this.fullscreenLoading = false;
+                                          this.$refs[projectName].resetFields();
                                           // this.buyNowDialog = true;
                                           console.log(e)
                                       });
@@ -2174,10 +2174,12 @@
                                   }
                                   this.newProjectFolderDialog = false;
                                   this.fullscreenLoading = false;
+                                  this.$refs[projectName].resetFields();
                               });                  
               } else {
                   this.newProjectFolderDialog = false;
                   this.fullscreenLoading = false;
+                   this.$refs[projectName].resetFields();
                   this.$session.remove('username');
                   localStorage.removeItem('current_sub_id');
                   let location = psl.parse(window.location.hostname)
@@ -2411,7 +2413,7 @@
         let maincss = newFolderName + '/public/main-files/main.css'
         await axios.post(config.baseURL + '/flows-dir-listing', {
             filename : maincss,
-            text : '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;} .grid{position: relative;}.item{display: block; position: absolute; width: 100px; height: 100px; margin: 5px; z-index: 1; background: rgb(228, 29, 22); color: #fff;}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}',
+            text : '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;} .grid{position: relative;}.item{display: block; position: absolute; width: 100px; height: 100px; margin: 5px; z-index: 1; background: white; color: black; border: 1px solid black}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}',
             type : 'file'
         })
         .then((res) => {
@@ -5446,6 +5448,7 @@
           }
           else{
             this.fullscreenLoading=false
+             this.$refs[projectName].resetFields();
             this.$message({
             showClose: true,
             message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
