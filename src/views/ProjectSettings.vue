@@ -2699,7 +2699,7 @@ export default {
             this.commitMessage = '';
             //console.log(response.data);
             this.$message({
-              message: 'Successfully published the website.',
+              message: 'New revision commited. ',
               type: 'success'
             });
             this.isCommitLoading = false;
@@ -2749,7 +2749,7 @@ export default {
               this.commitMessage = '';
               //console.log(response.data);
               this.$message({
-                message: 'Successfully published the website.',
+                message: 'New revision commited. ',
                 type: 'success'
               });
               this.isCommitLoading = false;
