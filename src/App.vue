@@ -23,7 +23,7 @@
         <el-tooltip class="item" effect="dark" content="Go To Dashboard" placement="bottom" v-if="isLoggedIn === true && ifDashboard === false">
           <el-button type="warning" class="dashboard-btn" @click="goToDashboard"><i class="fa fa-tachometer"></i></el-button>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="Logout" placement="bottom" v-if="isLoggedIn === true && ifDashboard === false">
+        <el-tooltip class="item" effect="dark" :content="useremailID" placement="bottom" v-if="isLoggedIn === true && ifDashboard === false">
           <el-button type="danger" class="logout-btn" @click="doLogout"><i class="fa fa-sign-out"></i></el-button>
         </el-tooltip>
         <div class="layout-content">
@@ -37,15 +37,16 @@
 <script>
 
 import psl from 'psl';
-
-import SiteFooter from './views/footer'
+import Cookies from 'js-cookie';
+import SiteFooter from './views/footer';
 export default {
   name: 'app',
   data () {
     return {
       isLoggedIn: false,
       username : '',
-      ifDashboard: false
+      ifDashboard: false,
+      useremailID: ''
     }
 	},
   components: {
@@ -69,6 +70,7 @@ export default {
       } else {
         this.isLoggedIn = false;
       }
+      this.useremailID = 'Logout: ' + Cookies.get('email');
     },
   	handleSelect() {
     },
@@ -79,18 +81,33 @@ export default {
       this.$router.push('/');
     },
     doLogout() {
-      // localStorage.removeItem("auth_token");
-      this.$session.remove('username');
-      let location = psl.parse(window.location.hostname)
-      location = location.domain === null ? location.input : location.domain
-      this.$cookie.delete('authUser', {domain: location});
-      this.$cookie.delete('auth_token', {domain: location});
+      this.$confirm('Do you want to logout?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+             localStorage.removeItem('current_sub_id');
+            this.$session.remove('username');
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.remove('auth_token' ,{domain: location});
+            Cookies.remove('email' ,{domain: location});
+            Cookies.remove('userDetailId' ,{domain: location}); 
+            Cookies.remove('subscriptionId' ,{domain: location}); 
 
-      this.isLoggedIn = false;
-      this.$router.push('/login');
+            this.isLoggedIn = false;
+            // this.$router.push('/login');
+            window.location = '/login';
+        }).catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: 'Delete canceled'
+          // });          
+        });
     },
     goToDashboard(){
-      this.$router.push('/user-dashboard');
+      // this.$router.push('/user-dashboard');
+      window.location = "/user-dashboard";
     },
     checkDashboard(){
 

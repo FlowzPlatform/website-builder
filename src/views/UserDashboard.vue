@@ -54,18 +54,19 @@
                                     </li>
                                 </ul>
                             </li> -->
-                            <!-- <li class="hh-dropdown no-color">
+                            <li class="hh-dropdown no-color">
                                 <a class="hh-menu-item" href="#">
                                     <img class="hh-list-img sm-img" src="https://api.adorable.io/avatars/285/gaurav@adorable.io.png" alt="me" /></a>
                                 <ul class="hh-dropmenu-item sm-menu">
                                     <li class="hh-notification-item">
-                                        <a class="hh-notification-content lg-text" href="#"><i class="fa fa-edit"></i>My Profile</a>
+                                        <!-- <i class="fa fa-user"></i> -->
+                                        {{userEmailId}}
                                     </li>
                                     <li class="hh-notification-item">
-                                        <a class="hh-notification-content lg-text" href="#" @click="doLogout"><i class="fa fa-power-off"></i>Sign out</a>
+                                        <a class="hh-notification-content lg-text" href="#" @click="doLogout"><i class="fa fa-power-off"></i>Log out</a>
                                     </li>
                                 </ul>
-                            </li> -->
+                            </li>
                         </ul>
                         <ul class="pull-right links">
                             <!-- <li>
@@ -161,7 +162,7 @@
             <nav class="hh-sidebar">
                 <ul>
                     <li>
-                        <a href="#" class="inbox">
+                        <a href="#" class="inbox" @click='goToDashboard()'>
                             <i class="fa fa-dashboard">
                                 <span class="icon-bg hh-bg-success"></span>
                             </i>
@@ -174,6 +175,14 @@
                                 <span class="icon-bg hh-bg-danger"></span>
                             </i>
                             <span class="hh-sidebar-item">Website Builder</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" @click='goToInvite()'>
+                            <i class="fa fa-handshake-o">
+                                <span class="icon-bg hh-bg-primary"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Invite</span>
                         </a>
                     </li>
                     <!-- <li>
@@ -192,53 +201,27 @@
                             <span class="hh-sidebar-item">Revenue</span>
                         </a>
                     </li> -->
-                    <li>
+                    <!-- <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
                                 <span class="icon-bg hh-bg-violet"></span>
                             </i>
                             <span class="hh-sidebar-item">Logout</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </nav>
         </aside>
 
-        <section>
+       <section>
             <div class="hh-body-wrapper">
                 <div class="container-fluid">
-                    <header class="hh-page-title">
-                        <span>Dashboard</span>
-                    </header>
+                    
                     <div class="row">
-                        <div class="col-lg-3 col-xs-6">
-                            <div class="hh-info-box hh-txt-success">
-                                <i class="fa fa-globe"></i>
-                                <span class="heading">Websites</span>
-                                <span class="value"><span>5</span></span>
-                            </div>
+                        <div class="col-md-12">
+                            <component :is="componentId" ref="contentComponent"></component>
                         </div>
-                        <div class="col-lg-3 col-xs-6">
-                            <div class="hh-info-box hh-txt-primary">
-                                <i class="fa fa-server"></i>
-                                <span class="heading">Services</span>
-                                <span class="value"><span>1</span></span>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-xs-6">
-                            <div class="hh-info-box hh-txt-danger">
-                                <i class="fa fa-calendar-times-o"></i>
-                                <span class="heading">Expiration</span>
-                                <span class="value"><span>12-Dec-2018</span></span>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-xs-6">
-                            <div class="hh-info-box hh-txt-warning">
-                                <i class="fa fa-dollar"></i>
-                                <span class="heading">Revenue</span>
-                                <span class="value"><span>1009K</span></span>
-                            </div>
-                        </div>
+                        
                     </div>
                     
 
@@ -254,6 +237,10 @@
 <script>
 
 import psl from 'psl';
+import Cookies from 'js-cookie';
+
+import Invite from './invite';
+import HomePage from './Dashboard';
 
 export default {
   name: 'UserDashboard',
@@ -264,26 +251,53 @@ export default {
   },
   data () {
     return {
-      data: 'data'
+        data: 'data',
+      componentId: '',
+      userEmailId: ''
     }
   },
   component: {
   },
   methods: {
-    goToEditor() {
-      this.$router.push('/editor');
+     goToEditor() {
+      // this.$router.push('/editor');
+      window.location = '/editor';
+    },
+    goToInvite(){
+        this.componentId = Invite;
+    },
+    goToDashboard(){
+        this.componentId = HomePage;
     },
     doLogout() {
-      // localStorage.removeItem("auth_token");
-      this.$session.remove('username');
-      let location = psl.parse(window.location.hostname)
-      location = location.domain === null ? location.input : location.domain
-      this.$cookie.delete('authUser', {domain: location});
-      this.$cookie.delete('auth_token', {domain: location});
-      this.$router.push('/login');
+      this.$confirm('Do you want to logout?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+             localStorage.removeItem('current_sub_id');
+            this.$session.remove('username');
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.remove('auth_token' ,{domain: location});
+            Cookies.remove('email' ,{domain: location});
+            Cookies.remove('userDetailId' ,{domain: location}); 
+            Cookies.remove('subscriptionId' ,{domain: location}); 
+
+            this.isLoggedIn = false;
+            // this.$router.push('/login');
+            window.location = '/login';
+        }).catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: 'Delete canceled'
+          // });          
+        });
     }
   },
   mounted () {
+
+    this.userEmailId = Cookies.get('email');
 
     $(function () {
 
@@ -443,7 +457,7 @@ a, a:hover, a:visited, a:link, a:active {
     -webkit-box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
             box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
     background: white;
-    z-index: 10000;
+    z-index: -1;
     text-align: center;
 }
 
