@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
         content: null,
         fileUrl: null,
         currentIndex: null,
+        updateStats: null,
         LayoutOptions: [{
           value: 'Blank',
           label: 'Blank'
