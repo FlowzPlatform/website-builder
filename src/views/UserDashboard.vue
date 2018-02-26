@@ -54,19 +54,20 @@
                                     </li>
                                 </ul>
                             </li> -->
-                            <li class="hh-dropdown no-color">
+                            <span><h5>Welcome<b> {{userEmailId}}</b></h5></span>
+                            <!-- <li class="hh-dropdown no-color">
                                 <a class="hh-menu-item" href="#">
                                     <img class="hh-list-img sm-img" src="https://api.adorable.io/avatars/285/gaurav@adorable.io.png" alt="me" /></a>
                                 <ul class="hh-dropmenu-item sm-menu">
                                     <li class="hh-notification-item">
-                                        <!-- <i class="fa fa-user"></i> -->
+                                        <i class="fa fa-user"></i>
                                         {{userEmailId}}
                                     </li>
                                     <li class="hh-notification-item">
                                         <a class="hh-notification-content lg-text" href="#" @click="doLogout"><i class="fa fa-power-off"></i>Log out</a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
                         </ul>
                         <ul class="pull-right links">
                             <!-- <li>
@@ -201,14 +202,14 @@
                             <span class="hh-sidebar-item">Revenue</span>
                         </a>
                     </li> -->
-                    <!-- <li>
+                    <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
                                 <span class="icon-bg hh-bg-violet"></span>
                             </i>
                             <span class="hh-sidebar-item">Logout</span>
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
             </nav>
         </aside>
