@@ -84,7 +84,7 @@
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                 <el-form-item prop="projectName">
                   <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                  <el-input maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                  <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -153,7 +153,7 @@
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
                     <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
-                    <el-input maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                    <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                   </el-form-item>
 
                   <el-form-item>
@@ -2752,7 +2752,7 @@
                                         "ProjectSEOKeywords": '',
                                         "ProjectSEODescription": '',
                                         // "ProjectFaviconName": '',
-                                        "ProjectVId":{'vid':'','userId':'','password':''},
+                                        "ProjectVId":{"vid":'',"userId":'',"password":'',"esUser":'',"virtualShopName":''},
                                         "CrmSettingId":''
                                       }, {
                                         "AssetImages": [],
@@ -5060,7 +5060,9 @@
         }).then(async () => {
           this.fullscreenLoading = true;
 
-          let clonedWebsiteTempName = node.data.name + '_copy'
+          // console.log(node);
+
+          let clonedWebsiteTempName = node.data.websitename + '_copy'
 
           let sourceConfig = await this.getConfigFileData(data.path);
           // console.log(clonedWebsiteTempName,sourceConfig)
@@ -5132,7 +5134,13 @@
             websiteName: clonedWebsiteTempName,
             configData: sourceConfig,
             pluginsData: pluginsData,
-            userId:userid
+            userId:userid,
+            subscriptionId: this.value
+          },{
+            headers: {
+              Authorization: Cookies.get('auth_token'),
+              subscriptionId: this.value
+            }
           })
           .then(async (res) => {
             let newFolderName = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id
@@ -5215,7 +5223,19 @@
                       let projectDetails = newFolderName + '/public/assets/project-details.json';
                       let projectDetailsData = [{
                                                 "projectOwner" : Cookies.get('email'),
-                                                "projectName" : this.repoName
+                                                "projectID" : this.repoName,
+                                                "UserID":Cookies.get('userDetailId'),
+                                                "BasePath":newFolderName,
+                                                "websiteName": node.data.name + '_copy',
+                                                "BaseURL":'http://'+Cookies.get('userDetailId')+'.'+this.repoName+'.'+config.domainkey+'/',
+                                                "builder_service_api": config.baseURL,
+                                                "login_api": config.loginUrl,
+                                                "register_api": config.registerUrl,
+                                                "user_details_api": config.userDetail,
+                                                "social_login_api": 'https://auth.'+config.domainkey+'/auth/',
+                                                "domainkey": config.domainkey,
+                                                "CrmSettingId":'',
+                                                "Projectvid":{"vid":'',"userId":'',"password":'',"esUser":'',"virtualShopName":''}
                                                 }];
 
                       // Save Project Details.json
