@@ -111,7 +111,14 @@ export default {
   watch: {
   	'$store.state.fileUrl': function(newvalue) {
   		this.init();
-  	}
+  	},
+    '$store.state.updateStats': function(newvalue) {
+      let self = this;
+      setTimeout(function(){
+        self.init();
+      },1500)
+      
+    }
   }
 }
 </script>

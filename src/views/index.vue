@@ -52,7 +52,7 @@
               </div>
 
               <!-- New File Dialog if it's not dashboard page -->
-              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" @close='canceldialog("formAddFile")'>
+              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" >
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
@@ -66,10 +66,10 @@
               </el-dialog>
 
               <!-- New Folder Dialog if it's not dashboard page -->
-              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" @close='canceldialogfolder("formAddFolder")' >
+              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
-                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
+                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
                         <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
                       </el-form-item>
                   </el-form>
@@ -83,7 +83,7 @@
             <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                 <el-form-item prop="projectName">
-                  <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
+                  <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
                   <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                 </el-form-item>
 
@@ -122,7 +122,7 @@
           </div>
 
             <div v-if="isHomePage === true">
-              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" @close='canceldialog("formAddFile")'>
+              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" >
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
                         <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
@@ -135,10 +135,10 @@
                       <el-button  @click="canceldialog('formAddFile')">Cancel</el-button>
                   </span>
                 </el-dialog>
-                <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" @close='canceldialogfolder("formAddFolder")'>
+                <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
-                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder" name="">
+                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
                         <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
                       </el-form-item>
                   </el-form>
@@ -152,7 +152,7 @@
               <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
-                    <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="addProjectFolder" name="">
+                    <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
                     <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
                   </el-form-item>
 
@@ -1566,6 +1566,7 @@
                   type: 'error'
                 });
               } else {
+                this.$store.state.updateStats = Math.random();
                 return axios.post(config.baseURL + '/flows-dir-listing', {
                     foldername: newFolderName,
                     type: 'folder'
@@ -1613,7 +1614,7 @@
                             this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername] = []
                             this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
                           }
-
+                          this.formAddFolder.foldername=''
                           this.saveConfigFile(folderUrl)
 
                         }).catch((e) => {
@@ -1663,328 +1664,334 @@
 
       // Create new File
       async addFile(formName) {
-      if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined){
-          // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        // let urlparts = configFileUrl.split("/");
-        // let fileNameOrginal = urlparts[urlparts.length - 1];
-        // let foldername = urlparts[urlparts.length - 1];
-        // let fileName = '/' + urlparts[urlparts.length - 1];
-        // var folderUrl = configFileUrl.replace(fileName, '');
-
-        let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        let urlparts = configFileUrl.split("/");
-        let fileNameOrginal = urlparts[urlparts.length - 1];
-        let foldername = urlparts[urlparts.length - 2];
-        // let fileName = '/' + urlparts[urlparts.length-1];
+        if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined){
+            // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          // let urlparts = configFileUrl.split("/");
+          // let fileNameOrginal = urlparts[urlparts.length - 1];
+          // let foldername = urlparts[urlparts.length - 1];
+          // let fileName = '/' + urlparts[urlparts.length - 1];
+          // var folderUrl = configFileUrl.replace(fileName, '');
 
 
+          let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          let urlparts = configFileUrl.split("/");
+          let fileNameOrginal = urlparts[urlparts.length - 1];
+          let foldername = urlparts[urlparts.length - 2];
+          // let fileName = '/' + urlparts[urlparts.length-1];
 
-        let fileName = '';
-        if (_.includes(configFileUrl, 'Partials')) {
-          fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-        } else if (_.includes(configFileUrl, 'Pages')) {
-          fileName = '/' + urlparts[urlparts.length - 1];
-        } else if (_.includes(configFileUrl, 'Layout')) {
-          fileName = '/' + urlparts[urlparts.length - 1];
-        } else {
-          fileName = '/' + urlparts[urlparts.length - 1];
-        }
 
-        var folderUrl = configFileUrl.replace(fileName, '');
 
-        let projectName = folderUrl.split('/');
-        projectName = projectName[6];
+          let fileName = '';
+          if (_.includes(configFileUrl, 'Partials')) {
+            fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+          } else if (_.includes(configFileUrl, 'Pages')) {
+            fileName = '/' + urlparts[urlparts.length - 1];
+          } else if (_.includes(configFileUrl, 'Layout')) {
+            fileName = '/' + urlparts[urlparts.length - 1];
+          } else {
+            fileName = '/' + urlparts[urlparts.length - 1];
+          }
 
-        // this.getConfigFileData(folderUrl);
+          var folderUrl = configFileUrl.replace(fileName, '');
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName);
-        let rawConfigs = responseConfig.data.configData;
-        this.globalConfigData = rawConfigs;
+          let projectName = folderUrl.split('/');
+          projectName = projectName[6];
 
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.addNewFileLoading = true
-            var name = this.formAddFile.filename;
-            var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
-            let checkfilename = false
-            if (newfilename.indexOf('Pages') > 0) {
-              for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
-                if (name == rawConfigs[1].pageSettings[i].PageName.split('.')[0]) {
-                  checkfilename = true
+          // this.getConfigFileData(folderUrl);
+
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName);
+          let rawConfigs = responseConfig.data.configData;
+          this.globalConfigData = rawConfigs;
+
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              this.addNewFileLoading = true
+              var name = this.formAddFile.filename;
+              var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
+              let checkfilename = false
+              if (newfilename.indexOf('Pages') > 0) {
+                for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+                  if (name == rawConfigs[1].pageSettings[i].PageName.split('.')[0]) {
+                    checkfilename = true
+                  }
+                }
+              } else {
+
+                for (let i = 0; i < Object.keys(rawConfigs[2].layoutOptions[0]).length; i++) {
+                  if (Object.keys(rawConfigs[2].layoutOptions[0])[i] == newfilename.split('/')[newfilename.split('/').length - 2])
+                    for (let p = 0; p < rawConfigs[2].layoutOptions[0][Object.keys(rawConfigs[2].layoutOptions[0])[i]].length; p++) {
+                      let namepartial = rawConfigs[2].layoutOptions[0][Object.keys(rawConfigs[2].layoutOptions[0])[i]][p].label
+                      if (name == namepartial) {
+
+                        checkfilename = true
+                      }
+                    }
                 }
               }
-            } else {
-
-              for (let i = 0; i < Object.keys(rawConfigs[2].layoutOptions[0]).length; i++) {
-                if (Object.keys(rawConfigs[2].layoutOptions[0])[i] == newfilename.split('/')[newfilename.split('/').length - 2])
-                  for (let p = 0; p < rawConfigs[2].layoutOptions[0][Object.keys(rawConfigs[2].layoutOptions[0])[i]].length; p++) {
-                    let namepartial = rawConfigs[2].layoutOptions[0][Object.keys(rawConfigs[2].layoutOptions[0])[i]][p].label
-                    if (name == namepartial) {
-
-                      checkfilename = true
-                    }
-                  }
-              }
-            }
 
 
-            if (checkfilename == true) {
-              //console.log('file already exists')
-              this.addNewFileLoading = false
-              this.$message({
-                showClose: true,
-                message: 'File already exists!!!',
-                type: 'error'
-              });
-            } else {
-              if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') == -1) {
-                return axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: newfilename + '.partial',
-                    text: ' ',
-                    type: 'file'
-                  })
-                  .then((res) => {
-                    this.newFileDialog = false
-                    this.addNewFileLoading = false
-                    this.formAddFile.filename = null
+              if (checkfilename == true) {
+                //console.log('file already exists')
+                this.addNewFileLoading = false
+                this.$message({
+                  showClose: true,
+                  message: 'File already exists!!!',
+                  type: 'error'
+                });
+              } else {
+                if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') == -1) {
+                  this.$store.state.updateStats = Math.random();
+                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: newfilename + '.partial',
+                      text: ' ',
+                      type: 'file'
+                    })
+                    .then((res) => {
+                      this.newFileDialog = false
+                      this.addNewFileLoading = false
+                      this.formAddFile.filename = null
 
-                    let temp = {
-                      value: name,
-                      label: name
-                    }
+                      let temp = {
+                        value: name,
+                        label: name
+                      }
 
-                    let checkValue = false;
-                    var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                    namefolder = namefolder[namefolder.length - 1];
+                      let checkValue = false;
+                      var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                      namefolder = namefolder[namefolder.length - 1];
 
-                    if (namefolder != 'Pages') {
-                      if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
-                        for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
-                          var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
-                          if ((obj.label) == name) {
-                            checkValue = true;
+                      if (namefolder != 'Pages') {
+                        if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
+                          for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
+                            var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
+                            if ((obj.label) == name) {
+                              checkValue = true;
+                            }
                           }
-                        }
-                        if (checkValue == true) {} else {
-                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+                          if (checkValue == true) {} else {
+                            this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
 
-                          // saveConfigFile
+                            // saveConfigFile
+                            this.saveConfigFile(folderUrl);
+                          }
+
+                        } else {
+                          this.globalConfigData[2].layoutOptions[0][namefolder] = [];
+                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
                           this.saveConfigFile(folderUrl);
                         }
-
-                      } else {
-                        this.globalConfigData[2].layoutOptions[0][namefolder] = [];
-                        this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
-                        this.saveConfigFile(folderUrl);
                       }
-                    }
 
 
-                  })
-                  .catch((e) => {
-                    //console.log(e)
-                  })
-              } else if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') != -1) {
-                return axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: newfilename + '.menu',
-                    text: ' ',
-                    type: 'file'
-                  })
-                  .then((res) => {
-                    this.newFileDialog = false
-                    this.addNewFileLoading = false
-                    this.formAddFile.filename = null;
+                    })
+                    .catch((e) => {
+                      //console.log(e)
+                    })
+                } else if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') != -1) {
+                  this.$store.state.updateStats = Math.random();
+                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: newfilename + '.menu',
+                      text: ' ',
+                      type: 'file'
+                    })
+                    .then((res) => {
+                      this.newFileDialog = false
+                      this.addNewFileLoading = false
+                      this.formAddFile.filename = null;
 
-                    let temp = {
-                      value: name,
-                      label: name
-                    }
+                      let temp = {
+                        value: name,
+                        label: name
+                      }
 
-                    let checkValue = false;
-                    var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                    namefolder = namefolder[namefolder.length - 1];
+                      let checkValue = false;
+                      var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                      namefolder = namefolder[namefolder.length - 1];
 
-                    if (namefolder != 'Pages') {
-                      if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
-                        for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
-                          var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
-                          if ((obj.label) == name) {
-                            checkValue = true;
+                      if (namefolder != 'Pages') {
+                        if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
+                          for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
+                            var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
+                            if ((obj.label) == name) {
+                              checkValue = true;
+                            }
                           }
-                        }
-                        if (checkValue == true) {} else {
-                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+                          if (checkValue == true) {} else {
+                            this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
 
-                          // saveConfigFile
+                            // saveConfigFile
+                            this.saveConfigFile(folderUrl);
+                          }
+
+                        } else {
+                          this.globalConfigData[2].layoutOptions[0][namefolder] = [];
+                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
                           this.saveConfigFile(folderUrl);
                         }
-
-                      } else {
-                        this.globalConfigData[2].layoutOptions[0][namefolder] = [];
-                        this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
-                        this.saveConfigFile(folderUrl);
                       }
-                    }
 
 
-                  })
-                  .catch((e) => {
-                    //console.log(e)
-                  })
-              } else if (newfilename.search('/Pages') != -1) {
-                return axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: newfilename + '.html',
-                    text: ' ',
-                    type: 'file'
-                  })
-                  .then((res) => {
+                    })
+                    .catch((e) => {
+                      //console.log(e)
+                    })
+                } else if (newfilename.search('/Pages') != -1) {
+                  this.$store.state.updateStats = Math.random();
+                  // this.$store.state.updateStats = 'PageUpdate';
+                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: newfilename + '.html',
+                      text: ' ',
+                      type: 'file'
+                    })
+                    .then((res) => {
 
 
-                    this.newFileDialog = false
-                    this.addNewFileLoading = false
-                    this.formAddFile.filename = null
+                      this.newFileDialog = false
+                      this.addNewFileLoading = false
+                      this.formAddFile.filename = null
 
-                    let temp = {
-                      value: name,
-                      label: name
-                    }
+                      let temp = {
+                        value: name,
+                        label: name
+                      }
 
-                    let checkValue = false;
-                    var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                    namefolder = namefolder[namefolder.length - 1];
+                      let checkValue = false;
+                      var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                      namefolder = namefolder[namefolder.length - 1];
 
-                    if (namefolder == 'Pages') {
-                      //// console.log('inside pages')
-                      var totpartial = []
-                      for (let k = 0; k < this.globalConfigData[2].layoutOptions[0].Layout.length; k++) {
-                        if (this.globalConfigData[2].layoutOptions[0].Layout[k].label == 'default') {
-                          //console.log('inside default layout');
-                          if (this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList.length > 0) {
-                            //// console.log('defaultList:',this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList)
-                            totpartial = JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList))
-                            //// console.log('found some default partial')
+                      if (namefolder == 'Pages') {
+                        //// console.log('inside pages')
+                        var totpartial = []
+                        for (let k = 0; k < this.globalConfigData[2].layoutOptions[0].Layout.length; k++) {
+                          if (this.globalConfigData[2].layoutOptions[0].Layout[k].label == 'default') {
+                            //console.log('inside default layout');
+                            if (this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList.length > 0) {
+                              //// console.log('defaultList:',this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList)
+                              totpartial = JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList))
+                              //// console.log('found some default partial')
 
-                          }
-                          //// console.log('totpartial:',totpartial);
-                          if (this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length > 0) {
+                            }
+                            //// console.log('totpartial:',totpartial);
+                            if (this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length > 0) {
 
-                            for (let j = 0; j < this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length; j++) {
-                              let checklayoutvalue = false;
-                              for (let r = 0; r < totpartial.length; r++) {
-                                //// console.log('totpartial[r]:',Object.keys(totpartial[r])[0])
-                                if (Object.keys(totpartial[r])[0] == this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]) {
-                                  checklayoutvalue = true;
-                                  totpartial[r][Object.keys(totpartial[r])[0]] = totpartial[r][Object.keys(totpartial[r])[0]].split('.')[0]
+                              for (let j = 0; j < this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length; j++) {
+                                let checklayoutvalue = false;
+                                for (let r = 0; r < totpartial.length; r++) {
+                                  //// console.log('totpartial[r]:',Object.keys(totpartial[r])[0])
+                                  if (Object.keys(totpartial[r])[0] == this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]) {
+                                    checklayoutvalue = true;
+                                    totpartial[r][Object.keys(totpartial[r])[0]] = totpartial[r][Object.keys(totpartial[r])[0]].split('.')[0]
+                                  }
                                 }
-                              }
-                              if (checklayoutvalue != true) {
-                                var obj = {}
-                                obj[this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]] = 'default'
-                                totpartial.push(obj);
-                              }
+                                if (checklayoutvalue != true) {
+                                  var obj = {}
+                                  obj[this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]] = 'default'
+                                  totpartial.push(obj);
+                                }
 
+                              }
                             }
                           }
                         }
-                      }
 
-                      var PageSettings = {
-                        "PageName": name + '.html',
-                        "PageSEOTitle": "",
-                        "PageSEOKeywords": "",
-                        "PageSEODescription": "",
-                        "PageLayout": "default",
-                        "PageCss": [],
-                        "PageExternalCss": [],
-                        "PageExternalJs": [],
-                        "PageMetaInfo": [],
-                        "PageMetacharset": 'UTF-8',
-                        "PageScripts": [],
-                        "PageStyles": [],
-                        "partials": totpartial
-                      };
+                        var PageSettings = {
+                          "PageName": name + '.html',
+                          "PageSEOTitle": "",
+                          "PageSEOKeywords": "",
+                          "PageSEODescription": "",
+                          "PageLayout": "default",
+                          "PageCss": [],
+                          "PageExternalCss": [],
+                          "PageExternalJs": [],
+                          "PageMetaInfo": [],
+                          "PageMetacharset": 'UTF-8',
+                          "PageScripts": [],
+                          "PageStyles": [],
+                          "partials": totpartial
+                        };
 
-                      this.globalConfigData[1].pageSettings.push((PageSettings))
-                      this.saveConfigFile(folderUrl);
-                    }
-                  })
-                  .catch((e) => {
-                    console.log(e)
-                  })
-              } else if (newfilename.search('/Layout') != -1) {
-                return axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: newfilename + '.layout',
-                    text: ' ',
-                    type: 'file'
-                  })
-                  .then((res) => {
-                    this.newFileDialog = false
-                    this.addNewFileLoading = false
-                    this.formAddFile.filename = null
-
-                    let temp = {
-                      value: name,
-                      label: name
-                    }
-
-                    let checkValue = false;
-                    var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                    namefolder = namefolder[namefolder.length - 1];
-
-                    if (namefolder != 'Pages') {
-                      if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
-                        for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
-                          var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
-                          if ((obj.label) == name) {
-                            checkValue = true;
-                          }
-                        }
-                        if (checkValue == true) {} else {
-                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
-
-                          // saveConfigFile
-                          this.saveConfigFile(folderUrl);
-                        }
-
-                      } else {
-                        this.globalConfigData[2].layoutOptions[0][namefolder] = [];
-                        this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
+                        this.globalConfigData[1].pageSettings.push((PageSettings))
                         this.saveConfigFile(folderUrl);
                       }
-                    }
+                    })
+                    .catch((e) => {
+                      console.log(e)
+                    })
+                } else if (newfilename.search('/Layout') != -1) {
+                  this.$store.state.updateStats = Math.random();
+                  return axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: newfilename + '.layout',
+                      text: ' ',
+                      type: 'file'
+                    })
+                    .then((res) => {
+                      this.newFileDialog = false
+                      this.addNewFileLoading = false
+                      this.formAddFile.filename = null
+
+                      let temp = {
+                        value: name,
+                        label: name
+                      }
+
+                      let checkValue = false;
+                      var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                      namefolder = namefolder[namefolder.length - 1];
+
+                      if (namefolder != 'Pages') {
+                        if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
+                          for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
+                            var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
+                            if ((obj.label) == name) {
+                              checkValue = true;
+                            }
+                          }
+                          if (checkValue == true) {} else {
+                            this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+
+                            // saveConfigFile
+                            this.saveConfigFile(folderUrl);
+                          }
+
+                        } else {
+                          this.globalConfigData[2].layoutOptions[0][namefolder] = [];
+                          this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
+                          this.saveConfigFile(folderUrl);
+                        }
+                      }
 
 
-                  })
-                  .catch((e) => {
-                    //console.log(e)
-                  })
+                    })
+                    .catch((e) => {
+                      //console.log(e)
+                    })
+                }
               }
-            }
 
-          } else {
-            // console.log('error submit!!');
-            return false;
-          }
-        });
-      // this.form.formName=''
-      // this.formAddFile.filename=''
-      } else{
-          this.newProjectFolderDialog = false;
-          this.fullscreenLoading = false;
-          this.$session.remove('username');
-          localStorage.removeItem('current_sub_id');
-          let location = psl.parse(window.location.hostname)
-          location = location.domain === null ? location.input : location.domain
-                        
-          Cookies.remove('auth_token' ,{domain: location});
-          Cookies.remove('email' ,{domain: location});
-          Cookies.remove('userDetailId' ,{domain: location}); 
-          Cookies.remove('subscriptionId' ,{domain: location}); 
-          this.$swal("You're Logged Out From System. Please login again!")
-          .then((value) => {
-            window.location = '/login'
+            } else {
+              // console.log('error submit!!');
+              return false;
+            }
           });
-        }
+        // this.form.formName=''
+        // this.formAddFile.filename=''
+        } else{
+            this.newProjectFolderDialog = false;
+            this.fullscreenLoading = false;
+            this.$session.remove('username');
+            localStorage.removeItem('current_sub_id');
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+                          
+            Cookies.remove('auth_token' ,{domain: location});
+            Cookies.remove('email' ,{domain: location});
+            Cookies.remove('userDetailId' ,{domain: location}); 
+            Cookies.remove('subscriptionId' ,{domain: location}); 
+            this.$swal("You're Logged Out From System. Please login again!")
+            .then((value) => {
+              window.location = '/login'
+            });
+          }
       },
       
      // async checknameexist(){
@@ -4459,13 +4466,13 @@
               let divappstart=''
               let divappend=''
               let dfscript=''
-              if(contentpartials.indexOf('datafieldgroup')>0){
+              if(contentpartials.indexOf('datafieldgroup')>0 || contentpartials.indexOf('datafieldtable')>0 ){
                 datadivscript= "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
                     "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
-                    "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
+                    "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n" 
                 divappstart='<div id="app">'
                 divappend='</div>'
-                dfscript="<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
+                dfscript="<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' + "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
               }
 
               let newContent = "<html>\n<head>\n" + tophead +
