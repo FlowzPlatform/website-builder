@@ -83,11 +83,11 @@
           <div class="col-md-12">
             <el-form ref="form1" :model="form" label-width="180px" :rules="rulesProjectSettings">
 
-              <el-form-item label="Repository Id:">
+              <el-form-item label="Website Id:">
                   <el-input v-model="newRepoId" :disabled="true"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Project name" prop="websitename">
+                <el-form-item label="Website name" prop="websitename">
                   <!-- <el-input v-model="websitename"></el-input> -->
                   <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
                     <el-button slot="append" @click="updateProjectName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
@@ -130,7 +130,7 @@
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
                 </el-form-item> -->
 
-                <el-form-item label="Favicon Logo">
+                <el-form-item label="Website Favicon Logo">
                   <div class="col6 valid">
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id=" ">Upload image</span>
@@ -144,17 +144,17 @@
                    <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
                 </el-form-item>
 
-                <el-form-item label="Project SEO Title">
+                <el-form-item label="Website SEO Title">
                   <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Project SEO Keywords">
+               <!--  <el-form-item label="Website SEO Keywords">
                   <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Project SEO Description">
+                <el-form-item label="Website SEO Description">
                   <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
-                </el-form-item>
+                </el-form-item> -->
 
             </el-form>
           </div>
@@ -1397,7 +1397,7 @@ export default {
 
   methods: {
     deletefaviconimage(){
-      this.form.brandLogoName='!!! No file uploaded !!!'
+      this.form.brandLogoName='!!!No file uploaded!!!'
     },
     linktocrm(){
       window.open('https://crm.'+config.domainkey);
@@ -2586,8 +2586,8 @@ export default {
         "BrandName": this.form.brandName,
         "BrandLogoName": this.form.brandLogoName,
         "ProjectSEOTitle": this.form.seoTitle,
-        "ProjectSEOKeywords": this.form.seoKeywords,
-        "ProjectSEODescription": this.form.seoDesc,
+        // "ProjectSEOKeywords": this.form.seoKeywords,
+        // "ProjectSEODescription": this.form.seoDesc,
         // "ProjectFaviconName": this.faviconName,
         "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid, "esUser":esuser,"virtualShopName":virtualShopName},
         "CrmSettingId":this.form.crmid
@@ -2922,24 +2922,25 @@ export default {
         await axios.get(config.baseURL + '/delete-publish-files', {}).then(async(response) => {
           console.log('deleted previous published files.')
         })
+   for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+      var tophead = '';
+      var endhead = '';
+      var topbody = '';
+      var endbody = '';
+      if(projectseotitle!=undefined && projectseotitle!=''){
+        SeoTitle=projectseotitle
+      }
+      if(ProjectFaviconName!=undefined&&ProjectFaviconName!=''&&ProjectFaviconName!='!!!No file uploaded!!!'){
 
-        for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
-          var tophead = '';
-          var endhead = '';
-          var topbody = '';
-          var endbody = '';
-          if (projectseotitle != undefined && projectseotitle != '') {
-            SeoTitle = projectseotitle
-          }
-          if (ProjectFaviconName != '') {
-            favicon = ' <link rel="icon" type="image/png" href="./favicon.' + ProjectFaviconName.split('.')[1] + '">'
-          }
-          // if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
-          //   favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
-          // }
-          if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
-            tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
-          }
+       favicon=' <link rel="icon" type="image/png" href="./favicon.'+ProjectFaviconName.split('.')[1]+'">'
+      }
+      // if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
+      //   favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+      // }
+        if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
+        tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
+      }
+
 
           if (metaInfo != undefined && metaInfo.length > 0) {
             for (let a = 0; a < metaInfo.length; a++) {
@@ -3333,8 +3334,7 @@ export default {
                     divappend = '</div>'
                   }
 
-                  let newContent = "<html>\n<head>\n" + tophead +
-                    "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
+              let newContent = "<html>\n<head>\n" + tophead +
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
@@ -3625,8 +3625,8 @@ export default {
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
         this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
         this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
-        this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
-        this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+        // this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
+        // this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
         this.assetsImages = this.settings[1].projectSettings[1].AssetImages;
