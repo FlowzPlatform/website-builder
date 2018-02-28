@@ -1,26 +1,5 @@
-// const baseURL = localStorage.getItem('baseURL');
+const GVbaseURL = localStorage.getItem('baseURL');
 // Reuse Component
-var folderUrl = localStorage.getItem("folderUrl");
-var useremail = localStorage.getItem("email");
-var userDetailId = localStorage.getItem("userDetailId");
-foldername = foldername[(foldername.length - 1)];
-
-let globalVariables = [];
-
-var globalVariablesSelect = []
-
-globalVariablesSelect.push({name: 'Select', value: ''});
-
-$.getJSON(configFileUrl, function(data) {
-  configData = data.configData;
-  globalVariables = configData[1].projectSettings[1].GlobalVariables;
-
-  for(var j = 0; j < globalVariables.length; j++){
-    let value = {name: globalVariables[j].variableId, value: globalVariables[j].variableId}
-    globalVariablesSelect.push(value);
-  }
-});
-
  grapesjs.plugins.add('global-variables-plugin', function(editor, options) {
   var bm = editor.BlockManager;
 
@@ -74,6 +53,32 @@ $.getJSON(configFileUrl, function(data) {
   var defaultModel = defaultType.model;
   var defaultView = defaultType.view;
   var traits;  
+
+  var folderUrl = localStorage.getItem("folderUrl");
+  var useremail = localStorage.getItem("email");
+  var userDetailId = localStorage.getItem("userDetailId");
+  let gvfoldername = folderUrl.split('/');
+  gvfoldername = gvfoldername[(gvfoldername.length - 1)];
+
+  console.log(folderUrl);
+
+  let globalVariables = [];
+
+  var globalVariablesSelect = []
+
+  globalVariablesSelect.push({name: 'Select', value: ''});
+
+  let configFileUrl = GVbaseURL + '/project-configuration/' + gvfoldername;
+
+  $.getJSON(configFileUrl, function(data) {
+    configData = data.configData;
+    globalVariables = configData[1].projectSettings[1].GlobalVariables;
+
+    for(var j = 0; j < globalVariables.length; j++){
+      let value = {name: globalVariables[j].variableId, value: globalVariables[j].variableId}
+      globalVariablesSelect.push(value);
+    }
+  });
 
   comps.addType('globalImage', {
     // Define the Model

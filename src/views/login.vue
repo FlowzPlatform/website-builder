@@ -387,7 +387,7 @@ export default {
     },
 
     goToLandingPage () {
-      this.$router.push('/');
+      window.location = '/';
     }
   },
   created () {

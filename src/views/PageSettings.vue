@@ -125,11 +125,11 @@
                          <div class="col-md-11">
                             <h3> JS Links </h3>
                          </div>
-                         <div style="float: right;" class="col-md-1">
+                         <!-- <div style="float: right;" class="col-md-1">
                             <el-tooltip class="item" effect="dark" content="To ProjectSetting links" placement="top-start">
                                <el-button type='info' icon="setting"></el-button>
                             </el-tooltip>
-                         </div>
+                         </div> -->
                       </div>
                       <hr>
                       <el-form ref="form" :model="form">

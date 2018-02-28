@@ -90,7 +90,7 @@ export default {
 
         axios.post(config.forgotPasswordUrl, {
           email : this.email,
-          url : config.frontEndUrl
+          url : config.forgotPasswordRedirectUrl
         })
         .then((res) => {
           if(res.status == 200 || res.status == 204){

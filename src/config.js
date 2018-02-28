@@ -21,6 +21,8 @@ if (process.env.NODE_ENV !== 'development') {
     ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
     registerUrl = 'https://api.'+domainkey+'/auth/api/setup';
     forgotPasswordUrl = 'https://api.' + domainkey + '/auth/api/forgetpassword';
+    forgotPasswordRedirectUrl = 'https://webbuilder.'+domainkey+'/reset-password';
+    resetPasswordUrl = 'https://api.' + domainkey + '/auth/api/resetpassword';
     userDetail = 'https://api.'+domainkey+'/auth/api/userdetails';
     socialUrl = 'https://api.'+domainkey+'/auth/api';
     subscriptionApi = 'https://api.'+domainkey+'/subscription/';
@@ -45,6 +47,8 @@ if (process.env.NODE_ENV !== 'development') {
     ldapUrl = 'https://api.flowzcluster.tk/auth/api/ldapauth';
     registerUrl = 'https://api.flowzcluster.tk/auth/api/setup';
     forgotPasswordUrl = 'https://api.flowzcluster.tk/auth/api/forgetpassword';
+    forgotPasswordRedirectUrl = 'https://localhost:8080/reset-password';
+    resetPasswordUrl = 'https://api.flowzcluster.tk/auth/api/resetpassword';
     userDetail = 'https://api.flowzcluster.tk/auth/api/userdetails';
     socialUrl = 'https://api.flowzcluster.tk/auth/api';
     subscriptionApi = 'https://api.flowzcluster.tk/subscription/';
@@ -68,6 +72,8 @@ module.exports = {
     ldapUrl: ldapUrl,
     registerUrl: registerUrl,
     forgotPasswordUrl: forgotPasswordUrl,
+    forgotPasswordRedirectUrl: forgotPasswordRedirectUrl,
+    resetPasswordUrl: resetPasswordUrl,
     userDetail: userDetail,
     socialUrl: socialUrl,
     initLdap: initLdap,
