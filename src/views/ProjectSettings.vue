@@ -83,11 +83,11 @@
           <div class="col-md-12">
             <el-form ref="form1" :model="form" label-width="180px" :rules="rulesProjectSettings">
 
-              <el-form-item label="Repository Id:">
+              <el-form-item label="Website Id:">
                   <el-input v-model="newRepoId" :disabled="true"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Project name" prop="websitename">
+                <el-form-item label="Website name" prop="websitename">
                   <!-- <el-input v-model="websitename"></el-input> -->
                   <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
                     <el-button slot="append" @click="updateProjectName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
@@ -130,7 +130,7 @@
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
                 </el-form-item> -->
 
-                <el-form-item label="Favicon Logo">
+                <el-form-item label="Website Favicon Logo">
                   <div class="col6 valid">
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id=" ">Upload image</span>
@@ -144,15 +144,15 @@
                    <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
                 </el-form-item>
 
-                <el-form-item label="Project SEO Title">
+                <el-form-item label="Website SEO Title">
                   <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Project SEO Keywords">
+                <el-form-item label="Website SEO Keywords">
                   <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Project SEO Description">
+                <el-form-item label="Website SEO Description">
                   <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
                 </el-form-item>
 
@@ -1394,7 +1394,7 @@ export default {
 
   methods: {
     deletefaviconimage(){
-      this.form.brandLogoName='!!! No file uploaded !!!'
+      this.form.brandLogoName='!!!No file uploaded!!!'
     },
     linktocrm(){
       window.open('https://crm.'+config.domainkey);
@@ -2855,7 +2855,8 @@ export default {
       if(projectseotitle!=undefined && projectseotitle!=''){
         SeoTitle=projectseotitle
       }
-      if(ProjectFaviconName!=''){
+      if(ProjectFaviconName!=undefined&&ProjectFaviconName!=''&&ProjectFaviconName!='!!!No file uploaded!!!'){
+
        favicon=' <link rel="icon" type="image/png" href="./favicon.'+ProjectFaviconName.split('.')[1]+'">'
       }
       // if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
@@ -3259,7 +3260,6 @@ export default {
                   }
 
               let newContent = "<html>\n<head>\n" + tophead +
-                    "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +

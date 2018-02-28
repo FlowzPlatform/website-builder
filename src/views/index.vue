@@ -21,7 +21,7 @@
               :value="item.value">
             </el-option>
             </el-select>
-            <el-tree v-loading="treeLoading" element-loading-text="Loading..." v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" highlight-current></el-tree>
+            <el-tree v-loading="treeLoading" element-loading-text="Loading..." v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current=true></el-tree>
           </div>
         </nav>
         <!-- /#sidebar-wrapper -->
@@ -889,6 +889,8 @@
       // Selecting any node in Listing tree 
       handleNodeClick(data) {
         // Store file/folder path
+        // console.log('handle click:',data)
+        // console.log('directoryTree',this.directoryTree)
         this.taburl = this.$store.state.fileUrl;
 
         this.$store.state.fileUrl = data.path;
@@ -2765,7 +2767,7 @@
                                         "RepositoryId": this.newRepoId,
                                         "ProjectName": projectRepoName,
                                         "BrandName": '',
-                                        "BrandLogoName": '',
+                                        "BrandLogoName": '!!!No file uploaded!!!',
                                         "ProjectLayout": '',
                                         "ProjectHeader": '',
                                         "ProjectFooter": '',
@@ -2782,7 +2784,10 @@
                                         "GlobalCssVariables": [],
                                         "ProjectExternalCss": [],
                                         "ProjectExternalJs": [],
-                                        "ProjectMetaInfo": [],
+                                        "ProjectMetaInfo": [{
+                                        "content":  "width=device-width, initial-scale=1" ,
+                                        "name":  "viewport"
+                                        }],
                                         "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
@@ -4039,7 +4044,7 @@
           var projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
           var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles;
           var projectseotitle = self.globalConfigData[1].projectSettings[0].ProjectSEOTitle;
-          var projectfaviconhref = self.globalConfigData[1].projectSettings[0].ProjectFaviconhref
+          var projectfaviconhref = self.globalConfigData[1].projectSettings[0].BrandLogoName
           var tophead = '';
           var endhead = '';
           var topbody = '';
@@ -4056,8 +4061,8 @@
           if (projectseotitle != undefined && projectseotitle != '') {
             SeoTitle = projectseotitle
           }
-          if (projectfaviconhref != undefined && projectfaviconhref != '') {
-            favicon = '<link rel="icon" type="image/png/gif" href="' + projectfaviconhref + '">'
+          if (projectfaviconhref != undefined && projectfaviconhref != '' && projectfaviconhref!='!!!No file uploaded!!!') {
+            favicon = '<link rel="icon" type="image/png" href="' + projectfaviconhref + '">'
           }
 
           if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
@@ -4476,7 +4481,6 @@
               }
 
               let newContent = "<html>\n<head>\n" + tophead +
-                    "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />\n" +
                     "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                     '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                     "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
@@ -6427,6 +6431,7 @@
 </style>
 
 <style>
+/*.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{background-color: #9e9e9e8f;}*/
   .el-tabs__new-tab {
     display: none !important;
   }
@@ -6437,7 +6442,7 @@
   .row {
     padding: 0px !important;
   }
-  el-tab-pane {
+  .el-tab-pane {
     font-size: 18px !important;
   }
 
