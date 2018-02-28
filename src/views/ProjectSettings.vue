@@ -75,7 +75,7 @@
       <!-- Project Settings Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Project Settings</a>
+              <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Website Settings</a>
           </div>
       </div>
       <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
@@ -162,7 +162,7 @@
 
         <div class="row">
           <div class="col-md-12">
-            <h3>Project Details</h3>
+            <h3>Website Details</h3>
             <vue-json-editor style="background-color: #fff; margin-top: 2%;" v-model="projectDetailsJson" :showBtns="false" @json-change="onJsonChange"></vue-json-editor>
           </div>
         </div>
