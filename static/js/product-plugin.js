@@ -7,112 +7,116 @@
 const baseURL = localStorage.getItem('baseURL');
 // console.log("URL: " + localStorage.getItem('baseURL'));
 
-// Reuse Component
-var folderUrl = localStorage.getItem("folderUrl");
-var useremail = localStorage.getItem("email");
-var userDetailId = localStorage.getItem("userDetailId");
-let storedTemplates;
-let configData;
-let storedTemplates_data
-let foldername = folderUrl.split('/');
-foldername = foldername[(foldername.length - 1)];
 
-let urlVariables = [];
-let urlVarValue = [];
-let menuOptions = [];
-var menuNames = [];
-
-let partialOptions = {};
-
-urlVarValue.push({ name: 'Select', value: '' });
-menuNames.push({ name: 'Select', value: '' });
-
-let configFileUrl = baseURL + '/project-configuration/' + foldername;
-
-$.getJSON(configFileUrl, function(data) {
-    configData = data.configData;
-    urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
-    menuOptions = configData[2].layoutOptions[0].Menu;
-    storedTemplates = Object.keys(configData[2].layoutOptions[0]);
-
-    //var partialOptions = {};
-
-    for (var j = 0; j < menuOptions.length; j++) {
-        let value = { name: menuOptions[j].label, value: menuOptions[j].label }
-        menuNames.push(value);
-    }
-
-    for (var j = 0; j < urlVariables.length; j++) {
-
-        let urlHeaders = '';
-
-        for (var jj = 0; jj < urlVariables[j].urlHeaderVariables.length; jj++) {
-            if (jj == (urlVariables[j].urlHeaderVariables.length - 1)) {
-                urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue;
-            } else {
-                urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue + '" ';
-            }
-
-        }
-
-        // console.log(urlVariables[j].finalvalue + '" ' + urlHeaders);
-
-        let value = { name: urlVariables[j].urlId, value: urlVariables[j].finalvalue + '" ' + urlHeaders };
-
-        urlVarValue.push(value);
-    }
-
-    /*
-    for (var i = 0; i < storedTemplates.length; i++) {
-        if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
-            storedTemplates = storedTemplates.splice(i, 1)
-        }
-    }
-
-    for (var i = 0; i <= storedTemplates.length - 1; i++) {
-        let resp2 = []
-        $.getJSON(configFileUrl, function(data) {
-            configData = data.configData;
-
-
-
-            // console.log('ReUseVue co2nfigData:', configData);
-            storedTemplates = Object.keys(configData[2].layoutOptions[0]);
-            for (let index = 0; index < storedTemplates.length; index++) {
-                let data_ = storedTemplates[index]
-                console.log('==============');
-                console.log(storedTemplates[index]);
-                for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
-                    if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
-                        //console.log(11111111);
-                        if (configData[2].layoutOptions[0][data_].length >= 2) {
-                            console.log(2222);
-                            for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
-                                if (j == 0) {
-                                    partialOptions[storedTemplates[index]] = [{
-                                        'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
-                                    }]
-                                } else {
-                                    partialOptions[storedTemplates[index]].push({
-                                        'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
-                                    })
-                                }
-                            }
-                        } else {
-                            partialOptions[storedTemplates[index]] = [{
-                                'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
-                            }]
-                        }
-                    }
-
-                }
-            }
-            console.log('loop end..', partialOptions);
-        });
-    }  */
-});
 
 grapesjs.plugins.add('product-plugin', function(editor, options) {
+
+    // Reuse Component
+    var folderUrl = localStorage.getItem("folderUrl");
+    var useremail = localStorage.getItem("email");
+    var userDetailId = localStorage.getItem("userDetailId");
+    let storedTemplates;
+    let configData;
+    let storedTemplates_data
+    let foldername = folderUrl.split('/');
+    foldername = foldername[(foldername.length - 1)];
+
+    let urlVariables = [];
+    let urlVarValue = [];
+    let menuOptions = [];
+    var menuNames = [];
+
+    let partialOptions = {};
+
+    urlVarValue.push({ name: 'Select', value: '' });
+    menuNames.push({ name: 'Select', value: '' });
+
+    let configFileUrl = baseURL + '/project-configuration/' + foldername;
+
+    $.getJSON(configFileUrl, function(data) {
+        configData = data.configData;
+        urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
+        menuOptions = configData[2].layoutOptions[0].Menu;
+        storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+
+        //var partialOptions = {};
+
+        for (var j = 0; j < menuOptions.length; j++) {
+            let value = { name: menuOptions[j].label, value: menuOptions[j].label }
+            menuNames.push(value);
+        }
+
+        for (var j = 0; j < urlVariables.length; j++) {
+
+            let urlHeaders = '';
+
+            for (var jj = 0; jj < urlVariables[j].urlHeaderVariables.length; jj++) {
+                if (jj == (urlVariables[j].urlHeaderVariables.length - 1)) {
+                    urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue;
+                } else {
+                    urlHeaders += urlVariables[j].urlHeaderVariables[jj].headerName + '="' + urlVariables[j].urlHeaderVariables[jj].headerValue + '" ';
+                }
+
+            }
+
+            // console.log(urlVariables[j].finalvalue + '" ' + urlHeaders);
+
+            let value = { name: urlVariables[j].urlId, value: urlVariables[j].finalvalue + '" ' + urlHeaders };
+
+            urlVarValue.push(value);
+        }
+
+        
+        for (var i = 0; i < storedTemplates.length; i++) {
+            if (storedTemplates[i] == 'Layout' || storedTemplates[i] == 'pages' || storedTemplates[i] == '.git' || storedTemplates[i] == 'main-files' || storedTemplates[i] == 'assets') {
+                storedTemplates = storedTemplates.splice(i, 1)
+            }
+        }
+
+        for (var i = 0; i <= storedTemplates.length - 1; i++) {
+            let resp2 = []
+            $.getJSON(configFileUrl, function(data) {
+                configData = data.configData;
+
+
+
+                // console.log('ReUseVue co2nfigData:', configData);
+                storedTemplates = Object.keys(configData[2].layoutOptions[0]);
+                for (let index = 0; index < storedTemplates.length; index++) {
+                    let data_ = storedTemplates[index]
+                    console.log('==============');
+                    console.log(storedTemplates[index]);
+                    for (let index2 = 0; index2 < configData[2].layoutOptions[0][data_].length; index2++) {
+                        if (storedTemplates[index].length != 0 && storedTemplates[index] != "Menu" && storedTemplates[index] != "Layout") {
+                            //console.log(11111111);
+                            if (configData[2].layoutOptions[0][data_].length >= 2) {
+                                console.log(2222);
+                                for (let j = 0; j < configData[2].layoutOptions[0][data_].length; j++) {
+                                    if (j == 0) {
+                                        partialOptions[storedTemplates[index]] = [{
+                                            'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
+                                        }]
+                                    } else {
+                                        partialOptions[storedTemplates[index]].push({
+                                            'name': configData[2].layoutOptions[0][data_][j].value + '.partial'
+                                        })
+                                    }
+                                }
+                            } else {
+                                partialOptions[storedTemplates[index]] = [{
+                                    'name': configData[2].layoutOptions[0][data_][index2].value + '.partial'
+                                }]
+                            }
+                        }
+
+                    }
+                }
+                console.log('loop end..', partialOptions);
+            });
+        }  
+    });
+
+
     var bm = editor.BlockManager;
 
     // bm.add('scriptingTag', {
