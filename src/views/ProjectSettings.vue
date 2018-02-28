@@ -148,13 +148,13 @@
                   <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Website SEO Keywords">
+               <!--  <el-form-item label="Website SEO Keywords">
                   <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
                 </el-form-item>
 
                 <el-form-item label="Website SEO Description">
                   <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
-                </el-form-item>
+                </el-form-item> -->
 
             </el-form>
           </div>
@@ -2559,8 +2559,8 @@ export default {
         "BrandName": this.form.brandName,
         "BrandLogoName": this.form.brandLogoName,
         "ProjectSEOTitle": this.form.seoTitle,
-        "ProjectSEOKeywords": this.form.seoKeywords,
-        "ProjectSEODescription": this.form.seoDesc,
+        // "ProjectSEOKeywords": this.form.seoKeywords,
+        // "ProjectSEODescription": this.form.seoDesc,
         // "ProjectFaviconName": this.faviconName,
         "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid, "esUser":esuser,"virtualShopName":virtualShopName},
         "CrmSettingId":this.form.crmid
@@ -3596,8 +3596,8 @@ export default {
         this.form.brandName = this.settings[1].projectSettings[0].BrandName;
         this.form.brandLogoName = this.settings[1].projectSettings[0].BrandLogoName;
         this.form.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
-        this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
-        this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+        // this.form.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
+        // this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
         this.assetsImages = this.settings[1].projectSettings[1].AssetImages;
