@@ -168,7 +168,7 @@
         </div>
 
       </div>
-      <!-- Project Settings section ends
+      <!-- Project Settings section ends -->
 
       <!-- Plugins Section -->
       <div class="collapsingDivWrapper row">
@@ -245,7 +245,7 @@
 
             <div class="row" style="margin-bottom: 15px; ">
               <div class="col-md-12">
-                <el-button icon="upload2" @click="uploadAssetImage()">Upload</el-button>
+                <el-button icon="upload2" @click="uploadAssetImage()" :loading="uploadAssetImageLoader">Upload</el-button>
               </div>
             </div>
 
@@ -342,12 +342,13 @@
                         <!-- Image upload Button -->
                         <div class="col-md-1" style="padding-left: 5px">
                           <el-tooltip content="Upload Image" placement="top">
-                            <div class="file-upload">
+                            <!-- <div class="file-upload">
                                 <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label">
                                   <i class="fa fa-upload"></i>
                                 </label>
                                 <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
-                            </div>
+                            </div> -->
+                            <el-button type="primary" icon="upload" @click="globalImageUploading(index, $event)" :loading="uploadGlobalImageButtonLoader"></el-button>
                           </el-tooltip>
                         </div>
 
@@ -1155,7 +1156,9 @@ export default {
       // isProjectDetailsJsonUpdated: false,
       projectPublicUrl: '',
       isPrimaryRole: false,
-      vshopcategory: []
+      vshopcategory: [],
+      uploadGlobalImageButtonLoader: false,
+      uploadAssetImageLoader: false
     }
   },
   components: {
@@ -1412,14 +1415,20 @@ export default {
     },
 
     uploadAssetImage() {
+      this.uploadAssetImageLoader = true;
       var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
 
       fsClient.pick({
-        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","video","audio","customsource"]
+        accept: 'image/*',
+        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"]
       }).then( (response) => {
+        this.uploadAssetImageLoader = false;
         // declare this function to handle response
         this.assetsImages.push(response.filesUploaded[0].url);
         this.saveProjectSettings();
+      }).catch( (error) => {
+        console.log(error);
+        this.uploadAssetImageLoader = false;
       });
 
     },
@@ -1443,41 +1452,60 @@ export default {
 
     async globalImageUploading(currentImageVariableIndex, file) {
 
-      this.imageInputIsDisabled = true;
+      // this.imageInputIsDisabled = true;
 
-      var fileParts = file.target.value.split('\\');
-      var imageName = fileParts[fileParts.length-1];
+      // var fileParts = file.target.value.split('\\');
+      // var imageName = fileParts[fileParts.length-1];
 
-      var scope = this;
+      // var scope = this;
 
-      var globalFileData = '';
-      // readFile
-      var reader = new FileReader();
-      reader.readAsDataURL(file.target.files[0]);
-      reader.onload = await function(e) {
-          $('[name = '+currentImageVariableIndex+']').attr('src', e.target.result);
-          // browser completed reading file - display it
-          globalFileData = e.target.result;
+      // var globalFileData = '';
+      // // readFile
+      // var reader = new FileReader();
+      // reader.readAsDataURL(file.target.files[0]);
+      // reader.onload = await function(e) {
+      //     $('[name = '+currentImageVariableIndex+']').attr('src', e.target.result);
+      //     // browser completed reading file - display it
+      //     globalFileData = e.target.result;
 
-          axios.post( config.baseURL + '/image-upload', {
-              filename : scope.folderUrl + '/public/assets/' + imageName,
-              text : globalFileData,
-              type : 'file'
-          })
-          .then((res) => {
-            //console.log(res.data);
-          })
-          .catch((e) => {
-            //console.log(e)
-          })
-      };
+      //     axios.post( config.baseURL + '/image-upload', {
+      //         filename : scope.folderUrl + '/public/assets/' + imageName,
+      //         text : globalFileData,
+      //         type : 'file'
+      //     })
+      //     .then((res) => {
+      //       //console.log(res.data);
+      //     })
+      //     .catch((e) => {
+      //       //console.log(e)
+      //     })
+      // };
 
-      this.globalVariables[currentImageVariableIndex].variableValue = imageName;
-      this.globalVariables[currentImageVariableIndex].isImageUrl = false;
+      // this.globalVariables[currentImageVariableIndex].variableValue = imageName;
+      // this.globalVariables[currentImageVariableIndex].isImageUrl = false;
+
+      this.uploadGlobalImageButtonLoader = true;
+
+      var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
+
+      fsClient.pick({
+        accept: 'image/*',
+        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"]
+      }).then( (response) => {
+        // declare this function to handle response
+        // this.assetsImages.push(response.filesUploaded[0].url);
+        // this.saveProjectSettings();
+        this.globalVariables[currentImageVariableIndex].variableValue = response.filesUploaded[0].url;
+        this.uploadGlobalImageButtonLoader = false;
+      }).catch( (error) => {
+        console.log(error);
+        this.uploadGlobalImageButtonLoader = false;
+      });
+
     },
 
     addNewVariable() {
-      let newVariable = { variableId: '', variableType: '', variableTitle: '', variableValue: '' , isImageUrl: true};
+      let newVariable = { variableId: '', variableType: '', variableTitle: '', variableValue: '' };
       this.globalVariables.push(newVariable);
       this.imageInputIsDisabled = false;
     },
@@ -1729,8 +1757,7 @@ export default {
               variableId: key[0],
               variableType: 'text',
               variableTitle: '',
-              variableValue: value[0],
-              isImageUrl: true
+              variableValue: value[0]
             }
 
             this.globalVariables.push(newVariable);
@@ -3513,7 +3540,9 @@ export default {
 
         this.commitMessage = 'Publish - ' + utcDate;
 
-        this.commitProject();
+        await this.commitProject();
+
+        this.init();
 
       } else {
         this.newProjectFolderDialog = false;
@@ -3536,9 +3565,9 @@ export default {
           domain: location
         });
         this.$swal("You're Logged Out From System. Please login again!")
-          .then((value) => {
-            window.location = '/login'
-          });
+        .then((value) => {
+          window.location = '/login'
+        });
       }
     },
 
@@ -3641,18 +3670,18 @@ export default {
 
       // replace all image tag source with index as name attribute to get the image file preview
 
-      for (var i = 0; i < this.globalVariables.length; i++){
-        if(this.globalVariables[i].variableType == 'image'){
-          let _imageIndex = i;
-          axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/public/assets/' + this.globalVariables[i].variableValue, {
-          }).then(response => {
-            $('[name = ' + _imageIndex + ']').attr('src', response.data);
-          }).catch(error => {
-            //console.log("Some error occured while fetching image: ", error);
-          });
+      // for (var i = 0; i < this.globalVariables.length; i++){
+      //   if(this.globalVariables[i].variableType == 'image'){
+      //     let _imageIndex = i;
+      //     axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/public/assets/' + this.globalVariables[i].variableValue, {
+      //     }).then(response => {
+      //       $('[name = ' + _imageIndex + ']').attr('src', response.data);
+      //     }).catch(error => {
+      //       //console.log("Some error occured while fetching image: ", error);
+      //     });
 
-        }
-      }
+      //   }
+      // }
 
       // Get all commits list
       let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
