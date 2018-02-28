@@ -2927,6 +2927,20 @@
                   //console.log(e)
                 })
 
+                // Create entry in configdata-history table
+                await axios.post(config.baseURL + '/configdata-history', {
+                    configData: repoSettings,
+                    commitSHA: SHA,
+                    websiteName: projectRepoName,
+                    userId: Cookies.get('userDetailId')
+                })
+                .then(function (response) {
+                    console.log('Initial config data saved in configdata-history. ', response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
 
                 this.fullscreenLoading = false;
                 let self = this;
