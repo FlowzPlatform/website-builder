@@ -514,23 +514,25 @@ export default {
                     var _varValue = self.globalVariables[i].variableValue;
 
                     if(($('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').length > 0)){
+
+                        $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', _varValue);
                         
-                        // Get all local images
-                        if(self.globalVariables[i].isImageUrl == true){
-                            //console.log('Image is URL link.');
-                            $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', _varValue);
-                        } else {
-                            let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + _varValue, {
-                            })
-                            .then((res) => {
-                                // If image is present in assets folder
-                                //console.log('Image found in /assets folder.');
-                                $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', res.data);
-                            })
-                            .catch((e) => {
-                                //console.log(e);
-                            }) 
-                        }
+                        // // Get all local images
+                        // if(self.globalVariables[i].isImageUrl == true){
+                        //     //console.log('Image is URL link.');
+                        //     $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', _varValue);
+                        // } else {
+                        //     let getImage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + _varValue, {
+                        //     })
+                        //     .then((res) => {
+                        //         // If image is present in assets folder
+                        //         //console.log('Image found in /assets folder.');
+                        //         $('.gjs-frame').contents().find('body [data-global-id="' + _varId + '"]').children('img').attr('src', res.data);
+                        //     })
+                        //     .catch((e) => {
+                        //         //console.log(e);
+                        //     }) 
+                        // }
                       
                     } 
                     break;
