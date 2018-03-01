@@ -126,9 +126,7 @@
         },
         methods : {
             capitalize (str) {
-                console.log("str before",str)
-                str = str[0].toUpperCase() + str.slice(1)
-                console.log("str after",str)                
+                str = str[0].toUpperCase() + str.slice(1)               
                 return str;
             },
             show (index) {
