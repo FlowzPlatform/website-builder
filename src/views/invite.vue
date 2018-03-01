@@ -68,9 +68,12 @@
     import 'iview/dist/styles/iview.css';
     import locale from 'iview/dist/locale/en-US';
     Vue.use(iView, { locale });
+
+    import psl from 'psl';
+    import expandInviteRow from './own_assigns.vue';
     
    export default {
-        components: { expandRow },
+        components: { expandRow, expandInviteRow },
         data() {
             return {
                 options: '',
@@ -89,32 +92,25 @@
                 assigned_Arr4 : [],
                 columns2: [
                     {
+                        type: 'expand',
+                        width: 50,
+                        render: (h, params) => {
+                           //return 
+                           return h(expandInviteRow, {
+                               props: {
+                                    row: params.row
+                                }
+                               //'Show role and model here'
+                            })
+                        }
+                    },
+                    {
                         title: 'Subscription Name',
                         key: 'name'
                     },
                     {
                         title: 'Subscription Id',
                         key: 'subscriptionId'
-                    },
-                    {
-                        title: 'Module',
-                        key: 'role',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('p', this.capitalize(Object.keys(params.row.role)[0]))
-                            ]);
-                        }
-                    },
-                    {
-                        title: 'Role',
-                        key: 'role',
-                        render: (h, params) => {
-                            return h('div', [
-                                //console.log(params)
-                                //let obj= Object.keys(params.row.role);
-                                h('strong',this.capitalize(params.row.role[Object.keys(params.row.role)]))
-                            ]);
-                        }
                     },
                     {
                         title : 'Assigned By' ,
@@ -246,9 +242,7 @@
        
         methods: {
             capitalize (str) {
-                console.log("str before",str)
-                str = str[0].toUpperCase() + str.slice(1)
-                console.log("str after",str)                
+                str = str[0].toUpperCase() + str.slice(1)             
                 return str;
             },
             async getHistory(){
@@ -387,9 +381,26 @@
                         }
                     })
                     .catch(function(error) {
-                        self.loading = false
-                        console.log('error', error.response)
-                        self.$message.warning("Something went wrong , please try again later ");
+                        self.loading = false;
+                        if(error.response.status == 401){
+                            let location = psl.parse(window.location.hostname)
+                            location = location.domain === null ? location.input : location.domain
+                            
+                            Cookies.remove('auth_token' ,{domain: location}) 
+                            Cookies.remove('subscriptionId' ,{domain: location}) 
+                            self.$store.commit('logout', self);
+                            
+                            self.$router.push({
+                                name: 'login'
+                            });
+                        }else if(error.response.status == 403){
+                            self.$Notice.error(
+                                {duration:0, 
+                                title: error.response.statusText,
+                                desc:error.response.data.message+'. Please <a href="'+config.default.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'}
+                                );
+                        
+                        }
                     })
                 }
                 
