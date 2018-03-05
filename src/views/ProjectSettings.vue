@@ -205,7 +205,7 @@
         <div class="row">
           <div class="col-md-12" align="right" style="margin-bottom: 10px;">
             <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
-              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText" type="warning" icon="time" :disabled="refreshDisabled">Refresh</el-button>
+              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time" :disabled="refreshDisabled">Refresh</el-button>
             </el-tooltip>
             <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
               <el-button size="small" type="primary">Click to upload</el-button>
@@ -1896,7 +1896,7 @@ export default {
       // Call Listings API and get Tree
       await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '/' + this.repoName, {})
         .then(async(res) => {
-          console.log(res);
+          // console.log(res);
           this.refreshPluginsLoading = false;
 
           let directoryListing = res.data.children;
