@@ -80,11 +80,11 @@
               </el-dialog>
 
             <!-- New Website Project Dialog if it's not dashboard page -->
-            <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
+            <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
               <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                 <el-form-item prop="projectName">
                   <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
-                  <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                  <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Website Name"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -116,7 +116,7 @@
                 </el-form-item>
               </el-form>
               <span slot="footer" class="dialog-footer">
-                  <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
+                  <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Website</el-button>
               </span>
             </el-dialog>
           </div>
@@ -149,11 +149,11 @@
               </el-dialog>
 
 
-              <el-dialog title="Project Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
+              <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
                     <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
-                    <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Project Name"></el-input>
+                    <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Website Name"></el-input>
                   </el-form-item>
 
                   <el-form-item>
@@ -185,7 +185,7 @@
                   </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Project</el-button>
+                    <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Website</el-button>
                 </span>
               </el-dialog>
             </div>
@@ -322,9 +322,9 @@
   // New Project creation validator
   let checkProjectName = (rule, value, callback) => {
       if (!value) {
-          return callback(new Error('Please Enter Project Name.'));
+          return callback(new Error('Please Enter Website Name.'));
       }else if(!(/^[a-z0-9A-Z]+$/i.test(value))){
-          return callback(new Error('Please Enter valid Project Name. (Project name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
+          return callback(new Error('Please Enter valid Website Name. (Project name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
       }else{
           
           return callback();
@@ -2953,7 +2953,7 @@
                 setTimeout(function(){
                   self.$message({
                     showClose: true,
-                    message: 'Project Created.',
+                    message: 'Website Created.',
                     type: 'success'
                   });
                 },500); 
