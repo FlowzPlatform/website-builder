@@ -92,7 +92,7 @@
         <div class="col-md-12">
           <div class="creative-table">
             <div class="table-title ">
-              <h4>Project Details</h4>
+              <h4>Website Details</h4>
               <p>Other important Project Details</p>
             </div>
             <div class="table-body">
@@ -106,15 +106,15 @@
                 <tbody>
                   <!-- {{tablePagesData}} -->
                   <tr>
-                    <td>Project SEO Title:</td>
+                    <td>Website SEO Title:</td>
                     <td><a id="seoTitle" data-title="Project SEO Title">{{seoTitle}}</a></td>
                   </tr>
                   <tr>
-                    <td>Project SEO Keywords:</td>
+                    <td>Website SEO Keywords:</td>
                     <td><a id="seoKeywords" data-title="Project SEO Keywords">{{seoKeywords}}</a></td>
                   </tr>
                   <tr>
-                    <td>Project SEO Description:</td>
+                    <td>Website SEO Description:</td>
                     <td><a id="seoDesc" data-type="textarea" data-pk="1">{{seoDesc}}</a></td>
                   </tr>
                 </tbody>
@@ -129,8 +129,8 @@
         <div class="col-md-12">
           <div class="creative-table">
             <div class="table-title title-style-2">
-              <h4>Project Commits</h4>
-              <p>List of your project revisions</p>
+              <h4>Website Commits</h4>
+              <p>List of your Website revisions</p>
             </div>
             <div class="table-body">
               <el-table

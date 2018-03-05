@@ -6,7 +6,7 @@
 	        <div class="creative-table">
 	          <div class="table-title title-style-3">
 	            <h4>Layout List</h4>
-	            <p>Project Name: {{repoName}}</p>
+	            <p>Website Name: {{repoName}}</p>
 	          </div>
 	          <div class="table-body">
 	            <table class="table table-hover">
