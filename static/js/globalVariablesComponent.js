@@ -60,7 +60,7 @@ const GVbaseURL = localStorage.getItem('baseURL');
   let gvfoldername = folderUrl.split('/');
   gvfoldername = gvfoldername[(gvfoldername.length - 1)];
 
-  console.log(folderUrl);
+  // console.log(folderUrl);
 
   let globalVariables = [];
 

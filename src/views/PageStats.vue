@@ -6,7 +6,7 @@
 	        <div class="creative-table">
 	          <div class="table-title title-style-2">
 	            <h4>Page List</h4>
-	            <p>Project Name: {{repoName}}</p>
+	            <p>Website Name: {{repoName}}</p>
 	          </div>
 	          <div class="table-body">
               <div class="table-responsive">
