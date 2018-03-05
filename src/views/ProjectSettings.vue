@@ -30,7 +30,7 @@
       <!-- <el-button type="info" size="small" @click="publishWebsite = true" >Publish Website</el-button> -->
 
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
-        <el-button type="warning" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
+        <el-button type="info" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
       </el-tooltip>
     </div>
 
@@ -56,14 +56,14 @@
                   <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
                 <br>
                 <div style="margin-top: 15px;">
-                  <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>
+                  <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Default Publish</el-button>
                 </div>
               </div>
 
               <div class="col-md-12" v-else>
                 <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
                 <div style="margin-top: 15px;">
-                  <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
+                  <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
                 </div>
               </div>
             </div>
@@ -133,7 +133,7 @@
                 <el-form-item label="Website Favicon Logo">
                   <div class="col6 valid">
                     <label for="upload-validation" class="brandLogoUploadLabel">
-                      <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id=" ">Upload image</span>
+                      <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label>
                     <span><b>Current file:</b><i> {{form.brandLogoName}}</i></span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
 
@@ -184,13 +184,19 @@
               <hr>
               <div class="row">
                 <div class="col-md-4">
-                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button>
+                  <img src="http://placehold.it/350x150?text=Template%201" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
+                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                 </div>
                 <div class="col-md-4">
-                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web2')">Template 2</button>
+                  <img src="http://placehold.it/350x150?text=Template%202" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
+                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web2')">Template 2</button> -->
                 </div>
                 <div class="col-md-4">
-                  <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web3')">Template 3</button>
+                  <img src="http://placehold.it/350x150?text=Template%203" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
+                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web3')">Template 3</button> -->
                 </div>
               </div>
             </div>
@@ -199,7 +205,7 @@
         <div class="row">
           <div class="col-md-12" align="right" style="margin-bottom: 10px;">
             <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
-              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" v-loading.fullscreen.lock="fullscreenLoading" type="warning" icon="time">Refresh</el-button>
+              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText" type="warning" icon="time" :disabled="refreshDisabled">Refresh</el-button>
             </el-tooltip>
             <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
               <el-button size="small" type="primary">Click to upload</el-button>
@@ -1158,7 +1164,9 @@ export default {
       isPrimaryRole: false,
       vshopcategory: [],
       uploadGlobalImageButtonLoader: false,
-      uploadAssetImageLoader: false
+      uploadAssetImageLoader: false,
+      refreshDisabled: false,
+      loadingText: ''
     }
   },
   components: {
@@ -1813,7 +1821,7 @@ export default {
         // let foldername = folderUrl.split('/');
         // foldername = foldername[6];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
         if(rethinkdbCheck.data){
 
@@ -2025,9 +2033,10 @@ export default {
             type: 'error'
           });
           this.refreshPluginsLoading = false;
+          this.fullscreenLoading = false;
           console.log(e)
         });
-        console.log('updated rethinkdb')
+
       var getFromBetween = {
         results: [],
         string: "",
@@ -2071,7 +2080,7 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName);
+      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
       configData = JSON.parse(JSON.stringify(configData.data.configData))
         //// console.log('new config file:',configData);
@@ -2082,7 +2091,7 @@ export default {
             for (let p = 0; p < configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length; p++) {
               var namepartial = configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
                 //// console.log('name:',namepartial)
-              var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Partials/' + Object.keys(configData[2].layoutOptions[0])[q] + '/' + namepartial + '.partial');
+              var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Partials/' + Object.keys(configData[2].layoutOptions[0])[q] + '/' + namepartial + '.partial').catch((err) => { console.log(err); this.fullscreenLoading = false });
               //// console.log('content of partial:',contentpage.data)
               //// console.log("inside !=pages directory")
               var content = ''
@@ -2204,7 +2213,7 @@ export default {
           //// console.log('namepage:',namepage)
           //// console.log('this.repoName:',this.repoName)
           //console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
-        var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/' + namepage);
+        var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/' + namepage).catch((err) => { console.log(err); this.fullscreenLoading = false });
         //// console.log('contentpage:',contentpage)
 
         //// console.log("inside ==pages directory")
@@ -2393,18 +2402,23 @@ export default {
         type: 'warning'
       }).then(async () => {
 
+        this.fullscreenLoading = true;
+        this.refreshDisabled = true;
+
         // Call service to copy files for selected template
         await axios.post( config.baseURL + '/copy-website', {
             projectPath : this.userDetailId + '/' + this.repoName,
             templateName : template
         })
         .then(async (res) => {
+
+          console.log(res)
           // await this.refreshPlugins();
 
           //Copy data of project_settings.json into project-details.json
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json');
+          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json').catch((err) => { console.log(err); this.fullscreenLoading = false });
 
           // console.log('projectSettingsFileData', projectSettingsFileData);
           let data = JSON.parse(projectSettingsFileData.data);
@@ -2417,12 +2431,18 @@ export default {
 
           // this.isProjectDetailsJsonUpdated = true;
           this.saveProjectSettings();
-          this.$notify({
-            title: 'Success',
-            message: 'Please press "Refresh button" to import all its Settings.',
-            type: 'info',
-            offset: 100
-          });
+
+          this.refreshDisabled = false;
+          // this.$notify({
+          //   title: 'Success',
+          //   message: 'Please press "Refresh button" to import all its Settings.',
+          //   type: 'info',
+          //   offset: 100
+          // });
+
+          this.fullscreenLoading = false;
+
+          this.refreshPlugins();
 
         })
         .catch((e) => {
@@ -2500,7 +2520,7 @@ export default {
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
         var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
-        var alldatauser = await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
+        var alldatauser = await axios.get(config.baseURL + '/project-configuration?userId=' + userid).catch((err) => { console.log(err); this.fullscreenLoading = false });
         // console.log(config.baseURL + '/project-configuration?userId=' + userid)
         let checkdetail = true
         for (let i = 0; i < alldatauser.data.data.length; i++) {
@@ -2572,7 +2592,7 @@ export default {
       
       // console.log('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid)
       if(this.form.vid!=''){
-        var projectviddetail=await axios.get('https://api.'+config.domainkey+'/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
+        var projectviddetail=await axios.get('https://api.'+config.domainkey+'/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}}).catch((err) => { console.log(err); this.fullscreenLoading = false });
         // console.log(projectviddetail.data)
         var uservid=projectviddetail.data.userId
         var esuser=projectviddetail.data.esUser
@@ -2607,7 +2627,7 @@ export default {
         "PaymentGateways": this.paymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
       if (rethinkdbCheck.data) {
 
         // update existing data
@@ -2715,6 +2735,7 @@ export default {
         })
         .catch(function (error) {
             console.log(error);
+            this.fullscreenLoading = false;
         });
 
       }).catch(error => {
@@ -2770,6 +2791,7 @@ export default {
               this.saveProjectSettings();
             }).catch(error => {
               console.log("error : ", error);
+              this.fullscreenLoading = false;
             });
 
             this.commitMessage = '';
@@ -2788,7 +2810,7 @@ export default {
         // If first commit was unsuccessfull
 
         // add repo to git
-        let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.nameOfRepo + '&userDetailId=' + Cookies.get('userDetailId'), {});
+        let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.nameOfRepo + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
         if(!(gitResponse.data.statusCode)){
           this.isCommitLoading = true;
@@ -2834,6 +2856,7 @@ export default {
                 this.saveProjectSettings();
               }).catch(error => {
                 console.log(error);
+                this.fullscreenLoading = false;
               });
 
               this.commitMessage = '';
@@ -2872,7 +2895,7 @@ export default {
         this.fullscreenLoading = true;
 
         var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+        var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false});
         var rawConfigs = responseConfig.data.configData;
         var partialstotal = []
         var pageSeoTitle;
@@ -2921,8 +2944,9 @@ export default {
 
         await axios.get(config.baseURL + '/delete-publish-files', {}).then(async(response) => {
           console.log('deleted previous published files.')
-        })
+        }).catch((err) => { console.log(err); this.fullscreenLoading = false })
    for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+    this.loadingText = 'Now publishing ' + rawConfigs[1].pageSettings[i].PageName + ' page.';
       var tophead = '';
       var endhead = '';
       var topbody = '';
@@ -3008,7 +3032,7 @@ export default {
           }
 
           var partials = ''
-          let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+          let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
           var rawSettings = responseConfigLoop.data.configData;
           var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
@@ -3116,12 +3140,12 @@ export default {
                 //console.log("error while blank file creation")
               })
           }
-          layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout');
+          layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout').catch((err) => { console.log(err); this.fullscreenLoading = false });
           var responseMetal = '';
 
           let backupMetalSmith = '';
 
-          let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html');
+          let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html').catch((err) => { console.log(err); this.fullscreenLoading = false });
           contentpartials = contentpartials.data
           var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
           let newFolderName = folderUrl + '/temp';
@@ -3130,7 +3154,7 @@ export default {
               type: 'folder'
             }).then(async(res) => {
               for (let p = 0; p < back_partials.length; p++) {
-                let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial');
+                let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial').catch((err) => { console.log(err); this.fullscreenLoading = false });
                 responsepartials = responsepartials.data
                 let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
                 var DefaultParams = [];
@@ -3609,7 +3633,7 @@ export default {
       //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
       if(this.configData.status == 200 || this.configData.status == 204){
 
@@ -3684,7 +3708,7 @@ export default {
       // }
 
       // Get all commits list
-      let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + websiteName );
+      let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((err) => { console.log(err); this.fullscreenLoading = false });
       let configData = responseConfig.data.configData;
       let SHA = configData[0].repoSettings[0].CurrentHeadSHA;
 
@@ -3700,6 +3724,7 @@ export default {
         }
       }).catch(error => {
         console.log( error);
+        this.fullscreenLoading = false;
       });
 
       await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/public/assets/project-details.json', {
@@ -3707,21 +3732,22 @@ export default {
         this.projectDetailsJson = JSON.parse(response.data);
       }).catch(error => {
         console.log("error occured while project details json: ", error);
+        this.fullscreenLoading = false;
       });
 
       let Allvshopid = await axios.get(config.vshopApi, {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }
-      });
+      }).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
       this.vshopcategory = Allvshopid.data;
-      // console.log('vshopcategory:',this.vshopcategory)
+
       
-      let gateways= await axios.get(config.paymentApiGateway);
+      let gateways= await axios.get(config.paymentApiGateway).catch((err) => { console.log(err); this.fullscreenLoading = false });
       this.Allgateway = gateways.data.gateways;
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-      let crm=await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      let crm=await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}}).catch((err) => { console.log(err); this.fullscreenLoading = false });
       this.crmdata=crm.data.data
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
@@ -3770,7 +3796,7 @@ export default {
               // console.log(this.folderUrl.split('/')[this.folderUrl.split('/').length-2])
               var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
               // console.log('userid',userid)
-              var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
+              var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch((err) => { console.log(err); this.fullscreenLoading = false });
               // console.log('alldatauser:',alldatauser.data.data.length)
               let checkdetail=true
               for(let i=0;i<alldatauser.data.data.length;i++){
@@ -3941,7 +3967,7 @@ export default {
   .page-buttons{
     position: fixed;
     bottom: 7px;
-    right: 50px;
+    right: 85px;
     margin-top: 17.5px;
     z-index: 10
   }
@@ -4071,5 +4097,26 @@ export default {
 
   .jsoneditor-vue div.jsoneditor-tree{
     background-color: #fff;
+  }
+
+  .template-image{
+    cursor: pointer;
+  }
+
+  .view-template {
+    position: absolute;
+    right: 5px;
+    top: -10px;
+    background-color: #292929;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 16px;
+  }
+
+  .view-template i {
+    margin-left: 6px;
+    margin-top: 6px;
   }
 </style>

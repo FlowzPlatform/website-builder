@@ -126,7 +126,7 @@ export default {
 
         axios.post(config.resetPasswordUrl, {
           new_password: this.form.pass,
-          token: forgetToken
+          token: forgetToken.trim()
         })
         .then(function (response) {
 

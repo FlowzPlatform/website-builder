@@ -268,7 +268,7 @@ export default {
         this.componentId = Invite;
     },
     goToDashboard(){
-        this.componentId = HomePage;
+        // this.componentId = HomePage;
     },
     doLogout() {
       this.$confirm('Do you want to logout?', 'Warning', {
