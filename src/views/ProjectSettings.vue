@@ -184,20 +184,18 @@
               <hr>
               <div class="row">
                 <div class="col-md-4">
-                  <img src="http://placehold.it/350x150?text=Template%201" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
+                  <img src="http://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                 </div>
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                   <img src="http://placehold.it/350x150?text=Template%202" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web2')">Template 2</button> -->
                 </div>
                 <div class="col-md-4">
                   <img src="http://placehold.it/350x150?text=Template%203" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web3')">Template 3</button> -->
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
