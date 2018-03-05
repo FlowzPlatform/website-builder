@@ -2941,7 +2941,7 @@
                     userId: Cookies.get('userDetailId')
                 })
                 .then(function (response) {
-                    console.log('Initial config data saved in configdata-history. ', response);
+                    // console.log('Initial config data saved in configdata-history. ', response);
                 })
                 .catch(function (error) {
                     console.log(error);
