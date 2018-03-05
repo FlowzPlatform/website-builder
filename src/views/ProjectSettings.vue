@@ -2782,7 +2782,7 @@ export default {
                   userId: Cookies.get('userDetailId')
               })
               .then(function (resp) {
-                  console.log('Config revision saved in configdata-history. ', resp);
+                  // console.log('Config revision saved in configdata-history. ', resp);
               })
               .catch(function (error) {
                   console.log(error);
@@ -2943,10 +2943,10 @@ export default {
         };
 
         await axios.get(config.baseURL + '/delete-publish-files', {}).then(async(response) => {
-          console.log('deleted previous published files.')
+          // console.log('deleted previous published files.')
         }).catch((err) => { console.log(err); this.fullscreenLoading = false })
-   for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
-    this.loadingText = 'Now publishing ' + rawConfigs[1].pageSettings[i].PageName + ' page.';
+    for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+      this.loadingText = ((i/rawConfigs[1].pageSettings.length)*100).toFixed(0)+'% Done.'+'Now publishing ' + rawConfigs[1].pageSettings[i].PageName + ' page.';
       var tophead = '';
       var endhead = '';
       var topbody = '';
@@ -3739,7 +3739,7 @@ export default {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }
-      }).catch((err) => { console.log(err); this.fullscreenLoading = false });
+      }).catch((err) => { console.log(err); });
 
       this.vshopcategory = Allvshopid.data;
 
@@ -3747,7 +3747,7 @@ export default {
       let gateways= await axios.get(config.paymentApiGateway).catch((err) => { console.log(err); this.fullscreenLoading = false });
       this.Allgateway = gateways.data.gateways;
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-      let crm=await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}}).catch((err) => { console.log(err); this.fullscreenLoading = false });
+      let crm=await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}}).catch((err) => { console.log(err);  });
       this.crmdata=crm.data.data
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
