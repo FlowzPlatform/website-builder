@@ -626,6 +626,14 @@
             this.options = sub_id
             this.value  = sub_id[0].value;
             localStorage.setItem("current_sub_id",this.value)
+            // if (localStorage.getItem('current_sub_id') != null || localStorage.getItem('current_sub_id') != undefined) {
+            //   this.value = localStorage.getItem('current_sub_id')
+            // }
+            // else{
+            //   this.options = sub_id
+            //   this.value  = sub_id[0].value;
+            //   localStorage.setItem("current_sub_id",this.value)
+            // }
     //this.getDataOfSubscriptionUser();
 
        // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
@@ -1358,7 +1366,7 @@
                 // 
 
                 this.componentId = 'GrapesComponent';
-                console.log('#############', this.componentId)
+                // console.log('#############', this.componentId)
                 // this.getConfigFileData();
               }
               this.fullscreenLoading = false;
