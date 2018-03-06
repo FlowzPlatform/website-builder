@@ -202,8 +202,7 @@
                   :label="item.title"
                   :name="item.name"> -->
                   <!-- <el-tooltip slot="label" :content="item.filepath"><span>{{item.title}}</span></el-tooltip> -->
-                  <!-- <component :is="item.componentId" ref="contentComponent" v-on:updateProjectName="getData"></component> -->
-                  {{componentId}}
+                  <!-- <component :is="item.componentId" ref="contentComponent" v-on:updateProjectName="getData"></component> -->                  
                   <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
                 <!-- </el-tab-pane>
               </el-tabs> -->
