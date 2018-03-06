@@ -30,7 +30,7 @@ jobs:
             docker push $DOCKER_USERNAME/web_builder_fronted_flowz:dev;
         elif [ ${TRAVIS_BRANCH} = "staging" ]; then
             docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-            docker build -t web_builder_fronted_flowz:staging --build-arg domainkey="$DOMAINKEY_STAGING" .;
+            docker build -t web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER --build-arg domainkey="$DOMAINKEY_STAGING" .;
             docker tag web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER $DOCKER_USERNAME/web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER;
             docker tag web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER $DOCKER_USERNAME/web_builder_fronted_flowz:staging;
             docker images;
