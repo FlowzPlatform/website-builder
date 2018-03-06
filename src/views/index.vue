@@ -625,6 +625,9 @@
             this.options = sub_id
             this.value  = sub_id[0].value;
             localStorage.setItem("current_sub_id",this.value)
+            if(localStorage.getItem("current_sub_id") != null || localStorage.getItem("current_sub_id") != undefined){
+                this.value = localStorage.getItem("current_sub_id")
+            }
     //this.getDataOfSubscriptionUser();
 
        // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
@@ -4810,7 +4813,12 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                                  headers: {
+                                      'subscriptionId': this.value,
+                                      'authorization': Cookies.get('auth_token')
+                                  }
+                              })
             .then(async (res) => {
               // console.log('file deleted:')
               this.currentFile = null
@@ -4918,6 +4926,13 @@
 
             })
             .catch((e) => {
+              if (e.response.status = 403) {
+                    this.$message({
+                        showClose: true,
+                        message: e.response.data.message,
+                        type: 'error'
+                    });
+                }
               console.log(e)
             })
           this.componentId = 'Dashboard';
@@ -4965,7 +4980,12 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                                  headers: {
+                                      'subscriptionId': this.value,
+                                      'authorization': Cookies.get('auth_token')
+                                  }
+                              })
           .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
@@ -4994,7 +5014,14 @@
 
           })
           .catch((e) => {
-            //console.log(e)
+             if (e.response.status = 403) {
+                    this.$message({
+                        showClose: true,
+                        message: e.response.data.message,
+                        type: 'error'
+                    });
+                }
+              console.log(e)
           })
         })
         .catch((e)=>{
@@ -5022,7 +5049,12 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                                  headers: {
+                                      'subscriptionId': this.value,
+                                      'authorization': Cookies.get('auth_token')
+                                  }
+                              })
             .then(async(res) => {
 
               // Delete Repository from GitLab Server
@@ -5064,7 +5096,14 @@
               this.componentId = 'Dashboard';
             })
             .catch((e) => {
-              //console.log(e)
+              if (e.response.status = 403) {
+                    this.$message({
+                        showClose: true,
+                        message: e.response.data.message,
+                        type: 'error'
+                    });
+                }
+              console.log(e)
             })
           this.componentId = 'Dashboard';
           this.isHomePage = true;
