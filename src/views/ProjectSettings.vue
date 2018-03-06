@@ -1403,7 +1403,10 @@ export default {
 
   methods: {
     deletefaviconimage(){
-      this.form.brandLogoName='!!!No file uploaded!!!'
+      this.form.brandLogoName='!!!No file uploaded!!!';
+
+      $('#text2').text('Upload Image');
+      $('.valid').removeClass('correct');
     },
     linktocrm(){
       window.open('https://crm.'+config.domainkey);

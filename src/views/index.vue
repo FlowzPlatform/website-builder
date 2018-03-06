@@ -4079,7 +4079,7 @@
                       SeoTitle = projectseotitle
                   }
                   if (projectfaviconhref != undefined && projectfaviconhref != '' && projectfaviconhref != '!!!No file uploaded!!!') {
-                      favicon = '<link rel="icon" type="image/png" href="' + projectfaviconhref + '">'
+                      favicon = '<link rel="icon" type="image/png" href="./../favicon.' + projectfaviconhref.split('.')[1] + '">'
                   }
 
                   if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
