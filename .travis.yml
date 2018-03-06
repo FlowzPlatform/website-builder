@@ -9,8 +9,8 @@ branches:
   only:
   - master
   - develop
-  - QA
   - staging
+  - QA
 
 jobs:
   include:
