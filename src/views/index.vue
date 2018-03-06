@@ -194,21 +194,22 @@
               <component :is="componentId" ref="contentComponent"></component>
             </div> -->
 
-            <div v-if="display != true" style="margin-left: 10px;">
-              <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  editable @tab-click="tabClicked" @edit="handleTabsEdit">
+            <div v-if="display = true" style="margin-left: 10px;">
+              <!-- <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  editable @tab-click="tabClicked" @edit="handleTabsEdit">
                 <el-tab-pane
                   v-for="(item, index) in editableTabs"
                   :key="item.name"
                   :label="item.title"
-                  :name="item.name">
-                  <el-tooltip slot="label" :content="item.filepath"><span>{{item.title}}</span></el-tooltip>
-                  <component :is="item.componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
-                </el-tab-pane>
-              </el-tabs>
+                  :name="item.name"> -->
+                  <!-- <el-tooltip slot="label" :content="item.filepath"><span>{{item.title}}</span></el-tooltip> -->
+                  <!-- <component :is="item.componentId" ref="contentComponent" v-on:updateProjectName="getData"></component> -->                  
+                  <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
+                <!-- </el-tab-pane>
+              </el-tabs> -->
             </div>
-            <div v-if="display == true" style="margin-left: 10px;">
+            <!-- <div v-if="display == true" style="margin-left: 10px;">
               <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
-            </div>
+            </div> -->
             
           </div>
         </div>
@@ -340,11 +341,11 @@
       return {
         display: true,
         flag: false,
-        tabPosition: 'bottom',
-        taburl: '',
-        editableTabsValue: '0',
-        editableTabs: [],
-        tabIndex:0,
+        // tabPosition: 'bottom',
+        // taburl: '',
+        // editableTabsValue: '0',
+        // editableTabs: [],
+        // tabIndex:0,
         options: '',
         value:'',
         autoFolders: true,
@@ -655,7 +656,7 @@
       // },
      changeSubscription(){
         this.fullscreenLoading=true
-        this.editableTabs = []
+        // this.editableTabs = []
 
         axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(async response => {
@@ -723,50 +724,50 @@
 
       // Route to GrapesEditor page from code view
       goToGrapesEditor: function(){
-        this.saveFile('void')
+        // this.saveFile('void')
         this.componentId = 'GrapesComponent';
         this.isPageCodeEditor = false;
-        this.display = false;
-        let url = this.$store.state.fileUrl;
-        let compId = this.componentId;
-        let newTabName = ++this.tabIndex + '';
-        let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
-        let editableTabValue = this.editableTabsValue
-        let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
-        function checkIfExist(filepath,array) {  // The last one is array
-            var found = array.some(function (el) {
-              return el.filepath == url;
-            });
-            if (!found)
-            {
-              let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-              array = removedArray  ;
-              editableTabValue = newTabName;
-                array.push({
-                  title: tab_file_name,
-                  name: newTabName,
-                  content: newTabName,
-                  componentId : compId,
-                  filepath : url
-                });
+        // this.display = false;
+        // let url = this.$store.state.fileUrl;
+        // let compId = this.componentId;
+        // let newTabName = ++this.tabIndex + '';
+        // let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+        // let editableTabValue = this.editableTabsValue
+        // let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
+        // function checkIfExist(filepath,array) {  // The last one is array
+        //     var found = array.some(function (el) {
+        //       return el.filepath == url;
+        //     });
+        //     if (!found)
+        //     {
+        //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+        //       array = removedArray  ;
+        //       editableTabValue = newTabName;
+        //         array.push({
+        //           title: tab_file_name,
+        //           name: newTabName,
+        //           content: newTabName,
+        //           componentId : compId,
+        //           filepath : url
+        //         });
 
-            }else{
-              let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-              array = removedArray  ;
-              editableTabValue = newTabName;
-              array.push({
-                  title: tab_file_name,
-                  name: newTabName,
-                  content: newTabName,
-                  componentId : compId,
-                  filepath : url
-                });
-            }
-            return array
-        }
-        this.editableTabs =  selectedPagePositionFirstArray ;
-        this.editableTabs.reverse();
-        this.editableTabsValue = newTabName;
+        //     }else{
+        //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+        //       array = removedArray  ;
+        //       editableTabValue = newTabName;
+        //       array.push({
+        //           title: tab_file_name,
+        //           name: newTabName,
+        //           content: newTabName,
+        //           componentId : compId,
+        //           filepath : url
+        //         });
+        //     }
+        //     return array
+        // }
+        // this.editableTabs =  selectedPagePositionFirstArray ;
+        // this.editableTabs.reverse();
+        // this.editableTabsValue = newTabName;
       },
       
       // If clicked the root folder
@@ -889,24 +890,24 @@
         // Store file/folder path
         // console.log('handle click:',data)
         // console.log('directoryTree',this.directoryTree)
-        this.taburl = this.$store.state.fileUrl;
+        // this.taburl = this.$store.state.fileUrl;
 
         this.$store.state.fileUrl = data.path;
         // If PageSettings Clicked
-        if(this.isPageEditing){
+        if(this.isPageEditing){  
 
           // clearInterval(myInterval);
 
-          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-            this.saveFile('getFileCmyIntervalontent')
-          }
+        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+        //     this.saveFile('getFileContent')
+        //   }
 
           this.isPageEditing = false;
           this.isProjectEditing = false;
           this.isSettingsPage = true;
           this.componentId = 'PageSettings';
 
-          this.display = false;
+        //   this.display = false;
 
           let url = data.path;
           let compId = this.componentId;
@@ -916,60 +917,60 @@
           // this.editableTabs = []
           //////////////////
 
-          let newTabName = ++this.tabIndex + '';
-          let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
-          let editableTabValue = this.editableTabsValue
-          let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
-          function checkIfExist(filepath,array) {  // The last one is array
-              var found = array.some(function (el) {
-                return el.filepath == url;
-              });
-              if (!found)
-              {
-                let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                array = removedArray  ;
-                editableTabValue = newTabName;
-                  array.push({
-                    title: tab_file_name,
-                    name: newTabName,
-                    content: newTabName,
-                    componentId : compId,
-                    filepath : url
-                  });
+        //   let newTabName = ++this.tabIndex + '';
+        //   let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+        //   let editableTabValue = this.editableTabsValue
+        //   let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
+        //   function checkIfExist(filepath,array) {  // The last one is array
+        //       var found = array.some(function (el) {
+        //         return el.filepath == url;
+        //       });
+        //       if (!found)
+        //       {
+        //         let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+        //         array = removedArray  ;
+        //         editableTabValue = newTabName;
+        //           array.push({
+        //             title: tab_file_name,
+        //             name: newTabName,
+        //             content: newTabName,
+        //             componentId : compId,
+        //             filepath : url
+        //           });
 
-              }else{
-                let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                array = removedArray  ;
-                editableTabValue = newTabName;
-                array.push({
-                    title: tab_file_name,
-                    name: newTabName,
-                    content: newTabName,
-                    componentId : compId,
-                    filepath : url
-                  });
-              }
-              return array
-          }
+        //       }else{
+        //         let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+        //         array = removedArray  ;
+        //         editableTabValue = newTabName;
+        //         array.push({
+        //             title: tab_file_name,
+        //             name: newTabName,
+        //             content: newTabName,
+        //             componentId : compId,
+        //             filepath : url
+        //           });
+        //       }
+        //       return array
+        //   }
 
-          this.editableTabs =  selectedPagePositionFirstArray ;
+        //   this.editableTabs =  selectedPagePositionFirstArray ;
 
-          this.editableTabs.reverse();
-          this.editableTabsValue = newTabName;
+        //   this.editableTabs.reverse();
+        //   this.editableTabsValue = newTabName;
         }
         // If ProjectSettings is clicked 
         else if(this.isProjectEditing) {
           // clearInterval(myInterval);
-          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-            this.saveFile('getFileContent')
-          }
+        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+        //     this.saveFile('getFileContent')
+        //   }
 
           this.isProjectEditing = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = true;
           this.componentId = 'ProjectSettings';
 
-          this.display = true;
+        //   this.display = true;
 
           // let url = data.path;
           // let compId = this.componentId;
@@ -1021,7 +1022,7 @@
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'ProjectStats';
-          this.display = true;
+        //   this.display = true;
           localStorage.setItem("folderUrl", data.path);
         }
         // If Clicked in Partials Folder 
@@ -1029,50 +1030,51 @@
           // clearInterval(myInterval);
           //console.log('Data Path: ', data.path);
           
-          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-            this.saveFile('getFileContent')
-          }
+        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+        //     this.saveFile('getFileContent')
+        //   }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'PartialStats';
-          this.display = true;
+        //   this.display = true;
         }
         // If Clicked in Layouts Folder 
         else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
           // clearInterval(myInterval);
 
-          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-            this.saveFile('getFileContent')
-          }
+        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+        //     this.saveFile('getFileContent')
+        //   }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'LayoutStats';
-          this.display = true;
+        //   this.display = true;
         }
         // If Clicked in Pages Folder 
         else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
+            
           // clearInterval(myInterval);
-          if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-            this.saveFile('getFileContent')
-          }
+        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+        //     this.saveFile('getFileContent')        
+        //   }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'PageStats';
-          this.display = true;
+        //   this.display = true;
         }
         // Every other clicks
         else {
-          this.fullscreenLoading = true;
-          this.display = true;
+        //   this.fullscreenLoading = true;
+        //   this.display = true;
           this.isProjectStats = false;
           this.isPartialStats = false;
           this.isPageEditing = false;
@@ -1081,19 +1083,19 @@
           this.isSettingsPage = false;
           this.currentFile = data;
           if(data.type == "file"){
-            this.display = false;
-            if(this.flag != true && this.editableTabs.length > 0){
-              if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
-                this.saveFile('getFileContent')
-              }
-            }
-            this.flag = false;
+            // this.display = false;
+            // if(this.flag != true && this.editableTabs.length > 0){
+            //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
+            //     this.saveFile('getFileContent')
+            //   }
+            // }
+            // this.flag = false;
 
-            let self = this;
-            setTimeout(async function(){
-              await self.getFileContent(data.path);
-              self.fullscreenLoading = false;
-            },50)
+            // let self = this;
+            // setTimeout(async function(){
+              this.getFileContent(data.path);
+            //   self.fullscreenLoading = false;
+            // },50)
           }
 
           this.fullscreenLoading = false;
@@ -1102,161 +1104,161 @@
       },
 
       // If Tabs is clicked
-      tabClicked : async function(targetName, action) {
-        this.fullscreenLoading = true;
-        this.saveFile('tabClicked');
+    //   tabClicked : async function(targetName, action) {
+    //     this.fullscreenLoading = true;
+    //     this.saveFile('tabClicked');
 
-        let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
-        this.$store.state.fileUrl = findingValue[0].filepath;
-        this.componentId = targetName.$vnode.componentOptions.children[0].componentOptions.tag
-        this.flag = true
-        this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
-        var componentId = this.componentId
-        let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-        let newContent
-        // switch (this.componentId) {
-        //   case 'GrapesComponent':
-        //     this.$refs.contentComponent[myIndex].getSavedHtml();
-        //     newContent = this.$store.state.content;
-        //     break;
-        //   case 'json-viewer':
-        //     newContent = JSON.stringify(this.$store.state.content);
-        //     break;
-        //   case 'GridManager':
-        //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-        //     newContent = this.$store.state.content;
-        //     break;
-        //   case 'MenuBuilder':
-        //     // this.saveJsonFile('else');
-        //     break;
-        //   default:
-        //       newContent = this.$store.state.content;
-        // }
-      },
+    //     let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
+    //     this.$store.state.fileUrl = findingValue[0].filepath;
+    //     this.componentId = targetName.$vnode.componentOptions.children[0].componentOptions.tag
+    //     this.flag = true
+    //     this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
+    //     var componentId = this.componentId
+    //     let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+    //     let newContent
+    //     // switch (this.componentId) {
+    //     //   case 'GrapesComponent':
+    //     //     this.$refs.contentComponent[myIndex].getSavedHtml();
+    //     //     newContent = this.$store.state.content;
+    //     //     break;
+    //     //   case 'json-viewer':
+    //     //     newContent = JSON.stringify(this.$store.state.content);
+    //     //     break;
+    //     //   case 'GridManager':
+    //     //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+    //     //     newContent = this.$store.state.content;
+    //     //     break;
+    //     //   case 'MenuBuilder':
+    //     //     // this.saveJsonFile('else');
+    //     //     break;
+    //     //   default:
+    //     //       newContent = this.$store.state.content;
+    //     // }
+    //   },
 
       // Closing a tab
-      handleTabsEdit: async function(targetName, action) {
-        let activeName;
-        let tabs;
+    //   handleTabsEdit: async function(targetName, action) {
+    //     let activeName;
+    //     let tabs;
 
-        let findingValue =  _.filter(this.editableTabs, {name: targetName});
-        this.$store.state.fileUrl =findingValue[0].filepath;
-        // save the content
-        // this.$refs.contentComponent[0].getHtml();
-        // let newContent = this.$store.state.content;
+    //     let findingValue =  _.filter(this.editableTabs, {name: targetName});
+    //     this.$store.state.fileUrl =findingValue[0].filepath;
+    //     // save the content
+    //     // this.$refs.contentComponent[0].getHtml();
+    //     // let newContent = this.$store.state.content;
 
-        if (action === 'remove') {
-          // this.saveFile('savebutton');
-          tabs = this.editableTabs;
-          activeName = this.editableTabsValue;
-          if (activeName === targetName) {
-            this.saveFile('void');
-            tabs.forEach((tab, index) => {
-              if (tab.name === targetName) {
-                let nextTab = tabs[index + 1] || tabs[index - 1];
-                if (nextTab) {
-                  activeName = nextTab.name;
-                  this.$store.state.fileUrl = nextTab.filepath
-                  this.flag = true
-                  this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
-                }
-              }
-            });
-          } else {
-            // let componentId = findingValue[0].componentId;
-            // this.componentId = findingValue[0].componentId;
-            // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            // let newContent
-            // switch (this.componentId) {
-            //   case 'GrapesComponent':
-            //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //     newContent = this.$store.state.content;
-            //     break;
-            //   case 'json-viewer':
-            //     newContent = JSON.stringify(this.$store.state.content);
-            //     break;
-            //   case 'GridManager':
-            //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //     newContent = this.$store.state.content;
-            //     break;
-            //   case 'MenuBuilder':
+    //     if (action === 'remove') {
+    //       // this.saveFile('savebutton');
+    //       tabs = this.editableTabs;
+    //       activeName = this.editableTabsValue;
+    //       if (activeName === targetName) {
+    //         this.saveFile('void');
+    //         tabs.forEach((tab, index) => {
+    //           if (tab.name === targetName) {
+    //             let nextTab = tabs[index + 1] || tabs[index - 1];
+    //             if (nextTab) {
+    //               activeName = nextTab.name;
+    //               this.$store.state.fileUrl = nextTab.filepath
+    //               this.flag = true
+    //               this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
+    //             }
+    //           }
+    //         });
+    //       } else {
+    //         // let componentId = findingValue[0].componentId;
+    //         // this.componentId = findingValue[0].componentId;
+    //         // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+    //         // let newContent
+    //         // switch (this.componentId) {
+    //         //   case 'GrapesComponent':
+    //         //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+    //         //     newContent = this.$store.state.content;
+    //         //     break;
+    //         //   case 'json-viewer':
+    //         //     newContent = JSON.stringify(this.$store.state.content);
+    //         //     break;
+    //         //   case 'GridManager':
+    //         //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+    //         //     newContent = this.$store.state.content;
+    //         //     break;
+    //         //   case 'MenuBuilder':
  
-            //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-            //   let tempurlparts = configFileUrl.split("/");
-            //   let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
-            //   console.log('fileName', fileName)
-            //   var folderUrl = fileName
+    //         //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //         //   let tempurlparts = configFileUrl.split("/");
+    //         //   let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+    //         //   console.log('fileName', fileName)
+    //         //   var folderUrl = fileName
  
-            //   let urlparts = this.$store.state.fileUrl.split("/");
-            //   let fileNameOrginal = urlparts[urlparts.length - 1];
-            //   let fileNameParts = fileNameOrginal.split('.');
-            //   let actualFileNameOnly = fileNameParts[0];
-            //   let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
-            //   console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
-            //   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
-            //   });
-            //   // console.log('response.data', response.data)
-            //   this.$store.state.content = response.data
-            //   newContent = this.$store.state.content
-            //     // this.saveJsonFile('else');
-            //     break;
-            //   default:
-            //       newContent = this.$store.state.content;
-            // }
-            // this.taburl = this.$store.state.fileUrl
-            // this.saveFileData(newContent);
-          }
-          this.editableTabsValue = activeName;
-          this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+    //         //   let urlparts = this.$store.state.fileUrl.split("/");
+    //         //   let fileNameOrginal = urlparts[urlparts.length - 1];
+    //         //   let fileNameParts = fileNameOrginal.split('.');
+    //         //   let actualFileNameOnly = fileNameParts[0];
+    //         //   let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+    //         //   console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
+    //         //   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
+    //         //   });
+    //         //   // console.log('response.data', response.data)
+    //         //   this.$store.state.content = response.data
+    //         //   newContent = this.$store.state.content
+    //         //     // this.saveJsonFile('else');
+    //         //     break;
+    //         //   default:
+    //         //       newContent = this.$store.state.content;
+    //         // }
+    //         // this.taburl = this.$store.state.fileUrl
+    //         // this.saveFileData(newContent);
+    //       }
+    //       this.editableTabsValue = activeName;
+    //       this.editableTabs = tabs.filter(tab => tab.name !== targetName);
 
-          if(this.editableTabs.length != 0){
-            // this.$store.state.fileUrl = this.editableTabs[0].filepath
-            // // console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
-            // let componentId = this.editableTabs[0].componentId;
-            // this.componentId = this.editableTabs[0].componentId;
-            // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            // let newContent
-            // switch (this.componentId) {
-            //   case 'GrapesComponent':
-            //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //     newContent = this.$store.state.content;
-            //     break;
-            //   case 'json-viewer':
-            //     newContent = JSON.stringify(this.$store.state.content);
-            //     break;
-            //   case 'GridManager':
-            //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //     newContent = this.$store.state.content;
-            //     break;
-            //   case 'MenuBuilder':
+    //       if(this.editableTabs.length != 0){
+    //         // this.$store.state.fileUrl = this.editableTabs[0].filepath
+    //         // // console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
+    //         // let componentId = this.editableTabs[0].componentId;
+    //         // this.componentId = this.editableTabs[0].componentId;
+    //         // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+    //         // let newContent
+    //         // switch (this.componentId) {
+    //         //   case 'GrapesComponent':
+    //         //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+    //         //     newContent = this.$store.state.content;
+    //         //     break;
+    //         //   case 'json-viewer':
+    //         //     newContent = JSON.stringify(this.$store.state.content);
+    //         //     break;
+    //         //   case 'GridManager':
+    //         //     await this.$refs.contentComponent[myIndex].getSavedHtml();
+    //         //     newContent = this.$store.state.content;
+    //         //     break;
+    //         //   case 'MenuBuilder':
  
-            //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-            //   let tempurlparts = configFileUrl.split("/");
-            //   let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
-            //   console.log('fileName', fileName)
-            //   var folderUrl = fileName
+    //         //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+    //         //   let tempurlparts = configFileUrl.split("/");
+    //         //   let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
+    //         //   console.log('fileName', fileName)
+    //         //   var folderUrl = fileName
  
-            //   let urlparts = this.$store.state.fileUrl.split("/");
-            //   let fileNameOrginal = urlparts[urlparts.length - 1];
-            //   let fileNameParts = fileNameOrginal.split('.');
-            //   let actualFileNameOnly = fileNameParts[0];
-            //   let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
-            //   console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
-            //   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
-            //   });
-            //   console.log('response.data', response.data)
-            //   this.$store.state.content = response.data
-            //   newContent = this.$store.state.content
-            //     // this.saveJsonFile('else');
-            //     break;
-            //   default:
-            //       newContent = this.$store.state.content;
-            // }
-          } else {
-            // clearInterval(myInterval);
-          }
-        }
-      },
+    //         //   let urlparts = this.$store.state.fileUrl.split("/");
+    //         //   let fileNameOrginal = urlparts[urlparts.length - 1];
+    //         //   let fileNameParts = fileNameOrginal.split('.');
+    //         //   let actualFileNameOnly = fileNameParts[0];
+    //         //   let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+    //         //   console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
+    //         //   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
+    //         //   });
+    //         //   console.log('response.data', response.data)
+    //         //   this.$store.state.content = response.data
+    //         //   newContent = this.$store.state.content
+    //         //     // this.saveJsonFile('else');
+    //         //     break;
+    //         //   default:
+    //         //       newContent = this.$store.state.content;
+    //         // }
+    //       } else {
+    //         // clearInterval(myInterval);
+    //       }
+    //     }
+    //   },
 
       // Get File content Locally
       getFileContent: async function(url) {
@@ -1356,6 +1358,7 @@
                 // 
 
                 this.componentId = 'GrapesComponent';
+                console.log('#############', this.componentId)
                 // this.getConfigFileData();
               }
               this.fullscreenLoading = false;
@@ -1415,58 +1418,58 @@
           }
         }
 
-        let compId = this.componentId;
+        // let compId = this.componentId;
 
-        let newTabName = ++this.tabIndex + '';
-        let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+        // let newTabName = ++this.tabIndex + '';
+        // let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
-        let editableTabValue = this.editableTabsValue
-        let selectedPagePositionFirstArray = await checkIfExist(url , this.editableTabs);
+        // let editableTabValue = this.editableTabsValue
+        // let selectedPagePositionFirstArray = await checkIfExist(url , this.editableTabs);
 
-        this.fullscreenLoading = false;
+        // this.fullscreenLoading = false;
 
-        var self = this
-        function checkIfExist(filepath,array) {  // The last one is array
+        // var self = this
+    //     function checkIfExist(filepath,array) {  // The last one is array
 
-           var found = array.some(function (el) {
-             return el.filepath == url;
-           });
+    //        var found = array.some(function (el) {
+    //          return el.filepath == url;
+    //        });
 
-           if (!found)
-           {
-             let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-             array = removedArray  ;
-             editableTabValue = newTabName;
-               array.push({
-                 title: tab_file_name,
-                 name: newTabName,
-                 content: newTabName,
-                 componentId : compId,
-                 filepath : url
-               });
+    //        if (!found)
+    //        {
+    //          let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+    //          array = removedArray  ;
+    //          editableTabValue = newTabName;
+    //            array.push({
+    //              title: tab_file_name,
+    //              name: newTabName,
+    //              content: newTabName,
+    //              componentId : compId,
+    //              filepath : url
+    //            });
 
-           }else{
-             let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-             array = removedArray  ;
-             editableTabValue = newTabName;
-             array.push({
-                 title: tab_file_name,
-                 name: newTabName,
-                 content: newTabName,
-                 componentId : compId,
-                 filepath : url
-               });
-           }
+    //        }else{
+    //          let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+    //          array = removedArray  ;
+    //          editableTabValue = newTabName;
+    //          array.push({
+    //              title: tab_file_name,
+    //              name: newTabName,
+    //              content: newTabName,
+    //              componentId : compId,
+    //              filepath : url
+    //            });
+    //        }
 
            
-           return array
-       }
+    //        return array
+    //    }
 
-       this.fullscreenLoading = false;
-       this.editableTabs =  selectedPagePositionFirstArray ;
-       this.editableTabs.reverse();
-       this.editableTabsValue = newTabName;
-       var self = this
+    //    this.fullscreenLoading = false;
+    //    this.editableTabs =  selectedPagePositionFirstArray ;
+    //    this.editableTabs.reverse();
+    //    this.editableTabsValue = newTabName;
+    //    var self = this
        // if(this.editableTabs[0].title){
        //   // clearInterval(myInterval);
        //   var title = this.editableTabs[0].title;
@@ -1479,7 +1482,7 @@
 
         this.breadcrumbArr = url.replace(this.rootpath, '').split('\\')
         this.loadingContent = false
-        this.fullscreenLoading = false
+        // this.fullscreenLoading = false
       },
 
       // Get particular project's config.json file
@@ -2978,84 +2981,85 @@
         });
       },
 
-      saveFileData(content){
-        axios.post(config.baseURL + '/flows-dir-listing', {
-          filename: this.taburl.replace(/\\/g, "\/"),
-          text: content,
-          type: 'file'
-        })
-        .then(async(res) => {
-          this.saveFileLoading = false;
-        })
-        .catch((e) => {
-          this.saveFileLoading = false
-          this.$message({
-            showClose: true,
-            message: 'File not saved! Please try again.',
-            type: 'error'
-          });
-          this.saveFileLoading = false;
-          //console.log(e)
-        })
-      },
+    //   saveFileData(content){
+    //     axios.post(config.baseURL + '/flows-dir-listing', {
+    //       filename: this.taburl.replace(/\\/g, "\/"),
+    //       text: content,
+    //       type: 'file'
+    //     })
+    //     .then(async(res) => {
+    //       this.saveFileLoading = false;
+    //     })
+    //     .catch((e) => {
+    //       this.saveFileLoading = false
+    //       this.$message({
+    //         showClose: true,
+    //         message: 'File not saved! Please try again.',
+    //         type: 'error'
+    //       });
+    //       this.saveFileLoading = false;
+    //       //console.log(e)
+    //     })
+    //   },
 
       // Save File
      async saveFile(arg) {
-          this.saveFileLoading = true;
-          let configFileUrl;
-          let newContent;
+        //   this.saveFileLoading = true;
+        //   let configFileUrl;
+        //   let newContent;
           if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-              if (arg == 'getFileContent') {
-                  var componentId = this.componentId
-                  let myIndex = _.findIndex(this.$refs.contentComponent, function(o) {
-                      return o.$vnode.componentOptions.tag === componentId;
-                  });
+            //   if (arg == 'getFileContent') {
+            //       var componentId = this.componentId
+            //       let myIndex = _.findIndex(this.$refs.contentComponent, function(o) {
+            //           return o.$vnode.componentOptions.tag === componentId;
+            //       });
+            //       this.saveFileLoading = true
+            //           // var tempContent = this.$store.state.tabChange
+            //       switch (this.componentId) {
+            //           case 'GrapesComponent':
+            //               this.$refs.contentComponent[myIndex].getHtml();
+            //               newContent = this.$store.state.content;
+            //               this.saveFileData(newContent)
+            //               break;
+            //           case 'json-viewer':
+            //               newContent = JSON.stringify(this.$store.state.content);
+            //               this.saveFileData(newContent)
+            //               break;
+            //           case 'GridManager':
+            //               this.$refs.contentComponent[myIndex].getHtml();
+            //               newContent = this.$store.state.content;
+            //               this.saveFileData(newContent)
+            //               break;
+            //           case 'MenuBuilder':
+            //               this.saveJsonFile('getFileContent');
+            //               break;
+            //           case 'MonacoEditorChild':
+            //               newContent = this.$store.state.content;
+            //               this.saveFileData(newContent)
+            //               break;
+            //           default:
+            //               newContent = this.$store.state.content;
+            //               this.saveFileLoading = false;
+            //       }
+            //       // this.$store.state.tabChange = '';
+            //   } 
+            //   else {
+                //   var componentId = this.componentId
+                //   let myIndex = _.findIndex(this.$refs.contentComponent, function(o) {
+                //       return o.$vnode.componentOptions.tag === componentId;
+                //   });
                   this.saveFileLoading = true
-                      // var tempContent = this.$store.state.tabChange
+                  let newContent = this.$store.state.content
                   switch (this.componentId) {
                       case 'GrapesComponent':
-                          this.$refs.contentComponent[myIndex].getHtml();
+                          this.$refs.contentComponent.getHtml();
                           newContent = this.$store.state.content;
-                          this.saveFileData(newContent)
                           break;
                       case 'json-viewer':
                           newContent = JSON.stringify(this.$store.state.content);
-                          this.saveFileData(newContent)
                           break;
                       case 'GridManager':
-                          this.$refs.contentComponent[myIndex].getHtml();
-                          newContent = this.$store.state.content;
-                          this.saveFileData(newContent)
-                          break;
-                      case 'MenuBuilder':
-                          this.saveJsonFile('getFileContent');
-                          break;
-                      case 'MonacoEditorChild':
-                          newContent = this.$store.state.content;
-                          this.saveFileData(newContent)
-                          break;
-                      default:
-                          newContent = this.$store.state.content;
-                          this.saveFileLoading = false;
-                  }
-                  // this.$store.state.tabChange = '';
-              } else {
-                  var componentId = this.componentId
-                  let myIndex = _.findIndex(this.$refs.contentComponent, function(o) {
-                      return o.$vnode.componentOptions.tag === componentId;
-                  });
-                  // newContent = this.$store.state.content
-                  this.saveFileLoading = true
-                  switch (this.componentId) {
-                      case 'GrapesComponent':
-                          this.$refs.contentComponent[myIndex].getHtml();
-                          newContent = this.$store.state.content;
-                          break;
-                      case 'json-viewer':
-                          newContent = JSON.stringify(this.$store.state.content);
-                          break;
-                      case 'GridManager':
-                          this.$refs.contentComponent[myIndex].getHtml();
+                          this.$refs.contentComponent.getHtml();
                           newContent = this.$store.state.content;
                           break;
                       case 'MenuBuilder':
@@ -3933,7 +3937,7 @@
                           });
                           console.log(e)
                       })
-              }
+            //   }
           } else {
               this.newProjectFolderDialog = false;
               this.fullscreenLoading = false;
@@ -4727,27 +4731,28 @@
         this.saveFileLoading = true
           let newContent = this.$store.state.content;
           var componentId = this.componentId
-          let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-          this.$refs.contentComponent[myIndex].getMenuJson();
+        //   let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
+          this.$refs.contentComponent.getMenuJson();
           newContent = this.$store.state.content;
             let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             let tempurlparts = configFileUrl.split("/");
             let fileName = '/' + tempurlparts[tempurlparts.length - 3] + '/' + tempurlparts[tempurlparts.length - 2] + '/' + tempurlparts[tempurlparts.length - 1];
             var folderUrl = configFileUrl.replace(fileName, '');
             let newJsonName
-          if (arg == 'getFileContent'){
-            let urlparts = this.taburl.split("/");
-            let fileNameOrginal = urlparts[urlparts.length - 1];
-            let fileNameParts = fileNameOrginal.split('.');
-            let actualFileNameOnly = fileNameParts[0];
-            newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
-          } else {
+        //   if (arg == 'getFileContent'){
+        //     let urlparts = this.taburl.split("/");
+        //     let fileNameOrginal = urlparts[urlparts.length - 1];
+        //     let fileNameParts = fileNameOrginal.split('.');
+        //     let actualFileNameOnly = fileNameParts[0];
+        //     newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
+        //   }
+        //    else {
             let urlparts = configFileUrl.split("/");
             let fileNameOrginal = urlparts[urlparts.length - 1];
             let fileNameParts = fileNameOrginal.split('.');
             let actualFileNameOnly = fileNameParts[0];
             newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
-          }
+        //   }
           return axios.post(config.baseURL + '/save-menu', {
               filename : newJsonName ,
               text : newContent,
@@ -4841,12 +4846,12 @@
                 // Remove item from array
                 this.globalConfigData[1].pageSettings.splice(indexOfPageName, 1);
 
-                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
-                     return o.title == last_element;
-                });
+                // let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                //      return o.title == last_element;
+                // });
 
                 // Remove item from tab
-                this.editableTabs.splice(indexOfTabArray, 1);
+                // this.editableTabs.splice(indexOfTabArray, 1);
                 // console.log('url:',folderUrl)
                 // save config file
                await this.saveConfigFile(file_path_);
@@ -4862,11 +4867,11 @@
                 // Remove item from array
                 this.globalConfigData[2].layoutOptions[0].Layout.splice(indexOfLayoutName, 1);
 
-                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
-                     return o.title == last_element;
-                });
+                // let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                //      return o.title == last_element;
+                // });
                 // Remove item from tab
-                this.editableTabs.splice(indexOfTabArray, 1);
+                // this.editableTabs.splice(indexOfTabArray, 1);
 
                 // save config file
                 this.saveConfigFile(file_path_);
@@ -4881,11 +4886,11 @@
 
                 this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
 
-                let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
-                     return o.title == last_element;
-                });
+                // let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                //      return o.title == last_element;
+                // });
                 // Remove item from tab
-                this.editableTabs.splice(indexOfTabArray, 1);
+                // this.editableTabs.splice(indexOfTabArray, 1);
               
                 // save config file
                 this.saveConfigFile(file_path_);
@@ -4903,11 +4908,11 @@
                   // Remove item from array
                   this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
 
-                  let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
-                     return o.title == last_element;
-                });
+                //   let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
+                //      return o.title == last_element;
+                // });
                 // Remove item from tab
-                this.editableTabs.splice(indexOfTabArray, 1);
+                // this.editableTabs.splice(indexOfTabArray, 1);
 
                   // save config file
                 }
@@ -5038,7 +5043,7 @@
                       message: 'Website successfully deleted..!!',
                       type: 'success'
                     });
-                    this.editableTabs = [];
+                    // this.editableTabs = [];
                   })
                   .catch((e) => {
                       this.$message({
@@ -6457,9 +6462,9 @@
 
 <style>
 /*.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{background-color: #9e9e9e8f;}*/
-  .el-tabs__new-tab {
+  /* .el-tabs__new-tab {
     display: none !important;
-  }
+  } */
   .el-tree-node {
     font-size: 14px !important;
     white-space: inherit !important;
@@ -6467,9 +6472,9 @@
   .row {
     padding: 0px !important;
   }
-  .el-tab-pane {
+  /* .el-tab-pane {
     font-size: 18px !important;
-  }
+  } */
 
   .el-select-dropdown{
       max-width: 320px !important;
