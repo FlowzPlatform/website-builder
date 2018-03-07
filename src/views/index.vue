@@ -4830,7 +4830,7 @@
                   }
               })
             .then(async (res) => {
-              // console.log('file deleted:')
+              //console.log('file deleted:')
               this.currentFile = null
               this.componentId = 'Dashboard';
 
@@ -4866,7 +4866,7 @@
                 // Remove item from tab
                 // this.editableTabs.splice(indexOfTabArray, 1);
                 // console.log('url:',folderUrl)
-                // save config file
+                //console.log("save config file")
                await this.saveConfigFile(file_path_);
               } else if (_.includes(data.path, 'Layout')) {
 
