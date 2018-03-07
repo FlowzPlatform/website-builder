@@ -1403,7 +1403,10 @@ export default {
 
   methods: {
     deletefaviconimage(){
-      this.form.brandLogoName='!!!No file uploaded!!!'
+      this.form.brandLogoName='!!!No file uploaded!!!';
+
+      $('#text2').text('Upload Image');
+      $('.valid').removeClass('correct');
     },
     linktocrm(){
       window.open('https://crm.'+config.domainkey);
@@ -2518,9 +2521,8 @@ export default {
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
         var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
-        var alldatauser = await axios.get(config.baseURL + '/project-configuration?userId=' + userid).catch((err) => { console.log(err); this.fullscreenLoading = false });
-        // console.log(config.baseURL + '/project-configuration?userId=' + userid)
-        let checkdetail = true
+        var alldatauser = await axios.get(config.baseURL + '/project-configuration?userId=' + userid).then((res)=>{
+          let checkdetail = true
         for (let i = 0; i < alldatauser.data.data.length; i++) {
           if (this.form.websitename == alldatauser.data.data[i].websiteName) {
             checkdetail = false
@@ -2538,6 +2540,9 @@ export default {
           this.form.websitename = this.configData.data.websiteName;
           return
         }
+        }).catch((err) => { console.log(err); this.fullscreenLoading = false });
+        // console.log(config.baseURL + '/project-configuration?userId=' + userid)
+        
       }
 
       var getFromBetween = {
@@ -2589,13 +2594,24 @@ export default {
       }
       
       // console.log('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid)
+      var uservid=''
+      var esuser=''
+      var virtualShopName=''
+      var passvid=''  
       if(this.form.vid!=''){
-        var projectviddetail=await axios.get('https://api.'+config.domainkey+'/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}}).catch((err) => { console.log(err); this.fullscreenLoading = false });
-        // console.log(projectviddetail.data)
-        var uservid=projectviddetail.data.userId
+
+        var projectviddetail=await axios.get('https://api.'+config.domainkey+'/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
+        .then((res)=>{
+          var uservid=projectviddetail.data.userId
         var esuser=projectviddetail.data.esUser
         var virtualShopName=projectviddetail.data.virtualShopName
         var passvid=projectviddetail.data.password  
+        }).catch((err) => {  
+        
+        console.log('@@@@@@@',err);
+      });
+        // console.log(projectviddetail.data)
+        
       }
       
       let ProjectSettings = [{
@@ -3403,7 +3419,6 @@ export default {
                       this.saveFileLoading = false;
 
                       await axios.get(config.baseURL + '/metalsmith-publish?path=' + folderUrl, {}).then(async(response) => {
-
                           await axios.post(config.baseURL + '/save-menu', {
                               filename: mainMetal,
                               text: backupMetalSmith,
@@ -3737,16 +3752,25 @@ export default {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }
+      }).then((res)=>{
+         this.vshopcategory = Allvshopid.data;
       }).catch((err) => { console.log(err); });
 
-      this.vshopcategory = Allvshopid.data;
+     
 
       
-      let gateways= await axios.get(config.paymentApiGateway).catch((err) => { console.log(err); this.fullscreenLoading = false });
-      this.Allgateway = gateways.data.gateways;
+      let gateways= await axios.get(config.paymentApiGateway)
+      .then((res)=>{
+        this.Allgateway = gateways.data.gateways;
+      }).catch((err) => { console.log(err); this.fullscreenLoading = false });
+      
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-      let crm=await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}}).catch((err) => { console.log(err);  });
-      this.crmdata=crm.data.data
+      let crm=await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      .then((res)=>{
+        this.crmdata=crm.data.data
+        
+      })
+      .catch((err) => { console.log(err);  });
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
 

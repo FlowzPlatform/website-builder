@@ -626,6 +626,14 @@
             this.options = sub_id
             this.value  = sub_id[0].value;
             localStorage.setItem("current_sub_id",this.value)
+            // if (localStorage.getItem('current_sub_id') != null || localStorage.getItem('current_sub_id') != undefined) {
+            //   this.value = localStorage.getItem('current_sub_id')
+            // }
+            // else{
+            //   this.options = sub_id
+            //   this.value  = sub_id[0].value;
+            //   localStorage.setItem("current_sub_id",this.value)
+            // }
     //this.getDataOfSubscriptionUser();
 
        // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
@@ -1358,7 +1366,7 @@
                 // 
 
                 this.componentId = 'GrapesComponent';
-                console.log('#############', this.componentId)
+                // console.log('#############', this.componentId)
                 // this.getConfigFileData();
               }
               this.fullscreenLoading = false;
@@ -4083,7 +4091,7 @@
                       SeoTitle = projectseotitle
                   }
                   if (projectfaviconhref != undefined && projectfaviconhref != '' && projectfaviconhref != '!!!No file uploaded!!!') {
-                      favicon = '<link rel="icon" type="image/png" href="' + projectfaviconhref + '">'
+                      favicon = '<link rel="icon" type="image/png" href="./../favicon.' + projectfaviconhref.split('.')[1] + '">'
                   }
 
                   if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
@@ -4815,7 +4823,12 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                  headers: {
+                      'subscriptionId': this.value,
+                      'authorization': Cookies.get('auth_token')
+                  }
+              })
             .then(async (res) => {
               // console.log('file deleted:')
               this.currentFile = null
@@ -4924,6 +4937,13 @@
             })
             .catch((e) => {
               console.log(e)
+              if (e.response.status = 403) {
+                this.$message({
+                    showClose: true,
+                    message: e.response.data.message,
+                    type: 'error'
+                });
+              }
             })
           this.componentId = 'Dashboard';
           this.isHomePage = true;
@@ -4970,7 +4990,12 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+              headers: {
+                  'subscriptionId': this.value,
+                  'authorization': Cookies.get('auth_token')
+              }
+          })
           .then((res) => {
               this.currentFile = null
               this.componentId = 'Dashboard';
@@ -4999,7 +5024,14 @@
 
           })
           .catch((e) => {
-            //console.log(e)
+            console.log(e)
+            if (e.response.status = 403) {
+                this.$message({
+                    showClose: true,
+                    message: e.response.data.message,
+                    type: 'error'
+                });
+              }
           })
         })
         .catch((e)=>{
@@ -5027,7 +5059,12 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + data.path.replace(/\\/g, "/"))
+          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                  headers: {
+                      'subscriptionId': this.value,
+                      'authorization': Cookies.get('auth_token')
+                  }
+              })
             .then(async(res) => {
 
               // Delete Repository from GitLab Server
@@ -5069,7 +5106,15 @@
               this.componentId = 'Dashboard';
             })
             .catch((e) => {
-              //console.log(e)
+              console.log(e)
+              if (e.response.status = 403) {
+                this.$message({
+                    showClose: true,
+                    message: e.response.data.message,
+                    type: 'error'
+                });
+              }
+
             })
           this.componentId = 'Dashboard';
           this.isHomePage = true;

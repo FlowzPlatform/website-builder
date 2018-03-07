@@ -1,5 +1,6 @@
 <template id="GrapesComponent">
   <div class="GrapesComponent">
+    <h5>Currently : <b>{{filename}}</b></h5>
     <div id="gjs" style="width: 100%; height: 88.8vh !important; margin-bottom: 45px"></div>
   </div>
 </template>
@@ -39,6 +40,7 @@ export default {
       pageCss: [],
       savedFile: false,
       fileUrl: '',
+      filename:'',
       assetImages: []
     }
   },
@@ -79,8 +81,9 @@ export default {
         var folderUrl = configFileUrl.replace(fileName, '');
 
         let foldername = folderUrl.split('/');
+        // this.filename=fileName.split('/')[fileName.split('/').length-1]
+        this.filename=fileName.replace('/','')
         foldername = foldername[6];
-
         //// console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
