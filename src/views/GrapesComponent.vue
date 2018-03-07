@@ -1,6 +1,6 @@
 <template id="GrapesComponent">
   <div class="GrapesComponent">
-    <h5>Current : <b>{{filename}}</b></h5>
+    <h5>Currently : <b>{{filename}}</b></h5>
     <div id="gjs" style="width: 100%; height: 88.8vh !important; margin-bottom: 45px"></div>
   </div>
 </template>
