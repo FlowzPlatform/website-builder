@@ -2748,6 +2748,7 @@
           .then(async (res) => {
             // Push repository changes
             await axios.post(config.baseURL + '/gitlab-add-repo', {
+              branchName: 'master',
               commitMessage: 'Initial Push',
               repoName: projectRepoName,
               userDetailId: Cookies.get('userDetailId')
@@ -2758,6 +2759,7 @@
                 let SHA;
                 await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
                 }).then(response => {
+                  console.log('Response commit : ', response);
                   SHA = response.data[0].id;
                   // console.log('SHA: ', SHA);
                 }).catch(error => {
@@ -2769,6 +2771,7 @@
                                         "RepositoryId": this.newRepoId,
                                         "RepositoryName": projectRepoName,
                                         "CurrentHeadSHA": SHA,
+                                        "CurrentBranch": "master",
                                         "BaseURL":newFolderName
                                       }]
                                     }, {
@@ -2948,6 +2951,7 @@
                 await axios.post(config.baseURL + '/configdata-history', {
                     configData: repoSettings,
                     commitSHA: SHA,
+                    currentBranch: 'master',
                     websiteName: projectRepoName,
                     userId: Cookies.get('userDetailId')
                 })
