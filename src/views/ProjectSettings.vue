@@ -184,7 +184,7 @@
               <hr>
               <div class="row">
                 <div class="col-md-4">
-                  <img src="http://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
+                  <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                 </div>
@@ -1321,7 +1321,6 @@ export default {
             message: 'File must be of "JSON" type.',
             type: 'error'
         });
-        //console.log('File must be of "JSON" type.');
       } else {
 
         var fileData = '';
@@ -1347,7 +1346,6 @@ export default {
                 message: 'Not a Proper variables file.',
                 type: 'error'
             });
-            //console.log('Not a Proper variables file');
           }
         }, 1000);
       }
@@ -1374,7 +1372,6 @@ export default {
             message: 'File must be of "JSON" type.',
             type: 'error'
         });
-        //console.log('File must be of "JSON" type.');
       } else {
 
         var fileData = '';
@@ -1403,7 +1400,10 @@ export default {
 
   methods: {
     deletefaviconimage(){
-      this.form.brandLogoName='!!!No file uploaded!!!'
+      this.form.brandLogoName='!!!No file uploaded!!!';
+
+      $('#text2').text('Upload Image');
+      $('.valid').removeClass('correct');
     },
     linktocrm(){
       window.open('https://crm.'+config.domainkey);
@@ -1444,12 +1444,10 @@ export default {
     },
 
     handleTabClick(tab, event) {
-      //console.log(tab, event);
     },
 
     handleChange(file, fileList) {
         this.fileList3 = fileList.slice(-3);
-        //console.log('fileList3:',this.fileList3)
         // var extract = require('extract-zip')
         // extract(source, {dir: target}, function (err) {
         //  // extraction is complete. make sure to handle the err
@@ -1522,7 +1520,6 @@ export default {
     },
 
     addNewHeader(n,index) {
-      // console.log(n,index)
       let newVariable = { headerName: '', headerValue: ''};
       this.urlVariables[index].urlHeaderVariables.push(newVariable);
     },
@@ -1614,7 +1611,6 @@ export default {
     },
 
     gatewaychange(n,index){
-      //// console.log(n,index)
      this.paymentgateway[index].fields=[]
 
      for(let i=0;i<this.Allgateway.length;i++){
@@ -1631,7 +1627,6 @@ export default {
      var ter=this.paymentgateway[index].description
      this.paymentgateway[index].description=' '
      this.paymentgateway[index].description=ter
-     //// console.log(this.paymentgateway,this.Paymentfields)
     },
 
     async addNewPlugin(pluginFileData) {
@@ -1651,7 +1646,6 @@ export default {
           type : 'file'
       })
       .then((res) => {
-        //console.log(res.data);
       })
       .catch((e) => {
           this.$message({
@@ -1671,14 +1665,12 @@ export default {
         type : 'folder'
       })
       .then(async (res) => {
-        //console.log('New Plugin Folder created!');
 
         this.settings[2].layoutOptions[0][pluginName] = [];
 
         // If it's already uploaded once
         let indexOfPartialInTreeData = _.findIndex(this.pluginsTreedata, function(o) { return o.label == pluginName; });
         if(indexOfPartialInTreeData > -1){
-          //console.log('Already uploaded plugin. I\'ll check for new variants. Plugin index: ', indexOfPartialInTreeData);
         } else {
           // Push New Object
           let pluginsParentObject = {
@@ -1689,9 +1681,6 @@ export default {
 
           this.pluginsTreedata.push(pluginsParentObject);
         }
-
-
-        //console.log('Plugins tree data: ', this.pluginsTreedata);
 
         // Loop through all partial variants
         for(let i = 0; i < pluginFileData.partials.length; i++){
@@ -1707,7 +1696,6 @@ export default {
           let indexOfPartialChildInTreeData = _.findIndex(this.pluginsTreedata[indexOfPartialInTreeData], function(o) { return o.label == pluginFileData.partials[i].title; });
 
           if(indexOfPartialChildInTreeData > -1){
-            //console.log('Already registered plugin variant.');
           } else {
 
             let indexOfParentInTreeData = _.findIndex(this.pluginsTreedata, function(o) { return o.label == pluginName; });
@@ -1793,10 +1781,8 @@ export default {
               type : 'file'
           })
           .then((res) => {
-            //console.log(variantName + ', Partial Variant Created!');
           })
           .catch((e) => {
-              //console.log(e)
           });
 
         }
@@ -1819,7 +1805,7 @@ export default {
         // let foldername = folderUrl.split('/');
         // foldername = foldername[6];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch((err) => { console.log(err); this.fullscreenLoading = false });
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch(err => { console.log(err); this.fullscreenLoading = false });
 
         if(rethinkdbCheck.data){
 
@@ -1828,7 +1814,6 @@ export default {
             configData: configData
           })
           .then(async (res) => {
-            //console.log(res.data);
           })
           .catch((e) => {
               this.$message({
@@ -2078,7 +2063,7 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch((err) => { console.log(err); this.fullscreenLoading = false });
+      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false });
 
       configData = JSON.parse(JSON.stringify(configData.data.configData))
         //// console.log('new config file:',configData);
@@ -2089,7 +2074,7 @@ export default {
             for (let p = 0; p < configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length; p++) {
               var namepartial = configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
                 //// console.log('name:',namepartial)
-              var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Partials/' + Object.keys(configData[2].layoutOptions[0])[q] + '/' + namepartial + '.partial').catch((err) => { console.log(err); this.fullscreenLoading = false });
+              var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Partials/' + Object.keys(configData[2].layoutOptions[0])[q] + '/' + namepartial + '.partial').catch(err => { console.log(err); this.fullscreenLoading = false });
               //// console.log('content of partial:',contentpage.data)
               //// console.log("inside !=pages directory")
               var content = ''
@@ -2211,7 +2196,7 @@ export default {
           //// console.log('namepage:',namepage)
           //// console.log('this.repoName:',this.repoName)
           //console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
-        var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/' + namepage).catch((err) => { console.log(err); this.fullscreenLoading = false });
+        var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/' + namepage).catch(err => { console.log(err); this.fullscreenLoading = false });
         //// console.log('contentpage:',contentpage)
 
         //// console.log("inside ==pages directory")
@@ -2513,31 +2498,28 @@ export default {
     },
 
     async saveProjectSettings() {
-      // console.log('form.websitename',this.form.websitename )
-      // console.log('configdata.websitename',this.configData.data.websiteName )
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
         var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
-        var alldatauser = await axios.get(config.baseURL + '/project-configuration?userId=' + userid).catch((err) => { console.log(err); this.fullscreenLoading = false });
-        // console.log(config.baseURL + '/project-configuration?userId=' + userid)
-        let checkdetail = true
-        for (let i = 0; i < alldatauser.data.data.length; i++) {
-          if (this.form.websitename == alldatauser.data.data[i].websiteName) {
+        await axios.get(config.baseURL + '/project-configuration?userId=' + userid).then((res)=>{
+          let checkdetail = true
+        for (let i = 0; i < res.data.data.length; i++) {
+          if (this.form.websitename == res.data.data[i].websiteName) {
             checkdetail = false
           }
         }
         if (checkdetail != false) {
-          // console.log('not same found')
         } else {
           this.$swal({
             title:'Save Aborted.',
             text: 'Website with "'+this.form.websitename+'" already exists!!!!',
             type: 'warning',
           })
-          // console.log('same name found', this.configData.data.websiteName);
           this.form.websitename = this.configData.data.websiteName;
           return
         }
+        }).catch((err) => { console.log(err);});
+        
       }
 
       var getFromBetween = {
@@ -2573,7 +2555,6 @@ export default {
         }
       };
       for(let i=0;i<this.urlVariables.length;i++){
-        // console.log(this.urlVariables[i].urlValue)
         var result=getFromBetween.get(this.urlVariables[i].urlValue, "{", "}")
         var checkurl=false
         this.urlVariables[i].finalvalue= this.urlVariables[i].urlValue
@@ -2584,18 +2565,25 @@ export default {
           if(indexurl!=-1 && this.globalVariables[indexurl].variableType=='text'){
           this.urlVariables[i].finalvalue=this.urlVariables[i].finalvalue.split('{'+result[j]+'}').join(this.globalVariables[indexurl].variableValue)
           }
-          // console.log(JSON.parse(JSON.stringify(this.urlVariables[i].finalvalue)))
         }
       }
-      
-      // console.log('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid)
+      var uservid=''
+      var esuser=''
+      var virtualShopName=''
+      var passvid=''  
       if(this.form.vid!=''){
-        var projectviddetail=await axios.get('https://api.'+config.domainkey+'/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}}).catch((err) => { console.log(err); this.fullscreenLoading = false });
-        // console.log(projectviddetail.data)
-        var uservid=projectviddetail.data.userId
-        var esuser=projectviddetail.data.esUser
-        var virtualShopName=projectviddetail.data.virtualShopName
-        var passvid=projectviddetail.data.password  
+
+        await axios.get('https://api.'+config.domainkey+'/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
+        .then(res=>{
+           uservid=res.data.userId
+           esuser=res.data.esUser
+           virtualShopName=res.data.virtualShopName
+           passvid=res.data.password  
+        }).catch((err) => {  
+        
+        console.log('@@@@@@@',err);
+      });
+        
       }
       
       let ProjectSettings = [{
@@ -2604,9 +2592,6 @@ export default {
         "BrandName": this.form.brandName,
         "BrandLogoName": this.form.brandLogoName,
         "ProjectSEOTitle": this.form.seoTitle,
-        // "ProjectSEOKeywords": this.form.seoKeywords,
-        // "ProjectSEODescription": this.form.seoDesc,
-        // "ProjectFaviconName": this.faviconName,
         "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid, "esUser":esuser,"virtualShopName":virtualShopName},
         "CrmSettingId":this.form.crmid
       }, {
@@ -2649,9 +2634,6 @@ export default {
             });
             console.log(e)
           });
-        // if (this.isProjectDetailsJsonUpdated == true) {
-         // await this.init();
-          // console.log(' this.projectDetailsJson.Projectvid', this.projectDetailsJson[0].Projectvid)
           this.projectDetailsJson[0].websiteName=this.form.websitename;
           this.projectDetailsJson[0].Projectvid.vid  = this.form.vid; 
           this.projectDetailsJson[0].Projectvid.userId = uservid;
@@ -2659,17 +2641,13 @@ export default {
           this.projectDetailsJson[0].CrmSettingId=this.form.crmid;
           this.projectDetailsJson[0].Projectvid.esUser=esuser
           this.projectDetailsJson[0].Projectvid.virtualShopName=virtualShopName
-          // console.log({"vid":this.form.vid, "userId":uservid, "password":passvid})
           let jsonFileName = this.folderUrl + '/public/assets/project-details.json';
-          // console.log(JSON.parse(JSON.stringify(this.projectDetailsJson)))
           await axios.post(config.baseURL + '/save-menu', {
               filename: jsonFileName,
               text: JSON.stringify(this.projectDetailsJson),
               type: 'file'
             })
             .then((res) => {
-              // console.log('success json file')
-              // this.isProjectDetailsJsonUpdated = false;
             })
             .catch((e) => {
               this.$message({
@@ -2681,7 +2659,6 @@ export default {
             })
            await this.init();
           this.$emit('updateProjectName');
-        // }
       } else {
         this.$message({
           showClose: true,
@@ -2694,19 +2671,10 @@ export default {
 
     revertCommit(index) {
       this.$store.state.currentIndex = index;
-      // $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
-      // $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       this.currentSha = this.commitsData[index].commitSHA;
-
-      //// console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(async response => {
-
-        // console.log(response);
-
-        // this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
-
         await axios.get(config.baseURL + '/configdata-history?commitSHA=' + this.currentSha, {
         })
         .then(async (resp) => {
@@ -3403,7 +3371,6 @@ export default {
                       this.saveFileLoading = false;
 
                       await axios.get(config.baseURL + '/metalsmith-publish?path=' + folderUrl, {}).then(async(response) => {
-
                           await axios.post(config.baseURL + '/save-menu', {
                               filename: mainMetal,
                               text: backupMetalSmith,
@@ -3733,20 +3700,32 @@ export default {
         this.fullscreenLoading = false;
       });
 
-      let Allvshopid = await axios.get(config.vshopApi, {
+       await axios.get(config.vshopApi, {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }
-      }).catch((err) => { console.log(err); });
+      }).then(res=>{
+        
+         this.vshopcategory = res.data;
+      }).catch(err => { console.log(err); });
 
-      this.vshopcategory = Allvshopid.data;
+     
 
       
-      let gateways= await axios.get(config.paymentApiGateway).catch((err) => { console.log(err); this.fullscreenLoading = false });
-      this.Allgateway = gateways.data.gateways;
+      await axios.get(config.paymentApiGateway)
+      .then(res=>{
+        
+        this.Allgateway = res.data.gateways;
+      }).catch(err => { console.log(err); });
+      
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-      let crm=await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}}).catch((err) => { console.log(err);  });
-      this.crmdata=crm.data.data
+     await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      .then(res=>{
+        
+        this.crmdata=res.data.data
+        
+      })
+      .catch(err => { console.log(err);  });
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
 
@@ -3784,18 +3763,14 @@ export default {
     updateProjectName(form) {
      this.$refs[form].validate(async (valid) => {
           if (valid) {
-            // console.log('websiteName',this.form.websitename,this.configData.data.websiteName)
             if(this.form.websitename==this.configData.data.websiteName){
               this.$swal({
                 text: 'Website with "'+this.form.websitename+'" already exists!!!!',
                 type: 'warning',
               })
             }else{
-              // console.log(this.folderUrl.split('/')[this.folderUrl.split('/').length-2])
               var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
-              // console.log('userid',userid)
-              var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch((err) => { console.log(err); this.fullscreenLoading = false });
-              // console.log('alldatauser:',alldatauser.data.data.length)
+              var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch(err => { console.log(err); this.fullscreenLoading = false });
               let checkdetail=true
               for(let i=0;i<alldatauser.data.data.length;i++){
                 if(this.form.websitename==alldatauser.data.data[i].websiteName){
@@ -3809,7 +3784,6 @@ export default {
               //   message: 'Successfully Changed Websitename.',
               //   type: 'success'
               // });
-                // console.log('not same found')
                 await this.saveProjectSettings();
                 await this.init();
                 // location.reload();
