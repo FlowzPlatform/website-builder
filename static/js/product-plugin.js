@@ -2210,6 +2210,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                         }
 
 
+
+                        $('<option />').html('-- Select --').appendTo(input);
                         $.each(partialOptions, function(key, value) {
                             var group = $('<optgroup label="' + key + '" />');
                             $.each(value, function() {
