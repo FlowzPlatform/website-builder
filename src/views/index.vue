@@ -3393,7 +3393,7 @@
                                                   }
                                               }
                                           }
-                                          // let totalPartial = content.match(/{{>/g).length;
+                                        }
                                           let namefile = fileNameOrginal.split('.')[0];
                                           let namefolder = foldername;
                                           let temp = {
@@ -3427,9 +3427,7 @@
                                               }
                                               this.saveConfigFile(folderUrl);
                                           } else {
-                                              //console.log('File doesnt exists');
                                           }
-                                      }
                                   } else {
                                       let namefile = fileNameOrginal.split('.')[0];
                                       let namefolder = foldername;
@@ -3459,7 +3457,6 @@
                                           }
                                           this.saveConfigFile(folderUrl);
                                       } else {
-                                          //console.log('File doesnt exists');
                                       }
                                   }
                               }
@@ -3596,6 +3593,7 @@
                                           }
                                       }
                                   }
+                                  name = fileName.split('/')[2].split('.')[0];
                                   this.saveConfigFile(folderUrl);
                                   let temp = {
                                       value: name,
@@ -3624,7 +3622,6 @@
                                                       })
 
                                                       if (this.globalConfigData[2].layoutOptions[0][layoutresult[v]] != undefined && indexlayoutdefaultpartial == -1) {
-
                                                           var indexlayoutpartial = _.findIndex(this.globalConfigData[2].layoutOptions[0][layoutresult[v]], function(o) {
 
                                                                   return o.value == 'default'
@@ -3689,7 +3686,6 @@
 
                                                       }
                                                   }
-                                                  
                                                   if (layoutresult.length > 0) {
                                                       for (let k = 0; k < this.globalConfigData[1].pageSettings[i].partials.length; k++) {
                                                           let checklayoutp = false
