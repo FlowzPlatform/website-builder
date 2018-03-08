@@ -3353,7 +3353,6 @@
 
                               }
                           } else {
-                              let checkValue = false;
                               if (fileName.search('.partial') != -1 && fileName.search('/Pages') == -1) {
                                   var content = ''
                                   content = this.$store.state.content;
@@ -3474,7 +3473,6 @@
                                   content1 = content1.data
                                   var result1 = [];
                                   result1 = (getFromBetween.get(content1, "{{>", "}}"));
-
                                   var DefaultParams = [];
                                   if (result1.length > 0) {
                                       var resultParam = result1
@@ -3512,6 +3510,7 @@
                                                   }
                                               }
                                           }
+                                        }
                                           for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
                                               let temp = this.globalConfigData[1].pageSettings[i].PageName
                                               temp = temp.split('.')[0]
@@ -3756,7 +3755,7 @@
                                       }
                                   }
                               }
-                          }
+                          
                       })
                       .catch((e) => {
                           this.saveFileLoading = false
