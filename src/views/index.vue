@@ -2989,73 +2989,9 @@
         });
       },
 
-    //   saveFileData(content){
-    //     axios.post(config.baseURL + '/flows-dir-listing', {
-    //       filename: this.taburl.replace(/\\/g, "\/"),
-    //       text: content,
-    //       type: 'file'
-    //     })
-    //     .then(async(res) => {
-    //       this.saveFileLoading = false;
-    //     })
-    //     .catch((e) => {
-    //       this.saveFileLoading = false
-    //       this.$message({
-    //         showClose: true,
-    //         message: 'File not saved! Please try again.',
-    //         type: 'error'
-    //       });
-    //       this.saveFileLoading = false;
-    //       //console.log(e)
-    //     })
-    //   },
-
       // Save File
      async saveFile(arg) {
-        //   this.saveFileLoading = true;
-        //   let configFileUrl;
-        //   let newContent;
           if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-            //   if (arg == 'getFileContent') {
-            //       var componentId = this.componentId
-            //       let myIndex = _.findIndex(this.$refs.contentComponent, function(o) {
-            //           return o.$vnode.componentOptions.tag === componentId;
-            //       });
-            //       this.saveFileLoading = true
-            //           // var tempContent = this.$store.state.tabChange
-            //       switch (this.componentId) {
-            //           case 'GrapesComponent':
-            //               this.$refs.contentComponent[myIndex].getHtml();
-            //               newContent = this.$store.state.content;
-            //               this.saveFileData(newContent)
-            //               break;
-            //           case 'json-viewer':
-            //               newContent = JSON.stringify(this.$store.state.content);
-            //               this.saveFileData(newContent)
-            //               break;
-            //           case 'GridManager':
-            //               this.$refs.contentComponent[myIndex].getHtml();
-            //               newContent = this.$store.state.content;
-            //               this.saveFileData(newContent)
-            //               break;
-            //           case 'MenuBuilder':
-            //               this.saveJsonFile('getFileContent');
-            //               break;
-            //           case 'MonacoEditorChild':
-            //               newContent = this.$store.state.content;
-            //               this.saveFileData(newContent)
-            //               break;
-            //           default:
-            //               newContent = this.$store.state.content;
-            //               this.saveFileLoading = false;
-            //       }
-            //       // this.$store.state.tabChange = '';
-            //   } 
-            //   else {
-                //   var componentId = this.componentId
-                //   let myIndex = _.findIndex(this.$refs.contentComponent, function(o) {
-                //       return o.$vnode.componentOptions.tag === componentId;
-                //   });
                   this.saveFileLoading = true
                   let newContent = this.$store.state.content
                   switch (this.componentId) {
@@ -3076,10 +3012,6 @@
                       default:
                           newContent = this.$store.state.content;
                   }
-
-                  // this.$store.state.tabChange = ''
-
-
                   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                   this.currentFile.path = this.$store.state.fileUrl
                   let previousUrl = this.currentFile.path;
@@ -3110,8 +3042,6 @@
                       })
                       .then(async(res) => {
                           this.saveFileLoading = false
-
-
                           var getFromBetween = {
                               results: [],
                               string: "",
@@ -3423,7 +3353,6 @@
 
                               }
                           } else {
-                              let checkValue = false;
                               if (fileName.search('.partial') != -1 && fileName.search('/Pages') == -1) {
                                   var content = ''
                                   content = this.$store.state.content;
@@ -3536,8 +3465,6 @@
                               }
                               else if (fileName.search('/Pages') != -1) {
                                   var content1 = ''
-                                      // content = this.$store.state.content;
-                                      // let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf(foldername) + foldername.length + 1, this.currentFile.path.replace(/\\/g, "\/").indexOf('.'));
 
                                   let name = fileName.split('/')[2];
                                   name = name.split('.')[0];
@@ -3545,9 +3472,7 @@
                                   content1 = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + name + '.html');
                                   content1 = content1.data
                                   var result1 = [];
-                                  // var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
                                   result1 = (getFromBetween.get(content1, "{{>", "}}"));
-
                                   var DefaultParams = [];
                                   if (result1.length > 0) {
                                       var resultParam = result1
@@ -3585,7 +3510,7 @@
                                                   }
                                               }
                                           }
-                                          // let totalPartial = content1.match(/{{>/g).length;
+                                        }
                                           for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
                                               let temp = this.globalConfigData[1].pageSettings[i].PageName
                                               temp = temp.split('.')[0]
@@ -3600,7 +3525,6 @@
                                                       var indexdefaultcheck = _.findIndex(this.globalConfigData[2].layoutOptions[0].Layout[indexlayoutname].defaultList, function(o) {
                                                               return Object.keys(o)[0] == tempPartialsvalue
                                                           })
-                                                          // console.log('indexdefaultcheck:',indexdefaultcheck)
                                                       var indexresult;
                                                       if (indexdefaultcheck == -1) {
                                                           indexresult = _.findIndex(result1, function(o) {
@@ -3623,7 +3547,6 @@
                                                               result1.push(Object.keys(this.globalConfigData[2].layoutOptions[0].Layout[indexlayoutname].defaultList[indexdefaultcheck])[0])
                                                               var obj = {}
                                                               obj[this.globalConfigData[2].layoutOptions[0].Layout[indexlayoutname].partialsList[c]] = this.globalConfigData[2].layoutOptions[0].Layout[indexlayoutname].defaultList[indexdefaultcheck][Object.keys(this.globalConfigData[2].layoutOptions[0].Layout[indexlayoutname].defaultList[indexdefaultcheck])[0]]
-                                                                  // console.log('obj',obj)
                                                               DefaultParams.push(obj)
                                                           }
                                                       }
@@ -3631,7 +3554,6 @@
                                                   }
                                                   for (let k = 0; k < result1.length; k++) {
                                                       let checkpartial = false
-                                                          //// console.log("result[k]:", result[k])
                                                       for (var r = 0; r < partials.length; r++) {
                                                           if (Object.keys(partials[r])[0] == result1[k]) {
 
@@ -3650,10 +3572,7 @@
                                                                       }
                                                                   }
 
-                                                              }
-                                                              // else {
-                                                              //   checkpartial = false
-                                                              // }
+                                                              } 
                                                           }
 
                                                       }
@@ -3673,75 +3592,11 @@
                                                       }
                                                   }
                                               } else if (name != temp) {
-                                                  //console.log("File not found in configData")
                                               }
                                           }
                                       }
                                   }
                                   this.saveConfigFile(folderUrl);
-                                  // var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
-                                  // if (vueresult.length > 0) {
-                                  //   for (let i = 0; i < vueresult.length; i++) {
-                                  //     var tempvue = vueresult[i]
-                                  //     var tempvue = tempvue.trim().split(' ')
-                                  //     if (tempvue[2] != undefined) {
-                                  //       var vuetemp = {
-                                  //         partialsName: tempvue[0].replace(/"/g, ''),
-                                  //         value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue',
-                                  //         options: tempvue[2].split('=')[1].replace(/"/g, '')
-                                  //       }
-                                  //     } else {
-                                  //       var vuetemp = {
-                                  //         partialsName: tempvue[0].replace(/"/g, ''),
-                                  //         value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue'
-                                  //       }
-                                  //     }
-
-                                  //     for (let i = 0; i < this.globalConfigData[1].pageSettings.length; i++) {
-                                  //       let temp = this.globalConfigData[1].pageSettings[i].PageName
-                                  //       temp = temp.split('.')[0]
-                                  //       if (name == temp) {
-                                  //         if (this.globalConfigData[1].pageSettings[i].VueComponents != undefined) {
-                                  //           let checkvue = false
-                                  //           for (let j = 0; j < this.globalConfigData[1].pageSettings[i].VueComponents.length; j++) {
-                                  //             if (this.globalConfigData[1].pageSettings[i].VueComponents[j].partialsName == tempvue[0].replace(/"/g, '')) {
-                                  //               if (this.globalConfigData[1].pageSettings[i].VueComponents[j].value.split('.')[0] == tempvue[1].split('=')[1].replace(/"/g, '')) {
-                                  //                 checkvue = true;
-                                  //                 if (this.globalConfigData[1].pageSettings[i].VueComponents[j].options != '') {
-                                  //                   if (tempvue[2] != undefined) {
-
-                                  //                     this.globalConfigData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
-                                  //                   } else {
-                                  //                     this.globalConfigData[1].pageSettings[i].VueComponents[j].options = ''
-                                  //                   }
-                                  //                 } else {
-                                  //                   if (tempvue[2] != undefined) {
-
-                                  //                     this.globalConfigData[1].pageSettings[i].VueComponents[j]['options'] = ''
-                                  //                     this.globalConfigData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
-                                  //                   } else {
-
-                                  //                   }
-                                  //                 }
-                                  //               } else {
-                                  //               }
-
-                                  //             }
-                                  //           }
-                                  //           if (checkvue != true) {
-
-                                  //             this.globalConfigData[1].pageSettings[i].VueComponents.push(vuetemp)
-                                  //           }
-                                  //         } else {
-                                  //           this.globalConfigData[1].pageSettings[i]['VueComponents'] = []
-                                  //           this.globalConfigData[1].pageSettings[i].VueComponents.push(vuetemp)
-                                  //         }
-                                  //       }
-                                  //     }
-                                  //   }
-                                  // }
-                                  // this.saveConfigFile(folderUrl);
-
                                   let temp = {
                                       value: name,
                                       label: name
@@ -3753,30 +3608,7 @@
                                           temp = temp.split('.')[0]
                                           if (name == temp) {
                                               checkValue = true;
-                                              // if (vueresult.length <= 0) {
-                                              //   if (this.globalConfigData[1].pageSettings[i].VueComponents != undefined && this.globalConfigData[1].pageSettings[i].VueComponents.length > 0) {
-                                              //     this.globalConfigData[1].pageSettings[i].VueComponents = [];
-                                              //     this.saveConfigFile(folderUrl);
-                                              //   }
-                                              // }
-                                              // if (result1.length <= 0) {
-                                              //     // var layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + this.globalConfigData[1].pageSettings[i].PageLayout + '.layout');
-                                              //     // layoutdata = layoutdata.data
-                                              //     // var layoutresult = (getFromBetween.get(layoutdata, "{{>", "}}"));
-                                              //     // var DefaultParams = [];
-                                              //   var layoutresult = [];
-                                              //   var layoutDefault=[];
-                                              //   for (let k = 0; k < this.globalConfigData[2].layoutOptions[0].Layout.length; k++) {
-                                              //     if (this.globalConfigData[2].layoutOptions[0].Layout[k].value == this.globalConfigData[1].pageSettings[i].PageLayout) {
-                                              //       layoutresult = JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList))
-                                              //       layoutDefault = JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList))
-                                              //     }
-                                              //   }
                                               if (result1.length <= 0) {
-                                                  // var layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + this.globalConfigData[1].pageSettings[i].PageLayout + '.layout');
-                                                  // layoutdata = layoutdata.data
-                                                  // var layoutresult = (getFromBetween.get(layoutdata, "{{>", "}}"));
-                                                  // var DefaultParams = [];
                                                   var layoutresult = [];
                                                   var layoutDefault = [];
                                                   for (let k = 0; k < this.globalConfigData[2].layoutOptions[0].Layout.length; k++) {
@@ -3798,7 +3630,6 @@
                                                                   return o.value == 'default'
 
                                                               })
-                                                              // console.log(this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial])
                                                           var tempvalue = this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial].partialsList
                                                           if (tempvalue != undefined) {
                                                               for (let z = 0; z < tempvalue.length; z++) {
@@ -3816,8 +3647,6 @@
                                                                           layoutDefault.push(obj)
                                                                       } else {
                                                                           layoutresult.push(tempvalue[z])
-                                                                              // var obj={}
-                                                                              // obj[tempvalue[z]]=this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial].defaultList[]
                                                                           layoutDefault.push(this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial].defaultList[checkdefaultvaluepartial])
                                                                       }
 
@@ -3826,13 +3655,11 @@
                                                           }
 
                                                       } else if (this.globalConfigData[2].layoutOptions[0][layoutresult[v]] != undefined && indexlayoutdefaultpartial != -1) {
-                                                          // console.log('layoutDefault',layoutDefault[indexlayoutdefaultpartial][layoutresult[v]])
                                                           var indexlayoutpartial = _.findIndex(this.globalConfigData[2].layoutOptions[0][layoutresult[v]], function(o) {
 
                                                                   return o.value == layoutDefault[indexlayoutdefaultpartial][layoutresult[v]].split('.')[0]
 
                                                               })
-                                                              // console.log(this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial])
                                                           if (this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial].partialsList != undefined) {
 
                                                               var tempvalue = this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial].partialsList
@@ -3852,8 +3679,6 @@
                                                                               layoutDefault.push(obj)
                                                                           } else {
                                                                               layoutresult.push(tempvalue[z])
-                                                                                  // var obj={}
-                                                                                  // obj[tempvalue[z]]=this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial].defaultList[]
                                                                               layoutDefault.push(this.globalConfigData[2].layoutOptions[0][layoutresult[v]][indexlayoutpartial].defaultList[checkdefaultvaluepartial])
                                                                           }
 
@@ -3863,8 +3688,6 @@
                                                           }
 
                                                       }
-
-                                                      // }
                                                   }
                                                   
                                                   if (layoutresult.length > 0) {
@@ -3928,13 +3751,11 @@
                                                   }
                                               }
                                           }
-
-
                                           this.saveConfigFile(folderUrl);
                                       }
                                   }
                               }
-                          }
+                          
                       })
                       .catch((e) => {
                           this.saveFileLoading = false
@@ -3945,7 +3766,6 @@
                           });
                           console.log(e)
                       })
-            //   }
           } else {
               this.newProjectFolderDialog = false;
               this.fullscreenLoading = false;
@@ -5053,7 +4873,7 @@
 
         this.$swal({
           title: 'Are you sure?',
-          text: 'You want you delete this Website!',
+          html: 'You want you delete <u>'+responseConfig.data.websiteName+'</u> Website!',
           type: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Yes, delete it!',
