@@ -184,7 +184,7 @@
               <hr>
               <div class="row">
                 <div class="col-md-4">
-                  <img src="http://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
+                  <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                 </div>
@@ -2498,8 +2498,6 @@ export default {
     },
 
     async saveProjectSettings() {
-      // console.log('form.websitename',this.form.websitename )
-      // console.log('configdata.websitename',this.configData.data.websiteName )
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
         var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
@@ -2511,19 +2509,16 @@ export default {
           }
         }
         if (checkdetail != false) {
-          // console.log('not same found')
         } else {
           this.$swal({
             title:'Save Aborted.',
             text: 'Website with "'+this.form.websitename+'" already exists!!!!',
             type: 'warning',
           })
-          // console.log('same name found', this.configData.data.websiteName);
           this.form.websitename = this.configData.data.websiteName;
           return
         }
         }).catch((err) => { console.log(err);});
-        // console.log(config.baseURL + '/project-configuration?userId=' + userid)
         
       }
 
@@ -2560,7 +2555,6 @@ export default {
         }
       };
       for(let i=0;i<this.urlVariables.length;i++){
-        // console.log(this.urlVariables[i].urlValue)
         var result=getFromBetween.get(this.urlVariables[i].urlValue, "{", "}")
         var checkurl=false
         this.urlVariables[i].finalvalue= this.urlVariables[i].urlValue
@@ -2571,11 +2565,8 @@ export default {
           if(indexurl!=-1 && this.globalVariables[indexurl].variableType=='text'){
           this.urlVariables[i].finalvalue=this.urlVariables[i].finalvalue.split('{'+result[j]+'}').join(this.globalVariables[indexurl].variableValue)
           }
-          // console.log(JSON.parse(JSON.stringify(this.urlVariables[i].finalvalue)))
         }
       }
-      
-      // console.log('https://api.flowzcluster.tk/pdmnew/vshopdata/'+this.form.vid)
       var uservid=''
       var esuser=''
       var virtualShopName=''
@@ -2583,16 +2574,15 @@ export default {
       if(this.form.vid!=''){
 
         await axios.get('https://api.'+config.domainkey+'/pdmnew/vshopdata/'+this.form.vid,{headers:{'Authorization':Cookies.get('auth_token')}})
-        .then((res)=>{
-          var uservid=res.data.userId
-        var esuser=res.data.esUser
-        var virtualShopName=res.data.virtualShopName
-        var passvid=res.data.password  
+        .then(res=>{
+           uservid=res.data.userId
+           esuser=res.data.esUser
+           virtualShopName=res.data.virtualShopName
+           passvid=res.data.password  
         }).catch((err) => {  
         
         console.log('@@@@@@@',err);
       });
-        // console.log(projectviddetail.data)
         
       }
       
@@ -2602,9 +2592,6 @@ export default {
         "BrandName": this.form.brandName,
         "BrandLogoName": this.form.brandLogoName,
         "ProjectSEOTitle": this.form.seoTitle,
-        // "ProjectSEOKeywords": this.form.seoKeywords,
-        // "ProjectSEODescription": this.form.seoDesc,
-        // "ProjectFaviconName": this.faviconName,
         "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid, "esUser":esuser,"virtualShopName":virtualShopName},
         "CrmSettingId":this.form.crmid
       }, {
@@ -2647,9 +2634,6 @@ export default {
             });
             console.log(e)
           });
-        // if (this.isProjectDetailsJsonUpdated == true) {
-         // await this.init();
-          // console.log(' this.projectDetailsJson.Projectvid', this.projectDetailsJson[0].Projectvid)
           this.projectDetailsJson[0].websiteName=this.form.websitename;
           this.projectDetailsJson[0].Projectvid.vid  = this.form.vid; 
           this.projectDetailsJson[0].Projectvid.userId = uservid;
@@ -2657,17 +2641,13 @@ export default {
           this.projectDetailsJson[0].CrmSettingId=this.form.crmid;
           this.projectDetailsJson[0].Projectvid.esUser=esuser
           this.projectDetailsJson[0].Projectvid.virtualShopName=virtualShopName
-          // console.log({"vid":this.form.vid, "userId":uservid, "password":passvid})
           let jsonFileName = this.folderUrl + '/public/assets/project-details.json';
-          // console.log(JSON.parse(JSON.stringify(this.projectDetailsJson)))
           await axios.post(config.baseURL + '/save-menu', {
               filename: jsonFileName,
               text: JSON.stringify(this.projectDetailsJson),
               type: 'file'
             })
             .then((res) => {
-              // console.log('success json file')
-              // this.isProjectDetailsJsonUpdated = false;
             })
             .catch((e) => {
               this.$message({
@@ -2679,7 +2659,6 @@ export default {
             })
            await this.init();
           this.$emit('updateProjectName');
-        // }
       } else {
         this.$message({
           showClose: true,
@@ -2692,19 +2671,10 @@ export default {
 
     revertCommit(index) {
       this.$store.state.currentIndex = index;
-      // $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
-      // $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
       this.currentSha = this.commitsData[index].commitSHA;
-
-      //// console.log(this.commitsData[index].commitSHA);
       axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
       }).then(async response => {
-
-        // console.log(response);
-
-        // this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
-
         await axios.get(config.baseURL + '/configdata-history?commitSHA=' + this.currentSha, {
         })
         .then(async (resp) => {
