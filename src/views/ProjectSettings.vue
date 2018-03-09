@@ -62,6 +62,7 @@
 
               <div class="col-md-12" v-else>
                 <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+                <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: [1] <strong>ns1.flowzdigital.com</strong> [2] <strong>ns2.flowzdigital.com</strong></p>
                 <div style="margin-top: 15px;">
                   <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
                 </div>
@@ -972,11 +973,12 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Revision Date</th>
+                      <th width="260">Revision Date</th>
                       <th>Revision Name</th>
                       <th>Revision Message</th>
                       <!-- <th>Revision SHA</th> -->
-                      <th>Revert To Revision</th>
+                      <th>Rollback</th>
+                      <th width="120">Download Code</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -988,6 +990,8 @@
                       <td>
                         <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.branchName != currentBranchName" size="small">Restore</el-button>
                         <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.branchName == currentBranchName">
+                      </td>
+                      <td>
                         <el-tooltip content="Download .zip" placement="top">
                           <el-button @click.native.prevent="exportWebsite(index)" type="info" size="small"><i class="fa fa-download fa-fw"></i></el-button>
                         </el-tooltip>
@@ -4233,7 +4237,7 @@ export default {
 
   .green-tick-img{
     width: 15px;
-    margin-right: 56px;
+    /*margin-right: 56px;*/
   }
 
   .asset-image{
@@ -4290,5 +4294,9 @@ export default {
   .view-template i {
     margin-left: 6px;
     margin-top: 6px;
+  }
+
+  .custom-note{
+    margin: 10px 0;
   }
 </style>

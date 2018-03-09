@@ -5434,6 +5434,7 @@
 
                   await axios.post(config.baseURL + '/gitlab-add-repo', {
                     commitMessage: 'Initial Push',
+                    branchName: 'master',
                     repoName: this.repoName,
                     userDetailId: Cookies.get('userDetailId')
                   }).then(async response => {
