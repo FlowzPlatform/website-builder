@@ -970,12 +970,12 @@
         <div class="row">
             <div class="col-md-12" style="margin-top: 2%">
               <div class="table-responsive">
-                <table class="table">
+                <table class="table" id="revisionsTable">
                   <thead>
                     <tr>
-                      <th width="260">Revision Date</th>
-                      <th>Revision Name</th>
-                      <th>Revision Message</th>
+                      <th width="260" @click="sortBranchesTable(0)">Revision Date <i class="fa fa-sort pull-right"></i></th>
+                      <th @click="sortBranchesTable(1)">Revision Name <i class="fa fa-sort pull-right"></i></th>
+                      <th @click="sortBranchesTable(2)">Revision Message <i class="fa fa-sort pull-right"></i></th>
                       <!-- <th>Revision SHA</th> -->
                       <th>Rollback</th>
                       <th width="120">Download Code</th>
@@ -1473,6 +1473,61 @@ export default {
   },
 
   methods: {
+    sortBranchesTable(n){
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("revisionsTable");
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "asc"; 
+      /* Make a loop that will continue until
+      no switching has been done: */
+      while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.getElementsByTagName("TR");
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch= true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch= true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1:
+          switchcount ++; 
+        } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    },
+
     deletefaviconimage(){
       this.form.brandLogoName='!!!No file uploaded!!!';
 
@@ -3851,6 +3906,8 @@ export default {
         this.fullscreenLoading = false;
       });
 
+      this.sortBranchesTable(0);
+
 
       await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/public/assets/project-details.json', {
       }).then(response => {
@@ -4255,5 +4312,13 @@ export default {
 
   .custom-note{
     margin: 10px 0;
+  }
+
+  #revisionsTable th {
+      cursor: pointer;
+  }
+
+  #revisionsTable th i {
+      margin-right: 20px;
   }
 </style>
