@@ -1,6 +1,7 @@
 <template id="GrapesComponent">
   <div class="GrapesComponent">
-    <h5>Currently : <b>{{filename}}</b></h5>
+    <a class="btn-file-name">{{filename}}</a>
+    <!-- <h5> <b>{{filename}}</b>  </h5> -->
     <div id="gjs" style="width: 100%; height: 88.8vh !important; margin-bottom: 45px"></div>
   </div>
 </template>
@@ -620,4 +621,55 @@ export default {
 .gjs-am-preview-cont{
     width: 15% !important;
 }
+
+.btn-file-name {
+  display: inline-block;
+  background: #464646;
+  border: 0.125em solid rgba(0,0,0,0.4);
+  padding: 0.5em 1em;
+  position: relative;
+
+  color: #DCDCDC !important;
+  font: 14px "Oswald", helvetica, arial, sans-serif;
+  /*text-transform: uppercase;*/
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  margin-right: 3em;
+}
+
+.btn-file-name.double:before,
+.btn-file-name:after {
+  content: "";
+  position: absolute;
+  display: block;
+  background: #464646;
+  border: 0.125em solid rgba(0,0,0,0.4);
+
+  width: 1.125em;
+  height: 112%;
+  top: -0.125em;
+
+  -webkit-transform-origin: bottom left;
+  -moz-transform-origin: bottom left;
+  transform-origin: bottom left;
+}
+
+.btn-file-name:after {
+  right: -0.25em;
+  -webkit-transform: skewX(-20deg);
+  -moz-transform: skewX(-20deg);
+  transform: skewX(-20deg);
+  border-left: none;
+}
+
+.btn-file-name.double:before {
+  left: -0.25em;
+  -webkit-transform: skewX(20deg);
+  -moz-transform: skewX(20deg);
+  transform: skewX(20deg);
+  border-right: none;
+}
+
 </style>

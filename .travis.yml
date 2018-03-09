@@ -9,6 +9,7 @@ branches:
   only:
   - master
   - develop
+  - staging
   - QA
 
 jobs:
@@ -27,6 +28,14 @@ jobs:
             docker images;
             docker tag web_builder_fronted_flowz:dev $DOCKER_USERNAME/web_builder_fronted_flowz:dev;
             docker push $DOCKER_USERNAME/web_builder_fronted_flowz:dev;
+        elif [ ${TRAVIS_BRANCH} = "staging" ]; then
+            docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+            docker build -t web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER --build-arg domainkey="$DOMAINKEY_STAGING" .;
+            docker tag web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER $DOCKER_USERNAME/web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER;
+            docker tag web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER $DOCKER_USERNAME/web_builder_fronted_flowz:staging;
+            docker images;
+            docker push $DOCKER_USERNAME/web_builder_fronted_flowz:$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER;
+            docker push $DOCKER_USERNAME/web_builder_fronted_flowz:staging;    
         else
             docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
             docker build -t web_builder_fronted_flowz:qa --build-arg domainkey="$DOMAINKEY_QA" .;
