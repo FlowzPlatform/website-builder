@@ -2748,6 +2748,7 @@
           .then(async (res) => {
             // Push repository changes
             await axios.post(config.baseURL + '/gitlab-add-repo', {
+              branchName: 'master',
               commitMessage: 'Initial Push',
               repoName: projectRepoName,
               userDetailId: Cookies.get('userDetailId')
@@ -2758,6 +2759,7 @@
                 let SHA;
                 await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
                 }).then(response => {
+                  console.log('Response commit : ', response);
                   SHA = response.data[0].id;
                   // console.log('SHA: ', SHA);
                 }).catch(error => {
@@ -2769,6 +2771,7 @@
                                         "RepositoryId": this.newRepoId,
                                         "RepositoryName": projectRepoName,
                                         "CurrentHeadSHA": SHA,
+                                        "CurrentBranch": "master",
                                         "BaseURL":newFolderName
                                       }]
                                     }, {
@@ -2948,6 +2951,7 @@
                 await axios.post(config.baseURL + '/configdata-history', {
                     configData: repoSettings,
                     commitSHA: SHA,
+                    currentBranch: 'master',
                     websiteName: projectRepoName,
                     userId: Cookies.get('userDetailId')
                 })
@@ -3393,7 +3397,7 @@
                                                   }
                                               }
                                           }
-                                          // let totalPartial = content.match(/{{>/g).length;
+                                        }
                                           let namefile = fileNameOrginal.split('.')[0];
                                           let namefolder = foldername;
                                           let temp = {
@@ -3427,9 +3431,7 @@
                                               }
                                               this.saveConfigFile(folderUrl);
                                           } else {
-                                              //console.log('File doesnt exists');
                                           }
-                                      }
                                   } else {
                                       let namefile = fileNameOrginal.split('.')[0];
                                       let namefolder = foldername;
@@ -3459,7 +3461,6 @@
                                           }
                                           this.saveConfigFile(folderUrl);
                                       } else {
-                                          //console.log('File doesnt exists');
                                       }
                                   }
                               }
@@ -3596,6 +3597,7 @@
                                           }
                                       }
                                   }
+                                  name = fileName.split('/')[2].split('.')[0];
                                   this.saveConfigFile(folderUrl);
                                   let temp = {
                                       value: name,
@@ -3624,7 +3626,6 @@
                                                       })
 
                                                       if (this.globalConfigData[2].layoutOptions[0][layoutresult[v]] != undefined && indexlayoutdefaultpartial == -1) {
-
                                                           var indexlayoutpartial = _.findIndex(this.globalConfigData[2].layoutOptions[0][layoutresult[v]], function(o) {
 
                                                                   return o.value == 'default'
@@ -3689,7 +3690,6 @@
 
                                                       }
                                                   }
-                                                  
                                                   if (layoutresult.length > 0) {
                                                       for (let k = 0; k < this.globalConfigData[1].pageSettings[i].partials.length; k++) {
                                                           let checklayoutp = false
@@ -5117,6 +5117,7 @@
 
                     }).catch(error => {
                       //console.log("Some error occured: ", error);
+                      this.fullscreenLoading = false;
                     });
                     
                     let clonedWebsiteData = await this.getConfigFileData(newFolderName);
@@ -5184,7 +5185,8 @@
                           // this.getData();
                         })
                         .catch((e) => {
-                            console.log(e)
+                            console.log(e);
+                            this.fullscreenLoading = false;
                         });
 
 
@@ -5207,17 +5209,20 @@
                           this.getData();
                         })
                         .catch((e) => {
-                            console.log(e)
+                            console.log(e);
+                            this.fullscreenLoading = false;
                         });
                       })
                       .catch((e) => {
-                          console.log(e)
+                          console.log(e);
+                          this.fullscreenLoading = false;
                       });
 
                       
                     })
                     .catch((esourceConfig) => {
-                        console.log(e)
+                        console.log(e);
+                        this.fullscreenLoading = false;
                     });
 
                   })
@@ -5227,6 +5232,7 @@
                       message: 'Server error',
                       type: 'error'
                     });
+                    this.fullscreenLoading = false;
                     console.log(e)
                   })
 
@@ -5250,6 +5256,7 @@
 
                   await axios.post(config.baseURL + '/gitlab-add-repo', {
                     commitMessage: 'Initial Push',
+                    branchName: 'master',
                     repoName: this.repoName,
                     userDetailId: Cookies.get('userDetailId')
                   }).then(async response => {
@@ -5340,11 +5347,20 @@
 
             })
             .catch((e) => {
-              console.log(e)
+              console.log(e);
+              this.fullscreenLoading = false;
             });
           })
           .catch((e) => {
-            console.log(e)
+            console.log(e);
+            if (e.response.status = 403) {
+                this.$message({
+                    showClose: true,
+                    message: e.response.data.message,
+                    type: 'error'
+                });
+            }
+            this.fullscreenLoading = false;
           });          
         }).catch((dismiss) => {
           //console.log('error', dismiss)
@@ -6303,19 +6319,19 @@
   /*Change angle arrow in open/closed */
 
   .hamburger.is-closed > .sideOpener > .fa-angle-right {
-      display: table-cell;
+      display: none;
   }
 
   .hamburger.is-closed > .sideOpener > .fa-angle-left {
-      display: none;
+      display: table-cell;
   }
 
   .hamburger.is-open > .sideOpener > .fa-angle-right {
-      display: none;
+      display: table-cell;
   }
 
   .hamburger.is-open > .sideOpener > .fa-angle-left {
-      display: table-cell;
+      display: none;
   }
 
   .tree-data-spinner{
