@@ -5117,6 +5117,7 @@
 
                     }).catch(error => {
                       //console.log("Some error occured: ", error);
+                      this.fullscreenLoading = false;
                     });
                     
                     let clonedWebsiteData = await this.getConfigFileData(newFolderName);
@@ -5184,7 +5185,8 @@
                           // this.getData();
                         })
                         .catch((e) => {
-                            console.log(e)
+                            console.log(e);
+                            this.fullscreenLoading = false;
                         });
 
 
@@ -5207,17 +5209,20 @@
                           this.getData();
                         })
                         .catch((e) => {
-                            console.log(e)
+                            console.log(e);
+                            this.fullscreenLoading = false;
                         });
                       })
                       .catch((e) => {
-                          console.log(e)
+                          console.log(e);
+                          this.fullscreenLoading = false;
                       });
 
                       
                     })
                     .catch((esourceConfig) => {
-                        console.log(e)
+                        console.log(e);
+                        this.fullscreenLoading = false;
                     });
 
                   })
@@ -5227,6 +5232,7 @@
                       message: 'Server error',
                       type: 'error'
                     });
+                    this.fullscreenLoading = false;
                     console.log(e)
                   })
 
@@ -5340,11 +5346,13 @@
 
             })
             .catch((e) => {
-              console.log(e)
+              console.log(e);
+              this.fullscreenLoading = false;
             });
           })
           .catch((e) => {
-            console.log(e)
+            console.log(e);
+            this.fullscreenLoading = false;
           });          
         }).catch((dismiss) => {
           //console.log('error', dismiss)
@@ -6303,19 +6311,19 @@
   /*Change angle arrow in open/closed */
 
   .hamburger.is-closed > .sideOpener > .fa-angle-right {
-      display: table-cell;
+      display: none;
   }
 
   .hamburger.is-closed > .sideOpener > .fa-angle-left {
-      display: none;
+      display: table-cell;
   }
 
   .hamburger.is-open > .sideOpener > .fa-angle-right {
-      display: none;
+      display: table-cell;
   }
 
   .hamburger.is-open > .sideOpener > .fa-angle-left {
-      display: table-cell;
+      display: none;
   }
 
   .tree-data-spinner{
