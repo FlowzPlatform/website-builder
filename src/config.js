@@ -102,5 +102,5 @@ module.exports = {
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
-    gitLabIpAddress: 'http://47.88.50.66/'
+    gitLabIpAddress: 'http://209.50.53.116/'
 }
