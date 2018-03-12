@@ -3807,11 +3807,15 @@
           Cookies.remove('subscriptionId', {
             domain: location
           });
-          this.$swal("You're Logged Out From System. Please login again!")
-            .then((value) => {
-              window.location = '/login'
+              this.$message({
+              message: 'You\'re Logged Out From System. Please login again!',
+              type: 'error',
+              onClose(){
+                window.location = '/login'
+              }
             });
         }
+
       },
       // Ends Save File
 
