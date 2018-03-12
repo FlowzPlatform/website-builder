@@ -3785,7 +3785,6 @@
                 message: 'File not saved! Please try again.',
                 type: 'error'
               });
-
               console.log(e)
             })
         } else {
@@ -3815,7 +3814,7 @@
                 window.location = '/login'
               }
             });
-          }
+        }
 
       },
       // Ends Save File
@@ -5421,12 +5420,12 @@
           }
           else{
             this.fullscreenLoading=false
-             this.$refs[projectName].resetFields();
             this.$message({
             showClose: true,
             message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
             type: 'error'
-          });
+            });
+           this.$refs[projectName].resetFields();
           
           }
           }
