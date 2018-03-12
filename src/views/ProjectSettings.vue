@@ -2860,21 +2860,22 @@ export default {
 
         this.fullscreenLoading = true;
 
-        var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false});
-        var rawConfigs = responseConfig.data.configData;
-        var partialstotal = []
-        var pageSeoTitle;
-        var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
-        var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
-        var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
-        var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
-        var projectscripts = rawConfigs[1].projectSettings[1].ProjectScripts
-        var projectstyles = rawConfigs[1].projectSettings[1].ProjectStyles
-        var projectseotitle = rawConfigs[1].projectSettings[0].ProjectSEOTitle;
-        var ProjectFaviconName = rawConfigs[1].projectSettings[0].BrandLogoName
-        var favicon = ''
-        var SeoTitle = ''
+        let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false});
+        let responseConfigLoop =responseConfig;
+        let rawConfigs = responseConfig.data.configData;
+        let partialstotal = []
+        let pageSeoTitle;
+        let externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
+        let externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
+        let metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
+        let ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
+        let projectscripts = rawConfigs[1].projectSettings[1].ProjectScripts
+        let projectstyles = rawConfigs[1].projectSettings[1].ProjectStyles
+        let projectseotitle = rawConfigs[1].projectSettings[0].ProjectSEOTitle;
+        let ProjectFaviconName = rawConfigs[1].projectSettings[0].BrandLogoName
+        let favicon = ''
+        let SeoTitle = ''
         var getFromBetween = {
           results: [],
           string: "",
@@ -2998,7 +2999,7 @@ export default {
           }
 
           var partials = ''
-          let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
+          // let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
           var rawSettings = responseConfigLoop.data.configData;
           var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
