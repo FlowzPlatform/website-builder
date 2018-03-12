@@ -47,7 +47,7 @@
                   <div style="margin-right:10px; margin: 15px;">
                       <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
                       <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'">Save</el-button>
+                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save</el-button>
                   </div>
               </div>
 
@@ -579,41 +579,48 @@
       app.service("flows-dir-listing").on("removed", (response) => {
           if (response['errno'] == undefined) {
               var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
-              //console.log(s);
-              let objCopy = self.directoryTree
-              let evalStr = 'self.directoryTree'
-              let $eval = eval(evalStr)
-              for (var i = 0; i < s.length; i++) {
-                  let inx = _.findIndex($eval, function(d) {
-                      return d.name == s[i]
-                  })
-                  if (inx >= 0 && $eval[inx]["children"] != undefined && $eval[inx].path != response) {
-                      if ($eval[inx].children.length > 0) {
-                          evalStr += '[' + inx + ']["children"]'
-                          $eval = eval(evalStr)
-                      }
-                  }
-              }
-              let inx = _.findIndex($eval, function(d) {
-                  return d.path == response
-              })
-              if (inx >= 0) {
-                  $eval.splice(inx, 1)
-                  if (self.currentFile != null) {
-                      if (self.currentFile.path == response) {
-                          self.$message({
-                              showClose: true,
-                              message: 'Successfully Deleted!',
-                              type: 'error'
-                          });
-                          self.currentFile = null
-                          self.componentId = null
-                      }
-                  }
+
+              if(s[5] == Cookies.get('userDetailId')){
+                //console.log(s);
+                let objCopy = self.directoryTree
+                let evalStr = 'self.directoryTree'
+                let $eval = eval(evalStr)
+                for (var i = 0; i < s.length; i++) {
+                    let inx = _.findIndex($eval, function(d) {
+                        return d.name == s[i]
+                    })
+                    if (inx >= 0 && $eval[inx]["children"] != undefined && $eval[inx].path != response) {
+                        if ($eval[inx].children.length > 0) {
+                            evalStr += '[' + inx + ']["children"]'
+                            $eval = eval(evalStr)
+                        }
+                    }
+                }
+                let inx = _.findIndex($eval, function(d) {
+                    return d.path == response
+                })
+                if (inx >= 0) {
+                    $eval.splice(inx, 1)
+                    if (self.currentFile != null) {
+                        if (self.currentFile.path == response) {
+                            self.$message({
+                                showClose: true,
+                                message: 'Successfully Deleted!',
+                                type: 'error'
+                            });
+                            self.currentFile = null
+                            self.componentId = null
+                        }
+                    }
+                }
+
+                this.getData();
+              } else {
+
               }
           }
 
-          this.getData();
+          
       });
       let sub_id = []
         await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
@@ -676,6 +683,7 @@
             //axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             await this.getData();
+            this.componentId = 'Dashboard';
             this.fullscreenLoading=false
           }).catch((e)=>{
             //  this.$message({
@@ -866,10 +874,13 @@
           Cookies.remove('email' ,{domain: location});
           Cookies.remove('userDetailId' ,{domain: location}); 
           Cookies.remove('subscriptionId' ,{domain: location}); 
-          this.$swal("You're Logged Out From System. Please login again!")
-          .then((value) => {
-            window.location = '/login'
-          });
+          this.$message({
+              message: 'You\'re Logged Out From System. Please login again!',
+              type: 'error',
+              onClose(){
+                window.location = '/login'
+              }
+            });
         }
       },
 
@@ -1665,9 +1676,12 @@
           Cookies.remove('subscriptionId', {
             domain: location
           });
-          this.$swal("You're Logged Out From System. Please login again!")
-            .then((value) => {
-              window.location = '/login'
+          this.$message({
+              message: 'You\'re Logged Out From System. Please login again!',
+              type: 'error',
+              onClose(){
+                window.location = '/login'
+              }
             });
         }
       },
@@ -1997,9 +2011,12 @@
             Cookies.remove('email' ,{domain: location});
             Cookies.remove('userDetailId' ,{domain: location}); 
             Cookies.remove('subscriptionId' ,{domain: location}); 
-            this.$swal("You're Logged Out From System. Please login again!")
-            .then((value) => {
-              window.location = '/login'
+            this.$message({
+              message: 'You\'re Logged Out From System. Please login again!',
+              type: 'error',
+              onClose(){
+                window.location = '/login'
+              }
             });
           }
       },
@@ -2214,10 +2231,13 @@
                   Cookies.remove('subscriptionId', {
                       domain: location
                   });
-                  this.$swal("You're Logged Out From System. Please login again!")
-                      .then((value) => {
-                          window.location = '/login'
-                      });
+                  this.$message({
+                    message: 'You\'re Logged Out From System. Please login again!',
+                    type: 'error',
+                    onClose(){
+                      window.location = '/login'
+                    }
+                  });
               }
           }
       },
@@ -3765,6 +3785,7 @@
                 message: 'File not saved! Please try again.',
                 type: 'error'
               });
+
               console.log(e)
             })
         } else {
@@ -3787,11 +3808,15 @@
           Cookies.remove('subscriptionId', {
             domain: location
           });
-          this.$swal("You're Logged Out From System. Please login again!")
-            .then((value) => {
-              window.location = '/login'
+              this.$message({
+              message: 'You\'re Logged Out From System. Please login again!',
+              type: 'error',
+              onClose(){
+                window.location = '/login'
+              }
             });
-        }
+          }
+
       },
       // Ends Save File
 
@@ -4547,10 +4572,13 @@
               Cookies.remove('subscriptionId', {
                   domain: location
               });
-              this.$swal("You're Logged Out From System. Please login again!")
-                  .then((value) => {
-                      window.location = '/login'
-                  });
+              this.$message({
+              message: 'You\'re Logged Out From System. Please login again!',
+              type: 'error',
+              onClose(){
+                window.location = '/login'
+              }
+            });
           }
       },
       // Generate Preview
