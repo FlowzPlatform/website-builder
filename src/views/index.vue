@@ -899,23 +899,22 @@
         // console.log('handle click:',data)
         // console.log('directoryTree',this.directoryTree)
         // this.taburl = this.$store.state.fileUrl;
-
         this.$store.state.fileUrl = data.path;
         // If PageSettings Clicked
-        if(this.isPageEditing){  
+        if (this.isPageEditing) {
 
           // clearInterval(myInterval);
 
-        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-        //     this.saveFile('getFileContent')
-        //   }
+          //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+          //     this.saveFile('getFileContent')
+          //   }
 
           this.isPageEditing = false;
           this.isProjectEditing = false;
           this.isSettingsPage = true;
           this.componentId = 'PageSettings';
 
-        //   this.display = false;
+          //   this.display = false;
 
           let url = data.path;
           let compId = this.componentId;
@@ -925,64 +924,64 @@
           // this.editableTabs = []
           //////////////////
 
-        //   let newTabName = ++this.tabIndex + '';
-        //   let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
-        //   let editableTabValue = this.editableTabsValue
-        //   let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
-        //   function checkIfExist(filepath,array) {  // The last one is array
-        //       var found = array.some(function (el) {
-        //         return el.filepath == url;
-        //       });
-        //       if (!found)
-        //       {
-        //         let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-        //         array = removedArray  ;
-        //         editableTabValue = newTabName;
-        //           array.push({
-        //             title: tab_file_name,
-        //             name: newTabName,
-        //             content: newTabName,
-        //             componentId : compId,
-        //             filepath : url
-        //           });
+          //   let newTabName = ++this.tabIndex + '';
+          //   let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
+          //   let editableTabValue = this.editableTabsValue
+          //   let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
+          //   function checkIfExist(filepath,array) {  // The last one is array
+          //       var found = array.some(function (el) {
+          //         return el.filepath == url;
+          //       });
+          //       if (!found)
+          //       {
+          //         let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+          //         array = removedArray  ;
+          //         editableTabValue = newTabName;
+          //           array.push({
+          //             title: tab_file_name,
+          //             name: newTabName,
+          //             content: newTabName,
+          //             componentId : compId,
+          //             filepath : url
+          //           });
 
-        //       }else{
-        //         let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-        //         array = removedArray  ;
-        //         editableTabValue = newTabName;
-        //         array.push({
-        //             title: tab_file_name,
-        //             name: newTabName,
-        //             content: newTabName,
-        //             componentId : compId,
-        //             filepath : url
-        //           });
-        //       }
-        //       return array
-        //   }
+          //       }else{
+          //         let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+          //         array = removedArray  ;
+          //         editableTabValue = newTabName;
+          //         array.push({
+          //             title: tab_file_name,
+          //             name: newTabName,
+          //             content: newTabName,
+          //             componentId : compId,
+          //             filepath : url
+          //           });
+          //       }
+          //       return array
+          //   }
 
-        //   this.editableTabs =  selectedPagePositionFirstArray ;
+          //   this.editableTabs =  selectedPagePositionFirstArray ;
 
-        //   this.editableTabs.reverse();
-        //   this.editableTabsValue = newTabName;
+          //   this.editableTabs.reverse();
+          //   this.editableTabsValue = newTabName;
         }
         // If ProjectSettings is clicked 
-        else if(this.isProjectEditing) {
+        else if (this.isProjectEditing) {
           // clearInterval(myInterval);
-        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-        //     this.saveFile('getFileContent')
-        //   }
+          //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+          //     this.saveFile('getFileContent')
+          //   }
 
           this.isProjectEditing = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = true;
           this.componentId = 'ProjectSettings';
 
-        //   this.display = true;
+          //   this.display = true;
 
           // let url = data.path;
           // let compId = this.componentId;
-     
+
           // let newTabName = ++this.tabIndex + '';
           // let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
 
@@ -1023,66 +1022,66 @@
           // this.editableTabsValue = newTabName;
         }
         // If Clicked in ProjectName 
-        else if(this.isProjectStats) {
+        else if (this.isProjectStats) {
           // clearInterval(myInterval);
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'ProjectStats';
-        //   this.display = true;
+          //   this.display = true;
           localStorage.setItem("folderUrl", data.path);
         }
         // If Clicked in Partials Folder 
-        else if( (_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
+        else if ((_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
           // clearInterval(myInterval);
           //console.log('Data Path: ', data.path);
-          
-        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-        //     this.saveFile('getFileContent')
-        //   }
+
+          //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+          //     this.saveFile('getFileContent')
+          //   }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'PartialStats';
-        //   this.display = true;
+          //   this.display = true;
         }
         // If Clicked in Layouts Folder 
-        else if(_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
+        else if (_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
           // clearInterval(myInterval);
 
-        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-        //     this.saveFile('getFileContent')
-        //   }
+          //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+          //     this.saveFile('getFileContent')
+          //   }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'LayoutStats';
-        //   this.display = true;
+          //   this.display = true;
         }
         // If Clicked in Pages Folder 
-        else if(_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
-            
+        else if (_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
+
           // clearInterval(myInterval);
-        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-        //     this.saveFile('getFileContent')        
-        //   }
+          //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
+          //     this.saveFile('getFileContent')        
+          //   }
 
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
           this.isSettingsPage = false;
           this.componentId = 'PageStats';
-        //   this.display = true;
+          //   this.display = true;
         }
         // Every other clicks
         else {
-        //   this.fullscreenLoading = true;
-        //   this.display = true;
+          //   this.fullscreenLoading = true;
+          //   this.display = true;
           this.isProjectStats = false;
           this.isPartialStats = false;
           this.isPageEditing = false;
@@ -1090,7 +1089,7 @@
           this.previewGrid = false;
           this.isSettingsPage = false;
           this.currentFile = data;
-          if(data.type == "file"){
+          if (data.type == "file") {
             // this.display = false;
             // if(this.flag != true && this.editableTabs.length > 0){
             //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
@@ -1101,7 +1100,7 @@
 
             // let self = this;
             // setTimeout(async function(){
-              this.getFileContent(data.path);
+            this.getFileContent(data.path);
             //   self.fullscreenLoading = false;
             // },50)
           }
