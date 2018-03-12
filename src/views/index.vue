@@ -47,7 +47,7 @@
                   <div style="margin-right:10px; margin: 15px;">
                       <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
                       <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'">Save</el-button>
+                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save</el-button>
                   </div>
               </div>
 
@@ -683,6 +683,7 @@
             //axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             await this.getData();
+            this.componentId = 'Dashboard';
             this.fullscreenLoading=false
           }).catch((e)=>{
             //  this.$message({
