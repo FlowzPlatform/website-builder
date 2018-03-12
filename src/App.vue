@@ -62,8 +62,66 @@ export default {
   mounted: function () {
     this.init();
     this.checkDashboard();
+
+    // Check for auth token on focusing to current tab
+    // $(window).on('focus', function() { 
+    //   alert(1);
+    //   // let location = psl.parse(window.location.hostname)
+    //   // location = location.domain === null ? location.input : location.domain
+    //   // Cookies.remove('auth_token' ,{domain: location});
+    // });
+
+    this.checkAuth();
   },
   methods: {
+    checkAuth(){
+
+      let self = this;
+
+      window.onload = function() {
+
+          var hidden, visibilityState, visibilityChange;
+
+          if (typeof document.hidden !== "undefined") {
+              hidden = "hidden", visibilityChange = "visibilitychange", visibilityState = "visibilityState";
+          }
+          else if (typeof document.mozHidden !== "undefined") {
+              hidden = "mozHidden", visibilityChange = "mozvisibilitychange", visibilityState = "mozVisibilityState";
+          }
+          else if (typeof document.msHidden !== "undefined") {
+              hidden = "msHidden", visibilityChange = "msvisibilitychange", visibilityState = "msVisibilityState";
+          }
+          else if (typeof document.webkitHidden !== "undefined") {
+              hidden = "webkitHidden", visibilityChange = "webkitvisibilitychange", visibilityState = "webkitVisibilityState";
+          }
+
+          document.addEventListener(visibilityChange, function() {
+
+              switch (document[visibilityState]) {
+              case "visible":
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain;
+                  if(Cookies.get('auth_token' ,{domain: location})){
+                    console.log('Still logged in.')
+                  } else {
+                    self.$message({
+                      message: 'You\'re Logged Out From System. Please login again!',
+                      duration: 500,
+                      type: 'error',
+                      onClose(){
+                        window.location = '/login'
+                      }
+                    });
+                  }
+                  
+                  break;
+              case "hidden":
+                  console.log('Out of Focus');
+                  break;
+              }
+          });
+      };
+    },
     init () {
       if(this.$cookie.get('auth_token')){
         this.isLoggedIn = true;

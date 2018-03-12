@@ -3745,10 +3745,21 @@ export default {
             Cookies.remove('subscriptionId', {
               domain: location
             });
-            this.$swal("You're Logged Out From System. Please login again!")
-            .then((value) => {
-              window.location = '/login'
+
+            this.$message({
+              message: 'You\'re Logged Out From System. Please login again!',
+              duration: 500,
+              type: 'error',
+              onClose(){
+                window.location = '/login'
+              }
             });
+
+            return;
+            // this.$swal("You're Logged Out From System. Please login again!")
+            // .then((value) => {
+            //   window.location = '/login'
+            // });
           }
     },
 
