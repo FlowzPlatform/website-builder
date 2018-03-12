@@ -409,6 +409,159 @@ export default {
     draggable
   },
   methods: {
+
+    async init(){
+        
+      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+      let urlparts = url.split("/");
+      let fileNameOrginal = urlparts[urlparts.length-1];
+      let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
+      this.folderUrl = url.replace(fileName, '');
+
+      let foldername = this.folderUrl.split('/');
+      foldername = foldername[6];
+
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+
+      if(this.configData.status == 200 || this.configData.status == 204){
+        this.settings = this.configData.data.configData;
+        
+        // Get Current file index
+        this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});
+
+        this.form.name = fileNameOrginal;
+        this.form.layouts = this.settings[2].layoutOptions[0].Layout;
+        
+        if('PageSEOTitle' in this.settings[1].pageSettings[this.currentFileIndex]){
+          this.form.seoTitle = this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle;
+        } else {
+          this.form.seoTitle = '';
+        }
+
+        if('PageLayout' in this.settings[1].pageSettings[this.currentFileIndex]){
+          //console.log('Layout Found in config', this.settings[1].pageSettings[this.currentFileIndex].PageLayout)
+          this.form.Layout = this.settings[1].pageSettings[this.currentFileIndex].PageLayout;
+          this.form.extrapartial= this.settings[1].pageSettings[this.currentFileIndex].partials;
+        } else {
+          this.form.Layout = '';
+        }
+
+        if('PageCss' in this.settings[1].pageSettings[this.currentFileIndex]){
+          this.checkedCss = this.settings[1].pageSettings[this.currentFileIndex].PageCss;
+        } else {
+          this.checkedCss = [];
+        }
+
+        if('PageMetaInfo' in this.settings[1].pageSettings[this.currentFileIndex]){
+          this.externallinksMeta = this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo;
+        } else {
+          this.externallinksMeta = [];
+        }
+         if('PageMetacharset' in this.settings[1].pageSettings[this.currentFileIndex]){
+          this.Metacharset = this.settings[1].pageSettings[this.currentFileIndex].PageMetacharset;
+        } else {
+          this.Metacharset = '';
+        }
+
+
+        if('PageExternalCss' in this.settings[1].pageSettings[this.currentFileIndex]){
+          this.externallinksCSS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss;
+        } else {
+          this.externallinksCSS = [];
+        }
+
+        if('PageExternalJs' in this.settings[1].pageSettings[this.currentFileIndex]){
+          this.externallinksJS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs;
+        } else {
+          this.externallinksJS = [];
+        }
+
+        if('PageScripts' in this.settings[1].pageSettings[this.currentFileIndex]){
+          this.localpagescripts = this.settings[1].pageSettings[this.currentFileIndex].PageScripts;
+        } else {
+          this.localpagescripts = [];
+        }
+        if('PageStyles' in this.settings[1].pageSettings[this.currentFileIndex]){
+          this.localpagestyles = this.settings[1].pageSettings[this.currentFileIndex].PageStyles;
+        } else {
+          this.localpagestyles = [];
+        }
+
+        for (var i = 0; i < this.form.layouts.length; i++) {
+          if (this.form.layouts[i].label === this.form.Layout) {
+            let variable = this.form.layouts[i].partialsList;
+            this.partialsList = variable;
+            this.defaultParams = this.form.layouts[i].defaultList;
+          }
+        }
+
+        this.AllData = [];
+        //// console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
+        if (this.configData.status == 200 || this.configData.status == 204) {
+
+          this.settings = this.configData.data.configData;
+
+          for (var i = 0; i < this.partialsList.length; i++) {
+
+            var nameP = this.partialsList[i];
+            if (this.settings[2].layoutOptions[0][nameP]) {
+
+              let change = false;
+              for (var j = 0; j < this.defaultParams.length; j++) {
+                if (Object.keys(this.defaultParams[j])[0] == nameP) {
+                  this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
+                  let tp = this.defaultParams[j][nameP].split('.')
+                  // if (tp[1] == 'hbs') {
+                  //   for (let k = 0; k < (this.AllData[i]).length; k++) {
+                  //     if ((this.AllData[i][k].value).split('.')[0] == tp[0])
+                  //       this.form.parent_id[nameP] = this.AllData[i][k]
+                  //   }
+                  // } else {
+
+                    this.form.parent_id[nameP] = tp[0];
+                  // }
+
+                  for (let k = 0; k < Object.keys(this.AllData[i]).length; k++) {
+                    this.AllData[i][k]['disabled'] = true;
+                  }
+
+                  change = true
+                }
+              }
+              if (change != true) {
+                this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
+                //console.log("this.AllData["+i+"]:",this.AllData[i])
+                if (this.AllData[i].length === 1) {
+                  //console.log('only one element')
+                  this.form.parent_id[nameP] = this.AllData[i][0]
+                }
+                else{
+                  for(let j=0;j<this.AllData[i].length;j++){
+                    //console.log('Object.keys(this.AllData[i][j]):',this.AllData[i][j].value)
+                    for(let k=0;k<this.form.extrapartial.length;k++){
+                      if(Object.keys(this.form.extrapartial[k])==nameP){
+                        if(this.form.extrapartial[k][Object.keys(this.form.extrapartial[k])]==this.AllData[i][j].value){
+                          //console.log("inside")
+                          this.form.parent_id[nameP]=this.AllData[i][j]
+                          break;
+                        }
+                      }
+                    }
+                  }
+                }
+                change = false;
+              }
+            } else {
+              //console.log("Partials not found in config file.")
+            }
+          }
+        }
+
+      } else {
+        //console.log('Cannot get config file!');
+      }   
+    },
+
     addNewlocalstyles(){
       let newVariable = { linkposition:'',style:''};
       this.localpagestyles.push(newVariable);
@@ -702,157 +855,16 @@ export default {
       }
     }
   },
-  async created () {
-
-    let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    let urlparts = url.split("/");
-    let fileNameOrginal = urlparts[urlparts.length-1];
-    let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
-    this.folderUrl = url.replace(fileName, '');
-
-    let foldername = this.folderUrl.split('/');
-    foldername = foldername[6];
-
-    this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
-
-    if(this.configData.status == 200 || this.configData.status == 204){
-      this.settings = this.configData.data.configData;
-      
-      // Get Current file index
-      this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});
-
-      this.form.name = fileNameOrginal;
-      this.form.layouts = this.settings[2].layoutOptions[0].Layout;
-      
-      if('PageSEOTitle' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.form.seoTitle = this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle;
-      } else {
-        this.form.seoTitle = '';
-      }
-
-      if('PageLayout' in this.settings[1].pageSettings[this.currentFileIndex]){
-        //console.log('Layout Found in config', this.settings[1].pageSettings[this.currentFileIndex].PageLayout)
-        this.form.Layout = this.settings[1].pageSettings[this.currentFileIndex].PageLayout;
-        this.form.extrapartial= this.settings[1].pageSettings[this.currentFileIndex].partials;
-      } else {
-        this.form.Layout = '';
-      }
-
-      if('PageCss' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.checkedCss = this.settings[1].pageSettings[this.currentFileIndex].PageCss;
-      } else {
-        this.checkedCss = [];
-      }
-
-      if('PageMetaInfo' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.externallinksMeta = this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo;
-      } else {
-        this.externallinksMeta = [];
-      }
-       if('PageMetacharset' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.Metacharset = this.settings[1].pageSettings[this.currentFileIndex].PageMetacharset;
-      } else {
-        this.Metacharset = '';
-      }
-
-
-      if('PageExternalCss' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.externallinksCSS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss;
-      } else {
-        this.externallinksCSS = [];
-      }
-
-      if('PageExternalJs' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.externallinksJS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs;
-      } else {
-        this.externallinksJS = [];
-      }
-
-      if('PageScripts' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.localpagescripts = this.settings[1].pageSettings[this.currentFileIndex].PageScripts;
-      } else {
-        this.localpagescripts = [];
-      }
-      if('PageStyles' in this.settings[1].pageSettings[this.currentFileIndex]){
-        this.localpagestyles = this.settings[1].pageSettings[this.currentFileIndex].PageStyles;
-      } else {
-        this.localpagestyles = [];
-      }
-
-      for (var i = 0; i < this.form.layouts.length; i++) {
-        if (this.form.layouts[i].label === this.form.Layout) {
-          let variable = this.form.layouts[i].partialsList;
-          this.partialsList = variable;
-          this.defaultParams = this.form.layouts[i].defaultList;
-        }
-      }
-
-      this.AllData = [];
-      //// console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
-      if (this.configData.status == 200 || this.configData.status == 204) {
-
-        this.settings = this.configData.data.configData;
-
-        for (var i = 0; i < this.partialsList.length; i++) {
-
-          var nameP = this.partialsList[i];
-          if (this.settings[2].layoutOptions[0][nameP]) {
-
-            let change = false;
-            for (var j = 0; j < this.defaultParams.length; j++) {
-              if (Object.keys(this.defaultParams[j])[0] == nameP) {
-                this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-                let tp = this.defaultParams[j][nameP].split('.')
-                // if (tp[1] == 'hbs') {
-                //   for (let k = 0; k < (this.AllData[i]).length; k++) {
-                //     if ((this.AllData[i][k].value).split('.')[0] == tp[0])
-                //       this.form.parent_id[nameP] = this.AllData[i][k]
-                //   }
-                // } else {
-
-                  this.form.parent_id[nameP] = tp[0];
-                // }
-
-                for (let k = 0; k < Object.keys(this.AllData[i]).length; k++) {
-                  this.AllData[i][k]['disabled'] = true;
-                }
-
-                change = true
-              }
-            }
-            if (change != true) {
-              this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-              //console.log("this.AllData["+i+"]:",this.AllData[i])
-              if (this.AllData[i].length === 1) {
-                //console.log('only one element')
-                this.form.parent_id[nameP] = this.AllData[i][0]
-              }
-              else{
-                for(let j=0;j<this.AllData[i].length;j++){
-                  //console.log('Object.keys(this.AllData[i][j]):',this.AllData[i][j].value)
-                  for(let k=0;k<this.form.extrapartial.length;k++){
-                    if(Object.keys(this.form.extrapartial[k])==nameP){
-                      if(this.form.extrapartial[k][Object.keys(this.form.extrapartial[k])]==this.AllData[i][j].value){
-                        //console.log("inside")
-                        this.form.parent_id[nameP]=this.AllData[i][j]
-                        break;
-                      }
-                    }
-                  }
-                }
-              }
-              change = false;
-            }
-          } else {
-            //console.log("Partials not found in config file.")
-          }
-        }
-      }
-
-    } else {
-      //console.log('Cannot get config file!');
-    }      
+  async created () {  
+    this.init();   
   },
+
+  watch: {
+    '$store.state.fileUrl': function(newvalue) {
+      this.init()
+    }
+  },
+
   mounted () {
      $(document).ready(function($) {
 
