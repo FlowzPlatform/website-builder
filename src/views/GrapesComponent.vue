@@ -46,7 +46,6 @@ export default {
     }
   },
     async mounted () {
-
         this.fileSaved = false;
 
         this.fileUrl = this.$store.state.fileUrl;
@@ -83,12 +82,13 @@ export default {
 
         let foldername = folderUrl.split('/');
         // this.filename=fileName.split('/')[fileName.split('/').length-1]
-        this.filename=fileName.replace('/','')
+        // this.filename=fileName.replace('/','')
         foldername = foldername[6];
         //// console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
         let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+        this.filename=responseConfig.data.websiteName+'/'+ fileName.replace('/','')
         let rawConfigs = responseConfig.data.configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
         this.globalVariables = rawConfigs[1].projectSettings[1].GlobalVariables;
