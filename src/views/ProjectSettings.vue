@@ -3936,6 +3936,17 @@ export default {
       }).then(res=>{
         
          this.vshopcategory = res.data;
+         if(this.form.vid!=''){
+          let tempvid=this.form.vid
+          let checkindex=_.findIndex(this.vshopcategory,function(o){
+            return o.id == tempvid
+          })
+         if(checkindex==-1){
+          this.form.vid=''
+         }
+         }
+         
+
       }).catch(err => { console.log(err); });
 
      
