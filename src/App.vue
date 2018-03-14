@@ -77,50 +77,54 @@ export default {
     checkAuth(){
 
       let self = this;
+        
+        window.onload = function() {
 
-      window.onload = function() {
+          if(self.$route.path == '/login'){
+            
+          } else {
+            
+            var hidden, visibilityState, visibilityChange;
 
-          var hidden, visibilityState, visibilityChange;
+            if (typeof document.hidden !== "undefined") {
+                hidden = "hidden", visibilityChange = "visibilitychange", visibilityState = "visibilityState";
+            }
+            else if (typeof document.mozHidden !== "undefined") {
+                hidden = "mozHidden", visibilityChange = "mozvisibilitychange", visibilityState = "mozVisibilityState";
+            }
+            else if (typeof document.msHidden !== "undefined") {
+                hidden = "msHidden", visibilityChange = "msvisibilitychange", visibilityState = "msVisibilityState";
+            }
+            else if (typeof document.webkitHidden !== "undefined") {
+                hidden = "webkitHidden", visibilityChange = "webkitvisibilitychange", visibilityState = "webkitVisibilityState";
+            }
 
-          if (typeof document.hidden !== "undefined") {
-              hidden = "hidden", visibilityChange = "visibilitychange", visibilityState = "visibilityState";
+            document.addEventListener(visibilityChange, function() {
+
+                switch (document[visibilityState]) {
+                case "visible":
+                    let location = psl.parse(window.location.hostname)
+                    location = location.domain === null ? location.input : location.domain;
+                    if(Cookies.get('auth_token' ,{domain: location})){
+
+                    } else {
+                      self.$message({
+                        message: 'You\'re Logged Out From System. Please login again!',
+                        duration: 2000,
+                        type: 'error',
+                        onClose(){
+                          window.location = '/login'
+                        }
+                      });
+                    }
+                    
+                    break;
+                case "hidden":
+                    break;
+                }
+            });
           }
-          else if (typeof document.mozHidden !== "undefined") {
-              hidden = "mozHidden", visibilityChange = "mozvisibilitychange", visibilityState = "mozVisibilityState";
-          }
-          else if (typeof document.msHidden !== "undefined") {
-              hidden = "msHidden", visibilityChange = "msvisibilitychange", visibilityState = "msVisibilityState";
-          }
-          else if (typeof document.webkitHidden !== "undefined") {
-              hidden = "webkitHidden", visibilityChange = "webkitvisibilitychange", visibilityState = "webkitVisibilityState";
-          }
-
-          document.addEventListener(visibilityChange, function() {
-
-              switch (document[visibilityState]) {
-              case "visible":
-                  let location = psl.parse(window.location.hostname)
-                  location = location.domain === null ? location.input : location.domain;
-                  if(Cookies.get('auth_token' ,{domain: location})){
-                    console.log('Still logged in.')
-                  } else {
-                    self.$message({
-                      message: 'You\'re Logged Out From System. Please login again!',
-                      duration: 500,
-                      type: 'error',
-                      onClose(){
-                        window.location = '/login'
-                      }
-                    });
-                  }
-                  
-                  break;
-              case "hidden":
-                  console.log('Out of Focus');
-                  break;
-              }
-          });
-      };
+        };
     },
     init () {
       if(this.$cookie.get('auth_token')){
