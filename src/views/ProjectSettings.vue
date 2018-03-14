@@ -3047,7 +3047,7 @@ export default {
             return;
           }
         }
-
+        
         this.$confirm('Do you want to publish your website? \n This will take upto 3-4 minutes. Continue?', 'Warning', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
@@ -3056,24 +3056,24 @@ export default {
 
           this.fullscreenLoading = true;
 
-          var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
+          let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
             console.log(err);
             this.fullscreenLoading = false
           });
-          var rawConfigs = responseConfig.data.configData;
-          var partialstotal = []
-          var pageSeoTitle;
-          var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
-          var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
-          var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
-          var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
-          var projectscripts = rawConfigs[1].projectSettings[1].ProjectScripts
-          var projectstyles = rawConfigs[1].projectSettings[1].ProjectStyles
-          var projectseotitle = rawConfigs[1].projectSettings[0].ProjectSEOTitle;
-          var ProjectFaviconName = rawConfigs[1].projectSettings[0].BrandLogoName
-          var favicon = ''
-          var SeoTitle = ''
+          let rawConfigs = responseConfig.data.configData;
+          let partialstotal = []
+          let pageSeoTitle;
+          let externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
+          let externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
+          let metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
+          let ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
+          let projectscripts = rawConfigs[1].projectSettings[1].ProjectScripts
+          let projectstyles = rawConfigs[1].projectSettings[1].ProjectStyles
+          let projectseotitle = rawConfigs[1].projectSettings[0].ProjectSEOTitle;
+          let ProjectFaviconName = rawConfigs[1].projectSettings[0].BrandLogoName
+          let favicon = ''
+          let SeoTitle = ''
           var getFromBetween = {
             results: [],
             string: "",
@@ -3197,7 +3197,6 @@ export default {
                 }
               }
             }
-
             var partials = ''
             let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
               console.log(err);
@@ -3958,6 +3957,17 @@ export default {
       }).then(res=>{
         
          this.vshopcategory = res.data;
+         if(this.form.vid!=''){
+          let tempvid=this.form.vid
+          let checkindex=_.findIndex(this.vshopcategory,function(o){
+            return o.id == tempvid
+          })
+         if(checkindex==-1){
+          this.form.vid=''
+         }
+         }
+         
+
       }).catch(err => { console.log(err); });
 
      
