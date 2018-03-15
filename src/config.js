@@ -35,6 +35,7 @@ if (process.env.NODE_ENV !== 'development') {
     paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
     vshopApi = 'https://api.' + domainkey + '/pdmnew/vshop-list';
     crmsettingapi='https://api.'+domainkey+'/crm/settings'
+    flowzDashboardUrl = 'https://dashboard.' + domainkey
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -60,12 +61,13 @@ if (process.env.NODE_ENV !== 'development') {
     paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
     vshopApi = 'https://api.flowzcluster.tk/pdmnew/vshop-list';
     crmsettingapi='https://api.flowzcluster.tk/crm/settings'
+    flowzDashboardUrl = 'https://dashboard.flowzcluster.tk'
 }
 
 module.exports = {
 
     frontEndUrl: frontEndUrl,
-
+    flowzDashboardUrl: flowzDashboardUrl,
     domainkey: domainkey,
     crmsettingapi:crmsettingapi,
     loginUrl: loginUrl,

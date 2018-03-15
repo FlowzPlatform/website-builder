@@ -13,9 +13,9 @@
       <div class='login_fields'>
           <div class='login_fields__user'>
               <div class='icon'>
-                  <i class="fa fa-address-book-o"></i>
+                  <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Full Name' type='text' maxlength="20" v-model="form.name" required>
+              <input placeholder='First Name' type='text' maxlength="20" v-model="form.fname" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -25,7 +25,7 @@
               <div class='icon'>
                   <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Username' type='text' maxlength="20" v-model="form.Uname" required>
+              <input placeholder='Last Name' type='text' maxlength="20" v-model="form.lname" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -99,11 +99,11 @@ export default {
   data () {
     return {
       form: {
-        name: '',
-        checkPass: '',
-        Uname: '',
+        fname: '',
+        lname: '',
         email: '',
         pass: '',
+        checkPass: '',
         isLoading: false
       },
       authen: {
@@ -132,59 +132,83 @@ export default {
 
 
         axios.post(config.registerUrl, {
-          username: this.form.Uname,
-          password: this.form.pass,
-          email: this.form.email,
-          fullname: this.form.Name
+          email: this.form.email.trim(),
+          password: this.form.pass.trim(),
+          firstname: this.form.fname.trim(),
+          lastname: this.form.lname.trim(),
         }, {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
           }
         }).then(response => {
-          this.authen.status = true;
-          let self = this;
 
-          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-          $('.login').removeClass('testtwo')
+          if(response.data.code == 200){
+            this.authen.status = true;
+            let self = this;
 
-          $('.login').removeClass('test')
-          $('.login div').fadeOut(123);
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
 
-          $('.success').fadeIn();
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
 
-          setTimeout(function () {
-            self.$router.push('/login');
-          }, 2000);
-          // window.location = '/login'
-          // axios.post( config.baseURL + '/user-service', {
-          //     username : this.form.Uname,
-          //     password : this.form.pass,
-          //     email : this.form.email,
-          //     name : this.form.name                  
-          // }).then(response => {
-          //   // window.location = '/login';
-          //   // Create user Folder
-          //   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-          //   // axios.post(config.baseURL+'/flows-dir-listing' , {
-          //   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
-          //   //   type : 'folder'
-          //   // })
-          //   // .then((res) => {
-          ////   //   console.log('user Folder created!');
-          //   // })
-          //   // .catch((e)=>{
-          ////   //   console.log("Error from pages"+res)
-          //   // });
-          //   this.authen.status = true;
-          //   let self = this;
-          //   setTimeout(function () {
-          //     self.$router.push('/login');
-          //   }, 2000);
-          // }).catch(error => {
-          //   this.authen.status = false;
-          //   this.authen.error = response.data;
-          // })
+            $('.success').fadeIn();
+
+            setTimeout(function () {
+              self.$router.push('/login');
+            }, 2000);
+            // window.location = '/login'
+            // axios.post( config.baseURL + '/user-service', {
+            //     username : this.form.Uname,
+            //     password : this.form.pass,
+            //     email : this.form.email,
+            //     name : this.form.name                  
+            // }).then(response => {
+            //   // window.location = '/login';
+            //   // Create user Folder
+            //   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+            //   // axios.post(config.baseURL+'/flows-dir-listing' , {
+            //   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
+            //   //   type : 'folder'
+            //   // })
+            //   // .then((res) => {
+            ////   //   console.log('user Folder created!');
+            //   // })
+            //   // .catch((e)=>{
+            ////   //   console.log("Error from pages"+res)
+            //   // });
+            //   this.authen.status = true;
+            //   let self = this;
+            //   setTimeout(function () {
+            //     self.$router.push('/login');
+            //   }, 2000);
+            // }).catch(error => {
+            //   this.authen.status = false;
+            //   this.authen.error = response.data;
+            // })
+          } else {
+            this.$message({
+                showClose: true,
+                message: 'Error: ' + response.data.error,
+                type: 'error'
+            });
+
+            console.log('Error: ', error.response);
+            this.authen.status = false;
+            this.authen.error = error.response.data;
+
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
+
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
+
+            $(".authent").fadeOut();
+            $('.login div').fadeIn();
+          }
+          
         }).catch(error => {
           this.$message({
               showClose: true,
