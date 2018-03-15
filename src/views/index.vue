@@ -41,13 +41,14 @@
           </div>
           <div class="allComponents">
             <!-- && componentId != null -->
-            <div class="row" v-if="isHomePage === false && isSettingsPage === false" style="margin-top: 0px;">
+            <!-- <div class="row" v-if="isHomePage === false && isSettingsPage === false" style="margin-top: 0px;"> -->
+            <div class="row" style="margin-top: 0px;">
               <!-- <div v-else class="col-md-4"></div> -->
               <div class="col-md-4 editor-buttons" align="right" v-if="componentId != null">
                   <div style="margin-right:10px; margin: 15px;">
                       <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
                       <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save</el-button>
+                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectSettings' && componentId != 'PageSettings' && componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save</el-button>
                   </div>
               </div>
 
@@ -55,8 +56,15 @@
               <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" >
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
-                        <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
-                        <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter File Name"></el-input>
+                        <div class="row">
+                          <div class="col-md-10">
+                            <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
+                            <el-input :maxlength=20 v-model="formAddFile.filename" @change="updateFileNameLimitCount()" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter File Name"></el-input>
+                          </div>
+                          <div class="col-md-2">
+                            <span class="inputLimitStatus"> {{fileLimitCount}}/20</span>    
+                          </div>
+                        </div>
                       </el-form-item> 
                   </el-form>
                   <span slot="footer" class="dialog-footer">
@@ -69,8 +77,16 @@
               <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
-                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
-                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
+                        <div class="row">
+                          <div class="col-md-10">
+                            <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
+                            <el-input :maxlength=20 v-model="formAddFolder.foldername" @change="updateFolderNameLimitCount()" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
+                          </div>
+                          <div class="col-md-2">
+                            <span class="inputLimitStatus"> {{folderLimitCount}}/20</span>    
+                          </div>
+                        </div>
+                        
                       </el-form-item>
                   </el-form>
                   <span slot="footer" class="dialog-footer">
@@ -79,49 +95,56 @@
                   </span>
               </el-dialog>
 
-            <!-- New Website Project Dialog if it's not dashboard page -->
-            <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
-              <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
-                <el-form-item prop="projectName">
-                  <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
-                  <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Website Name"></el-input>
-                </el-form-item>
+              <!-- New Website Project Dialog if it's not dashboard page -->
+              <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
+                <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
+                  <el-form-item prop="projectName">
+                    <div class="row">
+                      <div class="col-md-11">
+                        <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
+                        <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @change="updateProjectNameLimitCount()" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Website Name"></el-input>    
+                      </div>
+                      <div class="col-md-1">
+                        <span class="inputLimitStatus"> {{projectLimitCount}}/20</span>    
+                      </div>
+                    </div>
+                  </el-form-item>
 
-                <el-form-item>
-                  <div class="templateSelection">
-                    <strong>Select Template</strong>
-                    <ul>
-                      <li>
-                          <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
-                          <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
-                          <img src="https://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
-                      </li>
-                      <li>
-                          <input type="radio" name="layout" value="template1" id="myCheckbox1" />
-                          <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
-                      </li>
-                      <li>
-                          <input type="radio" name="layout" value="template2" id="myCheckbox2" />
-                          <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
-                      </li>
-                      <li>
-                          <input type="radio" name="layout" value="template3" id="myCheckbox3" />
-                          <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
-                      </li>
-                    </ul>
-                  </div>
-                </el-form-item>
-              </el-form>
-              <span slot="footer" class="dialog-footer">
-                  <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Website</el-button>
-              </span>
-            </el-dialog>
-          </div>
+                  <el-form-item>
+                    <div class="templateSelection">
+                      <strong>Select Template</strong>
+                      <ul>
+                        <li>
+                            <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
+                            <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
+                            <img src="https://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
+                        </li>
+                        <li>
+                            <input type="radio" name="layout" value="template1" id="myCheckbox1" />
+                            <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
+                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
+                        </li>
+                        <li>
+                            <input type="radio" name="layout" value="template2" id="myCheckbox2" />
+                            <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
+                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
+                        </li>
+                        <li>
+                            <input type="radio" name="layout" value="template3" id="myCheckbox3" />
+                            <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
+                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
+                        </li>
+                      </ul>
+                    </div>
+                  </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Website</el-button>
+                </span>
+              </el-dialog>
+            </div>
 
-            <div v-if="isHomePage === true">
+            <!-- <div v-if="isHomePage === true">
               <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" >
                   <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
                       <el-form-item prop="filename">
@@ -134,8 +157,9 @@
                       <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
                       <el-button  @click="canceldialog('formAddFile')">Cancel</el-button>
                   </span>
-                </el-dialog>
-                <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
+              </el-dialog>
+
+              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
                   <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
                       <el-form-item prop="foldername">
                         <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
@@ -147,7 +171,6 @@
                       <el-button @click="canceldialogfolder('formAddFolder')">Cancel</el-button>
                   </span>
               </el-dialog>
-
 
               <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
@@ -188,7 +211,7 @@
                     <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Website</el-button>
                 </span>
               </el-dialog>
-            </div>
+            </div> -->
 
             <!-- <div v-if="!previewGrid" style="margin-left: 10px;">
               <component :is="componentId" ref="contentComponent"></component>
@@ -404,6 +427,9 @@
                 { validator: checkProjectName, trigger: 'blur' }
             ]
         },
+        projectLimitCount: 0,
+        folderLimitCount: 0,
+        fileLimitCount: 0,
         newFileDialog : false,
         newFolderDialog : false,
         newProjectFolderDialog : false,
@@ -504,7 +530,7 @@
       //   this.$router.push('/login');
       // }
     },
-   async mounted () {
+    async mounted () {
 
       //console.log('Index Page: ', Cookies.get('email'));
 
@@ -624,27 +650,27 @@
       });
       let sub_id = []
         await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
-          .then(response => {
-            let obj_val = Object.values(response.data.data.package)
-            let obj_key = Object.keys(response.data.data.package)
-            for (let index = 0; index < obj_val.length; index++) {
-              sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
-            }
-            this.options = sub_id
-            this.value  = sub_id[0].value;
-            localStorage.setItem("current_sub_id",this.value)
-            // if (localStorage.getItem('current_sub_id') != null || localStorage.getItem('current_sub_id') != undefined) {
-            //   this.value = localStorage.getItem('current_sub_id')
-            // }
-            // else{
-            //   this.options = sub_id
-            //   this.value  = sub_id[0].value;
-            //   localStorage.setItem("current_sub_id",this.value)
-            // }
-    //this.getDataOfSubscriptionUser();
+        .then(response => {
+          let obj_val = Object.values(response.data.data.package)
+          let obj_key = Object.keys(response.data.data.package)
+          for (let index = 0; index < obj_val.length; index++) {
+            sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
+          }
+          this.options = sub_id
+          this.value  = sub_id[0].value;
+          localStorage.setItem("current_sub_id",this.value)
+          // if (localStorage.getItem('current_sub_id') != null || localStorage.getItem('current_sub_id') != undefined) {
+          //   this.value = localStorage.getItem('current_sub_id')
+          // }
+          // else{
+          //   this.options = sub_id
+          //   this.value  = sub_id[0].value;
+          //   localStorage.setItem("current_sub_id",this.value)
+                  // }
+          //this.getDataOfSubscriptionUser();
 
-       // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
-       //      this.value = Cookies.get("subscriptionId")
+           // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
+           //      this.value = Cookies.get("subscriptionId")
         })
     },
 
@@ -669,7 +695,19 @@
       //         }
       //     })
       // },
-     changeSubscription(){
+      updateProjectNameLimitCount(){
+        this.projectLimitCount = this.formAddProjectFolder.projectName.length;
+      },
+
+      updateFolderNameLimitCount(){
+        this.folderLimitCount = this.formAddFolder.foldername.length;
+      },
+
+      updateFileNameLimitCount(){
+        this.fileLimitCount = this.formAddFile.filename.length;
+      },
+
+      changeSubscription(){
         this.fullscreenLoading=true
         // this.editableTabs = []
 
@@ -696,14 +734,14 @@
             this.fullscreenLoading=false;
           })
       },
+
       canceldialogproject(formAddProjectFolder){
        this.$refs[formAddProjectFolder].resetFields();
         // console.log('cancel')
          this.newProjectFolderDialog = false;
          // this.formAddProjectFolder.projectName=''
-
-
       },
+
       canceldialog(formAddFile){
         this.$refs[formAddFile].resetFields();
 
@@ -711,6 +749,7 @@
 
         // this.formAddFile.filename=''
       },
+
       canceldialogfolder(formAddFolder){
         this.$refs[formAddFolder].resetFields();
 
@@ -718,6 +757,7 @@
         // console.log('&&&&')
         // this.formAddFolder.foldername=''
       },
+
       // Set template if selected in creating new project
       setTemplate(template) {
         if(template == 'template1'){
@@ -1447,47 +1487,47 @@
         // this.fullscreenLoading = false;
 
         // var self = this
-    //     function checkIfExist(filepath,array) {  // The last one is array
+         //  function checkIfExist(filepath,array) {  // The last one is array
 
-    //        var found = array.some(function (el) {
-    //          return el.filepath == url;
-    //        });
+         //     var found = array.some(function (el) {
+         //       return el.filepath == url;
+         //     });
 
-    //        if (!found)
-    //        {
-    //          let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-    //          array = removedArray  ;
-    //          editableTabValue = newTabName;
-    //            array.push({
-    //              title: tab_file_name,
-    //              name: newTabName,
-    //              content: newTabName,
-    //              componentId : compId,
-    //              filepath : url
-    //            });
+         //     if (!found)
+         //     {
+         //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+         //       array = removedArray  ;
+         //       editableTabValue = newTabName;
+         //         array.push({
+         //           title: tab_file_name,
+         //           name: newTabName,
+         //           content: newTabName,
+         //           componentId : compId,
+         //           filepath : url
+         //         });
 
-    //        }else{
-    //          let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-    //          array = removedArray  ;
-    //          editableTabValue = newTabName;
-    //          array.push({
-    //              title: tab_file_name,
-    //              name: newTabName,
-    //              content: newTabName,
-    //              componentId : compId,
-    //              filepath : url
-    //            });
-    //        }
+         //     }else{
+         //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
+         //       array = removedArray  ;
+         //       editableTabValue = newTabName;
+         //       array.push({
+         //           title: tab_file_name,
+         //           name: newTabName,
+         //           content: newTabName,
+         //           componentId : compId,
+         //           filepath : url
+         //         });
+         //     }
 
-           
-    //        return array
-    //    }
+             
+         //     return array
+         // }
 
-    //    this.fullscreenLoading = false;
-    //    this.editableTabs =  selectedPagePositionFirstArray ;
-    //    this.editableTabs.reverse();
-    //    this.editableTabsValue = newTabName;
-    //    var self = this
+         // this.fullscreenLoading = false;
+         // this.editableTabs =  selectedPagePositionFirstArray ;
+         // this.editableTabs.reverse();
+         // this.editableTabsValue = newTabName;
+         // var self = this
        // if(this.editableTabs[0].title){
        //   // clearInterval(myInterval);
        //   var title = this.editableTabs[0].title;
