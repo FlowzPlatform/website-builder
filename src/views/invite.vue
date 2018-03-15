@@ -397,7 +397,7 @@
                             self.$Notice.error(
                                 {duration:0, 
                                 title: error.response.statusText,
-                                desc:error.response.data.message+'. Please <a href="'+config.default.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'}
+                                desc:error.response.data.message+'. Please <a href="'+config.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'}
                                 );
                         
                         }

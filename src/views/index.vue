@@ -276,7 +276,7 @@
   // Custom Components
 
   // Home page
-  import Dashboard from './Dashboard'
+  import Dashboard from './editorDashboard'
 
   // Code Mirror
   import VueCodeMirror from 'vue-codemirror'

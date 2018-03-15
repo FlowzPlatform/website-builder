@@ -251,6 +251,7 @@ import Cookies from 'js-cookie';
 
 import Invite from './invite';
 import HomePage from './Dashboard';
+// import DashboardVue from './Dashboard.vue';
 
 export default {
   name: 'UserDashboard',
@@ -277,7 +278,7 @@ export default {
         this.componentId = Invite;
     },
     goToDashboard(){
-        // this.componentId = HomePage;
+        this.componentId = HomePage;
     },
     doLogout() {
       this.$confirm('Do you want to logout?', 'Warning', {
@@ -306,6 +307,8 @@ export default {
     }
   },
   mounted () {
+
+      this.goToDashboard();
 
     this.userEmailId = Cookies.get('email');
 
