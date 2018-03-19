@@ -133,7 +133,7 @@ import domenu from 'domenu'
 			let menuData;
 
 			try {
-		    	let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json');
+		    	let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json').catch((err)=>{ console.log('Error:', err); });
 				//// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
 					menuData = responseConfig.data;

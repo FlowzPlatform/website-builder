@@ -88,7 +88,7 @@ export default {
         //// console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
         this.filename=responseConfig.data.websiteName+'/'+ fileName.replace('/','')
         let rawConfigs = responseConfig.data.configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
@@ -435,7 +435,7 @@ export default {
 	methods:{
     async getSavedHtml() {
       let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
-      });
+      }).catch((err)=>{ console.log('Error:', err); });
       this.$store.state.content = response.data
     },
     getHtml: function () {

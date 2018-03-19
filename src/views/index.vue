@@ -672,6 +672,7 @@
            // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
            //      this.value = Cookies.get("subscriptionId")
         })
+        .catch((err)=>{ console.log('Error:', err); })
     },
 
     methods: {
@@ -1335,7 +1336,7 @@
         let ext = url.split('.').pop();
 
         this.$store.state.fileUrl = url;
-        let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + url);
+        let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + url).catch((err)=>{ console.log('Error:', err); });
 
         this.$store.dispatch('updateContent', {
           text: response.data
@@ -1394,7 +1395,7 @@
                 if (parentFolderName == 'Pages') {
                   this.isPageCodeEditor = true;
                   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl, {
-                  });
+                  }).catch((err)=>{ console.log('Error:', err); });
                   this.$store.state.content = response.data
                 } else {
                   this.isPageCodeEditor = false;
@@ -1548,7 +1549,7 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
         let rawConfigs = responseConfig.data.configData;
         return this.globalConfigData = rawConfigs;
       },
@@ -1560,7 +1561,7 @@
         foldername = foldername[6];
         // console.log('folderUrl:',folderUrl)
         // console.log('foldername:',foldername)
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
 
         if(rethinkdbCheck.data){
           // console.log('data checked')
@@ -1608,7 +1609,7 @@
               let foldername = folderUrl.split('/');
               foldername = foldername[(foldername.length - 1)];
               // this.getConfigFileData(folderUrl);
-              let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername);
+              let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
               let rawConfigs = responseConfig.data.configData;
               let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
               let checkfilename = false
@@ -1763,7 +1764,7 @@
 
           // this.getConfigFileData(folderUrl);
 
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName);
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((err)=>{ console.log('Error:', err); });
           let rawConfigs = responseConfig.data.configData;
           this.globalConfigData = rawConfigs;
 
@@ -2143,7 +2144,7 @@
                                           this.addNewProjectFolderLoading = false;
 
                                           // var response = resp
-                                          let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {});
+                                          let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err)=>{ console.log('Error:', err); });
 
                                           if (!(gitResponse.data.statusCode)) {
 
@@ -3095,7 +3096,7 @@
           let folderUrl = configFileUrl.replace(fileName, '');
           let projectName = folderUrl.split('/');
           projectName = projectName[(projectName.length - 1)];
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName);
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((err)=>{ console.log('Error:', err); });
           let rawConfigs = responseConfig.data.configData;
           this.globalConfigData = rawConfigs;
           axios.post(config.baseURL + '/flows-dir-listing', {
@@ -3142,7 +3143,7 @@
                 var content = '';
                 let name = this.currentFile.path.replace(/\\/g, "\/").substring(this.currentFile.path.replace(/\\/g, "\/").indexOf('Layout/') + 7, this.currentFile.path.replace(/\\/g, "\/").indexOf('.layout'));
 
-                content = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + name + '.layout');
+                content = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + name + '.layout').catch((err)=>{ console.log('Error:', err); });
                 content = content.data
                 var result = (getFromBetween.get(content, "{{>", "}}"));
                 var changeresult = JSON.parse(JSON.stringify(result))
@@ -3307,6 +3308,8 @@
                                 text: ' ',
                                 type: 'file'
                               })
+                              .catch((err)=>{ console.log('Error:', err); })
+
                               let temp1 = {
                                 value: DefaultParams[k][foldernameKey[j]].split('.')[0],
                                 label: DefaultParams[k][foldernameKey[j]].split('.')[0]
@@ -3372,6 +3375,8 @@
                                       text: ' ',
                                       type: 'file'
                                     })
+                                    .catch((err)=>{ console.log('Error:', err); })
+
                                     let temp1 = {
                                       value: DefaultParams[k][newName].split('.')[0],
                                       label: DefaultParams[k][newName].split('.')[0]
@@ -3525,7 +3530,7 @@
 
                   let name = fileName.split('/')[2];
                   name = name.split('.')[0];
-                  content1 = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + name + '.html');
+                  content1 = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + name + '.html').catch((err)=>{ console.log('Error:', err); });
                   content1 = content1.data
                   var result1 = [];
                   result1 = (getFromBetween.get(content1, "{{>", "}}"));
@@ -4177,7 +4182,7 @@
                           })
                   }
 
-                  let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout');
+                  let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout').catch((err)=>{ console.log('Error:', err); });
                   var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
                   this.backuplayout = backlayoutdata.data;
                   let newFolderName = folderUrl + '/temp';
@@ -4186,7 +4191,7 @@
                           type: 'folder'
                       }).then(async(res) => {
                           for (let i = 0; i < back_partials.length; i++) {
-                              let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial');
+                              let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[i]) + '/' + back_partials[i][Object.keys(back_partials[i])] + '.partial').catch((err)=>{ console.log('Error:', err); });
                               responsepartials = responsepartials.data
                               let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
                               var DefaultParams = [];
@@ -4319,7 +4324,7 @@
                           console.log(e)
                       })
 
-                  let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmithPreview.js');
+                  let responseMetal = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/metalsmithPreview.js').catch((err)=>{ console.log('Error:', err); });
                   let backupmetalsmith = JSON.parse(JSON.stringify(responseMetal.data))
 
                   var index = responseMetal.data.search('.source')
@@ -4465,7 +4470,8 @@
 
                                                           await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                                               .then(async(res) => {
-                                                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                                                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((err)=>{ console.log('Error:', err); })
+
                                                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                                                                       //console.log(e)
                                                                   })
@@ -4502,12 +4508,13 @@
                                                               text: backupmetalsmith,
                                                               type: 'file'
                                                           })
+                                                          .catch((err)=>{ console.log('Error:', err); })
 
                                                           await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                                                               //console.log(e)
                                                           })
-                                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((err)=>{ console.log('Error:', err); })
+                                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((err)=>{ console.log('Error:', err); })
                                                           console.log(e)
                                                       })
 
@@ -4521,12 +4528,13 @@
                                                       text: backupmetalsmith,
                                                       type: 'file'
                                                   })
+                                                  .catch((err)=>{ console.log('Error:', err); })
 
                                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                                                       //console.log(e)
                                                   })
-                                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((err)=>{ console.log('Error:', err); })
+                                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((err)=>{ console.log('Error:', err); })
                                                   console.log(err)
 
                                               })
@@ -4542,12 +4550,13 @@
                                               text: backupmetalsmith,
                                               type: 'file'
                                           })
+                                          .catch((err)=>{ console.log('Error:', err); })
 
                                           await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                                               //console.log(e)
                                           })
-                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((err)=>{ console.log('Error:', err); })
+                                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((err)=>{ console.log('Error:', err); })
                                           self.saveFileLoading = false
                                           console.log(e)
                                       })
@@ -4556,12 +4565,13 @@
                                   self.fullscreenLoading = false;
                                   window.open('http://' + config.ipAddress + '/plugins/public/error.html');
 
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((err)=>{ console.log('Error:', err); })
                                   await axios.post(config.baseURL + '/flows-dir-listing', {
                                       filename: mainMetal,
                                       text: backupmetalsmith,
                                       type: 'file'
                                   })
+                                  .catch((err)=>{ console.log('Error:', err); })
 
                                   await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
 
@@ -4575,12 +4585,13 @@
                           self.fullscreenLoading = false;
                           window.open('http://' + config.ipAddress + '/plugins/public/error.html');
 
-                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp')
+                          await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((err)=>{ console.log('Error:', err); })
                           await axios.post(config.baseURL + '/flows-dir-listing', {
                               filename: mainMetal,
                               text: backupmetalsmith,
                               type: 'file'
                           })
+                          .catch((err)=>{ console.log('Error:', err); })
                           await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {
 
                           }).catch((e) => {
@@ -4698,7 +4709,7 @@
         let projectName = urlparts[6];
         // console.log('projectName:',projectName)
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName ).catch((err)=>{ console.log('Error:', err); });
 
         let rawConfigs = responseConfig.data.configData;
         this.globalConfigData = rawConfigs;
@@ -4865,7 +4876,7 @@
 
         let projectName = urlparts[6];
         // this.getConfigFileData(folderUrl);
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName ).catch((err)=>{ console.log('Error:', err); });
 
         let rawConfigs = responseConfig.data.configData;
         this.globalConfigData = rawConfigs;
@@ -4935,7 +4946,7 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length - 1)];
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
         let rawConfigs = responseConfig.data.configData;
         let repositoryId = rawConfigs[0].repoSettings[0].RepositoryId;
 
@@ -5147,7 +5158,7 @@
             .then(async (resp) => {
 
               // var response = resp
-              let gitlabResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {});
+              let gitlabResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err)=>{ console.log('Error:', err); });
               
               if (!(gitlabResponse.data.statusCode)) {
 
@@ -5444,7 +5455,7 @@
           this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
           // console.log('userid',userid)
-          var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
+          var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch((err)=>{ console.log('Error:', err); })
           let checkdetail=true
           for(let i=0;i<alldatauser.data.data.length;i++){
             if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){

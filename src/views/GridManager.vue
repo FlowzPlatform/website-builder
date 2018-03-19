@@ -79,7 +79,7 @@
             getSavedHtml: async function(){
               //console.log('from GridManager')
               let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
-              });
+              }).catch((err)=>{ console.log('Error:', err); });
               this.$store.state.content = response.data
             },
             getHtml: function(){
