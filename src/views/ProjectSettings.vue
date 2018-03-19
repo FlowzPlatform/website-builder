@@ -1,29 +1,6 @@
 <template>
   <div class="ProjectSettings">
 
-    <!-- Publish Site Modal -->
-    <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
-      <!--<el-tabs v-model="activeName">
-         <el-tab-pane label="Default Domain" name="first">
-          Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
-          <br>
-          <br>
-            <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
-          <br>
-          <div align="right" style="margin-top: 15px;">
-            <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="Custom Domain" name="second">
-          <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
-          <div align="right" style="margin-top: 15px;">
-            <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
-          </div>
-
-        </el-tab-pane>
-      </el-tabs> -->
-    </el-dialog>
-
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
@@ -147,10 +124,11 @@
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label>
-                    <span><b>Current file:</b><i> {{form.brandLogoName}}</i></span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
+                    <br>
+                    <span><b>Current file:</b> {{form.brandLogoName}}</span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
 
                     <input type="file" name="" id="upload-validation">
-                    <span class="dis">( .png/ico only)</span>
+                    <span class="dis">( .png/ico only max size upto 70KB)</span>
 
                   </div>
                    <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
@@ -1091,7 +1069,7 @@ let checkBranchName = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('Please enter Branch Name.'));
     }else if(!(/^[a-z0-9A-Z_]+$/i.test(value))){
-        return callback(new Error('Special characters and spaces are not allowed)'));
+        return callback(new Error('Special characters and spaces are not allowed'));
     }else{
         return callback();
     }
@@ -1371,7 +1349,7 @@ export default {
         $('#text2').text('Invalid image file.');
         $('.valid').addClass('error').removeClass('correct');
         $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
-      }else if(iFileSize >= 1024000) {
+      }else if(iFileSize >= 70000) {
         $('#text2').text('Too large file.');
         $('.valid').addClass('error').removeClass('correct');
         $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
@@ -2828,56 +2806,69 @@ export default {
     },
 
     revertCommit(index) {
-      this.$store.state.currentIndex = index;
 
-      this.currentSha = this.branchesData[index].commitSHA;
+      this.$confirm('Do you really want to rollback to "' + this.branchesData[index].branchName + '" revision?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.$store.state.currentIndex = index;
 
-      this.configData.branchName = this.branchesData[index].branchName;
+        this.currentSha = this.branchesData[index].commitSHA;
 
-      this.currentBranchName = this.branchesData[index].branchName;
+        this.configData.branchName = this.branchesData[index].branchName;
 
-      //// console.log(this.commitsData[index].commitSHA);
-      axios.get( config.baseURL + '/branch-list?branchName=' + this.branchesData[index].branchName + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
-      }).then(async response => {
+        this.currentBranchName = this.branchesData[index].branchName;
 
-        // console.log(response);
+        //// console.log(this.commitsData[index].commitSHA);
+        axios.get( config.baseURL + '/branch-list?branchName=' + this.branchesData[index].branchName + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
+        }).then(async response => {
 
-        // this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
+          // console.log(response);
 
-        // console.log(config.baseURL + '/configdata-history?branchName=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName);
+          // this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
 
-        await axios.get(config.baseURL + '/configdata-history?currentBranch=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName, {
+          // console.log(config.baseURL + '/configdata-history?branchName=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName);
+
+          await axios.get(config.baseURL + '/configdata-history?currentBranch=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName, {
+          })
+          .then(async (resp) => {
+            console.log('Config data resp: ', resp);
+            let configData = resp.data.data[0].configData;
+              this.settings = null;
+              this.settings = configData;
+
+              // update config data
+              axios.patch(config.baseURL + '/project-configuration/' + configData[0].repoSettings[0].RepositoryName, {
+                  configData: this.settings
+              })
+              .then((response) => {
+                  console.log(response);
+                  this.$message({
+                    message: 'Rollbacked to revision "' + this.branchesData[index].branchName + '" ',
+                    type: 'success'
+                  });
+                  this.init();
+                  this.$emit('updateProjectName');
+              })
+              .catch(function (error) {
+                  console.log(error);
+              });
+
+              // await this.saveProjectSettings();
+              // this.init();
+          })
+          .catch(function (error) {
+              console.log(error);
+              this.fullscreenLoading = false;
+          });
+
+        }).catch(error => {
+          console.log( error);
         })
-        .then(async (resp) => {
-          console.log('Config data resp: ', resp);
-          let configData = resp.data.data[0].configData;
-            this.settings = null;
-            this.settings = configData;
-
-            // update config data
-            axios.patch(config.baseURL + '/project-configuration/' + configData[0].repoSettings[0].RepositoryName, {
-                configData: this.settings
-            })
-            .then((response) => {
-                console.log(response);
-                this.init();
-                this.$emit('updateProjectName');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-            // await this.saveProjectSettings();
-            // this.init();
-        })
-        .catch(function (error) {
-            console.log(error);
-            this.fullscreenLoading = false;
-        });
-
-      }).catch(error => {
-        console.log( error);
-      })
+      }).catch(() => {
+        console.log('Cancelled.')         
+      });
     },
 
     async commitProject(commitForm) {
@@ -3076,7 +3067,7 @@ export default {
           }
         }
         
-        this.$confirm('Do you want to publish your website? \n This will take upto 3-4 minutes. Continue?', 'Warning', {
+        this.$confirm('Do you want to publish your website? This will take a while to process. Continue?', 'Warning', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           type: 'warning'
