@@ -135,6 +135,7 @@
               this.options = sub_id
               this.value  = sub_id[0].value;
             })
+            .catch((err)=>{ console.log('Error:', err); })
         }
     }
 </script>

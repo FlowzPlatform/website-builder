@@ -263,6 +263,7 @@
                         // this.options2 = sub_id;
                         
                     })
+                    .catch((err)=>{ console.log('Error:', err); })
             },
             async getDataOfSubscriptionUser() {
                 this.$Loading.start();
@@ -293,6 +294,8 @@
                         
                         this.options = Role_id
                     })
+                    .catch((err)=>{ console.log('Error:', err); })
+
                     axios.get(config.userDetail, {
                         headers: {
                             'Authorization': Cookies.get('auth_token')
@@ -328,6 +331,7 @@
                         
                         this.$Loading.finish();
                     })
+                    .catch((err)=>{ console.log('Error:', err); })
             },
             async inviteNow() {
                 
