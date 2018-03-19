@@ -1950,7 +1950,7 @@ export default {
 
       })
       .catch((e)=>{
-        //console.log("Error"+e)
+        console.log("Error"+e)
       });
 
       this.addPluginLoading = false;
@@ -1961,7 +1961,7 @@ export default {
         // let foldername = folderUrl.split('/');
         // foldername = foldername[6];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch(err => { console.log(err); this.fullscreenLoading = false });
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch(err => { console.log(err); this.fullscreenLoading = false }).catch((e)=>{console.log(e)});
 
         if(rethinkdbCheck.data){
 
@@ -2219,7 +2219,7 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false });
+      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false }).catch((e)=>{console.log(e)});
 
       configData = JSON.parse(JSON.stringify(configData.data.configData))
         //// console.log('new config file:',configData);
@@ -2590,7 +2590,7 @@ export default {
             message: 'Failed! Please try again.',
             type: 'error'
           });
-          //console.log(e)
+          console.log(e)
         })
 
       }).catch((err) => {
@@ -2657,7 +2657,8 @@ export default {
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
         var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
-        await axios.get(config.baseURL + '/project-configuration?userId=' + userid).then((res)=>{
+        await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
+        .then((res)=>{
           let checkdetail = true
         for (let i = 0; i < res.data.data.length; i++) {
           if (this.form.websitename == res.data.data[i].websiteName) {
@@ -2674,7 +2675,8 @@ export default {
           this.form.websitename = this.configData.data.websiteName;
           return
         }
-        }).catch((err) => { console.log(err);});
+        })
+        .catch((err) => { console.log(err);});
         
       }
 
@@ -2847,7 +2849,7 @@ export default {
         await axios.get(config.baseURL + '/configdata-history?currentBranch=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName, {
         })
         .then(async (resp) => {
-            console.log('Config data resp: ', resp);
+          console.log('Config data resp: ', resp);
           let configData = resp.data.data[0].configData;
             this.settings = null;
             this.settings = configData;
@@ -3482,7 +3484,6 @@ export default {
                     }
                   }
                 }
-
               })
               .catch((e) => {
                 console.log(e)
@@ -3584,7 +3585,7 @@ export default {
                       filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
                       text: newContent,
                       type: 'file'
-                    })
+                    }).catch((e)=>{console.log(e)});
 
                     var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
 
@@ -3642,6 +3643,7 @@ export default {
                                     if (Layout == 'Blank') {
                                       await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
                                         .catch((e) => {
+                                          console.log(e)
                                           //console.log("error while deleting blank.layout file")
                                         })
                                     }
@@ -3650,9 +3652,9 @@ export default {
 
                                   })
                                   .catch((e) => {
-                                    //console.log(e)
+                                    console.log(e)
                                   })
-                              })
+                              }).catch((e)=>{console.log(e)});
 
                           })
                           .catch((err) => {
@@ -3663,13 +3665,13 @@ export default {
                               filename: mainMetal,
                               text: backupMetalSmith,
                               type: 'file'
-                            })
+                            }).catch((e)=>{console.log(e)});
                             axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                               console.log(e)
                             })
-                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
                             console.log(err)
-                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                           })
                       })
                       .catch((e) => {
@@ -3679,12 +3681,12 @@ export default {
                           filename: mainMetal,
                           text: backupMetalSmith,
                           type: 'file'
-                        })
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                        }).catch((e)=>{console.log(e)});
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                           //console.log(e)
                         })
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
                         console.log(e)
                       })
 
@@ -3697,12 +3699,12 @@ export default {
                       filename: mainMetal,
                       text: backupMetalSmith,
                       type: 'file'
-                    })
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                    }).catch((e)=>{console.log(e)});
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                       //console.log(e)
                     })
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
                   })
 
               })
@@ -3714,8 +3716,8 @@ export default {
                   filename: mainMetal,
                   text: backupMetalSmith,
                   type: 'file'
-                })
-                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                }).catch((e)=>{console.log(e)});
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                   //console.log(e)
                 })
