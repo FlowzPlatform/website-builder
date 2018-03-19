@@ -62,7 +62,18 @@
 
               <div class="col-md-12" v-else>
                 <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
-                <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: [1] <strong>ns1.flowzdigital.com</strong> [2] <strong>ns2.flowzdigital.com</strong></p>
+                <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
+                  [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
+                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns1-copy')"><i class="fa fa-copy"></i></a>
+                    </el-tooltip>
+                  </strong> 
+                  [2] <strong><span id="ns2-copy">ns2.flowzdigital.com</span>
+                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns2-copy')"><i class="fa fa-copy"></i></a>
+                    </el-tooltip>
+                  </strong> 
+                </p>
                 <div style="margin-top: 15px;">
                   <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
                 </div>
@@ -263,6 +274,8 @@
                   <div class="deleteImage"></div>
                   <img :src="n" class="asset-image" />
                 </div>
+                <input :id="n" type="text" class="form-control" :value="n" name="n">
+
               </div>
             </div>
 
@@ -376,7 +389,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-md-12" style="margin-top: 4%;">
             <h3>Dynamic Styles</h3>
             <hr>
@@ -385,12 +398,12 @@
                 <el-form-item>
                   <div class="row">
 
-                    <!-- Enter Variable ID -->
+                    <!-- Enter Variable ID --
                     <div class="col-md-5">
                       <el-input placeholder="Variable Name" v-model="n.variableName"></el-input>
                     </div>
 
-                    <!-- Select Type -->
+                    <!-- Select Type --
                     <div class="col-md-2" style="margin: 0; padding: 0">
                       <el-select v-model="n.variableType" placeholder="Select">
                         <el-option
@@ -402,46 +415,46 @@
                       </el-select>
                     </div>
 
-                    <!-- Enter Color Variable Value -->
+                    <!-- Enter Color Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'color'">
                       <el-color-picker v-model="n.variableValue" show-alpha></el-color-picker>
                     </div>
 
-                    <!-- Enter Pixel Variable Value -->
+                    <!-- Enter Pixel Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'px'">
                       <el-input placeholder="Pixels Value" v-model="n.variableValue"></el-input>
                     </div>
 
-                    <!-- Enter Percentage Variable Value -->
+                    <!-- Enter Percentage Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'percent'">
                       <el-slider v-model="n.variableValue"></el-slider>
                     </div>
 
-                    <!-- Enter Number Variable Value -->
+                    <!-- Enter Number Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'number'">
                       <el-input-number v-model="n.variableValue"></el-input-number>
                     </div>
 
-                    <!-- Enter Custom Variable Value -->
+                    <!-- Enter Custom Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'custom'">
                       <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
                     </div>
 
-                    <!-- Delete Variable -->
+                    <!-- Delete Variable --
                     <div class="col-md-1">
                       <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>
                     </div>
                   </div>
                 </el-form-item>
               </div>
-              <!-- Ends V-FOR looping -->
+              <!-- Ends V-FOR looping --
 
-              <!-- Create new variable -->
+              <!-- Create new variable --
               <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
 
             </el-form>
           </div>
-        </div>
+        </div> -->
       </div>
       <!-- Global Variables section ends -->
 
@@ -1473,6 +1486,18 @@ export default {
   },
 
   methods: {
+    copyToClipboard(value){
+      let elem = document.getElementById(value);
+      var $temp = $("<input>");
+      $("body").append($temp);
+      $temp.val($(elem).text()).select();
+      document.execCommand("copy");
+      this.$message({
+        message: 'Copied to clipboard.',
+        type: 'success'
+      });
+      $temp.remove();
+    },
     sortBranchesTable(n){
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
       table = document.getElementById("revisionsTable");
@@ -1556,7 +1581,8 @@ export default {
 
       fsClient.pick({
         accept: 'image/*',
-        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"]
+        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"],
+        rejectOnCancel: true
       }).then( (response) => {
         this.uploadAssetImageLoader = false;
         // declare this function to handle response
@@ -4364,5 +4390,9 @@ export default {
 
   #revisionsTable th i {
       margin-right: 20px;
+  }
+
+  .btn-xs{
+    padding: 5px;
   }
 </style>

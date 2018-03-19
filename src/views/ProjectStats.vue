@@ -88,7 +88,7 @@
         </div>
       </div>
 
-      <div class="row" style="margin-top: 40px;">
+      <!-- <div class="row" style="margin-top: 40px;">
         <div class="col-md-12">
           <div class="creative-table">
             <div class="table-title ">
@@ -104,7 +104,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- {{tablePagesData}} -->
                   <tr>
                     <td>Website SEO Title:</td>
                     <td><a id="seoTitle" data-title="Project SEO Title">{{seoTitle}}</a></td>
@@ -122,7 +121,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- List of Commits -->
       <div class="row" style="margin-top: 40px; margin-bottom: 50px;">
@@ -612,6 +611,7 @@ export default {
 
 .ProjectStats {
   font-family: 'Lato', sans-serif;
+  background-color: #eee;
 }
 
 .card{

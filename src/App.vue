@@ -77,10 +77,12 @@ export default {
     checkAuth(){
 
       let self = this;
+
+        // Check for Auth_Token. Helpful when user logs out from another application.
         
         window.onload = function() {
 
-          if(self.$route.path == '/login'){
+          if(self.$route.path == '/login' || self.$route.path == '/' || self.$route.path == '/register' || self.$route.path == '/forgot_password' || self.$route.path == '/reset-password' || self.$route.path == '/email-verification'){
             
           } else {
             

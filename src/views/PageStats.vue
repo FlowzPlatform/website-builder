@@ -127,6 +127,7 @@ export default {
 <style scoped>
 .PartialStats {
   font-family: 'Lato', sans-serif;
+  background-color: #eee;
 }
 
 .card{
