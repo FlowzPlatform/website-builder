@@ -386,7 +386,7 @@ export default {
 
     async saveProjectSettings() {
       
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err)=>{ console.log('Error:', err); });
 
       if (rethinkdbCheck.data) {
         // update existing data
@@ -421,7 +421,7 @@ export default {
       let foldername = folderUrl.split('/');
       foldername = foldername[6];
       
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
 
       if(this.configData.status == 200 || this.configData.status == 204){
         //console.log('Config file found! Updating fields..');

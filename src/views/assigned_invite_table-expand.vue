@@ -240,6 +240,7 @@
                         self.data6 = self.assignee
                     }
                 })
+                .catch((err)=>{ console.log('Error:', err); })
             }
         },
         mounted() {
