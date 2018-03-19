@@ -1,5 +1,5 @@
 <template>
-  <div class="editorDashboard">
+  <div class="HomePage">
     <!-- <div class="container">
       <div class="block">
         <div class="number">52</div>
@@ -29,7 +29,7 @@
 <script>
 
 export default {
-  name: 'editorDashboard',
+  name: 'HomePage',
   props: {
     options: {
       type: Object
