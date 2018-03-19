@@ -2,7 +2,26 @@
   <div class="HomePage">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span id="website"><h1 class='elegantshadow'>Websites</h1></span>
+        <span id="website"><h1 class='elegantshadow'>Websites </h1> </span>
+
+        <div class="row">
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-4">
+            <el-select v-model="value" @change="changeSubscription()" placeholder="Select Your Subscription" style="transform: scaleX(1); display: block;">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value" 
+              :class="subscriptionSelect">
+            </el-option>
+            </el-select> 
+          </div>
+          <div class="col-md-4">
+          </div>
+        </div>
+        
       </div>
           <div v-for="items in websites" class="list-type5"> 
         <ol>
@@ -22,15 +41,14 @@
     export default {
         name: 'HomePage',
         props: {
-            options: {
-                type: Object
-            }
         },
         data() {
             return {
                 data: 'data',
                 websites: [],
-                projectPublicUrl: []
+                projectPublicUrl: [],
+                options: '',
+                value:''
             }
         },
         component: {},
@@ -39,10 +57,10 @@
                 window.open(url);
             },
             getData() {
-                this.treeLoading = true;
+              console.log("hello")
                 let self = this;
-                if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                    axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + localStorage.getItem('current_sub_id'))
+                  if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+                    axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
                         .then(async response => {
                             for (let index = 0; index < response.data.children.length; index++) {
                                 this.configData = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[index].name).catch((err) => {
@@ -95,10 +113,28 @@
                         }
                     });
                 }
+                
             },
+            changeSubscription() {
+              this.websites = []
+              this.getData();
+
+            }
         },
-        mounted() {
+        async mounted() {
             this.getData();
+            let sub_id = []
+            await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
+            .then(response => {
+              console.log("res----",response)
+              let obj_val = Object.values(response.data.data.package)
+              let obj_key = Object.keys(response.data.data.package)
+              for (let index = 0; index < obj_val.length; index++) {
+                sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
+              }
+              this.options = sub_id
+              this.value  = sub_id[0].value;
+            })
         }
     }
 </script>
@@ -121,7 +157,7 @@
 /* //#0089e0 //#555  */
   h1 {
     font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
-    font-size: 42px;
+    font-size: 52px;
     padding: 0px 20px;
     text-align: center;
     text-transform: uppercase;
@@ -205,4 +241,11 @@
     } */
 
 
+</style>
+
+<style>
+.subscriptionSelect{
+  width:300px !important;  
+  margin: auto !important;
+}
 </style>
