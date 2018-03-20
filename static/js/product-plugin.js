@@ -747,6 +747,15 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         category: 'Data Field Group'
     });
 
+    bm.add('DataFieldTemplate', {
+        label: 'Data Field Template',
+        content: '<div class="container"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo" style="width: 100%;">Hot Topics</button> <div id="demo" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> <div class="col-md-6" style="border: 1px solid black; height: 200px"> One </div><div class="col-md-6" style="border: 1px solid black; height: 200px"> Two </div></div></div></div>',
+        attributes: {
+            class: 'fa fa-database',
+            title: 'Template-1',
+        },
+        category: 'Data Field Group'
+    });
 
 
 

@@ -3956,27 +3956,28 @@
               let self = this;
               setTimeout(async function() {
 
-                  var externalJs = self.globalConfigData[1].projectSettings[1].ProjectExternalJs;
-                  var externalCss = self.globalConfigData[1].projectSettings[1].ProjectExternalCss;
-                  var metaInfo = self.globalConfigData[1].projectSettings[1].ProjectMetaInfo;
-                  var ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
-                  var projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
-                  var projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles;
-                  var projectseotitle = self.globalConfigData[1].projectSettings[0].ProjectSEOTitle;
-                  var projectfaviconhref = self.globalConfigData[1].projectSettings[0].BrandLogoName
-                  var tophead = '';
-                  var endhead = '';
-                  var topbody = '';
-                  var endbody = '';
-                  var pagestyles = [];
-                  var favicon = ''
-                  var SeoTitle = ''
-                  var pageexternalJs = [];
-                  var pagescripts = [];
-                  var pageexternalCss = [];
-                  var pageMetaInfo = [];
-                  var pageSeoTitle;
-                  var PageMetacharset = '';
+                  let externalJs = self.globalConfigData[1].projectSettings[1].ProjectExternalJs;
+                  let externalCss = self.globalConfigData[1].projectSettings[1].ProjectExternalCss;
+                  let metaInfo = self.globalConfigData[1].projectSettings[1].ProjectMetaInfo;
+                  let ProjectMetacharset = self.globalConfigData[1].projectSettings[1].ProjectMetacharset
+                  let projectscripts = self.globalConfigData[1].projectSettings[1].ProjectScripts
+                  let projectstyles = self.globalConfigData[1].projectSettings[1].ProjectStyles;
+                  let projectseotitle = self.globalConfigData[1].projectSettings[0].ProjectSEOTitle;
+                  let projectfaviconhref = self.globalConfigData[1].projectSettings[0].BrandLogoName
+                  let tophead = '';
+                  let endhead = '';
+                  let topbody = '';
+                  let endbody = '';
+                  let pagestyles = [];
+                  let favicon = ''
+                  let SeoTitle = ''
+                  let pageexternalJs = [];
+                  let pagescripts = [];
+                  let pageexternalCss = [];
+                  let pageMetaInfo = [];
+                  let pageSeoTitle;
+                  let PageMetacharset = '';
+                  let PageCss=[];
                   if (projectseotitle != undefined && projectseotitle != '') {
                       SeoTitle = projectseotitle
                   }
@@ -4068,6 +4069,7 @@
                           PageMetacharset = self.globalConfigData[1].pageSettings[i].PageMetacharset;
                           pagescripts = self.globalConfigData[1].pageSettings[i].PageScripts;
                           pagestyles = self.globalConfigData[1].pageSettings[i].PageStyles;
+                          PageCss=self.globalConfigData[1].pageSettings[i].PageCss;
 
                       }
                   }
@@ -4390,7 +4392,12 @@
                           let divappstart = ''
                           let divappend = ''
                           let dfscript = ''
-                          if (contentpartials.indexOf('datafieldgroup') > 0 || contentpartials.indexOf('datafieldtable') > 0) {
+                          let indexvuejs=_.findIndex(PageCss,function(o){
+                            return o=='VueJs'
+                          })
+
+                          // if (contentpartials.indexOf('datafieldgroup') > 0 || contentpartials.indexOf('datafieldtable') > 0) {
+                            if(indexvuejs!=-1){
                               datadivscript = "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
                                   "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
                                   "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
