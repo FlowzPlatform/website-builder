@@ -190,89 +190,60 @@ export default {
 
         // 'gjs-plugin-ckeditor', 'grapesjs-blocks-bootstrap4', 'gjs-plugin-filestack', 'gjs-blocks-flexbox', 'gjs-navbar',
 
-		  editor = grapesjs.init({
-			plugins: ['gjs-blocks-basic', 'grapesjs-lory-slider', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'global-variables-plugin', 'product-plugin', 'flowz-blocks' ],
+		 //  editor = grapesjs.init({
+			// plugins: ['gjs-blocks-basic', 'grapesjs-lory-slider', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'global-variables-plugin', 'product-plugin', 'flowz-blocks' ],
             
-    		container : '#gjs',
-    		components: cssUrlString + htmlObject.html(),
-              allowScripts: true,
-        		storageManager: {
-                  id: 'gjs-',                 // Prefix identifier that will be used inside storing and loading
-                  type: 'local',              // Type of the storage
-                  autosave: false,            // Store data automatically
-                  autoload: false,            // Autoload stored data on init
-                  stepsBeforeSave: 1,         // If autosave enabled, indicates how many changes are necessary before store method is triggered
-                  storeComponents: false,     // Enable/Disable storing of components in JSON format
-                  storeStyles: false,         // Enable/Disable storing of rules/style in JSON format
-                  storeHtml: false,           // Enable/Disable storing of components as HTML string
-                  storeCss: false,            // Enable/Disable storing of rules/style as CSS string
-              },
+   //  		container : '#gjs',
+   //  		components: cssUrlString + htmlObject.html(),
+   //            allowScripts: true,
+   //      		storageManager: {
+   //                id: 'gjs-',                 // Prefix identifier that will be used inside storing and loading
+   //                type: 'local',              // Type of the storage
+   //                autosave: false,            // Store data automatically
+   //                autoload: false,            // Autoload stored data on init
+   //                stepsBeforeSave: 1,         // If autosave enabled, indicates how many changes are necessary before store method is triggered
+   //                storeComponents: false,     // Enable/Disable storing of components in JSON format
+   //                storeStyles: false,         // Enable/Disable storing of rules/style in JSON format
+   //                storeHtml: false,           // Enable/Disable storing of components as HTML string
+   //                storeCss: false,            // Enable/Disable storing of rules/style as CSS string
+   //            },
 
-              styleManager : {
-                sectors: [{
-                    name: 'General',
-                    open: false,
-                    buildProps: ['float', 'display', 'position', 'top', 'right', 'left', 'bottom']
-                  },{
-                    name: 'Dimension',
-                    open: false,
-                    buildProps: ['width', 'height', 'max-width', 'min-height', 'margin', 'padding'],
-                  },{
-                    name: 'Typography',
-                    open: false,
-                    buildProps: ['font-family', 'font-size', 'font-weight', 'letter-spacing', 'color', 'line-height', 'text-shadow'],
-                  },{
-                    name: 'Decorations',
-                    open: false,
-                    buildProps: [ 'opacity', 'border-radius-c', 'background-color', 'border-radius', 'border', 'box-shadow', 'background'],
-                  },{
-                    name: 'Extra',
-                    open: false,
-                    buildProps: ['transition', 'perspective', 'transform'],
-                  }
-                ],
-              },
+   //            styleManager : {
+   //              sectors: [{
+   //                  name: 'General',
+   //                  open: false,
+   //                  buildProps: ['float', 'display', 'position', 'top', 'right', 'left', 'bottom']
+   //                },{
+   //                  name: 'Dimension',
+   //                  open: false,
+   //                  buildProps: ['width', 'height', 'max-width', 'min-height', 'margin', 'padding'],
+   //                },{
+   //                  name: 'Typography',
+   //                  open: false,
+   //                  buildProps: ['font-family', 'font-size', 'font-weight', 'letter-spacing', 'color', 'line-height', 'text-shadow'],
+   //                },{
+   //                  name: 'Decorations',
+   //                  open: false,
+   //                  buildProps: [ 'opacity', 'border-radius-c', 'background-color', 'border-radius', 'border', 'box-shadow', 'background'],
+   //                },{
+   //                  name: 'Extra',
+   //                  open: false,
+   //                  buildProps: ['transition', 'perspective', 'transform'],
+   //                }
+   //              ],
+   //            },
 
-              assetManager: {
-                assets: images
-              },
+   //            assetManager: {
+   //              assets: images
+   //            },
 
-              blockManager: {
+   //            blockManager: {
               
-              },
+   //            },
 
-              // ,{
-              //     id: 'brandName',
-              //     label: 'Brand Name',
-              //     category: 'Global Variables',
-              //     attributes: {
-              //         class: 'fa fa-facebook-official',
-              //     },
-              //     content: '<span id="brandName">'+this.brandName+'</span>',
-              // },{
-              //     id: 'brandLogo',
-              //     label: 'Brand Logo',
-              //     category: 'Global Variables',
-              //     attributes: {
-              //         class: 'fa fa-flag',
-              //     },
-              //     content: '<img id="brandLogo" src='+this.imageBlob+' alt="company-logo" class="brand-logo"/>',
-              // }
-
-              // canvas: {
-              //     styles: [
-              //       'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css'
-              //     ],
-              //     scripts: [
-              //       'https://code.jquery.com/jquery-3.2.1.slim.min.js',
-              //       'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js',
-              //       'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js'
-              //     ],
-              //   },
-
-    		  style: variableCss + css,
+   //  		  style: variableCss + css,
         		
-      		});
+   //    		});
 
 
 
@@ -280,48 +251,48 @@ export default {
 
             // New Grapes JS Code
 
-          // editor = grapesjs.init({
-          //   height: '100%',
-          //   showOffsets: 1,
-          //   noticeOnUnload: 0,
-          //   // storageManager: { autoload: 0 },
-          //   container: '#gjs',
-          //   components: cssUrlString + htmlObject.html(),
-          //   // fromElement: true,
-          //   storageManager: {
-          //       id: 'gjs-',                 // Prefix identifier that will be used inside storing and loading
-          //       type: 'local',              // Type of the storage
-          //       autosave: false,            // Store data automatically
-          //       autoload: false,            // Autoload stored data on init
-          //       stepsBeforeSave: 1,         // If autosave enabled, indicates how many changes are necessary before store method is triggered
-          //       storeComponents: false,     // Enable/Disable storing of components in JSON format
-          //       storeStyles: false,         // Enable/Disable storing of rules/style in JSON format
-          //       storeHtml: false,           // Enable/Disable storing of components as HTML string
-          //       storeCss: false,            // Enable/Disable storing of rules/style as CSS string
-          //   },
-          //   allowScripts: true,
+          editor = grapesjs.init({
+            height: '100%',
+            showOffsets: 1,
+            noticeOnUnload: 0,
+            // storageManager: { autoload: 0 },
+            container: '#gjs',
+            components: cssUrlString + htmlObject.html(),
+            // fromElement: true,
+            storageManager: {
+                id: 'gjs-',                 // Prefix identifier that will be used inside storing and loading
+                type: 'local',              // Type of the storage
+                autosave: false,            // Store data automatically
+                autoload: false,            // Autoload stored data on init
+                stepsBeforeSave: 1,         // If autosave enabled, indicates how many changes are necessary before store method is triggered
+                storeComponents: false,     // Enable/Disable storing of components in JSON format
+                storeStyles: false,         // Enable/Disable storing of rules/style in JSON format
+                storeHtml: false,           // Enable/Disable storing of components as HTML string
+                storeCss: false,            // Enable/Disable storing of rules/style as CSS string
+            },
+            allowScripts: true,
 
-          //   plugins: ['gjs-blocks-basic', 'grapesjs-lory-slider', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'global-variables-plugin', 'product-plugin', 'flowz-blocks'],
-          //   pluginsOpts: {
-          //     'grapesjs-lory-slider': {
-          //     }
-          //   },
+            plugins: ['gjs-blocks-basic', 'grapesjs-lory-slider', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'global-variables-plugin', 'product-plugin', 'flowz-blocks'],
+            pluginsOpts: {
+              'grapesjs-lory-slider': {
+              }
+            },
 
-          //   assetManager: {
-          //     assets: images
-          //   },
-          //   style: variableCss + css,
-          // });
+            assetManager: {
+              assets: images
+            },
+            style: variableCss + css,
+          });
 
-          // let self = this;
-          // editor.on("component:update", function() {
-          //   let gethtml = beautify(editor.getHtml(), { format: 'html'});
-          //   let getcss =  beautify(editor.getCss(), { format: 'css'});
+          let self = this;
+          editor.on("component:update", function() {
+            let gethtml = beautify(editor.getHtml(), { format: 'html'});
+            let getcss =  beautify(editor.getCss(), { format: 'css'});
 
-          //   let fullhtml= "<style>\n" + getcss + "\n</style>\n"+
-          //       "\n\n\n\n" + gethtml;
-          //     self.$store.state.tabChange = fullhtml
-          // });
+            let fullhtml= "<style>\n" + getcss + "\n</style>\n"+
+                "\n\n\n\n" + gethtml;
+              self.$store.state.tabChange = fullhtml
+          });
 
           const categories = editor.BlockManager.getCategories();
           categories.each(category => {
@@ -357,7 +328,7 @@ export default {
 
           //// console.log('Global Variables length:', this.globalVariables.length);
 
-          let self = this;
+          // let self = this;
 
           setTimeout(async function(){
               for (var i = 0; i < self.globalVariables.length; i++){

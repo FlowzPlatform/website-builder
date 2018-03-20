@@ -35,7 +35,7 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 import psl from 'psl';
 import Cookies from 'js-cookie';
 import SiteFooter from './views/footer';
