@@ -108,7 +108,41 @@ export default {
                     let location = psl.parse(window.location.hostname)
                     location = location.domain === null ? location.input : location.domain;
                     if(Cookies.get('auth_token' ,{domain: location})){
+                      if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
+                        axios.get(config.userDetail, {
+                          headers: {
+                            'Authorization' : response.data.logintoken
+                          }   
+                        })
+                        .then(async (res) => {
+                          let userDetailId = res.data.data._id;
 
+                          // Store Token in Cookie
+                          Cookies.set('email', res.data.data.email, {domain: location});
+                          Cookies.set('userDetailId',  userDetailId, {domain: location});
+                          
+                          localStorage.setItem('userDetailId', userDetailId);
+                          localStorage.setItem('email', res.data.data.email);
+
+                          // create user folder
+                          await axios.post(config.baseURL+'/flows-dir-listing' , {
+                            foldername :'/var/www/html/websites/'+ userDetailId,
+                            type : 'folder'
+                          })
+                          .then((res) => {
+                            this.$router.push('/editor');
+                          });
+                          
+                        })
+                        .catch((e) => {
+                          console.log(e)
+                          this.$message({
+                              showClose: true,
+                              message: 'Error: ' + e.response.data,
+                              type: 'error'
+                          });
+                        })
+                      }
                     } else {
                       self.$message({
                         message: 'You\'re Logged Out From System. Please login again!',
