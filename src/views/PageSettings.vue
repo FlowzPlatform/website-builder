@@ -340,7 +340,7 @@ const config = require('../config');
 
 import axios from 'axios';
 
- const cssOptions = ['Bootstrap 3', 'Bootstrap 4', 'Font Awesome', 'Flowz Blocks', 'Google Fonts'];
+ const cssOptions = ['Bootstrap 3', 'Bootstrap 4', 'Font Awesome', 'Flowz Blocks', 'Google Fonts','VueJs'];
 
 export default {
   name: 'PageSettings',
