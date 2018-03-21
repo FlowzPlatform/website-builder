@@ -1595,6 +1595,7 @@
         if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
           this.$refs[foldername].validate(async (valid) => {
             if (valid) {
+              this.folderLimitCount = 0;
               this.newFolderDialog = false;
               this.addNewFolderLoading = false;
               
@@ -1770,8 +1771,9 @@
 
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              this.addNewFileLoading = true
+              this.addNewFileLoading = true;
               var name = this.formAddFile.filename;
+              this.fileLimitCount = 0;
               var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
               let checkfilename = false
               if (newfilename.indexOf('Pages') > 0) {
@@ -2153,6 +2155,8 @@
 
                                               this.newRepoId = gitResponse.data.id;
                                               this.repoName = gitResponse.data.name;
+
+                                              this.projectLimitCount = 0;
 
                                               // Create essential folders
                                               this.addOtherFolder(newFolderName);

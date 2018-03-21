@@ -36,8 +36,11 @@
 
 <script>
 import axios from 'axios';
+const config = require('./config');
+
 import psl from 'psl';
 import Cookies from 'js-cookie';
+
 import SiteFooter from './views/footer';
 export default {
   name: 'app',
@@ -76,91 +79,155 @@ export default {
   methods: {
     checkAuth(){
 
-      let self = this;
+      let location = psl.parse(window.location.hostname)
+      location = location.domain === null ? location.input : location.domain;
 
-        // Check for Auth_Token. Helpful when user logs out from another application.
-        
-        window.onload = function() {
+      setInterval(()=>{ 
+        if(Cookies.get('auth_token' ,{domain: location})){
+          // If Auth_Token is present and UserDetailId is not there
+          if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
+            console.log(config.userDetail)
+            axios.get(config.userDetail, {
+              headers: {
+                'Authorization' : Cookies.get('auth_token' ,{domain: location})
+              }   
+            })
+            .then(async (res) => {
+              let userDetailId = res.data.data._id;
+              // console.log(res);
 
-          if(self.$route.path == '/login' || self.$route.path == '/' || self.$route.path == '/register' || self.$route.path == '/forgot_password' || self.$route.path == '/reset-password' || self.$route.path == '/email-verification'){
-            
-          } else {
-            
-            var hidden, visibilityState, visibilityChange;
+              // Store Token in Cookie
+              Cookies.set('email', res.data.data.email, {domain: location});
+              Cookies.set('userDetailId',  userDetailId, {domain: location});
+              
+              localStorage.setItem('userDetailId', userDetailId);
+              localStorage.setItem('email', res.data.data.email);
 
-            if (typeof document.hidden !== "undefined") {
-                hidden = "hidden", visibilityChange = "visibilitychange", visibilityState = "visibilityState";
-            }
-            else if (typeof document.mozHidden !== "undefined") {
-                hidden = "mozHidden", visibilityChange = "mozvisibilitychange", visibilityState = "mozVisibilityState";
-            }
-            else if (typeof document.msHidden !== "undefined") {
-                hidden = "msHidden", visibilityChange = "msvisibilitychange", visibilityState = "msVisibilityState";
-            }
-            else if (typeof document.webkitHidden !== "undefined") {
-                hidden = "webkitHidden", visibilityChange = "webkitvisibilitychange", visibilityState = "webkitVisibilityState";
-            }
-
-            document.addEventListener(visibilityChange, function() {
-
-                switch (document[visibilityState]) {
-                case "visible":
-                    let location = psl.parse(window.location.hostname)
-                    location = location.domain === null ? location.input : location.domain;
-                    if(Cookies.get('auth_token' ,{domain: location})){
-                      if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
-                        axios.get(config.userDetail, {
-                          headers: {
-                            'Authorization' : response.data.logintoken
-                          }   
-                        })
-                        .then(async (res) => {
-                          let userDetailId = res.data.data._id;
-
-                          // Store Token in Cookie
-                          Cookies.set('email', res.data.data.email, {domain: location});
-                          Cookies.set('userDetailId',  userDetailId, {domain: location});
-                          
-                          localStorage.setItem('userDetailId', userDetailId);
-                          localStorage.setItem('email', res.data.data.email);
-
-                          // create user folder
-                          await axios.post(config.baseURL+'/flows-dir-listing' , {
-                            foldername :'/var/www/html/websites/'+ userDetailId,
-                            type : 'folder'
-                          })
-                          .then((res) => {
-                            this.$router.push('/editor');
-                          });
-                          
-                        })
-                        .catch((e) => {
-                          console.log(e)
-                          this.$message({
-                              showClose: true,
-                              message: 'Error: ' + e.response.data,
-                              type: 'error'
-                          });
-                        })
-                      }
-                    } else {
-                      self.$message({
-                        message: 'You\'re Logged Out From System. Please login again!',
-                        duration: 2000,
-                        type: 'error',
-                        onClose(){
-                          window.location = '/login'
-                        }
-                      });
-                    }
-                    
-                    break;
-                case "hidden":
-                    break;
-                }
-            });
+              // create user folder
+              await axios.post(config.baseURL+'/flows-dir-listing' , {
+                foldername :'/var/www/html/websites/'+ userDetailId,
+                type : 'folder'
+              })
+              .then((res) => {
+                window.location = '/editor';
+              });
+              
+            })
+            .catch((e) => {
+              console.log(e)
+              this.$message({
+                  showClose: true,
+                  message: 'Error: ' + e.response.data,
+                  type: 'error'
+              });
+            })
           }
-        };
+        } else {
+
+          if(this.$route.path == '/login' || this.$route.path == '/' || this.$route.path == '/register' || this.$route.path == '/forgot_password' || this.$route.path == '/reset-password' || this.$route.path == '/email-verification'){
+
+          } else {
+            window.location = '/login'
+          }
+          
+          // window.location = '/login'
+          
+          // this.$message({
+          //   message: 'You\'re Logged Out From System. Please login again!',
+          //   duration: 2000,
+          //   type: 'error',
+          //   onClose(){
+          //     window.location = '/login'
+          //   }
+          // });
+        }
+      }, 5000);
+
+      // let self = this;
+
+      // Check for Auth_Token. Helpful when user logs out from another application.
+      
+      // window.onload = function() {
+
+      //   if(self.$route.path == '/login' || self.$route.path == '/' || self.$route.path == '/register' || self.$route.path == '/forgot_password' || self.$route.path == '/reset-password' || self.$route.path == '/email-verification'){
+          
+      //   } else {
+          
+      //     var hidden, visibilityState, visibilityChange;
+
+      //     if (typeof document.hidden !== "undefined") {
+      //         hidden = "hidden", visibilityChange = "visibilitychange", visibilityState = "visibilityState";
+      //     }
+      //     else if (typeof document.mozHidden !== "undefined") {
+      //         hidden = "mozHidden", visibilityChange = "mozvisibilitychange", visibilityState = "mozVisibilityState";
+      //     }
+      //     else if (typeof document.msHidden !== "undefined") {
+      //         hidden = "msHidden", visibilityChange = "msvisibilitychange", visibilityState = "msVisibilityState";
+      //     }
+      //     else if (typeof document.webkitHidden !== "undefined") {
+      //         hidden = "webkitHidden", visibilityChange = "webkitvisibilitychange", visibilityState = "webkitVisibilityState";
+      //     }
+
+      //     document.addEventListener(visibilityChange, function() {
+
+      //         switch (document[visibilityState]) {
+      //         case "visible":
+      //             let location = psl.parse(window.location.hostname)
+      //             location = location.domain === null ? location.input : location.domain;
+      //             if(Cookies.get('auth_token' ,{domain: location})){
+      //               if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
+      //                 axios.get(config.userDetail, {
+      //                   headers: {
+      //                     'Authorization' : response.data.logintoken
+      //                   }   
+      //                 })
+      //                 .then(async (res) => {
+      //                   let userDetailId = res.data.data._id;
+
+      //                   // Store Token in Cookie
+      //                   Cookies.set('email', res.data.data.email, {domain: location});
+      //                   Cookies.set('userDetailId',  userDetailId, {domain: location});
+                        
+      //                   localStorage.setItem('userDetailId', userDetailId);
+      //                   localStorage.setItem('email', res.data.data.email);
+
+      //                   // create user folder
+      //                   await axios.post(config.baseURL+'/flows-dir-listing' , {
+      //                     foldername :'/var/www/html/websites/'+ userDetailId,
+      //                     type : 'folder'
+      //                   })
+      //                   .then((res) => {
+      //                     this.$router.push('/editor');
+      //                   });
+                        
+      //                 })
+      //                 .catch((e) => {
+      //                   console.log(e)
+      //                   this.$message({
+      //                       showClose: true,
+      //                       message: 'Error: ' + e.response.data,
+      //                       type: 'error'
+      //                   });
+      //                 })
+      //               }
+      //             } else {
+      //               self.$message({
+      //                 message: 'You\'re Logged Out From System. Please login again!',
+      //                 duration: 2000,
+      //                 type: 'error',
+      //                 onClose(){
+      //                   window.location = '/login'
+      //                 }
+      //               });
+      //             }
+                  
+      //             break;
+      //         case "hidden":
+      //             break;
+      //         }
+      //     });
+      //   }
+      // };
     },
     init () {
       if(this.$cookie.get('auth_token')){
