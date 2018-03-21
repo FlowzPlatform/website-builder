@@ -85,8 +85,8 @@ export default {
       setInterval(()=>{ 
         if(Cookies.get('auth_token' ,{domain: location})){
           // If Auth_Token is present and UserDetailId is not there
-          if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
-            console.log(config.userDetail)
+          // if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
+            // console.log(config.userDetail)
             axios.get(config.userDetail, {
               headers: {
                 'Authorization' : Cookies.get('auth_token' ,{domain: location})
@@ -110,6 +110,9 @@ export default {
               })
               .then((res) => {
                 window.location = '/editor';
+              })
+              .catch((res) => {
+                window.location = '/editor';
               });
               
             })
@@ -121,7 +124,9 @@ export default {
                   type: 'error'
               });
             })
-          }
+          // } else {
+            
+          // }
         } else {
 
           if(this.$route.path == '/login' || this.$route.path == '/' || this.$route.path == '/register' || this.$route.path == '/forgot_password' || this.$route.path == '/reset-password' || this.$route.path == '/email-verification'){
