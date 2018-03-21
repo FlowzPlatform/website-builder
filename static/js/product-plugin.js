@@ -749,7 +749,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     bm.add('DataFieldTemplate', {
         label: 'Data Field Template',
-        content: '<div class="container"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo" style="width: 100%;">Hot Topics</button> <div id="demo" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> <div class="col-md-6" style="border: 1px solid black; height: 200px"> One </div><div class="col-md-6" style="border: 1px solid black; height: 200px"> Two </div></div></div></div>',
+        content: '<div class="container"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo" style="width: 100%;">Hot Topics</button> <div id="demo" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> <div class="col-md-6" style="border: 1px solid black; height: 200px"> One </div><div class="col-md-6" style="border: 1px solid black; height: 200px"> Two </div></div></div><div class="row" style="margin-top: 15px"> <div class="col-md-8"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2" style="width: 100%;">Trending Articles</button> <div id="demo2" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> One </div></div></div><div class="col-md-4"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3" style="width: 100%;">Open Positions</button> <div id="demo3" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> two </div></div></div></div></div>',
         attributes: {
             class: 'fa fa-database',
             title: 'Template-1',
