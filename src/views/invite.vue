@@ -198,7 +198,9 @@
                          render: (h, params) => {
                             
                                 var date1 = moment(params.assignDate).format('DD-MMM-YYYY')
-                                return date1
+                                return h('div', [
+                                    h('span', date1)
+                                ]);
                             
                         }
                         
@@ -209,7 +211,9 @@
                          render: (h, params) => {
                             
                                 var date1 = moment(params.unassignDate).format('DD-MMM-YYYY')
-                                return date1
+                                return h('div', [
+                                    h('span', date1)
+                                ]);
                             
                         }
                         
