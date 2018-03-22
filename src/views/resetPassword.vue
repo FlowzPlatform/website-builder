@@ -76,8 +76,8 @@ export default {
       },
       authen: {
         status: false,
-        success: 'Authentication Success',
-        error: 'Authentication Failed'
+        success: 'Password Updated',
+        error: 'Reset Password Failed'
       }
     }
   },
@@ -109,26 +109,27 @@ export default {
 
         }, 2500);
 
-        var params = {};
+        // var params = {};
 
-        if (location.search) {
-            var parts = location.search.substring(1).split('&');
+        // if (location.search) {
+        //     var parts = location.search.substring(1).split('&');
 
-            for (var i = 0; i < parts.length; i++) {
-                var nv = parts[i].split('=');
-                if (!nv[0]) continue;
-                params[nv[0]] = nv[1] || true;
-            }
-        }
+        //     for (var i = 0; i < parts.length; i++) {
+        //         var nv = parts[i].split('=');
+        //         if (!nv[0]) continue;
+        //         params[nv[0]] = nv[1] || true;
+        //     }
+        // }
 
-        let forgetToken = params.forget_token;
-        // console.log(forgetToken);
+        // let forgetToken = params.forget_token;
+        let forgetToken = this.$route.query.forget_token;
+        console.log(forgetToken);
 
         axios.post(config.resetPasswordUrl, {
-          new_password: this.form.pass,
-          token: forgetToken.trim()
+          new_password: this.form.pass.trim(),
+          token: forgetToken
         })
-        .then(function (response) {
+        .then((response) => {
 
           console.log('Inside then')
 
