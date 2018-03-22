@@ -99,21 +99,7 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                 <el-form-item label="CRM Setting ID">
-                 <el-row><el-col :span='20'>
-                   <el-select v-model="form.crmid" placeholder="Select crm id">
-                    <el-option
-                      v-for="item in crmdata"
-                      :key="item.id"
-                      :label="item.configName"
-                      :value="item.id">
-                    </el-option>
-                  </el-select></el-col>
-                  <el-col :span='4'>
-                  <el-tooltip content="To change/add CRM Setting" placement="top">
-                  <el-button type="primary" icon='setting' @click='linktocrm()'>CRM Setting</el-button></el-tooltip></el-col>
-                  </el-row>
-                </el-form-item>
+               
 
                 <!-- <el-form-item label="Brand name">
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
@@ -786,15 +772,32 @@
       <!-- Payment Block -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="togglePaymentgateway" class="card color-div toggleableDivHeader">Payment gateway</a>
+              <a href="javascript:void(0)" id="togglePaymentgateway" class="card color-div toggleableDivHeader">Accounting</a>
           </div>
       </div>
       <div id="togglePaymentgatewayContent" class="toggleableDivHeaderContent" style="display: none;">
+       
           <div class="row">
               <div class="col-md-12">
                   <div class="row">
-                      <div class="col-md-4">
-                          <h3> Gateways: </h3>
+                      <div class="col-md-12">
+                         <el-form ref="form1" :model="form" label-width="90px">
+                          <el-form-item label="Accounts">
+                             <el-row><el-col :span='20'>
+                               <el-select v-model="form.crmid" placeholder="Select">
+                                <el-option
+                                  v-for="item in crmdata"
+                                  :key="item.id"
+                                  :label="item.configName"
+                                  :value="item.id">
+                                </el-option>
+                              </el-select></el-col>
+                              <el-col :span='4'>
+                              <el-tooltip content="Go To View Accounting System" placement="top">
+                              <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip></el-col>
+                              </el-row>
+                            </el-form-item>
+                            </el-form>
                       </div>
                   </div>
                   <hr>
@@ -802,41 +805,56 @@
 
                       <div>
                           <el-form-item>
-                              <draggable v-model='paymentgateway' @start="drag=true" @end="drag=false">
+                              <!-- <draggable v-model='paymentgateway' @start="drag=true" @end="drag=false"> -->
                                   <div style="margin-bottom: 25px" v-for='(n, index) in paymentgateway'>
                                       <div class="row">
-                                          <div class="col-md-1" style="margin: 0; padding-left: 15px">
+                                          <!-- <div class="col-md-1" style="margin: 0; padding-left: 15px">
                                               <el-checkbox v-model="n.checked"></el-checkbox>
-                                          </div>
+                                          </div> -->
                                           <!-- name of gateway-->
-                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
-                                              <el-input type="text" placeholder="Name" v-model="n.name"></el-input>
+                                          <div class="col-md-5" style="margin: 0; padding-left: 15px">
+                                              <!-- <el-input type="text" placeholder="Configurations Name" v-model="n.name"></el-input> -->
+                                              <!-- <el-form ref="form1" :model="form" label-width="90px">
+                                                <el-form-item label="Accounts">
+                                                 <el-row><el-col :span='20'> -->
+                                                   <el-select v-model="n.name" placeholder="Configurations Name">
+                                                    <el-option
+                                                      v-for="item in crmdata"
+                                                      :key="item.id"
+                                                      :label="item.configName"
+                                                      :value="item.id">
+                                                    </el-option>
+                                                  </el-select>
+                                                  <!-- </el-col>
+                                                  </el-row>
+                                                </el-form-item>
+                                              </el-form> -->
                                           </div>
                                           <!-- gateway  -->
-                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
+                                          <div class="col-md-4" style="margin: 0; padding-left: 0px">
                                               <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
                                                   <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
                                                   </el-option>
                                               </el-select>
                                           </div>
                                           <!-- gateway description -->
-                                          <div class="col-md-5" style="margin: 0; padding: 0px">
+                                          <!-- <div class="col-md-5" style="margin: 0; padding: 0px">
                                               <el-input type="textarea" placeholder="Description" v-model="n.description"></el-input>
-                                          </div>
+                                          </div> -->
                                           <!-- Delete Variable -->
-                                          <div class="col-md-1">
-                                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletepaymentgateway(index)" icon="delete2"></el-button>
+                                          <div class="col-md-3">
+                                              <el-button class="pull-right" style="max-width: 20%;" type="danger" @click="deletepaymentgateway(index)" icon="delete2"></el-button>
                                           </div>
-                                          <div class="col-md-1">
+                                          <!-- <div class="col-md-1">
                                               <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
                                                <el-button style="min-width: 100%;" icon="d-caret"></el-button>
                                             </el-tooltip>
 
-                                          </div>
+                                          </div> -->
                                       </div>
                                       <!-- <div> -->
                                       <div class="row">
-                                          <div class="col-md-4">
+                                          <div style="margin: 0; padding-top: 10px" class="col-md-4">
                                               <h5> Fields: </h5>
                                           </div>
                                       </div>
@@ -852,12 +870,12 @@
                                       <!-- </div> -->
                                       <hr>
                                   </div>
-                              </draggable>
+                              <!-- </draggable> -->
                           </el-form-item>
                       </div>
 
                       <!-- Create new variable -->
-                      <el-button type="primary" @click="addNewpaymentgateway">New Gateway</el-button>
+                      <el-button type="primary" @click="addNewAccountpaymentgateway">New Account</el-button>
                   </el-form>
               </div>
           </div>
@@ -1539,7 +1557,7 @@ export default {
     },
 
     linktocrm(){
-      window.open('https://crm.'+config.domainkey);
+      window.open('https://www.crm.'+config.domainkey);
     },
 
     setPrimaryRole(index){
@@ -1689,8 +1707,8 @@ export default {
       this.localstyles.push(newVariable);
     },
 
-    addNewpaymentgateway(){
-      let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
+    addNewAccountpaymentgateway(){
+      let newVariable = {name:'',gateway:'',fields:[]};
       this.paymentgateway.push(newVariable);
       this.Paymentfields.push([])
     },
