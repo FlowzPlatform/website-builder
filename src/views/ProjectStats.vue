@@ -88,7 +88,7 @@
         </div>
       </div>
 
-      <div class="row" style="margin-top: 40px;">
+      <!-- <div class="row" style="margin-top: 40px;">
         <div class="col-md-12">
           <div class="creative-table">
             <div class="table-title ">
@@ -104,7 +104,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- {{tablePagesData}} -->
                   <tr>
                     <td>Website SEO Title:</td>
                     <td><a id="seoTitle" data-title="Project SEO Title">{{seoTitle}}</a></td>
@@ -122,7 +121,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- List of Commits -->
       <div class="row" style="margin-top: 40px; margin-bottom: 50px;">
@@ -387,7 +386,7 @@ export default {
 
     async saveProjectSettings() {
       
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err)=>{ console.log('Error:', err); });
 
       if (rethinkdbCheck.data) {
         // update existing data
@@ -422,7 +421,7 @@ export default {
       let foldername = folderUrl.split('/');
       foldername = foldername[6];
       
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
 
       if(this.configData.status == 200 || this.configData.status == 204){
         //console.log('Config file found! Updating fields..');
@@ -612,6 +611,7 @@ export default {
 
 .ProjectStats {
   font-family: 'Lato', sans-serif;
+  background-color: #eee;
 }
 
 .card{

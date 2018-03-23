@@ -1,29 +1,6 @@
 <template>
   <div class="ProjectSettings">
 
-    <!-- Publish Site Modal -->
-    <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
-      <!--<el-tabs v-model="activeName">
-         <el-tab-pane label="Default Domain" name="first">
-          Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
-          <br>
-          <br>
-            <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
-          <br>
-          <div align="right" style="margin-top: 15px;">
-            <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="Custom Domain" name="second">
-          <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
-          <div align="right" style="margin-top: 15px;">
-            <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
-          </div>
-
-        </el-tab-pane>
-      </el-tabs> -->
-    </el-dialog>
-
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
@@ -62,7 +39,18 @@
 
               <div class="col-md-12" v-else>
                 <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
-                <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: [1] <strong>ns1.flowzdigital.com</strong> [2] <strong>ns2.flowzdigital.com</strong></p>
+                <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
+                  [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
+                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns1-copy')"><i class="fa fa-copy"></i></a>
+                    </el-tooltip>
+                  </strong> 
+                  [2] <strong><span id="ns2-copy">ns2.flowzdigital.com</span>
+                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns2-copy')"><i class="fa fa-copy"></i></a>
+                    </el-tooltip>
+                  </strong> 
+                </p>
                 <div style="margin-top: 15px;">
                   <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
                 </div>
@@ -136,10 +124,11 @@
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label>
-                    <span><b>Current file:</b><i> {{form.brandLogoName}}</i></span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
+                    <br>
+                    <span><b>Current file:</b> {{form.brandLogoName}}</span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
 
                     <input type="file" name="" id="upload-validation">
-                    <span class="dis">( .png/ico only)</span>
+                    <span class="dis">( .png/ico only max size upto 70KB)</span>
 
                   </div>
                    <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
@@ -263,6 +252,8 @@
                   <div class="deleteImage"></div>
                   <img :src="n" class="asset-image" />
                 </div>
+                <input :id="n" type="text" class="form-control" :value="n" name="n">
+
               </div>
             </div>
 
@@ -376,7 +367,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-md-12" style="margin-top: 4%;">
             <h3>Dynamic Styles</h3>
             <hr>
@@ -385,12 +376,12 @@
                 <el-form-item>
                   <div class="row">
 
-                    <!-- Enter Variable ID -->
+                    <!-- Enter Variable ID --
                     <div class="col-md-5">
                       <el-input placeholder="Variable Name" v-model="n.variableName"></el-input>
                     </div>
 
-                    <!-- Select Type -->
+                    <!-- Select Type --
                     <div class="col-md-2" style="margin: 0; padding: 0">
                       <el-select v-model="n.variableType" placeholder="Select">
                         <el-option
@@ -402,46 +393,46 @@
                       </el-select>
                     </div>
 
-                    <!-- Enter Color Variable Value -->
+                    <!-- Enter Color Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'color'">
                       <el-color-picker v-model="n.variableValue" show-alpha></el-color-picker>
                     </div>
 
-                    <!-- Enter Pixel Variable Value -->
+                    <!-- Enter Pixel Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'px'">
                       <el-input placeholder="Pixels Value" v-model="n.variableValue"></el-input>
                     </div>
 
-                    <!-- Enter Percentage Variable Value -->
+                    <!-- Enter Percentage Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'percent'">
                       <el-slider v-model="n.variableValue"></el-slider>
                     </div>
 
-                    <!-- Enter Number Variable Value -->
+                    <!-- Enter Number Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'number'">
                       <el-input-number v-model="n.variableValue"></el-input-number>
                     </div>
 
-                    <!-- Enter Custom Variable Value -->
+                    <!-- Enter Custom Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'custom'">
                       <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
                     </div>
 
-                    <!-- Delete Variable -->
+                    <!-- Delete Variable --
                     <div class="col-md-1">
                       <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>
                     </div>
                   </div>
                 </el-form-item>
               </div>
-              <!-- Ends V-FOR looping -->
+              <!-- Ends V-FOR looping --
 
-              <!-- Create new variable -->
+              <!-- Create new variable --
               <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
 
             </el-form>
           </div>
-        </div>
+        </div> -->
       </div>
       <!-- Global Variables section ends -->
 
@@ -1078,7 +1069,7 @@ let checkBranchName = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('Please enter Branch Name.'));
     }else if(!(/^[a-z0-9A-Z_]+$/i.test(value))){
-        return callback(new Error('Special characters and spaces are not allowed)'));
+        return callback(new Error('Special characters and spaces are not allowed'));
     }else{
         return callback();
     }
@@ -1358,7 +1349,7 @@ export default {
         $('#text2').text('Invalid image file.');
         $('.valid').addClass('error').removeClass('correct');
         $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
-      }else if(iFileSize >= 1024000) {
+      }else if(iFileSize >= 70000) {
         $('#text2').text('Too large file.');
         $('.valid').addClass('error').removeClass('correct');
         $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
@@ -1473,6 +1464,18 @@ export default {
   },
 
   methods: {
+    copyToClipboard(value){
+      let elem = document.getElementById(value);
+      var $temp = $("<input>");
+      $("body").append($temp);
+      $temp.val($(elem).text()).select();
+      document.execCommand("copy");
+      this.$message({
+        message: 'Copied to clipboard.',
+        type: 'success'
+      });
+      $temp.remove();
+    },
     sortBranchesTable(n){
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
       table = document.getElementById("revisionsTable");
@@ -1556,7 +1559,8 @@ export default {
 
       fsClient.pick({
         accept: 'image/*',
-        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"]
+        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"],
+        rejectOnCancel: true
       }).then( (response) => {
         this.uploadAssetImageLoader = false;
         // declare this function to handle response
@@ -1924,7 +1928,7 @@ export default {
 
       })
       .catch((e)=>{
-        //console.log("Error"+e)
+        console.log("Error"+e)
       });
 
       this.addPluginLoading = false;
@@ -1935,7 +1939,7 @@ export default {
         // let foldername = folderUrl.split('/');
         // foldername = foldername[6];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch(err => { console.log(err); this.fullscreenLoading = false });
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch(err => { console.log(err); this.fullscreenLoading = false }).catch((e)=>{console.log(e)});
 
         if(rethinkdbCheck.data){
 
@@ -2193,7 +2197,7 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false });
+      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false }).catch((e)=>{console.log(e)});
 
       configData = JSON.parse(JSON.stringify(configData.data.configData))
         //// console.log('new config file:',configData);
@@ -2564,7 +2568,7 @@ export default {
             message: 'Failed! Please try again.',
             type: 'error'
           });
-          //console.log(e)
+          console.log(e)
         })
 
       }).catch((err) => {
@@ -2631,7 +2635,8 @@ export default {
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
         var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
-        await axios.get(config.baseURL + '/project-configuration?userId=' + userid).then((res)=>{
+        await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
+        .then((res)=>{
           let checkdetail = true
         for (let i = 0; i < res.data.data.length; i++) {
           if (this.form.websitename == res.data.data[i].websiteName) {
@@ -2648,7 +2653,8 @@ export default {
           this.form.websitename = this.configData.data.websiteName;
           return
         }
-        }).catch((err) => { console.log(err);});
+        })
+        .catch((err) => { console.log(err);});
         
       }
 
@@ -2800,56 +2806,69 @@ export default {
     },
 
     revertCommit(index) {
-      this.$store.state.currentIndex = index;
 
-      this.currentSha = this.branchesData[index].commitSHA;
+      this.$confirm('Do you really want to rollback to "' + this.branchesData[index].branchName + '" revision?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.$store.state.currentIndex = index;
 
-      this.configData.branchName = this.branchesData[index].branchName;
+        this.currentSha = this.branchesData[index].commitSHA;
 
-      this.currentBranchName = this.branchesData[index].branchName;
+        this.configData.branchName = this.branchesData[index].branchName;
 
-      //// console.log(this.commitsData[index].commitSHA);
-      axios.get( config.baseURL + '/branch-list?branchName=' + this.branchesData[index].branchName + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
-      }).then(async response => {
+        this.currentBranchName = this.branchesData[index].branchName;
 
-        // console.log(response);
+        //// console.log(this.commitsData[index].commitSHA);
+        axios.get( config.baseURL + '/branch-list?branchName=' + this.branchesData[index].branchName + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
+        }).then(async response => {
 
-        // this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
+          // console.log(response);
 
-        // console.log(config.baseURL + '/configdata-history?branchName=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName);
+          // this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
 
-        await axios.get(config.baseURL + '/configdata-history?currentBranch=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName, {
-        })
-        .then(async (resp) => {
+          // console.log(config.baseURL + '/configdata-history?branchName=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName);
+
+          await axios.get(config.baseURL + '/configdata-history?currentBranch=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName, {
+          })
+          .then(async (resp) => {
             console.log('Config data resp: ', resp);
-          let configData = resp.data.data[0].configData;
-            this.settings = null;
-            this.settings = configData;
+            let configData = resp.data.data[0].configData;
+              this.settings = null;
+              this.settings = configData;
 
-            // update config data
-            axios.patch(config.baseURL + '/project-configuration/' + configData[0].repoSettings[0].RepositoryName, {
-                configData: this.settings
-            })
-            .then((response) => {
-                console.log(response);
-                this.init();
-                this.$emit('updateProjectName');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+              // update config data
+              axios.patch(config.baseURL + '/project-configuration/' + configData[0].repoSettings[0].RepositoryName, {
+                  configData: this.settings
+              })
+              .then((response) => {
+                  console.log(response);
+                  this.$message({
+                    message: 'Rollbacked to revision "' + this.branchesData[index].branchName + '" ',
+                    type: 'success'
+                  });
+                  this.init();
+                  this.$emit('updateProjectName');
+              })
+              .catch(function (error) {
+                  console.log(error);
+              });
 
-            // await this.saveProjectSettings();
-            // this.init();
+              // await this.saveProjectSettings();
+              // this.init();
+          })
+          .catch(function (error) {
+              console.log(error);
+              this.fullscreenLoading = false;
+          });
+
+        }).catch(error => {
+          console.log( error);
         })
-        .catch(function (error) {
-            console.log(error);
-            this.fullscreenLoading = false;
-        });
-
-      }).catch(error => {
-        console.log( error);
-      })
+      }).catch(() => {
+        console.log('Cancelled.')         
+      });
     },
 
     async commitProject(commitForm) {
@@ -3048,7 +3067,7 @@ export default {
           }
         }
         
-        this.$confirm('Do you want to publish your website? \n This will take upto 3-4 minutes. Continue?', 'Warning', {
+        this.$confirm('Do you want to publish your website? This will take a while to process. Continue?', 'Warning', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           type: 'warning'
@@ -3456,7 +3475,6 @@ export default {
                     }
                   }
                 }
-
               })
               .catch((e) => {
                 console.log(e)
@@ -3558,7 +3576,7 @@ export default {
                       filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
                       text: newContent,
                       type: 'file'
-                    })
+                    }).catch((e)=>{console.log(e)});
 
                     var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
 
@@ -3616,6 +3634,7 @@ export default {
                                     if (Layout == 'Blank') {
                                       await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
                                         .catch((e) => {
+                                          console.log(e)
                                           //console.log("error while deleting blank.layout file")
                                         })
                                     }
@@ -3624,9 +3643,9 @@ export default {
 
                                   })
                                   .catch((e) => {
-                                    //console.log(e)
+                                    console.log(e)
                                   })
-                              })
+                              }).catch((e)=>{console.log(e)});
 
                           })
                           .catch((err) => {
@@ -3637,13 +3656,13 @@ export default {
                               filename: mainMetal,
                               text: backupMetalSmith,
                               type: 'file'
-                            })
+                            }).catch((e)=>{console.log(e)});
                             axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                               console.log(e)
                             })
-                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
                             console.log(err)
-                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                           })
                       })
                       .catch((e) => {
@@ -3653,12 +3672,12 @@ export default {
                           filename: mainMetal,
                           text: backupMetalSmith,
                           type: 'file'
-                        })
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                        }).catch((e)=>{console.log(e)});
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                         axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                           //console.log(e)
                         })
-                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
                         console.log(e)
                       })
 
@@ -3671,12 +3690,12 @@ export default {
                       filename: mainMetal,
                       text: backupMetalSmith,
                       type: 'file'
-                    })
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                    }).catch((e)=>{console.log(e)});
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                     axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                       //console.log(e)
                     })
-                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
                   })
 
               })
@@ -3688,8 +3707,8 @@ export default {
                   filename: mainMetal,
                   text: backupMetalSmith,
                   type: 'file'
-                })
-                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                }).catch((e)=>{console.log(e)});
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                 axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
                   //console.log(e)
                 })
@@ -4364,5 +4383,9 @@ export default {
 
   #revisionsTable th i {
       margin-right: 20px;
+  }
+
+  .btn-xs{
+    padding: 5px;
   }
 </style>

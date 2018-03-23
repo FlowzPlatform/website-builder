@@ -340,7 +340,7 @@ const config = require('../config');
 
 import axios from 'axios';
 
- const cssOptions = ['Bootstrap 3', 'Bootstrap 4', 'Font Awesome', 'Flowz Blocks', 'Google Fonts'];
+ const cssOptions = ['Bootstrap 3', 'Bootstrap 4', 'Font Awesome', 'Flowz Blocks', 'Google Fonts','VueJs'];
 
 export default {
   name: 'PageSettings',
@@ -421,7 +421,7 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[6];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
 
       if(this.configData.status == 200 || this.configData.status == 204){
         this.settings = this.configData.data.configData;
@@ -627,7 +627,7 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[6];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername);
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
 
       this.AllData = [];
       
@@ -686,7 +686,7 @@ export default {
       let foldername = this.folderUrl.split('/');
       foldername = foldername[6];
 
-      this.Data = await axios.get(config.baseURL + '/project-configuration/' + foldername);
+      this.Data = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
 
       if (this.Data.status == 200 || this.Data.status == 204) {
         this.settingsData = this.Data.data.configData;
@@ -785,7 +785,7 @@ export default {
           this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
         }
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername);
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
 
         if (rethinkdbCheck.data) {
 
@@ -825,7 +825,7 @@ export default {
 
         this.settings[1].pageSettings.push(PageSettings);
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername);
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
 
         if (rethinkdbCheck.data) {
 
