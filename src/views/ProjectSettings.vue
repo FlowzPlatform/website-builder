@@ -772,110 +772,89 @@
       <!-- Payment Block -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="togglePaymentgateway" class="card color-div toggleableDivHeader">Accounting</a>
+              <a href="javascript:void(0)" id="toggleAccounting" class="card color-div toggleableDivHeader">Accounting</a>
           </div>
       </div>
-      <div id="togglePaymentgatewayContent" class="toggleableDivHeaderContent" style="display: none;">
+      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none;">
        
           <div class="row">
               <div class="col-md-12">
                   <div class="row">
                       <div class="col-md-12">
-                         <el-form ref="form1" :model="form" label-width="90px">
-                          <el-form-item label="Accounts">
-                             <el-row><el-col :span='20'>
-                               <el-select v-model="form.crmid" placeholder="Select">
-                                <el-option
-                                  v-for="item in crmdata"
-                                  :key="item.id"
-                                  :label="item.configName"
-                                  :value="item.id">
-                                </el-option>
-                              </el-select></el-col>
+                         <el-form ref="form1" :model="form" label-width="120px">
+                             <el-row>
+                              <el-col :span='20'>
+                                <el-form-item label="Account Used:">
+                                 <el-select v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
+                                  <el-option
+                                    v-for="item in crmdata"
+                                    :key="item.id"
+                                    :label="item.configName"
+                                    :value="item.id">
+                                  </el-option>
+                                </el-select>
+                                </el-form-item>
+                              </el-col>
                               <el-col :span='4'>
-                              <el-tooltip content="Go To View Accounting System" placement="top">
-                              <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip></el-col>
-                              </el-row>
-                            </el-form-item>
-                            </el-form>
+                                <el-tooltip content="Go View Accounting System" placement="top">
+                                <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip>
+                              </el-col>
+                            </el-row>
+                        </el-form>
                       </div>
                   </div>
                   <hr>
                   <el-form ref="form" :model="form">
-
                       <div>
-                          <el-form-item>
-                              <!-- <draggable v-model='paymentgateway' @start="drag=true" @end="drag=false"> -->
-                                  <div style="margin-bottom: 25px" v-for='(n, index) in paymentgateway'>
-                                      <div class="row">
-                                          <!-- <div class="col-md-1" style="margin: 0; padding-left: 15px">
-                                              <el-checkbox v-model="n.checked"></el-checkbox>
-                                          </div> -->
-                                          <!-- name of gateway-->
-                                          <div class="col-md-5" style="margin: 0; padding-left: 15px">
-                                              <!-- <el-input type="text" placeholder="Configurations Name" v-model="n.name"></el-input> -->
-                                              <!-- <el-form ref="form1" :model="form" label-width="90px">
-                                                <el-form-item label="Accounts">
-                                                 <el-row><el-col :span='20'> -->
-                                                   <el-select v-model="n.name" placeholder="Configurations Name">
-                                                    <el-option
-                                                      v-for="item in crmdata"
-                                                      :key="item.id"
-                                                      :label="item.configName"
-                                                      :value="item.id">
-                                                    </el-option>
-                                                  </el-select>
-                                                  <!-- </el-col>
-                                                  </el-row>
-                                                </el-form-item>
-                                              </el-form> -->
-                                          </div>
-                                          <!-- gateway  -->
-                                          <div class="col-md-4" style="margin: 0; padding-left: 0px">
-                                              <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
-                                                  <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
-                                                  </el-option>
-                                              </el-select>
-                                          </div>
-                                          <!-- gateway description -->
-                                          <!-- <div class="col-md-5" style="margin: 0; padding: 0px">
-                                              <el-input type="textarea" placeholder="Description" v-model="n.description"></el-input>
-                                          </div> -->
-                                          <!-- Delete Variable -->
-                                          <div class="col-md-3">
-                                              <el-button class="pull-right" style="max-width: 20%;" type="danger" @click="deletepaymentgateway(index)" icon="delete2"></el-button>
-                                          </div>
-                                          <!-- <div class="col-md-1">
-                                              <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                               <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                            </el-tooltip>
-
-                                          </div> -->
-                                      </div>
-                                      <!-- <div> -->
-                                      <div class="row">
-                                          <div style="margin: 0; padding-top: 10px" class="col-md-4">
-                                              <h5> Fields: </h5>
-                                          </div>
-                                      </div>
-                                      <div class="row">
-                                          <div v-for='i,k in Paymentfields[index]'>
-                                              <el-form ref="form" label-width="120px">
-                                                  <el-form-item style="margin: 0; padding-left:5px" v-bind:label='Paymentfields[index][k]'>
-                                                      <el-input type='text' v-model='n.fields[k][i]'></el-input>
-                                                  </el-form-item>
-                                              </el-form>
-                                          </div>
-                                      </div>
-                                      <!-- </div> -->
-                                      <hr>
-                                  </div>
-                              <!-- </draggable> -->
-                          </el-form-item>
+                        <div style="margin-bottom: 25px" v-for='(n, index) in accountpaymentgateway'>
+                            <div class="row">
+                            <!-- Configuration  -->
+                               <!--  <div class="col-md-1">
+                                  <el-form-item>
+                                      <el-radio v-model="gatewaychecked" v-bind:label="index+1" border></el-radio>
+                                  </el-form-item>
+                                </div> -->
+                                <div class="col-md-5" style="margin: 0; padding-left: 15px">
+                                  <el-form-item label="Configuration Name">
+                                      <!--    <el-select v-model="n.name" placeholder="Select">
+                                          <el-option
+                                            v-for="item in crmdata"
+                                            :key="item.id"
+                                            :label="item.configName"
+                                            :value="item.configName">
+                                          </el-option>
+                                        </el-select> -->
+                                      <el-input type='text' v-model="n.name" placeholder='Enter Custom Name'></el-input>
+                                  </el-form-item>
+                                </div>
+                                <!-- gateway  -->
+                                <div class="col-md-5" >
+                                  <el-form-item label="Gateways">
+                                    <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
+                                        <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
+                                        </el-option>
+                                    </el-select>
+                                  </el-form-item>
+                                </div>
+                                <!-- Delete Variable -->
+                                <div class="col-md-1">
+                                    <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteAccountpaymentgateway(index)" icon="delete2"></el-button>
+                                </div>
+                            </div>
+                                <div v-for='i,k in Paymentfields[index]'>
+                                  <div class="row">
+                                    <el-form ref="form" label-width="120px">
+                                        <el-form-item style="margin: 0; padding-left:133px" v-bind:label='Paymentfields[index][k]'>
+                                            <el-input type='text' v-model='n.fields[k][i]'></el-input>
+                                        </el-form-item>
+                                    </el-form>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
                       </div>
-
                       <!-- Create new variable -->
-                      <el-button type="primary" @click="addNewAccountpaymentgateway">New Account</el-button>
+                      <el-button type="primary" @click="addNewAccountpaymentgateway">Add New Payment Configuration</el-button>
                   </el-form>
               </div>
           </div>
@@ -1118,6 +1097,8 @@ export default {
         crmid:''
       },
       commitsData: [],
+      configurationdata:[],
+      gatewaychecked:'',
       crmdata:[],
       faviconhName:'',
       fileList3: [],
@@ -1208,7 +1189,7 @@ export default {
       customDomainName: '',
       userDetailId: '',
       ipAddress: config.ipAddress,
-      paymentgateway: [],
+      accountpaymentgateway: [],
       Paymentfields: [],
       Allgateway: [],
       currentSha: '',
@@ -1299,8 +1280,8 @@ export default {
         $("#toggleMetaTagsContent").slideToggle("slow");
       });
 
-      $("#togglePaymentgateway").click(function() {
-        $("#togglePaymentgatewayContent").slideToggle("slow");
+      $("#toggleAccounting").click(function() {
+        $("#toggleAccountingContent").slideToggle("slow");
 
       });
 
@@ -1559,6 +1540,11 @@ export default {
     linktocrm(){
       window.open('https://www.crm.'+config.domainkey);
     },
+    changeconfiguration(){
+      for(let i=0;i<this.crmdata.length;i++){
+
+      }
+    },
 
     setPrimaryRole(index){
       for(var i = 0; i < this.websiteRoles.length ; i++){
@@ -1709,7 +1695,7 @@ export default {
 
     addNewAccountpaymentgateway(){
       let newVariable = {name:'',gateway:'',fields:[]};
-      this.paymentgateway.push(newVariable);
+      this.accountpaymentgateway.push(newVariable);
       this.Paymentfields.push([])
     },
 
@@ -1757,28 +1743,22 @@ export default {
       this.externallinksMeta.splice(deleteIndex, 1);
     },
 
-    deletepaymentgateway(deleteIndex) {
-      this.paymentgateway.splice(deleteIndex,1);
+    deleteAccountpaymentgateway(deleteIndex) {
+      this.accountpaymentgateway.splice(deleteIndex,1);
       this.Paymentfields.splice(deleteIndex,1);
     },
 
     gatewaychange(n,index){
-     this.paymentgateway[index].fields=[]
-
-     for(let i=0;i<this.Allgateway.length;i++){
-      if(this.Allgateway[i].name==n.gateway){
-
-        for(let j=0;j<this.Allgateway[i].keys.length;j++){
-          var temp={}
-        temp[this.Allgateway[i].keys[j]]=''
-        this.paymentgateway[index].fields.push(temp)
-        }
-        this.Paymentfields[index]=this.Allgateway[i].keys
+      this.accountpaymentgateway[index].fields=[]
+      var indexGateway=_.findIndex(this.Allgateway,function(o){
+        return o.name==n.gateway
+      })
+      for(let j=0;j<this.Allgateway[indexGateway].keys.length;j++){
+        var temp={}
+      temp[this.Allgateway[indexGateway].keys[j]]=''
+      this.accountpaymentgateway[index].fields.push(temp)
       }
-     }
-     var ter=this.paymentgateway[index].description
-     this.paymentgateway[index].description=' '
-     this.paymentgateway[index].description=ter
+      this.Paymentfields[index]=this.Allgateway[indexGateway].keys
     },
 
     async addNewPlugin(pluginFileData) {
@@ -2761,7 +2741,7 @@ export default {
         "ProjectScripts": this.localscripts,
         "ProjectStyles": this.localstyles,
         "WebsiteRoles": this.websiteRoles,
-        "PaymentGateways": this.paymentgateway
+        "AccountPaymentGateways": this.accountpaymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
       let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
@@ -3894,7 +3874,7 @@ export default {
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
-        this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
+        this.accountpaymentgateway=this.settings[1].projectSettings[1].AccountPaymentGateways;
         // this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
         this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
@@ -3916,10 +3896,10 @@ export default {
 
       // console.log('URL: ', this.projectPublicUrl);
 
-      for(let i=0;i<this.paymentgateway.length;i++){
+      for(let i=0;i<this.accountpaymentgateway.length;i++){
         var temp=[]
-        for(let j=0;j<this.paymentgateway[i].fields.length;j++){
-          temp.push(Object.keys(this.paymentgateway[i].fields[j])[0])
+        for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
+          temp.push(Object.keys(this.accountpaymentgateway[i].fields[j])[0])
         }
         this.Paymentfields[i]=temp
       }

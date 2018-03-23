@@ -2875,7 +2875,7 @@
                                         "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
-                                        "PaymentGateways":[],
+                                        "AccountPaymentGateways":[],
                                         "WebsiteRoles": [{
                                           "roleName": "guest"
                                         }, {
