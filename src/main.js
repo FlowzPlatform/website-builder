@@ -16,6 +16,13 @@ import 'element-ui/lib/theme-default/index.css';
 
 import BootstrapVue from 'bootstrap-vue';
 
+import iView from 'iview';
+import 'iview/dist/styles/iview.css';
+Vue.use(iView);
+import VueWidgets from 'vue-widgets'
+import 'vue-widgets/dist/styles/vue-widgets.css'
+Vue.use(VueWidgets);
+
 Vue.use(BootstrapVue);
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

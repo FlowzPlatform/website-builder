@@ -777,7 +777,7 @@
       </div>
       <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none;">
        
-          <div class="row">
+          <!-- <div class="row">
               <div class="col-md-12">
                   <div class="row">
                       <div class="col-md-12">
@@ -803,31 +803,40 @@
                         </el-form>
                       </div>
                   </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                          <span>Card name</span>
+                          <el-button style="float: right; padding: 3px 0" type="text">Operation button</el-button>
+                        </div>
+                        <div v-for="o in 4" :key="o" class="text item">
+                          {{'List item ' + o }}
+                        </div>
+                      </el-card>
+                      </div>
+                       <div class="col-md-6">
+                      <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                          <span>Card name</span>
+                          <el-button style="float: right; padding: 3px 0" type="text">Operation button</el-button>
+                        </div>
+                        <div v-for="o in 4" :key="o" class="text item">
+                          {{'List item ' + o }}
+                        </div>
+                      </el-card>
+                    </div>
+                  </div>
                   <hr>
                   <el-form ref="form" :model="form">
                       <div>
                         <div style="margin-bottom: 25px" v-for='(n, index) in accountpaymentgateway'>
                             <div class="row">
-                            <!-- Configuration  -->
-                               <!--  <div class="col-md-1">
-                                  <el-form-item>
-                                      <el-radio v-model="gatewaychecked" v-bind:label="index+1" border></el-radio>
-                                  </el-form-item>
-                                </div> -->
                                 <div class="col-md-5" style="margin: 0; padding-left: 15px">
                                   <el-form-item label="Configuration Name">
-                                      <!--    <el-select v-model="n.name" placeholder="Select">
-                                          <el-option
-                                            v-for="item in crmdata"
-                                            :key="item.id"
-                                            :label="item.configName"
-                                            :value="item.configName">
-                                          </el-option>
-                                        </el-select> -->
                                       <el-input type='text' v-model="n.name" placeholder='Enter Custom Name'></el-input>
                                   </el-form-item>
                                 </div>
-                                <!-- gateway  -->
                                 <div class="col-md-5" >
                                   <el-form-item label="Gateways">
                                     <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
@@ -836,7 +845,6 @@
                                     </el-select>
                                   </el-form-item>
                                 </div>
-                                <!-- Delete Variable -->
                                 <div class="col-md-1">
                                     <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteAccountpaymentgateway(index)" icon="delete2"></el-button>
                                 </div>
@@ -853,10 +861,16 @@
                             <hr>
                         </div>
                       </div>
-                      <!-- Create new variable -->
                       <el-button type="primary" @click="addNewAccountpaymentgateway">Add New Payment Configuration</el-button>
                   </el-form>
               </div>
+          </div> -->
+          <!-- testing iviewui -->
+          <div class="row">
+          <div class="col-md-12">
+            
+          <settings></settings>
+          </div>
           </div>
       </div>
       <!-- Payment Block -->
@@ -1049,7 +1063,7 @@ const config = require('../config');
 import fileSaver from 'file-saver';
 
 import draggable from 'vuedraggable';
-
+import settings from './settings/settings'
 // ProjectName Validator
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
@@ -1233,7 +1247,8 @@ export default {
   },
   components: {
     draggable,
-    vueJsonEditor
+    vueJsonEditor,
+    settings
   },
 
   async mounted () {
@@ -4247,6 +4262,10 @@ export default {
       display: none;
   }
 
+  .box-card {
+    width: 480px;
+    margin:10px;
+  }
 
 
 
