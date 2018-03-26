@@ -91,7 +91,7 @@
 </template>
 
 <script>
-    let config = require("@/config/customConfig.js")
+    import config from './../../config.js'
     let feathersUrl =  config.default.serviceUrl;
     import _ from 'lodash'
     import Vue from 'vue'
@@ -189,9 +189,10 @@
                 }
             },
             goToSettingsList(){
-                this.$router.push({
-                    name: 'Settings'
-                });
+                this.$emit('addNewConfig','settings');
+                // this.$router.push({
+                //     name: 'Settings'
+                // });
             },
             async handleUpload (file) {
                 this.file = file
@@ -203,9 +204,9 @@
                 
                 this.$refs[name].validate(async  (valid)   => {
                     if (valid) {
-                        console.log(this.file)
+                        // console.log(this.file)
                         let file_ext = this.file.name.split('.').pop()
-                        console.log("self.file.type file_ext", file_ext)
+                        // console.log("self.file.type file_ext", file_ext)
                         if( self.file == null || file_ext !== "pem"){
                             self.$Message.error({
                                 content: ' Please, attach a .pem file!',
@@ -243,7 +244,7 @@
                                     data: data
                                 })  
                                 .then(function (response) {
-                                    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> " , response)
+                                    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> " , response)
                                     self.loading = false;
                                     self.$Message.success('Configuration Added Successfully');
                                     self.handleReset('XeroformValidate')
@@ -313,7 +314,7 @@
                             data: data
                         })  
                         .then(function (response) {
-                            console.log(response)
+                            // console.log(response)
                                 self.loading = false;
                                 self.$Message.success('Configuration Added Successfully');
                                 self.handleReset('QBformValidate')
@@ -451,7 +452,7 @@
             }
         },
         mounted() {
-            console.log(this.$store.state.settingData)
+            // console.log(this.$store.state.settingData)
             //console.log()
         }
     }

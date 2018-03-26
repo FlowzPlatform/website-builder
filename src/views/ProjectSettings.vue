@@ -88,7 +88,8 @@
                 <!-- <el-form-item label="Favicon Logo">
                    <el-input v-model="faviconhref" placeholder="href" ></el-input>
                 </el-form-item> -->
-
+                <el-row>
+                <el-col :span='20'>
                 <el-form-item label="V Shop ID">
                    <el-select v-model="form.vid" placeholder="Select vid">
                     <el-option
@@ -99,6 +100,16 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
+                </el-col>
+                <el-col :span='2'>
+                  <el-tooltip content="Go View V-shop Settings" placement="top">
+                  <el-button type="primary" icon='setting' @click='linktovshop()'>V-Shop</el-button></el-tooltip>
+                </el-col>
+                <el-col style='text-align: center;' :span='2'>
+                  <!-- <el-button type="primary" icon="el-icon-refresh"></el-button> -->
+                   <Button type="primary" shape="circle" @click="refreshvshop()" icon="refresh"></Button>
+                </el-col>
+                </el-row>
                
 
                 <!-- <el-form-item label="Brand name">
@@ -775,15 +786,15 @@
               <a href="javascript:void(0)" id="toggleAccounting" class="card color-div toggleableDivHeader">Accounting</a>
           </div>
       </div>
-      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none;">
+      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none; min-height: 620px">
        
-          <!-- <div class="row">
+          <div class="row">
               <div class="col-md-12">
                   <div class="row">
                       <div class="col-md-12">
                          <el-form ref="form1" :model="form" label-width="120px">
                              <el-row>
-                              <el-col :span='20'>
+                              <el-col :span='18'>
                                 <el-form-item label="Account Used:">
                                  <el-select v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
                                   <el-option
@@ -799,77 +810,20 @@
                                 <el-tooltip content="Go View Accounting System" placement="top">
                                 <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip>
                               </el-col>
+                               <el-col style='text-align: center' :span='2'>
+                                 <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button>
+                              </el-col>
                             </el-row>
                         </el-form>
                       </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <el-card class="box-card">
-                        <div slot="header" class="clearfix">
-                          <span>Card name</span>
-                          <el-button style="float: right; padding: 3px 0" type="text">Operation button</el-button>
-                        </div>
-                        <div v-for="o in 4" :key="o" class="text item">
-                          {{'List item ' + o }}
-                        </div>
-                      </el-card>
-                      </div>
-                       <div class="col-md-6">
-                      <el-card class="box-card">
-                        <div slot="header" class="clearfix">
-                          <span>Card name</span>
-                          <el-button style="float: right; padding: 3px 0" type="text">Operation button</el-button>
-                        </div>
-                        <div v-for="o in 4" :key="o" class="text item">
-                          {{'List item ' + o }}
-                        </div>
-                      </el-card>
-                    </div>
-                  </div>
-                  <hr>
-                  <el-form ref="form" :model="form">
-                      <div>
-                        <div style="margin-bottom: 25px" v-for='(n, index) in accountpaymentgateway'>
-                            <div class="row">
-                                <div class="col-md-5" style="margin: 0; padding-left: 15px">
-                                  <el-form-item label="Configuration Name">
-                                      <el-input type='text' v-model="n.name" placeholder='Enter Custom Name'></el-input>
-                                  </el-form-item>
-                                </div>
-                                <div class="col-md-5" >
-                                  <el-form-item label="Gateways">
-                                    <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
-                                        <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
-                                        </el-option>
-                                    </el-select>
-                                  </el-form-item>
-                                </div>
-                                <div class="col-md-1">
-                                    <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteAccountpaymentgateway(index)" icon="delete2"></el-button>
-                                </div>
-                            </div>
-                                <div v-for='i,k in Paymentfields[index]'>
-                                  <div class="row">
-                                    <el-form ref="form" label-width="120px">
-                                        <el-form-item style="margin: 0; padding-left:133px" v-bind:label='Paymentfields[index][k]'>
-                                            <el-input type='text' v-model='n.fields[k][i]'></el-input>
-                                        </el-form-item>
-                                    </el-form>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                      </div>
-                      <el-button type="primary" @click="addNewAccountpaymentgateway">Add New Payment Configuration</el-button>
-                  </el-form>
               </div>
-          </div> -->
+          </div>
+        <hr>
           <!-- testing iviewui -->
           <div class="row">
           <div class="col-md-12">
-            
-          <settings></settings>
+              <component :is="componentsID" v-on:addNewConfig="addNewConfig"></component>
           </div>
           </div>
       </div>
@@ -1064,6 +1018,9 @@ import fileSaver from 'file-saver';
 
 import draggable from 'vuedraggable';
 import settings from './settings/settings'
+import newpaymentsettings from './settings/Online-Payment'
+import newprofileconfigure from './settings/General-setting'
+import newaccountsettings from './settings/new-settings'
 // ProjectName Validator
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
@@ -1164,6 +1121,7 @@ export default {
       imageInputIsDisabled: false,
       uploadedVariableJsonData: '',
       layoutOptions: [],
+      componentsID:'settings',
 
       addPluginLoading: false,
       refreshPluginsLoading: false,
@@ -1248,7 +1206,11 @@ export default {
   components: {
     draggable,
     vueJsonEditor,
-    settings
+    settings,
+    newpaymentsettings,
+    newprofileconfigure,
+    newaccountsettings
+
   },
 
   async mounted () {
@@ -1478,6 +1440,10 @@ export default {
   },
 
   methods: {
+    addNewConfig(value){
+      // console.log('hi');
+      this.componentsID = value;
+    },
     copyToClipboard(value){
       let elem = document.getElementById(value);
       var $temp = $("<input>");
@@ -1551,9 +1517,19 @@ export default {
       $('#text2').text('Upload Image');
       $('.valid').removeClass('correct');
     },
-
+    linktovshop(){
+      window.open('https://www.vshopdata.'+config.domainkey);
+    },
+    refreshvshop(){
+      this.init();
+    },
     linktocrm(){
       window.open('https://www.crm.'+config.domainkey);
+    },
+    refreshaccounts(){
+      // var temp=this.componentsID;
+      this.componentsID=''
+      this.componentsID='settings'
     },
     changeconfiguration(){
       for(let i=0;i<this.crmdata.length;i++){

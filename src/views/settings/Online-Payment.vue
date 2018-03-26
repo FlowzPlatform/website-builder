@@ -41,7 +41,7 @@
 
 	let feathersUrl =  config.default.serviceUrl;
 	import Cookies from 'js-cookie';
-	import config from '@/config/customConfig.js'
+	import config from './../../config.js'
 	import _ from 'lodash'
 	import Vue from 'vue'
 	import axios from "axios"
@@ -71,18 +71,19 @@
 		},
 		methods: {
 			goToSettingsList(){
-				this.$router.push({
-					name: 'Settings'
-					// params: { tabName: 'Online Payment' }
+				this.$emit('addNewConfig','settings');
+				// this.$router.push({
+				// 	name: 'Settings'
+				// 	// params: { tabName: 'Online Payment' }
 
-				});
+				// });
 			},
 			handleSubmit (name) {
 				var self = this
 				self.loading = true;
 				this.$refs[name].validate((valid) => {
 					if (valid) {
-						console.log('formValidate----------------------------->',this.formValidate)
+						// console.log('formValidate----------------------------->',this.formValidate)
 						if(this.formValidate.configuration === 'all'){ 
 							this.$Modal.confirm({
 								title: '',
@@ -99,13 +100,13 @@
 									}
 									this.configs.forEach(item => {
 										let gateway = this.formValidate.gateway;
-										console.log("gateway",gateway);
+										// console.log("gateway",gateway);
 										var params = {'online_payment': {},'id' : item.id}
 										delete patchData.gateway;
 										patchData['isDefault'] = true;
 										patchData['isDeleted'] = false;
 										params.online_payment[gateway] = patchData;
-										console.log("---------------------params online payment",params);
+										// console.log("---------------------params online payment",params);
 										// console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
 										axios({
 											method: 'PATCH',
@@ -136,10 +137,10 @@
 							})                        
 						}
 						else{
-							console.log('this.configs',this.configs)
-							console.log('this.formValidate.configuration',this.formValidate.configuration)
+							// console.log('this.configs',this.configs)
+							// console.log('this.formValidate.configuration',this.formValidate.configuration)
 							var data000 = _.filter(this.configs, {'id': this.formValidate.configuration })
-							console.log("data000----------------------------->",data000)
+							// console.log("data000----------------------------->",data000)
 							var checkConfig;
 							this.$Modal.confirm({
 								title: '',
@@ -173,7 +174,7 @@
 										on: {
 											input: (val) => {
 											checkConfig = val
-											console.log("val",checkConfig)
+											// console.log("val",checkConfig)
 
 											}
 										}
@@ -188,13 +189,13 @@
 										delete patchData.x_api_login
 									}
 									let gateway = this.formValidate.gateway;
-									console.log("gateway",gateway);
+									// console.log("gateway",gateway);
 									var params = {'online_payment': {},'id' : configId}
 									delete patchData.gateway;
 									patchData['isDefault'] = true;
 									patchData['isDeleted'] = false;
 									params.online_payment[gateway] = patchData;
-									console.log("---------------------params online payment",params);
+									// console.log("---------------------params online payment",params);
 									// console.log("one configuration",this.formValidate)
 
 									if(checkConfig == true){
@@ -209,7 +210,7 @@
 												data: params
 											})  
 											.then(function (response) {
-												console.log('response------------------------>',response)
+												// console.log('response------------------------>',response)
 												self.handleReset();
 												self.loading = false;
 												self.$router.push({
@@ -223,7 +224,7 @@
 										})
 									}
 									else{ 
-										console.log('this.formValidate',this.formValidate)        
+										// console.log('this.formValidate',this.formValidate)        
 										axios({
 											method: 'PATCH',
 											url: feathersUrl +'settings/'+configId,
@@ -234,7 +235,7 @@
 											data: params
 										})  
 										.then(function (response) {
-											console.log('response------------------------>',response)
+											// console.log('response------------------------>',response)
 											self.handleReset();
 											self.loading = false;
 											self.$router.push({
@@ -274,16 +275,16 @@
 					}
 				})
 				.then(function (response) {
-					console.log("response >>>>>>>>>>>>>>>>",response)
+					// console.log("response >>>>>>>>>>>>>>>>",response)
 					if (response.data.data.length != 0)
 					{
 						var newConf = [];
-						console.log("self.configs---------------->before",newConf)
+						// console.log("self.configs---------------->before",newConf)
 						response.data.data.forEach(item => {
 							newConf.push(item);
 						})
 						self.configs = _.sortBy(newConf, ['configName']);
-						console.log("self.configs---------------->after",self.configs)
+						// console.log("self.configs---------------->after",self.configs)
 					}
 					else{
 

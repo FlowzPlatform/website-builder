@@ -490,7 +490,7 @@
     import VueWidgets from 'vue-widgets'
     import 'vue-widgets/dist/styles/vue-widgets.css'
     import axios from "axios" 
-    let config = require("./../../config/customConfig.js")
+    import config from './../../config.js'
     let feathersUrl =  config.default.serviceUrl;
     import Cookies from 'js-cookie';
     import psl from 'psl';
@@ -503,9 +503,13 @@
         components: {
             
         },
+         props: {
+            
+         },
         data () {
             return {
                 value2 : [],
+                // componentID:componentsID,
                 activetabs: '',
                 current: '',
                 tabValue: '',
@@ -586,12 +590,12 @@
                 return k + inx
             },
             handleEdit (card, tabname, rowinx) {
-                console.log('Edit :: ', card, tabname, rowinx, '--data--', this.data6[card].online_payment[tabname][rowinx])
+                // console.log('Edit :: ', card, tabname, rowinx, '--data--', this.data6[card].online_payment[tabname][rowinx])
                 let self = this;
                 this.exData = this.data6[card].online_payment[tabname][rowinx];
                 let oldData = _.cloneDeep(this.data6[card].online_payment[tabname][rowinx])
                 oldData = _.omit(oldData, ['_index', '_rowKey'])
-                console.log('...', oldData, this.exData )
+                // console.log('...', oldData, this.exData )
                 this.$Modal.confirm({
                     title: 'Edit',
                     closable: true,
@@ -611,7 +615,7 @@
                                         },
                                         on: {
                                             'on-change': (value) => {
-                                                console.log(value)
+                                                // console.log(value)
                                                 self.exData[k] = value
                                             }
                                         }
@@ -631,7 +635,7 @@
                                             },
                                             on: {
                                                 'input': (value) => {
-                                                    console.log('Input:: ', value)
+                                                    // console.log('Input:: ', value)
                                                     self.exData[k] = value
                                                 }
                                             }
@@ -647,12 +651,12 @@
                         ])
                     },
                     onOk() {
-                        console.log("edited data", self.exData);
+                        // console.log("edited data", self.exData);
                         let rowIndex = rowinx;
                         // self.exData = _.omit(self.exData, ['_index', '_rowKey'])
-                        console.log("rowIndex",rowIndex);
+                        // console.log("rowIndex",rowIndex);
                         let configId = self.data6[card].id;
-                        console.log("configId",configId);
+                        // console.log("configId",configId);
                         let patchData = {
                             id : configId,
                             rowIndex : rowIndex,
@@ -660,7 +664,7 @@
                                 [tabname] : self.exData
                             }
                         };
-                        console.log("patchData",patchData)
+                        // console.log("patchData",patchData)
                         axios({
                             method:'patch',
                             url:feathersUrl +'settings/'+configId,
@@ -670,7 +674,7 @@
                                 subscriptionId : Cookies.get('subscriptionId')
                             },
                         }).then(response => {
-                            console.log("++++++++++++------------response",response);
+                            // console.log("++++++++++++------------response",response);
                             if(response.status == 200){
                                 this.$Message.success("Configuaration updated successfully")
                             }
@@ -700,7 +704,7 @@
             },
             handleDelete (card, tabname, rowinx) {
                 let self = this;
-                console.log('Delete :: ', card, tabname, rowinx, '--data--', this.data6[card].online_payment[tabname][rowinx])
+                // console.log('Delete :: ', card, tabname, rowinx, '--data--', this.data6[card].online_payment[tabname][rowinx])
                 let configId = self.data6[card].id;
                 this.$Modal.confirm({ 
                     title: 'Confirm Delete',
@@ -709,7 +713,7 @@
                     content: '',
                     onOk: () => {
                         self.exData = self.data6[card].online_payment[tabname][rowinx];
-                        console.log("self.exData",self.exData);
+                        // console.log("self.exData",self.exData);
                         self.exData.isDeleted = true;
                         let patchData = {
                             id : configId,
@@ -718,7 +722,7 @@
                                 [tabname] : self.exData
                             }
                         };
-                        console.log("patchData",patchData)
+                        // console.log("patchData",patchData)
                         axios({
                             method:'patch',
                             url:feathersUrl +'settings/'+configId,
@@ -777,26 +781,32 @@
                 this.data6.splice(index, 1);
             },
             addNewConfig(){
-                 this.$store.state.settingData = ""
-                this.$router.push({
-                        name: 'Account Settings'
-                    });
+                this.$store.state.settingData = "";
+                this.$emit('addNewConfig','newaccountsettings');
+                // this.$router.push({
+                //         name: 'Account Settings'
+                //     });
             },
             addNewGeneralSettings() {
                 this.$store.state.settingData = ""
-                this.$router.push({
-                    name: 'Profile Settings'
-                });
+                 this.$emit('addNewConfig','newprofileconfigure');
+                // this.$router.push({
+                //     name: 'Profile Settings'
+                // });
             },
             addNewPaymentSettings() {
+                // console.log('componentsID:',this.componentID)
                 this.$store.state.settingData = ""
-                this.$router.push({
-                    name: 'Payment Settings'
-                });
+                 this.$emit('addNewConfig','newpaymentsettings');
+
+                // this.$router.push({
+                //     name: 'Payment Settings'
+                // });
+                // this.componentsID
             },
             defaultChanged(e){
                 
-                console.log(e)
+                // console.log(e)
             },
             change (status) {
                 
@@ -928,9 +938,9 @@
 
             },
             editGeneralConfig(data) {
-                console.log("inside edit")
+                // console.log("inside edit")
                 this.editData = data;
-                console.log("data.address",data.address)
+                // console.log("data.address",data.address)
                 this.editGeneralData = data.address;
                 // populateCountries("country", "state");
                 // $("#country").on("change",function() {
@@ -947,10 +957,10 @@
                 let self = this
                 
                 let EditModifiedData = await this.editedData() 
-                console.log(EditModifiedData)
+                // console.log(EditModifiedData)
                 let patchData = _.cloneDeep(EditModifiedData)
                 delete patchData.online_payment;
-                console.log("--------------",patchData);
+                // console.log("--------------",patchData);
                 axios({
                     method:'patch',
                     url:feathersUrl +'settings/'+this.editData.id,
@@ -987,9 +997,9 @@
                 let self = this
 
                 self.editData.address = self.editGeneralData
-                console.log("*****************",self.editGeneralData)
+                // console.log("*****************",self.editGeneralData)
                 let EditModifiedData = await this.getGeneralEditedData();
-                console.log("------------------EditModifiedData",self.editData.logo)
+                // console.log("------------------EditModifiedData",self.editData.logo)
                 let patchData = {
                     id : self.editData.id,
                     address : self.editData.address,
@@ -1034,7 +1044,7 @@
                 let reader  = new FileReader();
                 return new Promise ((resolve , reject) =>{
                     if (this.file && this.editData.domain == "Xero") {
-                        console.log("Is file uploaded = yes")
+                        // console.log("Is file uploaded = yes")
                             reader.readAsDataURL(this.file);
                             
                              reader.addEventListener("load", function () {
@@ -1053,12 +1063,12 @@
             getGeneralEditedData() {
                 let self = this;
                 return new Promise ((resolve , reject) =>{ 
-                    console.log('**************',this.file)
-                    console.log("self.file.type", this.file.type)
-                    console.log("-------------config id",this.editData.id)              
+                    // console.log('**************',this.file)
+                    // console.log("self.file.type", this.file.type)
+                    // console.log("-------------config id",this.editData.id)              
                     // self.editData['logo'] = '';
                     if( self.file != '' && (self.file.type === "image/png" || self.file.type === "image/jpeg")){
-                        console.log('this.file',this.file)
+                        // console.log('this.file',this.file)
                         var reader = new FileReader();
                         var file = this.file
                         
@@ -1093,7 +1103,7 @@
                 return false;
             },
             showSecret(data){
-                console.log("----------=================",this[data])
+                // console.log("----------=================",this[data])
                 if(this[data] == "password" ){
                     this[data] = "text"
                 }else{
@@ -1198,9 +1208,9 @@
                 // console.log("---------response",response)
                 localStorage.clear();
                 self.data6 = response.data.data
-                console.log("+++++++++++++++++++++data6",self.data6);
+                // console.log("+++++++++++++++++++++data6",self.data6);
                 let arrIndex = _.findIndex(response.data.data, function(o) { return o.domain == 'custom'; });
-                console.log("arrIndex",arrIndex)
+                // console.log("arrIndex",arrIndex)
                 if (arrIndex < 0) {
                     await axios({
                         method: 'post',
@@ -1212,7 +1222,7 @@
                         data: data
                     })
                     .then(function (response) {
-                        console.log("-----------settings response",response)
+                        // console.log("-----------settings response",response)
                         self.data6.push(response.data);
                         // self.data6.push(response.data);
                         // self.$Message.success('Success!');
@@ -1249,7 +1259,7 @@
                         }
                     });
                 }
-                console.log("after post self.data6",self.data6);
+                // console.log("after post self.data6",self.data6);
                 for (let [inx, item] of self.data6.entries()) {
 
                     if (item.hasOwnProperty('online_payment')) {
@@ -1273,7 +1283,7 @@
                         self.tabarr.push({activetab : ''})
                     }
                 }
-                console.log("self.tabarr",self.tabarr)
+                // console.log("self.tabarr",self.tabarr)
                 self.$Loading.finish();
             })
             .catch(error => {
@@ -1289,7 +1299,7 @@
                         name: 'login'
                     });
                 }else if(error.response.status == 403){
-                    console.log("error.response.data.data.errorCode",error.response.data.data.errorCode)
+                    // console.log("error.response.data.data.errorCode",error.response.data.data.errorCode)
                     if (error.response.data.data.errorCode === 'ERR-LIMIT-OVER' || error.response.data.data.errorCode === 'ERR-PERMISSION') {
                         self.$Notice.error({
                             duration:0, 

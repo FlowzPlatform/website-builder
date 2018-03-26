@@ -5,12 +5,12 @@
     </div>
     <div class="container" style="margin-top: 2%; width: 100%; margin-bottom: 2%;">
       <!-- Address Settings Section -->
-      <div class="collapsingDivWrapper row">
+     <!--  <div class="collapsingDivWrapper row">
           <div class="col-md-12">
               <a href="javascript:void(0)" id="toogleAddressSettings" class="card color-div toggleableDivHeader">Address</a>
           </div>
       </div>
-      <div id="toogleAddressSettingsContent" class="toggleableDivHeaderContent" style="">
+      <div id="toogleAddressSettingsContent" class="toggleableDivHeaderContent" style=""> -->
         <div class="row">
           <div class="col-md-12">
             <Form class="form" label-position="left" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
@@ -60,12 +60,12 @@
               <div style="color:blue;font-size: smaller;">**You will see this address in your invoice</div>
             </Form>
           </div>
-        </div>
+        <!-- </div> -->
       </div>
       <!-- Project Settings section ends -->
 
       <!-- Meta Tags -->
-      <div class="collapsingDivWrapper row">
+      <!-- <div class="collapsingDivWrapper row">
           <div class="col-md-12">
               <a href="javascript:void(0)" id="toggleUploadLogo" class="card color-div toggleableDivHeader">Upload Logo</a>
           </div>
@@ -90,7 +90,7 @@
             </FormItem>
             </Form>             
         </div>
-      </div>
+      </div> -->
       <!-- Meta Tags Ends -->
 
 
@@ -105,7 +105,7 @@
 import Vue from 'vue';
 import axios from 'axios';
 import _ from 'lodash';
-import config from '@/config/customConfig.js'
+import config from './../../config.js'
 let feathersUrl =  config.default.serviceUrl;
 import Cookies from 'js-cookie';
 var settingId
@@ -173,10 +173,11 @@ export default {
   },
   methods: {
     goToSettingsList(){
-      this.$router.push({
-          name: 'Settings'
-          // params: { tabName: 'General' }
-      });
+      this.$emit('addNewConfig','settings');
+      // this.$router.push({
+      //     name: 'Settings'
+      //     // params: { tabName: 'General' }
+      // });
     },
     configChange(data){              
       $('#CustomerName').css("display","block")
@@ -184,7 +185,7 @@ export default {
     },
     async handleUpload (file) {
       var self = this
-      console.log('file',file)
+      // console.log('file',file)
       if(file.size >= 51200){
           this.$Notice.error({
             title: 'File Limit',
@@ -203,21 +204,21 @@ export default {
       // this.logoLoading = true;
       var self = this;
       var checkConfig;
-      console.log('**************',this.file)
-      console.log("self.file.type", this.file.type)
+      // console.log('**************',this.file)
+      // console.log("self.file.type", this.file.type)
       // if( self.file != '' && (self.file.type === "image/png" || self.file.type === "image/jpeg")){
       let file_ext = this.file.name.split('.').pop()
-      console.log("self.file.type file_ext", file_ext)      
+      // console.log("self.file.type file_ext", file_ext)      
       if( self.file != '' && (file_ext === "png" || file_ext === "jpg")){
         this.logoLoading = true;
-          console.log('this.file',this.file)
+          // console.log('this.file',this.file)
           var reader = new FileReader();
           var file = this.file
-          console.log('reader',reader);
-          console.log('IIIIIIIIIIIIIIIIIII',file.name)
+          // console.log('reader',reader);
+          // console.log('IIIIIIIIIIIIIIIIIII',file.name)
 
           reader.addEventListener("load", function () {
-            console.log('reader------->',reader.result)
+            // console.log('reader------->',reader.result)
 
             var logoData1 = {'logo': reader.result}
             // console.log('iiiiiiiiiiiiiiiiii',logoData1)
@@ -230,10 +231,10 @@ export default {
                 okText: 'Agree',
                 cancelText: 'Disagree',
                 onOk: () => {
-                  console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^',self.formData.configuration)
+                  // console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^',self.formData.configuration)
                   delete self.formData.configuration;
                   self.configs.forEach(item => {
-                      console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
+                      // console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
                       axios({
                         method: 'PATCH',
                         url: feathersUrl +'settings/'+item.id,
@@ -262,10 +263,10 @@ export default {
               })                        
             }
             else{
-              console.log('this.configs',self.configs)
-              console.log('this.formData.configuration',self.formData.configuration)
+              // console.log('this.configs',self.configs)
+              // console.log('this.formData.configuration',self.formData.configuration)
               var data000 = _.filter(self.configs, {'id': self.formData.configuration })
-              console.log("data000----------------------------->",data000)
+              // console.log("data000----------------------------->",data000)
               var checkConfig;
               self.$Modal.confirm({
                   title: '',
@@ -299,7 +300,7 @@ export default {
                           on: {
                             input: (val) => {
                               checkConfig = val
-                              console.log("val",checkConfig)
+                              // console.log("val",checkConfig)
 
                             }
                           }
@@ -310,7 +311,7 @@ export default {
                     // console.log('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',checkConfig)
                     if(checkConfig == true){
                       self.configs.forEach(item => {
-                        console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
+                        // console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
                         axios({
                           method: 'PATCH',
                           url: feathersUrl +'settings/'+item.id,
@@ -365,7 +366,7 @@ export default {
 
           
           if (file) {
-            console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',reader)
+            // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',reader)
             reader.readAsDataURL(file);
           }
 
@@ -379,6 +380,7 @@ export default {
         
     },
     handleSubmit (name) {
+      // console.log(name)
       let self = this;
       this.$refs[name].validate((valid) => {
         if (valid) {
@@ -392,10 +394,10 @@ export default {
               cancelText: 'Disagree',
               onOk: () => {
                 delete this.formValidate.configuration;
-                console.log('formValidate----------------------------->',this.formValidate)
+                // console.log('formValidate----------------------------->',this.formValidate)
                 var params = {'address':this.formValidate}
                 this.configs.forEach(item => {
-                    console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
+                    // console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
                     axios({
                       method: 'PATCH',
                       url: feathersUrl +'settings/'+item.id,
@@ -406,7 +408,7 @@ export default {
                       data: params
                     })  
                     .then(function (response) {
-                      console.log('response------------------------>',response)
+                      // console.log('response------------------------>',response)
                       self.loading = false;
                       self.$router.push({
 												name: 'Settings'
@@ -424,10 +426,10 @@ export default {
             })                        
           }
           else{
-            console.log('this.configs',this.configs)
-            console.log('this.formValidate.configuration',this.formValidate.configuration)
+            // console.log('this.configs',this.configs)
+            // console.log('this.formValidate.configuration',this.formValidate.configuration)
             var data000 = _.filter(this.configs, {'id': this.formValidate.configuration })
-            console.log("data000----------------------------->",data000)
+            // console.log("data000----------------------------->",data000)
             var checkConfig;
             this.$Modal.confirm({
                   title: '',
@@ -469,14 +471,14 @@ export default {
                       ])
                   },
                   onOk: () => {
-                  console.log('data----------------------------->',params)
-                  console.log('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',checkConfig)
+                  // console.log('data----------------------------->',params)
+                  // console.log('YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',checkConfig)
                   if(checkConfig == true){
                     delete this.formValidate.configuration;
                     var params = {'address':this.formValidate}
-                    console.log('UUUUUUUUUUUUUUUUU',this.configs)
+                    // console.log('UUUUUUUUUUUUUUUUU',this.configs)
                     this.configs.forEach(item => {
-                      console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
+                      // console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
                       axios({
                         method: 'PATCH',
                         url: feathersUrl +'settings/'+item.id,
@@ -545,16 +547,16 @@ export default {
         }
       })
       .then(function (response) {
-        console.log("response >>>>>>>>>>>>>>>>",response)
+        // console.log("response >>>>>>>>>>>>>>>>",response)
         if (response.data.data.length != 0)
         {
           var newConf = [];
-          console.log("self.configs---------------->before",newConf)
+          // console.log("self.configs---------------->before",newConf)
           response.data.data.forEach(item => {
             newConf.push(item);
           })
           self.configs = _.sortBy(newConf, ['configName']);
-          console.log("self.configs---------------->after",self.configs)
+          // console.log("self.configs---------------->after",self.configs)
 
         }
         else
@@ -573,14 +575,14 @@ export default {
     },
     onFileChange (e) {
       let self = this
-      console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',e)
+      // console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',e)
       let files = e.target.files || e.dataTransfer.files
-      console.log('ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp',files)
+      // console.log('ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp',files)
       if (!files.length) {
         return
       }
       this.file = files[0]
-      console.log('this.file', this.file)
+      // console.log('this.file', this.file)
     },
   },
 
