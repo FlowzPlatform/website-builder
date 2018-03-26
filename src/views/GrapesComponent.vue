@@ -114,22 +114,22 @@ export default {
         htmlObject.find("#flowz-blocks-css").remove();
         htmlObject.find("#base-component-css").remove();
 
-        let cssUrlString = '';
+        // let cssUrlString = [];
 
-        if(pageIndex !== null){
-            //console.log(pageIndex)
-            this.pageCss = rawConfigs[1].pageSettings[pageIndex].PageCss;
+        // if(pageIndex !== null){
+        //     //console.log(pageIndex)
+        //     this.pageCss = rawConfigs[1].pageSettings[pageIndex].PageCss;
 
-            for (let i=0;  i<this.pageCss.length; i++) {
-                if (cssUrls[0][this.pageCss[i]]){
-                    cssUrlString += cssUrls[0][this.pageCss[i]];
-                } 
-            }
+        //     for (let i=0;  i<this.pageCss.length; i++) {
+        //         if (cssUrls[0][this.pageCss[i]]){
+        //             cssUrlString.push(cssUrls[0][this.pageCss[i]]);
+        //         } 
+        //     }
 
-            cssUrlString += cssUrls[0]['Base Components'];
-        } else {
-            cssUrlString = cssUrls[0]['Base Components'];
-        }
+        //     cssUrlString.push(cssUrls[0]['Base Components']);
+        // } else {
+        //     cssUrlString.push(cssUrls[0]['Base Components']);
+        // }
         //console.log('String ', cssUrlString);
         // let cssUrlLinks = '';
         // for(let i = 0; i < this.pageCss.length; i++){
@@ -257,7 +257,7 @@ export default {
             noticeOnUnload: 0,
             // storageManager: { autoload: 0 },
             container: '#gjs',
-            components: cssUrlString + htmlObject.html(),
+            components: htmlObject.html(),
             // fromElement: true,
             storageManager: {
                 id: 'gjs-',                 // Prefix identifier that will be used inside storing and loading
@@ -282,6 +282,9 @@ export default {
               assets: images
             },
             style: variableCss + css,
+            canvas: {
+                styles: cssUrls 
+            }
           });
 
           let self = this;

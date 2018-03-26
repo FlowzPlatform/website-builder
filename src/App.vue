@@ -85,6 +85,7 @@ export default {
       setInterval(()=>{ 
         if(Cookies.get('auth_token' ,{domain: location})){
           // If Auth_Token is present and UserDetailId is not there
+
           if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
             // console.log(config.userDetail)
             axios.get(config.userDetail, {
@@ -125,7 +126,43 @@ export default {
               });
             })
           } else {
-            
+
+            // Reauth UserDetailId with auth token
+            axios.get(config.userDetail, {
+              headers: {
+                'Authorization' : Cookies.get('auth_token' ,{domain: location})
+              }   
+            })
+            .then(async (res) => {
+
+              let userDetailId = res.data.data._id;
+
+              if(userDetailId == Cookies.get('userDetailId' ,{domain: location})){
+                // Valid toke and UserDetailId
+                // console.log('Valid user detail id');
+              } else {
+                // console.log('Invalid user detail id');
+                // Update userDetailId
+                // Store Token in Cookie
+                Cookies.set('email', res.data.data.email, {domain: location});
+                Cookies.set('userDetailId',  userDetailId, {domain: location});
+                
+                localStorage.setItem('userDetailId', userDetailId);
+                localStorage.setItem('email', res.data.data.email);
+              }
+              
+            })
+            .catch((e) => {
+              console.log(e)
+              
+              this.$alert('Error: ' + e.response.data, '', {
+                confirmButtonText: 'OK',
+                callback: action => {
+                  window.location = '/login'
+                }
+              });
+              
+            })
           }
         } else {
 
@@ -134,105 +171,10 @@ export default {
           } else {
             window.location = '/login'
           }
-          
-          // window.location = '/login'
-          
-          // this.$message({
-          //   message: 'You\'re Logged Out From System. Please login again!',
-          //   duration: 2000,
-          //   type: 'error',
-          //   onClose(){
-          //     window.location = '/login'
-          //   }
-          // });
+         
         }
       }, 5000);
 
-      // let self = this;
-
-      // Check for Auth_Token. Helpful when user logs out from another application.
-      
-      // window.onload = function() {
-
-      //   if(self.$route.path == '/login' || self.$route.path == '/' || self.$route.path == '/register' || self.$route.path == '/forgot_password' || self.$route.path == '/reset-password' || self.$route.path == '/email-verification'){
-          
-      //   } else {
-          
-      //     var hidden, visibilityState, visibilityChange;
-
-      //     if (typeof document.hidden !== "undefined") {
-      //         hidden = "hidden", visibilityChange = "visibilitychange", visibilityState = "visibilityState";
-      //     }
-      //     else if (typeof document.mozHidden !== "undefined") {
-      //         hidden = "mozHidden", visibilityChange = "mozvisibilitychange", visibilityState = "mozVisibilityState";
-      //     }
-      //     else if (typeof document.msHidden !== "undefined") {
-      //         hidden = "msHidden", visibilityChange = "msvisibilitychange", visibilityState = "msVisibilityState";
-      //     }
-      //     else if (typeof document.webkitHidden !== "undefined") {
-      //         hidden = "webkitHidden", visibilityChange = "webkitvisibilitychange", visibilityState = "webkitVisibilityState";
-      //     }
-
-      //     document.addEventListener(visibilityChange, function() {
-
-      //         switch (document[visibilityState]) {
-      //         case "visible":
-      //             let location = psl.parse(window.location.hostname)
-      //             location = location.domain === null ? location.input : location.domain;
-      //             if(Cookies.get('auth_token' ,{domain: location})){
-      //               if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
-      //                 axios.get(config.userDetail, {
-      //                   headers: {
-      //                     'Authorization' : response.data.logintoken
-      //                   }   
-      //                 })
-      //                 .then(async (res) => {
-      //                   let userDetailId = res.data.data._id;
-
-      //                   // Store Token in Cookie
-      //                   Cookies.set('email', res.data.data.email, {domain: location});
-      //                   Cookies.set('userDetailId',  userDetailId, {domain: location});
-                        
-      //                   localStorage.setItem('userDetailId', userDetailId);
-      //                   localStorage.setItem('email', res.data.data.email);
-
-      //                   // create user folder
-      //                   await axios.post(config.baseURL+'/flows-dir-listing' , {
-      //                     foldername :'/var/www/html/websites/'+ userDetailId,
-      //                     type : 'folder'
-      //                   })
-      //                   .then((res) => {
-      //                     this.$router.push('/editor');
-      //                   });
-                        
-      //                 })
-      //                 .catch((e) => {
-      //                   console.log(e)
-      //                   this.$message({
-      //                       showClose: true,
-      //                       message: 'Error: ' + e.response.data,
-      //                       type: 'error'
-      //                   });
-      //                 })
-      //               }
-      //             } else {
-      //               self.$message({
-      //                 message: 'You\'re Logged Out From System. Please login again!',
-      //                 duration: 2000,
-      //                 type: 'error',
-      //                 onClose(){
-      //                   window.location = '/login'
-      //                 }
-      //               });
-      //             }
-                  
-      //             break;
-      //         case "hidden":
-      //             break;
-      //         }
-      //     });
-      //   }
-      // };
     },
     init () {
       if(this.$cookie.get('auth_token')){

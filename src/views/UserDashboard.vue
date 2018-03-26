@@ -195,6 +195,7 @@
                             <span class="hh-sidebar-item">Invite</span>
                         </a>
                     </li>
+
                     <!-- <li>
                         <a href="#" class="snooz">
                             <i class="fa fa-line-chart">
@@ -211,6 +212,14 @@
                             <span class="hh-sidebar-item">Revenue</span>
                         </a>
                     </li> -->
+                    <li>
+                        <a href="#" @click='goToUserSettings()'>
+                            <i class="fa fa-cog">
+                                <span class="icon-bg hh-bg-success"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Settings</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
@@ -251,6 +260,7 @@ import Cookies from 'js-cookie';
 
 import Invite from './invite';
 import HomePage from './Dashboard';
+import UserSettings from './user-settings';
 // import DashboardVue from './Dashboard.vue';
 
 export default {
@@ -279,6 +289,9 @@ export default {
     },
     goToDashboard(){
         this.componentId = HomePage;
+    },
+    goToUserSettings(){
+        this.componentId = UserSettings;
     },
     doLogout() {
       this.$confirm('Do you want to logout?', 'Warning', {
