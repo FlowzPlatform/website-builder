@@ -45,9 +45,9 @@
                         <el-input v-model="form.seoTitle"></el-input>
                      </el-form-item>
                      <hr>
-                     <el-form-item label="Following CSS have been included:">
-                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
-                        <div style="margin: 15px 0;"></div>
+                     <el-form-item label="Enable frameworks:">
+                        <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox> -->
+                        <!-- <div style="margin: 15px 0;"></div> -->
                         <el-checkbox-group v-model="checkedCss" @change="handleCheckedCssChange">
                            <el-checkbox v-for="css in csses" :label="css" :key="css">{{css}}</el-checkbox>
                         </el-checkbox-group>
@@ -340,7 +340,7 @@ const config = require('../config');
 
 import axios from 'axios';
 
- const cssOptions = ['Bootstrap 3', 'Bootstrap 4', 'Font Awesome', 'Flowz Blocks', 'Google Fonts','VueJs'];
+ const cssOptions = ['VueJs'];
 
 export default {
   name: 'PageSettings',

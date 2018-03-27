@@ -319,7 +319,7 @@
   // Footer Bar
   import SiteFooter from './footer'
 
-  // let myInterval;
+  let saveInterval = Cookies.get('saveInterval', {domain: location} );
 
   // New File creation validator
   let checkFileName = (rule, value, callback) => {
@@ -955,7 +955,7 @@
         // If PageSettings Clicked
         if (this.isPageEditing) {
 
-          // clearInterval(myInterval);
+          clearInterval(saveInterval);
 
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
           //     this.saveFile('getFileContent')
@@ -1019,7 +1019,7 @@
         }
         // If ProjectSettings is clicked 
         else if (this.isProjectEditing) {
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
           //     this.saveFile('getFileContent')
           //   }
@@ -1075,7 +1075,7 @@
         }
         // If Clicked in ProjectName 
         else if (this.isProjectStats) {
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
@@ -1086,7 +1086,7 @@
         }
         // If Clicked in Partials Folder 
         else if ((_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
           //console.log('Data Path: ', data.path);
 
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
@@ -1102,7 +1102,7 @@
         }
         // If Clicked in Layouts Folder 
         else if (_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
 
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
           //     this.saveFile('getFileContent')
@@ -1118,7 +1118,7 @@
         // If Clicked in Pages Folder 
         else if (_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
 
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
           //     this.saveFile('getFileContent')        
           //   }
@@ -1314,7 +1314,7 @@
     //         //       newContent = this.$store.state.content;
     //         // }
     //       } else {
-    //         // clearInterval(myInterval);
+    //         // clearInterval(saveInterval);
     //       }
     //     }
     //   },
@@ -1528,14 +1528,20 @@
          // this.editableTabs =  selectedPagePositionFirstArray ;
          // this.editableTabs.reverse();
          // this.editableTabsValue = newTabName;
-         // var self = this
        // if(this.editableTabs[0].title){
-       //   // clearInterval(myInterval);
+       //   // clearInterval(saveInterval);
        //   var title = this.editableTabs[0].title;
-       //   myInterval = setInterval(function(){
+       //   saveInterval = setInterval(function(){
        //     self.saveFile('void')
        //    }, 3000);
        // }
+
+        // var self = this;
+        // clearInterval(saveInterval);
+       
+        // saveInterval = setInterval(function(){
+        //  self.saveFile('void')
+        // }, saveInterval);
 
 
 
@@ -2854,6 +2860,13 @@
                                         "ProjectVId":{"vid":'',"userId":'',"password":'',"esUser":'',"virtualShopName":''},
                                         "CrmSettingId":''
                                       }, {
+                                        "CloudinaryDetails": {
+                                          apiKey: '',
+                                          apiSecret: '',
+                                          cloudName: '',
+                                          uploadFolder: '',
+                                          uploadPreset: ''
+                                        },
                                         "AssetImages": [],
                                         "GlobalVariables": [],
                                         "GlobalUrlVariables": [],

@@ -1,6 +1,6 @@
 <template>
   <div class="UserSettings container">
-  	
+
   	<el-form :model="userSettingsForm" :rules="rules" ref="userSettingsForm" label-width="250px" class="demo-userSettingsForm">
 		  <el-form-item label="Autosave Interval" prop="autosaveInterval">
 		    <el-input-number v-model="userSettingsForm.autosaveInterval" :step="500" :min="0"></el-input-number>
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import psl from 'psl';
+import Cookies from 'js-cookie';
 
 export default {
   name: 'UserSettings',
@@ -28,13 +30,6 @@ export default {
     return {
       userSettingsForm: {
 	      autosaveInterval: 0,
-	      region: '',
-	      date1: '',
-	      date2: '',
-	      delivery: false,
-	      type: [],
-	      resource: '',
-	      desc: ''
 	    },
 	    rules: {
 	      autosaveInterval: [
@@ -49,7 +44,9 @@ export default {
   	saveUserSettings(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.set('saveInterval', this.userSettingsForm.autosaveInterval, {domain: location});
         } else {
           console.log('error submit!!');
           return false;
@@ -58,7 +55,7 @@ export default {
     }
   },
   mounted () {
-  	
+  	this.userSettingsForm.autosaveInterval = Cookies.get('saveInterval', {domain: location});
   }
 }
 
