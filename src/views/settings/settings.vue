@@ -670,8 +670,8 @@
                             url:feathersUrl +'settings/'+configId,
                             data: patchData,
                             headers:{
-                                Authorization : Cookies.get('auth_token'),
-                                subscriptionId : Cookies.get('subscriptionId')
+                                'Authorization' : Cookies.get('auth_token'),
+                                'subscriptionId' : Cookies.get('subscriptionId')
                             },
                         }).then(response => {
                             // console.log("++++++++++++------------response",response);
@@ -691,9 +691,9 @@
                                     Cookies.remove('subscriptionId' ,{domain: location}) 
                                     this.$store.commit('logout', this);
                                     
-                                    this.$router.push({
-                                        name: 'login'
-                                    });
+                                    // this.$router.push({
+                                    //     name: 'login'
+                                    // });
                                 }
                         });
                     },
@@ -728,8 +728,8 @@
                             url:feathersUrl +'settings/'+configId,
                             data: patchData,
                             headers:{
-                                Authorization : Cookies.get('auth_token'),
-                                subscriptionId : Cookies.get('subscriptionId')
+                                'Authorization' : Cookies.get('auth_token'),
+                                'subscriptionId' : Cookies.get('subscriptionId')
                             },
                         }).then(response => {
                             if(response.status == 200){
@@ -747,9 +747,9 @@
                                     Cookies.remove('subscriptionId' ,{domain: location})  
                                     this.$store.commit('logout', this);
                                     
-                                    this.$router.push({
-                                        name: 'login'
-                                    });
+                                    // this.$router.push({
+                                    //     name: 'login'
+                                    // });
                                 }
                         });
                     },
@@ -823,8 +823,8 @@
                             url:feathersUrl +'settings/'+data.id,
                             data:{isDeleated : true },
                             headers:{
-                                Authorization : Cookies.get('auth_token'),
-                                subscriptionId : Cookies.get('subscriptionId')
+                                'Authorization' : Cookies.get('auth_token'),
+                                'subscriptionId' : Cookies.get('subscriptionId')
                             },
                         }).then(response => {
                             if(response.status == 200){
@@ -847,9 +847,9 @@
                                     Cookies.remove('subscriptionId' ,{domain: location}) 
                                     this.$store.commit('logout', this);
                                     
-                                    this.$router.push({
-                                        name: 'login'
-                                    });
+                                    // this.$router.push({
+                                    //     name: 'login'
+                                    // });
                                 }
                         });
                     },
@@ -886,8 +886,8 @@
                             url:feathersUrl +'settings/'+data.id,
                             data: this.editData,
                             headers:{
-                                Authorization : Cookies.get('auth_token'),
-                                subscriptionId : Cookies.get('subscriptionId')
+                                'Authorization' : Cookies.get('auth_token'),
+                                'subscriptionId' : Cookies.get('subscriptionId')
                             },
                         }).then(response => {
                             if(response.status == 200){
@@ -906,9 +906,9 @@
                                     Cookies.remove('subscriptionId' ,{domain: location}) 
                                     this.$store.commit('logout', this);
                                     
-                                    this.$router.push({
-                                        name: 'login'
-                                    });
+                                    // this.$router.push({
+                                    //     name: 'login'
+                                    // });
                                 }
                         });
                     },
@@ -966,8 +966,8 @@
                     url:feathersUrl +'settings/'+this.editData.id,
                     data: patchData,
                     headers: {
-                        Authorization : Cookies.get('auth_token'),
-                        subscriptionId : Cookies.get('subscriptionId')
+                        'Authorization' : Cookies.get('auth_token'),
+                        'subscriptionId' : Cookies.get('subscriptionId')
                     },
                 })
                 .then(response => {
@@ -987,9 +987,9 @@
                             Cookies.remove('subscriptionId' ,{domain: location})  
                             this.$store.commit('logout', this);
                             
-                            this.$router.push({
-                                name: 'login'
-                            });
+                            // this.$router.push({
+                            //     name: 'login'
+                            // });
                         }
                 });
             },
@@ -1011,8 +1011,8 @@
                         url:feathersUrl +'settings/'+self.editData.id,
                         data: patchData,
                         headers:{
-                            Authorization : Cookies.get('auth_token'),
-                            subscriptionId : Cookies.get('subscriptionId')
+                            'Authorization' : Cookies.get('auth_token'),
+                            'subscriptionId' : Cookies.get('subscriptionId')
                         },
                     }).then(response => {
                         if(response.status == 200){
@@ -1031,9 +1031,9 @@
                                 Cookies.remove('subscriptionId' ,{domain: location}) 
                                 self.$store.commit('logout', self);
                                 
-                                self.$router.push({
-                                    name: 'login'
-                                });
+                                // self.$router.push({
+                                //     name: 'login'
+                                // });
                             }
                     });
                 },1000)
@@ -1145,8 +1145,8 @@
                     url:feathersUrl +'settings/'+data.id,
                     data:{isActive : data.isActive },
                     headers:{
-                        Authorization : Cookies.get('auth_token'),
-                        subscriptionId : Cookies.get('subscriptionId')
+                        'Authorization' : Cookies.get('auth_token'),
+                        'subscriptionId' : Cookies.get('subscriptionId')
                     },
                 }).then(response => {
                     if(response.status == 200){
@@ -1165,9 +1165,9 @@
                             Cookies.remove('subscriptionId' ,{domain: location}) 
                             this.$store.commit('logout', this);
                             
-                            this.$router.push({
-                                name: 'login'
-                            });
+                            // this.$router.push({
+                            //     name: 'login'
+                            // });
                         }
                 });
             }
@@ -1200,8 +1200,8 @@
                 method:'get',
                 url:feathersUrl +'settings',
                 headers:{
-                    Authorization : Cookies.get('auth_token'),
-                    subscriptionId : Cookies.get('subscriptionId')
+                    'Authorization' : Cookies.get('auth_token'),
+                    'subscriptionId' : Cookies.get('subscriptionId')
                 },
             })
             .then(async response => {
@@ -1216,8 +1216,8 @@
                         method: 'post',
                         url: feathersUrl +'settings',
                         headers:{
-                            Authorization : Cookies.get('auth_token'),
-                            subscriptionId : Cookies.get('subscriptionId')
+                            'Authorization' : Cookies.get('auth_token'),
+                            'subscriptionId' : Cookies.get('subscriptionId')
                         },
                         data: data
                     })
@@ -1237,9 +1237,9 @@
                             Cookies.remove('subscriptionId' ,{domain: location}) 
                             this.$store.commit('logout', this);
                             
-                            this.$router.push({
-                                name: 'login'
-                            });
+                            // this.$router.push({
+                            //     name: 'login'
+                            // });
                         }else if(error.response.status == 403){
                             console.log("error.response",error.response)
                             if (error.response.data.data.errorCode === 'ERR-LIMIT-OVER' || error.response.data.data.errorCode === 'ERR-PERMISSION') {
@@ -1295,9 +1295,9 @@
                     Cookies.remove('subscriptionId' ,{domain: location}) 
                     self.$store.commit('logout', self);
                     
-                    self.$router.push({
-                        name: 'login'
-                    });
+                    // self.$router.push({
+                    //     name: 'login'
+                    // });
                 }else if(error.response.status == 403){
                     // console.log("error.response.data.data.errorCode",error.response.data.data.errorCode)
                     if (error.response.data.data.errorCode === 'ERR-LIMIT-OVER' || error.response.data.data.errorCode === 'ERR-PERMISSION') {

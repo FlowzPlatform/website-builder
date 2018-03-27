@@ -3988,7 +3988,8 @@ export default {
       }).catch(err => { console.log(err); });
       
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-     await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      // console.log('@@@@@@@@@@@@@@@',localStorage.getItem('current_sub_id'))
+     await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId': Cookies.get('subscriptionId')}})
       .then(res=>{
         
         this.crmdata=res.data.data

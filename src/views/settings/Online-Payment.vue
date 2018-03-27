@@ -10,7 +10,7 @@
 						<FormItem label="Configuration Name">
 							<Select v-model="formValidate.configuration" style="width:100%;text-align:left">
 								<Option  value='all'>All</Option>
-								<Option  v-for="item in configs" :value="item.id" :key="item">{{ item.configName }} ({{item.domain}})</Option>
+								<Option  v-for="item in configs" :value="item.id" :key="item.id">{{ item.configName }} ({{item.domain}})</Option>
 							</Select>
 						</FormItem>
 						<FormItem label="Gateway" prop="gateway">
@@ -112,8 +112,8 @@
 											method: 'PATCH',
 											url: feathersUrl +'settings/'+item.id,
 											headers:{
-												Authorization : Cookies.get('auth_token'),
-												subscriptionId : Cookies.get('subscriptionId')
+												'Authorization' : Cookies.get('auth_token'),
+												'subscriptionId' : Cookies.get('subscriptionId')
 											},
 											data: params
 										})  
@@ -121,9 +121,10 @@
 											// console.log('response------------------------>',response)
 											self.handleReset();
 											self.loading = false;
-											self.$router.push({
-												name: 'Settings'
-											});
+											// self.$router.push({
+											// 	name: 'Settings'
+											// });
+											self.$emit('addNewConfig','settings');
 										})
 										.catch(function (error) {
 											self.loading = false;
@@ -204,8 +205,8 @@
 												method: 'PATCH',
 												url: feathersUrl +'settings/'+item.id,
 												headers:{
-													Authorization : Cookies.get('auth_token'),
-													subscriptionId : Cookies.get('subscriptionId')
+													'Authorization' : Cookies.get('auth_token'),
+													'subscriptionId' : Cookies.get('subscriptionId')
 												},
 												data: params
 											})  
@@ -213,9 +214,10 @@
 												// console.log('response------------------------>',response)
 												self.handleReset();
 												self.loading = false;
-												self.$router.push({
-													name: 'Settings'
-												});
+												// self.$router.push({
+												// 	name: 'Settings'
+												// });
+												self.$emit('addNewConfig','settings');
 											})
 											.catch(function (error) {
 												self.loading = false;
@@ -229,8 +231,8 @@
 											method: 'PATCH',
 											url: feathersUrl +'settings/'+configId,
 											headers:{
-												Authorization : Cookies.get('auth_token'),
-												subscriptionId : Cookies.get('subscriptionId')
+												'Authorization' : Cookies.get('auth_token'),
+												'subscriptionId' : Cookies.get('subscriptionId')
 											},
 											data: params
 										})  
@@ -238,9 +240,10 @@
 											// console.log('response------------------------>',response)
 											self.handleReset();
 											self.loading = false;
-											self.$router.push({
-												name: 'Settings'
-											});
+											// self.$router.push({
+											// 	name: 'Settings'
+											// });
+											self.$emit('addNewConfig','settings');
 										})
 										.catch(function (error) {
 											self.loading = false;
@@ -270,8 +273,8 @@
 				let self = this
 				await axios.get(config.default.serviceUrl + 'settings?isActive=true', {
 					headers:{
-						Authorization : Cookies.get('auth_token'),
-						subscriptionId : Cookies.get('subscriptionId')
+						'Authorization' : Cookies.get('auth_token'),
+						'subscriptionId' : Cookies.get('subscriptionId')
 					}
 				})
 				.then(function (response) {
@@ -306,9 +309,10 @@
 						Cookies.remove('auth_token' ,{domain: location}) 
 						this.$store.commit('logout', this);
 						
-						this.$router.push({
-							name: 'login'
-						});
+						// this.$router.push({
+						// 	name: 'login'
+						// });
+						this.$emit('addNewConfig','settings');
 					}else if(error.response.status == 403){
 						self.$Notice.error(
 						{duration:0, 

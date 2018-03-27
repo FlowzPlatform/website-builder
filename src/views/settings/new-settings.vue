@@ -248,9 +248,10 @@
                                     self.loading = false;
                                     self.$Message.success('Configuration Added Successfully');
                                     self.handleReset('XeroformValidate')
-                                    self.$router.push({
-                                        name: 'Settings'
-                                    });
+                                    self.$emit('addNewConfig','settings');
+                                    // self.$router.push({
+                                    //     name: 'Settings'
+                                    // });
                                 })
                                 .catch(function (error) {
                                     self.loading = false;
@@ -261,9 +262,10 @@
                                         Cookies.remove('auth_token' ,{domain: location}) 
                                         this.$store.commit('logout', this);
                                         
-                                        this.$router.push({
-                                            name: 'login'
-                                        });
+                                        // this.$router.push({
+                                        //     name: 'login'
+                                        // });
+                                        this.$emit('addNewConfig','settings');
                                     }else if(error.response.status == 403){
                                                 self.$Notice.error(
                                                 {duration:0, 
@@ -318,9 +320,10 @@
                                 self.loading = false;
                                 self.$Message.success('Configuration Added Successfully');
                                 self.handleReset('QBformValidate')
-                                self.$router.push({
-                                name: 'Settings'
-                            });
+                            //     self.$router.push({
+                            //     name: 'Settings'
+                            // });
+                            self.$emit('addNewConfig','settings');
                         })
                         .catch(function (error) {
                             self.loading = false;
@@ -331,9 +334,10 @@
                                 Cookies.remove('auth_token' ,{domain: location}) 
                                 this.$store.commit('logout', this);
                                 
-                                this.$router.push({
-                                    name: 'login'
-                                });
+                                // this.$router.push({
+                                //     name: 'login'
+                                // });
+                                this.$emit('addNewConfig','settings');
                             }else if(error.response.status == 403){
                                 self.$Notice.error({
                                     duration:0, 

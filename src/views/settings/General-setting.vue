@@ -5,19 +5,19 @@
     </div>
     <div class="container" style="margin-top: 2%; width: 100%; margin-bottom: 2%;">
       <!-- Address Settings Section -->
-     <!--  <div class="collapsingDivWrapper row">
+      <div class="collapsingDivWrapper row">
           <div class="col-md-12">
               <a href="javascript:void(0)" id="toogleAddressSettings" class="card color-div toggleableDivHeader">Address</a>
           </div>
       </div>
-      <div id="toogleAddressSettingsContent" class="toggleableDivHeaderContent" style=""> -->
+      <div id="toogleAddressSettingsContent" class="toggleableDivHeaderContent" style="">
         <div class="row">
           <div class="col-md-12">
             <Form class="form" label-position="left" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
             <FormItem label="Configuration Name">
                <Select v-model="formValidate.configuration" style="width:100%;text-align:left" @on-change="configChange">
                 <Option  value='all'>All</Option>
-                <Option  v-for="item in configs" :value="item.id" :key="item">{{ item.configName }} ({{item.domain}})</Option>
+                <Option  v-for="item in configs" :value="item.id" :key="item.id">{{ item.configName }} ({{item.domain}})</Option>
               </Select>
             </FormItem>
             <FormItem label="Name" prop="name" id="CustomerName">
@@ -60,12 +60,12 @@
               <div style="color:blue;font-size: smaller;">**You will see this address in your invoice</div>
             </Form>
           </div>
-        <!-- </div> -->
+        </div>
       </div>
       <!-- Project Settings section ends -->
 
       <!-- Meta Tags -->
-      <!-- <div class="collapsingDivWrapper row">
+      <div class="collapsingDivWrapper row">
           <div class="col-md-12">
               <a href="javascript:void(0)" id="toggleUploadLogo" class="card color-div toggleableDivHeader">Upload Logo</a>
           </div>
@@ -90,7 +90,7 @@
             </FormItem>
             </Form>             
         </div>
-      </div> -->
+      </div>
       <!-- Meta Tags Ends -->
 
 
@@ -239,17 +239,18 @@ export default {
                         method: 'PATCH',
                         url: feathersUrl +'settings/'+item.id,
                         headers:{
-                            Authorization : Cookies.get('auth_token'),
-                            subscriptionId : Cookies.get('subscriptionId')
+                            'Authorization' : Cookies.get('auth_token'),
+                            'subscriptionId' : Cookies.get('subscriptionId')
                         },
                         data: logoData1
                       })  
                       .then(function (response) {
                         // console.log('response------------------------>',response)
                         self.logoLoading = false;
-                        self.$router.push({
-                          name: 'Settings'
-                        });
+                        // self.$router.push({
+                        //   name: 'Settings'
+                        // });
+                        self.$emit('addNewConfig','settings');
                       })
                       .catch(function (error) {
                         console.log('error',error)
@@ -316,17 +317,18 @@ export default {
                           method: 'PATCH',
                           url: feathersUrl +'settings/'+item.id,
                           headers:{
-                              Authorization : Cookies.get('auth_token'),
-                              subscriptionId : Cookies.get('subscriptionId')
+                              'Authorization' : Cookies.get('auth_token'),
+                              'subscriptionId' : Cookies.get('subscriptionId')
                           },
                           data: logoData1
                         })  
                         .then(function (response) {
                           // console.log('response------------------------>',response)
                           self.logoLoading = false;
-                          self.$router.push({
-                            name: 'Settings'
-                          });
+                          self.$emit('addNewConfig','settings');
+                          // self.$router.push({
+                          //   name: 'Settings'
+                          // });
                         })
                         .catch(function (error) {
                           console.log('error',error)
@@ -339,17 +341,18 @@ export default {
                         method: 'PATCH',
                         url: feathersUrl +'settings/'+self.formData.configuration,
                         headers:{
-                            Authorization : Cookies.get('auth_token'),
-                            subscriptionId : Cookies.get('subscriptionId')
+                            'Authorization' : Cookies.get('auth_token'),
+                            'subscriptionId' : Cookies.get('subscriptionId')
                         },
                         data: logoData1
                       })  
                       .then(function (response) {
                         // console.log('response------------------------>',response)
                         self.logoLoading = false;
-                          self.$router.push({
-                            name: 'Settings'
-                          });
+                        self.$emit('addNewConfig','settings');
+                          // self.$router.push({
+                          //   name: 'Settings'
+                          // });
                       })
                       .catch(function (error) {
                         console.log('error',error)
@@ -402,17 +405,18 @@ export default {
                       method: 'PATCH',
                       url: feathersUrl +'settings/'+item.id,
                       headers:{
-                          Authorization : Cookies.get('auth_token'),
-                          subscriptionId : Cookies.get('subscriptionId')
+                          'Authorization' : Cookies.get('auth_token'),
+                          'subscriptionId' : Cookies.get('subscriptionId')
                       },
                       data: params
                     })  
                     .then(function (response) {
                       // console.log('response------------------------>',response)
                       self.loading = false;
-                      self.$router.push({
-												name: 'Settings'
-											});
+                      self.$emit('addNewConfig','settings');
+           //            self.$router.push({
+											// 	name: 'Settings'
+											// });
                     })
                     .catch(function (error) {
                       console.log('error',error)
@@ -483,17 +487,18 @@ export default {
                         method: 'PATCH',
                         url: feathersUrl +'settings/'+item.id,
                         headers:{
-                            Authorization : Cookies.get('auth_token'),
-                            subscriptionId : Cookies.get('subscriptionId')
+                            'Authorization' : Cookies.get('auth_token'),
+                            'subscriptionId' : Cookies.get('subscriptionId')
                         },
                         data: params
                       })  
                       .then(function (response) {
                         // console.log('response------------------------>',response)
                         self.loading = false;
-                        self.$router.push({
-                          name: 'Settings'
-                        });
+                        self.$emit('addNewConfig','settings');
+                        // self.$router.push({
+                        //   name: 'Settings'
+                        // });
                       })
                       .catch(function (error) {
                         console.log('error',error)
@@ -507,17 +512,18 @@ export default {
                       method: 'PATCH',
                       url: feathersUrl +'settings/'+this.formValidate.configuration,
                       headers:{
-                          Authorization : Cookies.get('auth_token'),
-                          subscriptionId : Cookies.get('subscriptionId')
+                          'Authorization' : Cookies.get('auth_token'),
+                          'subscriptionId' : Cookies.get('subscriptionId')
                       },
                       data: params
                     })  
                     .then(function (response) {
                       // console.log('response------------------------>',response)
                       self.loading = false;
-                      self.$router.push({
-												name: 'Settings'
-											});
+                      self.$emit('addNewConfig','settings');
+                      //self.$router.push({
+											// 	name: 'Settings'
+											// });
                     })
                     .catch(function (error) {
                       console.log('error',error)
@@ -540,10 +546,11 @@ export default {
     },
     async settingData () {
       let self = this
+      console.log(config.default.serviceUrl + 'settings?isActive=true')
       await axios.get(config.default.serviceUrl + 'settings?isActive=true', {
         headers:{
-          Authorization : Cookies.get('auth_token'),
-          subscriptionId : Cookies.get('subscriptionId')
+          'Authorization' : Cookies.get('auth_token'),
+          'subscriptionId' : Cookies.get('subscriptionId')
         }
       })
       .then(function (response) {
