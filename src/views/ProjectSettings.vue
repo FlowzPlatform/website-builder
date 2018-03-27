@@ -1050,8 +1050,8 @@ import fileSaver from 'file-saver';
 import draggable from 'vuedraggable';
 import settings from './settings/settings'
 import newpaymentsettings from './settings/Online-Payment'
-import newprofileconfigure from './settings/General-setting'
-import newaccountsettings from './settings/new-settings'
+// import newprofileconfigure from './settings/General-setting'
+// import newaccountsettings from './settings/new-settings'
 // ProjectName Validator
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
@@ -1241,8 +1241,8 @@ export default {
     vueJsonEditor,
     settings,
     newpaymentsettings,
-    newprofileconfigure,
-    newaccountsettings
+    // newprofileconfigure,
+    // newaccountsettings
 
   },
 

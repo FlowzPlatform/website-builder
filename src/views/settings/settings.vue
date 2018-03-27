@@ -4,8 +4,8 @@
             <TabPane label="Configuration" name="Configuration">-->
 
                 <div class="settings_header">
-                    <Button @click="addNewConfig">Add New Account</Button>
-                    <Button @click="addNewGeneralSettings">Add New Profile Configuration</Button>
+                    <!-- <Button @click="addNewConfig">Add New Account</Button> -->
+                    <!-- <Button @click="addNewGeneralSettings">Add New Profile Configuration</Button> -->
                     <Button @click="addNewPaymentSettings">Add New Payment Configuration</Button>
                 </div>
 
@@ -780,20 +780,20 @@
             remove (index) {
                 this.data6.splice(index, 1);
             },
-            addNewConfig(){
-                this.$store.state.settingData = "";
-                this.$emit('addNewConfig','newaccountsettings');
-                // this.$router.push({
-                //         name: 'Account Settings'
-                //     });
-            },
-            addNewGeneralSettings() {
-                this.$store.state.settingData = ""
-                 this.$emit('addNewConfig','newprofileconfigure');
-                // this.$router.push({
-                //     name: 'Profile Settings'
-                // });
-            },
+            // addNewConfig(){
+            //     this.$store.state.settingData = "";
+            //     this.$emit('addNewConfig','newaccountsettings');
+            //     // this.$router.push({
+            //     //         name: 'Account Settings'
+            //     //     });
+            // },
+            // addNewGeneralSettings() {
+            //     this.$store.state.settingData = ""
+            //      this.$emit('addNewConfig','newprofileconfigure');
+            //     // this.$router.push({
+            //     //     name: 'Profile Settings'
+            //     // });
+            // },
             addNewPaymentSettings() {
                 // console.log('componentsID:',this.componentID)
                 this.$store.state.settingData = ""

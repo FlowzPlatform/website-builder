@@ -8,7 +8,7 @@
 				<div class="col-md-12" style="margin-top: 20px;">
 					<Form class="form" label-position="left" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
 						<FormItem label="Configuration Name">
-							<Select v-model="formValidate.configuration" style="width:100%;text-align:left">
+							<Select v-model="formValidate.configuration" filterable style="width:100%;text-align:left">
 								<Option  value='all'>All</Option>
 								<Option  v-for="item in configs" :value="item.id" :key="item.id">{{ item.configName }} ({{item.domain}})</Option>
 							</Select>
