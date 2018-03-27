@@ -6,7 +6,7 @@
 	        <div class="creative-table">
 	          <div class="table-title title-style-3">
 	            <h4>Layout List</h4>
-	            <p>Project Name: {{repoName}}</p>
+	            <p>Website Name: {{repoName}}</p>
 	          </div>
 	          <div class="table-body">
 	            <table class="table table-hover">
@@ -20,7 +20,7 @@
 	              <tbody>
 	                <tr v-for="item in tablePagesData">
 	                  <td>{{item.number}}</td>
-	                  <td>{{item.layoutName}}.layout</td>
+	                  <td>{{item.layoutName}}</td>
 	                  <td v-html="item.partialsName"></td>
 	                </tr>
 	              </tbody>
@@ -39,7 +39,8 @@ import Vue from 'vue'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
 
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const config = require('../config');
 
@@ -69,20 +70,26 @@ export default {
       let folderUrl = configFileUrl.replace(fileName, '');
 
       let foldername = folderUrl.split('/');
-      foldername = foldername[(foldername.length-1)];
+      foldername = foldername[6];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
+        //console.log('Config file found! Updating fields..');
 
-        this.settings = this.configData.data.data[0].configData;
+        this.settings = this.configData.data.configData;
 
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.websiteName;
 
         this.tablePagesData = [];
 
+        // console.log(this.settings[2].layoutOptions[0].Layout);
+
         for(var i = 0; i < Object.keys(this.settings[2].layoutOptions[0].Layout).length; i++){
-          var partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
+          var partialsList;
+          if(this.settings[2].layoutOptions[0].Layout[i].partialsList != undefined){
+            partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
+          }
+          // var partialsList = Object.values(this.settings[2].layoutOptions[0].Layout[i].partialsList);
           let partialsListString = '';
           for(let j = 0; j < partialsList.length; j++){
             partialsListString += '<span class="label label-info" style="padding: 0.7em .6em .6em; margin-right: 5px; ">' + partialsList[j] + '</span>';
@@ -95,7 +102,7 @@ export default {
         }
 
       } else {
-        console.log('Cannot get config file!');
+        //console.log('Cannot get config file!');
       } 
   	}
   },
@@ -105,7 +112,14 @@ export default {
   watch: {
   	'$store.state.fileUrl': function(newvalue) {
   		this.init();
-  	}
+  	},
+    '$store.state.updateStats': function(newvalue) {
+      let self = this;
+      setTimeout(function(){
+        self.init();
+      },1500)
+      
+    }
   }
 }
 </script>
@@ -114,6 +128,7 @@ export default {
 <style scoped>
 .PartialStats {
   font-family: 'Lato', sans-serif;
+  background-color: #eee;
 }
 
 .card{
@@ -346,6 +361,7 @@ h3.subtitle{
   border-radius: 10px;
   padding-top: 75px;
   margin-top: 0px;
+  margin-bottom: 100px;
   position: relative;
   width: 100%;
   z-index: 5;

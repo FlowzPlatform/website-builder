@@ -6,7 +6,7 @@
 	        <div class="creative-table">
 	          <div class="table-title title-style-1">
 	            <h4>Partial List</h4>
-	            <p>Project Name: {{repoName}}</p>
+	            <p>Website Name: {{repoName}}</p>
 	          </div>
 	          <div class="table-body">
 	            <table class="table table-hover">
@@ -39,7 +39,8 @@ import Vue from 'vue'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
 
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const config = require('../config');
 
@@ -72,20 +73,20 @@ export default {
       // foldername = foldername[(foldername.length-1)];
 
       foldername = foldername[6];
-
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+      
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
 
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
+        //console.log('Config file found! Updating fields..');
 
-        this.settings = this.configData.data.data[0].configData;
+        this.settings = this.configData.data.configData;
 
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.websiteName;
 
         let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
         partialItems.splice(partialItems.indexOf('Layout'), 1);
 
-        console.log('All Parts:', this.settings[2].layoutOptions[0]);
+        //console.log('All Parts:', this.settings[2].layoutOptions[0]);
         this.tablePagesData = [];
 
         for(var i = 0; i < partialItems.length; i++){
@@ -100,20 +101,28 @@ export default {
           });
         }
 
-        console.log('Partials List:', this.tablePagesData)
+        //console.log('Partials List:', this.tablePagesData)
 
       } else {
-        console.log('Cannot get config file!');
+        //console.log('Cannot get config file!');
       } 
   	}
   },
   async mounted () {
+
   	let response = await this.init();
   },
   watch: {
   	'$store.state.fileUrl': function(newvalue) {
   		this.init();
-  	}
+  	},
+    '$store.state.updateStats': function(newvalue) {
+      let self = this;
+      setTimeout(function(){
+        self.init();
+      },1500)
+      
+    }
   }
 }
 </script>

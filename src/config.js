@@ -1,52 +1,85 @@
 domainkey = process.env.domainkey;
 
 if(process.env.baseURL == undefined){
-    url = 'http://api.'+domainkey+'/serverapi'
+    url = 'https://api.'+domainkey+'/serverapi'
 } else {
     url = process.env.baseURL;
     // url = 'http://devapi.flowz.com/serverapi';
 }
 
+localStorage.setItem('baseURL', url);
+
 // If Production Environment
 if (process.env.NODE_ENV !== 'development') {
     ipAdd = domainkey;
-    socketURL = 'ws://ws.'+domainkey+':4032';
-    frontEndUrl = 'http://webbuilder.'+domainkey+'/editor';
+    socketURL = 'wss://ws.'+domainkey+':4032';
+    frontEndUrl = 'https://webbuilder.'+domainkey+'/editor';
 
-    loginUrl = 'http://auth.'+domainkey+'/api/login';
-    registerUrl = 'http://auth.'+domainkey+'/api/setup';
-    userDetail = 'http://auth.'+domainkey+'/api/userdetails';
-    socialUrl = 'http://auth.'+domainkey+'/api';
+    initLdap = 'https://api.' + domainkey + '/authldap/init';
 
-    loginWithFacebookUrl = 'http://auth.'+domainkey+'/auth/facebook';
-    loginWithGoogleUrl = 'http://auth.'+domainkey+'/auth/Gplus';
-    loginWithTwitterUrl = 'http://auth.'+domainkey+'/auth/twitter';
-    loginWithGithubUrl = 'http://auth.'+domainkey+'/auth/github';
-    loginWithLinkedInUrl = 'http://auth.'+domainkey+'/auth/linkedin';
+    loginUrl = 'https://api.'+domainkey+'/auth/api/login';
+    ldapUrl = 'https://api.'+domainkey+'/auth/api/ldapauth';
+    registerUrl = 'https://api.'+domainkey+'/auth/api/setup';
+    forgotPasswordUrl = 'https://api.' + domainkey + '/auth/api/forgetpassword';
+    forgotPasswordRedirectUrl = 'https://webbuilder.'+domainkey+'/reset-password';
+    resetPasswordUrl = 'https://api.' + domainkey + '/auth/api/resetpassword';
+    userDetail = 'https://api.'+domainkey+'/auth/api/userdetails';
+    socialUrl = 'https://api.'+domainkey+'/auth/api';
+    subscriptionApi = 'https://api.'+domainkey+'/subscription/';
+    loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
+    loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
+    loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';
+    loginWithGithubUrl = 'https://auth.'+domainkey+'/auth/github';
+    loginWithLinkedInUrl = 'https://auth.'+domainkey+'/auth/linkedin';
+
+    paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
+    vshopApi = 'https://api.' + domainkey + '/pdmnew/vshop-list';
+    crmsettingapi='https://api.'+domainkey+'/crm/settings'
+    flowzDashboardUrl = 'https://dashboard.' + domainkey
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
     socketURL = 'http://localhost:4032';
     frontEndUrl = 'http://localhost:8080/editor';
 
-    loginUrl = 'http://devauth.flowz.com/api/login';
-    registerUrl = 'http://devauth.flowz.com/api/setup';
-    userDetail = 'http://devauth.flowz.com/api/userdetails';
-    socialUrl = 'http://devauth.flowz.com/api';
+    initLdap = 'https://api.flowzcluster.tk/authldap/init';
 
-    loginWithFacebookUrl = 'http://devauth.flowz.com/auth/facebook';
-    loginWithGoogleUrl = 'http://devauth.flowz.com/auth/Gplus';
-    loginWithTwitterUrl = 'http://devauth.flowz.com/auth/twitter';
-    loginWithGithubUrl = 'http://devauth.flowz.com/auth/github';
-    loginWithLinkedInUrl = 'http://devauth.flowz.com/auth/linkedin';
+    loginUrl = 'https://api.flowzcluster.tk/auth/api/login';
+    ldapUrl = 'https://api.flowzcluster.tk/auth/api/ldapauth';
+    registerUrl = 'https://api.flowzcluster.tk/auth/api/setup';
+    forgotPasswordUrl = 'https://api.flowzcluster.tk/auth/api/forgetpassword';
+    forgotPasswordRedirectUrl = 'http://localhost:8080/reset-password';
+    resetPasswordUrl = 'https://api.flowzcluster.tk/auth/api/resetpassword';
+    userDetail = 'https://api.flowzcluster.tk/auth/api/userdetails';
+    socialUrl = 'https://api.flowzcluster.tk/auth/api';
+    subscriptionApi = 'https://api.flowzcluster.tk/subscription/';
+    loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
+    loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';
+    loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
+    loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
+    loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
+    paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
+    vshopApi = 'https://api.flowzcluster.tk/pdmnew/vshop-list';
+    crmsettingapi='https://api.flowzcluster.tk/crm/settings'
+    flowzDashboardUrl = 'https://dashboard.flowzcluster.tk'
 }
 
 module.exports = {
+
+    frontEndUrl: frontEndUrl,
+    flowzDashboardUrl: flowzDashboardUrl,
+    domainkey: domainkey,
+    crmsettingapi:crmsettingapi,
     loginUrl: loginUrl,
+    ldapUrl: ldapUrl,
     registerUrl: registerUrl,
+    forgotPasswordUrl: forgotPasswordUrl,
+    forgotPasswordRedirectUrl: forgotPasswordRedirectUrl,
+    resetPasswordUrl: resetPasswordUrl,
     userDetail: userDetail,
     socialUrl: socialUrl,
-
+    initLdap: initLdap,
+    subscriptionApi: subscriptionApi,
     facebookSuccessCallbackUrl: frontEndUrl,
     googleSuccessCallbackUrl: frontEndUrl,
     twitterSuccessCallbackUrl: frontEndUrl,
@@ -59,6 +92,10 @@ module.exports = {
     loginWithGithubUrl: loginWithGithubUrl,
     loginWithLinkedInUrl: loginWithLinkedInUrl,
 
+    paymentApiGateway: paymentApiGateway,
+
+    vshopApi : vshopApi,
+
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
@@ -67,5 +104,5 @@ module.exports = {
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
-    gitLabIpAddress: 'http://162.209.122.250/'
+    gitLabIpAddress: 'http://209.50.53.116/'
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="Homepage">
 
-        <div class="svgs">
+        <!-- <div class="svgs">
             <h1>welcome to<br/>flowz builder</h1>
             <h3><span>the next generation</span><br/><span>drag 'n drop website builder...</span></h3>
             <button @click="startNow()"><span>Start now</span></button>
@@ -100,7 +100,34 @@
                 <path class="a2" d="M0 20 L30 52 L60 20"></path>
                 <path class="a3" d="M0 40 L30 72 L60 40"></path>
             </svg>
-        </div>
+        </div> -->
+
+        <header class="header">
+            <vue-particles color="#dedede"></vue-particles>
+            <div class="brand-box">
+                <span class="brand">Flowz Digital</span>
+            </div>
+            
+            <div class="text-box">
+                <h1 class="heading-primary">
+                    <span class="heading-primary-main">WELCOME TO FLOWZ BUILDER</span>
+                    <span class="heading-primary-sub">THE NEXT GENERATION DRAG 'N DROP WEBSITE BUILDER...</span>
+                </h1>
+                <a href="/login" class="btn btn-white btn-animated">Start Now</a>
+
+                <div class="mouse_scroll">
+
+                        <div class="mouse">
+                            <div class="wheel"></div>
+                        </div>
+                        <div>
+                            <span class="m_scroll_arrows unu"></span>
+                            <span class="m_scroll_arrows doi"></span>
+                            <span class="m_scroll_arrows trei"></span>
+                        </div>
+                </div>
+            </div>
+        </header>
 
         <section id="about">
             <div class="container">
@@ -403,7 +430,7 @@
                     <div class="col-md-12" align="center" style="margin-top: 50px">
                       <img src="../../static/img/Flowz-logo.png" class="footer-logo">
                       <h4 class="subtitle">The next generation open-source website builder</h4>
-                      <a href="https://github.com/FlowzPlatform/website-builder" class="btn btn-default btn-github" target="_blank"><i class="fa fa-github"></i> View on GitHub</a>
+                      <!-- <a href="https://github.com/FlowzPlatform/website-builder" class="btn btn-default btn-github" target="_blank"><i class="fa fa-github"></i> View on GitHub</a> -->
                     </div>
                   </div>
                   <div class="row text-center" style="margin: 2% 0;">
@@ -459,6 +486,16 @@
 </template>
 
 <script>
+    import Vue from 'vue'
+  import VueSession from 'vue-session'
+  Vue.use(VueSession)
+
+import psl from 'psl';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
+import config from '@/config';
+
 
 export default {
   name: 'Homepage',
@@ -477,10 +514,44 @@ export default {
   methods: {
     startNow () {
       this.$router.push('login');
+    },
+    init(){
+         let self = this;
+            if(Cookies.get('auth_token')){
+                axios({
+                    method: 'get',
+                    url: config.userDetail,
+                    headers: {'Authorization': Cookies.get('auth_token')}
+                })
+                .then(async function(result) {
+
+                    let location = psl.parse(window.location.hostname);
+
+                    location = location.domain === null ? location.input : location.domain;
+
+                    Cookies.set('email',  result.data.data.email  , {domain: location});
+                    Cookies.set('userDetailId',  result.data.data._id  , {domain: location});
+
+                    localStorage.setItem('userDetailId', result.data.data._id);
+                    localStorage.setItem('email', result.data.data.email);
+                    
+                    await axios.post(config.baseURL+'/flows-dir-listing' , {
+                      foldername :'/var/www/html/websites/'+ result.data.data._id,
+                      type : 'folder'
+                    })
+                    .then((res) => {
+                      self.$router.push('/editor');
+                    })
+                    .catch((err)=>{ console.log('Error:', err); });
+
+                })
+                .catch((err)=>{ console.log('Error:', err); })
+
+            }
     }
   },
   mounted () {
-
+    this.init()
   }
 }
 </script>
@@ -529,7 +600,7 @@ export default {
     height: 100%;
     background-color: #043A4F;
   }
-
+/*
   h1, h3 {
     position: absolute;
     z-index: 10;
@@ -538,16 +609,16 @@ export default {
     margin: 0;
     padding: 0;
     text-align: left;
-  }
+  }*/
 
-  h1 {
+/*  h1 {
     left: 6vw;
     top: 8vw;
     font-size: 4vw;
     line-height: 6vw;
     font-weight: 100;
     font-family: 'Comfortaa', sans-serif;
-  }
+  }*/
 
   h3 {
     left: 6vw;
@@ -1164,7 +1235,7 @@ export default {
     color: #e7e6f1;
   }
 
-  #about{
+  /*#about{
     margin-top: 900px;
   }
 
@@ -1178,7 +1249,7 @@ export default {
     #about {
       margin-top:  750px;
     }
-  }
+  }*/
 
   #about p {
     text-align: center;
@@ -2466,4 +2537,290 @@ footer .fa-google-plus:hover {
     animation-delay:0s;
     -webkit-animation-delay:0s; /* Safari 和 Chrome */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*New theme for landing page*/
+/*
+
+
+body {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #eee;
+}
+*/
+.header {
+    height: 100vh;
+    background-image: 
+      linear-gradient(to right bottom, 
+     rgba(76, 216, 255, 0.8),
+     rgba(30, 108, 217, 0.8)),
+     url('https://images.pexels.com/photos/373912/pexels-photo-373912.jpeg?w=1260&h=750&auto=compress&cs=tinysrgb');
+    
+    background-size: cover;
+    background-position: top;
+    position: relative;
+
+    clip-path: polygon(0 0, 100% 0, 100% 75vh, 0 100%);
+}
+
+.brand-box {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.brand { font-size: 32px; font-weight: 900; color: #fff}
+
+.text-box {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.heading-primary {
+    color: #fff;
+    text-transform: uppercase;
+
+    backface-visibility: hidden;
+    margin-bottom: 30px;
+}
+
+.heading-primary-main {
+    display: block;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: 5px;
+}
+
+.heading-primary-sub {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 7.4px;
+    margin-top: 15px;
+}
+
+.btn:link,
+.btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 100px;
+    transition: all .2s;
+    position: relative;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-white {
+    background-color: #fff;
+    color: #777;
+    font-size: 14px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mouse_scroll {
+    display: block;
+    margin: 0 auto;
+    width: 24px;
+    height: 100px;
+    /*background: blue;*/
+    margin-top: 125px;
+}
+
+
+.m_scroll_arrows
+{
+  display: block;
+  width: 5px;
+  height: 5px;
+  -ms-transform: rotate(45deg); /* IE 9 */
+  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+  transform: rotate(45deg);
+   
+  border-right: 2px solid white;
+  border-bottom: 2px solid white;
+  margin: 0 0 3px 4px;
+  
+  width: 16px;
+  height: 16px;
+}
+
+
+.unu
+{
+  margin-top: 1px;
+}
+
+.unu, .doi, .trei
+{
+    -webkit-animation: mouse-scroll 1s infinite;
+    -moz-animation: mouse-scroll 1s infinite;
+}
+
+.unu
+{
+  -webkit-animation-delay: .1s;
+  -moz-animation-delay: .1s;
+  -webkit-animation-direction: alternate;
+}
+
+.doi
+{
+  -webkit-animation-delay: .2s;
+  -moz-animation-delay: .2s;
+  -webkit-animation-direction: alternate;
+  margin-top: -6px;
+}
+
+.trei
+{
+  -webkit-animation-delay: .3s;
+  -moz-animation-delay: .3s;
+  -webkit-animation-direction: alternate;
+  margin-top: -6px;
+}
+
+
+
+
+.mouse
+{
+height: 42px;
+width: 24px;
+  border-radius: 14px;
+  transform: none;
+  border: 2px solid white;
+  top: 170px;
+}
+
+.wheel
+{
+  height: 5px;
+  width: 2px;
+  display: block;
+  margin: 5px auto;
+  background: white;
+  position: relative;
+  
+  height: 4px;
+  width: 4px;
+  border: 2px solid #fff;
+  -webkit-border-radius: 8px;
+          border-radius: 8px;
+  
+
+}
+
+.wheel
+{
+  -webkit-animation: mouse-wheel 0.6s linear infinite;
+  -moz-animation: mouse-wheel 0.6s linear infinite;
+}
+
+
+
+@-webkit-keyframes mouse-wheel
+{
+   0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(6px);
+    -ms-transform: translateY(6px);
+    transform: translateY(6px);
+  }
+}
+
+@-moz-keyframes mouse-wheel
+{
+  0% { top: 1px; }
+  25% { top: 2px; }
+  50% { top: 3px;}
+  75% { top: 2px;}
+  100% { top: 1px;}
+}
+
+@-webkit-keyframes mouse-scroll {
+
+  0%   { opacity: 0;}
+  50%  { opacity: .5;}
+  100% { opacity: 1;}
+}
+@-moz-keyframes mouse-scroll {
+
+  0%   { opacity: 0; }
+  50%  { opacity: .5; }
+  100% { opacity: 1; }
+}
+@-o-keyframes mouse-scroll {
+
+  0%   { opacity: 0; }
+  50%  { opacity: .5; }
+  100% { opacity: 1; }
+}
+@keyframes mouse-scroll {
+
+  0%   { opacity: 0; }
+  50%  { opacity: .5; }
+  100% { opacity: 1; }
+}
+
 </style>

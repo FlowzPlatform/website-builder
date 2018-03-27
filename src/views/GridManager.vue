@@ -77,9 +77,9 @@
               $(".gm-edit-mode").click().click();
             },
             getSavedHtml: async function(){
-              console.log('from GridManager')
+              //console.log('from GridManager')
               let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
-              });
+              }).catch((err)=>{ console.log('Error:', err); });
               this.$store.state.content = response.data
             },
             getHtml: function(){
@@ -119,5 +119,21 @@
 
     #gm-canvas .row.gm-editing>.gm-tools a:hover, #gm-canvas .row-fluid.gm-editing>.gm-tools a:hover{
       float: right;
+    }
+
+    .fa{
+      font-size: auto !important;
+      font-style: auto !important;
+      font-variant-ligatures: auto !important;
+      font-variant-caps: auto !important;
+      font-variant-numeric: auto !important;
+      font-variant-east-asian: auto !important;
+      font-weight: auto !important;
+      font-stretch: auto !important;
+      line-height: auto !important;
+    }
+
+    #gm-right-control-btns{
+      display: none;
     }
 </style>
