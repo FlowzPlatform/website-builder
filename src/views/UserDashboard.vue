@@ -2032,11 +2032,11 @@ ul.hh-dropmenu-item {
 
 .skewedbox span {
     position:relative;
-    text-transform: uppercase;
 }
 
 .skewedbox span span {
     font-weight: 900;
+    text-transform: lowercase;
 }
 
 .skew-logout-btn{
