@@ -638,7 +638,15 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     });
 
 
-
+    bm.add('SliderCustom', {
+        label: 'Custom Slider',
+        content: '<CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
+        attributes: {
+            class: 'fa fa-sliders',
+            title: 'Template-1',
+        },
+        category: 'Special Component'
+    });
 
     // Invoice Filters
     // bm.add('InvoiceDetail', {
@@ -2297,7 +2305,54 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         },
     });
 
-
+    comps.addType('CustomSliderComponent', {
+        model: defaultModel.extend({
+            init() {
+                this.listenTo(this, 'change:selectPartial', this.doStuff);
+            },
+            doStuff() {
+                var label, selected_value;
+                var folderUrl = localStorage.getItem("folderUrl");
+                $('#Div1').on('click', function() {
+                    label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+                    selected_value = $("#Div1 option:selected").text();
+                    let model = editor.getSelected();
+                    var split_selected_value = selected_value.split(".");
+                    if (split_selected_value[1] == "partial") {
+                        model.components("");
+                        model.components("{{> " + label + " id='" + selected_value + "' }}");
+                    } else if (split_selected_value[1] == "vue") {
+                        model.components('<component :is="' + split_selected_value[0] + '">' + selected_value + '</component>');
+                    }
+                });
+            },
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [{
+                    label: 'Banner Type',
+                    name: 'sliderCustom',
+                    type: 'select',
+                    options: bannerTypes
+                    // options: [{'name' : 'hello', 'value':'hello'}, {'name' : 'hello2', 'value':'hello2'}]
+                }],
+            }),
+        }, {
+            isComponent: function(el) {
+                if (el.tagName == 'CUSTOMSLIDERCOMPONENT') {
+                    return {
+                        type: 'CustomSliderComponent'
+                    };
+                }
+            },
+        }),
+        view: defaultType.view,
+        render: function() {
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here';
+            return this;
+        },
+    });
 
 
     // // Vue Component
