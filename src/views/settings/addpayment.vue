@@ -7,13 +7,11 @@
 			<div class="row">
 				<div class="col-md-12" style="margin-top: 20px;">
 					<Form class="form" label-position="left" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
-						<FormItem label="Custom Configuration">
-							<!-- <Select v-model="formValidate.configuration" filterable not-found-text='ssdsss' style="width:100%;text-align:left">
+						<FormItem label="Configuration Name">
+							<Select v-model="formValidate.configuration" style="width:100%;text-align:left">
 								<Option  value='all'>All</Option>
 								<Option  v-for="item in configs" :value="item.id" :key="item.id">{{ item.configName }} ({{item.domain}})</Option>
-							</Select> -->
-							<Input v-model="formValidate.configuration" placeholder="Enter Name"></Input>
-						</FormItem>
+							</Select>
 						</FormItem>
 						<FormItem label="Gateway" prop="gateway">
 							<Select v-model="formValidate.gateway" style="width:100%;text-align:left">
@@ -52,7 +50,7 @@
 			return {
 				loading: false,
 				formValidate:{
-					configuration:'',
+					configuration:'all',
 					gateway:'',
 					x_api_token:'',
 					x_api_login:''
@@ -74,19 +72,68 @@
 		methods: {
 			goToSettingsList(){
 				this.$emit('addNewConfig','settings');
-				// this.$router.push({
-				// 	name: 'Settings'
-				// 	// params: { tabName: 'Online Payment' }
-
-				// });
 			},
 			handleSubmit (name) {
 				var self = this
 				this.$refs[name].validate((valid) => {
 					if (valid) {
-							self.loading = true;
-							var data000 =this.formValidate.configuration;
-							console.log("data000----------------------------->",data000)
+						self.loading = true;
+						// console.log('formValidate----------------------------->',this.formValidate)
+						if(this.formValidate.configuration === 'all'){ 
+							this.$Modal.confirm({
+								title: '',
+								content: '<h4>This Payment Credentials will be configured for all of your Accounts</h4>',
+								width: 500,
+								okText: 'Agree',
+								cancelText: 'Disagree',
+								onOk: () => {
+									var configId = this.formValidate.configuration
+									let patchData = _.cloneDeep(this.formValidate)
+									delete patchData.configuration;
+									if (this.formValidate.gateway == 'stripe') {
+										delete patchData.x_api_login
+									}
+									this.configs.forEach(item => {
+										let gateway = this.formValidate.gateway;
+										console.log("gateway",gateway);
+										var params = {'online_payment': {},'id' : item.id}
+										delete patchData.gateway;
+										patchData['isDefault'] = true;
+										patchData['isDeleted'] = false;
+										params.online_payment[gateway] = patchData;
+										// console.log("---------------------params online payment",params);
+										// console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
+										axios({
+											method: 'PATCH',
+											url: feathersUrl +'buildersettings/'+item.id,
+											headers:{
+												'Authorization' : Cookies.get('auth_token'),
+												'subscriptionId' : Cookies.get('subscriptionId')
+											},
+											data: params
+										})  
+										.then(function (response) {
+											// console.log('response------------------------>',response)
+											self.handleReset();
+											self.loading = false;
+											self.$emit('addNewConfig','settings');
+										})
+										.catch(function (error) {
+											self.loading = false;
+											console.log('error',error)
+										})
+									})
+								},
+								onCancel: () => {
+									self.loading = false;
+								}
+							})                        
+						}
+						else{
+							// console.log('this.configs',this.configs)
+							// console.log('this.formValidate.configuration',this.formValidate.configuration)
+							var data000 = _.filter(this.configs, {'id': this.formValidate.configuration })
+							// console.log("data000----------------------------->",data000)
 							var checkConfig;
 							this.$Modal.confirm({
 								title: '',
@@ -107,12 +154,24 @@
 											input: (val) => {
 											}
 										}
-										},'This Payment Credential will be configured for ' + data000),
+										},'This Payment Credential will be configured for ' + data000[0].configName),
 										h('div', {
 										style:{
 											height:'50px'
 											}
-									})
+									}),
+										h('Checkbox', {
+										props: {
+											value: this.value
+										},
+										on: {
+											input: (val) => {
+											checkConfig = val
+											console.log("val",checkConfig)
+
+											}
+										}
+										},'Do you want to use this Payment credentials for all Accounts?')
 									])
 								},
 								onOk: () => {
@@ -124,61 +183,77 @@
 									}
 									let gateway = this.formValidate.gateway;
 									// console.log("gateway",gateway);
-
-									var params = {'online_payment': {}}
+									var params = {'online_payment': {},'id' : configId}
 									delete patchData.gateway;
 									patchData['isDefault'] = true;
 									patchData['isDeleted'] = false;
 									params.online_payment[gateway] = patchData;
+									// console.log("---------------------params online payment",params);
+									// console.log("one configuration",this.formValidate)
 
-									 let  data = {
-                                    // "configName": "Custom Configuration",
-                                    "configName":configId,
-                                    "domain" : 'custom',
-                                    "isActive":true,
-                                    "isDeleted":false,
-                                    "online_payment":params.online_payment,
-                                    "subscriptionId":Cookies.get('subscriptionId')
-                            		}
-                            		//
-									axios({
-										method: 'post',
-										url: feathersUrl +'buildersettings',
-										headers:{
-											'Authorization' : Cookies.get('auth_token'),
-                        					'subscriptionId' : Cookies.get('subscriptionId')
-										},
-										data: data
-									})  
-									.then(function (response) {
-										self.handleReset(name);
-										self.loading = false;
-										self.$emit('addNewConfig','settings');
-									})
-									.catch(function (error) {
-										self.loading = false;
-										console.log('error',error)
-									})
-						
-									
+									if(checkConfig == true){
+										this.configs.forEach(item => {
+											axios({
+												method: 'PATCH',
+												url: feathersUrl +'buildersettings/'+item.id,
+												headers:{
+													'Authorization' : Cookies.get('auth_token'),
+													'subscriptionId' : Cookies.get('subscriptionId')
+												},
+												data: params
+											})  
+											.then(function (response) {
+												console.log('response------------------------>',response)
+												self.handleReset();
+												self.loading = false;
+												self.$emit('addNewConfig','settings');
+											})
+											.catch(function (error) {
+												self.loading = false;
+												console.log('error',error)
+											})
+										})
+									}
+									else{ 
+										// console.log('this.formValidate',this.formValidate)        
+										axios({
+											method: 'PATCH',
+											url: feathersUrl +'buildersettings/'+configId,
+											headers:{
+												'Authorization' : Cookies.get('auth_token'),
+												'subscriptionId' : Cookies.get('subscriptionId')
+											},
+											data: params
+										})  
+										.then(function (response) {
+											// console.log('response------------------------>',response)
+											self.handleReset();
+											self.loading = false;
+											self.$emit('addNewConfig','settings');
+										})
+										.catch(function (error) {
+											self.loading = false;
+											console.log('error',error)
+										})
+									}
 								},
 								onCancel: () => {
 									self.loading = false;
 								}
 							})
+						}
 					} 
 					else {
-						self.loading = false;
 						this.$Message.error('Please fill up all the fields correctly');
 					}
 				})
 			},
 			handleReset (name) {
-			    this.$refs[name].resetFields();
 				this.formValidate.gateway = '',
 				this.formValidate.x_api_login = '',
 				this.formValidate.x_api_token = ''
-				this.formValidate.configuration = ''
+				// this.$refs[name].resetFields();
+				this.formValidate.configuration = 'all'
 			},
 			async settingData () {
 				let self = this
@@ -220,10 +295,7 @@
 						Cookies.remove('auth_token' ,{domain: location}) 
 						this.$store.commit('logout', this);
 						
-						// this.$router.push({
-						// 	name: 'login'
-						// });
-						this.$emit('addNewConfig','settings');
+						self.$emit('addNewConfig','settings');
 					}else if(error.response.status == 403){
 						self.$Notice.error(
 						{duration:0, 

@@ -1050,8 +1050,8 @@ import fileSaver from 'file-saver';
 import draggable from 'vuedraggable';
 import settings from './settings/settings'
 import newpaymentsettings from './settings/Online-Payment'
-import newprofileconfigure from './settings/General-setting'
-import newaccountsettings from './settings/new-settings'
+import addnewpaymentgatway from './settings/addpayment'
+// import newaccountsettings from './settings/new-settings'
 // ProjectName Validator
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
@@ -1252,8 +1252,9 @@ export default {
     vueJsonEditor,
     settings,
     newpaymentsettings,
-    newprofileconfigure,
-    newaccountsettings
+    addnewpaymentgatway
+    // newprofileconfigure,
+    // newaccountsettings
 
   },
 
@@ -4049,7 +4050,7 @@ export default {
         this.fullscreenLoading = false;
       });
 
-       await axios.get(config.vshopApi, {
+       await axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }

@@ -36,6 +36,7 @@ if (process.env.NODE_ENV !== 'development') {
     vshopApi = 'https://api.' + domainkey + '/pdmnew/vshop-list';
     crmsettingapi='https://api.'+domainkey+'/crm/settings'
     flowzDashboardUrl = 'https://dashboard.' + domainkey
+    buildersettings='https://api.'+domainkey+'/crm/buildersettings/'
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -62,10 +63,11 @@ if (process.env.NODE_ENV !== 'development') {
     vshopApi = 'https://api.flowzcluster.tk/pdmnew/vshop-list';
     crmsettingapi='https://api.flowzcluster.tk/crm/settings'
     flowzDashboardUrl = 'https://dashboard.flowzcluster.tk'
+    buildersettings='https://api.flowzcluster.tk/crm/buildersettings/'
 }
 
 module.exports = {
-
+    buildersettings:buildersettings,
     frontEndUrl: frontEndUrl,
     flowzDashboardUrl: flowzDashboardUrl,
     domainkey: domainkey,
