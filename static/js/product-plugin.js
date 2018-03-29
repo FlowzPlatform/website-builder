@@ -25,6 +25,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     let urlVarValue = [];
     let menuOptions = [];
     var menuNames = [];
+  
+    var bannerTypes = [];
 
     let partialOptions = {};
 
