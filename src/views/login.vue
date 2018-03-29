@@ -223,6 +223,8 @@ export default {
             // .then((res) => {
             //   this.$router.push('/editor');
             // });
+
+            window.location = '/editor';
             
           })
           .catch((e) => {
