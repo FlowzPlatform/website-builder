@@ -1206,7 +1206,7 @@
             })
             .then(async response => {
                 // console.log("---------response",response)
-                localStorage.clear();
+                // localStorage.clear();
                 self.data6 = response.data.data
                 // console.log("+++++++++++++++++++++data6",self.data6);
                 let arrIndex = _.findIndex(response.data.data, function(o) { return o.domain == 'custom'; });

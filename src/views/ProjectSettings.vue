@@ -233,22 +233,22 @@
       <div id="toggleAssetImagesContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
           <div class="col-md-12">
-            <el-form label-position="left" label-width="100px" :model="cloudinaryDetails">
-              <el-form-item label="API Key">
+            <el-form label-position="left" label-width="200px" :model="cloudinaryDetails" :rules="rulesCloudinaryDetails" ref="cloudinaryDetails">
+              <el-form-item label="API Key" prop="apiKey">
                 <el-input v-model="cloudinaryDetails.apiKey"></el-input>
               </el-form-item>
               <!-- <el-form-item label="API Secret">
                 <el-input v-model="cloudinaryDetails.apiSecret"></el-input>
               </el-form-item> -->
-              <el-form-item label="Cloud Name">
+              <el-form-item label="Cloud Name" prop="cloudName">
                 <el-input v-model="cloudinaryDetails.cloudName"></el-input>
               </el-form-item>
-              <el-form-item label="Upload Preset">
+              <el-form-item label="Upload Preset" prop="uploadPreset">
                 <el-input v-model="cloudinaryDetails.uploadPreset"></el-input>
               </el-form-item>
-              <el-form-item label="Upload Folder">
+              <!-- <el-form-item label="Upload Folder">
                 <el-input v-model="cloudinaryDetails.uploadFolder"></el-input>
-              </el-form-item>
+              </el-form-item> -->
               <!-- <el-form-item label="Upload Sources">
                 <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllSourcesChange">Check all</el-checkbox>
                 <div style="margin: 15px 0;"></div>
@@ -264,7 +264,7 @@
 
             <div class="row" style="margin-bottom: 15px; ">
               <div class="col-md-12">
-                <el-button icon="upload2" @click="uploadAssetImage()" :loading="uploadAssetImageLoader">Upload</el-button>
+                <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
               </div>
             </div>
 
@@ -1233,7 +1233,18 @@ export default {
         ]
       },
 
-      cloudinaryDetails: {}
+      cloudinaryDetails: {},
+      rulesCloudinaryDetails: {
+          apiKey: [
+              { required: true, message: 'Enter Cloudinary API key', trigger: 'blur' }
+          ],
+          cloudName: [
+              { required: true, message: 'Enter Cloud Name', trigger: 'blur' }
+          ],
+          uploadPreset: [
+              { required: true, message: 'Enter Upload Preset', trigger: 'blur' }
+          ]
+      },
     }
   },
   components: {
@@ -1592,53 +1603,56 @@ export default {
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.cloudinaryDetails.sources.length;
     },
 
-    uploadAssetImage() {
+    uploadAssetImage(formName) {
 
-      this.uploadAssetImageLoader = true;
-      // var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
+      this.$refs[formName].validate(async (valid) => {
+        if(valid){
+          this.uploadAssetImageLoader = true;
+          // var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
 
-      // fsClient.pick({
-      //   accept: 'image/*',
-      //   fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"],
-      //   rejectOnCancel: true
-      // }).then( (response) => {
-      //   this.uploadAssetImageLoader = false;
-      //   // declare this function to handle response
-      //   this.assetsImages.push(response.filesUploaded[0].url);
-      //   this.saveProjectSettings();
-      // }).catch( (error) => {
-      //   console.log(error);
-      //   this.uploadAssetImageLoader = false;
-      // });
+          // fsClient.pick({
+          //   accept: 'image/*',
+          //   fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"],
+          //   rejectOnCancel: true
+          // }).then( (response) => {
+          //   this.uploadAssetImageLoader = false;
+          //   // declare this function to handle response
+          //   this.assetsImages.push(response.filesUploaded[0].url);
+          //   this.saveProjectSettings();
+          // }).catch( (error) => {
+          //   console.log(error);
+          //   this.uploadAssetImageLoader = false;
+          // });
 
-      cloudinary.openUploadWidget({ 
-        cloud_name: this.cloudinaryDetails.cloudName, 
-        api_key: this.cloudinaryDetails.apiKey,
-        upload_preset: this.cloudinaryDetails.uploadPreset, 
-        folder: this.cloudinaryDetails.uploadFolder,
-        sources: ['local', 'camera', 'url', 'facebook', 'instagram']
-      }, (error, result) => { 
-        console.log(error, result);
-        if(error != null){
+          cloudinary.openUploadWidget({ 
+            cloud_name: this.cloudinaryDetails.cloudName, 
+            api_key: this.cloudinaryDetails.apiKey,
+            upload_preset: this.cloudinaryDetails.uploadPreset, 
+            folder: this.cloudinaryDetails.uploadFolder,
+            sources: ['local', 'camera', 'url', 'facebook', 'instagram']
+          }, (error, result) => { 
+            console.log(error, result);
+            if(error != null){
 
-          if(error.message == 'User closed widget'){
+              if(error.message == 'User closed widget'){
 
-          } else {
-            console.log('Image upload error: ', error);
-            this.$message({
-              message: 'Upload image failed. Please try again.',
-              type: 'error'
-            });  
-          }
-          
-          this.uploadAssetImageLoader = false;  
-        } else {
-          this.assetsImages.push(result[0].url);
-          this.uploadAssetImageLoader = false;  
+              } else {
+                console.log('Image upload error: ', error);
+                this.$message({
+                  message: 'Upload image failed. Please try again.',
+                  type: 'error'
+                });  
+              }
+              
+              this.uploadAssetImageLoader = false;  
+            } else {
+              this.assetsImages.push(result[0].url);
+              this.uploadAssetImageLoader = false;  
+            }
+            
+          });
         }
-        
       });
-
 
     },
 
