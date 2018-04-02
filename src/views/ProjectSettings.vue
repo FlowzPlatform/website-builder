@@ -91,7 +91,7 @@
                 <el-row>
                 <el-col :span='20'>
                 <el-form-item label="V Shop ID">
-                   <el-select v-model="form.vid" placeholder="Select vid">
+                   <el-select clearable v-model="form.vid" placeholder="Select vid">
                     <el-option
                       v-for="item in vshopcategory"
                       :key="item.id"
@@ -827,7 +827,7 @@
                              <el-row>
                               <el-col :span='18'>
                                 <el-form-item label="Account Used:">
-                                 <el-select v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
+                                 <el-select clearable v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
                                   <el-option
                                     v-for="item in crmdata"
                                     :key="item.id"
@@ -837,7 +837,7 @@
                                 </el-select>
                                 </el-form-item>
                               </el-col>
-                              <el-col :span='4'>
+                              <el-col v-if="crmdata.length>-1" :span='4'>
                                 <el-tooltip content="Go View Accounting System" placement="top">
                                 <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip>
                               </el-col>
@@ -1566,15 +1566,56 @@ export default {
       window.open('https://www.vshopdata.'+config.domainkey);
     },
     refreshvshop(){
-      this.init();
+
+      // this.init();
+       axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
+        headers: {
+          'Authorization': Cookies.get('auth_token')
+        }
+      }).then(res=>{
+        
+         this.vshopcategory = res.data;
+         if(this.form.vid!=''){
+          let tempvid=this.form.vid
+          let checkindex=_.findIndex(this.vshopcategory,function(o){
+            return o.id == tempvid
+          })
+         if(checkindex==-1){
+          this.form.vid=''
+         }
+         }
+         
+
+      }).catch(err => { console.log(err); });
     },
     linktocrm(){
       window.open('https://www.crm.'+config.domainkey);
     },
     refreshaccounts(){
+      console.log('refreshaccounts')
+      // this.init()
       // var temp=this.componentsID;
+      axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId': Cookies.get('subscriptionId')}})
+      .then(res=>{
+        
+        this.crmdata=res.data.data
+        if(this.form.crmid!=''){
+          let tempcrmid=this.form.crmid
+          let checkindex=_.findIndex(this.crmdata,function(o){
+            return o.id == tempcrmid
+          })
+         if(checkindex==-1){
+          this.form.crmid=''
+         }
+         }
+
+        
+      })
+      .catch(err => { console.log(err);  });
       this.componentsID=''
-      this.componentsID='settings'
+      // this.componentsID='settings'
+
+
     },
     changeconfiguration(){
       for(let i=0;i<this.crmdata.length;i++){
@@ -4085,6 +4126,16 @@ export default {
       .then(res=>{
         
         this.crmdata=res.data.data
+        if(this.form.crmid!=''){
+          let tempcrmid=this.form.crmid
+          let checkindex=_.findIndex(this.crmdata,function(o){
+            return o.id == tempcrmid
+          })
+         if(checkindex==-1){
+          this.form.crmid=''
+         }
+         }
+
         
       })
       .catch(err => { console.log(err);  });

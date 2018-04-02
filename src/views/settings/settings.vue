@@ -6,10 +6,10 @@
         <div>
             <Row>
                 <div v-for="(item, inx) in data6">
-                    <Col :span="12">
+                    <Col :span="24">
                         <div style="padding: 5px;">
                             <Card style="padding:10px;min-height: 300px">
-                                <p slot="title">{{item.configName}}</p>
+                                <p slot="title"> {{item.configName}}</p>
 
                                 <Tooltip placement="top" slot="extra" content="Add More Payment Gateways" style="padding-left:3px;">
                                      <Button class="ButtonGroup" @click="editconfigure(inx)"   type="ghost" icon="plus"></Button>
@@ -774,57 +774,57 @@
                 // console.log("---------response",response)
                 // localStorage.clear();
                 self.data6 = response.data.data
-                console.log("+++++++++data6",self.data6);
+                // console.log("+++++++++data6",self.data6);
                 let arrIndex = _.findIndex(response.data.data, function(o) { return o.domain == 'custom'; });
                 // console.log("arrIndex",arrIndex)
-                if (arrIndex < 0) {
-                    await axios({
-                        method: 'post',
-                        url: feathersUrl +'buildersettings',
-                        headers:{
-                            'Authorization' : Cookies.get('auth_token'),
-                            'subscriptionId' : Cookies.get('subscriptionId')
-                        },
-                        data: data
-                    })
-                    .then(function (response) {
-                        console.log("-----------settings response",response)
-                        self.data6.push(response.data);
-                        // self.data6.push(response.data);
-                        // self.$Message.success('Success!');
-                    })
-                    .catch(function (error) {
-                        console.log("error in get settings",error)
-                        if(error.response.status == 401){
-                            let location = psl.parse(window.location.hostname)
-                            location = location.domain === null ? location.input : location.domain
+                // if (arrIndex < 0) {
+                //     await axios({
+                //         method: 'post',
+                //         url: feathersUrl +'buildersettings',
+                //         headers:{
+                //             'Authorization' : Cookies.get('auth_token'),
+                //             'subscriptionId' : Cookies.get('subscriptionId')
+                //         },
+                //         data: data
+                //     })
+                //     .then(function (response) {
+                //         console.log("-----------settings response",response)
+                //         self.data6.push(response.data);
+                //         // self.data6.push(response.data);
+                //         // self.$Message.success('Success!');
+                //     })
+                //     .catch(function (error) {
+                //         console.log("error in get settings",error)
+                //         if(error.response.status == 401){
+                //             let location = psl.parse(window.location.hostname)
+                //             location = location.domain === null ? location.input : location.domain
                             
-                            Cookies.remove('auth_token' ,{domain: location}) 
-                            Cookies.remove('subscriptionId' ,{domain: location}) 
-                            this.$store.commit('logout', this);
+                //             Cookies.remove('auth_token' ,{domain: location}) 
+                //             Cookies.remove('subscriptionId' ,{domain: location}) 
+                //             this.$store.commit('logout', this);
                             
-                            // this.$router.push({
-                            //     name: 'login'
-                            // });
-                        }else if(error.response.status == 403){
-                            console.log("error.response",error.response)
-                            if (error.response.data.data.errorCode === 'ERR-LIMIT-OVER' || error.response.data.data.errorCode === 'ERR-PERMISSION') {
-                                self.$Notice.error({
-                                    duration:0, 
-                                    title: error.response.statusText,
-                                    desc:error.response.data.message
-                                });
-                            }
-                            else {
-                                self.$Notice.error({
-                                    duration:0, 
-                                    title: error.response.statusText,
-                                    desc:error.response.data.message+'. Please <a href="'+config.default.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'
-                                });
-                            }
-                        }
-                    });
-                }
+                //             // this.$router.push({
+                //             //     name: 'login'
+                //             // });
+                //         }else if(error.response.status == 403){
+                //             console.log("error.response",error.response)
+                //             if (error.response.data.data.errorCode === 'ERR-LIMIT-OVER' || error.response.data.data.errorCode === 'ERR-PERMISSION') {
+                //                 self.$Notice.error({
+                //                     duration:0, 
+                //                     title: error.response.statusText,
+                //                     desc:error.response.data.message
+                //                 });
+                //             }
+                //             else {
+                //                 self.$Notice.error({
+                //                     duration:0, 
+                //                     title: error.response.statusText,
+                //                     desc:error.response.data.message+'. Please <a href="'+config.default.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'
+                //                 });
+                //             }
+                //         }
+                //     });
+                // }
                 // console.log("after post self.data6",self.data6);
                 for (let [inx, item] of self.data6.entries()) {
 

@@ -95,7 +95,7 @@
 									}
 									this.configs.forEach(item => {
 										let gateway = this.formValidate.gateway;
-										console.log("gateway",gateway);
+										// console.log("gateway",gateway);
 										var params = {'online_payment': {},'id' : item.id}
 										delete patchData.gateway;
 										patchData['isDefault'] = true;
@@ -167,7 +167,7 @@
 										on: {
 											input: (val) => {
 											checkConfig = val
-											console.log("val",checkConfig)
+											// console.log("val",checkConfig)
 
 											}
 										}
@@ -203,7 +203,7 @@
 												data: params
 											})  
 											.then(function (response) {
-												console.log('response------------------------>',response)
+												// console.log('response------------------------>',response)
 												self.handleReset();
 												self.loading = false;
 												self.$emit('addNewConfig','settings');
@@ -252,7 +252,7 @@
 				this.formValidate.gateway = '',
 				this.formValidate.x_api_login = '',
 				this.formValidate.x_api_token = ''
-				// this.$refs[name].resetFields();
+				this.$refs[name].resetFields();
 				this.formValidate.configuration = 'all'
 			},
 			async settingData () {
