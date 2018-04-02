@@ -7,11 +7,7 @@
 			<div class="row">
 				<div class="col-md-12" style="margin-top: 20px;">
 					<Form class="form" label-position="left" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
-						<FormItem label="Custom Configuration">
-							<!-- <Select v-model="formValidate.configuration" filterable not-found-text='ssdsss' style="width:100%;text-align:left">
-								<Option  value='all'>All</Option>
-								<Option  v-for="item in configs" :value="item.id" :key="item.id">{{ item.configName }} ({{item.domain}})</Option>
-							</Select> -->
+						<FormItem label="Custom Configuration" prop="configuration">
 							<Input v-model="formValidate.configuration" placeholder="Enter Name"></Input>
 						</FormItem>
 						</FormItem>
@@ -59,6 +55,9 @@
 				},
 				configs: [],
 				ruleValidate: {
+					configuration: [
+						{ required: true, message: 'The configuration name cannot be empty', trigger: 'blur' }
+					],
 					gateway: [
 						{ required: true, message: 'Please select gateway', trigger: 'blur' }
 					],
@@ -86,7 +85,7 @@
 					if (valid) {
 							self.loading = true;
 							var data000 =this.formValidate.configuration;
-							console.log("data000----------------------------->",data000)
+							// console.log("data000----------------------------->",data000)
 							var checkConfig;
 							this.$Modal.confirm({
 								title: '',
@@ -124,23 +123,21 @@
 									}
 									let gateway = this.formValidate.gateway;
 									// console.log("gateway",gateway);
-
 									var params = {'online_payment': {}}
 									delete patchData.gateway;
 									patchData['isDefault'] = true;
 									patchData['isDeleted'] = false;
-									params.online_payment[gateway] = patchData;
-
+									params.online_payment[gateway] = [patchData];
 									 let  data = {
                                     // "configName": "Custom Configuration",
                                     "configName":configId,
                                     "domain" : 'custom',
                                     "isActive":true,
-                                    "isDeleted":false,
+                                    "isDeleated":false,
                                     "online_payment":params.online_payment,
                                     "subscriptionId":Cookies.get('subscriptionId')
                             		}
-                            		//
+                            		// console.log('data',data)
 									axios({
 										method: 'post',
 										url: feathersUrl +'buildersettings',
@@ -151,6 +148,7 @@
 										data: data
 									})  
 									.then(function (response) {
+										// console.log('response',response)
 										self.handleReset(name);
 										self.loading = false;
 										self.$emit('addNewConfig','settings');
