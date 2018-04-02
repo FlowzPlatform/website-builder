@@ -499,7 +499,7 @@
           localStorage.setItem('userDetailId', this.userDetailId);
           localStorage.setItem('email', res.data.data.email);
           
-          await axios.post(config.baseURL+'/flows-dir-listing' , {
+          await axios.post(config.baseURL+'/save-menu' , {
             foldername :'/var/www/html/websites/'+ this.userDetailId,
             type : 'folder'
           })
@@ -648,7 +648,7 @@
 
           
       });
-      let sub_id = []
+      let sub_id = [];
         await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
         .then(response => {
           let obj_val = Object.values(response.data.data.package)
@@ -656,8 +656,19 @@
           for (let index = 0; index < obj_val.length; index++) {
             sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
           }
-          this.options = sub_id
-          this.value  = sub_id[0].value;
+          this.options = sub_id;
+
+          if(!(Cookies.get('subscriptionId')) || Cookies.get('subscriptionId') == null || Cookies.get('subscriptionId') == undefined || Cookies.get('subscriptionId') == ""){
+            this.value = sub_id[0].value;
+          } else {
+            this.value = Cookies.get('subscriptionId')
+          }
+          // this.value  = sub_id[0].value;
+
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.set('subscriptionId', this.value, {domain: location});
+
           localStorage.setItem("current_sub_id",this.value)
           // if (localStorage.getItem('current_sub_id') != null || localStorage.getItem('current_sub_id') != undefined) {
           //   this.value = localStorage.getItem('current_sub_id')
@@ -714,11 +725,16 @@
 
         axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(async response => {
-            let location = psl.parse(window.location.hostname);
-            location = location.domain === null ? location.input : location.domain;
+            // let location = psl.parse(window.location.hostname);
+            // location = location.domain === null ? location.input : location.domain;
+
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.set('subscriptionId', this.value, {domain: location});
+
             localStorage.setItem("current_sub_id", this.value)
             // Cookies.set('userDetailId', response.data.userId, {domain: location});
-            // Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
+            Cookies.set('subscriptionId', this.value, {domain: location});
             //axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             await this.getData();
@@ -908,9 +924,11 @@
           this.fullscreenLoading = false;
           this.$session.remove('username');
           localStorage.removeItem('current_sub_id');
+
           let location = psl.parse(window.location.hostname)
           location = location.domain === null ? location.input : location.domain
-                        
+          
+          Cookies.remove('subscriptionId' ,{domain: location});              
           Cookies.remove('auth_token' ,{domain: location});
           Cookies.remove('email' ,{domain: location});
           Cookies.remove('userDetailId' ,{domain: location}); 
@@ -1709,6 +1727,7 @@
           this.fullscreenLoading = false;
           this.$session.remove('username');
           localStorage.removeItem('current_sub_id');
+          Cookies.remove('subscriptionId' ,{domain: location});
           let location = psl.parse(window.location.hostname)
           location = location.domain === null ? location.input : location.domain
 
@@ -2053,6 +2072,7 @@
             this.fullscreenLoading = false;
             this.$session.remove('username');
             localStorage.removeItem('current_sub_id');
+            Cookies.remove('subscriptionId' ,{domain: location});
             let location = psl.parse(window.location.hostname)
             location = location.domain === null ? location.input : location.domain
                           
@@ -2267,6 +2287,7 @@
                    this.$refs[projectName].resetFields();
                   this.$session.remove('username');
                   localStorage.removeItem('current_sub_id');
+                  Cookies.remove('subscriptionId' ,{domain: location});
                   let location = psl.parse(window.location.hostname)
                   location = location.domain === null ? location.input : location.domain
 
@@ -3854,6 +3875,7 @@
           this.fullscreenLoading = false;
           this.$session.remove('username');
           localStorage.removeItem('current_sub_id');
+          Cookies.remove('subscriptionId' ,{domain: location});
           let location = psl.parse(window.location.hostname)
           location = location.domain === null ? location.input : location.domain
 
@@ -4631,6 +4653,7 @@
               this.fullscreenLoading = false;
               this.$session.remove('username');
               localStorage.removeItem('current_sub_id');
+              Cookies.remove('subscriptionId' ,{domain: location});
               let location = psl.parse(window.location.hostname)
               location = location.domain === null ? location.input : location.domain
 
