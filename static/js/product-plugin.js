@@ -25,14 +25,25 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     let urlVarValue = [];
     let menuOptions = [];
     var menuNames = [];
+    var bannerTypes = [];
 
     let partialOptions = {};
 
+    bannerTypes.push({ name: 'Select', value: '' });
     urlVarValue.push({ name: 'Select', value: '' });
     menuNames.push({ name: 'Select', value: '' });
 
     let configFileUrl = baseURL + '/project-configuration/' + foldername;
-
+    $.getJSON(baseURL + '/bannertype?status=true&$paginate=false', function(data) {
+        // console.log('data', baseURL, data)
+        for (let item of data) {
+            $.getJSON(baseURL + '/banners?banner_type='+ item.id, function(res) {
+                if (res.data.length > 0) {
+                    bannerTypes.push({ name: item.bt_name, value: item.id})
+                }
+            })
+        }
+    })
     $.getJSON(configFileUrl, function(data) {
         configData = data.configData;
         urlVariables = configData[1].projectSettings[1].GlobalUrlVariables;
@@ -643,7 +654,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         content: '<CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
         attributes: {
             class: 'fa fa-sliders',
-            title: 'Template-1',
+            title: 'Custom Slider',
         },
         category: 'Special Component'
     });
