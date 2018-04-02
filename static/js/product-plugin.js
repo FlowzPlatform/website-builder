@@ -727,9 +727,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         category: 'Data Field Group'
     });
 
-    bm.add('DataFieldText', {
+    bm.add('DataFieldTextContainer', {
         label: 'Data Field Text',
-        content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
+        content: '<DataFieldTextContainer style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldTextContainer>',
         attributes: {
             class: 'fa fa-database',
             title: 'Data Field',
@@ -737,9 +737,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         category: 'Data Field Group'
     });
 
-    bm.add('DataFieldList', {
+    bm.add('DataFieldListcontainer', {
         label: 'Data Field List',
-        content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
+        content: '<DataFieldListcontainer style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldListcontainer>',
         attributes: {
             class: 'fa fa-database',
             title: 'Data Field',
@@ -2032,9 +2032,49 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         },
     });
 
+    // editor.TraitManager.addType('datafieldtext2custom', {
+
+    //     getInputEl: function () {
+    //         if (!this.inputEl) {
+    //             var input = document.createElement('textarea');
+    //             input.value = this.target.get('content');
+    //             this.inputEl = input;
+    //         }
+    //         return 'item.text.' + this.inputEl;
+    //     },
+
+    // });
+    // Each new type extends the default Trait
+    editor.TraitManager.addType('content', {
+        events: {
+            'keyup': 'onChange',  // trigger parent onChange method on keyup
+        },
+
+        /**
+        * Returns the input element
+        * @return {HTMLElement}
+        */
+        getInputEl: function () {
+            if (!this.inputEl) {
+                var input = document.createElement('textarea');
+                input.value = this.target.get('content');
+                this.inputEl = input;
+            }
+            return this.inputEl;
+        },
+
+        /**
+         * Triggered when the value of the model is changed
+         */
+        onValueChange: function () {
+            let model = editor.getSelected();
+            model.components("");
+            model.components("<datafieldtext :text=item.text." + this.model.get('value') + "></datafieldtext>");
+        }
+    });
 
 
-    comps.addType('DataFieldText', {
+    comps.addType('DataFieldTextContainer', {
         // Define the Model
         model: defaultModel.extend({
             // Extend default properties
@@ -2044,15 +2084,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 traits: [{
                     label: 'Data text field',
                     name: ':text',
-                    type: 'text'
+                    type: 'content',
+                    changeProp: 1
                 }]
             }),
 
         }, {
             isComponent: function(el) {
-                if (el.tagName == 'DATAFIELDTEXT') {
+                if (el.tagName == 'DATAFIELDTEXTCONTAINER') {
                     return {
-                        type: 'DataFieldText'
+                        type: 'DataFieldTextContainer'
                     };
                 }
             },
@@ -2069,7 +2110,35 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         },
     });
 
-    comps.addType('DataFieldList', {
+    editor.TraitManager.addType('content2', {
+        events: {
+            'keyup': 'onChange',  // trigger parent onChange method on keyup
+        },
+
+        /**
+        * Returns the input element
+        * @return {HTMLElement}
+        */
+        getInputEl: function () {
+            if (!this.inputEl) {
+                var input = document.createElement('textarea');
+                input.value = this.target.get('content');
+                this.inputEl = input;
+            }
+            return this.inputEl;
+        },
+
+        /**
+         * Triggered when the value of the model is changed
+         */
+        onValueChange: function () {
+            let model = editor.getSelected();
+            model.components("");
+            model.components('<datafieldlist style="min-width: 100%; min-height: 100px; display: block;" :items=item.text.' + this.model.get('value') + '><template scope="item" style="min-width: 100%; min-height: 100px; display: block;"><div class="fieldListRepeater"></div><template scope="item"></template></template></datafieldlist>');
+        }
+    });
+
+    comps.addType('DataFieldListcontainer', {
         // Define the Model
         model: defaultModel.extend({
             // Extend default properties
@@ -2079,15 +2148,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 traits: [{
                     label: 'Data list field',
                     name: ':items',
-                    type: 'text'
+                    type: 'content2',
+                    changeProp:1
                 }]
             }),
 
         }, {
             isComponent: function(el) {
-                if (el.tagName == 'DATAFIELDLIST') {
+                if (el.tagName == 'DATAFIELDLISTCONTAINER') {
                     return {
-                        type: 'DataFieldList'
+                        type: 'DataFieldListcontainer'
                     };
                 }
             },
