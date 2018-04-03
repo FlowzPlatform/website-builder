@@ -774,7 +774,7 @@
                 // console.log("---------response",response)
                 // localStorage.clear();
                 self.data6 = response.data.data
-                // console.log("+++++++++data6",self.data6);
+                // console.log("++++data6",self.data6);
                 let arrIndex = _.findIndex(response.data.data, function(o) { return o.domain == 'custom'; });
                 // console.log("arrIndex",arrIndex)
                 // if (arrIndex < 0) {
@@ -833,12 +833,22 @@
                         // console.log('item:: ', item.online_payment)
                         if (item.online_payment !== '') {
                             for (let k in item.online_payment) {
+                                
                                 item.online_payment[k] = _.reject(item.online_payment[k], {isDeleted: true})
                                 if (item.online_payment[k].length > 0) {
                                     if (i === 0) {
+                                        // self.alldata = false;
+                                        item.online_payment.alldeleted = false;
                                         self.tabarr.push({activetab : k+inx})
                                         i++
                                     }
+                                }
+                                else {
+                                    //message
+                                   
+                                    // self.alldata = true;
+                                    item.online_payment.alldeleted = true;
+                                    self.tabarr.push({activetab : ''})
                                 }
                             }
                         }
@@ -849,7 +859,7 @@
                         self.tabarr.push({activetab : ''})
                     }
                 }
-                // console.log("self.tabarr",self.tabarr)
+               
                 self.$Loading.finish();
             })
             .catch(error => {

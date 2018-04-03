@@ -18,10 +18,10 @@
 							<Option value='paypal'>PayPal</Option>
 							</Select>
 						</FormItem>
-						<FormItem label="x_api_token" v-if="formValidate.gateway">
+						<FormItem label="x_api_token" v-if="formValidate.gateway" prop='x_api_token'>
 							<Input v-model="formValidate.x_api_token" placeholder="Enter x_api_token"></Input>
 						</FormItem>
-						<FormItem label="x_api_login" v-if="formValidate.gateway == 'auth' || formValidate.gateway == 'paypal'">
+						<FormItem label="x_api_login" v-if="formValidate.gateway == 'auth' || formValidate.gateway == 'paypal'" prop='x_api_login'>
 							<Input v-model="formValidate.x_api_login" placeholder="Enter x_api_login"></Input>
 						</FormItem>
 						<div style="text-align:center;">

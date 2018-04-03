@@ -817,7 +817,7 @@
               <a href="javascript:void(0)" id="toggleAccounting" class="card color-div toggleableDivHeader">Accounting</a>
           </div>
       </div>
-      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none; min-height: 620px">
+      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none;" >
        
           <div class="row">
               <div class="col-md-12">
