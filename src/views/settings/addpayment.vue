@@ -20,10 +20,10 @@
 							<Option value='paypal'>PayPal</Option>
 							</Select>
 						</FormItem>
-						<FormItem label="x_api_token" v-if="formValidate.gateway">
+						<FormItem label="x_api_token" v-if="formValidate.gateway" prop='x_api_token'>
 							<Input v-model="formValidate.x_api_token" placeholder="Enter x_api_token"></Input>
 						</FormItem>
-						<FormItem label="x_api_login" v-if="formValidate.gateway == 'auth' || formValidate.gateway == 'paypal'">
+						<FormItem label="x_api_login" v-if="formValidate.gateway == 'auth' || formValidate.gateway == 'paypal'"  prop='x_api_login'>
 							<Input v-model="formValidate.x_api_login" placeholder="Enter x_api_login"></Input>
 						</FormItem>
 						<div style="text-align:center;">
@@ -103,7 +103,7 @@
 										params.online_payment[gateway] = patchData;
 										// console.log("---------------------params online payment",params);
 										// console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
-										axios({
+										 axios({
 											method: 'PATCH',
 											url: feathersUrl +'buildersettings/'+item.id,
 											headers:{
@@ -114,7 +114,7 @@
 										})  
 										.then(function (response) {
 											// console.log('response------------------------>',response)
-											self.handleReset();
+											self.handleReset(name);
 											self.loading = false;
 											self.$emit('addNewConfig','settings');
 										})
@@ -160,18 +160,18 @@
 											height:'50px'
 											}
 									}),
-										h('Checkbox', {
-										props: {
-											value: this.value
-										},
-										on: {
-											input: (val) => {
-											checkConfig = val
-											// console.log("val",checkConfig)
+										// h('Checkbox', {
+										// props: {
+										// 	value: this.value
+										// },
+										// on: {
+										// 	input: (val) => {
+										// 	checkConfig = val
+										// 	// console.log("val",checkConfig)
 
-											}
-										}
-										},'Do you want to use this Payment credentials for all Accounts?')
+										// 	}
+										// }
+										// },'Do you want to use this Payment credentials for all Accounts?')
 									])
 								},
 								onOk: () => {
@@ -204,7 +204,7 @@
 											})  
 											.then(function (response) {
 												// console.log('response------------------------>',response)
-												self.handleReset();
+												self.handleReset(name);
 												self.loading = false;
 												self.$emit('addNewConfig','settings');
 											})
@@ -227,7 +227,7 @@
 										})  
 										.then(function (response) {
 											// console.log('response------------------------>',response)
-											self.handleReset();
+											self.handleReset(name);
 											self.loading = false;
 											self.$emit('addNewConfig','settings');
 										})
@@ -252,7 +252,7 @@
 				this.formValidate.gateway = '',
 				this.formValidate.x_api_login = '',
 				this.formValidate.x_api_token = ''
-				this.$refs[name].resetFields();
+				this.$refs[name].resetFields(name);
 				this.formValidate.configuration = 'all'
 			},
 			async settingData () {
