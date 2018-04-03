@@ -4004,7 +4004,7 @@ export default {
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
 
       } else {
-        //console.log('Cannot get configurations!');
+        console.log('Cannot get configurations!');
       }
 
       if(this.form.brandLogoName==''){
