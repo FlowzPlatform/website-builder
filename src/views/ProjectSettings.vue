@@ -107,7 +107,9 @@
                 </el-col>
                 <el-col style='text-align: center;' :span='2'>
                   <!-- <el-button type="primary" icon="el-icon-refresh"></el-button> -->
-                   <Button type="primary" shape="circle" @click="refreshvshop()" icon="refresh"></Button>
+                   <el-tooltip content="Refresh V-shop settings" placement="top">
+                   <el-button type="primary" @click="refreshvshop()"><i class="fa fa-refresh"></i></el-button>
+                   </el-tooltip>
                 </el-col>
                 </el-row>
                
@@ -842,7 +844,10 @@
                                 <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip>
                               </el-col>
                                <el-col style='text-align: center' :span='2'>
-                                 <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button>
+                                 <!-- <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button> -->
+                                 <el-tooltip content="Refresh Accounts settings" placement="top">
+                                   <el-button type="primary" @click="refreshaccounts()"><i class="fa fa-refresh"></i></el-button>
+                                 </el-tooltip>
                               </el-col>
                             </el-row>
                         </el-form>
