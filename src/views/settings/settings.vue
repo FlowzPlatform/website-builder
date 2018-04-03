@@ -204,6 +204,7 @@
                 this.exData = this.data6[card].online_payment[tabname][rowinx];
                 let oldData = _.cloneDeep(this.data6[card].online_payment[tabname][rowinx])
                 oldData = _.omit(oldData, ['_index', '_rowKey'])
+                console.log('oldData:',oldData)
                 this.$Modal.confirm({
                     title: 'Edit',
                     closable: true,

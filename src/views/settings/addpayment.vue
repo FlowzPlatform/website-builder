@@ -20,11 +20,23 @@
 							<Option value='paypal'>PayPal</Option>
 							</Select>
 						</FormItem>
-						<FormItem label="x_api_token" v-if="formValidate.gateway" prop='x_api_token'>
-							<Input v-model="formValidate.x_api_token" placeholder="Enter x_api_token"></Input>
+						
+						<FormItem label="Secret" v-if="formValidate.gateway=='stripe'" prop='x_api_token'>
+							<Input v-model="formValidate.x_api_token" placeholder="Enter secret"></Input>
 						</FormItem>
-						<FormItem label="x_api_login" v-if="formValidate.gateway == 'auth' || formValidate.gateway == 'paypal'"  prop='x_api_login'>
-							<Input v-model="formValidate.x_api_login" placeholder="Enter x_api_login"></Input>
+						<FormItem label="Api_Login_id" v-if="formValidate.gateway=='auth'" prop='x_api_token'>
+							<Input v-model="formValidate.x_api_token" placeholder="Enter Api_Login_id"></Input>
+						</FormItem>
+						<FormItem label="Api_Client_Id" v-if="formValidate.gateway=='paypal'" prop='x_api_token'>
+							<Input v-model="formValidate.x_api_token" placeholder="Enter Api_Client_Id"></Input>
+						</FormItem>
+
+
+						<FormItem label="Transaction_key" v-if="formValidate.gateway == 'auth' "  prop='x_api_login'>
+							<Input v-model="formValidate.x_api_login" placeholder="Enter Transaction_key"></Input>
+						</FormItem>
+						<FormItem label="Secret" v-if="formValidate.gateway == 'paypal'"  prop='x_api_login'>
+							<Input v-model="formValidate.x_api_login" placeholder="Enter Secret"></Input>
 						</FormItem>
 						<div style="text-align:center;">
 							<Button type="primary" @click="handleSubmit('formValidate')" :loading="loading">Submit</Button>
