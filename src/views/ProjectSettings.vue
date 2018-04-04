@@ -3872,7 +3872,7 @@ export default {
 
             // Open in new window
             if (process.env.NODE_ENV !== 'development') {
-              window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.ipAddress);
+              window.open('http://' + Cookies.get('userDetailId') + '-' + this.repoName + '.' + config.ipAddress);
             } else {
               window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
             }
@@ -3992,7 +3992,6 @@ export default {
         // this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
-        this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
         this.assetsImages = this.settings[1].projectSettings[1].AssetImages;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
@@ -4007,6 +4006,20 @@ export default {
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
         this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
+
+        
+
+        if(!(this.settings[1].projectSettings[1].CloudinaryDetails)){
+          this.cloudinaryDetails = {
+            "apiKey":  "" ,
+            "apiSecret":  "" ,
+            "cloudName":  "" ,
+            "uploadFolder":  "" ,
+            "uploadPreset":  ""
+          }
+        } else {
+          this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
+        }
 
       } else {
         console.log('Cannot get configurations!');
