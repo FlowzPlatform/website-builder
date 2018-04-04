@@ -251,6 +251,7 @@
 								},
 								onCancel: () => {
 									self.loading = false;
+									self.handleReset(name);
 								}
 							})
 						}
@@ -264,7 +265,7 @@
 				this.formValidate.gateway = '',
 				this.formValidate.x_api_login = '',
 				this.formValidate.x_api_token = ''
-				this.$refs[name].resetFields(name);
+				this.$refs[name].resetFields();
 				this.formValidate.configuration = 'all'
 			},
 			async settingData () {
