@@ -88,9 +88,10 @@
                 <!-- <el-form-item label="Favicon Logo">
                    <el-input v-model="faviconhref" placeholder="href" ></el-input>
                 </el-form-item> -->
-
+                <el-row>
+                <el-col :span='20'>
                 <el-form-item label="V Shop ID">
-                   <el-select v-model="form.vid" placeholder="Select vid">
+                   <el-select clearable v-model="form.vid" placeholder="Select vid">
                     <el-option
                       v-for="item in vshopcategory"
                       :key="item.id"
@@ -99,21 +100,19 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                 <el-form-item label="CRM Setting ID">
-                 <el-row><el-col :span='20'>
-                   <el-select v-model="form.crmid" placeholder="Select crm id">
-                    <el-option
-                      v-for="item in crmdata"
-                      :key="item.id"
-                      :label="item.configName"
-                      :value="item.id">
-                    </el-option>
-                  </el-select></el-col>
-                  <el-col :span='4'>
-                  <el-tooltip content="To change/add CRM Setting" placement="top">
-                  <el-button type="primary" icon='setting' @click='linktocrm()'>CRM Setting</el-button></el-tooltip></el-col>
-                  </el-row>
-                </el-form-item>
+                </el-col>
+                <el-col :span='2'>
+                  <el-tooltip content="Go View V-shop Settings" placement="top">
+                  <el-button type="primary" icon='setting' @click='linktovshop()'>V-Shop</el-button></el-tooltip>
+                </el-col>
+                <el-col style='text-align: center;' :span='2'>
+                  <!-- <el-button type="primary" icon="el-icon-refresh"></el-button> -->
+                   <el-tooltip content="Refresh V-shop settings" placement="top">
+                   <el-button type="primary" @click="refreshvshop()"><i class="fa fa-refresh"></i></el-button>
+                   </el-tooltip>
+                </el-col>
+                </el-row>
+               
 
                 <!-- <el-form-item label="Brand name">
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
@@ -230,21 +229,52 @@
       <!-- Image upload Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleAssetImages" class="card color-div toggleableDivHeader">Asset Images</a>
+              <a href="javascript:void(0)" id="toggleAssetImages" class="card color-div toggleableDivHeader">Image Library</a>
           </div>
       </div>
       <div id="toggleAssetImagesContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
           <div class="col-md-12">
+            <el-form label-position="left" label-width="200px" :model="cloudinaryDetails" :rules="rulesCloudinaryDetails" ref="cloudinaryDetails">
+              <el-form-item label="API Key" prop="apiKey">
+                <el-input v-model="cloudinaryDetails.apiKey"></el-input>
+              </el-form-item>
+              <!-- <el-form-item label="API Secret">
+                <el-input v-model="cloudinaryDetails.apiSecret"></el-input>
+              </el-form-item> -->
+              <el-form-item label="Cloud Name" prop="cloudName">
+                <el-input v-model="cloudinaryDetails.cloudName"></el-input>
+              </el-form-item>
+              <el-form-item label="Upload Preset" prop="uploadPreset">
+                <el-input v-model="cloudinaryDetails.uploadPreset"></el-input>
+              </el-form-item>
+              <!-- <el-form-item label="Upload Folder">
+                <el-input v-model="cloudinaryDetails.uploadFolder"></el-input>
+              </el-form-item> -->
+              <!-- <el-form-item label="Upload Sources">
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllSourcesChange">Check all</el-checkbox>
+                <div style="margin: 15px 0;"></div>
+                <el-checkbox-group v-model="checkedSources" @change="handleCheckedSourcesChange">
+                  <el-checkbox v-for="source in cloudinaryDetails.sources" :label="source" :key="source">{{source}}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item> -->
+            </el-form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
 
             <div class="row" style="margin-bottom: 15px; ">
               <div class="col-md-12">
-                <el-button icon="upload2" @click="uploadAssetImage()" :loading="uploadAssetImageLoader">Upload</el-button>
+                <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
               </div>
             </div>
 
             <div class="row">
               <div class="col-md-3" v-for="(n, index) in assetsImages">
+                <div class="view-icon">
+                  <a :href="n" target="_blank"><i class="fa fa-external-link"></i></a>
+                </div>
                 <div class="delete-icon">
                   <a href="javascript:void(0)" @click="deleteAssetImage(index)"><i class="fa fa-times"></i></a>
                 </div>
@@ -786,80 +816,51 @@
       <!-- Payment Block -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="togglePaymentgateway" class="card color-div toggleableDivHeader">Payment gateway</a>
+              <a href="javascript:void(0)" id="toggleAccounting" class="card color-div toggleableDivHeader">Accounting</a>
           </div>
       </div>
-      <div id="togglePaymentgatewayContent" class="toggleableDivHeaderContent" style="display: none;">
+      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none;" >
+       
           <div class="row">
               <div class="col-md-12">
                   <div class="row">
-                      <div class="col-md-4">
-                          <h3> Gateways: </h3>
+                      <div class="col-md-12">
+                         <el-form ref="form1" :model="form" label-width="120px">
+                             <el-row>
+                              <el-col :span='18'>
+                                <el-form-item label="Account Used:">
+                                 <el-select clearable v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
+                                  <el-option
+                                    v-for="item in crmdata"
+                                    :key="item.id"
+                                    :label="item.configName"
+                                    :value="item.id">
+                                  </el-option>
+                                </el-select>
+                                </el-form-item>
+                              </el-col>
+                              <el-col v-if="crmdata.length>-1" :span='4'>
+                                <el-tooltip content="Go View Accounting System" placement="top">
+                                <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip>
+                              </el-col>
+                               <el-col style='text-align: center' :span='2'>
+                                 <!-- <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button> -->
+                                 <el-tooltip content="Refresh Accounts settings" placement="top">
+                                   <el-button type="primary" @click="refreshaccounts()"><i class="fa fa-refresh"></i></el-button>
+                                 </el-tooltip>
+                              </el-col>
+                            </el-row>
+                        </el-form>
                       </div>
                   </div>
-                  <hr>
-                  <el-form ref="form" :model="form">
-
-                      <div>
-                          <el-form-item>
-                              <draggable v-model='paymentgateway' @start="drag=true" @end="drag=false">
-                                  <div style="margin-bottom: 25px" v-for='(n, index) in paymentgateway'>
-                                      <div class="row">
-                                          <div class="col-md-1" style="margin: 0; padding-left: 15px">
-                                              <el-checkbox v-model="n.checked"></el-checkbox>
-                                          </div>
-                                          <!-- name of gateway-->
-                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
-                                              <el-input type="text" placeholder="Name" v-model="n.name"></el-input>
-                                          </div>
-                                          <!-- gateway  -->
-                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
-                                              <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
-                                                  <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
-                                                  </el-option>
-                                              </el-select>
-                                          </div>
-                                          <!-- gateway description -->
-                                          <div class="col-md-5" style="margin: 0; padding: 0px">
-                                              <el-input type="textarea" placeholder="Description" v-model="n.description"></el-input>
-                                          </div>
-                                          <!-- Delete Variable -->
-                                          <div class="col-md-1">
-                                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletepaymentgateway(index)" icon="delete2"></el-button>
-                                          </div>
-                                          <div class="col-md-1">
-                                              <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                               <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                            </el-tooltip>
-
-                                          </div>
-                                      </div>
-                                      <!-- <div> -->
-                                      <div class="row">
-                                          <div class="col-md-4">
-                                              <h5> Fields: </h5>
-                                          </div>
-                                      </div>
-                                      <div class="row">
-                                          <div v-for='i,k in Paymentfields[index]'>
-                                              <el-form ref="form" label-width="120px">
-                                                  <el-form-item style="margin: 0; padding-left:5px" v-bind:label='Paymentfields[index][k]'>
-                                                      <el-input type='text' v-model='n.fields[k][i]'></el-input>
-                                                  </el-form-item>
-                                              </el-form>
-                                          </div>
-                                      </div>
-                                      <!-- </div> -->
-                                      <hr>
-                                  </div>
-                              </draggable>
-                          </el-form-item>
-                      </div>
-
-                      <!-- Create new variable -->
-                      <el-button type="primary" @click="addNewpaymentgateway">New Gateway</el-button>
-                  </el-form>
               </div>
+          </div>
+        <hr>
+          <!-- testing iviewui -->
+          <div class="row">
+          <div class="col-md-12">
+              <component :is="componentsID" v-on:addNewConfig="addNewConfig"></component>
+          </div>
           </div>
       </div>
       <!-- Payment Block -->
@@ -1052,7 +1053,10 @@ const config = require('../config');
 import fileSaver from 'file-saver';
 
 import draggable from 'vuedraggable';
-
+import settings from './settings/settings'
+import newpaymentsettings from './settings/Online-Payment'
+import addnewpaymentgatway from './settings/addpayment'
+// import newaccountsettings from './settings/new-settings'
 // ProjectName Validator
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
@@ -1100,6 +1104,8 @@ export default {
         crmid:''
       },
       commitsData: [],
+      configurationdata:[],
+      gatewaychecked:'',
       crmdata:[],
       faviconhName:'',
       fileList3: [],
@@ -1151,6 +1157,7 @@ export default {
       imageInputIsDisabled: false,
       uploadedVariableJsonData: '',
       layoutOptions: [],
+      componentsID:'settings',
 
       addPluginLoading: false,
       refreshPluginsLoading: false,
@@ -1190,7 +1197,7 @@ export default {
       customDomainName: '',
       userDetailId: '',
       ipAddress: config.ipAddress,
-      paymentgateway: [],
+      accountpaymentgateway: [],
       Paymentfields: [],
       Allgateway: [],
       currentSha: '',
@@ -1229,12 +1236,31 @@ export default {
         commitMessage: [
           { required: true, message: 'Please enter commit message.', trigger: 'blur' }
         ]
-      }
+      },
+
+      cloudinaryDetails: {},
+      rulesCloudinaryDetails: {
+          apiKey: [
+              { required: true, message: 'Enter Cloudinary API key', trigger: 'blur' }
+          ],
+          cloudName: [
+              { required: true, message: 'Enter Cloud Name', trigger: 'blur' }
+          ],
+          uploadPreset: [
+              { required: true, message: 'Enter Upload Preset', trigger: 'blur' }
+          ]
+      },
     }
   },
   components: {
     draggable,
-    vueJsonEditor
+    vueJsonEditor,
+    settings,
+    newpaymentsettings,
+    addnewpaymentgatway
+    // newprofileconfigure,
+    // newaccountsettings
+
   },
 
   async mounted () {
@@ -1281,8 +1307,8 @@ export default {
         $("#toggleMetaTagsContent").slideToggle("slow");
       });
 
-      $("#togglePaymentgateway").click(function() {
-        $("#togglePaymentgatewayContent").slideToggle("slow");
+      $("#toggleAccounting").click(function() {
+        $("#toggleAccountingContent").slideToggle("slow");
 
       });
 
@@ -1464,6 +1490,10 @@ export default {
   },
 
   methods: {
+    addNewConfig(value){
+      // console.log('hi');
+      this.componentsID = value;
+    },
     copyToClipboard(value){
       let elem = document.getElementById(value);
       var $temp = $("<input>");
@@ -1537,9 +1567,65 @@ export default {
       $('#text2').text('Upload Image');
       $('.valid').removeClass('correct');
     },
+    linktovshop(){
+      window.open('https://www.vshopdata.'+config.domainkey);
+    },
+    refreshvshop(){
 
+      // this.init();
+       axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
+        headers: {
+          'Authorization': Cookies.get('auth_token')
+        }
+      }).then(res=>{
+        
+         this.vshopcategory = res.data;
+         if(this.form.vid!=''){
+          let tempvid=this.form.vid
+          let checkindex=_.findIndex(this.vshopcategory,function(o){
+            return o.id == tempvid
+          })
+         if(checkindex==-1){
+          this.form.vid=''
+         }
+         }
+         
+
+      }).catch(err => { console.log(err); });
+    },
     linktocrm(){
-      window.open('https://crm.'+config.domainkey);
+      window.open('https://www.crm.'+config.domainkey);
+    },
+    refreshaccounts(){
+      console.log('refreshaccounts')
+      // this.init()
+      // var temp=this.componentsID;
+      axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId': Cookies.get('subscriptionId')}})
+      .then(res=>{
+        
+        this.crmdata=res.data.data
+        if(this.form.crmid!=''){
+          let tempcrmid=this.form.crmid
+          let checkindex=_.findIndex(this.crmdata,function(o){
+            return o.id == tempcrmid
+          })
+         if(checkindex==-1){
+          this.form.crmid=''
+         }
+         }
+
+        
+      })
+      .catch(err => { console.log(err);  });
+      this.componentsID=''
+      this.componentsID='settings'
+
+
+    },
+    changeconfiguration(){
+      for(let i=0;i<this.crmdata.length;i++){
+
+      }
     },
 
     setPrimaryRole(index){
@@ -1553,22 +1639,66 @@ export default {
       // this.isProjectDetailsJsonUpdated = true;
     },
 
-    uploadAssetImage() {
-      this.uploadAssetImageLoader = true;
-      var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
+     handleCheckAllSourcesChange(event) {
+      this.checkedSources = event.target.checked ? this.cloudinaryDetails.sources : [];
+      this.isIndeterminate = false;
+    },
 
-      fsClient.pick({
-        accept: 'image/*',
-        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"],
-        rejectOnCancel: true
-      }).then( (response) => {
-        this.uploadAssetImageLoader = false;
-        // declare this function to handle response
-        this.assetsImages.push(response.filesUploaded[0].url);
-        this.saveProjectSettings();
-      }).catch( (error) => {
-        console.log(error);
-        this.uploadAssetImageLoader = false;
+    handleCheckedSourcesChange(value){
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.cloudinaryDetails.sources.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.cloudinaryDetails.sources.length;
+    },
+
+    uploadAssetImage(formName) {
+
+      this.$refs[formName].validate(async (valid) => {
+        if(valid){
+          this.uploadAssetImageLoader = true;
+          // var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
+
+          // fsClient.pick({
+          //   accept: 'image/*',
+          //   fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"],
+          //   rejectOnCancel: true
+          // }).then( (response) => {
+          //   this.uploadAssetImageLoader = false;
+          //   // declare this function to handle response
+          //   this.assetsImages.push(response.filesUploaded[0].url);
+          //   this.saveProjectSettings();
+          // }).catch( (error) => {
+          //   console.log(error);
+          //   this.uploadAssetImageLoader = false;
+          // });
+
+          cloudinary.openUploadWidget({ 
+            cloud_name: this.cloudinaryDetails.cloudName, 
+            api_key: this.cloudinaryDetails.apiKey,
+            upload_preset: this.cloudinaryDetails.uploadPreset, 
+            folder: this.cloudinaryDetails.uploadFolder,
+            sources: ['local', 'camera', 'url', 'facebook', 'instagram']
+          }, (error, result) => { 
+            console.log(error, result);
+            if(error != null){
+
+              if(error.message == 'User closed widget'){
+
+              } else {
+                console.log('Image upload error: ', error);
+                this.$message({
+                  message: 'Upload image failed. Please try again.',
+                  type: 'error'
+                });  
+              }
+              
+              this.uploadAssetImageLoader = false;  
+            } else {
+              this.assetsImages.push(result[0].url);
+              this.uploadAssetImageLoader = false;  
+            }
+            
+          });
+        }
       });
 
     },
@@ -1689,9 +1819,9 @@ export default {
       this.localstyles.push(newVariable);
     },
 
-    addNewpaymentgateway(){
-      let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
-      this.paymentgateway.push(newVariable);
+    addNewAccountpaymentgateway(){
+      let newVariable = {name:'',gateway:'',fields:[]};
+      this.accountpaymentgateway.push(newVariable);
       this.Paymentfields.push([])
     },
 
@@ -1739,28 +1869,22 @@ export default {
       this.externallinksMeta.splice(deleteIndex, 1);
     },
 
-    deletepaymentgateway(deleteIndex) {
-      this.paymentgateway.splice(deleteIndex,1);
+    deleteAccountpaymentgateway(deleteIndex) {
+      this.accountpaymentgateway.splice(deleteIndex,1);
       this.Paymentfields.splice(deleteIndex,1);
     },
 
     gatewaychange(n,index){
-     this.paymentgateway[index].fields=[]
-
-     for(let i=0;i<this.Allgateway.length;i++){
-      if(this.Allgateway[i].name==n.gateway){
-
-        for(let j=0;j<this.Allgateway[i].keys.length;j++){
-          var temp={}
-        temp[this.Allgateway[i].keys[j]]=''
-        this.paymentgateway[index].fields.push(temp)
-        }
-        this.Paymentfields[index]=this.Allgateway[i].keys
+      this.accountpaymentgateway[index].fields=[]
+      var indexGateway=_.findIndex(this.Allgateway,function(o){
+        return o.name==n.gateway
+      })
+      for(let j=0;j<this.Allgateway[indexGateway].keys.length;j++){
+        var temp={}
+      temp[this.Allgateway[indexGateway].keys[j]]=''
+      this.accountpaymentgateway[index].fields.push(temp)
       }
-     }
-     var ter=this.paymentgateway[index].description
-     this.paymentgateway[index].description=' '
-     this.paymentgateway[index].description=ter
+      this.Paymentfields[index]=this.Allgateway[indexGateway].keys
     },
 
     async addNewPlugin(pluginFileData) {
@@ -2731,6 +2855,7 @@ export default {
         "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid, "esUser":esuser,"virtualShopName":virtualShopName},
         "CrmSettingId":this.form.crmid
       }, {
+        "CloudinaryDetails": this.cloudinaryDetails,
         "AssetImages": this.assetsImages,
         "GlobalVariables": this.globalVariables,
         "GlobalUrlVariables": this.urlVariables,
@@ -2743,7 +2868,7 @@ export default {
         "ProjectScripts": this.localscripts,
         "ProjectStyles": this.localstyles,
         "WebsiteRoles": this.websiteRoles,
-        "PaymentGateways": this.paymentgateway
+        "AccountPaymentGateways": this.accountpaymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
       let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
@@ -3867,6 +3992,7 @@ export default {
         // this.form.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
         this.globalVariables = this.settings[1].projectSettings[1].GlobalVariables;
         this.urlVariables = this.settings[1].projectSettings[1].GlobalUrlVariables;
+        this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
         this.assetsImages = this.settings[1].projectSettings[1].AssetImages;
         this.globalCssVariables = this.settings[1].projectSettings[1].GlobalCssVariables;
         this.ecommerceSettings = this.settings[1].projectSettings[1].EcommerceSettings;
@@ -3876,13 +4002,14 @@ export default {
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
-        this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
+        this.accountpaymentgateway=this.settings[1].projectSettings[1].AccountPaymentGateways;
         // this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
         this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
+
       } else {
-        //console.log('Cannot get configurations!');
+        console.log('Cannot get configurations!');
       }
 
       if(this.form.brandLogoName==''){
@@ -3898,10 +4025,10 @@ export default {
 
       // console.log('URL: ', this.projectPublicUrl);
 
-      for(let i=0;i<this.paymentgateway.length;i++){
+      for(let i=0;i<this.accountpaymentgateway.length;i++){
         var temp=[]
-        for(let j=0;j<this.paymentgateway[i].fields.length;j++){
-          temp.push(Object.keys(this.paymentgateway[i].fields[j])[0])
+        for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
+          temp.push(Object.keys(this.accountpaymentgateway[i].fields[j])[0])
         }
         this.Paymentfields[i]=temp
       }
@@ -3969,7 +4096,7 @@ export default {
         this.fullscreenLoading = false;
       });
 
-       await axios.get(config.vshopApi, {
+       await axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }
@@ -3999,10 +4126,21 @@ export default {
       }).catch(err => { console.log(err); });
       
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-     await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      // console.log('@@@@@@@@@@@@@@@',localStorage.getItem('current_sub_id'))
+     await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId': Cookies.get('subscriptionId')}})
       .then(res=>{
         
         this.crmdata=res.data.data
+        if(this.form.crmid!=''){
+          let tempcrmid=this.form.crmid
+          let checkindex=_.findIndex(this.crmdata,function(o){
+            return o.id == tempcrmid
+          })
+         if(checkindex==-1){
+          this.form.crmid=''
+         }
+         }
+
         
       })
       .catch(err => { console.log(err);  });
@@ -4249,6 +4387,10 @@ export default {
       display: none;
   }
 
+  .box-card {
+    width: 480px;
+    margin:10px;
+  }
 
 
 
@@ -4320,6 +4462,26 @@ export default {
   .asset-image{
     height: 100px;
     width: 100%;
+  }
+
+  .view-icon{
+    text-align: right;
+    position: absolute;
+    top: -5px;
+    right: 33px;
+    background-color: #FFC900;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+  }
+
+  .view-icon a i{
+    margin-left: -15px;
+    top: 5px;
+    position: absolute;
+    color: #fff;
+    font-size: 12px;
   }
 
   .delete-icon{

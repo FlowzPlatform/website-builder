@@ -216,13 +216,15 @@ export default {
             $('.success').fadeIn();  
 
             // create user folder
-            await axios.post(config.baseURL+'/flows-dir-listing' , {
-              foldername :'/var/www/html/websites/'+ this.userDetailId,
-              type : 'folder'
-            })
-            .then((res) => {
-              this.$router.push('/editor');
-            });
+            // await axios.post(config.baseURL+'/flows-dir-listing' , {
+            //   foldername :'/var/www/html/websites/'+ this.userDetailId,
+            //   type : 'folder'
+            // })
+            // .then((res) => {
+            //   this.$router.push('/editor');
+            // });
+
+            window.location = '/editor';
             
           })
           .catch((e) => {

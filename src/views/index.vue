@@ -319,7 +319,7 @@
   // Footer Bar
   import SiteFooter from './footer'
 
-  // let myInterval;
+  let saveInterval = Cookies.get('saveInterval', {domain: location} );
 
   // New File creation validator
   let checkFileName = (rule, value, callback) => {
@@ -499,7 +499,7 @@
           localStorage.setItem('userDetailId', this.userDetailId);
           localStorage.setItem('email', res.data.data.email);
           
-          await axios.post(config.baseURL+'/flows-dir-listing' , {
+          await axios.post(config.baseURL+'/save-menu' , {
             foldername :'/var/www/html/websites/'+ this.userDetailId,
             type : 'folder'
           })
@@ -648,7 +648,7 @@
 
           
       });
-      let sub_id = []
+      let sub_id = [];
         await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
         .then(response => {
           let obj_val = Object.values(response.data.data.package)
@@ -656,8 +656,19 @@
           for (let index = 0; index < obj_val.length; index++) {
             sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
           }
-          this.options = sub_id
-          this.value  = sub_id[0].value;
+          this.options = sub_id;
+
+          if(!(Cookies.get('subscriptionId')) || Cookies.get('subscriptionId') == null || Cookies.get('subscriptionId') == undefined || Cookies.get('subscriptionId') == ""){
+            this.value = sub_id[0].value;
+          } else {
+            this.value = Cookies.get('subscriptionId')
+          }
+          // this.value  = sub_id[0].value;
+
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.set('subscriptionId', this.value, {domain: location});
+
           localStorage.setItem("current_sub_id",this.value)
           // if (localStorage.getItem('current_sub_id') != null || localStorage.getItem('current_sub_id') != undefined) {
           //   this.value = localStorage.getItem('current_sub_id')
@@ -714,11 +725,16 @@
 
         axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(async response => {
-            let location = psl.parse(window.location.hostname);
-            location = location.domain === null ? location.input : location.domain;
+            // let location = psl.parse(window.location.hostname);
+            // location = location.domain === null ? location.input : location.domain;
+
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.set('subscriptionId', this.value, {domain: location});
+
             localStorage.setItem("current_sub_id", this.value)
             // Cookies.set('userDetailId', response.data.userId, {domain: location});
-            // Cookies.set('subscriptionId', response.data.sub_id, {domain: location});
+            Cookies.set('subscriptionId', this.value, {domain: location});
             //axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
             //axios.defaults.headers.common['subscriptionId'] =  this.value;
             await this.getData();
@@ -908,9 +924,11 @@
           this.fullscreenLoading = false;
           this.$session.remove('username');
           localStorage.removeItem('current_sub_id');
+
           let location = psl.parse(window.location.hostname)
           location = location.domain === null ? location.input : location.domain
-                        
+          
+          Cookies.remove('subscriptionId' ,{domain: location});              
           Cookies.remove('auth_token' ,{domain: location});
           Cookies.remove('email' ,{domain: location});
           Cookies.remove('userDetailId' ,{domain: location}); 
@@ -955,7 +973,7 @@
         // If PageSettings Clicked
         if (this.isPageEditing) {
 
-          // clearInterval(myInterval);
+          clearInterval(saveInterval);
 
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
           //     this.saveFile('getFileContent')
@@ -1019,7 +1037,7 @@
         }
         // If ProjectSettings is clicked 
         else if (this.isProjectEditing) {
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
           //     this.saveFile('getFileContent')
           //   }
@@ -1075,7 +1093,7 @@
         }
         // If Clicked in ProjectName 
         else if (this.isProjectStats) {
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
           this.isProjectEditing = false;
           this.isProjectStats = false;
           this.$store.state.fileUrl = data.path;
@@ -1086,7 +1104,7 @@
         }
         // If Clicked in Partials Folder 
         else if ((_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
           //console.log('Data Path: ', data.path);
 
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
@@ -1102,7 +1120,7 @@
         }
         // If Clicked in Layouts Folder 
         else if (_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
 
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
           //     this.saveFile('getFileContent')
@@ -1118,7 +1136,7 @@
         // If Clicked in Pages Folder 
         else if (_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
 
-          // clearInterval(myInterval);
+          // clearInterval(saveInterval);
           //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
           //     this.saveFile('getFileContent')        
           //   }
@@ -1314,7 +1332,7 @@
     //         //       newContent = this.$store.state.content;
     //         // }
     //       } else {
-    //         // clearInterval(myInterval);
+    //         // clearInterval(saveInterval);
     //       }
     //     }
     //   },
@@ -1528,14 +1546,20 @@
          // this.editableTabs =  selectedPagePositionFirstArray ;
          // this.editableTabs.reverse();
          // this.editableTabsValue = newTabName;
-         // var self = this
        // if(this.editableTabs[0].title){
-       //   // clearInterval(myInterval);
+       //   // clearInterval(saveInterval);
        //   var title = this.editableTabs[0].title;
-       //   myInterval = setInterval(function(){
+       //   saveInterval = setInterval(function(){
        //     self.saveFile('void')
        //    }, 3000);
        // }
+
+        // var self = this;
+        // clearInterval(saveInterval);
+       
+        // saveInterval = setInterval(function(){
+        //  self.saveFile('void')
+        // }, saveInterval);
 
 
 
@@ -1703,6 +1727,7 @@
           this.fullscreenLoading = false;
           this.$session.remove('username');
           localStorage.removeItem('current_sub_id');
+          Cookies.remove('subscriptionId' ,{domain: location});
           let location = psl.parse(window.location.hostname)
           location = location.domain === null ? location.input : location.domain
 
@@ -2047,6 +2072,7 @@
             this.fullscreenLoading = false;
             this.$session.remove('username');
             localStorage.removeItem('current_sub_id');
+            Cookies.remove('subscriptionId' ,{domain: location});
             let location = psl.parse(window.location.hostname)
             location = location.domain === null ? location.input : location.domain
                           
@@ -2261,6 +2287,7 @@
                    this.$refs[projectName].resetFields();
                   this.$session.remove('username');
                   localStorage.removeItem('current_sub_id');
+                  Cookies.remove('subscriptionId' ,{domain: location});
                   let location = psl.parse(window.location.hostname)
                   location = location.domain === null ? location.input : location.domain
 
@@ -2854,6 +2881,13 @@
                                         "ProjectVId":{"vid":'',"userId":'',"password":'',"esUser":'',"virtualShopName":''},
                                         "CrmSettingId":''
                                       }, {
+                                        "CloudinaryDetails": {
+                                          apiKey: '',
+                                          apiSecret: '',
+                                          cloudName: '',
+                                          uploadFolder: '',
+                                          uploadPreset: ''
+                                        },
                                         "AssetImages": [],
                                         "GlobalVariables": [],
                                         "GlobalUrlVariables": [],
@@ -2875,7 +2909,7 @@
                                         "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
-                                        "PaymentGateways":[],
+                                        "AccountPaymentGateways":[],
                                         "WebsiteRoles": [{
                                           "roleName": "guest"
                                         }, {
@@ -3841,6 +3875,7 @@
           this.fullscreenLoading = false;
           this.$session.remove('username');
           localStorage.removeItem('current_sub_id');
+          Cookies.remove('subscriptionId' ,{domain: location});
           let location = psl.parse(window.location.hostname)
           location = location.domain === null ? location.input : location.domain
 
@@ -4618,6 +4653,7 @@
               this.fullscreenLoading = false;
               this.$session.remove('username');
               localStorage.removeItem('current_sub_id');
+              Cookies.remove('subscriptionId' ,{domain: location});
               let location = psl.parse(window.location.hostname)
               location = location.domain === null ? location.input : location.domain
 
