@@ -10,8 +10,10 @@
                         <div style="padding: 5px;">
                             <Card style="padding:10px;min-height: 300px">
                                 <p slot="title"> {{item.configName}}</p>
-
-                                <Tooltip placement="top" slot="extra" content="Add More Payment Gateways" style="padding-left:3px;">
+                                <Tooltip placement="top" slot="extra" content="Toggle active / inactive" style="padding-right:9px;">
+                                  <i-switch v-model="item.isActive" :disabled="disabled" @on-change="buttonClicked(item)"></i-switch>
+                              </Tooltip>
+                                <Tooltip placement="top" slot="extra" content="Add More Payment Gateways" style="padding-right:9px;">
                                      <Button class="ButtonGroup" @click="editconfigure(inx)"   type="ghost" icon="plus"></Button>
                                 </Tooltip>
                                 <ButtonGroup slot="extra" v-if="item.domain != 'custom'">
