@@ -265,6 +265,7 @@
   import socketio from 'feathers-socketio/client';
   import io from 'socket.io-client';
 
+  const uuidv4 = require('uuid/v4');
 
   var daex = require('json-daex');
 
@@ -2144,6 +2145,7 @@
 
                           // console.log("'subscriptionId': this.value,'authorization': token",  this.value, token)
                           axios.post(config.baseURL + '/project-configuration', {
+                                  id: uuidv4().replace(/\-/g, ''),
                                   userEmail: Cookies.get('email'),
                                   websiteName: this.formAddProjectFolder.projectName,
                                   userId: userid,
@@ -4839,23 +4841,41 @@
                   return o.value == layoutName;
                 });
 
-                // Remove item from array
-                this.globalConfigData[2].layoutOptions[0].Layout.splice(indexOfLayoutName, 1);
+                let isLayoutUsedInPage = false;
+                let pageUsingLayout = [];
 
-                axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
-                  headers: {
-                    'subscriptionId': this.value,
-                    'authorization': Cookies.get('auth_token')
+                this.globalConfigData[1].pageSettings.forEach((i, settingIndex) => {
+                  if(i.PageLayout == layoutName){
+                    isLayoutUsedInPage = true;
+                    pageUsingLayout.push(this.globalConfigData[1].pageSettings[settingIndex].PageName);
                   }
                 })
-                .then(async (res) => {
-                  this.componentId = 'Dashboard';
-                  this.isHomePage = true;
-                  this.currentFile = null;
-                  this.getData();
-                }).catch((dismiss) => {
-                  console.log('error', dismiss)
-                })
+
+                if(isLayoutUsedInPage == true){
+                  this.$alert('You cannot delete this layout. It is used in pages "' + pageUsingLayout + '. Please change the layout in page and then delete.', 'Cannot delete', {
+                    confirmButtonText: 'OK',
+                  });
+                } else {
+                  // Remove item from array
+                  this.globalConfigData[2].layoutOptions[0].Layout.splice(indexOfLayoutName, 1);
+
+                  axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                    headers: {
+                      'subscriptionId': this.value,
+                      'authorization': Cookies.get('auth_token')
+                    }
+                  })
+                  .then(async (res) => {
+                    this.componentId = 'Dashboard';
+                    this.isHomePage = true;
+                    this.currentFile = null;
+                    this.getData();
+                  }).catch((dismiss) => {
+                    console.log('error', dismiss)
+                  })
+                }
+
+                
 
                 // let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
                 //      return o.title == last_element;
@@ -5310,7 +5330,7 @@
         projectName = projectName[6];
 
         if(process.env.NODE_ENV !== 'development'){
-          window.open('http://' + Cookies.get('userDetailId') + '.' + projectName + '.'+ config.ipAddress);
+          window.open('http://' + Cookies.get('userDetailId') + '-' + projectName + '.'+ config.ipAddress);
         } else {
           window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + projectName + '/public/');
         }
@@ -5399,6 +5419,7 @@
            this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
           await axios.post(config.baseURL + '/project-configuration', {
+            id: uuidv4().replace(/\-/g, ''),
             userEmail: Cookies.get('email'),
             websiteName: clonedWebsiteTempName,
             configData: sourceConfig,
