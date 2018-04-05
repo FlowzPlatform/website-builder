@@ -56,6 +56,21 @@ export default {
     bdata: Object
   },
   data () {
+    const validateBtname = async(rule, value, callback) => {
+      let userId = Cookies.get('userDetailId')
+      if (value !== '' && this.formItem.website_id !== '') {
+        let resp = await (axios.get(bannertypeUrl + '?userId=' + userId +'&website_id=' + this.formItem.website_id + '&bt_name=' + value).then(res => {
+          return res.data.data
+        }).catch(err => {
+          return []
+        }))
+        if (resp.length > 0) {
+          callback(new Error('Banner Type Name already Exist in Selected Website. Please try another.'))
+        } else {
+          callback();
+        }
+      }
+    };
     return {
       formItem: {
           website_id: '',
@@ -69,7 +84,8 @@ export default {
           { required: true, message: 'Please select the Website', trigger: 'change' }
         ],
         bt_name: [
-          { required: true, message: 'Please fill in the Banner Type Name', trigger: 'blur' }
+          { required: true, message: 'Please fill in the Banner Type Name', trigger: 'blur' },
+          { validator: validateBtname, trigger: 'blur' }
         ]
       },
       webOptions: []
@@ -109,14 +125,6 @@ export default {
     }
   },
   mounted () {
-    // console.log('this.bdata', this.bdata)
-    // if (this.$route.params.id !== undefined) {
-    //   axios.get(bannertypeUrl + '/' + this.$route.params.id).then(res => {
-    //     this.formItem = res
-    //   }).catch(err => {
-    //     console.log('Error', err)
-    //   }) 
-    // }
     let userId = Cookies.get('userDetailId')
     if (userId !== '' && userId !== undefined) {
       this.$Spin.show();
