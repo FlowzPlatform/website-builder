@@ -3872,7 +3872,7 @@ export default {
 
             // Open in new window
             if (process.env.NODE_ENV !== 'development') {
-              window.open('http://' + Cookies.get('userDetailId') + '-' + this.repoName + '.' + config.ipAddress);
+              window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.ipAddress);
             } else {
               window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
             }
