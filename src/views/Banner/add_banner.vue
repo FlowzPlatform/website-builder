@@ -255,8 +255,9 @@ export default {
     }
   },
   mounted () {
-    axios.get(bannertypeUrl).then(res=> {
-      for(let item of res.data.data) {
+    let userId = Cookies.get('userDetailId')
+    axios.get(bannertypeUrl + '?userId=' + userId + '&status=true&$paginate=false').then(res=> {
+      for(let item of res.data) {
         this.bannertypes.push({
           label: item.bt_name,
           value: item.id
