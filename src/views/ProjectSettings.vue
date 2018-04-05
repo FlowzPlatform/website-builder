@@ -177,11 +177,11 @@
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                 </div>
-                <!-- <div class="col-md-4">
+                <div class="col-md-4">
                   <img src="http://placehold.it/350x150?text=Template%202" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                 </div>
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                   <img src="http://placehold.it/350x150?text=Template%203" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                 </div> -->
