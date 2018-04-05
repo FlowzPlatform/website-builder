@@ -4037,7 +4037,7 @@ export default {
 
 
       // console.log('URL: ', this.projectPublicUrl);
-      if(this.accountpaymentgateway.length>0){
+      if(this.accountpaymentgateway != undefined && this.accountpaymentgateway.length>0){
       for(let i=0;i<this.accountpaymentgateway.length;i++){
         var temp=[]
         for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
