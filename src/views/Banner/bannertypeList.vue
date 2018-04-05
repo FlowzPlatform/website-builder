@@ -30,7 +30,9 @@
     </Row>
     <Row >
       <div style="float: right;padding-top: 10px;">
-        <Page :total="btdata.total" :current="cpage" show-sizer show-total @on-change="pageChange" @on-page-size-change="psizeChange"></Page>
+        <Page v-if="btdata.total > 0" :total="btdata.total" :current="cpage" show-sizer show-total @on-change="pageChange" @on-page-size-change="psizeChange"></Page>
+        <div v-else-if="bdata.total === 1">Total {{bdata.total}} item</div>
+        <div v-else>Total {{bdata.total}} items</div>
       </div>
    </Row>
   </div>
