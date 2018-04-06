@@ -124,8 +124,10 @@
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label>
                     <br>
-                    <span><b>Current file:</b> {{form.brandLogoName}}</span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
-
+                    <span><b>Current file:</b> {{form.brandLogoName}}</span>
+                    <el-tooltip  v-if='form.brandLogoName!="!!!No file uploaded!!!"' content="To Remove current file" placement="top">
+                    <el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button>
+                    </el-tooltip>
                     <input type="file" name="" id="upload-validation">
                     <span class="dis">( .png/ico only max size upto 70KB)</span>
 
