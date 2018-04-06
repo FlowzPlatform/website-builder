@@ -577,7 +577,7 @@
       const app = feathers().configure(socketio(io(socket)))
       
       app.service("flows-dir-listing").on("created", (response) => {
-        console.log(response);
+        //console.log(response);
         if(response.socketListen) {
             response.path = response.path.replace(/\//g, "\\")
             var s = response.path.replace(this.rootpath, '').split('\\');
