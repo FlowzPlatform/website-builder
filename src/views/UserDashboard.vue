@@ -221,6 +221,46 @@
                         </a>
                     </li>
                     <li>
+                        <a href="#" class="done" @click="bExpand = !bExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Banners</span>
+                        </a>
+                    </li>
+                    <li v-if="bExpand">
+                        <a href="#" class="" @click='goToBanner("bt_add")'>
+                            <i class="fa fa-plus">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Banner Type</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("bt_list")'>
+                        <a href="#" class="">
+                            <i class="fa fa-list">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List BannerType</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("b_add")'>
+                        <a href="#" class="">
+                            <i class="fa fa-plus">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Banner</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("b_list")'>
+                        <a href="#" class="">
+                            <i class="fa fa-list">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Banners</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
                                 <span class="icon-bg hh-bg-violet"></span>
@@ -238,7 +278,7 @@
                     
                     <div class="row">
                         <div class="col-md-12">
-                            <component :is="componentId" ref="contentComponent"></component>
+                            <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner"></component>
                         </div>
                         
                     </div>
@@ -263,6 +303,12 @@ import HomePage from './Dashboard';
 import UserSettings from './user-settings';
 // import DashboardVue from './Dashboard.vue';
 
+// Banners Templates
+import AddBannerType from './Banner/add_bannertype';
+import AddBanner from './Banner/add_banner';
+import BannerTypeList from './Banner/bannertypeList';
+import BannerList from './Banner/bannersList';
+
 export default {
   name: 'UserDashboard',
   props: {
@@ -272,15 +318,44 @@ export default {
   },
   data () {
     return {
-        data: 'data',
+      data: 'data',
+      bExpand: false,
       componentId: '',
-      userEmailId: ''
+      userEmailId: '',
+      rowdata: {}
     }
   },
   component: {
   },
   methods: {
-     goToEditor() {
+    EditBanner (item) {
+        // console.log(item)
+        this.rowdata = item
+        if (item.type === 'bannertype') {
+          this.componentId = AddBannerType
+        } else if (item.type == 'banner') {
+          this.componentId = AddBanner
+        } else if (item.type == 'bannertypelist') {
+          this.componentId = BannerTypeList
+        } else if (item.type == 'bannerlist') {
+          this.componentId = BannerList
+        } else {
+          this.rowdata = {}
+        }
+    },
+    goToBanner (name) {
+      this.rowdata = {}
+        if (name === 'bt_add') {
+            this.componentId = AddBannerType;
+        } else if (name === 'b_add') {
+            this.componentId = AddBanner;
+        } else if (name === 'bt_list') {
+            this.componentId = BannerTypeList;
+        } else if (name === 'b_list') {
+            this.componentId = BannerList;
+        } else {}
+    },
+    goToEditor() {
       // this.$router.push('/editor');
       window.location = '/editor';
     },
@@ -335,13 +410,13 @@ export default {
             }
         });
 
-        $(document).on("click", function (e) {
-            e.preventDefault();
-            var $item = $(".hh-dropmenu-item");
-            if ($item.hasClass("active")) {
-                $item.removeClass("active");
-            }
-        });
+        // $(document).on("click", function (e) {
+        //     // e.preventDefault();
+        //     var $item = $(".hh-dropmenu-item");
+        //     if ($item.hasClass("active")) {
+        //         $item.removeClass("active");
+        //     }
+        // });
 
         $('.hh-chat-body').slimScroll({
             height: '450px',
@@ -359,12 +434,12 @@ export default {
             $(".hh-body-wrapper").toggleClass("hh-nav-min");
         });
 
-        $("li.hh-dropdown > a.hh-menu-item").on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $(".hh-dropmenu-item").removeClass("active");
-            $(this).next(".hh-dropmenu-item").toggleClass("active");
-        });
+        // $("li.hh-dropdown > a.hh-menu-item").on('click', function (e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //     $(".hh-dropmenu-item").removeClass("active");
+        //     $(this).next(".hh-dropmenu-item").toggleClass("active");
+        // });
 
         $(".fa-chevron-down").on("click", function () {
             var $ele = $(this).parents('.panel-heading');

@@ -124,8 +124,10 @@
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label>
                     <br>
-                    <span><b>Current file:</b> {{form.brandLogoName}}</span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
-
+                    <span><b>Current file:</b> {{form.brandLogoName}}</span>
+                    <el-tooltip  v-if='form.brandLogoName!="!!!No file uploaded!!!"' content="To Remove current file" placement="top">
+                    <el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button>
+                    </el-tooltip>
                     <input type="file" name="" id="upload-validation">
                     <span class="dis">( .png/ico only max size upto 70KB)</span>
 
@@ -177,11 +179,11 @@
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                 </div>
-                <!-- <div class="col-md-4">
+                <div class="col-md-4">
                   <img src="http://placehold.it/350x150?text=Template%202" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                 </div>
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                   <img src="http://placehold.it/350x150?text=Template%203" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                 </div> -->
@@ -3872,7 +3874,7 @@ export default {
 
             // Open in new window
             if (process.env.NODE_ENV !== 'development') {
-              window.open('http://' + Cookies.get('userDetailId') + '-' + this.repoName + '.' + config.ipAddress);
+              window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.ipAddress);
             } else {
               window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
             }
@@ -4037,13 +4039,14 @@ export default {
 
 
       // console.log('URL: ', this.projectPublicUrl);
-
+      if(this.accountpaymentgateway != undefined && this.accountpaymentgateway.length>0){
       for(let i=0;i<this.accountpaymentgateway.length;i++){
         var temp=[]
         for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
           temp.push(Object.keys(this.accountpaymentgateway[i].fields[j])[0])
         }
         this.Paymentfields[i]=temp
+      }
       }
 
       // replace all image tag source with index as name attribute to get the image file preview

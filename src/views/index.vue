@@ -5336,7 +5336,7 @@
         projectName = projectName[6];
 
         if(process.env.NODE_ENV !== 'development'){
-          window.open('http://' + Cookies.get('userDetailId') + '-' + projectName + '.'+ config.ipAddress);
+          window.open('http://' + Cookies.get('userDetailId') + '.' + projectName + '.'+ config.ipAddress);
         } else {
           window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + projectName + '/public/');
         }
