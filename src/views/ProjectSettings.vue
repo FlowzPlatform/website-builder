@@ -4171,6 +4171,17 @@ export default {
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
         this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
+        if(!(this.settings[1].projectSettings[1].CloudinaryDetails)){
+          this.cloudinaryDetails = {
+            "apiKey":  "" ,
+            "apiSecret":  "" ,
+            "cloudName":  "" ,
+            "uploadFolder":  "" ,
+            "uploadPreset":  ""
+          }
+        } else {
+          this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
+        }
 
         
 
