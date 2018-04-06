@@ -575,32 +575,36 @@
       // }
       
       const app = feathers().configure(socketio(io(socket)))
+      
       app.service("flows-dir-listing").on("created", (response) => {
-          response.path = response.path.replace(/\//g, "\\")
-          var s = response.path.replace(this.rootpath, '').split('\\');
+        console.log(response);
+        if(response.socketListen) {
+            response.path = response.path.replace(/\//g, "\\")
+            var s = response.path.replace(this.rootpath, '').split('\\');
 
-          if(s[5] == Cookies.get('userDetailId')){
-            let objCopy = self.directoryTree
-            let evalStr = 'self.directoryTree'
-            let $eval = eval(evalStr)
-            for (var i = 0; i < s.length; i++) {
-                let inx = _.findIndex($eval, function(d) {
-                    return d.name == s[i]
-                })
-                if (inx >= 0 && $eval[inx]["children"] != undefined) {
-                    evalStr += '[' + inx + ']["children"]'
-                    $eval = eval(evalStr)
-                }
+            if(s[5] == Cookies.get('userDetailId')){
+              let objCopy = self.directoryTree
+              let evalStr = 'self.directoryTree'
+              let $eval = eval(evalStr)
+              for (var i = 0; i < s.length; i++) {
+                  let inx = _.findIndex($eval, function(d) {
+                      return d.name == s[i]
+                  })
+                  if (inx >= 0 && $eval[inx]["children"] != undefined) {
+                      evalStr += '[' + inx + ']["children"]'
+                      $eval = eval(evalStr)
+                  }
+              }
+              let inx = _.findIndex($eval, function(d) {
+                  return d.name == response.name
+              })
+              if (inx < 0) {
+                  $eval.push(response)
+              }
             }
-            let inx = _.findIndex($eval, function(d) {
-                return d.name == response.name
-            })
-            if (inx < 0) {
-                $eval.push(response)
-            }
-          }
 
           // this.getData();
+          }
           
       })
       app.service("flows-dir-listing").on("removed", (response) => {
@@ -1930,6 +1934,7 @@
                     })
                 } else if (newfilename.search('/Pages') != -1) {
                   this.$store.state.updateStats = Math.random();
+                  console.log('file new')
                   // this.$store.state.updateStats = 'PageUpdate';
                   return axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: newfilename + '.html',
@@ -1937,6 +1942,7 @@
                       type: 'file'
                     })
                     .then((res) => {
+
 
 
                       this.newFileDialog = false
