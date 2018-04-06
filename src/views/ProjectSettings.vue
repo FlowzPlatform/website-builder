@@ -1069,7 +1069,7 @@ let checkProjectName = (rule, value, callback) => {
         return callback();
     }
 }
-
+  var daex = require('json-daex');
 // ProjectName Validator
 let checkBranchName = (rule, value, callback) => {
     if (!value) {
@@ -2631,7 +2631,170 @@ export default {
         this.saveConfigFile(this.repoName, configData);
         // }
       }
+      for (let p = 0; p < Object.keys(configData[2].layoutOptions[0]).length; p++) {
+          if (Object.keys(configData[2].layoutOptions[0])[p] == ('Layout')) {
+              for (let y = 0; y < configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[p]].length; y++) {
+                  var namelayout = configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[p]][y].value
+                  // console.log('namelayout:', namelayout)
+                  if (namelayout != 'Blank') {
+                      var content = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Layout/' + namelayout + '.layout').catch(err => {
+                          console.log(err);
+                          this.fullscreenLoading = false
+                      });
+                      content = content.data
+                      // console.log('content', content)
+                      var result = (getFromBetween.get(content, "{{>", "}}"));
+                      var changeresult = JSON.parse(JSON.stringify(result))
+                      // console.log("changeresult:",changeresult)
 
+                      for (let s = 0; s < changeresult.length; s++) {
+                          content = content.replace(changeresult[s], changeresult[s].replace(/&nbsp;/g, '').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g, "").replace(/\s*=\s*/g, '='))
+                      }
+                      await axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename: this.folderUrl + '/Layout/' + namelayout + '.layout',
+                          text: content,
+                          type: 'file'
+                      })
+                      var result = (getFromBetween.get(content, "{{>", "}}"));
+
+                      var DefaultParams = [];
+                      if (result.length > 0) {
+                          var resultParam = result
+                          for (let i = 0; i < resultParam.length; i++) {
+                            // console.log(i)
+                              var temp;
+                              temp = resultParam[i].trim()
+                              result[i] = result[i].trim()
+                              temp = temp.split(' ')
+                              //// console.log('temp:',temp)
+                              for (let j = 0; j < temp.length; j++) {
+                                  temp[j] = temp[j].trim();
+                                  // console.log('temp',temp[j])
+                                  if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+
+                                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'") > -1) {
+                                          result[i] = temp[0];
+                                          if (temp[j]) {
+                                              let x = temp[j]
+                                              x = temp[j].split("'")[1] + '.partial';
+                                              let obj = {}
+                                              obj[temp[0]] = x
+                                              DefaultParams.push(obj)
+                                              break;
+                                          }
+                                      }
+                                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"') > -1) {
+                                          result[i] = temp[0];
+                                          if (temp[j]) {
+                                              let x = temp[j]
+                                              x = temp[j].split('"')[1] + '.partial';
+                                              let obj = {}
+                                              obj[temp[0]] = x
+                                              DefaultParams.push(obj)
+                                              break;
+                                          }
+                                      }
+                                  } else {
+                                      // console.log('error while finding id in layout');
+                                  }
+                              }
+                          }
+
+
+                          //here we are adding new partial added inside layout to all pages who uses this following layout.
+                          // console.log('DefaultParams',DefaultParams)
+                          for (let i = 0; i < result.length; i++) {
+                            // console.log('result',result[i])
+                              let checktvalue = false;
+                              for (let k = 0; k < DefaultParams.length; k++) {
+                                // console.log('DefaultParams',DefaultParams[k])
+                                  if (result[i] == Object.keys(DefaultParams[k])[0]) {
+                                      for (let j = 0; j < configData[1].pageSettings.length; j++) {
+                                          if (configData[1].pageSettings[j].PageLayout == name) {
+                                              let checkdefaultvalue = false;
+                                              for (let x = 0; x < configData[1].pageSettings[j].partials.length; x++) {
+                                                  if (Object.keys(configData[1].pageSettings[j].partials[x])[0] == result[i]) {
+
+                                                      var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
+                                                      defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
+                                                      configData[1].pageSettings[j].partials[x] = defaulttemp
+                                                      checkdefaultvalue = true;
+                                                  }
+                                              }
+                                              if (checkdefaultvalue != true) {
+                                                  var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
+                                                  defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
+                                                  //// console.log('push for DefaultParams:')
+                                                  configData[1].pageSettings[j].partials.push(defaulttemp)
+                                              }
+                                          }
+                                      }
+                                      checktvalue = true
+                                  }
+                              }
+                              if (checktvalue != true) {
+                                  // console.log('!true')
+                                  for (let j = 0; j < configData[1].pageSettings.length; j++) {
+                                      if (configData[1].pageSettings[j].PageLayout == namelayout) {
+                                          let doublecheckvalue = false
+                                          for (let x = 0; x < configData[1].pageSettings[j].partials.length; x++) {
+                                              if (Object.keys(configData[1].pageSettings[j].partials[x])[0] == result[i]) {
+                                                  var defaulttemp = {}
+                                                  defaulttemp[result[i]] = 'default'
+                                                  doublecheckvalue = true
+                                                  configData[1].pageSettings[j].partials[x] = defaulttemp
+                                              }
+                                          }
+                                          if (doublecheckvalue != true) {
+                                              var defaulttemp = {}
+                                              defaulttemp[result[i]] = 'default'
+                                              configData[1].pageSettings[j].partials.push(defaulttemp)
+                                          }
+                                      }
+                                  }
+
+                              }
+                          }
+                      }
+                    //   let temp = {
+                    //   value: namelayout,
+                    //   label: namelayout,
+                    //   partialsList: result,
+                    //   defaultList: DefaultParams
+
+                    // }
+                    //Here we are creating new partial which are not present in our partial folder.
+                    // let checkValue = false;
+                    // for (var i = 0; i < configData[2].layoutOptions[0].Layout.length; i++) {
+                    //   var obj = configData[2].layoutOptions[0].Layout[i];
+                    //   if ((obj.label) == name) {
+                    //     checkValue = true;
+                    //   }
+                    // }
+                    // if (checkValue == true) {
+                      let currentFileIndex = daex.indexFirst(configData[2].layoutOptions[0].Layout, {
+                        'label': namelayout
+                      });
+                      // console.log('currentFileIndex',currentFileIndex)
+                      configData[2].layoutOptions[0].Layout[currentFileIndex].partialsList = result;
+                      configData[2].layoutOptions[0].Layout[currentFileIndex].defaultList = DefaultParams; //here default are having .partial as extension
+                      // this.saveConfigFile(folderUrl);
+
+                    // } else {
+                    //   configData[2].layoutOptions[0].Layout.push(temp);
+
+                    //   // this.saveConfigFile(folderUrl);
+                    // }
+                  }
+                  // console.log('configData',configData)
+                  this.saveConfigFile(this.repoName, configData);
+
+
+              }
+
+          }
+
+      }
       this.fullscreenLoading = false;
       await this.init();
       this.$emit('updateProjectName');
@@ -3879,7 +4042,7 @@ export default {
               window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
             }
           }
-
+           this.loadingText=''
           var dt = new Date();
           var utcDate = dt.toUTCString();
 
