@@ -265,6 +265,7 @@
   import socketio from 'feathers-socketio/client';
   import io from 'socket.io-client';
 
+  const uuidv4 = require('uuid/v4');
 
   var daex = require('json-daex');
 
@@ -574,32 +575,36 @@
       // }
       
       const app = feathers().configure(socketio(io(socket)))
+      
       app.service("flows-dir-listing").on("created", (response) => {
-          response.path = response.path.replace(/\//g, "\\")
-          var s = response.path.replace(this.rootpath, '').split('\\');
+        //console.log(response);
+        if(response.socketListen) {
+            response.path = response.path.replace(/\//g, "\\")
+            var s = response.path.replace(this.rootpath, '').split('\\');
 
-          if(s[5] == Cookies.get('userDetailId')){
-            let objCopy = self.directoryTree
-            let evalStr = 'self.directoryTree'
-            let $eval = eval(evalStr)
-            for (var i = 0; i < s.length; i++) {
-                let inx = _.findIndex($eval, function(d) {
-                    return d.name == s[i]
-                })
-                if (inx >= 0 && $eval[inx]["children"] != undefined) {
-                    evalStr += '[' + inx + ']["children"]'
-                    $eval = eval(evalStr)
-                }
+            if(s[5] == Cookies.get('userDetailId')){
+              let objCopy = self.directoryTree
+              let evalStr = 'self.directoryTree'
+              let $eval = eval(evalStr)
+              for (var i = 0; i < s.length; i++) {
+                  let inx = _.findIndex($eval, function(d) {
+                      return d.name == s[i]
+                  })
+                  if (inx >= 0 && $eval[inx]["children"] != undefined) {
+                      evalStr += '[' + inx + ']["children"]'
+                      $eval = eval(evalStr)
+                  }
+              }
+              let inx = _.findIndex($eval, function(d) {
+                  return d.name == response.name
+              })
+              if (inx < 0) {
+                  $eval.push(response)
+              }
             }
-            let inx = _.findIndex($eval, function(d) {
-                return d.name == response.name
-            })
-            if (inx < 0) {
-                $eval.push(response)
-            }
-          }
 
           // this.getData();
+          }
           
       })
       app.service("flows-dir-listing").on("removed", (response) => {
@@ -1929,6 +1934,7 @@
                     })
                 } else if (newfilename.search('/Pages') != -1) {
                   this.$store.state.updateStats = Math.random();
+                  console.log('file new')
                   // this.$store.state.updateStats = 'PageUpdate';
                   return axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: newfilename + '.html',
@@ -1936,6 +1942,7 @@
                       type: 'file'
                     })
                     .then((res) => {
+
 
 
                       this.newFileDialog = false
@@ -2144,6 +2151,7 @@
 
                           // console.log("'subscriptionId': this.value,'authorization': token",  this.value, token)
                           axios.post(config.baseURL + '/project-configuration', {
+                                  id: uuidv4().replace(/\-/g, ''),
                                   userEmail: Cookies.get('email'),
                                   websiteName: this.formAddProjectFolder.projectName,
                                   userId: userid,
@@ -4726,7 +4734,7 @@
           })
       },
 
-      // Remove File
+      // Remove File delete file method
       async remove(store, data) {
         // console.log('remove called:')
         // Get Config.json file data
@@ -4768,17 +4776,16 @@
           showCancelButton: true,
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
-        }).then(() => {
-          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
-                  headers: {
-                      'subscriptionId': this.value,
-                      'authorization': Cookies.get('auth_token')
-                  }
-              })
-            .then(async (res) => {
+        }).then(async () => {
+          // axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+          //         headers: {
+          //             'subscriptionId': this.value,
+          //             'authorization': Cookies.get('auth_token')
+          //         }
+          //     })
+          //   .then(async (res) => {
               //console.log('file deleted:')
-              this.currentFile = null
-              this.componentId = 'Dashboard';
+              
 
               let file_path_ = data.path.replace(/\\/g, "/")
               let arr_file = file_path_.split('/')
@@ -4805,6 +4812,23 @@
                 // Remove item from array
                 this.globalConfigData[1].pageSettings.splice(indexOfPageName, 1);
 
+                axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                  headers: {
+                    'subscriptionId': this.value,
+                    'authorization': Cookies.get('auth_token')
+                  }
+                })
+                .then(async (res) => {
+                  this.componentId = 'Dashboard';
+                  this.isHomePage = true;
+
+                  this.currentFile = null;
+                  this.getData();
+                
+                }).catch((dismiss) => {
+                  console.log('error', dismiss)
+                })
+
                 // let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
                 //      return o.title == last_element;
                 // });
@@ -4813,7 +4837,7 @@
                 // this.editableTabs.splice(indexOfTabArray, 1);
                 // console.log('url:',folderUrl)
                 //console.log("save config file")
-               await this.saveConfigFile(file_path_);
+                await this.saveConfigFile(file_path_);
               } else if (_.includes(data.path, 'Layout')) {
 
                 var layoutName = last_element.replace(".layout", "");
@@ -4823,8 +4847,41 @@
                   return o.value == layoutName;
                 });
 
-                // Remove item from array
-                this.globalConfigData[2].layoutOptions[0].Layout.splice(indexOfLayoutName, 1);
+                let isLayoutUsedInPage = false;
+                let pageUsingLayout = [];
+
+                this.globalConfigData[1].pageSettings.forEach((i, settingIndex) => {
+                  if(i.PageLayout == layoutName){
+                    isLayoutUsedInPage = true;
+                    pageUsingLayout.push(this.globalConfigData[1].pageSettings[settingIndex].PageName);
+                  }
+                })
+
+                if(isLayoutUsedInPage == true){
+                  this.$alert('You cannot delete this layout. It is used in pages "' + pageUsingLayout + '. Please change the layout in page and then delete.', 'Cannot delete', {
+                    confirmButtonText: 'OK',
+                  });
+                } else {
+                  // Remove item from array
+                  this.globalConfigData[2].layoutOptions[0].Layout.splice(indexOfLayoutName, 1);
+
+                  axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                    headers: {
+                      'subscriptionId': this.value,
+                      'authorization': Cookies.get('auth_token')
+                    }
+                  })
+                  .then(async (res) => {
+                    this.componentId = 'Dashboard';
+                    this.isHomePage = true;
+                    this.currentFile = null;
+                    this.getData();
+                  }).catch((dismiss) => {
+                    console.log('error', dismiss)
+                  })
+                }
+
+                
 
                 // let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
                 //      return o.title == last_element;
@@ -4834,16 +4891,72 @@
 
                 // save config file
                 this.saveConfigFile(file_path_);
-              } else if (_.includes(data.path, 'Partials')) {
+              } else if (_.includes(data.path, '/Partials')) {
                 // console.log('removing partials')
                 var foldername=arr_file[arr_file.length-2]           
                 var partialNameBreak = last_element.split('.');
                 var partialNameOnly = partialNameBreak[0];
 
-                // get index of file to be deleted
-                let indexOfPartialName = _.findIndex(this.globalConfigData[2].layoutOptions[0][foldername], function(o) { return o.value == partialNameOnly });
+                // await this.findPartialIfUsed(foldername, partialNameOnly);
 
-                this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
+                let matchingIndex = false;
+                let foundInPagesName = [];
+                let usedInLayout = false;
+                let foundInLayoutName = [];
+
+                this.globalConfigData[1].pageSettings.forEach((i, settingIndex) => {
+                  i.partials.forEach(j => {
+                    let matching = Object.keys(j).filter(k => k === foldername && j[k] === partialNameOnly);     
+                    if(matching && matching.length) {
+                      matchingIndex = true;
+                      foundInPagesName.push(this.globalConfigData[1].pageSettings[settingIndex].PageName);
+                    };
+                  })
+                })
+
+                this.globalConfigData[2].layoutOptions[0].Layout.forEach((i, settingIndex) => {
+                    
+                  i.partialsList.forEach((j,partialIndex) => {
+                    if(j==foldername){
+                      usedInLayout = true;
+                      foundInLayoutName.push(this.globalConfigData[2].layoutOptions[0].Layout[i].value)
+                    }
+                  })
+                })
+
+                if(matchingIndex == true){
+                  this.$alert('You cannot delete this partial. It is used in pages "' + foundInPagesName + '. Please change the partial in page and then delete.', 'Cannot delete', {
+                    confirmButtonText: 'OK',
+                  });
+                } else if(usedInLayout == true){
+                  this.$alert('You cannot delete this partial. It is used in layout ' + foundInLayoutName + '. Please change the partial in layout and then delete.', 'Cannot delete', {
+                    confirmButtonText: 'OK',
+                  });
+                } else {
+                  // get index of file to be deleted
+                  let indexOfPartialName = _.findIndex(this.globalConfigData[2].layoutOptions[0][foldername], function(o) { return o.value == partialNameOnly });
+
+                  this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
+
+                  axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                    headers: {
+                      'subscriptionId': this.value,
+                      'authorization': Cookies.get('auth_token')
+                    }
+                  })
+                  .then(async (res) => {
+                    this.componentId = 'Dashboard';
+                    this.isHomePage = true;
+                    this.currentFile = null;
+                    this.getData();
+                  }).catch((dismiss) => {
+                    console.log('error', dismiss)
+                  })
+                }
+
+                // console.log('Inside if partial folder: ', matchingIndex);
+
+                
 
                 // let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
                 //      return o.title == last_element;
@@ -4864,8 +4977,64 @@
                   // get index of file to be deleted
                   let indexOfPartialName = _.findIndex(this.globalConfigData[2].layoutOptions[0][foldername], function(o) { return o.value == partialNameOnly; });
 
+                  let matchingIndex = false;
+                  let foundInPagesName = [];
+                  let usedInLayout = false;
+                  let foundInLayoutName = [];
+                  this.globalConfigData[1].pageSettings.forEach((i, settingIndex) => {
+                    i.partials.forEach(j => {
+                      let matching = Object.keys(j).filter(k => k === foldername && j[k] === partialNameOnly);     
+                      if(matching && matching.length) {
+                        matchingIndex = true;
+                        foundInPagesName.push(this.globalConfigData[1].pageSettings[settingIndex].PageName);
+                      };
+                    })
+                  })
+
+                  this.globalConfigData[2].layoutOptions[0].Layout.forEach((i, settingIndex) => {
+                    
+                    i.partialsList.forEach((j,partialIndex) => {
+                      if(j==foldername){
+                        usedInLayout = true;
+                        foundInLayoutName.push(this.globalConfigData[2].layoutOptions[0].Layout[i].value)
+                      }
+                    })
+                  })
+
+                  if(matchingIndex == true){
+                    this.$alert('You cannot delete this partial. It is used in pages "' + foundInPagesName + '. Please change the partial in page and then delete.', 'Cannot delete', {
+                      confirmButtonText: 'OK',
+                    });
+                  } else if(usedInLayout == true){
+                    this.$alert('You cannot delete this partial. It is used in layout ' + foundInLayoutName + '. Please change the partial in layout and then delete.', 'Cannot delete', {
+                      confirmButtonText: 'OK',
+                    });
+                  } else {
+                    // get index of file to be deleted
+                    let indexOfPartialName = _.findIndex(this.globalConfigData[2].layoutOptions[0][foldername], function(o) { return o.value == partialNameOnly });
+
+                    this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
+
+                    axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                      headers: {
+                        'subscriptionId': this.value,
+                        'authorization': Cookies.get('auth_token')
+                      }
+                    })
+                    .then(async (res) => {
+                      this.componentId = 'Dashboard';
+                      this.isHomePage = true;
+                      this.currentFile = null;
+                      this.getData();
+                    }).catch((dismiss) => {
+                      console.log('error', dismiss)
+                    })
+                  }
+
+                  // console.log('Inside else if partial Variant: ', matchingIndex);
+
                   // Remove item from array
-                  this.globalConfigData[2].layoutOptions[0][foldername].splice(indexOfPartialName, 1);
+                  
 
                 //   let indexOfTabArray = _.findIndex(this.editableTabs, function(o) {
                 //      return o.title == last_element;
@@ -4878,7 +5047,7 @@
                   this.saveConfigFile(file_path_);
               }
 
-              this.getData();
+              
 
             })
             .catch((e) => {
@@ -4891,11 +5060,11 @@
                 });
               }
             })
-          this.componentId = 'Dashboard';
-          this.isHomePage = true;
-        }).catch((dismiss) => {
-          console.log('error', dismiss)
-        })
+        //   this.componentId = 'Dashboard';
+        //   this.isHomePage = true;
+        // }).catch((dismiss) => {
+        //   console.log('error', dismiss)
+        // })
       },
 
       // Remove Folder manipulating config.json
@@ -4936,15 +5105,14 @@
           confirmButtonText: 'Yes, delete it!',
           cancelButtonText: 'No, keep it'
         }).then(() => {
-          axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
-              headers: {
-                  'subscriptionId': this.value,
-                  'authorization': Cookies.get('auth_token')
-              }
-          })
-          .then((res) => {
-              this.currentFile = null
-              this.componentId = 'Dashboard';
+          // axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+          //     headers: {
+          //         'subscriptionId': this.value,
+          //         'authorization': Cookies.get('auth_token')
+          //     }
+          // })
+          // .then((res) => {
+              
               let file_path_ = data.path.replace(/\\/g, "/")
 
               let arr_file = file_path_.split('/')
@@ -4953,20 +5121,101 @@
                   var foldername = arr_file[arr_file.length - 1]
                   if (this.globalConfigData[2].layoutOptions[0][foldername] != undefined) {
 
-                      delete this.globalConfigData[2].layoutOptions[0][foldername];
-                      this.saveConfigFile(configFileUrl);
+                    let matchingIndex = false;
+                    let foundInPagesName = [];
+                    let usedInLayout = false;
+                    let foundInLayoutName = [];
+
+                    this.globalConfigData[1].pageSettings.forEach((i, settingIndex) => {
+                      i.partials.forEach(j => {
+                        let matching = Object.keys(j).filter(k => k === foldername);     
+                        if(matching && matching.length) {
+                          matchingIndex = true;
+                          foundInPagesName.push(this.globalConfigData[1].pageSettings[settingIndex].PageName);
+                        };
+                      })
+                    })
+
+                    this.globalConfigData[2].layoutOptions[0].Layout.forEach((i, settingIndex) => {
+
+                      // let indexOfCurrentLayout = i;
+                      
+                      i.partialsList.forEach((j,partialIndex) => {
+                        if(j==foldername){
+                          usedInLayout = true;
+                          // console.log(indexOfCurrentLayout)
+                          // console.log(this.globalConfigData[2].layoutOptions[0].Layout[settingIndex]);
+                          foundInLayoutName.push(this.globalConfigData[2].layoutOptions[0].Layout[settingIndex].value)
+                        }
+                      })
+                    })
+
+                    if(matchingIndex == true){
+                      this.$alert('You cannot delete this partial. It is used in pages "' + foundInPagesName + '". Please change the partial in page and then delete.', 'Cannot delete', {
+                        confirmButtonText: 'OK',
+                      });
+                    } else if(usedInLayout == true){
+                      this.$alert('You cannot delete this partial. It is used in layout ' + foundInLayoutName + '. Please change the partial in layout and then delete.', 'Cannot delete', {
+                        confirmButtonText: 'OK',
+                      });
+                    } else {
+                      axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                          headers: {
+                              'subscriptionId': this.value,
+                              'authorization': Cookies.get('auth_token')
+                          }
+                      })
+                      .then((res) => {
+
+                        this.currentFile = null
+                        this.componentId = 'Dashboard';
+                        delete this.globalConfigData[2].layoutOptions[0][foldername];
+                        this.saveConfigFile(configFileUrl);
+                        this.getData();
+
+                        this.$message({
+                            showClose: true,
+                            message: 'Folder deleted!',
+                            type: 'success'
+                        });
+                      })
+                      .catch((e)=>{
+                        //console.log(e)
+                      })
+                      
+                    }
+                    
                   } else {
                       //console.log("Folder not found in config file.")
                   }
+              } else {
+                axios.delete(config.baseURL + '/delete-service/0?filename=' + data.path.replace(/\\/g, "/"), {
+                    headers: {
+                        'subscriptionId': this.value,
+                        'authorization': Cookies.get('auth_token')
+                    }
+                })
+                .then((res) => {
+                  this.currentFile = null
+                  this.componentId = 'Dashboard';
+                  delete this.globalConfigData[2].layoutOptions[0][foldername];
+                  this.saveConfigFile(configFileUrl);
+                  this.getData();
+
+                  this.$message({
+                      showClose: true,
+                      message: 'Folder deleted!',
+                      type: 'success'
+                  });
+                })
+                .catch((e)=>{
+                  //console.log(e)
+                })
               }
 
-              this.getData();
+              
 
-              this.$message({
-                  showClose: true,
-                  message: 'Folder deleted!',
-                  type: 'success'
-              });
+              
 
           })
           .catch((e) => {
@@ -4979,10 +5228,10 @@
                 });
               }
           })
-        })
-        .catch((e)=>{
-          //console.log(e)
-        })
+        // })
+        // .catch((e)=>{
+        //   //console.log(e)
+        // })
       },
 
       // Remove Project Folder and Delete GitLab Repository
@@ -5176,6 +5425,7 @@
            this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
           await axios.post(config.baseURL + '/project-configuration', {
+            id: uuidv4().replace(/\-/g, ''),
             userEmail: Cookies.get('email'),
             websiteName: clonedWebsiteTempName,
             configData: sourceConfig,
