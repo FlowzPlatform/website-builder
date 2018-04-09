@@ -47,7 +47,6 @@
     "vue-widgets": "^1.0.9",
     "vuedraggable": "^2.15.0",
     "vuex": "^2.3.1",
-    "vuex-persistedstate": "^2.0.0",
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
