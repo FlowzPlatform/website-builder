@@ -542,10 +542,10 @@ export default {
                     .then((res) => {
                       self.$router.push('/editor');
                     })
-                    .catch((err)=>{ console.log('Error:', err); });
+                    .catch((err)=>{ console.log('Error:', err); window.location = '/login';});
 
                 })
-                .catch((err)=>{ console.log('Error:', err); })
+                .catch((err)=>{ console.log('Error:', err); window.location = '/login'; })
 
             }
     }
