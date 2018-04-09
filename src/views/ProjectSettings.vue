@@ -175,17 +175,44 @@
               <hr>
               <div class="row">
                 <div class="col-md-4">
-                  <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
+                  <div class="thumbnail">
+                    <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                  </div>
                 </div>
                 <div class="col-md-4">
-                  <img src="http://placehold.it/350x150?text=Template%202" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
+                  <div class="thumbnail">
+                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523281376/builder/images/template2.jpg" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  </div>
                 </div>
                 <div class="col-md-4">
-                  <img src="http://placehold.it/350x150?text=Template%203" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
+                  <div class="thumbnail">
+                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523281428/builder/images/template3.jpg" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="thumbnail">
+                    <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
+                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="thumbnail">
+                    <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" @click="revertToTemplate(template = 'web5')"/>
+                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="thumbnail">
+                    <img src="https://placehold.it/403x190?text=Comming%20Soon" alt="template 6" class="img-responsive template-image" />
+                  <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
+                  </div>
                 </div>
               </div>
             </div>

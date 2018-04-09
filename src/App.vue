@@ -82,99 +82,99 @@ export default {
       let location = psl.parse(window.location.hostname)
       location = location.domain === null ? location.input : location.domain;
 
-      setInterval(()=>{ 
-        if(Cookies.get('auth_token' ,{domain: location})){
-          // If Auth_Token is present and UserDetailId is not there
+      // setInterval(()=>{ 
+      //   if(Cookies.get('auth_token' ,{domain: location})){
+      //     // If Auth_Token is present and UserDetailId is not there
 
-          if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
-            // console.log(config.userDetail)
-            axios.get(config.userDetail, {
-              headers: {
-                'Authorization' : Cookies.get('auth_token' ,{domain: location})
-              }   
-            })
-            .then(async (res) => {
-              let userDetailId = res.data.data._id;
-              // console.log(res);
+      //     if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
+      //       // console.log(config.userDetail)
+      //       axios.get(config.userDetail, {
+      //         headers: {
+      //           'Authorization' : Cookies.get('auth_token' ,{domain: location})
+      //         }   
+      //       })
+      //       .then(async (res) => {
+      //         let userDetailId = res.data.data._id;
+      //         // console.log(res);
 
-              // Store Token in Cookie
-              Cookies.set('email', res.data.data.email, {domain: location});
-              Cookies.set('userDetailId',  userDetailId, {domain: location});
+      //         // Store Token in Cookie
+      //         Cookies.set('email', res.data.data.email, {domain: location});
+      //         Cookies.set('userDetailId',  userDetailId, {domain: location});
               
-              localStorage.setItem('userDetailId', userDetailId);
-              localStorage.setItem('email', res.data.data.email);
+      //         localStorage.setItem('userDetailId', userDetailId);
+      //         localStorage.setItem('email', res.data.data.email);
 
-              // create user folder
-              await axios.post(config.baseURL+'/flows-dir-listing' , {
-                foldername :'/var/www/html/websites/'+ userDetailId,
-                type : 'folder'
-              })
-              .then((res) => {
-                window.location = '/editor';
-              })
-              .catch((res) => {
-                window.location = '/editor';
-              });
+      //         // create user folder
+      //         await axios.post(config.baseURL+'/flows-dir-listing' , {
+      //           foldername :'/var/www/html/websites/'+ userDetailId,
+      //           type : 'folder'
+      //         })
+      //         .then((res) => {
+      //           window.location = '/editor';
+      //         })
+      //         .catch((res) => {
+      //           window.location = '/editor';
+      //         });
               
-            })
-            .catch((e) => {
-              console.log(e)
-              this.$message({
-                  showClose: true,
-                  message: 'Error: ' + e.response.data,
-                  type: 'error'
-              });
-              window.location = '/login';
-            })
-          } else {
+      //       })
+      //       .catch((e) => {
+      //         console.log(e)
+      //         this.$message({
+      //             showClose: true,
+      //             message: 'Error: ' + e.response.data,
+      //             type: 'error'
+      //         });
+      //         window.location = '/login';
+      //       })
+      //     } else {
 
-            // Reauth UserDetailId with auth token
-            axios.get(config.userDetail, {
-              headers: {
-                'Authorization' : Cookies.get('auth_token' ,{domain: location})
-              }   
-            })
-            .then(async (res) => {
+      //       // Reauth UserDetailId with auth token
+      //       axios.get(config.userDetail, {
+      //         headers: {
+      //           'Authorization' : Cookies.get('auth_token' ,{domain: location})
+      //         }   
+      //       })
+      //       .then(async (res) => {
 
-              let userDetailId = res.data.data._id;
+      //         let userDetailId = res.data.data._id;
 
-              if(userDetailId == Cookies.get('userDetailId' ,{domain: location})){
-                // Valid toke and UserDetailId
-                // console.log('Valid user detail id');
-              } else {
-                // console.log('Invalid user detail id');
-                // Update userDetailId
-                // Store Token in Cookie
-                Cookies.set('email', res.data.data.email, {domain: location});
-                Cookies.set('userDetailId',  userDetailId, {domain: location});
+      //         if(userDetailId == Cookies.get('userDetailId' ,{domain: location})){
+      //           // Valid toke and UserDetailId
+      //           // console.log('Valid user detail id');
+      //         } else {
+      //           // console.log('Invalid user detail id');
+      //           // Update userDetailId
+      //           // Store Token in Cookie
+      //           Cookies.set('email', res.data.data.email, {domain: location});
+      //           Cookies.set('userDetailId',  userDetailId, {domain: location});
                 
-                localStorage.setItem('userDetailId', userDetailId);
-                localStorage.setItem('email', res.data.data.email);
-              }
+      //           localStorage.setItem('userDetailId', userDetailId);
+      //           localStorage.setItem('email', res.data.data.email);
+      //         }
               
-            })
-            .catch((e) => {
-              console.log(e)
+      //       })
+      //       .catch((e) => {
+      //         console.log(e)
               
-              this.$alert('Error: ' + e.response.data, '', {
-                confirmButtonText: 'OK',
-                callback: action => {
-                  window.location = '/login'
-                }
-              });
+      //         this.$alert('Error: ' + e.response.data, '', {
+      //           confirmButtonText: 'OK',
+      //           callback: action => {
+      //             window.location = '/login'
+      //           }
+      //         });
               
-            })
-          }
-        } else {
+      //       })
+      //     }
+      //   } else {
 
-          if(this.$route.path == '/login' || this.$route.path == '/' || this.$route.path == '/register' || this.$route.path == '/forgot_password' || this.$route.path == '/reset-password' || this.$route.path == '/email-verification'){
+      //     if(this.$route.path == '/login' || this.$route.path == '/' || this.$route.path == '/register' || this.$route.path == '/forgot_password' || this.$route.path == '/reset-password' || this.$route.path == '/email-verification'){
 
-          } else {
-            window.location = '/login'
-          }
+      //     } else {
+      //       window.location = '/login'
+      //     }
          
-        }
-      }, 5000);
+      //   }
+      // }, 5000);
 
     },
     init () {
