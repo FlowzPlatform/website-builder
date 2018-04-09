@@ -10,20 +10,24 @@
       <div class='login_title'>
         <span>Login to Flowz Builder</span>
       </div>
-      <form id="form-facebook" name="form-facebook" :action="loginWithFacebookUrl" method="post">
+      <form id="form-facebook" name="form-facebook" :action="loginWithFacebookUrl" method="get">
         <input type="hidden" name="success_url" :value="facebookSuccessCallbackUrl">
       </form>
-      <form id="form-google" name="form-google" :action ="loginWithGoogleUrl" method="post">
+      <form id="form-google" name="form-google" :action ="loginWithGoogleUrl" method="get">
         <input type="hidden" name="success_url" :value="googleSuccessCallbackUrl">
+        <input type="hidden" name="failure_url" :value="googleFailureCallbackUrl">
       </form>
-      <form id="form-twitter" name="form-twitter" :action ="loginWithTwitterUrl" method="post">
+      <form id="form-twitter" name="form-twitter" :action ="loginWithTwitterUrl" method="get">
         <input type="hidden" name="success_url" :value="twitterSuccessCallbackUrl">
+        <input type="hidden" name="failure_url" :value="twitterFailureCallbackUrl">
       </form>
-      <form id="form-github" name="form-github" :action ="loginWithGithubUrl" method="post">
+      <form id="form-github" name="form-github" :action ="loginWithGithubUrl" method="get">
         <input type="hidden" name="success_url" :value="githubSuccessCallbackUrl">
+        <input type="hidden" name="failure_url" :value="githubFailureCallbackUrl">
       </form>
-      <form id="form-linkedIn" name="form-linkedIn" :action ="loginWithLinkedInUrl" method="post">
+      <form id="form-linkedIn" name="form-linkedIn" :action ="loginWithLinkedInUrl" method="get">
         <input type="hidden" name="success_url" :value="linkedInSuccessCallbackUrl">
+        <input type="hidden" name="failure_url" :value="linkedInFailureCallbackUrl">
       </form>
       <div class="social-buttons" align="center">
         <div>
@@ -129,10 +133,19 @@ export default {
         error: 'Authentication Failed'
       },
       facebookSuccessCallbackUrl : config.facebookSuccessCallbackUrl,
+
       googleSuccessCallbackUrl : config.googleSuccessCallbackUrl,
+      googleFailureCallbackUrl : config.googleFailureCallbackUrl,
+
       twitterSuccessCallbackUrl: config.twitterSuccessCallbackUrl,
+      twitterFailureCallbackUrl: config.twitterFailureCallbackUrl,
+
       githubSuccessCallbackUrl: config.githubSuccessCallbackUrl,
+      githubFailureCallbackUrl: config.githubFailureCallbackUrl,
+
       linkedInSuccessCallbackUrl: config.linkedInSuccessCallbackUrl,
+      linkedInFailureCallbackUrl: config.linkedInFailureCallbackUrl,
+
       loginWithFacebookUrl : config.loginWithFacebookUrl,
       loginWithGoogleUrl : config.loginWithGoogleUrl,
       loginWithTwitterUrl: config.loginWithTwitterUrl,

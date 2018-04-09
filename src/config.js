@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'development') {
     socialUrl = 'https://api.'+domainkey+'/auth/api';
     subscriptionApi = 'https://api.'+domainkey+'/subscription/';
     loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
-    loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
+    loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/google';
     loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';
     loginWithGithubUrl = 'https://auth.'+domainkey+'/auth/github';
     loginWithLinkedInUrl = 'https://auth.'+domainkey+'/auth/linkedin';
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV !== 'development') {
     socialUrl = 'https://api.flowzcluster.tk/auth/api';
     subscriptionApi = 'https://api.flowzcluster.tk/subscription/';
     loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
-    loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';
+    loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/google';
     loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
     loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
     loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
@@ -84,9 +84,13 @@ module.exports = {
     subscriptionApi: subscriptionApi,
     facebookSuccessCallbackUrl: frontEndUrl,
     googleSuccessCallbackUrl: frontEndUrl,
+    googleFailureCallbackUrl: frontEndUrl,
     twitterSuccessCallbackUrl: frontEndUrl,
+    twitterFailureCallbackUrl: frontEndUrl,
     githubSuccessCallbackUrl: frontEndUrl,
+    githubFailureCallbackUrl: frontEndUrl,
     linkedInSuccessCallbackUrl: frontEndUrl,
+    linkedInFailureCallbackUrl: frontEndUrl,
 
     loginWithFacebookUrl: loginWithFacebookUrl,
     loginWithGoogleUrl: loginWithGoogleUrl,
