@@ -1587,7 +1587,7 @@
 
       // Save config File
       async saveConfigFile(folderUrl){
-        // console.log('inside saveConfigFile')
+        console.log('inside saveConfigFile')
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
         // console.log('folderUrl:',folderUrl)
@@ -4383,6 +4383,8 @@
                   responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
                   var indexPartial = responseMetal.data.search("handlebars");
 
+                  let temppartials=[]
+                  console.log(' self.form.partials.length;', self.form.partials.length)
                   for (var j = 0; j < self.form.partials.length; j++) {
                       var temp1, temp2;
                       temp1 = '{{> ' + Object.keys(self.form.partials[j])[0] + " id='" + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + ".partial' }}"
@@ -4395,14 +4397,18 @@
                       var obj = {}
                       var key = Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]]
                       obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
-                      self.form.partials[j] = []
-                      self.form.partials[j] = obj
+                      // self.form.partials[j] = []
+                      console.log('obj',obj)
+                      temppartials[j] = obj;
+                      //self.form.partials[j] = obj
                   }
+                   console.log( 'temppartials',temppartials)
+                   console.log( 'self.form.partials',self.form.partials)
                   // self.$store.state.content = contentpartials;
                   var partials = '';
-                  for (var i = 0; i < self.form.partials.length; i++) {
-                      let key = Object.keys(self.form.partials[i])[0];
-                      let value = self.form.partials[i]
+                  for (var i = 0; i < temppartials.length; i++) {
+                      let key = Object.keys(temppartials[i])[0];
+                      let value = temppartials[i]
                       let key2 = key;
                       key = key.trim();
                       if (value[key2].match('partial')) {
@@ -4414,7 +4420,8 @@
                       partials = partials + temp;
                   }
                   responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
-                  self.form.partials = back_partials
+
+                  // self.form.partials = back_partials
 
                   // console.log("Final metalsmith:", responseMetal.data);
 
