@@ -124,6 +124,7 @@ export default {
                   message: 'Error: ' + e.response.data,
                   type: 'error'
               });
+              window.location = '/login';
             })
           } else {
 
