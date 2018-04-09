@@ -167,30 +167,12 @@
               <a href="javascript:void(0)" id="toggleImportPlugin" class="card color-div toggleableDivHeader">Import Plugin</a>
           </div>
       </div>
-      <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
+       <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row" style="margin-top: 15px;">
           <div class="col-md-12">
             <div class="thumbnail" style="padding: 20px;">
               <h3>Ecommerce Website Templates</h3>
               <hr>
-              <!--
-              <div class="row">
-                <div class="col-md-4">
-                  <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
-                </div>
-                <div class="col-md-4">
-                  <img src="http://placehold.it/350x150?text=Template%202" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                </div>
-                <div class="col-md-4">
-                  <img src="http://placehold.it/350x150?text=Template%203" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                </div>
-              </div>
-              -->
-              <!-- added new tpls start -->
               <div class="row">
                 <div class="col-md-4">
                   <div class="thumbnail">
@@ -233,8 +215,6 @@
                   </div>
                 </div>
               </div>
-
-              <!-- added new tpls end -->
             </div>
           </div>
         </div>
