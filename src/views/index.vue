@@ -477,22 +477,24 @@
     },
     created () {
 
+      let location = psl.parse(window.location.hostname)
+      location = location.domain === null ? location.input : location.domain
+
       // Check if login token in cookie exist or not
-      if(this.$cookie.get('auth_token')){
-        this.getData();
+      if(Cookies.get('auth_token', {domain: location})){
+        // this.getData();
         // Set email Session
 
         axios.get(config.userDetail, {
           headers: {
-            'Authorization' : this.$cookie.get('auth_token')
+            'Authorization' : Cookies.get('auth_token', {domain: location})
           }   
         })
         .then(async (res) => {
           this.userDetailId = res.data.data._id;
 
           // Store Token in Cookie
-          let location = psl.parse(window.location.hostname)
-          location = location.domain === null ? location.input : location.domain
+          
 
           Cookies.set('email', res.data.data.email, {domain: location});
           Cookies.set('userDetailId',  this.userDetailId, {domain: location});
