@@ -13,9 +13,9 @@
       <div class='login_fields'>
           <div class='login_fields__user'>
               <div class='icon'>
-                  <i class="fa fa-address-book-o"></i>
+                  <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Full Name' type='text' v-model="form.name" required>
+              <input placeholder='First Name' type='text' maxlength="20" v-model="form.fname" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -25,7 +25,7 @@
               <div class='icon'>
                   <img src='../assets/images/user_icon_copy.png'>
               </div>
-              <input placeholder='Username' type='text' v-model="form.Uname" required>
+              <input placeholder='Last Name' type='text' maxlength="20" v-model="form.lname" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -35,7 +35,7 @@
               <div class='icon'>
                   <i class="fa fa-envelope-o"></i>
               </div>
-              <input placeholder='Email Address' type='text' v-model="form.email" required>
+              <input placeholder='Email Address' type='text' maxlength="100" v-model="form.email" id="txtEmail" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -45,7 +45,7 @@
               <div class='icon'>
                   <img src='../assets/images/lock_icon_copy.png'>
               </div>
-              <input placeholder='Password' type='password' v-model="form.pass" required>
+              <input placeholder='Password' type='password' maxlength="20" v-model="form.pass" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -54,7 +54,7 @@
               <div class='icon'>
                   <img src='../assets/images/lock_icon_copy.png'>
               </div>
-              <input placeholder='Confirm Password' type='password' v-model="form.checkPass" required>
+              <input placeholder='Confirm Password' class="input-fields" type='password' maxlength="20" v-model="form.checkPass" required>
               <div class='validation'>
                   <img src='../assets/images/tick.png'>
               </div>
@@ -99,73 +99,150 @@ export default {
   data () {
     return {
       form: {
-        name: '',
-        checkPass: '',
-        Uname: '',
+        fname: '',
+        lname: '',
         email: '',
         pass: '',
+        checkPass: '',
         isLoading: false
       },
       authen: {
         status: false,
-        success: 'Authentication Success',
-        error: 'Authentication Failed'
-      }
+        success: 'Registration Success',
+        error: 'Registration Failed'
+      },
+      validEmail: false
     }
   },
   methods: {
     registerUser () {
-      axios.post(config.registerUrl, {
-        username: this.form.Uname,
-        password: this.form.pass,
-        email: this.form.email,
-        fullname: this.form.Name
-      }, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        }
-      }).then(response => {
-        this.authen.status = true;
-        let self = this;
-        setTimeout(function () {
-          self.$router.push('/login');
-        }, 2000);
-        // window.location = '/login'
-        // axios.post( config.baseURL + '/user-service', {
-        //     username : this.form.Uname,
-        //     password : this.form.pass,
-        //     email : this.form.email,
-        //     name : this.form.name                  
-        // }).then(response => {
-        //   // window.location = '/login';
-        //   // Create user Folder
-        //   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-        //   // axios.post(config.baseURL+'/flows-dir-listing' , {
-        //   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
-        //   //   type : 'folder'
-        //   // })
-        //   // .then((res) => {
-        //   //   console.log('user Folder created!');
-        //   // })
-        //   // .catch((e)=>{
-        //   //   console.log("Error from pages"+res)
-        //   // });
-        //   this.authen.status = true;
-        //   let self = this;
-        //   setTimeout(function () {
-        //     self.$router.push('/login');
-        //   }, 2000);
-        // }).catch(error => {
-        //   this.authen.status = false;
-        //   this.authen.error = response.data;
-        // })
-      }).catch(error => {
-        this.authen.status = false;
-        this.authen.error = response.data;
-      })
+
+      if(this.validEmail == true){
+        $('.login').addClass('test')
+        setTimeout(function(){
+          $('.login').addClass('testtwo')
+        },300);
+        setTimeout(function(){
+          $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+        },500);
+        setTimeout(function(){
+          
+        },2500);
+
+
+        axios.post(config.registerUrl, {
+          email: this.form.email.trim(),
+          password: this.form.pass.trim(),
+          firstname: this.form.fname.trim(),
+          lastname: this.form.lname.trim(),
+        }, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+          }
+        }).then(response => {
+
+          if(response.data.code == 200){
+            this.authen.status = true;
+            let self = this;
+
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
+
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
+
+            $('.success').fadeIn();
+
+            setTimeout(function () {
+              self.$router.push('/login');
+            }, 2000);
+            // window.location = '/login'
+            // axios.post( config.baseURL + '/user-service', {
+            //     username : this.form.Uname,
+            //     password : this.form.pass,
+            //     email : this.form.email,
+            //     name : this.form.name                  
+            // }).then(response => {
+            //   // window.location = '/login';
+            //   // Create user Folder
+            //   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+            //   // axios.post(config.baseURL+'/flows-dir-listing' , {
+            //   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
+            //   //   type : 'folder'
+            //   // })
+            //   // .then((res) => {
+            ////   //   console.log('user Folder created!');
+            //   // })
+            //   // .catch((e)=>{
+            ////   //   console.log("Error from pages"+res)
+            //   // });
+            //   this.authen.status = true;
+            //   let self = this;
+            //   setTimeout(function () {
+            //     self.$router.push('/login');
+            //   }, 2000);
+            // }).catch(error => {
+            //   this.authen.status = false;
+            //   this.authen.error = response.data;
+            // })
+          } else {
+            this.$message({
+                showClose: true,
+                message: 'Error: ' + response.data.error,
+                type: 'error'
+            });
+
+            console.log('Error: ', error.response);
+            this.authen.status = false;
+            this.authen.error = error.response.data;
+
+            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+            $('.login').removeClass('testtwo')
+
+            $('.login').removeClass('test')
+            $('.login div').fadeOut(123);
+
+            $(".authent").fadeOut();
+            $('.login div').fadeIn();
+          }
+          
+        }).catch(error => {
+          this.$message({
+              showClose: true,
+              message: 'Error: ' + error.response.data,
+              type: 'error'
+          });
+
+          console.log('Error: ', error.response);
+          this.authen.status = false;
+          this.authen.error = error.response.data;
+
+          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+          $('.login').removeClass('testtwo')
+
+          $('.login').removeClass('test')
+          $('.login div').fadeOut(123);
+
+          $(".authent").fadeOut();
+          $('.login div').fadeIn();
+
+        })
+      } else {
+        this.$message({
+            showClose: true,
+            message: 'Please enter valid email',
+            type: 'error'
+        });
+      }
+
+      
     },
     goToLandingPage () {
-      this.$router.push('/');
+      window.location = '/';
     }
   },
   mounted () {
@@ -175,37 +252,37 @@ export default {
       if(self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != ''){
         if(self.form.pass == self.form.checkPass){
           self.registerUser();
-          $('.login').addClass('test')
-          setTimeout(function(){
-            $('.login').addClass('testtwo')
-          },300);
-          setTimeout(function(){
-            $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-            $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-          },500);
-          setTimeout(function(){
-            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-            $('.login').removeClass('testtwo')
-          },2500);
-          setTimeout(function(){
-            $('.login').removeClass('test')
-            $('.login div').fadeOut(123);
-          },2800);
-          setTimeout(function(){
-            if(self.authen.status == true){
-              $('.success').fadeIn();  
-            } else {
-              $(".authent").fadeOut();
-              $('.login div').fadeIn();
-              self.$message({
-                  showClose: true,
-                  message: self.authen.error,
-                  type: 'error'
-              });
-            }
+          // $('.login').addClass('test')
+          // setTimeout(function(){
+          //   $('.login').addClass('testtwo')
+          // },300);
+          // setTimeout(function(){
+          //   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          //   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+          // },500);
+          // setTimeout(function(){
+          //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+          //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+          //   $('.login').removeClass('testtwo')
+          // },2500);
+          // setTimeout(function(){
+          //   $('.login').removeClass('test')
+          //   $('.login div').fadeOut(123);
+          // },2800);
+          // setTimeout(function(){
+          //   if(self.authen.status == true){
+          //     $('.success').fadeIn();  
+          //   } else {
+          //     $(".authent").fadeOut();
+          //     $('.login div').fadeIn();
+          //     self.$message({
+          //         showClose: true,
+          //         message: self.authen.error,
+          //         type: 'error'
+          //     });
+          //   }
             
-          },3200);
+          // },3200);
         } else{
           self.$message({
               showClose: true,
@@ -222,11 +299,91 @@ export default {
       }
     });
 
+    $('.input-fields').keyup(function(e){
+
+      var code = e.which; // recommended to use e.which, it's normalized across browsers
+      if(code==13)e.preventDefault();
+      if(code==32||code==13||code==188||code==186){
+        if(self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != ''){
+          if(self.form.pass == self.form.checkPass){
+            self.registerUser();
+            $('.login').addClass('test')
+            setTimeout(function(){
+              $('.login').addClass('testtwo')
+            },300);
+            setTimeout(function(){
+              $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+              $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+            },500);
+            setTimeout(function(){
+              $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+              $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+              $('.login').removeClass('testtwo')
+            },2500);
+            setTimeout(function(){
+              $('.login').removeClass('test')
+              $('.login div').fadeOut(123);
+            },2800);
+            setTimeout(function(){
+              if(self.authen.status == true){
+                $('.success').fadeIn();  
+              } else {
+                $(".authent").fadeOut();
+                $('.login div').fadeIn();
+                self.$message({
+                    showClose: true,
+                    message: self.authen.error,
+                    type: 'error'
+                });
+              }
+              
+            },3200);
+          } else{
+            self.$message({
+                showClose: true,
+                message: 'Password and Confirm password didn\'t matched...',
+                type: 'error'
+            });
+          }
+        } else {
+          self.$message({
+              showClose: true,
+              message: 'Please Enter all Fields',
+              type: 'error'
+          });
+        }
+      }
+    });
+
     $('input[type="text"],input[type="password"]').focus(function(){
       $(this).prev().animate({'opacity':'1'},200)
     });
     $('input[type="text"],input[type="password"]').blur(function(){
       $(this).prev().animate({'opacity':'.5'},200)
+    });
+
+    $('#txtEmail').blur(function(){
+      var userinput = $(this).val();
+      var pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
+
+      if(!pattern.test(userinput)){
+        self.$message({
+            showClose: true,
+            message: 'Please enter valid email',
+            type: 'error'
+        });
+        self.validEmail = false;
+        $(this).val("");
+        // $(this).focus();
+      } else {
+        self.validEmail = true;
+      }
+
+
+      // if(!pattern.test(userinput))
+      // {
+      //   alert('not a valid e-mail address');
+      // }​
     });
 
     $('input[type="text"],input[type="password"]').keyup(function(){

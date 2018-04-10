@@ -1,0 +1,39 @@
+2018-02-26T09:48:55.689166657 40.090834s notice: Recursively removing directory /home/software/HarshPatel/project/12-2-18/website-builder/rethinkdb_data/tmp
+2018-02-26T09:48:55.711394210 40.113066s notice: Initializing directory /home/software/HarshPatel/project/12-2-18/website-builder/rethinkdb_data
+2018-02-26T09:48:55.711591473 40.113257s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/software/HarshPatel/project/12-2-18/website-builder/rethinkdb_data' did not already exist or is empty.)
+2018-02-26T09:48:55.711649006 40.113314s notice: Running rethinkdb 2.3.5 (GCC 5.4.0)...
+2018-02-26T09:48:55.717656957 40.119329s notice: Running on Linux 4.4.0-112-generic x86_64
+2018-02-26T09:48:55.717827576 40.119493s notice: Loading data from directory /home/software/HarshPatel/project/12-2-18/website-builder/rethinkdb_data
+2018-02-26T09:48:55.843443297 40.245115s info: Automatically using cache size of 6453 MB
+2018-02-26T09:49:05.863204968 50.264871s notice: Listening for intracluster connections on port 29015
+2018-02-26T09:49:05.879721792 50.281388s notice: Listening for client driver connections on port 28015
+2018-02-26T09:49:05.880932924 50.282599s notice: Listening for administrative HTTP connections on port 8081
+2018-02-26T09:49:15.888430847 60.290097s notice: Listening on cluster addresses: 127.0.0.1, 172.17.0.1, 127.0.1.1, 192.168.1.2, ::1, fe80::aeb1:503a:f961:32e%3
+2018-02-26T09:49:25.899810128 70.301476s notice: Listening on driver addresses: 127.0.0.1, 172.17.0.1, 127.0.1.1, 192.168.1.2, ::1, fe80::aeb1:503a:f961:32e%3
+2018-02-26T09:49:35.910900562 80.312566s notice: Listening on http addresses: 127.0.0.1, 172.17.0.1, 127.0.1.1, 192.168.1.2, ::1, fe80::aeb1:503a:f961:32e%3
+2018-02-26T09:49:35.910930125 80.312595s notice: Server ready, "OBLAP_85_ldl" d1295f55-44f8-40e3-8c5f-5df7f565e88f
+2018-02-26T09:49:56.452022354 100.853688s warn: Problem when checking for new versions of RethinkDB: HTTP request to update.rethinkdb.com failed.
+2018-02-26T09:57:00.022476556 524.424142s info: Table 171c2aa7-cc53-4bcd-99f6-6264cea581d5: Starting a new Raft election for term 1.
+2018-02-26T09:57:00.023075586 524.424741s info: Table 171c2aa7-cc53-4bcd-99f6-6264cea581d5: Added replica on this server.
+2018-02-26T09:57:00.035936143 524.437601s info: Table 171c2aa7-cc53-4bcd-99f6-6264cea581d5: This server is Raft leader for term 1. Latest log index is 0.
+2018-02-26T09:57:00.634834128 525.036499s info: Table 14445216-c48e-4bd4-ab38-c2e9bbc2da77: Starting a new Raft election for term 1.
+2018-02-26T09:57:00.635125483 525.036790s info: Table 14445216-c48e-4bd4-ab38-c2e9bbc2da77: Added replica on this server.
+2018-02-26T09:57:00.643954603 525.045620s info: Table 14445216-c48e-4bd4-ab38-c2e9bbc2da77: This server is Raft leader for term 1. Latest log index is 0.
+2018-02-26T09:57:01.266002569 525.667668s info: Table 6b7532ef-8ec9-48f8-820e-93cd0d1812a7: Starting a new Raft election for term 1.
+2018-02-26T09:57:01.266097899 525.667763s info: Table 6b7532ef-8ec9-48f8-820e-93cd0d1812a7: Added replica on this server.
+2018-02-26T09:57:01.276523209 525.678188s info: Table 6b7532ef-8ec9-48f8-820e-93cd0d1812a7: This server is Raft leader for term 1. Latest log index is 0.
+2018-02-26T09:57:01.891534637 526.293200s info: Table 4cf944ac-bb6a-4ef7-b295-89ce019798c1: Starting a new Raft election for term 1.
+2018-02-26T09:57:01.892045956 526.293711s info: Table 4cf944ac-bb6a-4ef7-b295-89ce019798c1: Added replica on this server.
+2018-02-26T09:57:01.905940236 526.307605s info: Table 4cf944ac-bb6a-4ef7-b295-89ce019798c1: This server is Raft leader for term 1. Latest log index is 0.
+2018-02-26T09:57:02.516233392 526.917898s info: Table 45351bb9-488a-4051-ac13-bb460b999e61: Starting a new Raft election for term 1.
+2018-02-26T09:57:02.516452896 526.918118s info: Table 45351bb9-488a-4051-ac13-bb460b999e61: Added replica on this server.
+2018-02-26T09:57:02.527331662 526.928997s info: Table 45351bb9-488a-4051-ac13-bb460b999e61: This server is Raft leader for term 1. Latest log index is 0.
+2018-02-26T09:57:03.158628374 527.560295s info: Table f2f6a7ef-8ca0-4a4c-a460-1458541bdb73: Starting a new Raft election for term 1.
+2018-02-26T09:57:03.161120952 527.562787s info: Table f2f6a7ef-8ca0-4a4c-a460-1458541bdb73: Added replica on this server.
+2018-02-26T09:57:03.176551586 527.578217s info: Table f2f6a7ef-8ca0-4a4c-a460-1458541bdb73: This server is Raft leader for term 1. Latest log index is 0.
+2018-02-26T09:57:03.804476833 528.206142s info: Table 25cec018-501a-4e02-b9e2-8653416f302c: Starting a new Raft election for term 1.
+2018-02-26T09:57:03.805047728 528.206713s info: Table 25cec018-501a-4e02-b9e2-8653416f302c: Added replica on this server.
+2018-02-26T09:57:03.814944557 528.216609s info: Table 25cec018-501a-4e02-b9e2-8653416f302c: This server is Raft leader for term 1. Latest log index is 0.
+2018-02-26T09:57:04.423248142 528.824913s info: Table 3d10e077-83f9-458d-b7ef-546a7cfc5f25: Starting a new Raft election for term 1.
+2018-02-26T09:57:04.423408796 528.825074s info: Table 3d10e077-83f9-458d-b7ef-546a7cfc5f25: Added replica on this server.
+2018-02-26T09:57:04.433608394 528.835274s info: Table 3d10e077-83f9-458d-b7ef-546a7cfc5f25: This server is Raft leader for term 1. Latest log index is 0.

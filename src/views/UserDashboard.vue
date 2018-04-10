@@ -54,15 +54,26 @@
                                     </li>
                                 </ul>
                             </li> -->
+                            <!-- <span><h5>Welcome<b> {{userEmailId}}</b></h5></span> -->
+                            <div class="skewedbox">
+                              <span>Welcome: <span>{{userEmailId}}</span></span>
+                            </div>
+                            <el-tooltip class="item" effect="dark" content="Logout">
+                               <a class="skew-logout-btn" @click="doLogout">
+                                  <i class="fa fa-sign-out"></i>
+                              </a>
+                            </el-tooltip> 
+                           
                             <!-- <li class="hh-dropdown no-color">
                                 <a class="hh-menu-item" href="#">
                                     <img class="hh-list-img sm-img" src="https://api.adorable.io/avatars/285/gaurav@adorable.io.png" alt="me" /></a>
                                 <ul class="hh-dropmenu-item sm-menu">
                                     <li class="hh-notification-item">
-                                        <a class="hh-notification-content lg-text" href="#"><i class="fa fa-edit"></i>My Profile</a>
+                                        <i class="fa fa-user"></i>
+                                        {{userEmailId}}
                                     </li>
                                     <li class="hh-notification-item">
-                                        <a class="hh-notification-content lg-text" href="#" @click="doLogout"><i class="fa fa-power-off"></i>Sign out</a>
+                                        <a class="hh-notification-content lg-text" href="#" @click="doLogout"><i class="fa fa-power-off"></i>Log out</a>
                                     </li>
                                 </ul>
                             </li> -->
@@ -161,7 +172,7 @@
             <nav class="hh-sidebar">
                 <ul>
                     <li>
-                        <a href="#" class="inbox">
+                        <a href="#" class="inbox" @click='goToDashboard()'>
                             <i class="fa fa-dashboard">
                                 <span class="icon-bg hh-bg-success"></span>
                             </i>
@@ -176,6 +187,15 @@
                             <span class="hh-sidebar-item">Website Builder</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="#" @click='goToInvite()'>
+                            <i class="fa fa-handshake-o">
+                                <span class="icon-bg hh-bg-primary"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Invite</span>
+                        </a>
+                    </li>
+
                     <!-- <li>
                         <a href="#" class="snooz">
                             <i class="fa fa-line-chart">
@@ -193,6 +213,54 @@
                         </a>
                     </li> -->
                     <li>
+                        <a href="#" @click='goToUserSettings()'>
+                            <i class="fa fa-cog">
+                                <span class="icon-bg hh-bg-success"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="done" @click="bExpand = !bExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Banners</span>
+                        </a>
+                    </li>
+                    <li v-if="bExpand">
+                        <a href="#" class="" @click='goToBanner("bt_add")'>
+                            <i class="fa fa-plus">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Banner Type</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("bt_list")'>
+                        <a href="#" class="">
+                            <i class="fa fa-list">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List BannerType</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("b_add")'>
+                        <a href="#" class="">
+                            <i class="fa fa-plus">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Banner</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("b_list")'>
+                        <a href="#" class="">
+                            <i class="fa fa-list">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Banners</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
                                 <span class="icon-bg hh-bg-violet"></span>
@@ -204,41 +272,15 @@
             </nav>
         </aside>
 
-        <section>
+       <section>
             <div class="hh-body-wrapper">
                 <div class="container-fluid">
-                    <header class="hh-page-title">
-                        <span>Dashboard</span>
-                    </header>
+                    
                     <div class="row">
-                        <div class="col-lg-3 col-xs-6">
-                            <div class="hh-info-box hh-txt-success">
-                                <i class="fa fa-globe"></i>
-                                <span class="heading">Websites</span>
-                                <span class="value"><span>5</span></span>
-                            </div>
+                        <div class="col-md-12">
+                            <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner"></component>
                         </div>
-                        <div class="col-lg-3 col-xs-6">
-                            <div class="hh-info-box hh-txt-primary">
-                                <i class="fa fa-server"></i>
-                                <span class="heading">Services</span>
-                                <span class="value"><span>1</span></span>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-xs-6">
-                            <div class="hh-info-box hh-txt-danger">
-                                <i class="fa fa-calendar-times-o"></i>
-                                <span class="heading">Expiration</span>
-                                <span class="value"><span>12-Dec-2018</span></span>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-xs-6">
-                            <div class="hh-info-box hh-txt-warning">
-                                <i class="fa fa-dollar"></i>
-                                <span class="heading">Revenue</span>
-                                <span class="value"><span>1009K</span></span>
-                            </div>
-                        </div>
+                        
                     </div>
                     
 
@@ -254,6 +296,18 @@
 <script>
 
 import psl from 'psl';
+import Cookies from 'js-cookie';
+
+import Invite from './invite';
+import HomePage from './Dashboard';
+import UserSettings from './user-settings';
+// import DashboardVue from './Dashboard.vue';
+
+// Banners Templates
+import AddBannerType from './Banner/add_bannertype';
+import AddBanner from './Banner/add_banner';
+import BannerTypeList from './Banner/bannertypeList';
+import BannerList from './Banner/bannersList';
 
 export default {
   name: 'UserDashboard',
@@ -264,26 +318,87 @@ export default {
   },
   data () {
     return {
-      data: 'data'
+      data: 'data',
+      bExpand: false,
+      componentId: '',
+      userEmailId: '',
+      rowdata: {}
     }
   },
   component: {
   },
   methods: {
+    EditBanner (item) {
+        // console.log(item)
+        this.rowdata = item
+        if (item.type === 'bannertype') {
+          this.componentId = AddBannerType
+        } else if (item.type == 'banner') {
+          this.componentId = AddBanner
+        } else if (item.type == 'bannertypelist') {
+          this.componentId = BannerTypeList
+        } else if (item.type == 'bannerlist') {
+          this.componentId = BannerList
+        } else {
+          this.rowdata = {}
+        }
+    },
+    goToBanner (name) {
+      this.rowdata = {}
+        if (name === 'bt_add') {
+            this.componentId = AddBannerType;
+        } else if (name === 'b_add') {
+            this.componentId = AddBanner;
+        } else if (name === 'bt_list') {
+            this.componentId = BannerTypeList;
+        } else if (name === 'b_list') {
+            this.componentId = BannerList;
+        } else {}
+    },
     goToEditor() {
-      this.$router.push('/editor');
+      // this.$router.push('/editor');
+      window.location = '/editor';
+    },
+    goToInvite(){
+        this.componentId = Invite;
+    },
+    goToDashboard(){
+        this.componentId = HomePage;
+    },
+    goToUserSettings(){
+        this.componentId = UserSettings;
     },
     doLogout() {
-      // localStorage.removeItem("auth_token");
-      this.$session.remove('username');
-      let location = psl.parse(window.location.hostname)
-      location = location.domain === null ? location.input : location.domain
-      this.$cookie.delete('authUser', {domain: location});
-      this.$cookie.delete('auth_token', {domain: location});
-      this.$router.push('/login');
+      this.$confirm('Do you want to logout?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+             localStorage.removeItem('current_sub_id');
+            this.$session.remove('username');
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.remove('auth_token' ,{domain: location});
+            Cookies.remove('email' ,{domain: location});
+            Cookies.remove('userDetailId' ,{domain: location}); 
+            Cookies.remove('subscriptionId' ,{domain: location}); 
+
+            this.isLoggedIn = false;
+            // this.$router.push('/login');
+            window.location = '/login';
+        }).catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: 'Delete canceled'
+          // });          
+        });
     }
   },
   mounted () {
+
+      this.goToDashboard();
+
+    this.userEmailId = Cookies.get('email');
 
     $(function () {
 
@@ -295,13 +410,13 @@ export default {
             }
         });
 
-        $(document).on("click", function (e) {
-            e.preventDefault();
-            var $item = $(".hh-dropmenu-item");
-            if ($item.hasClass("active")) {
-                $item.removeClass("active");
-            }
-        });
+        // $(document).on("click", function (e) {
+        //     // e.preventDefault();
+        //     var $item = $(".hh-dropmenu-item");
+        //     if ($item.hasClass("active")) {
+        //         $item.removeClass("active");
+        //     }
+        // });
 
         $('.hh-chat-body').slimScroll({
             height: '450px',
@@ -319,12 +434,12 @@ export default {
             $(".hh-body-wrapper").toggleClass("hh-nav-min");
         });
 
-        $("li.hh-dropdown > a.hh-menu-item").on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $(".hh-dropmenu-item").removeClass("active");
-            $(this).next(".hh-dropmenu-item").toggleClass("active");
-        });
+        // $("li.hh-dropdown > a.hh-menu-item").on('click', function (e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //     $(".hh-dropmenu-item").removeClass("active");
+        //     $(this).next(".hh-dropmenu-item").toggleClass("active");
+        // });
 
         $(".fa-chevron-down").on("click", function () {
             var $ele = $(this).parents('.panel-heading');
@@ -443,7 +558,7 @@ a, a:hover, a:visited, a:link, a:active {
     -webkit-box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
             box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
     background: white;
-    z-index: 10000;
+    z-index: -1;
     text-align: center;
 }
 
@@ -522,7 +637,7 @@ a, a:hover, a:visited, a:link, a:active {
 .hh-logo-container {
     width: 225px;
     text-align: center;
-    height: 50px;
+    height: 82px;
     float: left;
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
@@ -1968,4 +2083,56 @@ ul.hh-dropmenu-item {
     color: #fff !important;
 }
 
+.skewedbox {
+  position:relative;
+  background-color:#000000;
+  /*width:200px;*/
+  color:#FFFFFF;
+  padding:15px;
+  margin:0 auto;
+  margin-right: 50px;
+}
+
+.skewedbox:before {
+  content:'';
+  position:absolute;
+  left:-10%;
+  top:0;
+  width:120%;
+  height:100%;
+  background-color:#58ADFF;
+  transform:skewX(-20deg);
+  box-shadow:0 0 5px rgba(0,0,0,0.5);
+}
+
+.skewedbox span {
+    position:relative;
+}
+
+.skewedbox span span {
+    font-weight: 900;
+    text-transform: lowercase;
+}
+
+.skew-logout-btn{
+  position: absolute;
+  right: 10px;
+  top: 30px;
+  background-color: rgba(255,0,0,0.7);
+  transition: 0.2s all linear;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px #999;
+}
+
+.skew-logout-btn:hover{
+  background-color: rgba(255,0,0,1);
+  transition: 0.2s all linear;
+}
+
+.skew-logout-btn i{
+  color: #fff;
+  margin: 5px 7px;
+}
 </style>

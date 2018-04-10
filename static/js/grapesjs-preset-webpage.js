@@ -81,12 +81,12 @@ grapesjs.plugins.add('gjs-preset-webpage', (editor, opts) => {
     id: 'undo',
     className: 'fa fa-undo icon-undo',
     command: 'undo',
-    attributes: { title: 'Undo (CTRL/CMD + Z)'}
+    attributes: { title: 'Undo'}
   },{
     id: 'redo',
     className: 'fa fa-repeat icon-redo',
     command: 'redo',
-    attributes: { title: 'Redo (CTRL/CMD + SHIFT + Z)' }
+    attributes: { title: 'Redo' }
   },{
     id: 'clean-all',
     className: 'fa fa-trash icon-blank',
