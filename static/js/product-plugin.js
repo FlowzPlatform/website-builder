@@ -651,7 +651,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     bm.add('SliderCustom', {
         label: 'Custom Slider',
-        content: '<CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
+        content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script><CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
         attributes: {
             class: 'fa fa-sliders',
             title: 'Custom Slider',
