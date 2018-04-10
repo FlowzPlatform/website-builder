@@ -8,20 +8,23 @@
         <div class="overlay"></div>
     
         <!-- Sidebar Wrapper -->
-        <nav id="sidebar-wrapper" role="navigation">
-          <div class="treeViewBlock" style="transform: scaleX(-1);">
-            <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
-              <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+        <nav id="sidebar-wrapper" role="navigation" style="">
+          <div class="treeViewBlock" style="transform: scaleX(-1); padding: 5px;">
+            <div style="transform: scaleX(-1);">
+              <small>Current Subscription</small>
+              <!-- <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
+                <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+              </div> -->
+              <el-select v-model="value" @change="changeSubscription()" placeholder="Select Your Subscription" style="width: 100%">
+              <el-option style="width: 100%"
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+              </el-select>
+              <el-tree v-loading="treeLoading" element-loading-text="Loading..." v-if='isTreeVisible === true' :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current=true></el-tree>  
             </div>
-            <el-select v-model="value" @change="changeSubscription()" placeholder="Select Your Subscription" style="transform: scaleX(-1); width: 100%">
-            <el-option style="width: 100%"
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-            </el-select>
-            <el-tree v-loading="treeLoading" element-loading-text="Loading..." v-if='isTreeVisible === true' style="transform: scaleX(-1);" :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current=true></el-tree>
           </div>
         </nav>
         <!-- /#sidebar-wrapper -->
@@ -30,9 +33,6 @@
         <div id="page-content-wrapper">
           <div class="sideMenuOpener">
             <button type="button" class="hamburger is-open" data-toggle="offcanvas">
-                <!-- <span class="hamb-top"></span>
-                <span class="hamb-middle"></span>
-                <span class="hamb-bottom"></span> -->
                 <div class="sideOpener">
                   <i class="fa fa-angle-right text-white"></i>
                   <i class="fa fa-angle-left text-white"></i>
@@ -40,10 +40,10 @@
             </button>
           </div>
           <div class="allComponents">
-            <!-- && componentId != null -->
-            <!-- <div class="row" v-if="isHomePage === false && isSettingsPage === false" style="margin-top: 0px;"> -->
+
             <div class="row" style="margin-top: 0px;">
-              <!-- <div v-else class="col-md-4"></div> -->
+
+              <!-- Action Buttons -->
               <div class="col-md-4 editor-buttons" align="right" v-if="componentId != null">
                   <div style="margin-right:10px; margin: 15px;">
                       <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
@@ -144,96 +144,9 @@
               </el-dialog>
             </div>
 
-            <!-- <div v-if="isHomePage === true">
-              <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" >
-                  <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
-                      <el-form-item prop="filename">
-                        <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
-                        <el-input v-model="formAddFile.filename" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter File Name"></el-input>
-                      </el-form-item>
-                       
-                  </el-form>
-                  <span slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
-                      <el-button  @click="canceldialog('formAddFile')">Cancel</el-button>
-                  </span>
-              </el-dialog>
-
-              <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
-                  <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
-                      <el-form-item prop="foldername">
-                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
-                        <el-input v-model="formAddFolder.foldername" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
-                      </el-form-item>
-                  </el-form>
-                  <span slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
-                      <el-button @click="canceldialogfolder('formAddFolder')">Cancel</el-button>
-                  </span>
-              </el-dialog>
-
-              <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
-                <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
-                  <el-form-item prop="projectName">
-                    <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
-                    <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Website Name"></el-input>
-                  </el-form-item>
-
-                  <el-form-item>
-                    <div class="templateSelection">
-                      <strong>Select Template</strong>
-                      <ul>
-                        <li>
-                            <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
-                            <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
-                            <img src="https://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
-                        </li>
-                        <li>
-                            <input type="radio" name="layout" value="template1" id="myCheckbox1" />
-                            <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
-                        </li>
-                        <li>
-                            <input type="radio" name="layout" value="template2" id="myCheckbox2" />
-                            <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
-                        </li>
-                        <li>
-                            <input type="radio" name="layout" value="template3" id="myCheckbox3" />
-                            <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
-                        </li>
-                      </ul>
-                    </div>
-                  </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Website</el-button>
-                </span>
-              </el-dialog>
-            </div> -->
-
-            <!-- <div v-if="!previewGrid" style="margin-left: 10px;">
-              <component :is="componentId" ref="contentComponent"></component>
-            </div> -->
-
             <div v-if="display = true" style="margin-left: 10px;">
-              <!-- <el-tabs  v-model="editableTabsValue"  type="card" :tab-position="tabPosition"  editable @tab-click="tabClicked" @edit="handleTabsEdit">
-                <el-tab-pane
-                  v-for="(item, index) in editableTabs"
-                  :key="item.name"
-                  :label="item.title"
-                  :name="item.name"> -->
-                  <!-- <el-tooltip slot="label" :content="item.filepath"><span>{{item.title}}</span></el-tooltip> -->
-                  <!-- <component :is="item.componentId" ref="contentComponent" v-on:updateProjectName="getData"></component> -->                  
-                  <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
-                <!-- </el-tab-pane>
-              </el-tabs> -->
-            </div>
-            <!-- <div v-if="display == true" style="margin-left: 10px;">
               <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
-            </div> -->
-            
+            </div>
           </div>
         </div>
         <!-- /#page-content-wrapper -->
@@ -365,11 +278,6 @@
       return {
         display: true,
         flag: false,
-        // tabPosition: 'bottom',
-        // taburl: '',
-        // editableTabsValue: '0',
-        // editableTabs: [],
-        // tabIndex:0,
         options: '',
         value:'',
         autoFolders: true,
@@ -482,7 +390,7 @@
 
       // Check if login token in cookie exist or not
       if(Cookies.get('auth_token', {domain: location})){
-        // this.getData();
+        
         // Set email Session
 
         axios.get(config.userDetail, {
@@ -527,15 +435,8 @@
         this.$router.push('/login');
       }
 
-      // if(this.$cookie.get('auth_token')){
-      //   this.getData();
-      // } else {
-      //   this.$router.push('/login');
-      // }
     },
     async mounted () {
-
-      //console.log('Index Page: ', Cookies.get('email'));
 
       // Sidemenu Toggle
       $(document).ready(function() {
@@ -561,108 +462,110 @@
           }
         }
 
-        $('[data-toggle="offcanvas"]').click(function() {
-            $('#wrapper').toggleClass('toggled');
-        });
+      });
+
+      $('[data-toggle="offcanvas"]').click(function() {
+          $('#wrapper').toggleClass('toggled');
       });
 
       // Project Directory Listing
-      let self = this
+      let self = this;
 
       let socket = config.socketURL;
-      // if (process.env.NODE_ENV !== 'development') {
-      //   socket = io(config.socketURL);
-      // } else {
-      //   socket = config.socketURL
-      // }
       
       const app = feathers().configure(socketio(io(socket)))
       
+      // Socket Listen for Creating File or Folder
       app.service("flows-dir-listing").on("created", (response) => {
-        //console.log(response);
-        if(response.socketListen) {
-            response.path = response.path.replace(/\//g, "\\")
-            var s = response.path.replace(this.rootpath, '').split('\\');
+        if (response.socketListen) {
+          response.path = response.path.replace(/\//g, "\\")
+          var s = response.path.replace(this.rootpath, '').split('\\');
 
-            if(s[5] == Cookies.get('userDetailId')){
-              let objCopy = self.directoryTree
-              let evalStr = 'self.directoryTree'
-              let $eval = eval(evalStr)
-              for (var i = 0; i < s.length; i++) {
-                  let inx = _.findIndex($eval, function(d) {
-                      return d.name == s[i]
-                  })
-                  if (inx >= 0 && $eval[inx]["children"] != undefined) {
-                      evalStr += '[' + inx + ']["children"]'
-                      $eval = eval(evalStr)
-                  }
-              }
+          if (s[5] == Cookies.get('userDetailId')) {
+            let objCopy = self.directoryTree
+            let evalStr = 'self.directoryTree'
+            let $eval = eval(evalStr)
+            for (var i = 0; i < s.length; i++) {
               let inx = _.findIndex($eval, function(d) {
-                  return d.name == response.name
+                return d.name == s[i]
               })
-              if (inx < 0) {
-                  $eval.push(response)
+              if (inx >= 0 && $eval[inx]["children"] != undefined) {
+                evalStr += '[' + inx + ']["children"]'
+                $eval = eval(evalStr)
               }
             }
-
-          // this.getData();
+            let inx = _.findIndex($eval, function(d) {
+              return d.name == response.name
+            })
+            if (inx < 0) {
+              $eval.push(response)
+            }
           }
-          
-      })
-      app.service("flows-dir-listing").on("removed", (response) => {
-          if (response['errno'] == undefined) {
-              var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
-
-              if(s[5] == Cookies.get('userDetailId')){
-                //console.log(s);
-                let objCopy = self.directoryTree
-                let evalStr = 'self.directoryTree'
-                let $eval = eval(evalStr)
-                for (var i = 0; i < s.length; i++) {
-                    let inx = _.findIndex($eval, function(d) {
-                        return d.name == s[i]
-                    })
-                    if (inx >= 0 && $eval[inx]["children"] != undefined && $eval[inx].path != response) {
-                        if ($eval[inx].children.length > 0) {
-                            evalStr += '[' + inx + ']["children"]'
-                            $eval = eval(evalStr)
-                        }
-                    }
-                }
-                let inx = _.findIndex($eval, function(d) {
-                    return d.path == response
-                })
-                if (inx >= 0) {
-                    $eval.splice(inx, 1)
-                    if (self.currentFile != null) {
-                        if (self.currentFile.path == response) {
-                            self.$message({
-                                showClose: true,
-                                message: 'Successfully Deleted!',
-                                type: 'error'
-                            });
-                            self.currentFile = null
-                            self.componentId = null
-                        }
-                    }
-                }
-
-                this.getData();
-              } else {
-
-              }
-          }
-
-          
+        }
       });
+
+      // Socket Listen for Delete File or Folder
+      app.service("flows-dir-listing").on("removed", (response) => {
+        if (response['errno'] == undefined) {
+          var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
+
+          if (s[5] == Cookies.get('userDetailId')) {
+            let objCopy = self.directoryTree
+            let evalStr = 'self.directoryTree'
+            let $eval = eval(evalStr)
+            for (var i = 0; i < s.length; i++) {
+              let inx = _.findIndex($eval, function(d) {
+                return d.name == s[i]
+              })
+              if (inx >= 0 && $eval[inx]["children"] != undefined && $eval[inx].path != response) {
+                if ($eval[inx].children.length > 0) {
+                  evalStr += '[' + inx + ']["children"]'
+                  $eval = eval(evalStr)
+                }
+              }
+            }
+            let inx = _.findIndex($eval, function(d) {
+              return d.path == response
+            })
+            if (inx >= 0) {
+              $eval.splice(inx, 1)
+              if (self.currentFile != null) {
+                if (self.currentFile.path == response) {
+                  self.$message({
+                    showClose: true,
+                    message: 'Successfully Deleted!',
+                    type: 'error'
+                  });
+                  self.currentFile = null
+                  self.componentId = null
+                }
+              }
+            }
+            this.getData();
+          } else {
+            // Do Nothing
+          }
+        }
+      });
+
+      // Get all subscriptions
       let sub_id = [];
-        await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
-        .then(response => {
+      await axios.get(config.userDetail ,{ 
+        headers: { 
+          'Authorization': Cookies.get('auth_token') 
+        } 
+      })
+      .then(response => {
+        
+        if(response.data.data.package){
+
           let obj_val = Object.values(response.data.data.package)
           let obj_key = Object.keys(response.data.data.package)
+
           for (let index = 0; index < obj_val.length; index++) {
             sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
-          }
+          }  
+
           this.options = sub_id;
 
           if(!(Cookies.get('subscriptionId')) || Cookies.get('subscriptionId') == null || Cookies.get('subscriptionId') == undefined || Cookies.get('subscriptionId') == ""){
@@ -670,50 +573,34 @@
           } else {
             this.value = Cookies.get('subscriptionId')
           }
-          // this.value  = sub_id[0].value;
 
           let location = psl.parse(window.location.hostname)
           location = location.domain === null ? location.input : location.domain
           Cookies.set('subscriptionId', this.value, {domain: location});
 
-          localStorage.setItem("current_sub_id",this.value)
-          // if (localStorage.getItem('current_sub_id') != null || localStorage.getItem('current_sub_id') != undefined) {
-          //   this.value = localStorage.getItem('current_sub_id')
-          // }
-          // else{
-          //   this.options = sub_id
-          //   this.value  = sub_id[0].value;
-          //   localStorage.setItem("current_sub_id",this.value)
-                  // }
-          //this.getDataOfSubscriptionUser();
+          localStorage.setItem("current_sub_id",this.value);
+        } else {
 
-           // if(Cookies.get("subscriptionId") && Cookies.get("subscriptionId") != undefined){
-           //      this.value = Cookies.get("subscriptionId")
-        })
-        .catch((err)=>{ console.log('Error:', err); })
+          this.$confirm('No subscriptions found for your user. Subscribe to some package?', 'No Subscriptions found.', {
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No. I\'m just wandering here',
+            type: 'warning'
+          }).then(() => {
+            window.open('https://www.dashboard.' + domainkey + '/');
+          }).catch(() => {
+            console.log('Cancelled.')         
+          });
+
+        }       
+
+      })
+      .catch((err)=>{ 
+        console.log('Error:', err); 
+      });
     },
 
     methods: {
-      // async getDataOfSubscriptionUser(){
-      //   let sub_id = []
-      //   await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
-      //     .then(response => {
-      //       let obj_val = Object.values(response.data.data.package)
-      //       let obj_key = Object.keys(response.data.data.package)
-      //       for (let index = 0; index < obj_val.length; index++) {
-      //         sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
-      //       }
-      //       this.options = sub_id
 
-      //        if(!Cookies.get("subscriptionId") || Cookies.get("subscriptionId") == undefined || Cookies.get("subscriptionId") == ""){
-      //             this.value = sub_id[0].value;
-      //             let location = psl.parse(window.location.hostname);
-      //             location = location.domain === null ? location.input : location.domain;
-
-      //             Cookies.set("subscriptionId" , this.value, {domain: location});
-      //         }
-      //     })
-      // },
       updateProjectNameLimitCount(){
         this.projectLimitCount = this.formAddProjectFolder.projectName.length;
       },
@@ -728,32 +615,20 @@
 
       changeSubscription(){
         this.fullscreenLoading=true
-        // this.editableTabs = []
 
         axios.get(config.subscriptionApi + 'user-subscription/' + this.value ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
           .then(async response => {
-            // let location = psl.parse(window.location.hostname);
-            // location = location.domain === null ? location.input : location.domain;
 
             let location = psl.parse(window.location.hostname)
             location = location.domain === null ? location.input : location.domain
             Cookies.set('subscriptionId', this.value, {domain: location});
 
             localStorage.setItem("current_sub_id", this.value)
-            // Cookies.set('userDetailId', response.data.userId, {domain: location});
             Cookies.set('subscriptionId', this.value, {domain: location});
-            //axios.defaults.headers.common['Authorization'] =  Cookies.get('auth_token');
-            //axios.defaults.headers.common['subscriptionId'] =  this.value;
             await this.getData();
             this.componentId = 'Dashboard';
             this.fullscreenLoading=false
           }).catch((e)=>{
-            //  this.$message({
-            //   showClose: true,
-            //   duration:0,
-            //   message: 'Servers are down please try again later.',
-            //   type: 'error'
-            // });
             console.log(e)
             this.fullscreenLoading=false;
           })
@@ -1663,6 +1538,7 @@
                 this.$store.state.updateStats = Math.random();
                 return axios.post(config.baseURL + '/flows-dir-listing', {
                     foldername: newFolderName,
+                    socketListen: true,
                     type: 'folder'
                   })
                   .then(async (res) => {
@@ -1686,6 +1562,7 @@
                     if (this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')) {
                       axios.post(config.baseURL + '/flows-dir-listing', {
                           filename: newFolderName + '/default.partial',
+                          socketListen: true,
                           text: '',
                           type: 'file'
                         })
@@ -1843,6 +1720,7 @@
                   return axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: newfilename + '.partial',
                       text: ' ',
+                      socketListen: true,
                       type: 'file'
                     })
                     .then((res) => {
@@ -1890,6 +1768,7 @@
                   this.$store.state.updateStats = Math.random();
                   return axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: newfilename + '.menu',
+                      socketListen: true,
                       text: ' ',
                       type: 'file'
                     })
@@ -1940,6 +1819,7 @@
                   // this.$store.state.updateStats = 'PageUpdate';
                   return axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: newfilename + '.html',
+                      socketListen: true,
                       text: ' ',
                       type: 'file'
                     })
@@ -2022,6 +1902,7 @@
                   this.$store.state.updateStats = Math.random();
                   return axios.post(config.baseURL + '/flows-dir-listing', {
                       filename: newfilename + '.layout',
+                      socketListen: true,
                       text: ' ',
                       type: 'file'
                     })
@@ -3353,6 +3234,7 @@
                               let newFolderName = folderUrl + '/Partials/';
                               await axios.post(config.baseURL + '/flows-dir-listing', {
                                 filename: newFolderName + foldernameKey[j] + "/" + DefaultParams[k][foldernameKey[j]],
+                                socketListen: true,
                                 text: ' ',
                                 type: 'file'
                               })
@@ -3376,6 +3258,7 @@
                     let newName = result[i]
                     let newFolderName = folderUrl + '/Partials/' + result[i];
                     axios.post(config.baseURL + '/flows-dir-listing', {
+                        socketListen: true,
                         foldername: newFolderName,
                         type: 'folder'
                       })
@@ -3389,6 +3272,7 @@
                         let newfilename = newFolderName + '/default.partial'
                         axios.post(config.baseURL + '/flows-dir-listing', {
                             filename: newfilename,
+                            socketListen: true,
                             text: ' ',
                             type: 'file'
                           })
@@ -3420,6 +3304,7 @@
                                     let newFolderName = folderUrl + '/Partials/';
                                     await axios.post(config.baseURL + '/flows-dir-listing', {
                                       filename: newFolderName + newName + "/" + DefaultParams[k][newName],
+                                      socketListen: true,
                                       text: ' ',
                                       type: 'file'
                                     })

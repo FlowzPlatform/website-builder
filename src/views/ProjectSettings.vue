@@ -183,13 +183,13 @@
                 </div>
                 <div class="col-md-4">
                   <div class="thumbnail">
-                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523281376/builder/images/template2.jpg" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
+                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523358756/builder/images/template2.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="thumbnail">
-                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523281428/builder/images/template3.jpg" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
+                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523358764/builder/images/tempate3.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   </div>
                 </div>
