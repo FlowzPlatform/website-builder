@@ -30,7 +30,7 @@
     </Row>
     <Row >
       <div style="float: right;padding-top: 10px;">
-        <Page v-if="bdata.total > 10" :total="bdata.total" :current="cpage" show-sizer show-total @on-change="pageChange" @on-page-size-change="psizeChange"></Page>
+        <Page v-if="bdata.total > 10" :total="bdata.total" :current="cpage" show-sizer show-total :page-size="limit" @on-change="pageChange" @on-page-size-change="psizeChange"></Page>
         <div v-else-if="bdata.total === 1">Total {{bdata.total}} item</div>
         <div v-else>Total {{bdata.total}} items</div>
       </div>
@@ -202,7 +202,11 @@ export default {
   },
   methods: {
     handleSearch () {
-      this.init()
+      if (this.filterobj.name !== '' || this.filterobj.type !== '') {
+        this.cpage = 1
+        this.skip = this.cpage * this.limit - this.limit
+        this.init()
+      }
     },
     handleFileterReset () {
       this.filterobj.name = ''
@@ -210,6 +214,7 @@ export default {
       this.init()
     },
     pageChange (page) {
+      this.cpage = page
       this.skip = page * this.limit - this.limit
       this.init()
     },

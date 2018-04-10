@@ -10,7 +10,7 @@
      <Form :model="formItem" :label-width="300" ref="formItem" :rules="rulesformItem">
         <FormItem label="Select Website" prop="website_id">
             <!-- <Input v-model.trim="formItem.website_id" placeholder="Select"></Input> -->
-            <Select v-model="formItem.website_id" placeholder="Select Website">
+            <Select v-model="formItem.website_id" placeholder="Select Website" :disabled="isdisable">
                 <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </FormItem>      
@@ -32,7 +32,7 @@
             </i-switch>
         </FormItem>
         <FormItem>
-            <Button v-if="formItem.id" type="primary" @click="handleEdit('formItem')">Edit</Button>
+            <Button v-if="formItem.id" type="primary" @click="handleEdit('formItem')">Update</Button>
             <Button v-else type="primary" @click="handleSubmit('formItem')">Submit</Button>
             <Button type="ghost" style="margin-left: 8px" @click="handleCancel">Cancel</Button>
         </FormItem>
@@ -60,7 +60,12 @@ export default {
       let userId = Cookies.get('userDetailId')
       if (value !== '' && this.formItem.website_id !== '') {
         let resp = await (axios.get(bannertypeUrl + '?userId=' + userId +'&website_id=' + this.formItem.website_id + '&bt_name=' + value).then(res => {
-          return res.data.data
+          if (this.formItem.id) {
+            let arr = _.reject(res.data.data, {bt_name: this.btname})
+            return arr
+          } else {
+            return res.data.data
+          }
         }).catch(err => {
           return []
         }))
@@ -88,7 +93,9 @@ export default {
           { validator: validateBtname, trigger: 'blur' }
         ]
       },
-      webOptions: []
+      webOptions: [],
+      isdisable: false,
+      btname: ''
     }
   },
   methods: {
@@ -141,6 +148,8 @@ export default {
       if (this.bdata.type === 'bannertype' && this.bdata.id !== '') {
         axios.get(bannertypeUrl + '/' + this.bdata.id).then(res => {
           this.formItem = res.data
+          this.btname = res.data.bt_name
+          this.isdisable = true
         }).catch(err => {
           console.log('Error::', err)
         })

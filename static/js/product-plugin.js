@@ -34,10 +34,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     menuNames.push({ name: 'Select', value: '' });
 
     let configFileUrl = baseURL + '/project-configuration/' + foldername;
-    $.getJSON(baseURL + '/bannertype?status=true&$paginate=false', function(data) {
+    $.getJSON(baseURL + '/bannertype?userId='+userDetailId+'&website_id='+foldername+'&status=true&$paginate=false', function(data) {
         // console.log('data', baseURL, data)
         for (let item of data) {
-            $.getJSON(baseURL + '/banners?banner_type='+ item.id, function(res) {
+            $.getJSON(baseURL + '/banners?userId='+userDetailId+'&banner_type='+item.id+'&banner_status=true', function(res) {
                 if (res.data.length > 0) {
                     bannerTypes.push({ name: item.bt_name, value: item.id})
                 }
