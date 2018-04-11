@@ -104,6 +104,7 @@ export default {
         banner_status: true,
         banner_linkurl: '',
         linkurl_target: '_blank',
+        createdAt: '',
         // website_id: '',
         userId: Cookies.get('userDetailId')
       },
@@ -142,6 +143,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid && this.isShowimgblock) {
           this.$Spin.show();
+          this.formItem.createdAt = new Date()
           // this.formItem.website_id = this.btypeDetail.website_id
           axios.post(bannersUrl, this.formItem).then(res => {
             this.$Spin.hide();
