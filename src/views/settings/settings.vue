@@ -756,8 +756,8 @@
             self.loading = true;
             let  data = {
                 "configName": "Custom Configuration",
-                // "customer_url" :  feathersUrl+"customcustomer",
-                // "invoice_url" : feathersUrl+"custominvoice",
+                "customer_url" :  feathersUrl+"customcustomer",
+                "invoice_url" : feathersUrl+"custominvoice",
                 "domain" : 'custom',
                 "isActive" : true,
                 "isDeleated" : false,
@@ -774,7 +774,7 @@
                 },
             })
             .then(async response => {
-                // console.log("---------response",response)
+                console.log("---------response",response)
                 // localStorage.clear();
                 self.data6 = response.data.data
                 // console.log("++++data6",self.data6);
@@ -871,9 +871,9 @@
                     let location = psl.parse(window.location.hostname)
                     location = location.domain === null ? location.input : location.domain
                     
-                    Cookies.remove('auth_token' ,{domain: location}) 
-                    Cookies.remove('subscriptionId' ,{domain: location}) 
-                    self.$store.commit('logout', self);
+                    // Cookies.remove('auth_token' ,{domain: location}) 
+                    // Cookies.remove('subscriptionId' ,{domain: location}) 
+                    // self.$store.commit('logout', self);
                     
                     // self.$router.push({
                     //     name: 'login'
