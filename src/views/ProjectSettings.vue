@@ -167,7 +167,7 @@
               <a href="javascript:void(0)" id="toggleImportPlugin" class="card color-div toggleableDivHeader">Import Plugin</a>
           </div>
       </div>
-       <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
+      <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row" style="margin-top: 15px;">
           <div class="col-md-12">
             <div class="thumbnail" style="padding: 20px;">
@@ -2353,7 +2353,6 @@ export default {
       var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false }).catch((e)=>{console.log(e)});
 
       configData = JSON.parse(JSON.stringify(configData.data.configData))
-        //// console.log('new config file:',configData);
       for (let q = 0; q < Object.keys(configData[2].layoutOptions[0]).length; q++) {
         //// console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
         if (Object.keys(configData[2].layoutOptions[0])[q] != ('Layout')) {
@@ -2480,17 +2479,9 @@ export default {
       }
       for (let r = 0; r < configData[1].pageSettings.length; r++) {
         var namepage = configData[1].pageSettings[r].PageName
-          //// console.log('namepage:',namepage)
-          //// console.log('this.repoName:',this.repoName)
-          //console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
         var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/' + namepage).catch(err => { console.log(err); this.fullscreenLoading = false });
-        //// console.log('contentpage:',contentpage)
-
-        //// console.log("inside ==pages directory")
         var content1 = ''
-          // content = this.$store.state.content;
         let name = namepage;
-        //// console.log('name:',name)
         name = name.split('.')[0]
         content1 = contentpage.data
         var result1 = [];
@@ -2498,6 +2489,7 @@ export default {
         var DefaultParams = [];
         if (result1.length > 0) {
           var resultParam = result1
+
           for (let i = 0; i < resultParam.length; i++) {
             var temp;
             temp = resultParam[i].trim()
@@ -2533,23 +2525,19 @@ export default {
               }
             }
           }
-          //// console.log("DefaultParams:",DefaultParams)
+
           for (let i = 0; i < configData[1].pageSettings.length; i++) {
             let temp = configData[1].pageSettings[i].PageName
             temp = temp.split('.')[0]
-              //// console.log('temp:',temp)
             if (name == temp) {
-              //console.log('temp:',temp)
               var partials = configData[1].pageSettings[i].partials
               for (let k = 0; k < result1.length; k++) {
                 let checkpartial = false
-                  //// console.log("result[k]:", result[k])
-                for (let r = 0; r < partials.length; r++) {
-                  if (Object.keys(partials[r])[0] == result1[k]) {
-                    checkpartial = true
-                      //// console.log("checkpartial==true")
+                for (let l = 0; l < partials.length; l++) {
+                  if (Object.keys(partials[l])[0] == result1[k]) {
+                    checkpartial = true //partial found in page setting
                     var temp1 = DefaultParams[k][result1[k]]
-                    var temp2 = partials[r][result1[k]]
+                    var temp2 = partials[l][result1[k]]
                     if (temp1.split('.')[0] == temp2.split('.')[0]) {
                       for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
 
@@ -2568,7 +2556,6 @@ export default {
 
                 }
                 if (checkpartial != true) {
-                  //console.log("checkpartial!=true")
                   var obj = {}
                   obj[result1[k]] = DefaultParams[k][result1[k]].split('.')[0]
                   for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
@@ -2581,82 +2568,15 @@ export default {
                   }
                   configData[1].pageSettings[i].partials.push(obj);
                   r = r - 1;
+                  break;
                 }
               }
             } else if (name != temp) {
               //// console.log("file not found in config file")
             }
           }
-          this.saveConfigFile(this.repoName, configData);
         }
-        // this.configData=JSON.parse(JSON.stringify(this.configData.data.data[0].configData))
-        var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
-        if (vueresult.length > 0) {
-          for (let i = 0; i < vueresult.length; i++) {
-            var tempvue = vueresult[i]
-            var tempvue = tempvue.trim().split(' ')
-            if (tempvue[2] != undefined) {
-              var vuetemp = {
-                partialsName: tempvue[0].replace(/"/g, ''),
-                value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue',
-                options: tempvue[2].split('=')[1].replace(/"/g, '')
-              }
-            } else {
-              var vuetemp = {
-                partialsName: tempvue[0].replace(/"/g, ''),
-                value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue'
-              }
-            }
-
-            for (let i = 0; i < configData[1].pageSettings.length; i++) {
-              let temp = configData[1].pageSettings[i].PageName
-              temp = temp.split('.')[0]
-              if (name == temp) {
-                if (configData[1].pageSettings[i].VueComponents != undefined) {
-                  let checkvue = false
-                  for (let j = 0; j < configData[1].pageSettings[i].VueComponents.length; j++) {
-                    if (configData[1].pageSettings[i].VueComponents[j].partialsName == tempvue[0].replace(/"/g, '')) {
-                      if (configData[1].pageSettings[i].VueComponents[j].value.split('.')[0] == tempvue[1].split('=')[1].replace(/"/g, '')) {
-                        checkvue = true;
-                        if (configData[1].pageSettings[i].VueComponents[j].options != '') {
-                          if (tempvue[2] != undefined) {
-
-                            configData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
-                          } else {
-                            configData[1].pageSettings[i].VueComponents[j].options = ''
-                          }
-                        } else {
-                          if (tempvue[2] != undefined) {
-
-                            configData[1].pageSettings[i].VueComponents[j]['options'] = ''
-                            configData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
-                          } else {
-
-                          }
-                        }
-                      } else {
-                        //console.log("value not matched")
-
-                      }
-
-                    }
-                  }
-                  if (checkvue != true) {
-
-                    configData[1].pageSettings[i].VueComponents.push(vuetemp)
-                  }
-                } else {
-                  configData[1].pageSettings[i]['VueComponents'] = []
-                  configData[1].pageSettings[i].VueComponents.push(vuetemp)
-                }
-              }
-            }
-          }
-          this.saveConfigFile(this.repoName, configData);
-        }
-
         this.saveConfigFile(this.repoName, configData);
-        // }
       }
       for (let p = 0; p < Object.keys(configData[2].layoutOptions[0]).length; p++) {
           if (Object.keys(configData[2].layoutOptions[0])[p] == ('Layout')) {
@@ -4380,18 +4300,18 @@ export default {
       var ids = getRemove(this.pluginsTreedata, data.id)
 
       function getRemove (ma, idm) {
-        if (ma instanceof Array) {
-          let k = _.findIndex(ma, {id:idm})
-          if (k >= 0) {
-            ma.splice(k,1)
-            return true
-          }
-          for (let i in ma) {
-            let ii = getRemove(ma[i].children, idm)
-            if (ii) return true
-          }
-        }
-        return false
+        if (ma instanceof Array) {
+          let k = _.findIndex(ma, {id:idm})
+          if (k >= 0) {
+            ma.splice(k,1)
+            return true
+          }
+          for (let i in ma) {
+            let ii = getRemove(ma[i].children, idm)
+            if (ii) return true
+          }
+        }
+        return false
       }
     },
 
