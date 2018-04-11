@@ -82,6 +82,7 @@ export default {
           bt_name: '',
           bt_category: '',
           status: true,
+          createdAt: '',
           userId: Cookies.get('userDetailId')
       },
       rulesformItem: {
@@ -102,6 +103,7 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
+          this.formItem.createdAt = new Date()
           axios.post(bannertypeUrl, this.formItem).then(res => {
             this.$Notice.success({title: 'Success', desc: 'Successfully saved.', duration: 3})
             this.$emit('updateBanner', {type: 'bannertypelist'})
