@@ -14,7 +14,8 @@
                 			<input type="text" class="form-control" placeholder="Enter Base URL" name="apiUrl" v-model="menuBaseUrl">		
                 		</div>
                 		<div class="col-md-2">
-                			<button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button>
+                			<el-button type="primary" @click="updateMenuData()" :loading="fetchDataLoader">Fetch Data</el-button>
+                			<!-- <button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button> -->
                 		</div>
                 	</div>
                 	
@@ -116,8 +117,9 @@ import domenu from 'domenu'
 		data: () => ({
         outputJson: [],
         MenuJSON: [],
-        apiUrl: '',
-        menuBaseUrl: ''
+        apiUrl: 'https://api.flowzcluster.tk/pdmnew/categories',
+        menuBaseUrl: 'search.html?SearchSensor=',
+        fetchDataLoader: false
 	    }),
 	    components: {
 	    },
@@ -280,6 +282,8 @@ import domenu from 'domenu'
 
 			async updateMenuData () {
 
+				this.fetchDataLoader = true;
+
 				// window.localStorage.setItem('domenu-1Json', []);
 
 
@@ -291,25 +295,37 @@ import domenu from 'domenu'
 				let folderPath = this.$store.state.fileUrl.replace(/\\/g, "\/");
 				let folderName = folderPath.split('/')[6];
 
-				let fullUrl = '/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + folderName + '/public/assets/project-details.json';
+				// let fullUrl = '/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + folderName + '/public/assets/project-details.json';
 
-				await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + fullUrl, {
+				// await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + fullUrl, {
+				// })
+				// .then((res) => {
+				// 	let configs = JSON.parse(res.data);
+				// 	// console.log(configs);
+				// 	// console.log(configs[0].Projectvid.vid);
+				// 	vid = configs[0].Projectvid.vid;
+				// })
+				// .catch((e) => {
+				//     console.log(e)
+				// })
+
+				await axios.get(config.baseURL + '/project-configuration/' + folderName , {
 				})
-				.then((res) => {
-					let configs = JSON.parse(res.data);
-					// console.log(configs);
-					// console.log(configs[0].Projectvid.vid);
-					vid = configs[0].Projectvid.vid;
+				.then(function (response) {
+				    console.log(response);
+				    let configs = response.data.configData;
+				    vid = configs[1].projectSettings[0].ProjectVId.vid;
 				})
-				.catch((e) => {
-				    console.log(e)
-				})
+				.catch(function (error) {
+				    console.log(error);
+				    this.fetchDataLoader = false;
+				});
 
 				axios.get(this.apiUrl, {
-			    headers: {
-			    	Authorization: Cookies.get('auth_token'),
-			    	vid: vid
-			    }
+				    headers: {
+				    	Authorization: Cookies.get('auth_token'),
+				    	vid: vid
+				    }
 				})
 				.then((res) => {
 					console.log(res);
@@ -319,22 +335,22 @@ import domenu from 'domenu'
 				    for(let i = 0; i < categories.length; i++){
 				    	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
 				    	let menuItem = {
-														    "id": i,
-														    "title": categories[i].key,
-														    "customSelect": this.menuBaseUrl + urlName,
-														    "__domenu_params": {}
-														    ,
-														    "select2ScrollPosition": {
-														        "x": 0, "y": 0
-														    }
-															};
+										    "id": i,
+										    "title": categories[i].key,
+										    "customSelect": this.menuBaseUrl + urlName,
+										    "__domenu_params": {}
+										    ,
+										    "select2ScrollPosition": {
+										        "x": 0, "y": 0
+										    }
+										};
 
 						menuJson.push(menuItem);								
 			    	}
 
 			    	menuData = JSON.stringify(menuJson);
 			    	// window.localStorage.setItem('domenu-1Json', JSON.stringify(menuJson));
-
+			    	this.fetchDataLoader = false;
 			    	this.initMenu(menuData);
 				})
 				.catch((e) => {
@@ -343,7 +359,8 @@ import domenu from 'domenu'
 				        message: 'Failed! Please try again.',
 				        type: 'error'
 				    });
-				    //console.log(e)
+				    console.log(e);
+				    this.fetchDataLoader = false;
 				})
 			}
 		}
