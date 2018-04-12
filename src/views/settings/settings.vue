@@ -8,7 +8,7 @@
                 <div v-for="(item, inx) in data6">
                     <Col :span="24">
                         <div style="padding: 5px;">
-                            <Card style="padding:10px;min-height: 300px">
+                            <Card style="padding:10px;min-height: 320px">
                                 <p slot="title"> {{item.configName}}</p>
                                 <Tooltip placement="top" slot="extra" content="Toggle active / inactive" style="padding-right:9px;">
                                   <i-switch v-model="item.isActive" :disabled="disabled" @on-change="buttonClicked(item)"></i-switch>

@@ -3,7 +3,7 @@
 		<div class="settings_header">
 			<Button @click="goToSettingsList">All Account Settings</Button>
 		</div>
-		<div class="container" style="background: white;">
+		<div class="container" style="background: white;min-height: 320px;padding:10px">
 			<div class="row">
 				<div class="col-md-12" style="margin-top: 20px;">
 					<Form class="form" label-position="left" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
