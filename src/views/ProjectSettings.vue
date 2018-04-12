@@ -4387,18 +4387,18 @@ export default {
       var ids = getRemove(this.pluginsTreedata, data.id)
 
       function getRemove (ma, idm) {
-        if (ma instanceof Array) {
-          let k = _.findIndex(ma, {id:idm})
-          if (k >= 0) {
-            ma.splice(k,1)
-            return true
-          }
-          for (let i in ma) {
-            let ii = getRemove(ma[i].children, idm)
-            if (ii) return true
-          }
-        }
-        return false
+        if (ma instanceof Array) {
+          let k = _.findIndex(ma, {id:idm})
+          if (k >= 0) {
+            ma.splice(k,1)
+            return true
+          }
+          for (let i in ma) {
+            let ii = getRemove(ma[i].children, idm)
+            if (ii) return true
+          }
+        }
+        return false
       }
     },
 
