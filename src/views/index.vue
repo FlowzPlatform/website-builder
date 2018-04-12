@@ -2802,7 +2802,7 @@
                                         "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
-                                        "AccountPaymentGateways":[],
+                                        // "AccountPaymentGateways":[],
                                         "WebsiteRoles": [{
                                           "roleName": "guest"
                                         }, {
