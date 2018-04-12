@@ -18,7 +18,7 @@
 							<Option value='paypal'>PayPal</Option>
 							</Select>
 						</FormItem>
-						<FormItem label="Secret" v-if="formValidate.gateway=='stripe'" prop='x_api_token'>
+						<!-- <FormItem label="Secret" v-if="formValidate.gateway=='stripe'" prop='x_api_token'>
 							<Input v-model="formValidate.x_api_token" placeholder="Enter secret"></Input>
 						</FormItem>
 						<FormItem label="Api_Login_id" v-if="formValidate.gateway=='auth'" prop='x_api_token'>
@@ -34,7 +34,30 @@
 						</FormItem>
 						<FormItem label="Secret" v-if="formValidate.gateway == 'paypal'"  prop='x_api_login'>
 							<Input v-model="formValidate.x_api_login" placeholder="Enter Secret"></Input>
+						</FormItem> -->
+
+
+						<FormItem label="Secret key" v-if="formValidate.gateway == 'stripe'" prop="Secret_Key">
+							<Input v-model="formValidate.Secret_Key" placeholder="Enter Secret key"></Input>
 						</FormItem>
+						<!--<FormItem label="x_api_token" v-if="formValidate.gateway">
+							<Input v-model="formValidate.x_api_token" placeholder="Enter x_api_token"></Input>
+						</FormItem>-->
+						<FormItem label="Transaction Key" v-if="formValidate.gateway == 'auth'" prop="Transaction_Key">
+							<Input v-model="formValidate.Transaction_Key" placeholder="Enter Transaction Key"></Input>
+						</FormItem>
+						<FormItem label="Signature Key" v-if="formValidate.gateway == 'auth'" prop="Signature_Key">
+							<Input v-model="formValidate.Signature_Key" placeholder="Enter Signature Key"></Input>
+						</FormItem>
+						<FormItem label="Client Id" v-if="formValidate.gateway == 'paypal'" prop="Client_Id">
+							<Input v-model="formValidate.Client_Id" placeholder="Enter Client Id"></Input>
+						</FormItem>
+						<FormItem label="Secret" v-if="formValidate.gateway == 'paypal'" prop="Secret">
+							<Input v-model="formValidate.Secret" placeholder="Enter Secret"></Input>
+						</FormItem>
+						<!--<FormItem label="x_api_login" v-if="formValidate.gateway == 'auth' || formValidate.gateway == 'paypal'">
+							<Input v-model="formValidate.x_api_login" placeholder="Enter x_api_login"></Input>
+						</FormItem>-->
 						<div style="text-align:center;">
 							<Button type="primary" @click="handleSubmit('formValidate')" :loading="loading">Submit</Button>
 							<Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px;">Reset</Button>
@@ -61,23 +84,40 @@
 				formValidate:{
 					configuration:'',
 					gateway:'',
-					x_api_token:'',
-					x_api_login:''
+					Secret_Key: '',
+					Transaction_Key: '',
+					Signature_Key: '',
+					Client_Id: '',
+					Secret: ''
+					// x_api_token:'',
+					// x_api_login:''
 				},
 				configs: [],
 				ruleValidate: {
-					configuration: [
-						{ required: true, message: 'The configuration name cannot be empty', trigger: 'blur' }
-					],
 					gateway: [
 						{ required: true, message: 'Please select gateway', trigger: 'blur' }
 					],
-					x_api_login: [
-						{ required: true, message: 'The x_api_login cannot be empty', trigger: 'blur' }
+					Secret_Key: [
+						{ required: true, message: 'The Secret_Key cannot be empty', trigger: 'blur' }
 					],
-					x_api_token: [
-						{ required: true, message: 'The x_api_token cannot be empty', trigger: 'blur' }
-					]
+					Transaction_Key: [
+						{ required: true, message: 'The Transaction_Key cannot be empty', trigger: 'blur' }
+					],
+					Signature_Key: [
+						{ required: true, message: 'The Signature_Key cannot be empty', trigger: 'blur' }
+					],
+					Client_Id: [
+						{ required: true, message: 'The Client_Id cannot be empty', trigger: 'blur' }
+					],
+					Secret: [
+						{ required: true, message: 'The Secret cannot be empty', trigger: 'blur' }
+					],
+					// x_api_login: [
+					// 	{ required: true, message: 'The x_api_login cannot be empty', trigger: 'blur' }
+					// ],
+					// x_api_token: [
+					// 	{ required: true, message: 'The x_api_token cannot be empty', trigger: 'blur' }
+					// ]
 				}
 			}
 		},
@@ -130,7 +170,20 @@
 									let patchData = _.cloneDeep(this.formValidate)
 									delete patchData.configuration;
 									if (this.formValidate.gateway == 'stripe') {
-										delete patchData.x_api_login
+										delete patchData.Transaction_Key
+										delete patchData.Signature_Key
+										delete patchData.Client_Id
+										delete patchData.Secret
+									}
+									if (this.formValidate.gateway == 'auth') {
+										delete patchData.Secret_Key
+										delete patchData.Client_Id
+										delete patchData.Secret
+									}
+									if (this.formValidate.gateway == 'paypal') {
+										delete patchData.Secret_Key
+										delete patchData.Transaction_Key
+										delete patchData.Signature_Key
 									}
 									let gateway = this.formValidate.gateway;
 									// console.log("gateway",gateway);
@@ -146,7 +199,10 @@
                                     "isActive":true,
                                     "isDeleated":false,
                                     "online_payment":params.online_payment,
-                                    "subscriptionId":Cookies.get('subscriptionId')
+                                    "subscriptionId":Cookies.get('subscriptionId'),
+                                    "customer_url":' https://api.'+config.domainkey+'/crm/customcustomer',
+                                    "invoice_url": 'https://api.'+config.domainkey+'/crm/custominvoice',
+
                             		}
                             		// console.log('data',data)
 									axios({

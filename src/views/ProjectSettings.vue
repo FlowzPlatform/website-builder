@@ -1226,8 +1226,8 @@ export default {
       customDomainName: '',
       userDetailId: '',
       ipAddress: config.ipAddress,
-      accountpaymentgateway: [],
-      Paymentfields: [],
+      // accountpaymentgateway: [],
+      // Paymentfields: [],
       Allgateway: [],
       currentSha: '',
       publishType: 'default',
@@ -1848,11 +1848,11 @@ export default {
       this.localstyles.push(newVariable);
     },
 
-    addNewAccountpaymentgateway(){
-      let newVariable = {name:'',gateway:'',fields:[]};
-      this.accountpaymentgateway.push(newVariable);
-      this.Paymentfields.push([])
-    },
+    // addNewAccountpaymentgateway(){
+    //   let newVariable = {name:'',gateway:'',fields:[]};
+    //   this.accountpaymentgateway.push(newVariable);
+    //   this.Paymentfields.push([])
+    // },
 
     addNewWebsiteRole(){
       let newVariable = { roleName: '' }
@@ -1898,23 +1898,23 @@ export default {
       this.externallinksMeta.splice(deleteIndex, 1);
     },
 
-    deleteAccountpaymentgateway(deleteIndex) {
-      this.accountpaymentgateway.splice(deleteIndex,1);
-      this.Paymentfields.splice(deleteIndex,1);
-    },
+    // deleteAccountpaymentgateway(deleteIndex) {
+    //   this.accountpaymentgateway.splice(deleteIndex,1);
+    //   this.Paymentfields.splice(deleteIndex,1);
+    // },
 
-    gatewaychange(n,index){
-      this.accountpaymentgateway[index].fields=[]
-      var indexGateway=_.findIndex(this.Allgateway,function(o){
-        return o.name==n.gateway
-      })
-      for(let j=0;j<this.Allgateway[indexGateway].keys.length;j++){
-        var temp={}
-      temp[this.Allgateway[indexGateway].keys[j]]=''
-      this.accountpaymentgateway[index].fields.push(temp)
-      }
-      this.Paymentfields[index]=this.Allgateway[indexGateway].keys
-    },
+    // gatewaychange(n,index){
+    //   this.accountpaymentgateway[index].fields=[]
+    //   var indexGateway=_.findIndex(this.Allgateway,function(o){
+    //     return o.name==n.gateway
+    //   })
+    //   for(let j=0;j<this.Allgateway[indexGateway].keys.length;j++){
+    //     var temp={}
+    //   temp[this.Allgateway[indexGateway].keys[j]]=''
+    //   this.accountpaymentgateway[index].fields.push(temp)
+    //   }
+    //   this.Paymentfields[index]=this.Allgateway[indexGateway].keys
+    // },
 
     async addNewPlugin(pluginFileData) {
 
@@ -2980,7 +2980,7 @@ export default {
         "ProjectScripts": this.localscripts,
         "ProjectStyles": this.localstyles,
         "WebsiteRoles": this.websiteRoles,
-        "AccountPaymentGateways": this.accountpaymentgateway
+        // "AccountPaymentGateways": this.accountpaymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
       let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
@@ -4113,7 +4113,7 @@ export default {
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
-        this.accountpaymentgateway=this.settings[1].projectSettings[1].AccountPaymentGateways;
+        // this.accountpaymentgateway=this.settings[1].projectSettings[1].AccountPaymentGateways;
         // this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
         this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
@@ -4159,16 +4159,16 @@ export default {
       }
 
 
-      // console.log('URL: ', this.projectPublicUrl);
-      if(this.accountpaymentgateway != undefined && this.accountpaymentgateway.length>0){
-      for(let i=0;i<this.accountpaymentgateway.length;i++){
-        var temp=[]
-        for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
-          temp.push(Object.keys(this.accountpaymentgateway[i].fields[j])[0])
-        }
-        this.Paymentfields[i]=temp
-      }
-      }
+      // // console.log('URL: ', this.projectPublicUrl);
+      // if(this.accountpaymentgateway != undefined && this.accountpaymentgateway.length>0){
+      // for(let i=0;i<this.accountpaymentgateway.length;i++){
+      //   var temp=[]
+      //   for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
+      //     temp.push(Object.keys(this.accountpaymentgateway[i].fields[j])[0])
+      //   }
+      //   this.Paymentfields[i]=temp
+      // }
+      // }
 
       // replace all image tag source with index as name attribute to get the image file preview
 
@@ -4256,11 +4256,11 @@ export default {
      
 
       
-      await axios.get(config.paymentApiGateway)
-      .then(res=>{
+      // await axios.get(config.paymentApiGateway)
+      // .then(res=>{
         
-        this.Allgateway = res.data.gateways;
-      }).catch(err => { console.log(err); });
+      //   this.Allgateway = res.data.gateways;
+      // }).catch(err => { console.log(err); });
       
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
       // console.log('@@@@@@@@@@@@@@@',localStorage.getItem('current_sub_id'))

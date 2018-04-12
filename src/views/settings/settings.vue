@@ -774,7 +774,7 @@
                 },
             })
             .then(async response => {
-                console.log("---------response",response)
+                // console.log("---------response",response)
                 // localStorage.clear();
                 self.data6 = response.data.data
                 // console.log("++++data6",self.data6);
