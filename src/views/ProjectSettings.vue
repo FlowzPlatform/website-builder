@@ -297,11 +297,12 @@
               <div class="col-md-12">
                 <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
                 <el-button icon="search" @click="fetchcloudinaryImages('cloudinaryDetails')" :loading="fetchImagesLoader">Fetch Images</el-button>
-                <el-button style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
+                <span>Total Images: {{assetsImages.length}}</span>
+                <el-button v-if="assetsImages.length > 0" style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
               </div>
             </div>
 
-            <div class="row" style="max-height: 600px; overflow-y: auto;">
+            <div class="row" style="max-height: 600px; overflow-y: auto;" v-loading="fetchImagesLoader" element-loading-text="Loading...">
               <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
                 <div class="view-icon">
                   <a :href="n" target="_blank"><i class="fa fa-external-link"></i></a>
@@ -318,12 +319,12 @@
               </div>
             </div>
 
-            <div class="row" align="center" style="margin: 10px 0;">
+            <!-- <div class="row" align="center" style="margin: 10px 0;">
               <div class="col-md-12">
-                <!-- :disabled="isEnabledByNextCursor" -->
+                <!-- :disabled="isEnabledByNextCursor" --
                 <el-button type="primary" icon="plus" v-if="assetsImages.length > 0" @click="loadMoreImages()" :loading="loadMoreImagesLoader">Load More</el-button>  
               </div>
-            </div>
+            </div> -->
 
           </div>
         </div>
@@ -1698,15 +1699,22 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if(valid){
           this.fetchImagesLoader = true;
-          axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudinaryDetails.cloudName + '&apiKey=' + this.cloudinaryDetails.apiKey + '&apiSecret=' + this.cloudinaryDetails.apiSecret, {
+          axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudinaryDetails.cloudName + '&apiKey=' + this.cloudinaryDetails.apiKey + '&apiSecret=' + this.cloudinaryDetails.apiSecret + '&nextCursor=' + this.cloudinaryDetails.nextCursor, {
           })
-          .then((response) => {
+          .then(async (response) => {
+              
               for(let i = 0; i < response.data.resources.length; i++){
                 // console.log(response.data.resources[i].secure_url);
                 this.assetsImages.push(response.data.resources[i].secure_url);
               }
-              this.cloudinaryDetails.nextCursor = response.data.next_cursor;
-              this.fetchImagesLoader = false;
+
+              if(response.data.next_cursor !== undefined){
+                this.cloudinaryDetails.nextCursor = response.data.next_cursor;
+                await this.fetchcloudinaryImages('cloudinaryDetails');
+              } else {
+                this.cloudinaryDetails.nextCursor = '';
+                this.fetchImagesLoader = false;
+              }
           })
           .catch((error) => {
               console.log(error);
@@ -1716,30 +1724,31 @@ export default {
       });
     },
 
-    loadMoreImages(){
-      this.loadMoreImagesLoader = true;
-      axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudinaryDetails.cloudName + '&apiKey=' + this.cloudinaryDetails.apiKey + '&apiSecret=' + this.cloudinaryDetails.apiSecret + '&nextCursor=' + this.cloudinaryDetails.nextCursor, {
-      })
-      .then((response) => {
-          for(let i = 0; i < response.data.resources.length; i++){
-            // console.log(response.data.resources[i].secure_url);
-            this.assetsImages.push(response.data.resources[i].secure_url);
-          }
-          if(response.data.next_cursor){
-            this.nextCursor = response.data.next_cursor;
-            this.isEnabledByNextCursor = false;
-          } else {
-            this.isEnabledByNextCursor = true;
-            this.nextCursor = '';
-          }
-          // this.nextCursor = response.data.next_cursor;
-          this.loadMoreImagesLoader = false;
-      })
-      .catch((error) => {
-          console.log(error);
-          this.loadMoreImagesLoader = false;
-      });
-    },
+    // loadMoreImages(){
+    //   this.loadMoreImagesLoader = true;
+    //   axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudinaryDetails.cloudName + '&apiKey=' + this.cloudinaryDetails.apiKey + '&apiSecret=' + this.cloudinaryDetails.apiSecret + '&nextCursor=' + this.cloudinaryDetails.nextCursor, {
+    //   })
+    //   .then((response) => {
+    //       for(let i = 0; i < response.data.resources.length; i++){
+    //         // console.log(response.data.resources[i].secure_url);
+    //         this.assetsImages.push(response.data.resources[i].secure_url);
+    //       }
+    //       console.log('Load More next cursor: ', response.data.next_cursor);
+    //       if(response.data.next_cursor){
+    //         this.nextCursor = response.data.next_cursor;
+    //         this.isEnabledByNextCursor = false;
+    //       } else {
+    //         this.isEnabledByNextCursor = true;
+    //         this.nextCursor = '';
+    //       }
+    //       // this.nextCursor = response.data.next_cursor;
+    //       this.loadMoreImagesLoader = false;
+    //   })
+    //   .catch((error) => {
+    //       console.log(error);
+    //       this.loadMoreImagesLoader = false;
+    //   });
+    // },
 
     removeAllAssetsImages(){
       this.$confirm('This will all the images. Continue?', 'Warning', {
@@ -1749,6 +1758,7 @@ export default {
       }).then(() => {
         this.assetsImages = [];
         this.isEnabledByNextCursor = false;
+        this.cloudinaryDetails.nextCursor = '';
       }).catch(() => {
         console.log('Cancelled.');         
       });
