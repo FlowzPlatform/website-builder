@@ -2777,7 +2777,9 @@
                                           apiSecret: '',
                                           cloudName: '',
                                           uploadFolder: '',
-                                          uploadPreset: ''
+                                          uploadPreset: '',
+                                          nextCursor: '',
+                                          isEnabledByNextCursor: true
                                         },
                                         "AssetImages": [],
                                         "GlobalVariables": [],
