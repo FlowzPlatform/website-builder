@@ -8,7 +8,7 @@
                 <div v-for="(item, inx) in data6">
                     <Col :span="24">
                         <div style="padding: 5px;">
-                            <Card style="padding:10px;min-height: 300px">
+                            <Card style="padding:10px;min-height: 320px">
                                 <p slot="title"> {{item.configName}}</p>
                                 <Tooltip placement="top" slot="extra" content="Toggle active / inactive" style="padding-right:9px;">
                                   <i-switch v-model="item.isActive" :disabled="disabled" @on-change="buttonClicked(item)"></i-switch>
@@ -756,8 +756,8 @@
             self.loading = true;
             let  data = {
                 "configName": "Custom Configuration",
-                // "customer_url" :  feathersUrl+"customcustomer",
-                // "invoice_url" : feathersUrl+"custominvoice",
+                "customer_url" :  feathersUrl+"customcustomer",
+                "invoice_url" : feathersUrl+"custominvoice",
                 "domain" : 'custom',
                 "isActive" : true,
                 "isDeleated" : false,
@@ -871,9 +871,9 @@
                     let location = psl.parse(window.location.hostname)
                     location = location.domain === null ? location.input : location.domain
                     
-                    Cookies.remove('auth_token' ,{domain: location}) 
-                    Cookies.remove('subscriptionId' ,{domain: location}) 
-                    self.$store.commit('logout', self);
+                    // Cookies.remove('auth_token' ,{domain: location}) 
+                    // Cookies.remove('subscriptionId' ,{domain: location}) 
+                    // self.$store.commit('logout', self);
                     
                     // self.$router.push({
                     //     name: 'login'

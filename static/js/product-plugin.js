@@ -34,10 +34,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     menuNames.push({ name: 'Select', value: '' });
 
     let configFileUrl = baseURL + '/project-configuration/' + foldername;
-    $.getJSON(baseURL + '/bannertype?status=true&$paginate=false', function(data) {
+    $.getJSON(baseURL + '/bannertype?userId='+userDetailId+'&website_id='+foldername+'&status=true&$paginate=false', function(data) {
         // console.log('data', baseURL, data)
         for (let item of data) {
-            $.getJSON(baseURL + '/banners?banner_type='+ item.id, function(res) {
+            $.getJSON(baseURL + '/banners?userId='+userDetailId+'&banner_type='+item.id+'&banner_status=true', function(res) {
                 if (res.data.length > 0) {
                     bannerTypes.push({ name: item.bt_name, value: item.id})
                 }
@@ -651,7 +651,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     bm.add('SliderCustom', {
         label: 'Custom Slider',
-        content: '<CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
+        content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script><CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
         attributes: {
             class: 'fa fa-sliders',
             title: 'Custom Slider',

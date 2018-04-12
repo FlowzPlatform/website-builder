@@ -27,12 +27,12 @@ if (process.env.NODE_ENV !== 'development') {
     socialUrl = 'https://api.'+domainkey+'/auth/api';
     subscriptionApi = 'https://api.'+domainkey+'/subscription/';
     loginWithFacebookUrl = 'https://auth.'+domainkey+'/auth/facebook';
-    loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/Gplus';
+    loginWithGoogleUrl = 'https://auth.'+domainkey+'/auth/google';
     loginWithTwitterUrl = 'https://auth.'+domainkey+'/auth/twitter';
     loginWithGithubUrl = 'https://auth.'+domainkey+'/auth/github';
     loginWithLinkedInUrl = 'https://auth.'+domainkey+'/auth/linkedin';
 
-    paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
+    // paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
     vshopApi = 'https://api.' + domainkey + '/pdmnew/vshop-list';
     crmsettingapi='https://api.'+domainkey+'/crm/settings'
     flowzDashboardUrl = 'https://dashboard.' + domainkey
@@ -55,11 +55,11 @@ if (process.env.NODE_ENV !== 'development') {
     socialUrl = 'https://api.flowzcluster.tk/auth/api';
     subscriptionApi = 'https://api.flowzcluster.tk/subscription/';
     loginWithFacebookUrl = 'https://auth.flowzcluster.tk/auth/facebook';
-    loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/Gplus';
+    loginWithGoogleUrl = 'https://auth.flowzcluster.tk/auth/google';
     loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
     loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
     loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
-    paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
+    // paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
     vshopApi = 'https://api.flowzcluster.tk/pdmnew/vshop-list';
     crmsettingapi='https://api.flowzcluster.tk/crm/settings'
     flowzDashboardUrl = 'https://dashboard.flowzcluster.tk'
@@ -84,9 +84,13 @@ module.exports = {
     subscriptionApi: subscriptionApi,
     facebookSuccessCallbackUrl: frontEndUrl,
     googleSuccessCallbackUrl: frontEndUrl,
+    googleFailureCallbackUrl: frontEndUrl,
     twitterSuccessCallbackUrl: frontEndUrl,
+    twitterFailureCallbackUrl: frontEndUrl,
     githubSuccessCallbackUrl: frontEndUrl,
+    githubFailureCallbackUrl: frontEndUrl,
     linkedInSuccessCallbackUrl: frontEndUrl,
+    linkedInFailureCallbackUrl: frontEndUrl,
 
     loginWithFacebookUrl: loginWithFacebookUrl,
     loginWithGoogleUrl: loginWithGoogleUrl,
@@ -94,7 +98,7 @@ module.exports = {
     loginWithGithubUrl: loginWithGithubUrl,
     loginWithLinkedInUrl: loginWithLinkedInUrl,
 
-    paymentApiGateway: paymentApiGateway,
+    // paymentApiGateway: paymentApiGateway,
 
     vshopApi : vshopApi,
 

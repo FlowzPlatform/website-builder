@@ -12,7 +12,7 @@
             <Input v-model.trim="formItem.banner_name" placeholder="Banner Name"></Input>
         </FormItem>
         <FormItem label="Select Banner Type" prop="banner_type">
-            <Select v-model="formItem.banner_type" @on-change="OnChangeBannerType">
+            <Select v-model="formItem.banner_type" @on-change="OnChangeBannerType" :disabled="isdisable">
                 <Option v-for="item in bannertypes" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </FormItem>
@@ -56,7 +56,7 @@
             </i-switch>
         </FormItem>
         <FormItem>
-            <Button v-if="formItem.id" type="primary" @click="handleEdit('formItem')">Edit</Button>
+            <Button v-if="formItem.id" type="primary" @click="handleEdit('formItem')">Update</Button>
             <Button v-else type="primary" @click="handleSubmit('formItem')">Submit</Button>
             <Button type="ghost" style="margin-left: 8px" @click="handleCancel">Cancel</Button>
         </FormItem>
@@ -104,6 +104,7 @@ export default {
         banner_status: true,
         banner_linkurl: '',
         linkurl_target: '_blank',
+        createdAt: '',
         // website_id: '',
         userId: Cookies.get('userDetailId')
       },
@@ -133,7 +134,8 @@ export default {
         value: 'same' 
       }],
       cloudDetails: {},
-      btypeDetail: {}
+      btypeDetail: {},
+      isdisable: false
     }
   },
   methods: {
@@ -141,6 +143,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid && this.isShowimgblock) {
           this.$Spin.show();
+          this.formItem.createdAt = new Date()
           // this.formItem.website_id = this.btypeDetail.website_id
           axios.post(bannersUrl, this.formItem).then(res => {
             this.$Spin.hide();
@@ -267,6 +270,7 @@ export default {
     if (this.bdata.type === 'banner' && this.bdata.id !== undefined) {
       axios.get(bannersUrl + '/' + this.bdata.id).then(res => {
         this.formItem = res.data
+        this.isdisable = true
       })
     }
   }

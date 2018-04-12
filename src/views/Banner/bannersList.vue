@@ -26,11 +26,11 @@
       </Col>
     </Row>
     <Row>
-      <Table :columns="bcolumns" :data="bdata.data" stripe></Table>
+      <Table :loading="loading" :columns="bcolumns" :data="bdata.data" stripe></Table>
     </Row>
     <Row >
       <div style="float: right;padding-top: 10px;">
-        <Page v-if="bdata.total > 10" :total="bdata.total" :current="cpage" show-sizer show-total @on-change="pageChange" @on-page-size-change="psizeChange"></Page>
+        <Page v-if="bdata.total > 10" :total="bdata.total" :current="cpage" show-sizer show-total :page-size="limit" @on-change="pageChange" @on-page-size-change="psizeChange"></Page>
         <div v-else-if="bdata.total === 1">Total {{bdata.total}} item</div>
         <div v-else>Total {{bdata.total}} items</div>
       </div>
@@ -194,6 +194,7 @@ export default {
         total: 0,
         data: []
       },
+      loading: false,
       cpage: 1,
       limit: 10,
       skip: 0,
@@ -202,7 +203,11 @@ export default {
   },
   methods: {
     handleSearch () {
-      this.init()
+      if (this.filterobj.name !== '' || this.filterobj.type !== '') {
+        this.cpage = 1
+        this.skip = this.cpage * this.limit - this.limit
+        this.init()
+      }
     },
     handleFileterReset () {
       this.filterobj.name = ''
@@ -210,6 +215,7 @@ export default {
       this.init()
     },
     pageChange (page) {
+      this.cpage = page
       this.skip = page * this.limit - this.limit
       this.init()
     },
@@ -266,6 +272,7 @@ export default {
       }
     },
     async init () {
+      this.loading = true
       let userId = Cookies.get('userDetailId')
       if (userId !== '' && userId !== undefined) {
         let query = '?userId=' + userId + '&$sort[createdAt]=-1&$skip=' + this.skip + '&$limit=' + this.limit
@@ -279,6 +286,7 @@ export default {
           return res.data
         })
       }
+      this.loading = false
     }
   },
   mounted () {

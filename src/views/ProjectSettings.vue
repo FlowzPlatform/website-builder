@@ -268,9 +268,9 @@
               <el-form-item label="API Key" prop="apiKey">
                 <el-input v-model="cloudinaryDetails.apiKey"></el-input>
               </el-form-item>
-              <!-- <el-form-item label="API Secret">
+              <el-form-item label="API Secret" prop="apiSecret">
                 <el-input v-model="cloudinaryDetails.apiSecret"></el-input>
-              </el-form-item> -->
+              </el-form-item>
               <el-form-item label="Cloud Name" prop="cloudName">
                 <el-input v-model="cloudinaryDetails.cloudName"></el-input>
               </el-form-item>
@@ -296,11 +296,14 @@
             <div class="row" style="margin-bottom: 15px; ">
               <div class="col-md-12">
                 <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
+                <el-button icon="search" @click="fetchcloudinaryImages('cloudinaryDetails')" :loading="fetchImagesLoader">Fetch Images</el-button>
+                <span>Total Images: {{assetsImages.length}}</span>
+                <el-button v-if="assetsImages.length > 0" style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-3" v-for="(n, index) in assetsImages">
+            <div class="row" style="max-height: 600px; overflow-y: auto;" v-loading="fetchImagesLoader" element-loading-text="Loading...">
+              <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
                 <div class="view-icon">
                   <a :href="n" target="_blank"><i class="fa fa-external-link"></i></a>
                 </div>
@@ -310,11 +313,18 @@
                 <div class="thumbnail">
                   <div class="deleteImage"></div>
                   <img :src="n" class="asset-image" />
+                  <input :id="n" type="text" class="form-control" :value="n" name="n">
                 </div>
-                <input :id="n" type="text" class="form-control" :value="n" name="n">
 
               </div>
             </div>
+
+            <!-- <div class="row" align="center" style="margin: 10px 0;">
+              <div class="col-md-12">
+                <!-- :disabled="isEnabledByNextCursor" --
+                <el-button type="primary" icon="plus" v-if="assetsImages.length > 0" @click="loadMoreImages()" :loading="loadMoreImagesLoader">Load More</el-button>  
+              </div>
+            </div> -->
 
           </div>
         </div>
@@ -1226,8 +1236,8 @@ export default {
       customDomainName: '',
       userDetailId: '',
       ipAddress: config.ipAddress,
-      accountpaymentgateway: [],
-      Paymentfields: [],
+      // accountpaymentgateway: [],
+      // Paymentfields: [],
       Allgateway: [],
       currentSha: '',
       publishType: 'default',
@@ -1272,6 +1282,9 @@ export default {
           apiKey: [
               { required: true, message: 'Enter Cloudinary API key', trigger: 'blur' }
           ],
+          apiSecret: [
+              { required: true, message: 'Enter Cloudinary API secret', trigger: 'blur' }
+          ],
           cloudName: [
               { required: true, message: 'Enter Cloud Name', trigger: 'blur' }
           ],
@@ -1279,6 +1292,9 @@ export default {
               { required: true, message: 'Enter Upload Preset', trigger: 'blur' }
           ]
       },
+      fetchImagesLoader: false,
+      loadMoreImagesLoader: false,
+      isEnabledByNextCursor: true
     }
   },
   components: {
@@ -1679,6 +1695,75 @@ export default {
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.cloudinaryDetails.sources.length;
     },
 
+    fetchcloudinaryImages(formName){
+      this.$refs[formName].validate(async (valid) => {
+        if(valid){
+          this.fetchImagesLoader = true;
+          axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudinaryDetails.cloudName + '&apiKey=' + this.cloudinaryDetails.apiKey + '&apiSecret=' + this.cloudinaryDetails.apiSecret + '&nextCursor=' + this.cloudinaryDetails.nextCursor, {
+          })
+          .then(async (response) => {
+              
+              for(let i = 0; i < response.data.resources.length; i++){
+                // console.log(response.data.resources[i].secure_url);
+                this.assetsImages.push(response.data.resources[i].secure_url);
+              }
+
+              if(response.data.next_cursor !== undefined){
+                this.cloudinaryDetails.nextCursor = response.data.next_cursor;
+                await this.fetchcloudinaryImages('cloudinaryDetails');
+              } else {
+                this.cloudinaryDetails.nextCursor = '';
+                this.fetchImagesLoader = false;
+              }
+          })
+          .catch((error) => {
+              console.log(error);
+              this.fetchImagesLoader = false;
+          });
+        }
+      });
+    },
+
+    // loadMoreImages(){
+    //   this.loadMoreImagesLoader = true;
+    //   axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudinaryDetails.cloudName + '&apiKey=' + this.cloudinaryDetails.apiKey + '&apiSecret=' + this.cloudinaryDetails.apiSecret + '&nextCursor=' + this.cloudinaryDetails.nextCursor, {
+    //   })
+    //   .then((response) => {
+    //       for(let i = 0; i < response.data.resources.length; i++){
+    //         // console.log(response.data.resources[i].secure_url);
+    //         this.assetsImages.push(response.data.resources[i].secure_url);
+    //       }
+    //       console.log('Load More next cursor: ', response.data.next_cursor);
+    //       if(response.data.next_cursor){
+    //         this.nextCursor = response.data.next_cursor;
+    //         this.isEnabledByNextCursor = false;
+    //       } else {
+    //         this.isEnabledByNextCursor = true;
+    //         this.nextCursor = '';
+    //       }
+    //       // this.nextCursor = response.data.next_cursor;
+    //       this.loadMoreImagesLoader = false;
+    //   })
+    //   .catch((error) => {
+    //       console.log(error);
+    //       this.loadMoreImagesLoader = false;
+    //   });
+    // },
+
+    removeAllAssetsImages(){
+      this.$confirm('This will all the images. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.assetsImages = [];
+        this.isEnabledByNextCursor = false;
+        this.cloudinaryDetails.nextCursor = '';
+      }).catch(() => {
+        console.log('Cancelled.');         
+      });
+    },
+
     uploadAssetImage(formName) {
 
       this.$refs[formName].validate(async (valid) => {
@@ -1848,11 +1933,11 @@ export default {
       this.localstyles.push(newVariable);
     },
 
-    addNewAccountpaymentgateway(){
-      let newVariable = {name:'',gateway:'',fields:[]};
-      this.accountpaymentgateway.push(newVariable);
-      this.Paymentfields.push([])
-    },
+    // addNewAccountpaymentgateway(){
+    //   let newVariable = {name:'',gateway:'',fields:[]};
+    //   this.accountpaymentgateway.push(newVariable);
+    //   this.Paymentfields.push([])
+    // },
 
     addNewWebsiteRole(){
       let newVariable = { roleName: '' }
@@ -1898,23 +1983,23 @@ export default {
       this.externallinksMeta.splice(deleteIndex, 1);
     },
 
-    deleteAccountpaymentgateway(deleteIndex) {
-      this.accountpaymentgateway.splice(deleteIndex,1);
-      this.Paymentfields.splice(deleteIndex,1);
-    },
+    // deleteAccountpaymentgateway(deleteIndex) {
+    //   this.accountpaymentgateway.splice(deleteIndex,1);
+    //   this.Paymentfields.splice(deleteIndex,1);
+    // },
 
-    gatewaychange(n,index){
-      this.accountpaymentgateway[index].fields=[]
-      var indexGateway=_.findIndex(this.Allgateway,function(o){
-        return o.name==n.gateway
-      })
-      for(let j=0;j<this.Allgateway[indexGateway].keys.length;j++){
-        var temp={}
-      temp[this.Allgateway[indexGateway].keys[j]]=''
-      this.accountpaymentgateway[index].fields.push(temp)
-      }
-      this.Paymentfields[index]=this.Allgateway[indexGateway].keys
-    },
+    // gatewaychange(n,index){
+    //   this.accountpaymentgateway[index].fields=[]
+    //   var indexGateway=_.findIndex(this.Allgateway,function(o){
+    //     return o.name==n.gateway
+    //   })
+    //   for(let j=0;j<this.Allgateway[indexGateway].keys.length;j++){
+    //     var temp={}
+    //   temp[this.Allgateway[indexGateway].keys[j]]=''
+    //   this.accountpaymentgateway[index].fields.push(temp)
+    //   }
+    //   this.Paymentfields[index]=this.Allgateway[indexGateway].keys
+    // },
 
     async addNewPlugin(pluginFileData) {
 
@@ -2980,7 +3065,7 @@ export default {
         "ProjectScripts": this.localscripts,
         "ProjectStyles": this.localstyles,
         "WebsiteRoles": this.websiteRoles,
-        "AccountPaymentGateways": this.accountpaymentgateway
+        // "AccountPaymentGateways": this.accountpaymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
       let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
@@ -4113,18 +4198,20 @@ export default {
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
-        this.accountpaymentgateway=this.settings[1].projectSettings[1].AccountPaymentGateways;
+        // this.accountpaymentgateway=this.settings[1].projectSettings[1].AccountPaymentGateways;
         // this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
         this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
+
         if(!(this.settings[1].projectSettings[1].CloudinaryDetails)){
           this.cloudinaryDetails = {
             "apiKey":  "" ,
             "apiSecret":  "" ,
             "cloudName":  "" ,
             "uploadFolder":  "" ,
-            "uploadPreset":  ""
+            "uploadPreset":  "",
+            "nextCursor": ""
           }
         } else {
           this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
@@ -4132,17 +4219,17 @@ export default {
 
         
 
-        if(!(this.settings[1].projectSettings[1].CloudinaryDetails)){
-          this.cloudinaryDetails = {
-            "apiKey":  "" ,
-            "apiSecret":  "" ,
-            "cloudName":  "" ,
-            "uploadFolder":  "" ,
-            "uploadPreset":  ""
-          }
-        } else {
-          this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
-        }
+        // if(!(this.settings[1].projectSettings[1].CloudinaryDetails)){
+        //   this.cloudinaryDetails = {
+        //     "apiKey":  "" ,
+        //     "apiSecret":  "" ,
+        //     "cloudName":  "" ,
+        //     "uploadFolder":  "" ,
+        //     "uploadPreset":  ""
+        //   }
+        // } else {
+        //   this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
+        // }
 
       } else {
         console.log('Cannot get configurations!');
@@ -4159,16 +4246,16 @@ export default {
       }
 
 
-      // console.log('URL: ', this.projectPublicUrl);
-      if(this.accountpaymentgateway != undefined && this.accountpaymentgateway.length>0){
-      for(let i=0;i<this.accountpaymentgateway.length;i++){
-        var temp=[]
-        for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
-          temp.push(Object.keys(this.accountpaymentgateway[i].fields[j])[0])
-        }
-        this.Paymentfields[i]=temp
-      }
-      }
+      // // console.log('URL: ', this.projectPublicUrl);
+      // if(this.accountpaymentgateway != undefined && this.accountpaymentgateway.length>0){
+      // for(let i=0;i<this.accountpaymentgateway.length;i++){
+      //   var temp=[]
+      //   for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
+      //     temp.push(Object.keys(this.accountpaymentgateway[i].fields[j])[0])
+      //   }
+      //   this.Paymentfields[i]=temp
+      // }
+      // }
 
       // replace all image tag source with index as name attribute to get the image file preview
 
@@ -4256,11 +4343,11 @@ export default {
      
 
       
-      await axios.get(config.paymentApiGateway)
-      .then(res=>{
+      // await axios.get(config.paymentApiGateway)
+      // .then(res=>{
         
-        this.Allgateway = res.data.gateways;
-      }).catch(err => { console.log(err); });
+      //   this.Allgateway = res.data.gateways;
+      // }).catch(err => { console.log(err); });
       
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
       // console.log('@@@@@@@@@@@@@@@',localStorage.getItem('current_sub_id'))
