@@ -2297,13 +2297,28 @@ export default {
           await this.init();
         })
         .catch((e) => {
-          this.$message({
-            showClose: true,
-            message: 'Failed to refresh! Please try again.',
-            type: 'error'
-          });
           this.refreshPluginsLoading = false;
           this.fullscreenLoading = false;
+          this.$confirm(e.response.data.message, 'Error', {
+            confirmButtonText: 'logout',
+            cancelButtonText: 'reload',
+            type: 'error',
+            center: true
+          }).then(() => {
+            localStorage.removeItem('current_sub_id');
+            this.$session.remove('username');
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.remove('auth_token' ,{domain: location});
+            Cookies.remove('email' ,{domain: location});
+            Cookies.remove('userDetailId' ,{domain: location}); 
+            Cookies.remove('subscriptionId' ,{domain: location}); 
+            this.isLoggedIn = false;
+            // this.$router.push('/login');
+            window.location = '/login';
+          }).catch(() => {
+            location.reload()
+          });
           console.log(e)
         });
 
@@ -2771,7 +2786,28 @@ export default {
           //Copy data of project_settings.json into project-details.json
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json').catch((err) => { console.log(err); this.fullscreenLoading = false });
+          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json').catch((e) => { 
+             this.$confirm(e.response.data.message, 'Error', {
+                confirmButtonText: 'logout',
+                cancelButtonText: 'reload',
+                type: 'error',
+                center: true
+              }).then(() => {
+                localStorage.removeItem('current_sub_id');
+                this.$session.remove('username');
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+                Cookies.remove('auth_token' ,{domain: location});
+                Cookies.remove('email' ,{domain: location});
+                Cookies.remove('userDetailId' ,{domain: location}); 
+                Cookies.remove('subscriptionId' ,{domain: location}); 
+                this.isLoggedIn = false;
+                // this.$router.push('/login');
+                window.location = '/login';
+              }).catch(() => {
+                location.reload()
+              });
+             this.fullscreenLoading = false });
 
           // console.log('projectSettingsFileData', projectSettingsFileData);
           let data = JSON.parse(projectSettingsFileData.data);
@@ -2890,7 +2926,28 @@ export default {
           return
         }
         })
-        .catch((err) => { console.log(err);});
+        .catch((err) => { 
+          this.$confirm(e.response.data.message, 'Error', {
+            confirmButtonText: 'logout',
+            cancelButtonText: 'reload',
+            type: 'error',
+            center: true
+          }).then(() => {
+            localStorage.removeItem('current_sub_id');
+            this.$session.remove('username');
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.remove('auth_token' ,{domain: location});
+            Cookies.remove('email' ,{domain: location});
+            Cookies.remove('userDetailId' ,{domain: location}); 
+            Cookies.remove('subscriptionId' ,{domain: location}); 
+            this.isLoggedIn = false;
+            // this.$router.push('/login');
+            window.location = '/login';
+          }).catch(() => {
+            location.reload()
+          });
+        });
         
       }
 
@@ -2983,7 +3040,28 @@ export default {
         "AccountPaymentGateways": this.accountpaymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((e) => { this.fullscreenLoading = false 
+        this.$confirm(e.response.data.message, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });
+      });
       if (rethinkdbCheck.data) {
 
         // update existing data
@@ -3109,8 +3187,9 @@ export default {
     },
 
     async commitProject(commitForm) {
-
-      this.$refs[commitForm].validate(async (valid) => {
+      axios.get(config.baseURL + '/rethinkservicecheck')
+      .then(async response => {
+        this.$refs[commitForm].validate(async (valid) => {
         if (valid) {
 
           let self = this;
@@ -3287,6 +3366,30 @@ export default {
         }
       });
 
+      })
+      .catch(e => {
+        this.$confirm(e.response.data.message, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });
+      })
+      
     },
 
     async publishMetalsmith(publishType) {
@@ -3313,9 +3416,29 @@ export default {
           this.fullscreenLoading = true;
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
-            console.log(err);
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((e) => {
+            console.log(e);
             this.fullscreenLoading = false
+            this.$confirm(e.response.data.message, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+              localStorage.removeItem('current_sub_id');
+              this.$session.remove('username');
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.remove('auth_token' ,{domain: location});
+              Cookies.remove('email' ,{domain: location});
+              Cookies.remove('userDetailId' ,{domain: location}); 
+              Cookies.remove('subscriptionId' ,{domain: location}); 
+              this.isLoggedIn = false;
+              // this.$router.push('/login');
+              window.location = '/login';
+            }).catch(() => {
+              location.reload()
+            }); 
           });
           let rawConfigs = responseConfig.data.configData;
           let partialstotal = []
@@ -4081,7 +4204,29 @@ export default {
       //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((err) => { console.log(err); this.fullscreenLoading = false });
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((e) => { 
+        this.fullscreenLoading = false 
+        this.$confirm(e.response.data.message, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });  
+      });
 
       if(this.configData.status == 200 || this.configData.status == 204){
 

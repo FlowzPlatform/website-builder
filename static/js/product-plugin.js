@@ -2041,7 +2041,38 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         },
     });
 
+// define custom traits
+// Each new type extends the default Trait
+editor.TraitManager.addType('content', {
+  events:{
+    'keyup': 'onChange',  // trigger parent onChange method on keyup
+  },
 
+  /**
+  * Returns the input element
+  * @return {HTMLElement}
+  */
+  getInputEl: function() {
+    if (!this.inputEl) {
+      var input = document.createElement('textarea');
+      input.value = this.target.get('content');
+      this.inputEl = input;
+    }
+    return this.inputEl;
+  },
+
+  /**
+   * Triggered when the value of the model is changed
+   */
+  onValueChange: function () {
+    this.target.set('content', this.model.get('value'));
+  },
+  
+  getValueForTarget: function() {
+      console.log("inside getValueForTargetss")
+      return this.model.get( 'item.text' + 'value');
+  }
+});
 
     comps.addType('DataFieldText', {
         // Define the Model
@@ -2053,7 +2084,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 traits: [{
                     label: 'Data text field',
                     name: ':text',
-                    type: 'text'
+                    type: 'content'
                 }]
             }),
 

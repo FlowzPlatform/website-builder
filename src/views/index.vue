@@ -434,7 +434,6 @@
         console.log('Token Not found. Please Login.');
         this.$router.push('/login');
       }
-
     },
     async mounted () {
 
@@ -762,7 +761,26 @@
                   this.treeLoading = false;
                 })
                 .catch((e) => {
-                  console.log('Data Error.');  
+                  this.$confirm(e.response.data.message, 'Error', {
+                    confirmButtonText: 'logout',
+                    cancelButtonText: 'reload',
+                    type: 'error',
+                    center: true
+                  }).then(() => {
+                    localStorage.removeItem('current_sub_id');
+                    this.$session.remove('username');
+                    let location = psl.parse(window.location.hostname)
+                    location = location.domain === null ? location.input : location.domain
+                    Cookies.remove('auth_token' ,{domain: location});
+                    Cookies.remove('email' ,{domain: location});
+                    Cookies.remove('userDetailId' ,{domain: location}); 
+                    Cookies.remove('subscriptionId' ,{domain: location}); 
+                    this.isLoggedIn = false;
+                    // this.$router.push('/login');
+                    window.location = '/login';
+                  }).catch(() => {
+                    location.reload()
+                  }); 
                   this.treeLoading = false;
                 })
 
@@ -1455,7 +1473,29 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((e)=>{
+          this.fullscreenLoading = false;
+            this.$confirm(e.response.data.message, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+         });
         let rawConfigs = responseConfig.data.configData;
         return this.globalConfigData = rawConfigs;
       },
@@ -1516,7 +1556,29 @@
               let foldername = folderUrl.split('/');
               foldername = foldername[(foldername.length - 1)];
               // this.getConfigFileData(folderUrl);
-              let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
+              let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((e)=>{ 
+                console.log('Error:', e); 
+                this.$confirm(e.response.data.message, 'Error', {
+                  confirmButtonText: 'logout',
+                  cancelButtonText: 'reload',
+                  type: 'error',
+                  center: true
+                }).then(() => {
+                      localStorage.removeItem('current_sub_id');
+                      this.$session.remove('username');
+                      let location = psl.parse(window.location.hostname)
+                      location = location.domain === null ? location.input : location.domain
+                      Cookies.remove('auth_token' ,{domain: location});
+                      Cookies.remove('email' ,{domain: location});
+                      Cookies.remove('userDetailId' ,{domain: location}); 
+                      Cookies.remove('subscriptionId' ,{domain: location}); 
+                      this.isLoggedIn = false;
+                      // this.$router.push('/login');
+                      window.location = '/login';
+                  }).catch(() => {
+                      location.reload()
+                  });
+                });
               let rawConfigs = responseConfig.data.configData;
               let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
               let checkfilename = false
@@ -1674,7 +1736,28 @@
 
           // this.getConfigFileData(folderUrl);
 
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((err)=>{ console.log('Error:', err); });
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((e)=>{ 
+            this.$confirm(e.response.data.message, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+           });
           let rawConfigs = responseConfig.data.configData;
           this.globalConfigData = rawConfigs;
 
@@ -2046,7 +2129,7 @@
                                   }
                               })
                               .then((res) => {
-                                  // console.log('##############')
+                                  console.log('##############')
                                   let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
                                       // let newFolderName=res.data.id 
                                   return axios.post(config.baseURL + '/flows-dir-listing', {
@@ -2160,7 +2243,30 @@
 
                               })
                               .catch((e) => {
-                                  console.log(e)
+                                  this.newProjectFolderDialog = false;
+                                  this.fullscreenLoading = false;
+                                  this.$refs[projectName].resetFields();
+                                  console.log("e........................",e)
+                                  this.$confirm(e.response.data.message, 'Error', {
+                                    confirmButtonText: 'logout',
+                                    cancelButtonText: 'reload',
+                                    type: 'error',
+                                    center: true
+                                  }).then(() => {
+                                    localStorage.removeItem('current_sub_id');
+                                    this.$session.remove('username');
+                                    let location = psl.parse(window.location.hostname)
+                                    location = location.domain === null ? location.input : location.domain
+                                    Cookies.remove('auth_token' ,{domain: location});
+                                    Cookies.remove('email' ,{domain: location});
+                                    Cookies.remove('userDetailId' ,{domain: location}); 
+                                    Cookies.remove('subscriptionId' ,{domain: location}); 
+                                    this.isLoggedIn = false;
+                                    // this.$router.push('/login');
+                                    window.location = '/login';
+                                  }).catch(() => {
+                                    location.reload()
+                                  }); 
                                   if (e.response.status = 403) {
                                       this.$message({
                                           showClose: true,
@@ -2168,9 +2274,6 @@
                                           type: 'error'
                                       });
                                   }
-                                  this.newProjectFolderDialog = false;
-                                  this.fullscreenLoading = false;
-                                  this.$refs[projectName].resetFields();
                               });                  
               } else {
                   this.newProjectFolderDialog = false;
@@ -3025,7 +3128,29 @@
           let folderUrl = configFileUrl.replace(fileName, '');
           let projectName = folderUrl.split('/');
           projectName = projectName[(projectName.length - 1)];
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((err)=>{ console.log('Error:', err); });
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((e)=>{ 
+             this.fullscreenLoading = false;
+            this.$confirm(e.response.data.message, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+           });
           let rawConfigs = responseConfig.data.configData;
           this.globalConfigData = rawConfigs;
           axios.post(config.baseURL + '/flows-dir-listing', {
@@ -4118,7 +4243,28 @@
                           })
                   }
 
-                  let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout').catch((err)=>{ console.log('Error:', err); });
+                  let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout').catch((e)=>{ 
+                      this.$confirm(e.response.data.message, 'Error', {
+                        confirmButtonText: 'logout',
+                        cancelButtonText: 'reload',
+                        type: 'error',
+                        center: true
+                      }).then(() => {
+                            localStorage.removeItem('current_sub_id');
+                            this.$session.remove('username');
+                            let location = psl.parse(window.location.hostname)
+                            location = location.domain === null ? location.input : location.domain
+                            Cookies.remove('auth_token' ,{domain: location});
+                            Cookies.remove('email' ,{domain: location});
+                            Cookies.remove('userDetailId' ,{domain: location}); 
+                            Cookies.remove('subscriptionId' ,{domain: location}); 
+                            this.isLoggedIn = false;
+                            // this.$router.push('/login');
+                            window.location = '/login';
+                        }).catch(() => {
+                            location.reload()
+                        });
+                   });
                   var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
                   this.backuplayout = backlayoutdata.data;
                   let newFolderName = folderUrl + '/temp';
@@ -5136,7 +5282,29 @@
         let foldername = folderUrl.split('/');
         foldername = foldername[(foldername.length - 1)];
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((e)=>{ 
+          this.fullscreenLoading = false;
+            this.$confirm(e.response.data.message, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+         });
         let rawConfigs = responseConfig.data.configData;
         let repositoryId = rawConfigs[0].repoSettings[0].RepositoryId;
 
@@ -5623,6 +5791,27 @@
           })
           .catch((e) => {
             console.log(e);
+            this.fullscreenLoading = false;
+            this.$confirm(e.response.data.message, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
             if (e.response.status = 403) {
                 this.$message({
                     showClose: true,
@@ -5646,7 +5835,33 @@
           this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
           // console.log('userid',userid)
-          var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch((err)=>{ console.log('Error:', err); })
+          var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch((e)=>{ 
+            console.log('Error:', e); 
+            this.newProjectFolderDialog = false;
+            this.fullscreenLoading = false;
+            this.$refs[projectName].resetFields();
+            console.log("e........................",e)
+            this.$confirm(e.response.data.message, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+          })
           let checkdetail=true
           for(let i=0;i<alldatauser.data.data.length;i++){
             if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
