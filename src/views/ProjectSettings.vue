@@ -297,7 +297,7 @@
               <div class="col-md-12">
                 <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
                 <el-button icon="search" @click="fetchcloudinaryImages('cloudinaryDetails')" :loading="fetchImagesLoader">Fetch Images</el-button>
-                <span>Total Images: {{assetsImages.length}}</span>
+                <span class="cloudinaryFilesCount">Total Images: {{assetsImages.length}}</span>
                 <el-button v-if="assetsImages.length > 0" style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
               </div>
             </div>
@@ -1807,7 +1807,9 @@ export default {
               
               this.uploadAssetImageLoader = false;  
             } else {
-              this.assetsImages.push(result[0].url);
+              for(var i = 0; i < result.length; i++){
+                this.assetsImages.push(result[i].secure_url);  
+              }
               this.uploadAssetImageLoader = false;  
             }
             
@@ -4773,5 +4775,10 @@ export default {
 
   .btn-xs{
     padding: 5px;
+  }
+
+  .cloudinaryFilesCount{
+    margin-left: 15px;
+    font-weight: 900;
   }
 </style>
