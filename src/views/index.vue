@@ -761,7 +761,15 @@
                   this.treeLoading = false;
                 })
                 .catch((e) => {
-                  this.$confirm(e.response.data.message, 'Error', {
+                  let dataMessage = '';
+                  if (e.message != undefined) {
+                      dataMessage = e.message              
+                  } else if (e.response.data.message != undefined) {
+                    dataMessage = e.response.data.message
+                  } else{
+                    dataMessage = "Please try again! Some error occured."
+                  }
+                  this.$confirm(dataMessage, 'Error', {
                     confirmButtonText: 'logout',
                     cancelButtonText: 'reload',
                     type: 'error',
@@ -811,10 +819,25 @@
             this.treeLoading = false;
             this.isDataLoading = false;
             this.isTreeVisible = false;
-            this.$message({
-              showClose: true,
-              message: 'Services unreachable. Please try again later.',
-              type: 'error'
+            this.$confirm("API service unavailable, please try again.", 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+              localStorage.removeItem('current_sub_id');
+              this.$session.remove('username');
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.remove('auth_token' ,{domain: location});
+              Cookies.remove('email' ,{domain: location});
+              Cookies.remove('userDetailId' ,{domain: location}); 
+              Cookies.remove('subscriptionId' ,{domain: location}); 
+              this.isLoggedIn = false;
+              // this.$router.push('/login');
+              window.location = '/login';
+            }).catch(() => {
+              location.reload()
             });
             console.log(e);
           });
@@ -1475,7 +1498,15 @@
 
         let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((e)=>{
           this.fullscreenLoading = false;
-            this.$confirm(e.response.data.message, 'Error', {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
               confirmButtonText: 'logout',
               cancelButtonText: 'reload',
               type: 'error',
@@ -1558,7 +1589,15 @@
               // this.getConfigFileData(folderUrl);
               let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((e)=>{ 
                 console.log('Error:', e); 
-                this.$confirm(e.response.data.message, 'Error', {
+                let dataMessage = '';
+                if (e.message != undefined) {
+                    dataMessage = e.message              
+                } else if (e.response.data.message != undefined) {
+                  dataMessage = e.response.data.message
+                } else{
+                  dataMessage = "Please try again! Some error occured."
+                }
+                this.$confirm(dataMessage, 'Error', {
                   confirmButtonText: 'logout',
                   cancelButtonText: 'reload',
                   type: 'error',
@@ -2247,7 +2286,15 @@
                                   this.fullscreenLoading = false;
                                   this.$refs[projectName].resetFields();
                                   console.log("e........................",e)
-                                  this.$confirm(e.response.data.message, 'Error', {
+                                  let dataMessage = '';
+                                if (e.message != undefined) {
+                                    dataMessage = e.message              
+                                } else if (e.response.data.message != undefined) {
+                                  dataMessage = e.response.data.message
+                                } else{
+                                  dataMessage = "Please try again! Some error occured."
+                                }
+                                this.$confirm(dataMessage, 'Error', {
                                     confirmButtonText: 'logout',
                                     cancelButtonText: 'reload',
                                     type: 'error',
@@ -3130,7 +3177,15 @@
           projectName = projectName[(projectName.length - 1)];
           let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((e)=>{ 
              this.fullscreenLoading = false;
-            this.$confirm(e.response.data.message, 'Error', {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
               confirmButtonText: 'logout',
               cancelButtonText: 'reload',
               type: 'error',
@@ -4244,7 +4299,15 @@
                   }
 
                   let layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + self.form.Layout + '.layout').catch((e)=>{ 
-                      this.$confirm(e.response.data.message, 'Error', {
+                      let dataMessage = '';
+                      if (e.message != undefined) {
+                          dataMessage = e.message              
+                      } else if (e.response.data.message != undefined) {
+                        dataMessage = e.response.data.message
+                      } else{
+                        dataMessage = "Please try again! Some error occured."
+                      }
+                      this.$confirm(dataMessage, 'Error', {
                         confirmButtonText: 'logout',
                         cancelButtonText: 'reload',
                         type: 'error',
@@ -5284,7 +5347,15 @@
 
         let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((e)=>{ 
           this.fullscreenLoading = false;
-            this.$confirm(e.response.data.message, 'Error', {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
               confirmButtonText: 'logout',
               cancelButtonText: 'reload',
               type: 'error',
@@ -5792,7 +5863,15 @@
           .catch((e) => {
             console.log(e);
             this.fullscreenLoading = false;
-            this.$confirm(e.response.data.message, 'Error', {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
               confirmButtonText: 'logout',
               cancelButtonText: 'reload',
               type: 'error',
@@ -5835,13 +5914,22 @@
           this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
           // console.log('userid',userid)
-          var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch((e)=>{ 
-            console.log('Error:', e); 
+          var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch((e)=>{
             this.newProjectFolderDialog = false;
             this.fullscreenLoading = false;
             this.$refs[projectName].resetFields();
-            console.log("e........................",e)
-            this.$confirm(e.response.data.message, 'Error', {
+            console.log(e)
+            console.log(e.response)
+            console.log("............................",e.message)
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
               confirmButtonText: 'logout',
               cancelButtonText: 'reload',
               type: 'error',

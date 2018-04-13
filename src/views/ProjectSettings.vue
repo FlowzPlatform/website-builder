@@ -2299,7 +2299,15 @@ export default {
         .catch((e) => {
           this.refreshPluginsLoading = false;
           this.fullscreenLoading = false;
-          this.$confirm(e.response.data.message, 'Error', {
+          let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
             confirmButtonText: 'logout',
             cancelButtonText: 'reload',
             type: 'error',
@@ -2787,7 +2795,15 @@ export default {
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
           var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json').catch((e) => { 
-             this.$confirm(e.response.data.message, 'Error', {
+             let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
                 confirmButtonText: 'logout',
                 cancelButtonText: 'reload',
                 type: 'error',
@@ -2927,7 +2943,15 @@ export default {
         }
         })
         .catch((err) => { 
-          this.$confirm(e.response.data.message, 'Error', {
+          let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
             confirmButtonText: 'logout',
             cancelButtonText: 'reload',
             type: 'error',
@@ -3041,7 +3065,15 @@ export default {
       }];
       this.settings[1].projectSettings = ProjectSettings;
       let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((e) => { this.fullscreenLoading = false 
-        this.$confirm(e.response.data.message, 'Error', {
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
           confirmButtonText: 'logout',
           cancelButtonText: 'reload',
           type: 'error',
@@ -3368,7 +3400,15 @@ export default {
 
       })
       .catch(e => {
-        this.$confirm(e.response.data.message, 'Error', {
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
           confirmButtonText: 'logout',
           cancelButtonText: 'reload',
           type: 'error',
@@ -3419,7 +3459,15 @@ export default {
           let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((e) => {
             console.log(e);
             this.fullscreenLoading = false
-            this.$confirm(e.response.data.message, 'Error', {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
               confirmButtonText: 'logout',
               cancelButtonText: 'reload',
               type: 'error',
@@ -4206,7 +4254,15 @@ export default {
 
       this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((e) => { 
         this.fullscreenLoading = false 
-        this.$confirm(e.response.data.message, 'Error', {
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
           confirmButtonText: 'logout',
           cancelButtonText: 'reload',
           type: 'error',
