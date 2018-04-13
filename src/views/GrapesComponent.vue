@@ -409,6 +409,7 @@ export default {
     getHtml: function () {
 
           let uglyCss = editor.getCss();
+
           uglyCss = uglyCss.replace(/\s/g,'')
 
           let grapesHtml = beautify(editor.getHtml(), { format: 'html'});

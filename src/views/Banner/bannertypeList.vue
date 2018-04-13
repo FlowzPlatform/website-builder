@@ -26,7 +26,7 @@
     	</Col>
     </Row>
     <Row>
-      <Table :columns="btcolumns" :data="btdata.data" stripe></Table>
+      <Table :loading="loading" :columns="btcolumns" :data="btdata.data" stripe></Table>
     </Row>
     <Row >
       <div style="float: right;padding-top: 10px;">
@@ -203,6 +203,7 @@ export default {
       	total: 0,
       	data: []
       },
+      loading: false,
       cpage: 1,
       limit: 10,
       skip: 0,
@@ -274,6 +275,7 @@ export default {
       }
     },
     async init() {
+    	this.loading = true
     	let userId = Cookies.get('userDetailId')
       if (userId !== '' && userId !== undefined) {
       	let query = '?userId=' + userId + '&$sort[createdAt]=-1&$skip=' + this.skip + '&$limit=' + this.limit
@@ -287,6 +289,7 @@ export default {
 	        return res.data
 	      })
       }
+    	this.loading = false
     }
   },
   mounted() {

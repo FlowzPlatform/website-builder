@@ -1462,7 +1462,7 @@
 
       // Save config File
       async saveConfigFile(folderUrl){
-        console.log('inside saveConfigFile')
+        // console.log('inside saveConfigFile')
         let foldername = folderUrl.split('/');
         foldername = foldername[6];
         // console.log('folderUrl:',folderUrl)
@@ -2802,7 +2802,7 @@
                                         "ProjectMetacharset": 'UTF-8',
                                         "ProjectScripts":[],
                                         "ProjectStyles": [],
-                                        "AccountPaymentGateways":[],
+                                        // "AccountPaymentGateways":[],
                                         "WebsiteRoles": [{
                                           "roleName": "guest"
                                         }, {
@@ -3247,7 +3247,6 @@
                                 label: DefaultParams[k][foldernameKey[j]].split('.')[0]
                               }
                               this.globalConfigData[2].layoutOptions[0][foldernameKey[j]].push(temp1)
-                              this.saveConfigFile(folderUrl);
                             }
                           }
                         }
@@ -3255,6 +3254,7 @@
                       }
                     }
                   }
+                  this.saveConfigFile(folderUrl);
                   if (check == false) {
                     // console.log('inside false')
                     let newName = result[i]
@@ -3599,7 +3599,7 @@
                   }
                 }
                 name = fileName.split('/')[2].split('.')[0];
-                this.saveConfigFile(folderUrl);
+                
                 let temp = {
                   value: name,
                   label: name
@@ -3752,9 +3752,9 @@
                         }
                       }
                     }
-                    this.saveConfigFile(folderUrl);
                   }
                 }
+                this.saveConfigFile(folderUrl);
               }
 
             })
@@ -4270,8 +4270,8 @@
                   responseMetal.data = responseMetal.data.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.data.substr(index + 9)
                   var indexPartial = responseMetal.data.search("handlebars");
 
-                  let temppartials=[]
-                  console.log(' self.form.partials.length;', self.form.partials.length)
+                  let partialtemp=[]
+                  // console.log(' self.form.partials.length;', self.form.partials.length)
                   for (var j = 0; j < self.form.partials.length; j++) {
                       var temp1, temp2;
                       temp1 = '{{> ' + Object.keys(self.form.partials[j])[0] + " id='" + self.form.partials[j][Object.keys(self.form.partials[j])[0]] + ".partial' }}"
@@ -4285,17 +4285,17 @@
                       var key = Object.keys(self.form.partials[j])[0] + '_' + self.form.partials[j][Object.keys(self.form.partials[j])[0]]
                       obj[key] = self.form.partials[j][Object.keys(self.form.partials[j])[0]]
                       // self.form.partials[j] = []
-                      console.log('obj',obj)
-                      temppartials[j] = obj;
+                      // console.log('obj',obj)
+                      partialtemp[j] = obj;
                       //self.form.partials[j] = obj
                   }
-                   console.log( 'temppartials',temppartials)
-                   console.log( 'self.form.partials',self.form.partials)
+                   // console.log( 'temppartials',temppartials)
+                   // console.log( 'self.form.partials',self.form.partials)
                   // self.$store.state.content = contentpartials;
                   var partials = '';
-                  for (var i = 0; i < temppartials.length; i++) {
-                      let key = Object.keys(temppartials[i])[0];
-                      let value = temppartials[i]
+                  for (var i = 0; i < partialtemp.length; i++) {
+                      let key = Object.keys(partialtemp[i])[0];
+                      let value = partialtemp[i]
                       let key2 = key;
                       key = key.trim();
                       if (value[key2].match('partial')) {
