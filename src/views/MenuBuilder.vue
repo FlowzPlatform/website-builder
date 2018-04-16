@@ -3,25 +3,25 @@
 		<section class="container" style="margin-top: 2%;">
 		  <h3 id="user-menu">Customize Menu:</h3>
 
-		  	<div class="well">
+		  	<!-- <div class="well">
 		  		<div class="row">
 		  			<div class="col-md-12">
                 	<div class="row">
-                		<div class="col-md-5">
+                		<!-- <div class="col-md-5">
                 			<input type="text" class="form-control" placeholder="Enter API URL" name="apiUrl" v-model="apiUrl">		
-                		</div>
-                		<div class="col-md-5">
-                			<input type="text" class="form-control" placeholder="Enter Base URL" name="apiUrl" v-model="menuBaseUrl">		
+                		</div> --
+                		<div class="col-md-10">
+                			<input type="text" class="form-control" placeholder="Enter Base URL" name="menuBaseUrl" v-model="menuBaseUrl">		
                 		</div>
                 		<div class="col-md-2">
                 			<el-button type="primary" @click="updateMenuData()" :loading="fetchDataLoader">Fetch Data</el-button>
-                			<!-- <button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button> -->
+                			<!-- <button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button> --
                 		</div>
                 	</div>
                 	
 		  			</div>
 		  		</div>
-		  	</div>
+		  	</div> -->
 		  	
 		  	<div class="row" style="margin-bottom: 70px;">
 		  		<div class="col-md-12">
@@ -42,9 +42,9 @@
 					        <!-- .dd-button-container will hide once an item enters the edit mode -->
 					        <div class="dd-button-container">
 					          <!-- @migrating-from 0.13.29 add button-->
-					          <button class="custom-button-example">&#x270E;</button>
-					          <button class="item-add">+</button>
-					          <button class="item-remove" data-confirm-class="item-remove-confirm">&times;</button>
+					          <button class="menu-btn custom-button-example">&#x270E;</button>
+					          <button class="menu-btn item-add">+</button>
+					          <button class="menu-btn item-remove" data-confirm-class="item-remove-confirm">&times;</button>
 					        </div>
 					        <!-- Inside of .dd-edit-box you can add your custom input fields -->
 					        <div class="dd-edit-box" style="display: none;">
@@ -54,13 +54,13 @@
 					          <input type="text" name="title" autocomplete="off" placeholder="Item"
 					                 data-placeholder="Any nice idea for the title?"
 					                 data-default-value="doMenu List Item. {?numeric.increment}">
-					          <select name="custom-select">
+					          <select name="custom-select" id="customSelect">
 					            <!-- <option>select something...</option> -->
 					            <optgroup label="Pages">
 					              <option v-bind:value="item.pageLink" v-for="item in pageList">{{item.pageName}}</option>
 					            </optgroup>
 					            <optgroup label="Categories">
-					              <option v-bind:value="item.pageLink" v-for="item in pageList">{{item.pageName}}</option>
+					              <option v-bind:value="item.categoryLink" v-for="item in categoriesList">{{item.categoryName}}</option>
 					            </optgroup>
 					          </select>
 					          <!-- @migrating-from 0.13.29 an element ".end-edit" within ".dd-edit-box" exists the edit mode on click -->
@@ -109,10 +109,10 @@ import domenu from 'domenu'
 		data: () => ({
       outputJson: [],
       MenuJSON: [],
-      apiUrl: 'https://api.flowzcluster.tk/pdmnew/categories',
       menuBaseUrl: 'search.html?SearchSensor=',
       fetchDataLoader: false,
-      pageList: []
+      pageList: [],
+      categoriesList: []
     }),
     components: {
     },
@@ -137,6 +137,10 @@ import domenu from 'domenu'
 					pageLink: allPages[i].PageName
 				})
 			}
+
+			await this.fetchMenuData();
+
+			console.log(this.categoriesList);
 
 			let menuData;
 
@@ -206,15 +210,25 @@ import domenu from 'domenu'
 
 		    // Init textarea
 		    $jsonOutput.val(domenu.toJson());
+
+		    // var $optionGroup = $("#customSelect").find('optgroup[label="Categories"]');
+
+		    // if(this.categoriesList.length > 0){
+		    // 	for(var i = 0; i < this.categoriesList.length; i++){
+		    // 		console.log(this.categoriesList[i].categoryLink)
+				  //   $optionGroup.append('<option value="' + this.categoriesList[i].categoryLink + '">' + this.categoriesList[i].categoryName + '</option>');
+			   //  }
+		    // }
+			  
 			},
 			
 			getMenuJson: function () {
 				this.$store.state.content = $('.jsonOutput').val();
 			},
 
-			async updateMenuData () {
+			async fetchMenuData () {
 
-				this.fetchDataLoader = true;
+				// this.fetchDataLoader = true;
 
 				let menuData;
 				let vid = '';
@@ -225,45 +239,49 @@ import domenu from 'domenu'
 				await axios.get(config.baseURL + '/project-configuration/' + folderName , {
 				})
 				.then(function (response) {
-				    console.log(response);
 				    let configs = response.data.configData;
 				    vid = configs[1].projectSettings[0].ProjectVId.vid;
 				})
 				.catch(function (error) {
 				    console.log(error);
-				    this.fetchDataLoader = false;
+				    // this.fetchDataLoader = false;
 				});
 
-				axios.get(this.apiUrl, {
+				await axios.get(config.menuCategoriesUrl, {
 			    headers: {
 			    	Authorization: Cookies.get('auth_token'),
 			    	vid: vid
 			    }
 				})
 				.then((res) => {
-					console.log(res);
 					let menuJson = [];
 			    let categories = res.data.aggregations.group_by_category.buckets;
 
 			    for(let i = 0; i < categories.length; i++){
-			    	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
-			    	let menuItem = {
-									    "id": i,
-									    "title": categories[i].key.toUpperCase(),
-									    "customSelect": this.menuBaseUrl + urlName,
-									    "__domenu_params": {}
-									    ,
-									    "select2ScrollPosition": {
-									        "x": 0, "y": 0
-									    }
-									};
+			    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-')
 
-						menuJson.push(menuItem);								
+			    	this.categoriesList.push({
+			    		categoryName: categories[i].key.toUpperCase(),
+			    		categoryLink: this.menuBaseUrl + urlName
+			    	});
+
+			      //let menuItem = {
+						// 			    "id": i,
+						// 			    "title": categories[i].key.toUpperCase(),
+						// 			    "customSelect": this.menuBaseUrl + urlName,
+						// 			    "__domenu_params": {}
+						// 			    ,
+						// 			    "select2ScrollPosition": {
+						// 			        "x": 0, "y": 0
+						// 			    }
+						// 			};
+
+						// menuJson.push(menuItem);								
 		    	}
 
-		    	menuData = JSON.stringify(menuJson);
-		    	this.fetchDataLoader = false;
-		    	this.initMenu(menuData);
+		    	// menuData = JSON.stringify(menuJson);
+		    	// this.fetchDataLoader = false;
+		    	// this.initMenu(menuData);
 				})
 				.catch((e) => {
 			    this.$message({
@@ -272,7 +290,7 @@ import domenu from 'domenu'
 			        type: 'error'
 			    });
 			    console.log(e);
-			    this.fetchDataLoader = false;
+			    // this.fetchDataLoader = false;
 				})
 			}
 		}
@@ -685,5 +703,11 @@ import domenu from 'domenu'
 		text-shadow: none;
 		border-radius: 3px;
 		border: 1px solid #999;
+	}
+
+	.menu-btn{
+		width: 20px;
+		height: 20px;
+		font-weight: bolder;
 	}
 </style>
