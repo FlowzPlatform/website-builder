@@ -1382,7 +1382,7 @@ export default {
 
     let self = this;
 
-    $.fn.editable.defaults.mode = 'inline';
+    // $.fn.editable.defaults.mode = 'inline';
 
     // Brand Image uploader
     let scope = this;

@@ -3757,6 +3757,11 @@
                 this.saveConfigFile(folderUrl);
               }
 
+              this.$message({
+                message: 'File Saved!',
+                showClose: true,
+                type: 'success'
+              });
             })
             .catch((e) => {
               this.saveFileLoading = false
