@@ -46,11 +46,11 @@ export default {
   },
   mounted () {
 
-    $.fn.editable.defaults.mode = 'inline';
+    // $.fn.editable.defaults.mode = 'inline';
 
-    $(document).ready(function() {
-      $('#xeditable').editable();
-    });
+    // $(document).ready(function() {
+    //   $('#xeditable').editable();
+    // });
   }
 }
 </script>
