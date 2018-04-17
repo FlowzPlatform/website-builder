@@ -225,7 +225,7 @@
                             <i class="fa fa-file-image-o">
                                 <span class="icon-bg hh-bg-warning"></span>
                             </i>
-                            <span class="hh-sidebar-item">Banners</span>
+                            <span class="hh-sidebar-item">Banner Management</span>
                         </a>
                     </li>
                     <li v-if="bExpand">
@@ -558,7 +558,7 @@ a, a:hover, a:visited, a:link, a:active {
     -webkit-box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
             box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
     background: white;
-    z-index: -1;
+    z-index: 1;
     text-align: center;
 }
 
