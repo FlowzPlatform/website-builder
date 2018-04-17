@@ -247,51 +247,59 @@ import domenu from 'domenu'
 				    // this.fetchDataLoader = false;
 				});
 
-				await axios.get(config.menuCategoriesUrl, {
-			    headers: {
-			    	Authorization: Cookies.get('auth_token'),
-			    	vid: vid
-			    }
-				})
-				.then((res) => {
-					let menuJson = [];
-			    let categories = res.data.aggregations.group_by_category.buckets;
+				if(vid){
+					await axios.get(config.menuCategoriesUrl, {
+				    headers: {
+				    	Authorization: Cookies.get('auth_token'),
+				    	vid: vid
+				    }
+					})
+					.then((res) => {
+						let menuJson = [];
+				    let categories = res.data.aggregations.group_by_category.buckets;
 
-			    for(let i = 0; i < categories.length; i++){
-			    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-')
+				    for(let i = 0; i < categories.length; i++){
+				    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-')
 
-			    	this.categoriesList.push({
-			    		categoryName: categories[i].key.toUpperCase(),
-			    		categoryLink: this.menuBaseUrl + urlName
-			    	});
+				    	this.categoriesList.push({
+				    		categoryName: categories[i].key.toUpperCase(),
+				    		categoryLink: this.menuBaseUrl + urlName
+				    	});
 
-			      //let menuItem = {
-						// 			    "id": i,
-						// 			    "title": categories[i].key.toUpperCase(),
-						// 			    "customSelect": this.menuBaseUrl + urlName,
-						// 			    "__domenu_params": {}
-						// 			    ,
-						// 			    "select2ScrollPosition": {
-						// 			        "x": 0, "y": 0
-						// 			    }
-						// 			};
+				      //let menuItem = {
+							// 			    "id": i,
+							// 			    "title": categories[i].key.toUpperCase(),
+							// 			    "customSelect": this.menuBaseUrl + urlName,
+							// 			    "__domenu_params": {}
+							// 			    ,
+							// 			    "select2ScrollPosition": {
+							// 			        "x": 0, "y": 0
+							// 			    }
+							// 			};
 
-						// menuJson.push(menuItem);								
-		    	}
+							// menuJson.push(menuItem);								
+			    	}
 
-		    	// menuData = JSON.stringify(menuJson);
-		    	// this.fetchDataLoader = false;
-		    	// this.initMenu(menuData);
-				})
-				.catch((e) => {
-			    this.$message({
-			        showClose: true,
-			        message: 'Failed! Please try again.',
-			        type: 'error'
-			    });
-			    console.log(e);
-			    // this.fetchDataLoader = false;
-				})
+			    	// menuData = JSON.stringify(menuJson);
+			    	// this.fetchDataLoader = false;
+			    	// this.initMenu(menuData);
+					})
+					.catch((e) => {
+				    this.$message({
+				        showClose: true,
+				        message: 'Failed! Please try again.',
+				        type: 'error'
+				    });
+				    console.log(e);
+				    // this.fetchDataLoader = false;
+					})
+				} else {
+					this.$message({
+				        showClose: true,
+				        message: 'Please set "VID" in Project settings to get all of your category list.',
+				        type: 'info'
+				    });
+				}
 			}
 		}
 	}
