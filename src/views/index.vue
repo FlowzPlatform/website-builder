@@ -755,7 +755,7 @@
                   }
 
                   response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-                    return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
+                    return !(child.name == 'public' ||child.name == '.temppublish' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
                     // return !(child.name == '.git')
                   })
 
@@ -2207,7 +2207,13 @@
 
       // Create neccessary folders for project
       async addOtherFolder(newFolderName){
-
+        //Create .tempfolder for job queue
+        await axios.post(config.baseURL+'/flows-dir-listing' , {
+          foldername : newFolderName+'/.temppublish',
+          type : 'folder'
+        }).catch((e)=>{
+          console.log(e);
+        })
         // Create Public folder
         await axios.post(config.baseURL+'/flows-dir-listing' , {
           foldername : newFolderName+'/public',

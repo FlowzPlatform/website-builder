@@ -33,7 +33,7 @@
                   <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
                 <br>
                 <div style="margin-top: 15px;">
-                  <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Default Publish</el-button>
+                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Default Publish</el-button>
                 </div>
               </div>
 
@@ -1090,7 +1090,7 @@ import _ from 'lodash';
 import Cookies from 'js-cookie';
 const config = require('../config');
 import fileSaver from 'file-saver';
-
+ import psl from 'psl';
 import draggable from 'vuedraggable';
 import settings from './settings/settings'
 import newpaymentsettings from './settings/Online-Payment'
@@ -1142,6 +1142,7 @@ export default {
         vid:'',
         crmid:''
       },
+      isdisabled:false,
       commitsData: [],
       configurationdata:[],
       gatewaychecked:'',
@@ -3373,6 +3374,97 @@ export default {
       });
 
     },
+    async publishjobqueue(publishType){
+      if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+
+        this.$confirm('Do you want to publish your website? This will take a while to process. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(async () => {
+          this.fullscreenLoading = true;
+          let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
+            this.isdisabled=true;           
+
+            //Now calling api to copy of all folder to a temporary location.
+
+            await axios.post(config.baseURL+'/copy-jobqueue-publish-files?projectPath='+folderUrl)
+            .then(async(res)=>{
+              console.log('Copy Successfull!!') 
+
+               let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
+                  console.log(err);
+                  this.fullscreenLoading=false;
+                  this.isdisabled=false;
+                });
+
+              //Now we have all necesary data to call jobqueue api
+
+              await axios.post(config.baseURL+'/publish-jobqueue',{
+                RepojsonData:responseConfig.data,
+                TempdirURL:folderUrl+'/.temppublish',
+                Webisteid:this.repoName,
+                Status:'pending'})
+              .then((res)=>{
+
+                this.fullscreenLoading=false
+                this.isdisabled=false;
+                
+              }).catch((err)=>{
+                this.fullscreenLoading=false
+                this.isdisabled=false;
+                console.log(err);
+              })
+            })
+            .catch((err)=>{ 
+              this.isdisabled=false;
+              this.fullscreenLoading=false;
+              console.log(err)
+            })         
+
+          
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      } else {
+        this.newProjectFolderDialog = false;
+        this.fullscreenLoading = false;
+        this.$session.remove('username');
+        localStorage.removeItem('current_sub_id');
+        let location = psl.parse(window.location.hostname)
+        location = location.domain === null ? location.input : location.domain
+
+        Cookies.remove('auth_token', {
+          domain: location
+        });
+        Cookies.remove('email', {
+          domain: location
+        });
+        Cookies.remove('userDetailId', {
+          domain: location
+        });
+        Cookies.remove('subscriptionId', {
+          domain: location
+        });
+
+        this.$message({
+          message: 'You\'re Logged Out From System. Please login again!',
+          duration: 500,
+          type: 'error',
+          onClose() {
+            window.location = '/login'
+          }
+        });
+
+        return;
+        // this.$swal("You're Logged Out From System. Please login again!")
+        // .then((value) => {
+        //   window.location = '/login'
+        // });
+      }
+    },
 
     async publishMetalsmith(publishType) {
 
@@ -4338,7 +4430,35 @@ export default {
          }
          
 
-      }).catch(err => { console.log(err); });
+      }).catch(err => { 
+        // console.log('111111',err.response);
+            if(err.response.data.code==401){
+              console.log(err.response.data.message)
+                this.$swal({
+                  title: 'Authentication token expired',
+                  text: 'Please Login Again!!!',
+                  type: 'warning',
+                  showCancelButton: true,
+                }).then(()=>{
+                  let location = psl.parse(window.location.hostname)
+                    location = location.domain === null ? location.input : location.domain
+
+                    Cookies.remove('auth_token', {
+                      domain: location
+                    });
+                    Cookies.remove('email', {
+                      domain: location
+                    });
+                    Cookies.remove('userDetailId', {
+                      domain: location
+                    });
+                    Cookies.remove('subscriptionId', {
+                      domain: location
+                    });
+                    window.location='/login'
+                })
+            }
+       });
 
      
 
