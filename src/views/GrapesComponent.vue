@@ -45,8 +45,6 @@ export default {
 
         this.fileUrl = this.$store.state.fileUrl;
 
-
-
         // // get bootstrap css
         // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
 
