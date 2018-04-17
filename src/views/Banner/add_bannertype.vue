@@ -2,30 +2,29 @@
   <div class="bannertypenew">
    <Row >
       <div style="padding-bottom: 10px;">
-        <h2 v-if="formItem.id">Edit Banner Type</h2>
-        <h2 v-else>Add Banner Type</h2>
+        <h2 v-if="formItem.id">Edit Category</h2>
+        <h2 v-else>Add Category</h2>
       </div>
    </Row>
    <Row style="border: 1px solid #C0C0C0; padding: 20px">
      <Form :model="formItem" :label-width="300" ref="formItem" :rules="rulesformItem">
-        <FormItem label="Select Website" prop="website_id">
-            <!-- <Input v-model.trim="formItem.website_id" placeholder="Select"></Input> -->
+        <FormItem label="Website" prop="website_id" filterable>
             <Select v-model="formItem.website_id" placeholder="Select Website" :disabled="isdisable">
                 <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </FormItem>      
-        <FormItem label="Banner Type Name" prop="bt_name">
-            <Input v-model.trim="formItem.bt_name" placeholder="Banner Type Name"></Input>
+        <FormItem label="Category Name" prop="bt_name">
+            <Input v-model.trim="formItem.bt_name" placeholder="Category Name"></Input>
         </FormItem>
-        <FormItem label="Select Banner Type Category">
+        <!-- <FormItem label="Select Banner Type Category">
             <Select v-model="formItem.bt_category">
                 <Option value="search_page">Search Page</Option>
                 <Option value="home_page">Home Page</Option>
                 <Option value="detail_page">Detail Page</Option>
                 <Option value="brand_slider">Brand Slider</Option>
             </Select>
-        </FormItem>
-        <FormItem label="Status">
+        </FormItem> -->
+        <FormItem  v-if="formItem.id" label="Status">
             <i-switch v-model="formItem.status" size="large">
                 <span slot="open">On</span>
                 <span slot="close">Off</span>
@@ -90,7 +89,7 @@ export default {
           { required: true, message: 'Please select the Website', trigger: 'change' }
         ],
         bt_name: [
-          { required: true, message: 'Please fill in the Banner Type Name', trigger: 'blur' },
+          { required: true, message: 'Please fill in the Banner Category Name', trigger: 'blur' },
           { validator: validateBtname, trigger: 'blur' }
         ]
       },
@@ -119,6 +118,7 @@ export default {
       delete item.id
       this.$refs[name].validate((valid) => {
         if (valid) {
+          item.createdAt = new Date()
           axios.put(bannertypeUrl + '/' + this.formItem.id, item).then(res => {
             this.$Notice.success({title: 'Success!!', desc: 'Successfully Edited.', duration: 3})
             this.$emit('updateBanner', {type: 'bannertypelist'})
