@@ -81,7 +81,14 @@ export default {
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
         let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((e)=>{ 
-            this.$confirm(e.response.data.message, 'Error', {
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
                     confirmButtonText: 'logout',
                     cancelButtonText: 'reload',
                     type: 'error',

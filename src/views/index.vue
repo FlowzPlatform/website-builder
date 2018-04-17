@@ -491,11 +491,16 @@
             let self = this;
 
             let socket = config.socketURL;
-
-            const app = feathers().configure(socketio(io(socket)))
+            let socket1 = io(socket)
+            const app = feathers().configure(socketio(socket1))
+            let socketStatus = false;
+            socket1.on('disconnect', function (disconnect){
+                socketStatus = true;
+            })
 
             // Socket Listen for Creating File or Folder
-            app.service("flows-dir-listing").on("created", (response) => {
+            if(socketStatus == true){
+                app.service("flows-dir-listing").on("created", (response) => {
                 if (response.socketListen) {
                     response.path = response.path.replace(/\//g, "\\")
                     var s = response.path.replace(this.rootpath, '').split('\\');
@@ -566,6 +571,11 @@
                     }
                 }
             });
+            }
+            else{
+                this.$message("Currently Live updates are not available. Please wait or reload the page");
+            }
+            
 
             // Get all subscriptions
             let sub_id = [];
@@ -850,7 +860,14 @@
                             this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '');
                                 })
                                 .catch((e) => {
-                                  this.$confirm(e.response.data.message, 'Error', {
+                                  if (e.message != undefined) {
+                                    dataMessage = e.message              
+                                } else if (e.response.data.message != undefined) {
+                                dataMessage = e.response.data.message
+                                } else{
+                                dataMessage = "Please try again! Some error occured."
+                                }
+                                this.$confirm(dataMessage, 'Error', {
                                     confirmButtonText: 'logout',
                                     cancelButtonText: 'reload',
                                     type: 'error',
@@ -1638,7 +1655,14 @@
                 return this.globalConfigData = rawConfigs;
                 })
                 .catch((e) => {
-                  this.$confirm(e.response.data.message, 'Error', {
+                  if (e.message != undefined) {
+                    dataMessage = e.message              
+                } else if (e.response.data.message != undefined) {
+                dataMessage = e.response.data.message
+                } else{
+                dataMessage = "Please try again! Some error occured."
+                }
+                this.$confirm(dataMessage, 'Error', {
                     confirmButtonText: 'logout',
                     cancelButtonText: 'reload',
                     type: 'error',
@@ -1855,7 +1879,14 @@
                             }
                             })
                             .catch((e) => {
-                              this.$confirm(e.response.data.message, 'Error', {
+                              if (e.message != undefined) {
+                                dataMessage = e.message              
+                            } else if (e.response.data.message != undefined) {
+                            dataMessage = e.response.data.message
+                            } else{
+                            dataMessage = "Please try again! Some error occured."
+                            }
+                            this.$confirm(dataMessage, 'Error', {
                                 confirmButtonText: 'logout',
                                 cancelButtonText: 'reload',
                                 type: 'error',
@@ -1958,7 +1989,14 @@
                         })
                         .then(async (res) => {
                             let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((e) => {
-                                this.$confirm(e.response.data.message, 'Error', {
+                                if (e.message != undefined) {
+                                    dataMessage = e.message              
+                                } else if (e.response.data.message != undefined) {
+                                dataMessage = e.response.data.message
+                                } else{
+                                dataMessage = "Please try again! Some error occured."
+                                }
+                                this.$confirm(dataMessage, 'Error', {
                                     confirmButtonText: 'logout',
                                     cancelButtonText: 'reload',
                                     type: 'error',
@@ -2269,7 +2307,14 @@
                     });
                         })
                         .catch((e) => {
-                            this.$confirm(e.response.data.message, 'Error', {
+                            if (e.message != undefined) {
+                                dataMessage = e.message              
+                            } else if (e.response.data.message != undefined) {
+                            dataMessage = e.response.data.message
+                            } else{
+                            dataMessage = "Please try again! Some error occured."
+                            }
+                            this.$confirm(dataMessage, 'Error', {
                                 confirmButtonText: 'logout',
                                 cancelButtonText: 'reload',
                                 type: 'error',
@@ -2575,7 +2620,14 @@
                                     });
                             })
                             .catch((e) => {
-                                this.$confirm(e.response.data.message, 'Error', {
+                                if (e.message != undefined) {
+                                    dataMessage = e.message              
+                                } else if (e.response.data.message != undefined) {
+                                dataMessage = e.response.data.message
+                                } else{
+                                dataMessage = "Please try again! Some error occured."
+                                }
+                                this.$confirm(dataMessage, 'Error', {
                                     confirmButtonText: 'logout',
                                     cancelButtonText: 'reload',
                                     type: 'error',
@@ -4231,7 +4283,14 @@
                         })
                         })
                         .catch((e) => {
-                            this.$confirm(e.response.data.message, 'Error', {
+                            if (e.message != undefined) {
+                                dataMessage = e.message              
+                            } else if (e.response.data.message != undefined) {
+                            dataMessage = e.response.data.message
+                            } else{
+                            dataMessage = "Please try again! Some error occured."
+                            }
+                            this.$confirm(dataMessage, 'Error', {
                                 confirmButtonText: 'logout',
                                 cancelButtonText: 'reload',
                                 type: 'error',
@@ -5124,7 +5183,14 @@
                             })
                             })
                             .catch((e) => {
-                                this.$confirm(e.response.data.message, 'Error', {
+                                if (e.message != undefined) {
+                                    dataMessage = e.message              
+                                } else if (e.response.data.message != undefined) {
+                                dataMessage = e.response.data.message
+                                } else{
+                                dataMessage = "Please try again! Some error occured."
+                                }
+                                this.$confirm(dataMessage, 'Error', {
                                     confirmButtonText: 'logout',
                                     cancelButtonText: 'reload',
                                     type: 'error',
@@ -6292,7 +6358,14 @@
 
                                                             })
                                                             .catch((esourceConfig) => {
-                                                                this.$confirm(e.response.data.message, 'Error', {
+                                                                if (e.message != undefined) {
+                                                                    dataMessage = e.message              
+                                                                } else if (e.response.data.message != undefined) {
+                                                                dataMessage = e.response.data.message
+                                                                } else{
+                                                                dataMessage = "Please try again! Some error occured."
+                                                                }
+                                                                this.$confirm(dataMessage, 'Error', {
                                                                     confirmButtonText: 'logout',
                                                                     cancelButtonText: 'reload',
                                                                     type: 'error',
@@ -6323,7 +6396,14 @@
                                                             });
                                                     })
                                                     .catch((e) => {
-                                                        this.$confirm(e.response.data.message, 'Error', {
+                                                        if (e.message != undefined) {
+                                                            dataMessage = e.message              
+                                                        } else if (e.response.data.message != undefined) {
+                                                        dataMessage = e.response.data.message
+                                                        } else{
+                                                        dataMessage = "Please try again! Some error occured."
+                                                        }
+                                                        this.$confirm(dataMessage, 'Error', {
                                                             confirmButtonText: 'logout',
                                                             cancelButtonText: 'reload',
                                                             type: 'error',
@@ -6508,7 +6588,14 @@
                         }
                         })
                         .catch((e) => {
-                          this.$confirm(e.response.data.message, 'Error', {
+                          if (e.message != undefined) {
+                            dataMessage = e.message              
+                        } else if (e.response.data.message != undefined) {
+                        dataMessage = e.response.data.message
+                        } else{
+                        dataMessage = "Please try again! Some error occured."
+                        }
+                        this.$confirm(dataMessage, 'Error', {
                             confirmButtonText: 'logout',
                             cancelButtonText: 'reload',
                             type: 'error',
