@@ -747,7 +747,7 @@
             }
         },
         async mounted(){
-            this.$Loading.start()
+            // this.$Loading.start()
             // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&",this.$route.params)
             // if (this.$route.params.tabName) {
             //     this.activetabs = this.$route.params.tabName
