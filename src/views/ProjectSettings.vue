@@ -32,8 +32,11 @@
                 <br>
                   <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
                 <br>
+
                 <div style="margin-top: 15px;">
-                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Default Publish</el-button>
+                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Publish</el-button>
+  
+                  <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button>
                 </div>
               </div>
 
@@ -1383,7 +1386,7 @@ export default {
 
     let self = this;
 
-    $.fn.editable.defaults.mode = 'inline';
+    // $.fn.editable.defaults.mode = 'inline';
 
     // Brand Image uploader
     let scope = this;
@@ -3376,17 +3379,71 @@ export default {
       });
 
     },
+    cancelpublishjobqueue(){
+     if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+        this.$confirm('Do you wish to Cancel publishling your website !!! Continue ?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(async () => {
+
+          let canceldata=await axios.get(config.baseURL+'/jobqueue?websiteid='+this.repoName)
+          console.log('canceldata',canceldata.data)
+
+
+
+          this.isdisabled=false
+          console.log('canceled called');
+
+        })
+     } else {
+         this.newProjectFolderDialog = false;
+         this.fullscreenLoading = false;
+         this.$session.remove('username');
+         localStorage.removeItem('current_sub_id');
+         let location = psl.parse(window.location.hostname)
+         location = location.domain === null ? location.input : location.domain
+
+         Cookies.remove('auth_token', {
+             domain: location
+         });
+         Cookies.remove('email', {
+             domain: location
+         });
+         Cookies.remove('userDetailId', {
+             domain: location
+         });
+         Cookies.remove('subscriptionId', {
+             domain: location
+         });
+
+         this.$message({
+             message: 'You\'re Logged Out From System. Please login again!',
+             duration: 500,
+             type: 'error',
+             onClose() {
+                 window.location = '/login'
+             }
+         });
+
+         return;
+         // this.$swal("You're Logged Out From System. Please login again!")
+         // .then((value) => {
+         //   window.location = '/login'
+         // });
+     }
+    },
     async publishjobqueue(publishType){
       if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
 
-        this.$confirm('Do you want to publish your website? This will take a while to process. Continue?', 'Warning', {
+        this.$confirm('Do you wish to Publish your website: '+this.form.websitename+' ?', 'Warning', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(async () => {
           this.fullscreenLoading = true;
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-
+            //Now disabling the publish button.
             this.isdisabled=true;           
 
             //Now calling api to copy of all folder to a temporary location.
@@ -3403,15 +3460,16 @@ export default {
 
               //Now we have all necesary data to call jobqueue api
 
-              await axios.post(config.baseURL+'/publish-jobqueue',{
+              await axios.post(config.baseURL+'/jobqueue',{
                 RepojsonData:responseConfig.data,
                 TempdirURL:folderUrl+'/.temppublish',
-                Webisteid:this.repoName,
-                Status:'pending'})
+                Webisteid:this.repoName})
               .then((res)=>{
 
                 this.fullscreenLoading=false
-                this.isdisabled=false;
+                //Now we will keep listening for jobqueue completion.
+                
+                // this.isdisabled=false;
                 
               }).catch((err)=>{
                 this.fullscreenLoading=false
@@ -3424,8 +3482,7 @@ export default {
               this.fullscreenLoading=false;
               console.log(err)
             })         
-
-          
+    
         }).catch((err) => {
           console.log(err);
         });
