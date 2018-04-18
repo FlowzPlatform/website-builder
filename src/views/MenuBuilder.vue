@@ -109,7 +109,7 @@ import domenu from 'domenu'
 		data: () => ({
       outputJson: [],
       MenuJSON: [],
-      menuBaseUrl: 'search.html?SearchSensor=',
+      menuBaseUrl: 'search.html?SearchSensor="',
       fetchDataLoader: false,
       pageList: [],
       categoriesList: []
@@ -259,7 +259,7 @@ import domenu from 'domenu'
 				    let categories = res.data.aggregations.group_by_category.buckets;
 
 				    for(let i = 0; i < categories.length; i++){
-				    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-')
+				    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-') + '"';
 
 				    	this.categoriesList.push({
 				    		categoryName: categories[i].key.toUpperCase(),

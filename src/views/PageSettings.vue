@@ -795,6 +795,11 @@ export default {
             })
             .then(async(res) => {
               //console.log(res.data);
+              this.$message({
+                message: 'Saved!',
+                showClose: true,
+                type: 'success'
+              });
             })
             .catch((e) => {
               this.$message({
@@ -835,6 +840,11 @@ export default {
             })
             .then(async(res) => {
               //console.log(res.data);
+              this.$message({
+                message: 'Saved!',
+                showClose: true,
+                type: 'success'
+              });
             })
             .catch((e) => {
               this.$message({
@@ -853,6 +863,7 @@ export default {
           });
         }
       }
+
     }
   },
   async created () {  
