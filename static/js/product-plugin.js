@@ -2114,56 +2114,56 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     });
 
 
-    comps.addType('img', {
-        // Define the Model
-        model: defaultModel.extend({
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                        label: 'Data image field',
-                        name: ':src',
-                        type: 'text'
-                    },
-                    {
-                        label: 'image height',
-                        name: 'height',
-                        type: 'text'
-                    },
-                    {
-                        label: 'image width',
-                        name: 'width',
-                        type: 'text'
-                    },
-                    {
-                        label: 'image alt',
-                        name: 'alt',
-                        type: 'text'
-                    }
-                ]
-            }),
+    // comps.addType('img', {
+    //     // Define the Model
+    //     model: defaultModel.extend({
+    //         // Extend default properties
+    //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
+    //             editable: true,
+    //             droppable: true,
+    //             traits: [{
+    //                     label: 'Data image field',
+    //                     name: ':src',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image height',
+    //                     name: 'height',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image width',
+    //                     name: 'width',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image alt',
+    //                     name: 'alt',
+    //                     type: 'text'
+    //                 }
+    //             ]
+    //         }),
 
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'IMG') {
-                    return {
-                        type: 'img'
-                    };
-                }
-            },
-        }),
+    //     }, {
+    //         isComponent: function(el) {
+    //             if (el.tagName == 'IMG') {
+    //                 return {
+    //                     type: 'img'
+    //                 };
+    //             }
+    //         },
+    //     }),
 
-        view: defaultType.view,
+    //     view: defaultType.view,
 
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
+    //     // The render() should return 'this'
+    //     render: function() {
+    //         // Extend the original render method
+    //         defaultType.view.prototype.render.apply(this, arguments);
+    //         this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+    //         return this;
+    //     },
+    // });
 
 
 
