@@ -47,6 +47,7 @@
             <div  v-for="(mitem, index) in itemArr">
               <Col :span="6" style="">
                 <div style="margin: 10px;padding-bottom:20px;border: 1px solid #eee;border-radius: 4px;background: white;padding:10px;">
+                  {{index}}
                   <a @click="handleRemoveItem(index)"><Icon class="mIcon" type="close-circled" style=""></Icon></a>
                   <img :src="mitem.banner_img" height="180" class="thumbnail" style="width:-webkit-fill-available;border:unset;padding:0" />
                   <!-- <hr> -->
@@ -238,7 +239,7 @@ export default {
   },
   methods: {
     handleRemoveItem (inx) {
-      let finx = _.findIndex(this.assetsImages, {url: this.itemArr[inx].url})
+      let finx = _.findIndex(this.assetsImages, {url: this.itemArr[inx].banner_img})
       if (finx !== undefined && finx !== -1) {
         this.assetsImages[finx].isSelect = false
       }
