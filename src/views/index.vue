@@ -96,7 +96,7 @@
               </el-dialog>
 
               <!-- New Website Project Dialog if it's not dashboard page -->
-              <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
+              <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")' id="createProjectModal">
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
                     <div class="row">
@@ -5683,7 +5683,9 @@
            this.$refs[projectName].resetFields();
           
           }
-          }
+        } else {
+          $('#createProjectModal').scrollTop(0);
+        }
        
       })
       },

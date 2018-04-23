@@ -408,10 +408,11 @@ export default {
     },
     getHtml: function () {
 
-          let uglyCss = editor.getCss();
+          // let uglyCss = editor.getCss();
 
-          uglyCss = uglyCss.replace(/\s/g,'')
+          // uglyCss = uglyCss.replace(/\s/g,'')
 
+          let grapesCss = beautify(editor.getCss(), { format: 'css'});
           let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
 
           // var regex = /body+\{([^}]+)/g;
@@ -433,7 +434,7 @@ export default {
 
           // let grapesCss = beautify(uglyCss, { format: 'css'});
 
-          this.$store.state.content = "<style>\n" + uglyCss + "\n</style>\n"+
+          this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
               "\n\n\n\n" + grapesHtml;
 
           this.savedFile = true;

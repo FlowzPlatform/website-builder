@@ -651,7 +651,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     bm.add('SliderCustom', {
         label: 'Custom Slider',
-        content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script><CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
+        content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script><style>.row {display: flex !important;}</style><CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
         attributes: {
             class: 'fa fa-sliders',
             title: 'Custom Slider',
@@ -2114,56 +2114,56 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     });
 
 
-    comps.addType('img', {
-        // Define the Model
-        model: defaultModel.extend({
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                        label: 'Data image field',
-                        name: ':src',
-                        type: 'text'
-                    },
-                    {
-                        label: 'image height',
-                        name: 'height',
-                        type: 'text'
-                    },
-                    {
-                        label: 'image width',
-                        name: 'width',
-                        type: 'text'
-                    },
-                    {
-                        label: 'image alt',
-                        name: 'alt',
-                        type: 'text'
-                    }
-                ]
-            }),
+    // comps.addType('img', {
+    //     // Define the Model
+    //     model: defaultModel.extend({
+    //         // Extend default properties
+    //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
+    //             editable: true,
+    //             droppable: true,
+    //             traits: [{
+    //                     label: 'Data image field',
+    //                     name: ':src',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image height',
+    //                     name: 'height',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image width',
+    //                     name: 'width',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image alt',
+    //                     name: 'alt',
+    //                     type: 'text'
+    //                 }
+    //             ]
+    //         }),
 
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'IMG') {
-                    return {
-                        type: 'img'
-                    };
-                }
-            },
-        }),
+    //     }, {
+    //         isComponent: function(el) {
+    //             if (el.tagName == 'IMG') {
+    //                 return {
+    //                     type: 'img'
+    //                 };
+    //             }
+    //         },
+    //     }),
 
-        view: defaultType.view,
+    //     view: defaultType.view,
 
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
+    //     // The render() should return 'this'
+    //     render: function() {
+    //         // Extend the original render method
+    //         defaultType.view.prototype.render.apply(this, arguments);
+    //         this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+    //         return this;
+    //     },
+    // });
 
 
 
@@ -2341,12 +2341,59 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 editable: true,
                 droppable: true,
                 traits: [{
-                    label: 'Banner Type',
+                    label: 'Category',
                     name: 'sliderCustom',
                     type: 'select',
                     options: bannerTypes
                     // options: [{'name' : 'hello', 'value':'hello'}, {'name' : 'hello2', 'value':'hello2'}]
-                }],
+                },
+                {
+                    label: 'Type',
+                    name: 'btype',
+                    type: 'select',
+                    options: [{'name': 'Normal Slider', 'value': 'normal'}, {'name': 'Brand Slider', 'value': 'brand'}]
+                },
+                {
+                    label: 'Autoplay (in ms)',
+                    name: 'aplay',
+                    type: 'number',
+                    value: 5000
+                },
+                {
+                    label: 'Pagination',
+                    name: 'pagination',
+                    type: 'checkbox',
+                    value: true
+                },
+                {
+                    label: 'Navigation',
+                    name: 'navigation',
+                    type: 'checkbox'
+                },
+                {
+                    label: 'Previous Button Text',
+                    name: 'prev',
+                    type: 'text',
+                    value: 'prev'
+                },
+                {
+                    label: 'Next Button Text',
+                    name: 'next',
+                    type: 'text',
+                    value: 'next'
+                },
+                {
+                    label: 'Slide Speed (in ms)',
+                    name: 'slidespeed',
+                    type: 'number',
+                    value: '200'
+                },
+                {
+                    label: 'Items displayed at a time (for brand slider)',
+                    name: 'ditems',
+                    type: 'number',
+                    value: 5
+                }]
             }),
         }, {
             isComponent: function(el) {
