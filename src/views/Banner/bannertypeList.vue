@@ -424,6 +424,12 @@ export default {
 .deleteb:hover {
 	color: red;
 }
+.ivu-table td, .ivu-table th {
+  min-width: 173px !important;
+}
+.ivu-table table {
+    table-layout: auto !important;
+}
 </style>
 <style scoped>
 	.bannertype {
