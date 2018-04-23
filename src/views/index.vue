@@ -3617,6 +3617,7 @@
                     temp = temp.split('.')[0]
                     if (name == temp) {
                       checkValue = true;
+                       result1 = (getFromBetween.get(content1, "{{>", "}}"));
                       if (result1.length <= 0) {
                         var layoutresult = [];
                         var layoutDefault = [];
@@ -3701,7 +3702,6 @@
                           for (let k = 0; k < this.globalConfigData[1].pageSettings[i].partials.length; k++) {
                             let checklayoutp = false
                             for (let j = 0; j < layoutresult.length; j++) {
-
                               if (Object.keys(this.globalConfigData[1].pageSettings[i].partials[k])[0] == layoutresult[j]) {
 
                                 if (layoutDefault.length > 0) {
@@ -3714,13 +3714,13 @@
                                   }
 
                                 } else {
-                                  if (this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]] != '') {
+                                  if (this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]] != undefined) {
                                     checklayoutp = true
                                   }
                                 }
 
                               } else {
-                                if (this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]] != '') {
+                                if (this.globalConfigData[1].pageSettings[i].partials[k][layoutresult[j]] != undefined) {
                                   checklayoutp = true
                                 }
                               }

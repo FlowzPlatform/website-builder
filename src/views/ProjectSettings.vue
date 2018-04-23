@@ -34,7 +34,7 @@
                 <br>
 
                 <div style="margin-top: 15px;">
-                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Publish</el-button>
+                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Publish</el-button>
   
                   <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button>
                 </div>
@@ -3387,7 +3387,7 @@ export default {
           type: 'warning'
         }).then(async () => {
 
-          let canceldata=await axios.get(config.baseURL+'/jobqueue?websiteid='+this.repoName)
+          let canceldata=await axios.delete(config.baseURL+'/jobqueue?websiteid='+this.repoName)
           console.log('canceldata',canceldata.data)
 
 
@@ -3433,7 +3433,7 @@ export default {
          // });
      }
     },
-    async publishjobqueue(publishType){
+    async publishjobqueue(){
       if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
 
         this.$confirm('Do you wish to Publish your website: '+this.form.websitename+' ?', 'Warning', {
@@ -3463,7 +3463,7 @@ export default {
               await axios.post(config.baseURL+'/jobqueue',{
                 RepojsonData:responseConfig.data,
                 TempdirURL:folderUrl+'/.temppublish',
-                Webisteid:this.repoName})
+                Websiteid:this.repoName})
               .then((res)=>{
 
                 this.fullscreenLoading=false
@@ -4520,16 +4520,6 @@ export default {
        });
 
      
-
-      
-      // await axios.get(config.paymentApiGateway)
-      // .then(res=>{
-        
-      //   this.Allgateway = res.data.gateways;
-      // }).catch(err => { console.log(err); });
-      
-      // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-      // console.log('@@@@@@@@@@@@@@@',localStorage.getItem('current_sub_id'))
      await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId': Cookies.get('subscriptionId')}})
       .then(res=>{
         
@@ -4549,6 +4539,13 @@ export default {
       .catch(err => { console.log(err);  });
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
+
+
+
+       let status=await axios.get(config.baseURL+'/jobqueue?websiteid='+this.repoName)
+       if(status.data.data=='active'){
+        this.isdisabled=true
+       }
 
       if(this.commitsData[0]){
         return 'positive-row';
