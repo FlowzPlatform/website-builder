@@ -36,7 +36,8 @@
                 <div style="margin-top: 15px;">
                   <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Publish</el-button>
   
-                  <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button>
+                  <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button><br>
+                  <el-progress v-if='isdisabled==true' style='margin: 21px 0px 6px 0px' :percentage="70"></el-progress>
                 </div>
               </div>
 
@@ -4306,7 +4307,7 @@ export default {
     },
 
     async init () {
-
+      this.fullscreenLoading = true 
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
@@ -4386,6 +4387,7 @@ export default {
 
       } else {
         console.log('Cannot get configurations!');
+        this.fullscreenLoading = false 
       }
 
       if(this.form.brandLogoName==''){
@@ -4493,6 +4495,7 @@ export default {
 
       }).catch(err => { 
         // console.log('111111',err.response);
+          this.fullscreenLoading = false 
             if(err.response.data.code==401){
               console.log(err.response.data.message)
                 this.$swal({
@@ -4538,16 +4541,17 @@ export default {
 
         
       })
-      .catch(err => { console.log(err);  });
+      .catch(err => { this.fullscreenLoading = false ;console.log(err);  });
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
 
 
 
-       let status=await axios.get(config.baseURL+'/jobqueue?websiteid='+this.repoName)
+       let status=await axios.get(config.baseURL+'/jobqueue?websiteid='+this.repoName).catch((e)=>{this.fullscreenLoading = false })
        if(status.data.data=='active'){
         this.isdisabled=true
        }
+       this.fullscreenLoading = false
 
       if(this.commitsData[0]){
         return 'positive-row';
