@@ -3388,7 +3388,7 @@ export default {
         }).then(async () => {
 
           let canceldata=await axios.delete(config.baseURL+'/jobqueue?websiteid='+this.repoName)
-          console.log('canceldata',canceldata.data)
+          // console.log('canceldata',canceldata.data)
 
 
 
@@ -3450,7 +3450,7 @@ export default {
 
             await axios.post(config.baseURL+'/copy-jobqueue-publish-files?projectPath='+folderUrl)
             .then(async(res)=>{
-              console.log('Copy Successfull!!') 
+              // console.log('Copy Successfull!!') 
 
                let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
                   console.log(err);
@@ -3463,7 +3463,8 @@ export default {
               await axios.post(config.baseURL+'/jobqueue',{
                 RepojsonData:responseConfig.data,
                 TempdirURL:folderUrl+'/.temppublish',
-                Websiteid:this.repoName})
+                Websiteid:this.repoName,
+                baseURL:config.baseURL})
               .then((res)=>{
 
                 this.fullscreenLoading=false
@@ -3549,6 +3550,7 @@ export default {
           this.fullscreenLoading = true;
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          console.log('folderUrl:',folderUrl)
           let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
             console.log(err);
             this.fullscreenLoading = false
