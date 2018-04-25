@@ -35,212 +35,207 @@
 </template>
 
 <script>
-import axios from 'axios';
-const config = require('./config');
 
-import psl from 'psl';
-import Cookies from 'js-cookie';
+import psl from 'psl'
+import Cookies from 'js-cookie'
 
-import SiteFooter from './views/footer';
+import SiteFooter from './views/footer'
 export default {
-  name: 'app',
-  data () {
-    return {
-      isLoggedIn: false,
-      username : '',
-      ifDashboard: false,
-      useremailID: ''
-    }
+	name: 'app',
+	data () {
+		return {
+			isLoggedIn: false,
+			username: '',
+			ifDashboard: false,
+			useremailID: ''
+		}
 	},
-  components: {
-    SiteFooter
-  },
-  updated: function () {
-    if(this.$cookie.get('auth_token')){
-      this.isLoggedIn = true;
-    } else {
+	components: {
+		SiteFooter
+	},
+	updated: function () {
+		if (this.$cookie.get('auth_token')) {
+			this.isLoggedIn = true
+		} else {
 
-    }
-  },
-  mounted: function () {
-    this.init();
-    this.checkDashboard();
+		}
+	},
+	mounted: function () {
+		this.init()
+		this.checkDashboard()
 
-    // Check for auth token on focusing to current tab
-    // $(window).on('focus', function() { 
-    //   alert(1);
-    //   // let location = psl.parse(window.location.hostname)
-    //   // location = location.domain === null ? location.input : location.domain
-    //   // Cookies.remove('auth_token' ,{domain: location});
-    // });
+		// Check for auth token on focusing to current tab
+		// $(window).on('focus', function() {
+		//   alert(1);
+		//   // let location = psl.parse(window.location.hostname)
+		//   // location = location.domain === null ? location.input : location.domain
+		//   // Cookies.remove('auth_token' ,{domain: location});
+		// });
 
-    this.checkAuth();
-  },
-  methods: {
-    checkAuth(){
+		this.checkAuth()
+	},
+	methods: {
+		checkAuth () {
+			// let location = psl.parse(window.location.hostname)
+			// location = location.domain === null ? location.input : location.domain
 
-      let location = psl.parse(window.location.hostname)
-      location = location.domain === null ? location.input : location.domain;
+			// setInterval(()=>{
+			//   if(Cookies.get('auth_token' ,{domain: location})){
+			//     // If Auth_Token is present and UserDetailId is not there
 
-      // setInterval(()=>{ 
-      //   if(Cookies.get('auth_token' ,{domain: location})){
-      //     // If Auth_Token is present and UserDetailId is not there
+			//     if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
+			//       // console.log(config.userDetail)
+			//       axios.get(config.userDetail, {
+			//         headers: {
+			//           'Authorization' : Cookies.get('auth_token' ,{domain: location})
+			//         }
+			//       })
+			//       .then(async (res) => {
+			//         let userDetailId = res.data.data._id;
+			//         // console.log(res);
 
-      //     if(!Cookies.get('userDetailId' ,{domain: location}) || !Cookies.get('email' ,{domain: location})){
-      //       // console.log(config.userDetail)
-      //       axios.get(config.userDetail, {
-      //         headers: {
-      //           'Authorization' : Cookies.get('auth_token' ,{domain: location})
-      //         }   
-      //       })
-      //       .then(async (res) => {
-      //         let userDetailId = res.data.data._id;
-      //         // console.log(res);
+			//         // Store Token in Cookie
+			//         Cookies.set('email', res.data.data.email, {domain: location});
+			//         Cookies.set('userDetailId',  userDetailId, {domain: location});
 
-      //         // Store Token in Cookie
-      //         Cookies.set('email', res.data.data.email, {domain: location});
-      //         Cookies.set('userDetailId',  userDetailId, {domain: location});
-              
-      //         localStorage.setItem('userDetailId', userDetailId);
-      //         localStorage.setItem('email', res.data.data.email);
+			//         localStorage.setItem('userDetailId', userDetailId);
+			//         localStorage.setItem('email', res.data.data.email);
 
-      //         // create user folder
-      //         await axios.post(config.baseURL+'/flows-dir-listing' , {
-      //           foldername :'/var/www/html/websites/'+ userDetailId,
-      //           type : 'folder'
-      //         })
-      //         .then((res) => {
-      //           window.location = '/editor';
-      //         })
-      //         .catch((res) => {
-      //           window.location = '/editor';
-      //         });
-              
-      //       })
-      //       .catch((e) => {
-      //         console.log(e)
-      //         this.$message({
-      //             showClose: true,
-      //             message: 'Error: ' + e.response.data,
-      //             type: 'error'
-      //         });
-      //         window.location = '/login';
-      //       })
-      //     } else {
+			//         // create user folder
+			//         await axios.post(config.baseURL+'/flows-dir-listing' , {
+			//           foldername :'/var/www/html/websites/'+ userDetailId,
+			//           type : 'folder'
+			//         })
+			//         .then((res) => {
+			//           window.location = '/editor';
+			//         })
+			//         .catch((res) => {
+			//           window.location = '/editor';
+			//         });
 
-      //       // Reauth UserDetailId with auth token
-      //       axios.get(config.userDetail, {
-      //         headers: {
-      //           'Authorization' : Cookies.get('auth_token' ,{domain: location})
-      //         }   
-      //       })
-      //       .then(async (res) => {
+			//       })
+			//       .catch((e) => {
+			//         console.log(e)
+			//         this.$message({
+			//             showClose: true,
+			//             message: 'Error: ' + e.response.data,
+			//             type: 'error'
+			//         });
+			//         window.location = '/login';
+			//       })
+			//     } else {
 
-      //         let userDetailId = res.data.data._id;
+			//       // Reauth UserDetailId with auth token
+			//       axios.get(config.userDetail, {
+			//         headers: {
+			//           'Authorization' : Cookies.get('auth_token' ,{domain: location})
+			//         }
+			//       })
+			//       .then(async (res) => {
 
-      //         if(userDetailId == Cookies.get('userDetailId' ,{domain: location})){
-      //           // Valid toke and UserDetailId
-      //           // console.log('Valid user detail id');
-      //         } else {
-      //           // console.log('Invalid user detail id');
-      //           // Update userDetailId
-      //           // Store Token in Cookie
-      //           Cookies.set('email', res.data.data.email, {domain: location});
-      //           Cookies.set('userDetailId',  userDetailId, {domain: location});
-                
-      //           localStorage.setItem('userDetailId', userDetailId);
-      //           localStorage.setItem('email', res.data.data.email);
-      //         }
-              
-      //       })
-      //       .catch((e) => {
-      //         console.log(e)
-              
-      //         this.$alert('Error: ' + e.response.data, '', {
-      //           confirmButtonText: 'OK',
-      //           callback: action => {
-      //             window.location = '/login'
-      //           }
-      //         });
-              
-      //       })
-      //     }
-      //   } else {
+			//         let userDetailId = res.data.data._id;
 
-      //     if(this.$route.path == '/login' || this.$route.path == '/' || this.$route.path == '/register' || this.$route.path == '/forgot_password' || this.$route.path == '/reset-password' || this.$route.path == '/email-verification'){
+			//         if(userDetailId == Cookies.get('userDetailId' ,{domain: location})){
+			//           // Valid toke and UserDetailId
+			//           // console.log('Valid user detail id');
+			//         } else {
+			//           // console.log('Invalid user detail id');
+			//           // Update userDetailId
+			//           // Store Token in Cookie
+			//           Cookies.set('email', res.data.data.email, {domain: location});
+			//           Cookies.set('userDetailId',  userDetailId, {domain: location});
 
-      //     } else {
-      //       window.location = '/login'
-      //     }
-         
-      //   }
-      // }, 5000);
+			//           localStorage.setItem('userDetailId', userDetailId);
+			//           localStorage.setItem('email', res.data.data.email);
+			//         }
 
-    },
-    init () {
-      if(this.$cookie.get('auth_token')){
-        this.isLoggedIn = true;
-      } else {
-        this.isLoggedIn = false;
-      }
-      this.useremailID = 'Logout: ' + Cookies.get('email');
-    },
-  	handleSelect() {
-    },
-    loginPage() {
-      this.$router.push('/login');
-    },
-    homePage() {
-      this.$router.push('/');
-    },
-    doLogout() {
-      this.$confirm('Do you want to logout?', 'Warning', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-             localStorage.removeItem('current_sub_id');
-            this.$session.remove('username');
-            let location = psl.parse(window.location.hostname)
-            location = location.domain === null ? location.input : location.domain
-            Cookies.remove('auth_token' ,{domain: location});
-            Cookies.remove('email' ,{domain: location});
-            Cookies.remove('userDetailId' ,{domain: location}); 
-            Cookies.remove('subscriptionId' ,{domain: location}); 
+			//       })
+			//       .catch((e) => {
+			//         console.log(e)
 
-            this.isLoggedIn = false;
-            // this.$router.push('/login');
-            window.location = '/login';
-        }).catch(() => {
-          // this.$message({
-          //   type: 'info',
-          //   message: 'Delete canceled'
-          // });          
-        });
-    },
-    goToDashboard(){
-      // this.$router.push('/user-dashboard');
-      window.location = "/user-dashboard";
-    },
-    checkDashboard(){
+			//         this.$alert('Error: ' + e.response.data, '', {
+			//           confirmButtonText: 'OK',
+			//           callback: action => {
+			//             window.location = '/login'
+			//           }
+			//         });
 
-      let routerName =  this.$route.path;
+			//       })
+			//     }
+			//   } else {
 
-      if(routerName == '/user-dashboard' || this.$session.get('username') != undefined){
-       this.ifDashboard = true;
-       this.isLoggedIn = true;  
-      } else {
-        this.ifDashboard = false;
-        this.isLoggedIn = false;
-      }
-    }
-  },
-  watch: {
-    '$route.path': function(newvalue) {
-      this.init();
-      this.checkDashboard();
-    }
-  }
+			//     if(this.$route.path == '/login' || this.$route.path == '/' || this.$route.path == '/register' || this.$route.path == '/forgot_password' || this.$route.path == '/reset-password' || this.$route.path == '/email-verification'){
+
+			//     } else {
+			//       window.location = '/login'
+			//     }
+
+			//   }
+			// }, 5000);
+		},
+		init () {
+			if (this.$cookie.get('auth_token')) {
+				this.isLoggedIn = true
+			} else {
+				this.isLoggedIn = false
+			}
+			this.useremailID = 'Logout: ' + Cookies.get('email')
+		},
+		handleSelect () {
+		},
+		loginPage () {
+			this.$router.push('/login')
+		},
+		homePage () {
+			this.$router.push('/')
+		},
+		doLogout () {
+			this.$confirm('Do you want to logout?', 'Warning', {
+				confirmButtonText: 'OK',
+				cancelButtonText: 'Cancel',
+				type: 'warning'
+			}).then(() => {
+				localStorage.removeItem('current_sub_id')
+				this.$session.remove('username')
+				let location = psl.parse(window.location.hostname)
+				location = location.domain === null ? location.input : location.domain
+				Cookies.remove('auth_token', {domain: location})
+				Cookies.remove('email', {domain: location})
+				Cookies.remove('userDetailId', {domain: location})
+				Cookies.remove('subscriptionId', {domain: location})
+
+				this.isLoggedIn = false
+				// this.$router.push('/login');
+				window.location = '/login'
+			}).catch(() => {
+				// this.$message({
+				//   type: 'info',
+				//   message: 'Delete canceled'
+				// });
+			})
+		},
+		goToDashboard () {
+			// this.$router.push('/user-dashboard');
+			window.location = '/user-dashboard'
+		},
+		checkDashboard () {
+			let routerName = this.$route.path
+
+			if (routerName == '/user-dashboard' || this.$session.get('username') != undefined) {
+				this.ifDashboard = true
+				this.isLoggedIn = true
+			} else {
+				this.ifDashboard = false
+				this.isLoggedIn = false
+			}
+		}
+	},
+	watch: {
+		'$route.path': function (newvalue) {
+			this.init()
+			this.checkDashboard()
+		}
+	}
 }
 </script>
 

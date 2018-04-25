@@ -16,19 +16,19 @@
 <script>
   import vueJsonEditor from 'vue-json-editor'
   export default {
-    name:'json-viewer',
-    data: () => ({
-        json : {}
-    }),
-    components: {
-      vueJsonEditor
-    },
-    methods: {
-      onJsonChange (value) {
-          this.$store.state.content = value
-        //// console.log('value:', value)
-      }
-    }
+  	name: 'json-viewer',
+  	data: () => ({
+  		json: {}
+  	}),
+  	components: {
+  		vueJsonEditor
+  	},
+  	methods: {
+  		onJsonChange (value) {
+  			this.$store.state.content = value
+  			/// / console.log('value:', value)
+  		}
+  	}
   }
 </script>
 

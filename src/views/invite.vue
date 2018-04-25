@@ -57,366 +57,351 @@
 <script src="https://unpkg.com/iview/dist/iview.min.js"></script>
 <script>
     import axios from 'axios'
-    import Cookies from 'js-cookie';
-    const config = require('../config');
-    let subscriptionUrl = config.subscriptionApi
-    import expandRow from './assigned_invite_table-expand.vue';
-    import moment from 'moment';
-    import _ from 'lodash'
-    import Vue from 'vue';
-    import iView from 'iview';
-    import 'iview/dist/styles/iview.css';
-    import locale from 'iview/dist/locale/en-US';
-    Vue.use(iView, { locale });
+import Cookies from 'js-cookie'
+import expandRow from './assigned_invite_table-expand.vue'
+import moment from 'moment'
+import _ from 'lodash'
+import Vue from 'vue'
+import iView from 'iview'
+import 'iview/dist/styles/iview.css'
+import locale from 'iview/dist/locale/en-US'
 
-    import psl from 'psl';
-    import expandInviteRow from './own_assigns.vue';
+import psl from 'psl'
+import expandInviteRow from './own_assigns.vue'
+const config = require('../config')
+let subscriptionUrl = config.subscriptionApi
+Vue.use(iView, { locale })
+
+export default {
+    	components: { expandRow, expandInviteRow },
+    	data () {
+    		return {
+    			options: '',
+    			value1: '',
+    			options2: '',
+    			value2: '',
+    			roleOption1: '',
+    			roleValue1: '',
+    			input: '',
+    			loading: false,
+    			data2: [],
+    			data3: [],
+    			data4: [],
+    			assigned_Arr2: [],
+    			assigned_Arr3: [],
+    			assigned_Arr4: [],
+    			columns2: [
+    				{
+    					type: 'expand',
+    					width: 50,
+    					render: (h, params) => {
+    						// return
+    						return h(expandInviteRow, {
+    							props: {
+    								row: params.row
+    							}
+    							// 'Show role and model here'
+    						})
+    					}
+    				},
+    				{
+    					title: 'Subscription Name',
+    					key: 'name'
+    				},
+    				{
+    					title: 'Subscription Id',
+    					key: 'subscriptionId'
+    				},
+    				{
+    					title: 'Assigned By',
+    					key: 'invitedBy'
+    				}
+    			],
+    			columns3: [
+    				{
+    					type: 'expand',
+    					width: 50,
+    					render: (h, params) => {
+    						return h(expandRow, {
+    							props: {
+    								row: params.row
+    							}
+    						})
+    					}
+    				},
+    				{
+    					title: 'Subscription Name',
+    					key: 'name'
+    				},
+    				{
+    					title: 'Subscription Id',
+    					key: 'subscriptionId'
+    				},
+    				{
+    					title: 'Role',
+    					key: 'role',
+    					render: (h, params) => {
+    						return h('div', [
+    							// console.log(params)
+    							// let obj= Object.keys(params.row.role);
+    							// console.log("Object.keys(params.row.role)",Object.keys(params.row.role))
+    							// console.log(">>>>>>>>>>>>>>>>>>>>> " , params.row.role)
+    							// h('strong',params)
+    							h('p', this.capitalize(params.row.role))
+    							// h('strong',this.capitalize(params.row.role[Object.keys(params.row.role)]))
+    						])
+    					}
     
-   export default {
-        components: { expandRow, expandInviteRow },
-        data() {
-            return {
-                options: '',
-                value1: '',
-                options2: '',
-                value2: '',
-                roleOption1: '',
-                roleValue1: '',
-                input: '',
-                loading :false,
-                data2:[],
-                data3: [],
-                data4: [],
-                assigned_Arr2 : [],
-                assigned_Arr3 : [],
-                assigned_Arr4 : [],
-                columns2: [
-                    {
-                        type: 'expand',
-                        width: 50,
-                        render: (h, params) => {
-                           //return 
-                           return h(expandInviteRow, {
-                               props: {
-                                    row: params.row
-                                }
-                               //'Show role and model here'
-                            })
-                        }
-                    },
-                    {
-                        title: 'Subscription Name',
-                        key: 'name'
-                    },
-                    {
-                        title: 'Subscription Id',
-                        key: 'subscriptionId'
-                    },
-                    {
-                        title : 'Assigned By' ,
-                        key : 'invitedBy'
-                    }
-                ],
-                 columns3: [
-                     {
-                        type: 'expand',
-                        width: 50,
-                        render: (h, params) => {
-                            return h(expandRow, {
-                                props: {
-                                    row: params.row
-                                }
-                            })
-                        }
-                    },
-                    {
-                        title: 'Subscription Name',
-                        key: 'name'
-                    },
-                    {
-                        title: 'Subscription Id',
-                        key: 'subscriptionId'
-                    },
-                    {
-                        title: 'Role',
-                        key: 'role',
-                         render: (h, params) => {
-                            return h('div', [
-                                //console.log(params)
-                                //let obj= Object.keys(params.row.role);
-                                // console.log("Object.keys(params.row.role)",Object.keys(params.row.role))
-                                // console.log(">>>>>>>>>>>>>>>>>>>>> " , params.row.role)
-                                // h('strong',params)
-                                h('p', this.capitalize(params.row.role))
-                                //h('strong',this.capitalize(params.row.role[Object.keys(params.row.role)]))
-                            ]);
-                        }
-                        
-                    }
-                ],
-                columns4: [
-                     
-                    {
-                        title: 'Subscription Name',
-                        key: 'name'
-                    },
-                    {
-                        title: 'Subscription Id',
-                        key: 'subscriptionId'
-                    },
-                    {
-                        title: 'Role',
-                        key: 'role',
-                        render: (h, params) => {
-                            return h('div', [
-                                //console.log(params)
-                                //let obj= Object.keys(params.row.role);
-                                h('strong', this.capitalize(params.row.role[Object.keys(params.row.role)]))
-                            ]);
-                        }
-                        
-                    },
-                    {
-                        title: 'Module',
-                        key: 'role',
-                        render: (h, params) => {
-                            return h('div', [
-                               // console.log(params)
-                                h('p', this.capitalize(Object.keys(params.row.role)[0]))
-                            ]);
-                        }
-                        
-                    },
-                    {
-                        title: 'Assigned By',
-                        key: 'fromEmail'
-                        
-                    },
-                    {
-                        title: 'Assigned Date',
-                        key: 'assignDate',
-                         render: (h, params) => {
-                            
-                                var date1 = moment(params.assignDate).format('DD-MMM-YYYY')
-                                return h('div', [
-                                    h('span', date1)
-                                ]);
-                            
-                        }
-                        
-                    },
-                    {
-                        title: 'Un-Assigned Date',
-                        key: 'unassignDate',
-                         render: (h, params) => {
-                            
-                                var date1 = moment(params.unassignDate).format('DD-MMM-YYYY')
-                                return h('div', [
-                                    h('span', date1)
-                                ]);
-                            
-                        }
-                        
-                    },
-                    {
-                        title: 'Assign Period',
-                        key: '',
-                        render: (h, params) => {
-                                // console.log("params....", params)
-                                // var date1 = moment(params.unassignDate).format('DD-MMM-YYYY')
-                                // return date1
-                                var now = moment(params.assignDate); 
-                                var end = moment(params.unassignDate); 
-                                var duration = moment.duration(now.diff(end));
-                                var days = duration.asDays();
-                                //console.log(days)
-                                return days + ' Days';    
-                        }
-                        
-                    }
-                ]
-            }
-        },
-        mounted() {
-            
-            this.getDataOfSubscriptionUser();
-            this.getHistory();
-            
-        },
-       
-        methods: {
-            capitalize (str) {
-                str = str[0].toUpperCase() + str.slice(1)             
-                return str;
-            },
-            async getHistory(){
-                 axios.get(subscriptionUrl+'subscription-invitation', {
+    				}
+    			],
+    			columns4: [
+    
+    				{
+    					title: 'Subscription Name',
+    					key: 'name'
+    				},
+    				{
+    					title: 'Subscription Id',
+    					key: 'subscriptionId'
+    				},
+    				{
+    					title: 'Role',
+    					key: 'role',
+    					render: (h, params) => {
+    						return h('div', [
+    							// console.log(params)
+    							// let obj= Object.keys(params.row.role);
+    							h('strong', this.capitalize(params.row.role[Object.keys(params.row.role)]))
+    						])
+    					}
+    
+    				},
+    				{
+    					title: 'Module',
+    					key: 'role',
+    					render: (h, params) => {
+    						return h('div', [
+    							// console.log(params)
+    							h('p', this.capitalize(Object.keys(params.row.role)[0]))
+    						])
+    					}
+    
+    				},
+    				{
+    					title: 'Assigned By',
+    					key: 'fromEmail'
+    
+    				},
+    				{
+    					title: 'Assigned Date',
+    					key: 'assignDate',
+    					render: (h, params) => {
+    						var date1 = moment(params.assignDate).format('DD-MMM-YYYY')
+    						return h('div', [
+    							h('span', date1)
+    						])
+    					}
+    
+    				},
+    				{
+    					title: 'Un-Assigned Date',
+    					key: 'unassignDate',
+    					render: (h, params) => {
+    						var date1 = moment(params.unassignDate).format('DD-MMM-YYYY')
+    						return h('div', [
+    							h('span', date1)
+    						])
+    					}
+    
+    				},
+    				{
+    					title: 'Assign Period',
+    					key: '',
+    					render: (h, params) => {
+    						// console.log("params....", params)
+    						// var date1 = moment(params.unassignDate).format('DD-MMM-YYYY')
+    						// return date1
+    						var now = moment(params.assignDate)
+    						var end = moment(params.unassignDate)
+    						var duration = moment.duration(now.diff(end))
+    						var days = duration.asDays()
+    						// console.log(days)
+    						return days + ' Days'
+    					}
+    
+    				}
+    			]
+    		}
+    	},
+    	mounted () {
+    		this.getDataOfSubscriptionUser()
+    		this.getHistory()
+    },
+    
+    	methods: {
+    		capitalize (str) {
+    			str = str[0].toUpperCase() + str.slice(1)
+    			return str
+    		},
+    		async getHistory () {
+    			axios.get(subscriptionUrl + 'subscription-invitation', {
 
-                   // axios.get('http://172.16.230.86:3030/subscription-invitation', {
-                        headers: {
-                            'Authorization': Cookies.get('auth_token')
-                        },
-                        params : {isDeleted : true, own : false},
-                       
-                    })
-                    .then(response => {
-                        console.log(response)
-                        
-                        // this.data2 = this.assigned_Arr2 ;
-                         this.data4 = response.data.data;
-                        // this.options2 = sub_id;
-                        
-                    })
-                    .catch((err)=>{ console.log('Error:', err); })
-            },
-            async getDataOfSubscriptionUser() {
-                this.$Loading.start();
-                let sub_id = [];
-                let Role_id = [];
-                
-               // axios.get('http://api.flowzcluster.tk/subscription/register-roles', {
-                    
-                    await axios.get(subscriptionUrl + 'register-roles', {
-                        // headers: {
-                        //     'Authorization': Cookies.get('auth_token')
-                        // },
-                        params : {module : 'webbuilder'}
-                    })
-                    .then(response => {
-                        //console.log("res.................------>>>>", response)
-                        let new_data = response.data.data;
-                         //console.log(new_data.length)
-                        for (let index = 0; index < new_data.length; index++) {
-                            console.log("data.........", new_data[index].role)
-                            
-                            Role_id.push({
-                                "value1": new_data[index].role,
-                                "label1": new_data[index].role
-                            })
-                        }
-                        //console.log("Role_id..........", Role_id)
-                        
-                        this.options = Role_id
-                    })
-                    .catch((err)=>{ console.log('Error:', err); })
+    				// axios.get('http://172.16.230.86:3030/subscription-invitation', {
+    				headers: {
+    					'Authorization': Cookies.get('auth_token')
+    				},
+    				params: {isDeleted: true, own: false}
+    
+    			})
+    				.then(response => {
+    					console.log(response)
+    
+    					// this.data2 = this.assigned_Arr2 ;
+    					this.data4 = response.data.data
+    					// this.options2 = sub_id;
+    				})
+    				.catch((err) => { console.log('Error:', err) })
+    		},
+    		async getDataOfSubscriptionUser () {
+    			this.$Loading.start()
+    			let sub_id = []
+    			let Role_id = []
+    
+    			// axios.get('http://api.flowzcluster.tk/subscription/register-roles', {
+    
+    			await axios.get(subscriptionUrl + 'register-roles', {
+    				// headers: {
+    				//     'Authorization': Cookies.get('auth_token')
+    				// },
+    				params: {module: 'webbuilder'}
+    			})
+    				.then(response => {
+    					// console.log("res.................------>>>>", response)
+    					let new_data = response.data.data
+    					// console.log(new_data.length)
+    					for (let index = 0; index < new_data.length; index++) {
+    						console.log('data.........', new_data[index].role)
+    
+    						Role_id.push({
+    							'value1': new_data[index].role,
+    							'label1': new_data[index].role
+    						})
+    					}
+    					// console.log("Role_id..........", Role_id)
+    
+    					this.options = Role_id
+    				})
+    				.catch((err) => { console.log('Error:', err) })
 
-                    axios.get(config.userDetail, {
-                        headers: {
-                            'Authorization': Cookies.get('auth_token')
-                        }
-                    })
-                    .then(response => {
-                        console.log("res.................------>>>>", response)
-                        let new_data = response.data.data.package;
-                        for (var key in new_data) {
-                            if (new_data.hasOwnProperty(key)) {
-                                
-                                if (new_data[key].role == "admin") {
-                                    sub_id.push({
-                                        "value2": new_data[key].subscriptionId,
-                                        "label2": new_data[key].name
-                                    })
-                                    this.assigned_Arr3.push(new_data[key])
-                                }else{
-                                    console.log( "new_data[key].subscriptionId " ,  new_data[key]);
-                                    this.assigned_Arr2.push(new_data[key])
-                                    
-                                    console.log(this.assigned_Arr2) 
-                                }
-                                
-                            }
-                        }
-                        console.log("sub_id..........", sub_id)
-                                    console.log(this.assigned_Arr2) 
-                        
-                        this.data2 = this.assigned_Arr2 ;
-                        this.data3 = this.assigned_Arr3;
-                        this.options2 = sub_id;
-                        
-                        this.$Loading.finish();
-                    })
-                    .catch((err)=>{ console.log('Error:', err); })
-            },
-            async inviteNow() {
-                
-                if(this.value2 == undefined || this.value2 == '' || this.value1 == ''){
-                    this.$message.warning("Please select both subscription & role for invitation");
-                }else{
-                    this.loading = true;
-                    let new_data;
-                let self = this;
-                
-                let obj =_.find(this.options2, {value2:this.value2});
-               
-                
-                // console.log(this.input)
-                // console.log(this.value1)
-                // console.log(this.value2)
-                let userId;
-                let previous_packages;
-                let params = {
-                    "toEmail": this.input,
-                    "subscriptionId": this.value2,
-                    "name" : obj.label2,  
-                    "role": {
-                        "webbuilder": this.value1
-                    },
-                    "fromEmail" : Cookies.get('email')
-                }
+    			axios.get(config.userDetail, {
+    				headers: {
+    					'Authorization': Cookies.get('auth_token')
+    				}
+    			})
+    				.then(response => {
+    					console.log('res.................------>>>>', response)
+    					let new_data = response.data.data.package
+    					for (var key in new_data) {
+    						if (new_data.hasOwnProperty(key)) {
+    							if (new_data[key].role == 'admin') {
+    								sub_id.push({
+    									'value2': new_data[key].subscriptionId,
+    									'label2': new_data[key].name
+    								})
+    								this.assigned_Arr3.push(new_data[key])
+    							} else {
+    								console.log('new_data[key].subscriptionId ', new_data[key])
+    								this.assigned_Arr2.push(new_data[key])
+    
+    								console.log(this.assigned_Arr2)
+    							}
+    						}
+    					}
+    					console.log('sub_id..........', sub_id)
+    					console.log(this.assigned_Arr2)
+    
+    					this.data2 = this.assigned_Arr2
+    					this.data3 = this.assigned_Arr3
+    					this.options2 = sub_id
+    
+    					this.$Loading.finish()
+    				})
+    				.catch((err) => { console.log('Error:', err) })
+    		},
+    		async inviteNow () {
+    			if (this.value2 == undefined || this.value2 == '' || this.value1 == '') {
+    				this.$message.warning('Please select both subscription & role for invitation')
+			} else {
+    				this.loading = true
+    				let new_data
+    				let self = this
+    
+    				let obj = _.find(this.options2, {value2: this.value2})
+    
+    				// console.log(this.input)
+    				// console.log(this.value1)
+    				// console.log(this.value2)
+    				let userId
+    				let previous_packages
+    				let params = {
+    					'toEmail': this.input,
+    					'subscriptionId': this.value2,
+    					'name': obj.label2,
+    					'role': {
+    						'webbuilder': this.value1
+    					},
+    					'fromEmail': Cookies.get('email')
+    				}
 
-                await axios({
-                        method: 'POST',
-                          url: subscriptionUrl + 'invite',
-                       // url: "http://172.16.230.86:3030/" + 'invite',
-                        headers: {
-                            "Authorization": Cookies.get('auth_token'),
+    				await axios({
+    					method: 'POST',
+    					url: subscriptionUrl + 'invite',
+    					// url: "http://172.16.230.86:3030/" + 'invite',
+    					headers: {
+    						'Authorization': Cookies.get('auth_token')
 
-                        },
-                        data: params
-                    })
-                    .then(function(response) {
-                        self.loading = false
-                        console.log('response------------------------>', response)
-                        if(response.data.status == 404 ){
-                             //alert(response.data.data)
-                            self.$message.warning(response.data.data);
-                        }else if(response.data.code == '201'){
-                            // self.$message.success(response.data.message);
-                            self.$message.success("User assigned successfully");
-                        }else if(response.data.code == '200'){
-                            // self.$message.success(response.data.message);
-                            self.$message.warning("User already assigned for this subscription with same role");
-                        }
-                    })
-                    .catch(function(error) {
-                        self.loading = false;
-                        if(error.response.status == 401){
-                            let location = psl.parse(window.location.hostname)
-                            location = location.domain === null ? location.input : location.domain
-                            
-                            Cookies.remove('auth_token' ,{domain: location}) 
-                            Cookies.remove('subscriptionId' ,{domain: location}) 
-                            self.$store.commit('logout', self);
-                            
-                            self.$router.push({
-                                name: 'login'
-                            });
-                        }else if(error.response.status == 403){
-                            self.$Notice.error(
-                                {duration:0, 
-                                title: error.response.statusText,
-                                desc:error.response.data.message+'. Please <a href="'+config.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'}
-                                );
-                        
-                        }
-                    })
-                }
-                
-
-            }
-        }
+    					},
+    					data: params
+    				})
+    					.then(function (response) {
+    						self.loading = false
+    						console.log('response------------------------>', response)
+    						if (response.data.status == 404) {
+    							// alert(response.data.data)
+    							self.$message.warning(response.data.data)
+    						} else if (response.data.code == '201') {
+    							// self.$message.success(response.data.message);
+    							self.$message.success('User assigned successfully')
+						} else if (response.data.code == '200') {
+    							// self.$message.success(response.data.message);
+    							self.$message.warning('User already assigned for this subscription with same role')
+						}
+    					})
+    					.catch(function (error) {
+    						self.loading = false
+    						if (error.response.status == 401) {
+    							let location = psl.parse(window.location.hostname)
+    							location = location.domain === null ? location.input : location.domain
+    
+    							Cookies.remove('auth_token', {domain: location})
+    							Cookies.remove('subscriptionId', {domain: location})
+    							self.$store.commit('logout', self)
+    
+    							self.$router.push({
+    								name: 'login'
+    							})
+    						} else if (error.response.status == 403) {
+    							self.$Notice.error(
+    								{duration: 0,
+    									title: error.response.statusText,
+    									desc: error.response.data.message + '. Please <a href="' + config.flowzDashboardUrl + '/subscription-list" target="_blank">Subscribe</a>'}
+    							)
+						}
+    					})
+    			}
+    		}
+    	}
     }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

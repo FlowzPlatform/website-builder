@@ -11,13 +11,13 @@
     Vue.use(VueCodeMirror)
     
     export default {
-        name:'code-mirror',
-        data: () => ({
-            editorOption : {
-                mode: 'text/javascript',
-                lineWrapping: true
-            }
-        })
+    	name: 'code-mirror',
+    	data: () => ({
+    		editorOption: {
+    			mode: 'text/javascript',
+    			lineWrapping: true
+    		}
+    	})
     }
 </script>
 

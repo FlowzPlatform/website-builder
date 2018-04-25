@@ -24,87 +24,83 @@
     </div>
 </template>
 <script>
-    let gm = null;
-    let containerObj = null;
-
-    const beautify = require('beautify');
-
     // import './GridManager/jquery.gridmanager.min.js';
 
-    import axios from 'axios';
-    const config = require('../config');
+import axios from 'axios'
 
-    export default {
-        name:'GridManager',
-        data () {
-            return {
-                dialogVisible: false,
-                options: [{
-                  value: '<component :is="ImageComponent" :options="[{ url: \'http://placehold.it/100x100/008080/FFFFFF\', alt: \'Profile Image\' }]"></component>',
-                  label: 'Profile Component'
-                }, {
-                  value: '<component :is="ImageComponent" :options="[{ url: \'http://placehold.it/700x400\', alt: \'Loading...\' }]"></component>',
-                  label: 'Image Component'
-                }, {
-                  value: '<component :is="NavbarComponent" :options="[{ navbarClass: \'navbar-inverse\' }]"></component>',
-                  label: 'Navbar Component'
-                }],
-                selectedComponent: ''
-            }
-        },
-        components: {
-        },
-        mounted: function() {
-          var self = this;
+let gm = null
+let containerObj = null
 
-          if(gm != null){
-              gm.deinitCanvas();
-          }
-          gm = $("#mycanvas").gridmanager({
-              debug: 1,
-              customControls: {
-                  global_col: [{ callback: self.test_callback, loc: 'top' }]
-              }
-          }).data('gridmanager');
-            this.init();
+const beautify = require('beautify')
+const config = require('../config')
 
-        },
-        methods: {
-            init(){
+export default {
+    	name: 'GridManager',
+    	data () {
+    		return {
+    			dialogVisible: false,
+    			options: [{
+    				value: '<component :is="ImageComponent" :options="[{ url: \'http://placehold.it/100x100/008080/FFFFFF\', alt: \'Profile Image\' }]"></component>',
+    				label: 'Profile Component'
+    			}, {
+    				value: '<component :is="ImageComponent" :options="[{ url: \'http://placehold.it/700x400\', alt: \'Loading...\' }]"></component>',
+    				label: 'Image Component'
+    			}, {
+    				value: '<component :is="NavbarComponent" :options="[{ navbarClass: \'navbar-inverse\' }]"></component>',
+    				label: 'Navbar Component'
+    			}],
+    			selectedComponent: ''
+    		}
+    	},
+    	components: {
+    	},
+    	mounted: function () {
+    		var self = this
 
+    		if (gm != null) {
+    			gm.deinitCanvas()
+    		}
+    		gm = $('#mycanvas').gridmanager({
+    			debug: 1,
+    			customControls: {
+    				global_col: [{ callback: self.test_callback, loc: 'top' }]
+    			}
+    		}).data('gridmanager')
+    		this.init()
+    },
+    	methods: {
+    		init () {
+    			$('#gm-canvas').empty().append(this.$store.state.content)
+    			$('.gm-edit-mode').click().click()
+    		},
+    		getSavedHtml: async function () {
+    			// console.log('from GridManager')
+    			let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl, {
+    			}).catch((err) => { console.log('Error:', err) })
+			this.$store.state.content = response.data
+    		},
+    		getHtml: function () {
+    			let canvas = gm.$el.find('#' + gm.options.canvasId)
+    			gm.deinitCanvas()
+    			this.$store.state.content = beautify(canvas.html(), { format: 'html'})
+    			this.$store.state.content = (this.$store.state.content).replace(/&gt;/g, '>')
+    			gm.initCanvas()
+    		},
+    		test_callback: function (container, btnElem) {
+    			this.dialogVisible = true
+    			containerObj = container.getElementsByClassName('gm-content')[0]
+    		},
+    		setComponent () {
+    			this.dialogVisible = false
 
-              $("#gm-canvas").empty().append(this.$store.state.content)
-              $(".gm-edit-mode").click().click();
-            },
-            getSavedHtml: async function(){
-              //console.log('from GridManager')
-              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  this.$store.state.fileUrl , {
-              }).catch((err)=>{ console.log('Error:', err); });
-              this.$store.state.content = response.data
-            },
-            getHtml: function(){
-                let canvas = gm.$el.find("#" + gm.options.canvasId);
-                gm.deinitCanvas();
-                this.$store.state.content = beautify(canvas.html(), { format: 'html'});
-                this.$store.state.content = (this.$store.state.content).replace(/&gt;/g, '>');
-                gm.initCanvas();
-            },
-            test_callback: function(container, btnElem){
-                this.dialogVisible = true;
-                containerObj = container.getElementsByClassName("gm-content")[0];
-            },
-            setComponent() {
-                this.dialogVisible = false;
-
-                $(containerObj).text(this.selectedComponent);
-
-            }
-        },
-        watch: {
-          '$store.state.content': function(newvalue) {
-            this.init();
-          }
-        }
+    			$(containerObj).text(this.selectedComponent)
+    		}
+    	},
+    	watch: {
+    		'$store.state.content': function (newvalue) {
+    			this.init()
+    		}
+    	}
     }
 </script>
 

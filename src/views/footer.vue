@@ -9,27 +9,27 @@
 <script>
 
 export default {
-  name: 'SiteFooter',
-  props: {
-    options: {
-      type: Object
-    }
-  },
-  data () {
-    return {
-    }
-  },
-  component: {
-  },
-  updated: function () {
-    
-  },
-  mounted: function () {
-    
-  },
-  methods: {
-    
-  }
+	name: 'SiteFooter',
+	props: {
+		options: {
+			type: Object
+		}
+	},
+	data () {
+		return {
+		}
+	},
+	component: {
+	},
+	updated: function () {
+
+	},
+	mounted: function () {
+
+	},
+	methods: {
+
+	}
 }
 </script>
 

@@ -49,84 +49,84 @@ import axios from 'axios'
 import config from '../../config'
 import moment from 'moment'
 import _ from 'lodash'
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 
 let baseUrl = config.baseURL
 let bannertypeUrl = config.baseURL + '/bannertype'
 let bannersUrl = config.baseURL + '/banners'
 
 export default {
-  name: 'bannertype',
-  data () {
-    return {
+	name: 'bannertype',
+	data () {
+		return {
     	filterobj: {
     		name: '',
     		website: '',
     		status: ''
     	},
-      btcolumns: [
-        {
-          title: 'Category Name',
-          key: 'bt_name',
-          sortable: true,
-          sortType: 'normal'
-          // sortMethod: this.handleSorting
-          // align: 'center'
-        },
-        {
-          title: 'Website',
-          key: 'website_id',
-          // width: 100,
-          // sortable: true,
-          // sortType: 'normal',
-          align: 'center',
-          render: (h, params) => {
-            let inx = _.findIndex(this.webOptions, {value: params.row.website_id})
-            let wName = ''
-            if( inx === -1 ) {
+			btcolumns: [
+				{
+					title: 'Category Name',
+					key: 'bt_name',
+					sortable: true,
+					sortType: 'normal'
+					// sortMethod: this.handleSorting
+					// align: 'center'
+				},
+				{
+					title: 'Website',
+					key: 'website_id',
+					// width: 100,
+					// sortable: true,
+					// sortType: 'normal',
+					align: 'center',
+					render: (h, params) => {
+						let inx = _.findIndex(this.webOptions, {value: params.row.website_id})
+						let wName = ''
+						if (inx === -1) {
             	wName = '-'
-            } else {
+						} else {
             	wName = this.webOptions[inx].label
-            }
-            return h('div', wName)
-          }
-        },
-        {
-          title: 'Updated Date',
-          key: 'createdAt',
-          align: 'center',
-          width: 300,
-          sortable: true,
-          sortType: 'desc',
-          render: (h, params) => {
-            return h('div', moment(params.row.createdAt).format('LL'))
-          }
-        },
-        {
-          title: 'Status',
-          key: 'status',
-          align: 'center',
-          width: 300,
-          render: (h, params) => {
-            const row = params.row;
-            const color = row.status ? 'green' : 'red';
-            const text = row.status ? 'ACTIVE' : 'INACTIVE';
+						}
+						return h('div', wName)
+					}
+				},
+				{
+					title: 'Updated Date',
+					key: 'createdAt',
+					align: 'center',
+					width: 300,
+					sortable: true,
+					sortType: 'desc',
+					render: (h, params) => {
+						return h('div', moment(params.row.createdAt).format('LL'))
+					}
+				},
+				{
+					title: 'Status',
+					key: 'status',
+					align: 'center',
+					width: 300,
+					render: (h, params) => {
+						const row = params.row
+						const color = row.status ? 'green' : 'red'
+						const text = row.status ? 'ACTIVE' : 'INACTIVE'
 
-            return h('Tag', {
-                props: {
-                    type: 'dot',
-                    color: color
-                },
-                nativeOn: { 
-                  click: async() => {
-                    let res = await this.handleTagClick(params.row.id, params.row.status, params.index)
-                    if (res.status === 'success') {
+						return h('Tag', {
+							props: {
+								type: 'dot',
+								color: color
+							},
+							nativeOn: {
+								click: async () => {
+									let res = await this.handleTagClick(params.row.id, params.row.status, params.index)
+									if (res.status === 'success') {
                     	if (res.msg === 'found') {
                   		  this.$Modal.confirm({
-                          title: 'Confirm',
-                          content: '<p><b style="color: #f90;">'+ res.data.length + ((res.data.length === 1) ? ' Banner' : ' Banners') +' </b> found with <b>'+ params.row.bt_name +'</b>. </p><p>Are you sure you want to '+(params.row.status ? 'INACTIVE': 'ACTIVE')+' all?</p>',
-                          loading: true,
-                          onOk: async () => {
+												title: 'Confirm',
+												content: '<p><b style="color: #f90;">' + res.data.length + ((res.data.length === 1) ? ' Banner' : ' Banners') + ' </b> found with <b>' + params.row.bt_name + '</b>. </p><p>Are you sure you want to ' + (params.row.status ? 'INACTIVE' : 'ACTIVE') + ' all?</p>',
+												loading: true,
+												onOk: async () => {
                           	for (let item of res.data) {
                           		let s = await axios.patch(bannersUrl + '/' + item.id, {banner_status: !params.row.status})
                           	}
@@ -140,8 +140,8 @@ export default {
 											        this.$Notice.error({ title: 'Error', desc: '', duration: 3})
                           		this.$Modal.remove()
 											      })
-                          }
-                        })
+												}
+											})
                     	} else {
                     		axios.patch(bannertypeUrl + '/' + params.row.id, {status: !params.row.status}).then(res => {
 									        this.btdata.data[params.index].status = !params.row.status
@@ -152,22 +152,22 @@ export default {
 									        this.$Notice.error({ title: 'Error', desc: '', duration: 3})
 									      })
                     	}
-                    } else {
+									} else {
                     	this.$Notice.error({ title: 'Error', desc: '', duration: 3})
-                    }
-                  } 
-                }
-            }, text)
-          }
-        },
-        {
-          title: 'Action',
-          key: 'action',
-          width: 300,
-          align: 'center',
-          render: (h, params) => {
-            let self = this
-            return h('div', [
+									}
+								}
+							}
+						}, text)
+					}
+				},
+				{
+					title: 'Action',
+					key: 'action',
+					width: 300,
+					align: 'center',
+					render: (h, params) => {
+						let self = this
+						return h('div', [
             	// h('Tooltip', {
             	// 	props: {
             	// 		content: 'Edit',
@@ -183,7 +183,7 @@ export default {
 	            				this.$emit('updateBanner', {type: 'bannertype', id: params.row.id})
 	            			}
 	            		}
-	            	},[
+	            	}, [
 	            		h('Icon', {
 	            			props: {
 	            				type: 'compose'
@@ -206,16 +206,16 @@ export default {
 	            			'iconlink': true
 	            		},
 	            		on: {
-	            			click: async() => {
+	            			click: async () => {
 		                	let userId = Cookies.get('userDetailId')
 		                	axios.get(bannersUrl + '?userId=' + userId + '&banner_type=' + params.row.id).then(res => {
 		                		if (res.data.data.length > 0) {
 		                			this.$Modal.confirm({
 			                      title: 'Confirm',
-			                      content: '<p><b style="color:#f90;">'+res.data.data.length + ' ' + ((res.data.data.length === 1) ? 'Banner': 'Banners') +'</b> found with Banner Type.</p><p>Are you sure you want to Delete all?</p>',
+			                      content: '<p><b style="color:#f90;">' + res.data.data.length + ' ' + ((res.data.data.length === 1) ? 'Banner' : 'Banners') + '</b> found with Banner Type.</p><p>Are you sure you want to Delete all?</p>',
 			                      loading: true,
-			                      onOk: async() => {
-			                        for(let item of res.data.data) {
+			                      onOk: async () => {
+			                        for (let item of res.data.data) {
 			                        	let a = await axios.delete(bannersUrl + '/' + item.id)
 			                        }
 			                        await self.handleDelete(params.row.id)
@@ -226,17 +226,17 @@ export default {
 		                			this.$Modal.confirm({
 			                      title: 'Confirm',
 			                      content: '<p>Are you sure you want to Delete?</p>',
-			                      onOk: function() {
+			                      onOk: function () {
 			                        self.handleDelete(params.row.id)
 			                      }
-			                    })		
+			                    })
 		                		}
 		                	}).catch(err => {
-		                		this.$Notice.error({title:'Error', desc: '', duration: 3})
+		                		this.$Notice.error({title: 'Error', desc: '', duration: 3})
 		                	})
 		                }
 	            		}
-	            	},[
+	            	}, [
 	            		h('Icon', {
 	            			props: {
 	            				type: 'trash-b'
@@ -248,31 +248,31 @@ export default {
 	            		})
 	            	], '')
             	// ])
-            ])
-          }
-        }
-      ],
-      btdata: {
+						])
+					}
+				}
+			],
+			btdata: {
       	total: 0,
       	data: []
-      },
-      loading: false,
-      cpage: 1,
-      limit: 10,
-      skip: 0,
-      webOptions: [],
-      statusOptions: [{
+			},
+			loading: false,
+			cpage: 1,
+			limit: 10,
+			skip: 0,
+			webOptions: [],
+			statusOptions: [{
       	label: 'ACTIVE',
       	value: 'true'
-      },{
+			}, {
       	label: 'INACTIVE',
       	value: 'false'
-      }]
-    }
-  },
-  methods: {
+			}]
+		}
+	},
+	methods: {
   	handleBlank (value) {
-  		if (this.filterobj.name === '')  {
+  		if (this.filterobj.name === '') {
   			this.init()
   		}
   	},
@@ -287,18 +287,18 @@ export default {
   			}
   		}
   		this.cpage = 1
-      this.skip = this.cpage * this.limit - this.limit
+			this.skip = this.cpage * this.limit - this.limit
   		this.init(item)
   	},
   	handleSearch () {
   		// console.log('Search::', 'name::', this.btcolumns[0].sortType, ' ::date::', this.btcolumns[1].sortType)
   		if (this.filterobj.name !== '' || this.filterobj.website !== '' || this.filterobj.status !== '') {
   			this.cpage = 1
-        this.skip = this.cpage * this.limit - this.limit
+				this.skip = this.cpage * this.limit - this.limit
   			this.init()
   		}
   	},
-  	handleFileterReset() {
+  	handleFileterReset () {
   		if (this.filterobj.name !== '' || this.filterobj.website !== '' || this.filterobj.status !== '') {
 	  		this.filterobj.website = ''
 	  		this.filterobj.status = ''
@@ -316,7 +316,7 @@ export default {
   		this.limit = size
   		this.init()
   	},
-    async handleTagClick(id, status, inx) {
+		async handleTagClick (id, status, inx) {
     	let userId = Cookies.get('userDetailId')
     	let resp = await axios.get(bannersUrl + '?userId=' + userId + '&banner_type=' + id).then(res => {
     		if (res.data.data.length > 0) {
@@ -328,50 +328,50 @@ export default {
     		return {status: 'error'}
     	})
     	return resp
-    },
-    handleDelete (iid) {
-      let finx = _.findIndex(this.btdata.data, {id: iid})
-      if (finx !== undefined && finx >= 0) {
-        axios.delete(bannertypeUrl + '/' + iid).then(res => {
-          this.btdata.data.splice(finx, 1)
-          this.btdata.total -= 1
-          this.$Notice.success({ title: 'Success!', desc: 'Successfully Deleted.', duration: 3})
+		},
+		handleDelete (iid) {
+			let finx = _.findIndex(this.btdata.data, {id: iid})
+			if (finx !== undefined && finx >= 0) {
+				axios.delete(bannertypeUrl + '/' + iid).then(res => {
+					this.btdata.data.splice(finx, 1)
+					this.btdata.total -= 1
+					this.$Notice.success({ title: 'Success!', desc: 'Successfully Deleted.', duration: 3})
     			let userId = Cookies.get('userDetailId')
-          let skp = this.skip + (this.limit - 1)
-          let query = '?userId=' + userId + '&$sort[createdAt]=-1&$skip=' + skp + '&$limit=1'
-          if (this.filterobj.name !== '') {
-	      		query += '&bt_name[$search]=' + this.filterobj.name 
+					let skp = this.skip + (this.limit - 1)
+					let query = '?userId=' + userId + '&$sort[createdAt]=-1&$skip=' + skp + '&$limit=1'
+					if (this.filterobj.name !== '') {
+	      		query += '&bt_name[$search]=' + this.filterobj.name
 	      	}
 	      	if (this.filterobj.website !== '') {
-	      		query += '&website_id=' + this.filterobj.website 
+	      		query += '&website_id=' + this.filterobj.website
 	      	}
-          axios.get(bannertypeUrl + query).then(res => {
+					axios.get(bannertypeUrl + query).then(res => {
           	if (res.data.data.length > 0) {
           		this.btdata.data.push(res.data.data[0])
           	} else {
           		this.btdata.data.total -= 1
           	}
-          })
-        }).catch(err => {
-          this.$Notice.error({ title: 'Error!', desc: 'Not Deleted.', duration: 3})
-        })
-      }
-    },
-    async init(item) {
+					})
+				}).catch(err => {
+					this.$Notice.error({ title: 'Error!', desc: 'Not Deleted.', duration: 3})
+				})
+			}
+		},
+		async init (item) {
     	this.loading = true
     	let userId = Cookies.get('userDetailId')
-      if (userId !== '' && userId !== undefined) {
+			if (userId !== '' && userId !== undefined) {
       	let query = ''
       	if (item === undefined) {
       		query += '?userId=' + userId + '&$sort[createdAt]=-1&$skip=' + this.skip + '&$limit=' + this.limit
       	} else {
-      		query += '?userId=' + userId + '&$sort['+ item.key +']='+ ((item.order === 'asc') ? '1' : '-1') +'&$skip=' + this.skip + '&$limit=' + this.limit
+      		query += '?userId=' + userId + '&$sort[' + item.key + ']=' + ((item.order === 'asc') ? '1' : '-1') + '&$skip=' + this.skip + '&$limit=' + this.limit
       	}
       	if (this.filterobj.name !== '') {
-      		query += '&bt_name[$search]=[' + this.filterobj.name + ',/$'+ this.filterobj.name +'/i]' 
+      		query += '&bt_name[$search]=[' + this.filterobj.name + ',/$' + this.filterobj.name + '/i]'
       	}
       	if (this.filterobj.website !== '') {
-      		query += '&website_id=' + this.filterobj.website 
+      		query += '&website_id=' + this.filterobj.website
       	}
       	if (this.filterobj.status !== '') {
       		query += '&status=' + JSON.parse(this.filterobj.status)
@@ -382,25 +382,25 @@ export default {
 	      	this.$Notice.error({title: 'Network Error', desc: '', duration: 2})
 	      	return {total: 0, data: []}
 	      })
-      }
+			}
     	this.loading = false
-    }
-  },
-  mounted() {
+		}
+	},
+	mounted () {
   	let userId = Cookies.get('userDetailId')
-    if (userId !== '' && userId !== undefined) {
-      this.$Spin.show();
-      axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
-        for (let item of res.data.data) {
-          this.webOptions.push({label: item.websiteName, value: item.id})
-        }
-        this.$Spin.hide();
-      }).catch(err => {
-        this.$Spin.hide();
-      })
-    }
-    this.init() 
-  }
+		if (userId !== '' && userId !== undefined) {
+			this.$Spin.show()
+			axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
+				for (let item of res.data.data) {
+					this.webOptions.push({label: item.websiteName, value: item.id})
+				}
+				this.$Spin.hide()
+			}).catch(err => {
+				this.$Spin.hide()
+			})
+		}
+		this.init()
+	}
 }
 </script>
 

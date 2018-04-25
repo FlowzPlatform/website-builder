@@ -153,7 +153,7 @@
 
 import axios from 'axios'
 import config from '../../config'
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 import _ from 'lodash'
 import moment from 'moment'
 import configs from '@/config'
@@ -163,313 +163,312 @@ let bannertypeUrl = config.baseURL + '/bannertype'
 let bannersUrl = config.baseURL + '/banners'
 
 export default {
-  name: 'bannersnew',
-  props: {
-    bdata: Object
-  },
-  data () {
-    const validatelinkURL = async(rule, value, callback) => {
-      if (value !== '') {
-        var patt = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
-        var _res = patt.test(value)
-        if (!_res) {
-          callback(new Error('Not Valid Link URL'))
-        } else {
-          callback();
-        }
-      }
-    };
-    return {
-      colOpen: '0',
-      isShowimgblock: false,
-      formItem: {
-        banner_name: '',
-        banner_type: '',
-        banner_img: '',
-        banner_status: true,
-        banner_linkurl: '',
-        linkurl_target: '_blank',
-        createdAt: '',
-        // website_id: '',
-        userId: Cookies.get('userDetailId')
-      },
-      uploadAssetImageLoader: false,
-      bannertypes: [],
-      rulesformItem: {
-        banner_type: [
-          { required: true, message: 'Please select the Banner Type', trigger: 'change' }
-        ],
-        banner_linkurl: [
-          { validator: validatelinkURL, trigger: 'blur' }
-        ],
-        banner_img: [
-          // { required: true, message: 'Please select the Banner Image', trigger: 'change' }
-          // { validator: validateIMG, trigger: 'change' }
-        ]
-      },
-      updateRules: {
-          banner_type: [
-            { required: true, message: 'Please select the Banner Type', trigger: 'change' }
-          ],
-          banner_linkurl: [
-            { validator: validatelinkURL, trigger: 'blur' }
-          ],
-          banner_img: [
-            { required: true, message: 'Please select the Banner Image', trigger: 'change' }
-            // { validator: validateIMG, trigger: 'change' }
-          ]
-      },
-      uploadFile: {},
-      targetOpts: [{
-        label: 'New Window',
-        value: '_blank' 
-      }, {
-        label: 'Same Window',
-        value: 'same' 
-      }],
-      cloudDetails: {},
-      btypeDetail: {},
-      isdisable: false,
-      fetchImagesLoader: false,
-      assetsImages: [],
-      itemArr: []
-      // modelData: []
-    }
-  },
-  methods: {
-    handleRemoveItem (inx) {
-      let finx = _.findIndex(this.assetsImages, {url: this.itemArr[inx].banner_img})
-      if (finx !== undefined && finx !== -1) {
-        this.assetsImages[finx].isSelect = false
-      }
-      this.itemArr.splice(inx, 1)
-    },
-    imageSelection (inx, name) {
-      this.assetsImages[inx].isSelect = !this.assetsImages[inx].isSelect
-      if (name === undefined) {
-        // new image selection
-        if (this.assetsImages[inx].isSelect) {
-          this.itemArr.push({
-            banner_name: '', 
-            banner_img: this.assetsImages[inx].url, 
-            banner_linkurl: '', 
-            banner_type: this.formItem.banner_type, 
-            banner_status: true, 
-            linkurl_target: '_blank'
-          })
-        } else {
-          let finx = _.findIndex(this.itemArr, {banner_img: this.assetsImages[inx].url})
-          if (finx !== undefined && finx !== -1) {
-            this.itemArr.splice(finx, 1)
-          }
-        }
-      } else {
-        // edit image
-        if (this.assetsImages[inx].isSelect) {
-          for (let [minx, obj] of this.assetsImages.entries()) {
-            if (inx !== minx && obj.isSelect) {
-              obj.isSelect = false
-            }
-          }
-          console.log(this.assetsImages[inx].url)
-          this.formItem.banner_img = this.assetsImages[inx].url 
-        } else {
-          this.formItem.banner_img = ''
-          this.assetsImages[inx].isSelect = !this.assetsImages[inx].isSelect
-        }
-      }
-    },
-    handleSubmit (name) {
-      this.$refs[name].validate((valid) => {
-        if (valid && this.isShowimgblock) {
-          if (this.itemArr.length > 0) {
-            for (let item of this.itemArr) {
-              item.createdAt = new Date()
-              item.userId = Cookies.get('userDetailId')
-            }
-            this.$Spin.show();
-            // console.log('itemArr', this.itemArr)
-            // this.formItem.createdAt = new Date()
-            // this.formItem.website_id = this.btypeDetail.website_id
-            axios.post(bannersUrl, this.itemArr).then(res => {
-              this.$Spin.hide();
-              this.$Notice.success({title: 'Success!!', desc: '', duration: 2})
-              this.$emit('updateBanner', {type: 'bannerlist'})
-            }).catch(err => {
-              this.$Spin.hide();
-              this.$Notice.error({title: 'Error!!', desc: 'Not saved.', duration: 2})
-            })
-          } else {
-            this.$Notice.error({title: 'No Banner uploaded or selected!!', desc: 'Select or Upload at least one Banner.', duration: 4})
-          }
-        }
-      })
-    },
-    handleEdit (name) {
-      let item = _.cloneDeep(this.formItem)
-      delete item.id
-      this.$refs[name].validate(async(valid) => {
-        if (valid && this.isShowimgblock) {
-          this.$Spin.show();
-          item.createdAt = new Date()
-          axios.put(bannersUrl + '/' + this.formItem.id, item).then(res => {
-            this.$Spin.hide();
-            this.$router.push({title: 'Success!!', desc: 'Successfully Edited.', duration: 2})
-            this.$emit('updateBanner', {type: 'bannerlist'})
-          }).catch(err => {
-            this.$Spin.hide();
-            console.log('Error', err)
-          })
-        }
-      })
-    },
-    handleCancel () {
-      this.$emit('updateBanner', {type: 'bannerlist'})
-    },
-    uploadAssetImage() {
-      this.formItem.banner_img = ''
-      this.uploadAssetImageLoader = true;
-      cloudinary.openUploadWidget({ 
-        cloud_name: this.cloudDetails.cloudName, 
-        api_key: this.cloudDetails.apiKey,
-        upload_preset: this.cloudDetails.uploadPreset, 
-        sources: ['local', 'camera', 'url', 'facebook']
-      }, (error, result) => { 
-        // console.log(error, result);
-        if(error != null){
+	name: 'bannersnew',
+	props: {
+		bdata: Object
+	},
+	data () {
+		const validatelinkURL = async (rule, value, callback) => {
+			if (value !== '') {
+				var patt = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
+				var _res = patt.test(value)
+				if (!_res) {
+					callback(new Error('Not Valid Link URL'))
+				} else {
+					callback()
+				}
+			}
+		}
+		return {
+			colOpen: '0',
+			isShowimgblock: false,
+			formItem: {
+				banner_name: '',
+				banner_type: '',
+				banner_img: '',
+				banner_status: true,
+				banner_linkurl: '',
+				linkurl_target: '_blank',
+				createdAt: '',
+				// website_id: '',
+				userId: Cookies.get('userDetailId')
+			},
+			uploadAssetImageLoader: false,
+			bannertypes: [],
+			rulesformItem: {
+				banner_type: [
+					{ required: true, message: 'Please select the Banner Type', trigger: 'change' }
+				],
+				banner_linkurl: [
+					{ validator: validatelinkURL, trigger: 'blur' }
+				],
+				banner_img: [
+					// { required: true, message: 'Please select the Banner Image', trigger: 'change' }
+					// { validator: validateIMG, trigger: 'change' }
+				]
+			},
+			updateRules: {
+				banner_type: [
+					{ required: true, message: 'Please select the Banner Type', trigger: 'change' }
+				],
+				banner_linkurl: [
+					{ validator: validatelinkURL, trigger: 'blur' }
+				],
+				banner_img: [
+					{ required: true, message: 'Please select the Banner Image', trigger: 'change' }
+					// { validator: validateIMG, trigger: 'change' }
+				]
+			},
+			uploadFile: {},
+			targetOpts: [{
+				label: 'New Window',
+				value: '_blank'
+			}, {
+				label: 'Same Window',
+				value: 'same'
+			}],
+			cloudDetails: {},
+			btypeDetail: {},
+			isdisable: false,
+			fetchImagesLoader: false,
+			assetsImages: [],
+			itemArr: []
+			// modelData: []
+		}
+	},
+	methods: {
+		handleRemoveItem (inx) {
+			let finx = _.findIndex(this.assetsImages, {url: this.itemArr[inx].banner_img})
+			if (finx !== undefined && finx !== -1) {
+				this.assetsImages[finx].isSelect = false
+			}
+			this.itemArr.splice(inx, 1)
+		},
+		imageSelection (inx, name) {
+			this.assetsImages[inx].isSelect = !this.assetsImages[inx].isSelect
+			if (name === undefined) {
+				// new image selection
+				if (this.assetsImages[inx].isSelect) {
+					this.itemArr.push({
+						banner_name: '',
+						banner_img: this.assetsImages[inx].url,
+						banner_linkurl: '',
+						banner_type: this.formItem.banner_type,
+						banner_status: true,
+						linkurl_target: '_blank'
+					})
+				} else {
+					let finx = _.findIndex(this.itemArr, {banner_img: this.assetsImages[inx].url})
+					if (finx !== undefined && finx !== -1) {
+						this.itemArr.splice(finx, 1)
+					}
+				}
+			} else {
+				// edit image
+				if (this.assetsImages[inx].isSelect) {
+					for (let [minx, obj] of this.assetsImages.entries()) {
+						if (inx !== minx && obj.isSelect) {
+							obj.isSelect = false
+						}
+					}
+					console.log(this.assetsImages[inx].url)
+					this.formItem.banner_img = this.assetsImages[inx].url
+				} else {
+					this.formItem.banner_img = ''
+					this.assetsImages[inx].isSelect = !this.assetsImages[inx].isSelect
+				}
+			}
+		},
+		handleSubmit (name) {
+			this.$refs[name].validate((valid) => {
+				if (valid && this.isShowimgblock) {
+					if (this.itemArr.length > 0) {
+						for (let item of this.itemArr) {
+							item.createdAt = new Date()
+							item.userId = Cookies.get('userDetailId')
+						}
+						this.$Spin.show()
+						// console.log('itemArr', this.itemArr)
+						// this.formItem.createdAt = new Date()
+						// this.formItem.website_id = this.btypeDetail.website_id
+						axios.post(bannersUrl, this.itemArr).then(res => {
+							this.$Spin.hide()
+							this.$Notice.success({title: 'Success!!', desc: '', duration: 2})
+							this.$emit('updateBanner', {type: 'bannerlist'})
+						}).catch(err => {
+							this.$Spin.hide()
+							this.$Notice.error({title: 'Error!!', desc: 'Not saved.', duration: 2})
+						})
+					} else {
+						this.$Notice.error({title: 'No Banner uploaded or selected!!', desc: 'Select or Upload at least one Banner.', duration: 4})
+					}
+				}
+			})
+		},
+		handleEdit (name) {
+			let item = _.cloneDeep(this.formItem)
+			delete item.id
+			this.$refs[name].validate(async (valid) => {
+				if (valid && this.isShowimgblock) {
+					this.$Spin.show()
+					item.createdAt = new Date()
+					axios.put(bannersUrl + '/' + this.formItem.id, item).then(res => {
+						this.$Spin.hide()
+						this.$router.push({title: 'Success!!', desc: 'Successfully Edited.', duration: 2})
+						this.$emit('updateBanner', {type: 'bannerlist'})
+					}).catch(err => {
+						this.$Spin.hide()
+						console.log('Error', err)
+					})
+				}
+			})
+		},
+		handleCancel () {
+			this.$emit('updateBanner', {type: 'bannerlist'})
+		},
+		uploadAssetImage () {
+			this.formItem.banner_img = ''
+			this.uploadAssetImageLoader = true
+			cloudinary.openUploadWidget({
+				cloud_name: this.cloudDetails.cloudName,
+				api_key: this.cloudDetails.apiKey,
+				upload_preset: this.cloudDetails.uploadPreset,
+				sources: ['local', 'camera', 'url', 'facebook']
+			}, (error, result) => {
+				// console.log(error, result);
+				if (error != null) {
+					if (error.message == 'User closed widget') {
 
-          if(error.message == 'User closed widget'){
+					} else {
+						console.log('Image upload error: ', error)
+						this.$message({
+							message: 'Upload image failed. Please try again.',
+							type: 'error'
+						})
+					}
 
-          } else {
-            console.log('Image upload error: ', error);
-            this.$message({
-              message: 'Upload image failed. Please try again.',
-              type: 'error'
-            });  
-          }
-          
-          this.uploadAssetImageLoader = false;  
-        } else {
-          // console.log('result::', result)
-          if (this.formItem.id === undefined) {
-            for (let item of result) {
-              this.itemArr.push({
-                banner_name: item.original_filename, 
-                banner_img: item.secure_url, 
-                banner_linkurl: '', 
-                banner_type: this.formItem.banner_type, 
-                banner_status: true, 
-                linkurl_target: '_blank'
-              })
-            }
-          } else {
-            this.uploadFile = result[0]
-            this.formItem.banner_img = result[0].url
-          }
-          this.uploadAssetImageLoader = false;  
-        }
-      });
-    },
-    startFetching() {
-      this.colOpen = '1'
-      this.assetsImages = []
-      this.fetchImagesLoader = true;
-      this.fetchcloudinaryImages()
-    },
-    async fetchcloudinaryImages(){
-          await axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudDetails.cloudName + '&apiKey=' + this.cloudDetails.apiKey + '&apiSecret=' + this.cloudDetails.apiSecret + '&nextCursor=' + this.cloudDetails.nextCursor, {
-          })
-          .then((response) => {
-              for(let i = 0; i < response.data.resources.length; i++){
-                if (response.data.resources[i].secure_url === this.formItem.banner_img) {
-                  this.assetsImages.push({isSelect: true, url: response.data.resources[i].secure_url});
-                } else {
-                  this.assetsImages.push({isSelect: false, url: response.data.resources[i].secure_url});
-                }
-              }
-              if(response.data.next_cursor !== undefined){
-                this.cloudDetails.nextCursor = response.data.next_cursor;
-                this.fetchcloudinaryImages();
-              } else {
-                this.cloudDetails.nextCursor = '';
-                this.fetchImagesLoader = false;
-              }
-          })
-          .catch((error) => {
-              console.log(error);
-              // this.$Notice.error({title: 'Network Error', desc: '', duration: 2})
-              this.fetchImagesLoader = false;
-          });
-    },
-    async OnChangeBannerType (value) {
-      // console.log(value)
-      this.isShowimgblock = false
-      this.$Spin.show()
-      if (value !== '') {
-        let resp = await axios.get(bannertypeUrl + '/' + value).then(res => {
-          // console.log('result', res.data)
-          return res.data
-        }).catch(err => {
-          return {}
-        })
-        this.btypeDetail = resp
-        if (!_.isEmpty(resp)) {
-          // console.log('baseURL:: ', bannersUrl)
-          let result = await axios(baseURL + '/project-configuration/' + resp.website_id).then(res => {
-            return res.data
-          }).catch(err => {
-            return {}
-          })
-          if (!_.isEmpty(result)) {
-            if (result.hasOwnProperty('configData')) {
-              let cDetails = result.configData[1].projectSettings[1].CloudinaryDetails
-              if (cDetails !== undefined && cDetails.apiKey !== '' && cDetails.cloudName !== '' && cDetails.uploadPreset) {
-                this.cloudDetails = cDetails 
-                this.isShowimgblock = true
-                this.$Spin.hide()
-                // this.uploadAssetImage()
-              } else {
-                this.$Spin.hide()
-                this.$Notice.error({
-                  title: 'Error',
-                  desc: 'Please add Cloudinary Details to <b>' + result.websiteName + '</b> Website.',
-                  duration: 10
-                })
-              }
-            } else {
-              this.$Message.error('INTERVAL SERVER ERROR.')
-              this.$Spin.hide()  
-            }
-          } else {
-            this.$Message.error('INTERVAL SERVER ERROR.')
-            this.$Spin.hide()
-          }
-        } else {
-          this.$Message.error('INTERVAL SERVER ERROR.')
-          this.$Spin.hide()
-        }
-      }
-      this.assetsImages = []
-      this.itemArr = []
-    }
-  },
-  mounted () {
-    let userId = Cookies.get('userDetailId')
-    axios.get(bannertypeUrl + '?userId=' + userId + '&status=true&$paginate=false').then(res=> {
-      for(let item of res.data) {
-        this.bannertypes.push({
-          label: item.bt_name,
-          value: item.id
-        })
-      }
-    })
-    if (this.bdata.type === 'banner' && this.bdata.id !== undefined) {
-      axios.get(bannersUrl + '/' + this.bdata.id).then(res => {
-        this.formItem = res.data
-        this.isdisable = true
-      })
-    }
-  }
+					this.uploadAssetImageLoader = false
+				} else {
+					// console.log('result::', result)
+					if (this.formItem.id === undefined) {
+						for (let item of result) {
+							this.itemArr.push({
+								banner_name: item.original_filename,
+								banner_img: item.secure_url,
+								banner_linkurl: '',
+								banner_type: this.formItem.banner_type,
+								banner_status: true,
+								linkurl_target: '_blank'
+							})
+						}
+					} else {
+						this.uploadFile = result[0]
+						this.formItem.banner_img = result[0].url
+					}
+					this.uploadAssetImageLoader = false
+				}
+			})
+		},
+		startFetching () {
+			this.colOpen = '1'
+			this.assetsImages = []
+			this.fetchImagesLoader = true
+			this.fetchcloudinaryImages()
+		},
+		async fetchcloudinaryImages () {
+			await axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudDetails.cloudName + '&apiKey=' + this.cloudDetails.apiKey + '&apiSecret=' + this.cloudDetails.apiSecret + '&nextCursor=' + this.cloudDetails.nextCursor, {
+			})
+				.then((response) => {
+					for (let i = 0; i < response.data.resources.length; i++) {
+						if (response.data.resources[i].secure_url === this.formItem.banner_img) {
+							this.assetsImages.push({isSelect: true, url: response.data.resources[i].secure_url})
+						} else {
+							this.assetsImages.push({isSelect: false, url: response.data.resources[i].secure_url})
+						}
+					}
+					if (response.data.next_cursor !== undefined) {
+						this.cloudDetails.nextCursor = response.data.next_cursor
+						this.fetchcloudinaryImages()
+					} else {
+						this.cloudDetails.nextCursor = ''
+						this.fetchImagesLoader = false
+					}
+				})
+				.catch((error) => {
+					console.log(error)
+					// this.$Notice.error({title: 'Network Error', desc: '', duration: 2})
+					this.fetchImagesLoader = false
+				})
+		},
+		async OnChangeBannerType (value) {
+			// console.log(value)
+			this.isShowimgblock = false
+			this.$Spin.show()
+			if (value !== '') {
+				let resp = await axios.get(bannertypeUrl + '/' + value).then(res => {
+					// console.log('result', res.data)
+					return res.data
+				}).catch(err => {
+					return {}
+				})
+				this.btypeDetail = resp
+				if (!_.isEmpty(resp)) {
+					// console.log('baseURL:: ', bannersUrl)
+					let result = await axios(baseURL + '/project-configuration/' + resp.website_id).then(res => {
+						return res.data
+					}).catch(err => {
+						return {}
+					})
+					if (!_.isEmpty(result)) {
+						if (result.hasOwnProperty('configData')) {
+							let cDetails = result.configData[1].projectSettings[1].CloudinaryDetails
+							if (cDetails !== undefined && cDetails.apiKey !== '' && cDetails.cloudName !== '' && cDetails.uploadPreset) {
+								this.cloudDetails = cDetails
+								this.isShowimgblock = true
+								this.$Spin.hide()
+								// this.uploadAssetImage()
+							} else {
+								this.$Spin.hide()
+								this.$Notice.error({
+									title: 'Error',
+									desc: 'Please add Cloudinary Details to <b>' + result.websiteName + '</b> Website.',
+									duration: 10
+								})
+							}
+						} else {
+							this.$Message.error('INTERVAL SERVER ERROR.')
+							this.$Spin.hide()
+						}
+					} else {
+						this.$Message.error('INTERVAL SERVER ERROR.')
+						this.$Spin.hide()
+					}
+				} else {
+					this.$Message.error('INTERVAL SERVER ERROR.')
+					this.$Spin.hide()
+				}
+			}
+			this.assetsImages = []
+			this.itemArr = []
+		}
+	},
+	mounted () {
+		let userId = Cookies.get('userDetailId')
+		axios.get(bannertypeUrl + '?userId=' + userId + '&status=true&$paginate=false').then(res => {
+			for (let item of res.data) {
+				this.bannertypes.push({
+					label: item.bt_name,
+					value: item.id
+				})
+			}
+		})
+		if (this.bdata.type === 'banner' && this.bdata.id !== undefined) {
+			axios.get(bannersUrl + '/' + this.bdata.id).then(res => {
+				this.formItem = res.data
+				this.isdisable = true
+			})
+		}
+	}
 }
 </script>
 

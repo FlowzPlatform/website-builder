@@ -35,108 +35,106 @@
 
 <script>
     import axios from 'axios'
-    import Cookies from 'js-cookie';
-    const config = require('../config');
+    import Cookies from 'js-cookie'
+const config = require('../config')
 
-    export default {
-        name: 'HomePage',
-        props: {
-        },
-        data() {
-            return {
-                data: 'data',
-                websites: [],
-                projectPublicUrl: [],
-                options: '',
-                value:''
-            }
-        },
-        component: {},
-        methods: {
-            openLink(url) {
-                window.open(url);
-            },
-            getData() {
-              console.log("hello")
-                let self = this;
-                  if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                    axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
-                        .then(async response => {
-                            for (let index = 0; index < response.data.children.length; index++) {
-                                this.configData = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[index].name).catch((err) => {
-                                    console.log(err);
-                                });
+export default {
+    	name: 'HomePage',
+    	props: {
+    	},
+    	data () {
+    		return {
+    			data: 'data',
+    			websites: [],
+    			projectPublicUrl: [],
+    			options: '',
+    			value: ''
+    		}
+    	},
+    	component: {},
+    	methods: {
+    		openLink (url) {
+    			window.open(url)
+    		},
+    		getData () {
+    			console.log('hello')
+    			let self = this
+    			if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+    				axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
+    					.then(async response => {
+    						for (let index = 0; index < response.data.children.length; index++) {
+    							this.configData = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[index].name).catch((err) => {
+    								console.log(err)
+    							})
 
-                                this.repoName = this.configData.data.id;
-                                let websiteName = this.configData.data.websiteName
-                                console.log("websiteName", websiteName)
-                                if (!(process.env.NODE_ENV == 'development')) {
-                                    let url_ = 'http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.domainkey + '/'
-                                    this.websites.push({
-                                        website: websiteName,
-                                        url: url_
-                                    })
-                                } else {
-                                    let url_ = 'http://localhost/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/'
-                                    this.websites.push({
-                                        website: websiteName,
-                                        url: url_
-                                    });
-                                }
-                            }
-                        })
-                        .catch(e => {
-                            console.log(e)
-                        });
-                } else {
-                    localStorage.removeItem('current_sub_id');
-                    let location = psl.parse(window.location.hostname)
-                    location = location.domain === null ? location.input : location.domain
+							this.repoName = this.configData.data.id
+    							let websiteName = this.configData.data.websiteName
+    							console.log('websiteName', websiteName)
+    							if (!(process.env.NODE_ENV == 'development')) {
+    								let url_ = 'http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.domainkey + '/'
+    								this.websites.push({
+    									website: websiteName,
+    									url: url_
+    								})
+    							} else {
+    								let url_ = 'http://localhost/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/'
+    								this.websites.push({
+    									website: websiteName,
+    									url: url_
+    								})
+    							}
+    						}
+    					})
+    					.catch(e => {
+    						console.log(e)
+    					})
+    			} else {
+    				localStorage.removeItem('current_sub_id')
+    				let location = psl.parse(window.location.hostname)
+    				location = location.domain === null ? location.input : location.domain
 
-                    Cookies.remove('auth_token', {
-                        domain: location
-                    });
-                    Cookies.remove('email', {
-                        domain: location
-                    });
-                    Cookies.remove('userDetailId', {
-                        domain: location
-                    });
-                    Cookies.remove('subscriptionId', {
-                        domain: location
-                    });
-                    this.$message({
-                        message: 'You\'re Logged Out From System. Please login again!',
-                        type: 'error',
-                        onClose() {
-                            window.location = '/login'
-                        }
-                    });
-                }
-                
-            },
-            changeSubscription() {
-              this.websites = []
-              this.getData();
-
-            }
-        },
-        async mounted() {
-            this.getData();
-            let sub_id = []
-            await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
-            .then(response => {
-              console.log("res----",response)
-              let obj_val = Object.values(response.data.data.package)
-              let obj_key = Object.keys(response.data.data.package)
-              for (let index = 0; index < obj_val.length; index++) {
-                sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
-              }
-              this.options = sub_id
-              this.value  = sub_id[0].value;
-            })
-            .catch((err)=>{ console.log('Error:', err); })
-        }
+    				Cookies.remove('auth_token', {
+    					domain: location
+    				})
+    				Cookies.remove('email', {
+    					domain: location
+    				})
+    				Cookies.remove('userDetailId', {
+    					domain: location
+    				})
+    				Cookies.remove('subscriptionId', {
+    					domain: location
+    				})
+    				this.$message({
+    					message: 'You\'re Logged Out From System. Please login again!',
+    					type: 'error',
+    					onClose () {
+    						window.location = '/login'
+    					}
+    				})
+    			}
+    		},
+    		changeSubscription () {
+    			this.websites = []
+    			this.getData()
+    		}
+    	},
+    	async mounted () {
+    		this.getData()
+    		let sub_id = []
+    		await axios.get(config.userDetail, { headers: { 'Authorization': Cookies.get('auth_token') } })
+    			.then(response => {
+    				console.log('res----', response)
+    				let obj_val = Object.values(response.data.data.package)
+    				let obj_key = Object.keys(response.data.data.package)
+    				for (let index = 0; index < obj_val.length; index++) {
+    					sub_id.push({'value': obj_val[index].subscriptionId, 'label': obj_val[index].name})
+    				}
+    				this.options = sub_id
+    				this.value = sub_id[0].value
+    			})
+    			.catch((err) => { console.log('Error:', err) })
+    	}
     }
 </script>
 

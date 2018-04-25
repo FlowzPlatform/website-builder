@@ -29,29 +29,29 @@
 <script>
 
 export default {
-  name: 'HomePage',
-  props: {
-    options: {
-      type: Object
-    }
-  },
-  data () {
-    return {
-      data: 'data'
-    }
-  },
-  component: {
-  },
-  methods: {
-  },
-  mounted () {
+	name: 'HomePage',
+	props: {
+		options: {
+			type: Object
+		}
+	},
+	data () {
+		return {
+			data: 'data'
+		}
+	},
+	component: {
+	},
+	methods: {
+	},
+	mounted () {
 
-    // $.fn.editable.defaults.mode = 'inline';
+		// $.fn.editable.defaults.mode = 'inline';
 
-    // $(document).ready(function() {
-    //   $('#xeditable').editable();
-    // });
-  }
+		// $(document).ready(function() {
+		//   $('#xeditable').editable();
+		// });
+	}
 }
 </script>
 

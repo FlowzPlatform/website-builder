@@ -376,72 +376,68 @@ npm run build --report</code></pre>
 
 <script>
     import Vue from 'vue'
-  import VueSession from 'vue-session'
-  Vue.use(VueSession)
+import VueSession from 'vue-session'
 
-import psl from 'psl';
-import Cookies from 'js-cookie';
-import axios from 'axios';
+import psl from 'psl'
+import Cookies from 'js-cookie'
+import axios from 'axios'
 
-import config from '@/config';
-
+import config from '@/config'
+Vue.use(VueSession)
 
 export default {
-  name: 'Homepage',
-  props: {
+	name: 'Homepage',
+	props: {
     options: {
-      type: Object
+    			type: Object
     }
-  },
-  data () {
+	},
+	data () {
     return {
-      data: 'data'
+    			data: 'data'
     }
-  },
-  component: {
-  },
-  methods: {
+	},
+	component: {
+	},
+	methods: {
     startNow () {
-      this.$router.push('login');
-    },
-    init(){
-         let self = this;
-            if(Cookies.get('auth_token')){
-                axios({
-                    method: 'get',
-                    url: config.userDetail,
-                    headers: {'Authorization': Cookies.get('auth_token')}
-                })
-                .then(async function(result) {
+    			this.$router.push('login')
+		},
+    init () {
+    			let self = this
+    			if (Cookies.get('auth_token')) {
+    				axios({
+    					method: 'get',
+    					url: config.userDetail,
+    					headers: {'Authorization': Cookies.get('auth_token')}
+    				})
+    					.then(async function (result) {
+    						let location = psl.parse(window.location.hostname)
 
-                    let location = psl.parse(window.location.hostname);
+    						location = location.domain === null ? location.input : location.domain
 
-                    location = location.domain === null ? location.input : location.domain;
+    						Cookies.set('email', result.data.data.email, {domain: location})
+    						Cookies.set('userDetailId', result.data.data._id, {domain: location})
 
-                    Cookies.set('email',  result.data.data.email  , {domain: location});
-                    Cookies.set('userDetailId',  result.data.data._id  , {domain: location});
-
-                    localStorage.setItem('userDetailId', result.data.data._id);
-                    localStorage.setItem('email', result.data.data.email);
-                    
-                    await axios.post(config.baseURL+'/flows-dir-listing' , {
-                      foldername :'/var/www/html/websites/'+ result.data.data._id,
-                      type : 'folder'
-                    })
-                    .then((res) => {
-                      self.$router.push('/editor');
-                    })
-                    .catch((err)=>{ console.log('Error:', err); window.location = '/login';});
-
-                })
-                .catch((err)=>{ console.log('Error:', err); window.location = '/login'; })
-
-            }
+    						localStorage.setItem('userDetailId', result.data.data._id)
+    						localStorage.setItem('email', result.data.data.email)
+    
+    						await axios.post(config.baseURL + '/flows-dir-listing', {
+    							foldername: '/var/www/html/websites/' + result.data.data._id,
+    							type: 'folder'
+    						})
+    							.then((res) => {
+    								self.$router.push('/editor')
+    							})
+    							.catch((err) => { console.log('Error:', err); window.location = '/login' })
+					})
+    					.catch((err) => { console.log('Error:', err); window.location = '/login' })
+    			}
     }
-  },
-  mounted () {
+	},
+	mounted () {
     this.init()
-  }
+	}
 }
 </script>
 

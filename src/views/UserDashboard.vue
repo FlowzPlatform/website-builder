@@ -295,206 +295,199 @@
 
 <script>
 
-import psl from 'psl';
-import Cookies from 'js-cookie';
+import psl from 'psl'
+import Cookies from 'js-cookie'
 
-import Invite from './invite';
-import HomePage from './Dashboard';
-import UserSettings from './user-settings';
+import Invite from './invite'
+import HomePage from './Dashboard'
+import UserSettings from './user-settings'
 // import DashboardVue from './Dashboard.vue';
 
 // Banners Templates
-import AddBannerType from './Banner/add_bannertype';
-import AddBanner from './Banner/add_banner';
-import BannerTypeList from './Banner/bannertypeList';
-import BannerList from './Banner/bannersList';
+import AddBannerType from './Banner/add_bannertype'
+import AddBanner from './Banner/add_banner'
+import BannerTypeList from './Banner/bannertypeList'
+import BannerList from './Banner/bannersList'
 
 export default {
-  name: 'UserDashboard',
-  props: {
-    options: {
-      type: Object
-    }
-  },
-  data () {
-    return {
-      data: 'data',
-      bExpand: false,
-      componentId: '',
-      userEmailId: '',
-      rowdata: {}
-    }
-  },
-  component: {
-  },
-  methods: {
-    EditBanner (item) {
-        // console.log(item)
-        this.rowdata = item
-        if (item.type === 'bannertype') {
-          this.componentId = AddBannerType
-        } else if (item.type == 'banner') {
-          this.componentId = AddBanner
-        } else if (item.type == 'bannertypelist') {
-          this.componentId = BannerTypeList
-        } else if (item.type == 'bannerlist') {
-          this.componentId = BannerList
-        } else {
-          this.rowdata = {}
-        }
-    },
-    goToBanner (name) {
-      this.rowdata = {}
-        if (name === 'bt_add') {
-            this.componentId = AddBannerType;
-        } else if (name === 'b_add') {
-            this.componentId = AddBanner;
-        } else if (name === 'bt_list') {
-            this.componentId = BannerTypeList;
-        } else if (name === 'b_list') {
-            this.componentId = BannerList;
-        } else {}
-    },
-    goToEditor() {
-      // this.$router.push('/editor');
-      window.location = '/editor';
-    },
-    goToInvite(){
-        this.componentId = Invite;
-    },
-    goToDashboard(){
-        this.componentId = HomePage;
-    },
-    goToUserSettings(){
-        this.componentId = UserSettings;
-    },
-    doLogout() {
-      this.$confirm('Do you want to logout?', 'Warning', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-             localStorage.removeItem('current_sub_id');
-            this.$session.remove('username');
-            let location = psl.parse(window.location.hostname)
-            location = location.domain === null ? location.input : location.domain
-            Cookies.remove('auth_token' ,{domain: location});
-            Cookies.remove('email' ,{domain: location});
-            Cookies.remove('userDetailId' ,{domain: location}); 
-            Cookies.remove('subscriptionId' ,{domain: location}); 
+	name: 'UserDashboard',
+	props: {
+		options: {
+			type: Object
+		}
+	},
+	data () {
+		return {
+			data: 'data',
+			bExpand: false,
+			componentId: '',
+			userEmailId: '',
+			rowdata: {}
+		}
+	},
+	component: {
+	},
+	methods: {
+		EditBanner (item) {
+			// console.log(item)
+			this.rowdata = item
+			if (item.type === 'bannertype') {
+				this.componentId = AddBannerType
+			} else if (item.type == 'banner') {
+				this.componentId = AddBanner
+			} else if (item.type == 'bannertypelist') {
+				this.componentId = BannerTypeList
+			} else if (item.type == 'bannerlist') {
+				this.componentId = BannerList
+			} else {
+				this.rowdata = {}
+			}
+		},
+		goToBanner (name) {
+			this.rowdata = {}
+			if (name === 'bt_add') {
+				this.componentId = AddBannerType
+			} else if (name === 'b_add') {
+				this.componentId = AddBanner
+			} else if (name === 'bt_list') {
+				this.componentId = BannerTypeList
+			} else if (name === 'b_list') {
+				this.componentId = BannerList
+			} else {}
+		},
+		goToEditor () {
+			// this.$router.push('/editor');
+			window.location = '/editor'
+		},
+		goToInvite () {
+			this.componentId = Invite
+		},
+		goToDashboard () {
+			this.componentId = HomePage
+		},
+		goToUserSettings () {
+			this.componentId = UserSettings
+		},
+		doLogout () {
+			this.$confirm('Do you want to logout?', 'Warning', {
+				confirmButtonText: 'OK',
+				cancelButtonText: 'Cancel',
+				type: 'warning'
+			}).then(() => {
+				localStorage.removeItem('current_sub_id')
+				this.$session.remove('username')
+				let location = psl.parse(window.location.hostname)
+				location = location.domain === null ? location.input : location.domain
+				Cookies.remove('auth_token', {domain: location})
+				Cookies.remove('email', {domain: location})
+				Cookies.remove('userDetailId', {domain: location})
+				Cookies.remove('subscriptionId', {domain: location})
 
-            this.isLoggedIn = false;
-            // this.$router.push('/login');
-            window.location = '/login';
-        }).catch(() => {
-          // this.$message({
-          //   type: 'info',
-          //   message: 'Delete canceled'
-          // });          
-        });
-    }
-  },
-  mounted () {
+				this.isLoggedIn = false
+				// this.$router.push('/login');
+				window.location = '/login'
+			}).catch(() => {
+				// this.$message({
+				//   type: 'info',
+				//   message: 'Delete canceled'
+				// });
+			})
+		}
+	},
+	mounted () {
+		this.goToDashboard()
 
-      this.goToDashboard();
+		this.userEmailId = Cookies.get('email')
 
-    this.userEmailId = Cookies.get('email');
+		$(function () {
+			$(window).on('scroll', function (e) {
+				if ($(window).scrollTop() > 50) {
+					$('.flat-theme').addClass('sticky')
+				} else {
+					$('.flat-theme').removeClass('sticky')
+				}
+			})
 
-    $(function () {
+			// $(document).on("click", function (e) {
+			//     // e.preventDefault();
+			//     var $item = $(".hh-dropmenu-item");
+			//     if ($item.hasClass("active")) {
+			//         $item.removeClass("active");
+			//     }
+			// });
 
-        $(window).on("scroll", function (e) {
-            if ($(window).scrollTop() > 50) {
-                $(".flat-theme").addClass("sticky");
-            } else {
-                $(".flat-theme").removeClass("sticky");
-            }
-        });
+			$('.hh-chat-body').slimScroll({
+				height: '450px',
+				color: '#c6c6c6'
+			})
 
-        // $(document).on("click", function (e) {
-        //     // e.preventDefault();
-        //     var $item = $(".hh-dropmenu-item");
-        //     if ($item.hasClass("active")) {
-        //         $item.removeClass("active");
-        //     }
-        // });
+			$('.hh-timeline-body').slimScroll({
+				height: '450px',
+				color: '#c6c6c6'
+			})
 
-        $('.hh-chat-body').slimScroll({
-            height: '450px',
-            color: "#c6c6c6"
-        });
+			$('.hh-toggle-btn').on('click', function () {
+				$('.hh-logo-container').toggleClass('hh-nav-min')
+				$('.hh-sidebar').toggleClass('hh-nav-min')
+				$('.hh-body-wrapper').toggleClass('hh-nav-min')
+			})
 
-        $('.hh-timeline-body').slimScroll({
-            height: '450px',
-            color: '#c6c6c6'
-        });
+			// $("li.hh-dropdown > a.hh-menu-item").on('click', function (e) {
+			//     e.preventDefault();
+			//     e.stopPropagation();
+			//     $(".hh-dropmenu-item").removeClass("active");
+			//     $(this).next(".hh-dropmenu-item").toggleClass("active");
+			// });
 
-        $(".hh-toggle-btn").on('click', function () {
-            $(".hh-logo-container").toggleClass("hh-nav-min");
-            $(".hh-sidebar").toggleClass("hh-nav-min");
-            $(".hh-body-wrapper").toggleClass("hh-nav-min");
-        });
+			$('.fa-chevron-down').on('click', function () {
+				var $ele = $(this).parents('.panel-heading')
+				$ele.siblings('.panel-footer').toggleClass('hh-collapse')
+				$ele.siblings('.panel-body').toggleClass('hh-collapse', function () {
+				})
+			})
 
-        // $("li.hh-dropdown > a.hh-menu-item").on('click', function (e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        //     $(".hh-dropmenu-item").removeClass("active");
-        //     $(this).next(".hh-dropmenu-item").toggleClass("active");
-        // });
+			$('.fa-close').on('click', function () {
+				var $ele = $(this).parents('.panel')
+				$ele.addClass('panel-close')
+				setTimeout(function () {
+					$ele.parent().remove()
+				}, 210)
+			})
 
-        $(".fa-chevron-down").on("click", function () {
-            var $ele = $(this).parents('.panel-heading');
-            $ele.siblings('.panel-footer').toggleClass("hh-collapse");
-            $ele.siblings('.panel-body').toggleClass("hh-collapse", function () {
-            });
-        });
+			$('.fa-rotate-right').on('click', function () {
+				var $ele = $(this).parents('.panel-heading').siblings('.panel-body')
+				$ele.append('<div class="overlay"><div class="overlay-content"><i class="fa fa-refresh fa-2x fa-spin"></i></div></div>')
+				setTimeout(function () {
+					$ele.find('.overlay').remove()
+				}, 2000)
+			})
 
-        $(".fa-close").on("click", function () {
-            var $ele = $(this).parents('.panel');
-            $ele.addClass('panel-close');
-            setTimeout(function () {
-                $ele.parent().remove();
-            }, 210);
-        });
+			$('#hh-chat-send').on('click', function () {
+				var value = $('#hh-chat-txt').val()
+				var $ele = $('.hh-chat-body')
+				var img = 'https://lh4.googleusercontent.com/-GXmmnYTuWkg/AAAAAAAAAAI/AAAAAAAAAAA/oK6DEDS7grM/w56-h56/photo.jpg'
+				if (value) {
+					$('#hh-chat-txt').val('')
+					$ele.append(getTempl(img, value, 'left'))
+					setTimeout(function () {
+						img = 'http://www.gravatar.com/avatar/9099c2946891970eb4739e6455400913.png'
+						$ele.append(getTempl(img, 'Cool!!!', 'right'))
+						$ele.slimScroll({
+							scrollTo: $ele[0].scrollHeight
+						})
+					}, 2000)
 
-        $(".fa-rotate-right").on("click", function () {
-            var $ele = $(this).parents('.panel-heading').siblings('.panel-body');
-            $ele.append('<div class="overlay"><div class="overlay-content"><i class="fa fa-refresh fa-2x fa-spin"></i></div></div>');
-            setTimeout(function () {
-                $ele.find('.overlay').remove();
-            }, 2000);
-        });
+					$ele.slimScroll({
+						scrollTo: $ele[0].scrollHeight
+					})
+				}
+			})
 
-        $("#hh-chat-send").on("click", function () {
-            var value = $("#hh-chat-txt").val();
-            var $ele = $(".hh-chat-body");
-            var img = "https://lh4.googleusercontent.com/-GXmmnYTuWkg/AAAAAAAAAAI/AAAAAAAAAAA/oK6DEDS7grM/w56-h56/photo.jpg";
-            if (value) {
-                $("#hh-chat-txt").val('');
-                $ele.append(getTempl(img, value, 'left'));
-                setTimeout(function () {
-                    img = "http://www.gravatar.com/avatar/9099c2946891970eb4739e6455400913.png";
-                    $ele.append(getTempl(img, "Cool!!!", 'right'));
-                    $ele.slimScroll({
-                        scrollTo: $ele[0].scrollHeight
-                    });
-                }, 2000);
-
-                $ele.slimScroll({
-                    scrollTo: $ele[0].scrollHeight
-                });
-
-            }
-
-        });
-
-
-
-        $(".hh-notification-item").on("click", function (e) {
-            e.stopPropagation();
-        });
-
-    });
-  }
+			$('.hh-notification-item').on('click', function (e) {
+				e.stopPropagation()
+			})
+		})
+	}
 }
 </script>
 

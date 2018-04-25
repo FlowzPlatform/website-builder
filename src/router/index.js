@@ -13,48 +13,48 @@ Vue.use(Router)
 
 export default new Router({
 	mode: 'history',
-  routes: [
-    {
-      path: '/',
-      name: 'Homepage',
-      component: Homepage
-    },
-    {
-      path: '/user-dashboard',
-      name: 'UserDashboard',
-      component: UserDashboard,
-      meta: { description: 'User Dashboard', requiresAuth: true },
-    },
-    {
-      path: '/editor',
-      name: 'Index',
-      component: Index,
-      meta: { description: 'Website Editor', requiresAuth: true },
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login
-    },
-    {
-      path: '/reset-password',
-      name: 'reset',
-      component: resetPassword
-    },
-    {
-      path: '/email-verification',
-      name: 'email-verification',
-      component: EmailVerification
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: Register
-    },
-    {
-      path: '/forgot_password',
-      name: 'ForgotPassword',
-      component: ForgotPassword
-    }
-  ]
+	routes: [
+		{
+			path: '/',
+			name: 'Homepage',
+			component: Homepage
+		},
+		{
+			path: '/user-dashboard',
+			name: 'UserDashboard',
+			component: UserDashboard,
+			meta: { description: 'User Dashboard', requiresAuth: true }
+		},
+		{
+			path: '/editor',
+			name: 'Index',
+			component: Index,
+			meta: { description: 'Website Editor', requiresAuth: true }
+		},
+		{
+			path: '/login',
+			name: 'Login',
+			component: Login
+		},
+		{
+			path: '/reset-password',
+			name: 'reset',
+			component: resetPassword
+		},
+		{
+			path: '/email-verification',
+			name: 'email-verification',
+			component: EmailVerification
+		},
+		{
+			path: '/register',
+			name: 'Register',
+			component: Register
+		},
+		{
+			path: '/forgot_password',
+			name: 'ForgotPassword',
+			component: ForgotPassword
+		}
+	]
 })

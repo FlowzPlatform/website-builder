@@ -37,93 +37,89 @@
 
 import Vue from 'vue'
 import VueSession from 'vue-session'
+
+import axios from 'axios'
+import Cookies from 'js-cookie'
 Vue.use(VueSession)
 
-import axios from 'axios';
-import Cookies from 'js-cookie';
-
-const config = require('../config');
+const config = require('../config')
 
 export default {
-  name: 'PartialStats',
-  props: {
-    options: {
-      type: Object
-    }
-  },
-  data () {
-    return {
-      repoName: '',
-      tablePagesData: [],
-    }
-  },
-  component: {
-  },
-  methods: {
+	name: 'PartialStats',
+	props: {
+		options: {
+			type: Object
+		}
+	},
+	data () {
+		return {
+			repoName: '',
+			tablePagesData: []
+		}
+	},
+	component: {
+	},
+	methods: {
   	async init () {
+			let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, '\/')
+			let urlparts = configFileUrl.split('/')
+			let fileNameOrginal = urlparts[urlparts.length - 1]
+			let fileName = '/' + urlparts[urlparts.length - 1]
 
-      let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      let urlparts = configFileUrl.split("/");
-      let fileNameOrginal = urlparts[urlparts.length - 1];
-      let fileName = '/' + urlparts[urlparts.length - 1];
-      
-      let folderUrl = configFileUrl.replace(fileName, '');
+			let folderUrl = configFileUrl.replace(fileName, '')
 
-      let foldername = folderUrl.split('/');
-      // foldername = foldername[(foldername.length-1)];
+			let foldername = folderUrl.split('/')
+			// foldername = foldername[(foldername.length-1)];
 
-      foldername = foldername[6];
-      
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
+			foldername = foldername[6]
 
-      if(this.configData.status == 200 || this.configData.status == 204){
-        //console.log('Config file found! Updating fields..');
+			this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => { console.log('Error:', err) })
 
-        this.settings = this.configData.data.configData;
+			if (this.configData.status == 200 || this.configData.status == 204) {
+				// console.log('Config file found! Updating fields..');
 
-        this.repoName = this.configData.data.websiteName;
+				this.settings = this.configData.data.configData
 
-        let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
-        partialItems.splice(partialItems.indexOf('Layout'), 1);
+				this.repoName = this.configData.data.websiteName
 
-        //console.log('All Parts:', this.settings[2].layoutOptions[0]);
-        this.tablePagesData = [];
+				let partialItems = Object.keys(this.settings[2].layoutOptions[0])
+				partialItems.splice(partialItems.indexOf('Layout'), 1)
 
-        for(var i = 0; i < partialItems.length; i++){
-          var eachPartialFileList = '';
-          for(var j = 0; j < this.settings[2].layoutOptions[0][partialItems[i]].length; j++){
-            eachPartialFileList += '<span class="label label-info" style="margin-right: 5px; padding: 0.7em .6em .6em;">' + this.settings[2].layoutOptions[0][partialItems[i]][j].value + '</span>';
-          }
-          this.tablePagesData.push({
-            number: i + 1,
-            partialName: partialItems[i],
-            partialFiles: eachPartialFileList
-          });
-        }
+				// console.log('All Parts:', this.settings[2].layoutOptions[0]);
+				this.tablePagesData = []
 
-        //console.log('Partials List:', this.tablePagesData)
+				for (var i = 0; i < partialItems.length; i++) {
+					var eachPartialFileList = ''
+					for (var j = 0; j < this.settings[2].layoutOptions[0][partialItems[i]].length; j++) {
+						eachPartialFileList += '<span class="label label-info" style="margin-right: 5px; padding: 0.7em .6em .6em;">' + this.settings[2].layoutOptions[0][partialItems[i]][j].value + '</span>'
+					}
+					this.tablePagesData.push({
+						number: i + 1,
+						partialName: partialItems[i],
+						partialFiles: eachPartialFileList
+					})
+				}
 
-      } else {
-        //console.log('Cannot get config file!');
-      } 
+				// console.log('Partials List:', this.tablePagesData)
+			} else {
+				// console.log('Cannot get config file!');
+			}
   	}
-  },
-  async mounted () {
-
-  	let response = await this.init();
-  },
-  watch: {
-  	'$store.state.fileUrl': function(newvalue) {
-  		this.init();
+	},
+	async mounted () {
+  	let response = await this.init()
+	},
+	watch: {
+  	'$store.state.fileUrl': function (newvalue) {
+  		this.init()
   	},
-    '$store.state.updateStats': function(newvalue) {
-      let self = this;
-      setTimeout(function(){
-        self.init();
-      },1500)
-      
-    }
-  }
+		'$store.state.updateStats': function (newvalue) {
+			let self = this
+			setTimeout(function () {
+				self.init()
+			}, 1500)
+		}
+	}
 }
 </script>
 

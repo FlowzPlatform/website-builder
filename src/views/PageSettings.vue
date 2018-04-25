@@ -332,597 +332,569 @@
 
 import Vue from 'vue'
 import VueSession from 'vue-session'
-Vue.use(VueSession)
 import draggable from 'vuedraggable'
-var daex = require('json-daex');
-import Cookies from 'js-cookie';
-const config = require('../config');
+import Cookies from 'js-cookie'
 
-import axios from 'axios';
+import axios from 'axios'
+Vue.use(VueSession)
+var daex = require('json-daex')
+const config = require('../config')
 
- const cssOptions = ['VueJs'];
+const cssOptions = ['VueJs']
 
 export default {
-  name: 'PageSettings',
-  props: {
-    options: {
-      type: Object
-    }
-  },
-  data () {
-    return {
-      form: {
-        name: '',
-        nameSecond:'',
-        seoTitle: '',
-        Header: '',
-        Footer: '',
-        Layout: '',
-        Sidebar: '',
-        Menu: '',
-        headers: [],
-        footers: [],
-        layouts: [],
-        secondlayouts: [],
-        sidebar: [],
-        menu: [],
-        parent_id: []
-      },
-      AllData: [],
-      PageLayout: '',
-      PageFooter: '',
-      PageHeader: '',
-      currentFileIndex: '',
-      configData: [],
-      Data:[],
-      settingsData:[],
-      currentIndex:'',
-      settings: [],
-      folderUrl: '',
-      partialsList: [],
-      partialsListSelection: [],
-      defaultParams: [],
-      checked2:'',
-
-      checkAll: true,
-      checkedCss: [],
-      csses: cssOptions,
-      isIndeterminate: true,
-      externallinksJS:[],
-      externallinksCSS:[],
-      externallinksMeta:[{
-        name: 'Edit Me',
-        content: 'Update Me'
-      }],
-      Allposition:[
-      {label:'Start of <head> Tag',value:'starthead'},
-       {label:'End of <head> tag',value:'endhead'},
-      {label:'Start of <body> Tag',value:'startbody'},
-      {label:'End of <body> tag',value:'endbody'}
-      ],
-      Metacharset:'',
-      localpagescripts:[],
-      localpagestyles:[]
-    }
-  },
-  components: {
-    draggable
-  },
-  methods: {
-
-    async init(){
-        
-      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      let urlparts = url.split("/");
-      let fileNameOrginal = urlparts[urlparts.length-1];
-      let fileName = '/' + urlparts[urlparts.length-2] + '/' + urlparts[urlparts.length-1];
-      this.folderUrl = url.replace(fileName, '');
-
-      let foldername = this.folderUrl.split('/');
-      foldername = foldername[6];
-
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
-
-      if(this.configData.status == 200 || this.configData.status == 204){
-        this.settings = this.configData.data.configData;
-        
-        // Get Current file index
-        this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings,{'PageName':fileNameOrginal});
-
-        this.form.name = fileNameOrginal;
-        this.form.layouts = this.settings[2].layoutOptions[0].Layout;
-        
-        if('PageSEOTitle' in this.settings[1].pageSettings[this.currentFileIndex]){
-          this.form.seoTitle = this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle;
-        } else {
-          this.form.seoTitle = '';
-        }
-
-        if('PageLayout' in this.settings[1].pageSettings[this.currentFileIndex]){
-          //console.log('Layout Found in config', this.settings[1].pageSettings[this.currentFileIndex].PageLayout)
-          this.form.Layout = this.settings[1].pageSettings[this.currentFileIndex].PageLayout;
-          this.form.extrapartial= this.settings[1].pageSettings[this.currentFileIndex].partials;
-        } else {
-          this.form.Layout = '';
-        }
-
-        if('PageCss' in this.settings[1].pageSettings[this.currentFileIndex]){
-          this.checkedCss = this.settings[1].pageSettings[this.currentFileIndex].PageCss;
-        } else {
-          this.checkedCss = [];
-        }
-
-        if('PageMetaInfo' in this.settings[1].pageSettings[this.currentFileIndex]){
-          this.externallinksMeta = this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo;
-        } else {
-          this.externallinksMeta = [];
-        }
-         if('PageMetacharset' in this.settings[1].pageSettings[this.currentFileIndex]){
-          this.Metacharset = this.settings[1].pageSettings[this.currentFileIndex].PageMetacharset;
-        } else {
-          this.Metacharset = '';
-        }
-
-
-        if('PageExternalCss' in this.settings[1].pageSettings[this.currentFileIndex]){
-          this.externallinksCSS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss;
-        } else {
-          this.externallinksCSS = [];
-        }
-
-        if('PageExternalJs' in this.settings[1].pageSettings[this.currentFileIndex]){
-          this.externallinksJS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs;
-        } else {
-          this.externallinksJS = [];
-        }
-
-        if('PageScripts' in this.settings[1].pageSettings[this.currentFileIndex]){
-          this.localpagescripts = this.settings[1].pageSettings[this.currentFileIndex].PageScripts;
-        } else {
-          this.localpagescripts = [];
-        }
-        if('PageStyles' in this.settings[1].pageSettings[this.currentFileIndex]){
-          this.localpagestyles = this.settings[1].pageSettings[this.currentFileIndex].PageStyles;
-        } else {
-          this.localpagestyles = [];
-        }
-
-        for (var i = 0; i < this.form.layouts.length; i++) {
-          if (this.form.layouts[i].label === this.form.Layout) {
-            let variable = this.form.layouts[i].partialsList;
-            this.partialsList = variable;
-            this.defaultParams = this.form.layouts[i].defaultList;
-          }
-        }
-
-        this.AllData = [];
-        //// console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
-        if (this.configData.status == 200 || this.configData.status == 204) {
-
-          this.settings = this.configData.data.configData;
-
-          for (var i = 0; i < this.partialsList.length; i++) {
-
-            var nameP = this.partialsList[i];
-            if (this.settings[2].layoutOptions[0][nameP]) {
-
-              let change = false;
-              for (var j = 0; j < this.defaultParams.length; j++) {
-                if (Object.keys(this.defaultParams[j])[0] == nameP) {
-                  this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-                  let tp = this.defaultParams[j][nameP].split('.')
-                  // if (tp[1] == 'hbs') {
-                  //   for (let k = 0; k < (this.AllData[i]).length; k++) {
-                  //     if ((this.AllData[i][k].value).split('.')[0] == tp[0])
-                  //       this.form.parent_id[nameP] = this.AllData[i][k]
-                  //   }
-                  // } else {
-
-                    this.form.parent_id[nameP] = tp[0];
-                  // }
-
-                  for (let k = 0; k < Object.keys(this.AllData[i]).length; k++) {
-                    this.AllData[i][k]['disabled'] = true;
-                  }
-
-                  change = true
-                }
-              }
-              if (change != true) {
-                this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-                //console.log("this.AllData["+i+"]:",this.AllData[i])
-                if (this.AllData[i].length === 1) {
-                  //console.log('only one element')
-                  this.form.parent_id[nameP] = this.AllData[i][0]
-                }
-                else{
-                  for(let j=0;j<this.AllData[i].length;j++){
-                    //console.log('Object.keys(this.AllData[i][j]):',this.AllData[i][j].value)
-                    for(let k=0;k<this.form.extrapartial.length;k++){
-                      if(Object.keys(this.form.extrapartial[k])==nameP){
-                        if(this.form.extrapartial[k][Object.keys(this.form.extrapartial[k])]==this.AllData[i][j].value){
-                          //console.log("inside")
-                          this.form.parent_id[nameP]=this.AllData[i][j]
-                          break;
-                        }
-                      }
-                    }
-                  }
-                }
-                change = false;
-              }
-            } else {
-              //console.log("Partials not found in config file.")
-            }
-          }
-        }
-
-      } else {
-        //console.log('Cannot get config file!');
-      }   
-    },
-
-    addNewlocalstyles(){
-      let newVariable = { linkposition:'',style:''};
-      this.localpagestyles.push(newVariable);
-    },
-    deletelocalstyles(deleteIndex){
-      this.localpagestyles.splice(deleteIndex,1);
-    },
-    handleCheckAllChange(event) {
-      this.checkedCss = event.target.checked ? cssOptions : [];
-      this.isIndeterminate = false;
-      //console.log('Checked items:', this.checkedCss);
-    },
-    handleCheckedCssChange(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.csses.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.csses.length;
-      //console.log('Checked items:', this.checkedCss);
-    },
-
-    addNewexternallinkJS() {
-      let newVariable = { linktype: 'JS', linkposition: '', linkurl: ''};
-      this.externallinksJS.push(newVariable);
-    },
-    addNewexternallinkCSS() {
-      let newVariable = { linktype: 'CSS', linkposition: '', linkurl: ''};
-      this.externallinksCSS.push(newVariable);
-    },
-    addNewexternallinkMeta() {
-      let newVariable = { name:'',content:''};
-      this.externallinksMeta.push(newVariable);
-    },
-    deletelinkJS(deleteIndex) {
-      this.externallinksJS.splice(deleteIndex, 1);
-    },
-    deletelinkCSS(deleteIndex) {
-      this.externallinksCSS.splice(deleteIndex, 1);
-    },
-    deletelinkMeta(deleteIndex) {
-      this.externallinksMeta.splice(deleteIndex, 1);
-    },
-    addNewlocalscripts(){
-      let newVariable = { linkposition:'',script:''};
-      this.localpagescripts.push(newVariable);
-    },
-    deletelocalscripts(deleteIndex){
-      this.localpagescripts.splice(deleteIndex,1);
-    },
-
-    async layoutChange() {
-      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      let urlparts = url.split("/");
-      let fileNameOrginal = urlparts[urlparts.length - 1];
-      let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-      this.folderUrl = url.replace(fileName, '');
-      for (var i = 0; i < this.form.layouts.length; i++) {
-        if (this.form.layouts[i].label === this.form.Layout) {
-          let variable = this.form.layouts[i].partialsList;
-          this.partialsList = variable;
-          this.defaultParams = this.form.layouts[i].defaultList;
-        }
-      }
-
-      let foldername = this.folderUrl.split('/');
-      foldername = foldername[6];
-
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
-
-      this.AllData = [];
-      
-      if (this.configData.status == 200 || this.configData.status == 204) {
-
-        this.settings = this.configData.data.configData;
-
-        for (var i = 0; i < this.partialsList.length; i++) {
-
-          var nameP = this.partialsList[i];
-          if (this.settings[2].layoutOptions[0][nameP]) {
-
-            let change = false;
-            for (var j = 0; j < this.defaultParams.length; j++) {
-              if (Object.keys(this.defaultParams[j])[0] == nameP) {
-                this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-                let tp = this.defaultParams[j][nameP].split('.')
-                if (tp[1] == 'hbs') {
-                  for (let k = 0; k < (this.AllData[i]).length; k++) {
-                    if ((this.AllData[i][k].value).split('.')[0] == tp[0])
-                      this.form.parent_id[nameP] = this.AllData[i][k]
-                  }
-                } else {
-
-                  this.form.parent_id[nameP] = tp[0];
-                }
-
-                for (let k = 0; k < Object.keys(this.AllData[i]).length; k++) {
-                  this.AllData[i][k]['disabled'] = true;
-                }
-
-                change = true
-              }
-            }
-            if (change != true) {
-              this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
-              if (this.AllData[i].length == 1) {
-                this.form.parent_id[nameP] = this.AllData[i][0]
-              }
-              change = false;
-            }
-          } else {
-            //console.log("Partials not found in config file.")
-          }
-        }
-      }
-    },
-
-    async savePageSettings() {
-      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      let urlparts = url.split("/");
-      let fileNameOrginal = urlparts[urlparts.length - 1];
-      let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-      this.folderUrl = url.replace(fileName, '');
-
-      let foldername = this.folderUrl.split('/');
-      foldername = foldername[6];
-
-      this.Data = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
-
-      if (this.Data.status == 200 || this.Data.status == 204) {
-        this.settingsData = this.Data.data.configData;
-        this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
-          'PageName': fileNameOrginal
-        });
-        this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout;
-
-      } else {
-        //console.log('Cannot get config file!');
-      }
-      for (var i = 0; i < this.form.secondlayouts.length; i++) {
-        if (this.form.secondlayouts[i].label === this.form.Layout) {
-          this.partialsListSelection = this.form.secondlayouts[i].partialsList;
-        }
-      }
-      var PageSettings = {
-        "PageName": this.form.name,
-        "PageSEOTitle": this.form.seoTitle,
-        "PageLayout": this.form.Layout,
-        "partials": [],
-        "PageCss": this.checkedCss
-      };
-      if (this.currentFileIndex != null) {
-        this.settings[1].pageSettings[this.currentFileIndex].partials = [];
-        this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout;
-        this.settings[1].pageSettings[this.currentFileIndex].PageCss = this.checkedCss;
-
-        this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs=this.externallinksJS;
-        this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss=this.externallinksCSS;
-        this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo=this.externallinksMeta;
-        this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle=this.form.seoTitle;
-        this.settings[1].pageSettings[this.currentFileIndex].PageMetacharset=this.Metacharset;
-        this.settings[1].pageSettings[this.currentFileIndex].PageScripts=this.localpagescripts;
-        this.settings[1].pageSettings[this.currentFileIndex].PageStyles=this.localpagestyles;
-
-        
-        for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
-          if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
-            var extraPartial = [];
-            var hbsvalue;
-            hbsvalue = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value
-
-            extraPartial.push(Object.keys(this.form.parent_id)[j])
-            var temp1 = (this.form.parent_id[Object.keys(this.form.parent_id)[j]].defaultList)
-            for (let x = 0; x < temp1.length; x++) {
-              var obj1 = {};
-              obj1[Object.keys(temp1[x])] = temp1[x][Object.keys(temp1[x])].split('.')[0]
-              this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj1)
-            }
-
-          }
-        }
-        for (var i = 0; i < this.partialsListSelection.length; i++) {
-          for (let z = 0; z < this.AllData[i].length; z++) {
-            if (this.AllData[i][z]['disabled'] == true)
-              this.AllData[i][z]['disabled'] = false
-          }
-          let temp = this.partialsListSelection[i]
-          var obj = {};
-          let change = false;
-          for (var j = 0; j < this.defaultParams.length; j++) {
-            if (Object.keys(this.defaultParams[j])[0] == temp.trim()) {
-              let x = Object.keys(this.defaultParams[j])[0];
-              let y = this.defaultParams[j][x].split('.')[0]
-              obj[temp] = y;
-              change = true;
-            }
-          }
-          if (change != true) {
-
-            // obj[temp] = this.form.parent_id[temp].value;
-
-            if (this.form.parent_id[temp] != undefined) {
-
-              //// console.log("no value defined, hence DEFAULT set:")
-              obj[temp] = this.form.parent_id[temp].value;
-              change = false;
-            } else {
-              let self = this;
-
-              setTimeout(function() {
-                self.$notify.info({
-                  title: 'AutoSet',
-                  message: temp + ': Default ',
-                  type: 'warning'
-                });
-              }, 100);
-
-              obj[temp] = 'default'
-              change = false;
-            }
-
-            // change = false;
-          }
-          this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
-        }
-
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
-
-        if (rethinkdbCheck.data) {
-
-          // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
-              configData: this.settings
-            })
-            .then(async(res) => {
-              //console.log(res.data);
-              this.$message({
-                message: 'Saved!',
-                showClose: true,
-                type: 'success'
-              });
-            })
-            .catch((e) => {
-              this.$message({
-                showClose: true,
-                message: 'Failed! Please try again.',
-                type: 'error'
-              });
-              //console.log(e)
-            });
-
-        } else {
-          this.$message({
-            showClose: true,
-            message: 'Data Error.',
-            type: 'error'
-          });
-        }
-
-
-
-      } else {
-        for (var i = 0; i < this.partialsListSelection.length; i++) {
-          let temp = this.partialsListSelection[i]
-          var obj = {};
-          obj[temp] = this.form.parent_id[temp];
-          PageSettings.partials.push(obj)
-        }
-
-        this.settings[1].pageSettings.push(PageSettings);
-
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err)=>{ console.log('Error:', err); });
-
-        if (rethinkdbCheck.data) {
-
-          // update existing data
-          await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
-              configData: this.settings
-            })
-            .then(async(res) => {
-              //console.log(res.data);
-              this.$message({
-                message: 'Saved!',
-                showClose: true,
-                type: 'success'
-              });
-            })
-            .catch((e) => {
-              this.$message({
-                showClose: true,
-                message: 'Failed! Please try again.',
-                type: 'error'
-              });
-              //console.log(e)
-            });
-
-        } else {
-          this.$message({
-            showClose: true,
-            message: 'Data Error.',
-            type: 'error'
-          });
-        }
-      }
-
-    }
-  },
-  async created () {  
-    this.init();   
-  },
-
-  watch: {
-    '$store.state.fileUrl': function(newvalue) {
-      this.init()
-    }
-  },
-
-  mounted () {
-     $(document).ready(function($) {
-
-        $("#add-meta-tag").click(function() {
-            $("#add-meta-tagContent").slideToggle("slow");
-            if ($("#add-meta-tag").text() == "External Meta Tags") {
-                $("#add-meta-tag").html("External Meta Tags")
-            } else {
-                $("#add-meta-tag").text("External Meta Tags")
-            }
-        });
-
-
-        $("#pageSettings").click(function() {
-            $("#pageSettingsContent").slideToggle("slow");
-            if ($("#pageSettings").text() == "Page Settings") {
-                $("#pageSettings").html("Page Settings")
-            } else {
-                $("#pageSettings").text("Page Settings")
-            }
-        });
-        $("#add-js-css").click(function() {
-            $("#add-js-cssContent").slideToggle("slow");
-            if ($("#add-js-css").text() == "Add JS/CSS Links") {
-                $("#add-js-css").html("Add JS/CSS Links")
-            } else {
-                $("#add-js-css").text("Add JS/CSS Links")
-            }
-        });
-        $("#add-local-scripts").click(function() {
-            $("#add-local-scriptsContent").slideToggle("slow");
-            if ($("#add-local-scripts").text() == "Add Local Scripts") {
-                $("#add-local-scripts").html("Add Local Scripts")
-            } else {
-                $("#add-local-scripts").text("Add Local Scripts")
-            }
-        });
-         $("#add-local-styles").click(function() {
-            $("#add-local-stylesContent").slideToggle("slow");
-            if ($("#add-local-styles").text() == "Add Local Styles") {
-                $("#add-local-styles").html("Add Local Styles")
-            } else {
-                $("#add-local-styles").text("Add Local Styles")
-            }
-        });
-   });
-  }
+	name: 'PageSettings',
+	props: {
+		options: {
+			type: Object
+		}
+	},
+	data () {
+		return {
+			form: {
+				name: '',
+				nameSecond: '',
+				seoTitle: '',
+				Header: '',
+				Footer: '',
+				Layout: '',
+				Sidebar: '',
+				Menu: '',
+				headers: [],
+				footers: [],
+				layouts: [],
+				secondlayouts: [],
+				sidebar: [],
+				menu: [],
+				parent_id: []
+			},
+			AllData: [],
+			PageLayout: '',
+			PageFooter: '',
+			PageHeader: '',
+			currentFileIndex: '',
+			configData: [],
+			Data: [],
+			settingsData: [],
+			currentIndex: '',
+			settings: [],
+			folderUrl: '',
+			partialsList: [],
+			partialsListSelection: [],
+			defaultParams: [],
+			checked2: '',
+
+			checkAll: true,
+			checkedCss: [],
+			csses: cssOptions,
+			isIndeterminate: true,
+			externallinksJS: [],
+			externallinksCSS: [],
+			externallinksMeta: [{
+				name: 'Edit Me',
+				content: 'Update Me'
+			}],
+			Allposition: [
+				{label: 'Start of <head> Tag', value: 'starthead'},
+				{label: 'End of <head> tag', value: 'endhead'},
+				{label: 'Start of <body> Tag', value: 'startbody'},
+				{label: 'End of <body> tag', value: 'endbody'}
+			],
+			Metacharset: '',
+			localpagescripts: [],
+			localpagestyles: []
+		}
+	},
+	components: {
+		draggable
+	},
+	methods: {
+
+		async init () {
+			let url = this.$store.state.fileUrl.replace(/\\/g, '\/')
+			let urlparts = url.split('/')
+			let fileNameOrginal = urlparts[urlparts.length - 1]
+			let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1]
+			this.folderUrl = url.replace(fileName, '')
+
+			let foldername = this.folderUrl.split('/')
+			foldername = foldername[6]
+
+			this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => { console.log('Error:', err) })
+
+			if (this.configData.status == 200 || this.configData.status == 204) {
+				this.settings = this.configData.data.configData
+
+				// Get Current file index
+				this.currentFileIndex = daex.indexFirst(this.settings[1].pageSettings, {'PageName': fileNameOrginal})
+
+				this.form.name = fileNameOrginal
+				this.form.layouts = this.settings[2].layoutOptions[0].Layout
+
+				if ('PageSEOTitle' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					this.form.seoTitle = this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle
+				} else {
+					this.form.seoTitle = ''
+				}
+
+				if ('PageLayout' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					// console.log('Layout Found in config', this.settings[1].pageSettings[this.currentFileIndex].PageLayout)
+					this.form.Layout = this.settings[1].pageSettings[this.currentFileIndex].PageLayout
+					this.form.extrapartial = this.settings[1].pageSettings[this.currentFileIndex].partials
+				} else {
+					this.form.Layout = ''
+				}
+
+				if ('PageCss' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					this.checkedCss = this.settings[1].pageSettings[this.currentFileIndex].PageCss
+				} else {
+					this.checkedCss = []
+				}
+
+				if ('PageMetaInfo' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					this.externallinksMeta = this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo
+				} else {
+					this.externallinksMeta = []
+				}
+				if ('PageMetacharset' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					this.Metacharset = this.settings[1].pageSettings[this.currentFileIndex].PageMetacharset
+				} else {
+					this.Metacharset = ''
+				}
+
+				if ('PageExternalCss' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					this.externallinksCSS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss
+				} else {
+					this.externallinksCSS = []
+				}
+
+				if ('PageExternalJs' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					this.externallinksJS = this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs
+				} else {
+					this.externallinksJS = []
+				}
+
+				if ('PageScripts' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					this.localpagescripts = this.settings[1].pageSettings[this.currentFileIndex].PageScripts
+				} else {
+					this.localpagescripts = []
+				}
+				if ('PageStyles' in this.settings[1].pageSettings[this.currentFileIndex]) {
+					this.localpagestyles = this.settings[1].pageSettings[this.currentFileIndex].PageStyles
+				} else {
+					this.localpagestyles = []
+				}
+
+				for (var i = 0; i < this.form.layouts.length; i++) {
+					if (this.form.layouts[i].label === this.form.Layout) {
+						let variable = this.form.layouts[i].partialsList
+						this.partialsList = variable
+						this.defaultParams = this.form.layouts[i].defaultList
+					}
+				}
+
+				this.AllData = []
+				/// / console.log(this.configData)     Object.keys(this.settings[2].layoutOptions[0]).length
+				if (this.configData.status == 200 || this.configData.status == 204) {
+					this.settings = this.configData.data.configData
+
+					for (var i = 0; i < this.partialsList.length; i++) {
+						var nameP = this.partialsList[i]
+						if (this.settings[2].layoutOptions[0][nameP]) {
+							let change = false
+							for (var j = 0; j < this.defaultParams.length; j++) {
+								if (Object.keys(this.defaultParams[j])[0] == nameP) {
+									this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
+									let tp = this.defaultParams[j][nameP].split('.')
+									// if (tp[1] == 'hbs') {
+									//   for (let k = 0; k < (this.AllData[i]).length; k++) {
+									//     if ((this.AllData[i][k].value).split('.')[0] == tp[0])
+									//       this.form.parent_id[nameP] = this.AllData[i][k]
+									//   }
+									// } else {
+
+									this.form.parent_id[nameP] = tp[0]
+									// }
+
+									for (let k = 0; k < Object.keys(this.AllData[i]).length; k++) {
+										this.AllData[i][k]['disabled'] = true
+									}
+
+									change = true
+								}
+							}
+							if (change != true) {
+								this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
+								// console.log("this.AllData["+i+"]:",this.AllData[i])
+								if (this.AllData[i].length === 1) {
+									// console.log('only one element')
+									this.form.parent_id[nameP] = this.AllData[i][0]
+								} else {
+									for (let j = 0; j < this.AllData[i].length; j++) {
+										// console.log('Object.keys(this.AllData[i][j]):',this.AllData[i][j].value)
+										for (let k = 0; k < this.form.extrapartial.length; k++) {
+											if (Object.keys(this.form.extrapartial[k]) == nameP) {
+												if (this.form.extrapartial[k][Object.keys(this.form.extrapartial[k])] == this.AllData[i][j].value) {
+													// console.log("inside")
+													this.form.parent_id[nameP] = this.AllData[i][j]
+													break
+												}
+											}
+										}
+									}
+								}
+								change = false
+							}
+						} else {
+							// console.log("Partials not found in config file.")
+						}
+					}
+				}
+			} else {
+				// console.log('Cannot get config file!');
+			}
+		},
+
+		addNewlocalstyles () {
+			let newVariable = { linkposition: '', style: ''}
+			this.localpagestyles.push(newVariable)
+		},
+		deletelocalstyles (deleteIndex) {
+			this.localpagestyles.splice(deleteIndex, 1)
+		},
+		handleCheckAllChange (event) {
+			this.checkedCss = event.target.checked ? cssOptions : []
+			this.isIndeterminate = false
+			// console.log('Checked items:', this.checkedCss);
+		},
+		handleCheckedCssChange (value) {
+			let checkedCount = value.length
+			this.checkAll = checkedCount === this.csses.length
+			this.isIndeterminate = checkedCount > 0 && checkedCount < this.csses.length
+			// console.log('Checked items:', this.checkedCss);
+		},
+
+		addNewexternallinkJS () {
+			let newVariable = { linktype: 'JS', linkposition: '', linkurl: ''}
+			this.externallinksJS.push(newVariable)
+		},
+		addNewexternallinkCSS () {
+			let newVariable = { linktype: 'CSS', linkposition: '', linkurl: ''}
+			this.externallinksCSS.push(newVariable)
+		},
+		addNewexternallinkMeta () {
+			let newVariable = { name: '', content: ''}
+			this.externallinksMeta.push(newVariable)
+		},
+		deletelinkJS (deleteIndex) {
+			this.externallinksJS.splice(deleteIndex, 1)
+		},
+		deletelinkCSS (deleteIndex) {
+			this.externallinksCSS.splice(deleteIndex, 1)
+		},
+		deletelinkMeta (deleteIndex) {
+			this.externallinksMeta.splice(deleteIndex, 1)
+		},
+		addNewlocalscripts () {
+			let newVariable = { linkposition: '', script: ''}
+			this.localpagescripts.push(newVariable)
+		},
+		deletelocalscripts (deleteIndex) {
+			this.localpagescripts.splice(deleteIndex, 1)
+		},
+
+		async layoutChange () {
+			let url = this.$store.state.fileUrl.replace(/\\/g, '\/')
+			let urlparts = url.split('/')
+			let fileNameOrginal = urlparts[urlparts.length - 1]
+			let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1]
+			this.folderUrl = url.replace(fileName, '')
+			for (var i = 0; i < this.form.layouts.length; i++) {
+				if (this.form.layouts[i].label === this.form.Layout) {
+					let variable = this.form.layouts[i].partialsList
+					this.partialsList = variable
+					this.defaultParams = this.form.layouts[i].defaultList
+				}
+			}
+
+			let foldername = this.folderUrl.split('/')
+			foldername = foldername[6]
+
+			this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => { console.log('Error:', err) })
+
+			this.AllData = []
+
+			if (this.configData.status == 200 || this.configData.status == 204) {
+				this.settings = this.configData.data.configData
+
+				for (var i = 0; i < this.partialsList.length; i++) {
+					var nameP = this.partialsList[i]
+					if (this.settings[2].layoutOptions[0][nameP]) {
+						let change = false
+						for (var j = 0; j < this.defaultParams.length; j++) {
+							if (Object.keys(this.defaultParams[j])[0] == nameP) {
+								this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
+								let tp = this.defaultParams[j][nameP].split('.')
+								if (tp[1] == 'hbs') {
+									for (let k = 0; k < (this.AllData[i]).length; k++) {
+										if ((this.AllData[i][k].value).split('.')[0] == tp[0]) { this.form.parent_id[nameP] = this.AllData[i][k] }
+									}
+								} else {
+									this.form.parent_id[nameP] = tp[0]
+								}
+
+								for (let k = 0; k < Object.keys(this.AllData[i]).length; k++) {
+									this.AllData[i][k]['disabled'] = true
+								}
+
+								change = true
+							}
+						}
+						if (change != true) {
+							this.AllData[i] = this.settings[2].layoutOptions[0][nameP]
+							if (this.AllData[i].length == 1) {
+								this.form.parent_id[nameP] = this.AllData[i][0]
+							}
+							change = false
+						}
+					} else {
+						// console.log("Partials not found in config file.")
+					}
+				}
+			}
+		},
+
+		async savePageSettings () {
+			let url = this.$store.state.fileUrl.replace(/\\/g, '\/')
+			let urlparts = url.split('/')
+			let fileNameOrginal = urlparts[urlparts.length - 1]
+			let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1]
+			this.folderUrl = url.replace(fileName, '')
+
+			let foldername = this.folderUrl.split('/')
+			foldername = foldername[6]
+
+			this.Data = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => { console.log('Error:', err) })
+
+			if (this.Data.status == 200 || this.Data.status == 204) {
+				this.settingsData = this.Data.data.configData
+				this.currentIndex = daex.indexFirst(this.settingsData[1].pageSettings, {
+					'PageName': fileNameOrginal
+				})
+				this.form.secondlayouts = this.settingsData[2].layoutOptions[0].Layout
+			} else {
+				// console.log('Cannot get config file!');
+			}
+			for (var i = 0; i < this.form.secondlayouts.length; i++) {
+				if (this.form.secondlayouts[i].label === this.form.Layout) {
+					this.partialsListSelection = this.form.secondlayouts[i].partialsList
+				}
+			}
+			var PageSettings = {
+				'PageName': this.form.name,
+				'PageSEOTitle': this.form.seoTitle,
+				'PageLayout': this.form.Layout,
+				'partials': [],
+				'PageCss': this.checkedCss
+			}
+			if (this.currentFileIndex != null) {
+				this.settings[1].pageSettings[this.currentFileIndex].partials = []
+				this.settings[1].pageSettings[this.currentFileIndex].PageLayout = this.form.Layout
+				this.settings[1].pageSettings[this.currentFileIndex].PageCss = this.checkedCss
+
+				this.settings[1].pageSettings[this.currentFileIndex].PageExternalJs = this.externallinksJS
+				this.settings[1].pageSettings[this.currentFileIndex].PageExternalCss = this.externallinksCSS
+				this.settings[1].pageSettings[this.currentFileIndex].PageMetaInfo = this.externallinksMeta
+				this.settings[1].pageSettings[this.currentFileIndex].PageSEOTitle = this.form.seoTitle
+				this.settings[1].pageSettings[this.currentFileIndex].PageMetacharset = this.Metacharset
+				this.settings[1].pageSettings[this.currentFileIndex].PageScripts = this.localpagescripts
+				this.settings[1].pageSettings[this.currentFileIndex].PageStyles = this.localpagestyles
+
+				for (let j = 0; j < Object.keys(this.form.parent_id).length; j++) {
+					if (this.form.parent_id[Object.keys(this.form.parent_id)[j]].partialsList != undefined) {
+						var extraPartial = []
+						var hbsvalue
+						hbsvalue = this.form.parent_id[Object.keys(this.form.parent_id)[j]].value
+
+						extraPartial.push(Object.keys(this.form.parent_id)[j])
+						var temp1 = (this.form.parent_id[Object.keys(this.form.parent_id)[j]].defaultList)
+						for (let x = 0; x < temp1.length; x++) {
+							var obj1 = {}
+							obj1[Object.keys(temp1[x])] = temp1[x][Object.keys(temp1[x])].split('.')[0]
+							this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj1)
+						}
+					}
+				}
+				for (var i = 0; i < this.partialsListSelection.length; i++) {
+					for (let z = 0; z < this.AllData[i].length; z++) {
+						if (this.AllData[i][z]['disabled'] == true) { this.AllData[i][z]['disabled'] = false }
+					}
+					let temp = this.partialsListSelection[i]
+					var obj = {}
+					let change = false
+					for (var j = 0; j < this.defaultParams.length; j++) {
+						if (Object.keys(this.defaultParams[j])[0] == temp.trim()) {
+							let x = Object.keys(this.defaultParams[j])[0]
+							let y = this.defaultParams[j][x].split('.')[0]
+							obj[temp] = y
+							change = true
+						}
+					}
+					if (change != true) {
+						// obj[temp] = this.form.parent_id[temp].value;
+
+						if (this.form.parent_id[temp] != undefined) {
+							/// / console.log("no value defined, hence DEFAULT set:")
+							obj[temp] = this.form.parent_id[temp].value
+							change = false
+						} else {
+							let self = this
+
+							setTimeout(function () {
+								self.$notify.info({
+									title: 'AutoSet',
+									message: temp + ': Default ',
+									type: 'warning'
+								})
+							}, 100)
+
+							obj[temp] = 'default'
+							change = false
+						}
+
+						// change = false;
+					}
+					this.settings[1].pageSettings[this.currentFileIndex].partials.push(obj)
+				}
+
+				let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => { console.log('Error:', err) })
+
+				if (rethinkdbCheck.data) {
+					// update existing data
+					await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
+						configData: this.settings
+					})
+						.then(async (res) => {
+							// console.log(res.data);
+							this.$message({
+								message: 'Saved!',
+								showClose: true,
+								type: 'success'
+							})
+						})
+						.catch((e) => {
+							this.$message({
+								showClose: true,
+								message: 'Failed! Please try again.',
+								type: 'error'
+							})
+							// console.log(e)
+						})
+				} else {
+					this.$message({
+						showClose: true,
+						message: 'Data Error.',
+						type: 'error'
+					})
+				}
+			} else {
+				for (var i = 0; i < this.partialsListSelection.length; i++) {
+					let temp = this.partialsListSelection[i]
+					var obj = {}
+					obj[temp] = this.form.parent_id[temp]
+					PageSettings.partials.push(obj)
+				}
+
+				this.settings[1].pageSettings.push(PageSettings)
+
+				let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => { console.log('Error:', err) })
+
+				if (rethinkdbCheck.data) {
+					// update existing data
+					await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
+						configData: this.settings
+					})
+						.then(async (res) => {
+							// console.log(res.data);
+							this.$message({
+								message: 'Saved!',
+								showClose: true,
+								type: 'success'
+							})
+						})
+						.catch((e) => {
+							this.$message({
+								showClose: true,
+								message: 'Failed! Please try again.',
+								type: 'error'
+							})
+							// console.log(e)
+						})
+				} else {
+					this.$message({
+						showClose: true,
+						message: 'Data Error.',
+						type: 'error'
+					})
+				}
+			}
+		}
+	},
+	async created () {
+		this.init()
+	},
+
+	watch: {
+		'$store.state.fileUrl': function (newvalue) {
+			this.init()
+		}
+	},
+
+	mounted () {
+		$(document).ready(function ($) {
+			$('#add-meta-tag').click(function () {
+				$('#add-meta-tagContent').slideToggle('slow')
+				if ($('#add-meta-tag').text() == 'External Meta Tags') {
+					$('#add-meta-tag').html('External Meta Tags')
+				} else {
+					$('#add-meta-tag').text('External Meta Tags')
+				}
+			})
+
+			$('#pageSettings').click(function () {
+				$('#pageSettingsContent').slideToggle('slow')
+				if ($('#pageSettings').text() == 'Page Settings') {
+					$('#pageSettings').html('Page Settings')
+				} else {
+					$('#pageSettings').text('Page Settings')
+				}
+			})
+			$('#add-js-css').click(function () {
+				$('#add-js-cssContent').slideToggle('slow')
+				if ($('#add-js-css').text() == 'Add JS/CSS Links') {
+					$('#add-js-css').html('Add JS/CSS Links')
+				} else {
+					$('#add-js-css').text('Add JS/CSS Links')
+				}
+			})
+			$('#add-local-scripts').click(function () {
+				$('#add-local-scriptsContent').slideToggle('slow')
+				if ($('#add-local-scripts').text() == 'Add Local Scripts') {
+					$('#add-local-scripts').html('Add Local Scripts')
+				} else {
+					$('#add-local-scripts').text('Add Local Scripts')
+				}
+			})
+			$('#add-local-styles').click(function () {
+				$('#add-local-stylesContent').slideToggle('slow')
+				if ($('#add-local-styles').text() == 'Add Local Styles') {
+					$('#add-local-styles').html('Add Local Styles')
+				} else {
+					$('#add-local-styles').text('Add Local Styles')
+				}
+			})
+		})
+	}
 }
 </script>
 

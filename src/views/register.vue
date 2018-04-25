@@ -89,311 +89,301 @@
 <script>
 import Vue from 'vue'
 import VueSession from 'vue-session'
-Vue.use(VueSession)
 
 import axios from 'axios'
-const config = require('../config');
+Vue.use(VueSession)
+const config = require('../config')
 
 export default {
-  name: 'Register',
-  data () {
-    return {
-      form: {
-        fname: '',
-        lname: '',
-        email: '',
-        pass: '',
-        checkPass: '',
-        isLoading: false
-      },
-      authen: {
-        status: false,
-        success: 'Registration Success',
-        error: 'Registration Failed'
-      },
-      validEmail: false
-    }
-  },
-  methods: {
-    registerUser () {
+	name: 'Register',
+	data () {
+		return {
+			form: {
+				fname: '',
+				lname: '',
+				email: '',
+				pass: '',
+				checkPass: '',
+				isLoading: false
+			},
+			authen: {
+				status: false,
+				success: 'Registration Success',
+				error: 'Registration Failed'
+			},
+			validEmail: false
+		}
+	},
+	methods: {
+		registerUser () {
+			if (this.validEmail == true) {
+				$('.login').addClass('test')
+				setTimeout(function () {
+					$('.login').addClass('testtwo')
+				}, 300)
+				setTimeout(function () {
+					$('.authent').show().animate({right: -320}, {easing: 'easeOutQuint', duration: 600, queue: false })
+					$('.authent').animate({opacity: 1}, {duration: 200, queue: false }).addClass('visible')
+				}, 500)
+				setTimeout(function () {
 
-      if(this.validEmail == true){
-        $('.login').addClass('test')
-        setTimeout(function(){
-          $('.login').addClass('testtwo')
-        },300);
-        setTimeout(function(){
-          $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-        },500);
-        setTimeout(function(){
-          
-        },2500);
+				}, 2500)
 
+				axios.post(config.registerUrl, {
+					email: this.form.email.trim(),
+					password: this.form.pass.trim(),
+					firstname: this.form.fname.trim(),
+					lastname: this.form.lname.trim()
+				}, {
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+					}
+				}).then(response => {
+					if (response.data.code == 200) {
+						this.authen.status = true
+						let self = this
 
-        axios.post(config.registerUrl, {
-          email: this.form.email.trim(),
-          password: this.form.pass.trim(),
-          firstname: this.form.fname.trim(),
-          lastname: this.form.lname.trim(),
-        }, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-          }
-        }).then(response => {
+						$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
+						$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+						$('.login').removeClass('testtwo')
 
-          if(response.data.code == 200){
-            this.authen.status = true;
-            let self = this;
+						$('.login').removeClass('test')
+						$('.login div').fadeOut(123)
 
-            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-            $('.login').removeClass('testtwo')
+						$('.success').fadeIn()
 
-            $('.login').removeClass('test')
-            $('.login div').fadeOut(123);
+						setTimeout(function () {
+							self.$router.push('/login')
+						}, 2000)
+						// window.location = '/login'
+						// axios.post( config.baseURL + '/user-service', {
+						//     username : this.form.Uname,
+						//     password : this.form.pass,
+						//     email : this.form.email,
+						//     name : this.form.name
+						// }).then(response => {
+						//   // window.location = '/login';
+						//   // Create user Folder
+						//   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
+						//   // axios.post(config.baseURL+'/flows-dir-listing' , {
+						//   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
+						//   //   type : 'folder'
+						//   // })
+						//   // .then((res) => {
+						/// /   //   console.log('user Folder created!');
+						//   // })
+						//   // .catch((e)=>{
+						/// /   //   console.log("Error from pages"+res)
+						//   // });
+						//   this.authen.status = true;
+						//   let self = this;
+						//   setTimeout(function () {
+						//     self.$router.push('/login');
+						//   }, 2000);
+						// }).catch(error => {
+						//   this.authen.status = false;
+						//   this.authen.error = response.data;
+						// })
+					} else {
+						this.$message({
+							showClose: true,
+							message: 'Error: ' + response.data.error,
+							type: 'error'
+						})
 
-            $('.success').fadeIn();
+						console.log('Error: ', error.response)
+						this.authen.status = false
+						this.authen.error = error.response.data
 
-            setTimeout(function () {
-              self.$router.push('/login');
-            }, 2000);
-            // window.location = '/login'
-            // axios.post( config.baseURL + '/user-service', {
-            //     username : this.form.Uname,
-            //     password : this.form.pass,
-            //     email : this.form.email,
-            //     name : this.form.name                  
-            // }).then(response => {
-            //   // window.location = '/login';
-            //   // Create user Folder
-            //   //let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + this.formAddProjectFolder.projectName;
-            //   // axios.post(config.baseURL+'/flows-dir-listing' , {
-            //   //   foldername :'/var/www/html/websites/'+ this.form.Uname,
-            //   //   type : 'folder'
-            //   // })
-            //   // .then((res) => {
-            ////   //   console.log('user Folder created!');
-            //   // })
-            //   // .catch((e)=>{
-            ////   //   console.log("Error from pages"+res)
-            //   // });
-            //   this.authen.status = true;
-            //   let self = this;
-            //   setTimeout(function () {
-            //     self.$router.push('/login');
-            //   }, 2000);
-            // }).catch(error => {
-            //   this.authen.status = false;
-            //   this.authen.error = response.data;
-            // })
-          } else {
-            this.$message({
-                showClose: true,
-                message: 'Error: ' + response.data.error,
-                type: 'error'
-            });
+						$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
+						$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+						$('.login').removeClass('testtwo')
 
-            console.log('Error: ', error.response);
-            this.authen.status = false;
-            this.authen.error = error.response.data;
+						$('.login').removeClass('test')
+						$('.login div').fadeOut(123)
 
-            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-            $('.login').removeClass('testtwo')
+						$('.authent').fadeOut()
+						$('.login div').fadeIn()
+					}
+				}).catch(error => {
+					this.$message({
+						showClose: true,
+						message: 'Error: ' + error.response.data,
+						type: 'error'
+					})
 
-            $('.login').removeClass('test')
-            $('.login div').fadeOut(123);
+					console.log('Error: ', error.response)
+					this.authen.status = false
+					this.authen.error = error.response.data
 
-            $(".authent").fadeOut();
-            $('.login div').fadeIn();
-          }
-          
-        }).catch(error => {
-          this.$message({
-              showClose: true,
-              message: 'Error: ' + error.response.data,
-              type: 'error'
-          });
+					$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
+					$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+					$('.login').removeClass('testtwo')
 
-          console.log('Error: ', error.response);
-          this.authen.status = false;
-          this.authen.error = error.response.data;
+					$('.login').removeClass('test')
+					$('.login div').fadeOut(123)
 
-          $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-          $('.login').removeClass('testtwo')
+					$('.authent').fadeOut()
+					$('.login div').fadeIn()
+				})
+			} else {
+				this.$message({
+					showClose: true,
+					message: 'Please enter valid email',
+					type: 'error'
+				})
+			}
+		},
+		goToLandingPage () {
+			window.location = '/'
+		}
+	},
+	mounted () {
+		let self = this
 
-          $('.login').removeClass('test')
-          $('.login div').fadeOut(123);
+		$('input[type="submit"]').click(function () {
+			if (self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != '') {
+				if (self.form.pass == self.form.checkPass) {
+					self.registerUser()
+					// $('.login').addClass('test')
+					// setTimeout(function(){
+					//   $('.login').addClass('testtwo')
+					// },300);
+					// setTimeout(function(){
+					//   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+					//   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+					// },500);
+					// setTimeout(function(){
+					//   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+					//   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+					//   $('.login').removeClass('testtwo')
+					// },2500);
+					// setTimeout(function(){
+					//   $('.login').removeClass('test')
+					//   $('.login div').fadeOut(123);
+					// },2800);
+					// setTimeout(function(){
+					//   if(self.authen.status == true){
+					//     $('.success').fadeIn();
+					//   } else {
+					//     $(".authent").fadeOut();
+					//     $('.login div').fadeIn();
+					//     self.$message({
+					//         showClose: true,
+					//         message: self.authen.error,
+					//         type: 'error'
+					//     });
+					//   }
 
-          $(".authent").fadeOut();
-          $('.login div').fadeIn();
+					// },3200);
+				} else {
+					self.$message({
+						showClose: true,
+						message: 'Password and Confirm password didn\'t matched...',
+						type: 'error'
+					})
+				}
+			} else {
+				self.$message({
+					showClose: true,
+					message: 'Please Enter all Fields',
+					type: 'error'
+				})
+			}
+		})
 
-        })
-      } else {
-        this.$message({
-            showClose: true,
-            message: 'Please enter valid email',
-            type: 'error'
-        });
-      }
+		$('.input-fields').keyup(function (e) {
+			var code = e.which // recommended to use e.which, it's normalized across browsers
+			if (code == 13)e.preventDefault()
+			if (code == 32 || code == 13 || code == 188 || code == 186) {
+				if (self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != '') {
+					if (self.form.pass == self.form.checkPass) {
+						self.registerUser()
+						$('.login').addClass('test')
+						setTimeout(function () {
+							$('.login').addClass('testtwo')
+						}, 300)
+						setTimeout(function () {
+							$('.authent').show().animate({right: -320}, {easing: 'easeOutQuint', duration: 600, queue: false })
+							$('.authent').animate({opacity: 1}, {duration: 200, queue: false }).addClass('visible')
+						}, 500)
+						setTimeout(function () {
+							$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
+							$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+							$('.login').removeClass('testtwo')
+						}, 2500)
+						setTimeout(function () {
+							$('.login').removeClass('test')
+							$('.login div').fadeOut(123)
+						}, 2800)
+						setTimeout(function () {
+							if (self.authen.status == true) {
+								$('.success').fadeIn()
+							} else {
+								$('.authent').fadeOut()
+								$('.login div').fadeIn()
+								self.$message({
+									showClose: true,
+									message: self.authen.error,
+									type: 'error'
+								})
+							}
+						}, 3200)
+					} else {
+						self.$message({
+							showClose: true,
+							message: 'Password and Confirm password didn\'t matched...',
+							type: 'error'
+						})
+					}
+				} else {
+					self.$message({
+						showClose: true,
+						message: 'Please Enter all Fields',
+						type: 'error'
+					})
+				}
+			}
+		})
 
-      
-    },
-    goToLandingPage () {
-      window.location = '/';
-    }
-  },
-  mounted () {
-    let self = this;
+		$('input[type="text"],input[type="password"]').focus(function () {
+			$(this).prev().animate({'opacity': '1'}, 200)
+		})
+		$('input[type="text"],input[type="password"]').blur(function () {
+			$(this).prev().animate({'opacity': '.5'}, 200)
+		})
 
-    $('input[type="submit"]').click(function(){
-      if(self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != ''){
-        if(self.form.pass == self.form.checkPass){
-          self.registerUser();
-          // $('.login').addClass('test')
-          // setTimeout(function(){
-          //   $('.login').addClass('testtwo')
-          // },300);
-          // setTimeout(function(){
-          //   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          //   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-          // },500);
-          // setTimeout(function(){
-          //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-          //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-          //   $('.login').removeClass('testtwo')
-          // },2500);
-          // setTimeout(function(){
-          //   $('.login').removeClass('test')
-          //   $('.login div').fadeOut(123);
-          // },2800);
-          // setTimeout(function(){
-          //   if(self.authen.status == true){
-          //     $('.success').fadeIn();  
-          //   } else {
-          //     $(".authent").fadeOut();
-          //     $('.login div').fadeIn();
-          //     self.$message({
-          //         showClose: true,
-          //         message: self.authen.error,
-          //         type: 'error'
-          //     });
-          //   }
-            
-          // },3200);
-        } else{
-          self.$message({
-              showClose: true,
-              message: 'Password and Confirm password didn\'t matched...',
-              type: 'error'
-          });
-        }
-      } else {
-        self.$message({
-            showClose: true,
-            message: 'Please Enter all Fields',
-            type: 'error'
-        });
-      }
-    });
+		$('#txtEmail').blur(function () {
+			var userinput = $(this).val()
+			var pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
 
-    $('.input-fields').keyup(function(e){
+			if (!pattern.test(userinput)) {
+				self.$message({
+					showClose: true,
+					message: 'Please enter valid email',
+					type: 'error'
+				})
+				self.validEmail = false
+				$(this).val('')
+				// $(this).focus();
+			} else {
+				self.validEmail = true
+			}
 
-      var code = e.which; // recommended to use e.which, it's normalized across browsers
-      if(code==13)e.preventDefault();
-      if(code==32||code==13||code==188||code==186){
-        if(self.form.name != '' && self.form.Uname != '' && self.form.email != '' && self.form.pass != '' && self.form.checkPass != ''){
-          if(self.form.pass == self.form.checkPass){
-            self.registerUser();
-            $('.login').addClass('test')
-            setTimeout(function(){
-              $('.login').addClass('testtwo')
-            },300);
-            setTimeout(function(){
-              $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-              $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-            },500);
-            setTimeout(function(){
-              $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-              $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-              $('.login').removeClass('testtwo')
-            },2500);
-            setTimeout(function(){
-              $('.login').removeClass('test')
-              $('.login div').fadeOut(123);
-            },2800);
-            setTimeout(function(){
-              if(self.authen.status == true){
-                $('.success').fadeIn();  
-              } else {
-                $(".authent").fadeOut();
-                $('.login div').fadeIn();
-                self.$message({
-                    showClose: true,
-                    message: self.authen.error,
-                    type: 'error'
-                });
-              }
-              
-            },3200);
-          } else{
-            self.$message({
-                showClose: true,
-                message: 'Password and Confirm password didn\'t matched...',
-                type: 'error'
-            });
-          }
-        } else {
-          self.$message({
-              showClose: true,
-              message: 'Please Enter all Fields',
-              type: 'error'
-          });
-        }
-      }
-    });
+			// if(!pattern.test(userinput))
+			// {
+			//   alert('not a valid e-mail address');
+			// }
+		})
 
-    $('input[type="text"],input[type="password"]').focus(function(){
-      $(this).prev().animate({'opacity':'1'},200)
-    });
-    $('input[type="text"],input[type="password"]').blur(function(){
-      $(this).prev().animate({'opacity':'.5'},200)
-    });
-
-    $('#txtEmail').blur(function(){
-      var userinput = $(this).val();
-      var pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
-
-      if(!pattern.test(userinput)){
-        self.$message({
-            showClose: true,
-            message: 'Please enter valid email',
-            type: 'error'
-        });
-        self.validEmail = false;
-        $(this).val("");
-        // $(this).focus();
-      } else {
-        self.validEmail = true;
-      }
-
-
-      // if(!pattern.test(userinput))
-      // {
-      //   alert('not a valid e-mail address');
-      // }​
-    });
-
-    $('input[type="text"],input[type="password"]').keyup(function(){
-      if(!$(this).val() == ''){
-        $(this).next().animate({'opacity':'1','right' : '30'},200)
-      } else {
-        $(this).next().animate({'opacity':'0','right' : '20'},200)
-      }
-    });
-  }
+		$('input[type="text"],input[type="password"]').keyup(function () {
+			if (!$(this).val() == '') {
+				$(this).next().animate({'opacity': '1', 'right': '30'}, 200)
+			} else {
+				$(this).next().animate({'opacity': '0', 'right': '20'}, 200)
+			}
+		})
+	}
 }
 </script>
 

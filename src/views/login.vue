@@ -108,452 +108,442 @@
 <script>
 import Vue from 'vue'
 import VueSession from 'vue-session'
- 
+
+import axios from 'axios'
+import psl from 'psl'
+import Cookies from 'js-cookie'
+
 Vue.use(VueSession)
 
-import axios from 'axios';
-import psl from 'psl';
-import Cookies from 'js-cookie';
-
-
-
-const config = require('../config');
+const config = require('../config')
 
 export default {
-  name: 'Login',
-  data () {
-    return {
-      form: {
-        user: '',
-        pass: ''
-      },
-      authen: {
-        status: false,
-        success: 'Authentication Success',
-        error: 'Authentication Failed'
-      },
-      facebookSuccessCallbackUrl : config.facebookSuccessCallbackUrl,
+	name: 'Login',
+	data () {
+		return {
+			form: {
+				user: '',
+				pass: ''
+			},
+			authen: {
+				status: false,
+				success: 'Authentication Success',
+				error: 'Authentication Failed'
+			},
+			facebookSuccessCallbackUrl: config.facebookSuccessCallbackUrl,
 
-      googleSuccessCallbackUrl : config.googleSuccessCallbackUrl,
-      googleFailureCallbackUrl : config.googleFailureCallbackUrl,
+			googleSuccessCallbackUrl: config.googleSuccessCallbackUrl,
+			googleFailureCallbackUrl: config.googleFailureCallbackUrl,
 
-      twitterSuccessCallbackUrl: config.twitterSuccessCallbackUrl,
-      twitterFailureCallbackUrl: config.twitterFailureCallbackUrl,
+			twitterSuccessCallbackUrl: config.twitterSuccessCallbackUrl,
+			twitterFailureCallbackUrl: config.twitterFailureCallbackUrl,
 
-      githubSuccessCallbackUrl: config.githubSuccessCallbackUrl,
-      githubFailureCallbackUrl: config.githubFailureCallbackUrl,
+			githubSuccessCallbackUrl: config.githubSuccessCallbackUrl,
+			githubFailureCallbackUrl: config.githubFailureCallbackUrl,
 
-      linkedInSuccessCallbackUrl: config.linkedInSuccessCallbackUrl,
-      linkedInFailureCallbackUrl: config.linkedInFailureCallbackUrl,
+			linkedInSuccessCallbackUrl: config.linkedInSuccessCallbackUrl,
+			linkedInFailureCallbackUrl: config.linkedInFailureCallbackUrl,
 
-      loginWithFacebookUrl : config.loginWithFacebookUrl,
-      loginWithGoogleUrl : config.loginWithGoogleUrl,
-      loginWithTwitterUrl: config.loginWithTwitterUrl,
-      loginWithGithubUrl: config.loginWithGithubUrl,
-      loginWithLinkedInUrl: config.loginWithLinkedInUrl,
-      userDetailId: '',
-      isLdapLogin: false
-    }
-  },
-  component: {
-  },
-  methods: {
-    authenticate () {
-      //console.log('Authenticating User');
+			loginWithFacebookUrl: config.loginWithFacebookUrl,
+			loginWithGoogleUrl: config.loginWithGoogleUrl,
+			loginWithTwitterUrl: config.loginWithTwitterUrl,
+			loginWithGithubUrl: config.loginWithGithubUrl,
+			loginWithLinkedInUrl: config.loginWithLinkedInUrl,
+			userDetailId: '',
+			isLdapLogin: false
+		}
+	},
+	component: {
+	},
+	methods: {
+		authenticate () {
+			// console.log('Authenticating User');
 
-      $('.login').addClass('test')
-      setTimeout(function(){
-        $('.login').addClass('testtwo')
-      },300);
-      setTimeout(function(){
-        $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-      },500);
-      setTimeout(function(){
-        
-      },2500);
-      // setTimeout(function(){
-        
-      // },2800);
+			$('.login').addClass('test')
+			setTimeout(function () {
+				$('.login').addClass('testtwo')
+			}, 300)
+			setTimeout(function () {
+				$('.authent').show().animate({right: -320}, {easing: 'easeOutQuint', duration: 600, queue: false })
+				$('.authent').animate({opacity: 1}, {duration: 200, queue: false }).addClass('visible')
+			}, 500)
+			setTimeout(function () {
 
-      let loginNowUrl;
+			}, 2500)
+			// setTimeout(function(){
 
-      if(this.isLdapLogin === true){
-        loginNowUrl = config.ldapUrl;
-      } else {
-        loginNowUrl = config.loginUrl;
-      }
+			// },2800);
 
-      console.log('Login URL: ', loginNowUrl);
+			let loginNowUrl
 
-      axios.post(loginNowUrl, {
-        password: this.form.pass,
-        email: this.form.user
-      }, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        }
-      }).then(async response => {
-        if (response.data) {
-          this.$session.start()
-          this.$session.set('token', response.data.logintoken);
-          // localStorage.setItem("auth_token", response.data.logintoken);
+			if (this.isLdapLogin === true) {
+				loginNowUrl = config.ldapUrl
+			} else {
+				loginNowUrl = config.loginUrl
+			}
 
-          // Set email Session
-          //console.log('User Details: ', response.data);
-          axios.get(config.userDetail, {
-            headers: {
-              'Authorization' : response.data.logintoken
-            }   
-          })
-          .then(async (res) => {
-            this.userDetailId = res.data.data._id;
+			console.log('Login URL: ', loginNowUrl)
 
-            // Store Token in Cookie
-            let location = psl.parse(window.location.hostname)
-            location = location.domain === null ? location.input : location.domain
-            Cookies.set('auth_token', response.data.logintoken, {domain: location});
-            Cookies.set('email', res.data.data.email, {domain: location});
-            Cookies.set('userDetailId',  this.userDetailId, {domain: location});
-            
-            localStorage.setItem('userDetailId', this.userDetailId);
-            localStorage.setItem('email', res.data.data.email);
+			axios.post(loginNowUrl, {
+				password: this.form.pass,
+				email: this.form.user
+			}, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+				}
+			}).then(async response => {
+				if (response.data) {
+					this.$session.start()
+					this.$session.set('token', response.data.logintoken)
+					// localStorage.setItem("auth_token", response.data.logintoken);
 
-            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-            $('.login').removeClass('testtwo')
+					// Set email Session
+					// console.log('User Details: ', response.data);
+					axios.get(config.userDetail, {
+						headers: {
+							'Authorization': response.data.logintoken
+						}
+					})
+						.then(async (res) => {
+							this.userDetailId = res.data.data._id
 
-            $('.login').removeClass('test')
-            $('.login div').fadeOut(123);
+							// Store Token in Cookie
+							let location = psl.parse(window.location.hostname)
+							location = location.domain === null ? location.input : location.domain
+							Cookies.set('auth_token', response.data.logintoken, {domain: location})
+							Cookies.set('email', res.data.data.email, {domain: location})
+							Cookies.set('userDetailId', this.userDetailId, {domain: location})
 
-            $('.success').fadeIn();  
+							localStorage.setItem('userDetailId', this.userDetailId)
+							localStorage.setItem('email', res.data.data.email)
 
-            // create user folder
-            // await axios.post(config.baseURL+'/flows-dir-listing' , {
-            //   foldername :'/var/www/html/websites/'+ this.userDetailId,
-            //   type : 'folder'
-            // })
-            // .then((res) => {
-            //   this.$router.push('/editor');
-            // });
+							$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
+							$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+							$('.login').removeClass('testtwo')
 
-            window.location = '/editor';
-            
-          })
-          .catch((e) => {
-            console.log(e)
-            
-            $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-            $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-            $('.login').removeClass('testtwo')
+							$('.login').removeClass('test')
+							$('.login div').fadeOut(123)
 
-            $('.login').removeClass('test')
-            $('.login div').fadeOut(123);
+							$('.success').fadeIn()
 
-            $(".authent").fadeOut();
-            $('.login div').fadeIn();
+							// create user folder
+							// await axios.post(config.baseURL+'/flows-dir-listing' , {
+							//   foldername :'/var/www/html/websites/'+ this.userDetailId,
+							//   type : 'folder'
+							// })
+							// .then((res) => {
+							//   this.$router.push('/editor');
+							// });
 
-            this.$message({
-                showClose: true,
-                message: 'Error: ' + e.response.data,
-                type: 'error'
-            });
-          })
-          
-          // this.$router.push('/');
-          this.authen.status = true;
+							window.location = '/editor'
+						})
+						.catch((e) => {
+							console.log(e)
 
-          
-          // await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
-          // }).then(response => {
-          //   if (response.data) {
-          //       this.$session.set('privateToken', response.data.private_token);
-          //       this.$session.set('userId', response.data.id);
-          //       this.$session.set('username', response.data.username);
-          //       this.authen.status = true;
+							$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
+							$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+							$('.login').removeClass('testtwo')
 
-          //       // axios.post(config.baseURL+'/flows-dir-listing' , {
-          //       //   foldername :'/var/www/html/websites/'+ this.$session.get('username'),
-          //       //   type : 'folder'
-          //       // })
-          //       // .then((res) => {
-          ////       //   console.log('user Folder created!');
-          //       // })
+							$('.login').removeClass('test')
+							$('.login div').fadeOut(123)
 
-          //       let self = this;
-          //       setTimeout(function () {
-          //         self.$router.push('/editor');
-          //       }, 2000);
-                
-          //   }
-          // }).catch(error => {
-          ////   console.log(error);
-          //   this.authen.status = false;
-          //   // this.$notify.error({
-          //   //   title: 'Error',
-          //   //   message: error.response.data,
-          //   //   offset: 100
-          //   // });
-          // })
-        }
-        
-      }).catch(error => {
-        this.authen.status = false;
+							$('.authent').fadeOut()
+							$('.login div').fadeIn()
 
-        // let self = this;
+							this.$message({
+								showClose: true,
+								message: 'Error: ' + e.response.data,
+								type: 'error'
+							})
+						})
 
-        // setTimeout(function(){
-        //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-        //   $('.login').removeClass('testtwo')
+					// this.$router.push('/');
+					this.authen.status = true
 
-        //   $('.login').removeClass('test')
-        //   $('.login div').fadeOut(123);
+					// await axios.get( config.baseURL + '/user-service?email=' + this.form.user + '&password=' + this.form.pass, {
+					// }).then(response => {
+					//   if (response.data) {
+					//       this.$session.set('privateToken', response.data.private_token);
+					//       this.$session.set('userId', response.data.id);
+					//       this.$session.set('username', response.data.username);
+					//       this.authen.status = true;
 
-        //   $(".authent").fadeOut();
-        //   $('.login div').fadeIn();
+					//       // axios.post(config.baseURL+'/flows-dir-listing' , {
+					//       //   foldername :'/var/www/html/websites/'+ this.$session.get('username'),
+					//       //   type : 'folder'
+					//       // })
+					//       // .then((res) => {
+					/// /       //   console.log('user Folder created!');
+					//       // })
 
-        //   if(error.response.status == 404){
-        //     self.$message({
-        //         showClose: true,
-        //         message: 'Invalid Credentials',
-        //         type: 'error'
-        //     });
-        //   } else {
-        //     self.$message({
-        //         showClose: true,
-        //         message: 'Error: ' + error.response.data,
-        //         type: 'error'
-        //     });
-        //   }
-        // }, 500)
+					//       let self = this;
+					//       setTimeout(function () {
+					//         self.$router.push('/editor');
+					//       }, 2000);
 
-        $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-        $('.login').removeClass('testtwo')
+					//   }
+					// }).catch(error => {
+					/// /   console.log(error);
+					//   this.authen.status = false;
+					//   // this.$notify.error({
+					//   //   title: 'Error',
+					//   //   message: error.response.data,
+					//   //   offset: 100
+					//   // });
+					// })
+				}
+			}).catch(error => {
+				this.authen.status = false
 
-        $('.login').removeClass('test')
-        $('.login div').fadeOut(123);
+				// let self = this;
 
-        $(".authent").fadeOut();
-        $('.login div').fadeIn();
-        // $('.login div').fadeIn();
+				// setTimeout(function(){
+				//   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+				//   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+				//   $('.login').removeClass('testtwo')
 
-        // console.log(error.response);
+				//   $('.login').removeClass('test')
+				//   $('.login div').fadeOut(123);
 
-        if(error.response.status == 404){
-          this.$message({
-              showClose: true,
-              message: 'Invalid Credentials',
-              type: 'error'
-          });
-        } else {
-          this.$message({
-              showClose: true,
-              message: 'Error: ' + error.response.data,
-              type: 'error'
-          });
-        }
+				//   $(".authent").fadeOut();
+				//   $('.login div').fadeIn();
 
-        
+				//   if(error.response.status == 404){
+				//     self.$message({
+				//         showClose: true,
+				//         message: 'Invalid Credentials',
+				//         type: 'error'
+				//     });
+				//   } else {
+				//     self.$message({
+				//         showClose: true,
+				//         message: 'Error: ' + error.response.data,
+				//         type: 'error'
+				//     });
+				//   }
+				// }, 500)
 
-        // let self = this;
-        // setTimeout(function(){
-          
-        // }, 2000);
+				$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
+				$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+				$('.login').removeClass('testtwo')
 
-        console.log('Error: ', error);
+				$('.login').removeClass('test')
+				$('.login div').fadeOut(123)
 
-        // this.$notify.error({
-        //   title: 'Error',
-        //   message: error.response.data,
-        //   offset: 100
-        // });
-      })
-    },
+				$('.authent').fadeOut()
+				$('.login div').fadeIn()
+				// $('.login div').fadeIn();
 
-    doFacebookLogin () {
-      //console.log('Facebook Login');
-      document.getElementById('form-facebook').submit();
-    },
+				// console.log(error.response);
 
-    doGooglePlusLogin () {
-      //console.log('Google Login');
-      document.getElementById('form-google').submit();
-    },
+				if (error.response.status == 404) {
+					this.$message({
+						showClose: true,
+						message: 'Invalid Credentials',
+						type: 'error'
+					})
+				} else {
+					this.$message({
+						showClose: true,
+						message: 'Error: ' + error.response.data,
+						type: 'error'
+					})
+				}
 
-    doTwitterLogin () {
-      //console.log('Twitter Login');
-      document.getElementById('form-twitter').submit();
-    },
+				// let self = this;
+				// setTimeout(function(){
 
-    doGithubLogin () {
-      //console.log('Github Login');
-      document.getElementById('form-github').submit();
-    },
+				// }, 2000);
 
-    doLinkedInLogin () {
-      //console.log('LinkedIn Login');
-      document.getElementById('form-linkedIn').submit();
-    },
+				console.log('Error: ', error)
 
-    checkLdapLogin () {
-      this.isLdapLogin = $('#ldapCheckbox').prop('checked');
-    },
+				// this.$notify.error({
+				//   title: 'Error',
+				//   message: error.response.data,
+				//   offset: 100
+				// });
+			})
+		},
 
-    goToLandingPage () {
-      window.location = '/';
-    }
-  },
-  created () {
-    $('.login div').fadeIn();
-    // Check if login token in cookie exist or not
-    if(Cookies.get('auth_token')){
-      // Set email Session
-      axios.get(config.userDetail, {
-        headers: {
-          'Authorization' : Cookies.get('auth_token')
-        }   
-      })
-      .then(async (res) => {
-        this.userDetailId = res.data.data._id;
+		doFacebookLogin () {
+			// console.log('Facebook Login');
+			document.getElementById('form-facebook').submit()
+		},
 
-        // Store Token in Cookie
-        let location = psl.parse(window.location.hostname)
-        location = location.domain === null ? location.input : location.domain
+		doGooglePlusLogin () {
+			// console.log('Google Login');
+			document.getElementById('form-google').submit()
+		},
 
-        Cookies.set('email', res.data.data.email, {domain: location});
-        Cookies.set('userDetailId',  this.userDetailId, {domain: location});
-        
-        localStorage.setItem('userDetailId', this.userDetailId);
-        localStorage.setItem('email', res.data.data.email);
+		doTwitterLogin () {
+			// console.log('Twitter Login');
+			document.getElementById('form-twitter').submit()
+		},
 
-        await axios.post(config.baseURL+'/flows-dir-listing' , {
-          foldername :'/var/www/html/websites/'+ this.userDetailId,
-          type : 'folder'
-        })
-        .then((res) => {
-          this.$router.push('/editor');
-          //console.log('user Folder created!');
-        });
-        
-      })
-      .catch((e) => {
-        console.log(e)
-        this.$message({
-          showClose: true,
-            message: 'Invalid Token',
-            type: 'error'
-        });
-      })
-    } else {
-      console.log('Token Not found. Please Login.');
-      $('.login div').fadeIn();
-    }
-  },
-  mounted () {
+		doGithubLogin () {
+			// console.log('Github Login');
+			document.getElementById('form-github').submit()
+		},
 
-    let self = this;
+		doLinkedInLogin () {
+			// console.log('LinkedIn Login');
+			document.getElementById('form-linkedIn').submit()
+		},
 
-    $('.input-fields').keyup(function(e){ 
-        var code = e.which; // recommended to use e.which, it's normalized across browsers
-        if(code==13)e.preventDefault();
-        if(code==32||code==13||code==188||code==186){
-            if(self.form.user != '' && self.form.pass != ''){
-              self.authenticate();
-              
-              // setTimeout(function(){
-              //   if(self.authen.status == true){
-              //     $('.success').fadeIn();  
-              //   } else {
-              //     $(".authent").fadeOut();
-              //     $('.login div').fadeIn();
-              //     self.$message({
-              //         showClose: true,
-              //         message: 'Username Password did not matched..',
-              //         type: 'error'
-              //     });
-              //   }
-                
-              // },3200);
-            } else {
-              self.$message({
-                  showClose: true,
-                  message: 'Please Enter all Fields',
-                  type: 'error'
-              });
-            }
-        } // missing closing if brace
-    });
+		checkLdapLogin () {
+			this.isLdapLogin = $('#ldapCheckbox').prop('checked')
+		},
 
-    $('input[type="submit"]').click(function(){
-      if(self.form.user != '' && self.form.pass != ''){
-        self.authenticate();
-        // $('.login').addClass('test')
-        // setTimeout(function(){
-        //   $('.login').addClass('testtwo')
-        // },300);
-        // setTimeout(function(){
-        //   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        //   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
-        // },500);
-        // setTimeout(function(){
-        //   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
-        //   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
-        //   $('.login').removeClass('testtwo')
-        // },2500);
-        // setTimeout(function(){
-        //   $('.login').removeClass('test')
-        //   $('.login div').fadeOut(123);
-        // },2800);
-        // setTimeout(function(){
-        //   if(self.authen.status == true){
-        //     $('.success').fadeIn();  
-        //   } else {
-        //     $(".authent").fadeOut();
-        //     $('.login div').fadeIn();
-        //     self.$message({
-        //         showClose: true,
-        //         message: 'Username Password did not matched..',
-        //         type: 'error'
-        //     });
-        //   }
-          
-        // },3200);
-      } else {
-        self.$message({
-            showClose: true,
-            message: 'Please Enter all Fields',
-            type: 'error'
-        });
-      }
-    });
+		goToLandingPage () {
+			window.location = '/'
+		}
+	},
+	created () {
+		$('.login div').fadeIn()
+		// Check if login token in cookie exist or not
+		if (Cookies.get('auth_token')) {
+			// Set email Session
+			axios.get(config.userDetail, {
+				headers: {
+					'Authorization': Cookies.get('auth_token')
+				}
+			})
+				.then(async (res) => {
+					this.userDetailId = res.data.data._id
 
-    $('input[type="text"],input[type="password"]').focus(function(){
-      $(this).prev().animate({'opacity':'1'},200)
-    });
-    $('input[type="text"],input[type="password"]').blur(function(){
-      $(this).prev().animate({'opacity':'.5'},200)
-    });
+					// Store Token in Cookie
+					let location = psl.parse(window.location.hostname)
+					location = location.domain === null ? location.input : location.domain
 
-    $('input[type="text"],input[type="password"]').keyup(function(){
-      if(!$(this).val() == ''){
-        $(this).next().animate({'opacity':'1','right' : '30'},200)
-      } else {
-        $(this).next().animate({'opacity':'0','right' : '20'},200)
-      }
-    });
+					Cookies.set('email', res.data.data.email, {domain: location})
+					Cookies.set('userDetailId', this.userDetailId, {domain: location})
 
-    // var open = 0;
-    // $('.tab').click(function(){
-    //   $(this).fadeOut(200,function(){
-    //     $(this).parent().animate({'left':'0'})
-    //   });
-    // });
+					localStorage.setItem('userDetailId', this.userDetailId)
+					localStorage.setItem('email', res.data.data.email)
 
-    $('.login div').fadeIn();
+					await axios.post(config.baseURL + '/flows-dir-listing', {
+						foldername: '/var/www/html/websites/' + this.userDetailId,
+						type: 'folder'
+					})
+						.then((res) => {
+							this.$router.push('/editor')
+							// console.log('user Folder created!');
+						})
+				})
+				.catch((e) => {
+					console.log(e)
+					this.$message({
+						showClose: true,
+						message: 'Invalid Token',
+						type: 'error'
+					})
+				})
+		} else {
+			console.log('Token Not found. Please Login.')
+			$('.login div').fadeIn()
+		}
+	},
+	mounted () {
+		let self = this
 
-  }
+		$('.input-fields').keyup(function (e) {
+			var code = e.which // recommended to use e.which, it's normalized across browsers
+			if (code == 13)e.preventDefault()
+			if (code == 32 || code == 13 || code == 188 || code == 186) {
+				if (self.form.user != '' && self.form.pass != '') {
+					self.authenticate()
+
+					// setTimeout(function(){
+					//   if(self.authen.status == true){
+					//     $('.success').fadeIn();
+					//   } else {
+					//     $(".authent").fadeOut();
+					//     $('.login div').fadeIn();
+					//     self.$message({
+					//         showClose: true,
+					//         message: 'Username Password did not matched..',
+					//         type: 'error'
+					//     });
+					//   }
+
+					// },3200);
+				} else {
+					self.$message({
+						showClose: true,
+						message: 'Please Enter all Fields',
+						type: 'error'
+					})
+				}
+			} // missing closing if brace
+		})
+
+		$('input[type="submit"]').click(function () {
+			if (self.form.user != '' && self.form.pass != '') {
+				self.authenticate()
+				// $('.login').addClass('test')
+				// setTimeout(function(){
+				//   $('.login').addClass('testtwo')
+				// },300);
+				// setTimeout(function(){
+				//   $(".authent").show().animate({right:-320},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+				//   $(".authent").animate({opacity: 1},{duration: 200, queue: false }).addClass('visible');
+				// },500);
+				// setTimeout(function(){
+				//   $(".authent").show().animate({right:90},{easing : 'easeOutQuint' ,duration: 600, queue: false });
+				//   $(".authent").animate({opacity: 0},{duration: 200, queue: false }).addClass('visible');
+				//   $('.login').removeClass('testtwo')
+				// },2500);
+				// setTimeout(function(){
+				//   $('.login').removeClass('test')
+				//   $('.login div').fadeOut(123);
+				// },2800);
+				// setTimeout(function(){
+				//   if(self.authen.status == true){
+				//     $('.success').fadeIn();
+				//   } else {
+				//     $(".authent").fadeOut();
+				//     $('.login div').fadeIn();
+				//     self.$message({
+				//         showClose: true,
+				//         message: 'Username Password did not matched..',
+				//         type: 'error'
+				//     });
+				//   }
+
+				// },3200);
+			} else {
+				self.$message({
+					showClose: true,
+					message: 'Please Enter all Fields',
+					type: 'error'
+				})
+			}
+		})
+
+		$('input[type="text"],input[type="password"]').focus(function () {
+			$(this).prev().animate({'opacity': '1'}, 200)
+		})
+		$('input[type="text"],input[type="password"]').blur(function () {
+			$(this).prev().animate({'opacity': '.5'}, 200)
+		})
+
+		$('input[type="text"],input[type="password"]').keyup(function () {
+			if (!$(this).val() == '') {
+				$(this).next().animate({'opacity': '1', 'right': '30'}, 200)
+			} else {
+				$(this).next().animate({'opacity': '0', 'right': '20'}, 200)
+			}
+		})
+
+		// var open = 0;
+		// $('.tab').click(function(){
+		//   $(this).fadeOut(200,function(){
+		//     $(this).parent().animate({'left':'0'})
+		//   });
+		// });
+
+		$('.login div').fadeIn()
+	}
 }
 </script>
 

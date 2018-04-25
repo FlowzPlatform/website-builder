@@ -98,116 +98,112 @@
 // import $ from 'jquery'
 
 import axios from 'axios'
-
-const config = require('../config');
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 
 import domenu from 'domenu'
 
-	export default {
-		name: 'menuBuilder',
-		data: () => ({
-      outputJson: [],
-      MenuJSON: [],
-      menuBaseUrl: 'search.html?SearchSensor="',
-      fetchDataLoader: false,
-      pageList: [],
-      categoriesList: []
-    }),
-    components: {
-    },
-		async created () {
-			let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-			let urlparts = configFileUrl.split("/");
-			let fileNameOrginal = urlparts[urlparts.length - 1];
-			let fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-			let fileNameParts = fileNameOrginal.split('.');
-			let actualFileNameOnly = fileNameParts[0];
-			var folderUrl = configFileUrl.replace(fileName, '');
+const config = require('../config')
 
-			let configData = await axios.get( config.baseURL + '/project-configuration/' + urlparts[6], )
+export default {
+	name: 'menuBuilder',
+	data: () => ({
+		outputJson: [],
+		MenuJSON: [],
+		menuBaseUrl: 'search.html?SearchSensor="',
+		fetchDataLoader: false,
+		pageList: [],
+		categoriesList: []
+	}),
+	components: {
+	},
+	async created () {
+		let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, '\/')
+		let urlparts = configFileUrl.split('/')
+		let fileNameOrginal = urlparts[urlparts.length - 1]
+		let fileName = '/' + urlparts[urlparts.length - 3] + '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1]
+		let fileNameParts = fileNameOrginal.split('.')
+		let actualFileNameOnly = fileNameParts[0]
+		var folderUrl = configFileUrl.replace(fileName, '')
+
+		let configData = await axios.get(config.baseURL + '/project-configuration/' + urlparts[6])
 			.catch(function (error) {
-			    console.log(error);
-			});
+			    console.log(error)
+			})
 
-			let allPages = configData.data.configData[1].pageSettings;
-			for(let i = 0; i < allPages.length; i++){
-				this.pageList.push({
-					pageName: allPages[i].PageName,
-					pageLink: allPages[i].PageName
-				})
+		let allPages = configData.data.configData[1].pageSettings
+		for (let i = 0; i < allPages.length; i++) {
+			this.pageList.push({
+				pageName: allPages[i].PageName,
+				pageLink: allPages[i].PageName
+			})
+		}
+
+		await this.fetchMenuData()
+
+		let menuData
+
+		try {
+		    	let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json').catch((err) => { console.log('Error:', err) })
+			if (responseConfig.data) {
+				menuData = responseConfig.data
+				this.initMenu(menuData)
+			} else {
+				menuData = [{'id': 1, 'title': 'Home', 'customSelect': 'index.html', '__domenu_params': {}, 'select2ScrollPosition': {'x': 0, 'y': 0}}]
+				this.initMenu(menuData)
 			}
+		} catch (err) {
+			menuData = '[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]'
+			this.initMenu(menuData)
+		}
+	},
 
-			await this.fetchMenuData();
+	methods: {
+		initMenu (menuData) {
+			let montedself = this
 
-			let menuData;
-
-			try {
-		    	let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json').catch((err)=>{ console.log('Error:', err); });
-				if(responseConfig.data){
-					menuData = responseConfig.data;
-					this.initMenu(menuData);
-				} else {
-					menuData = [{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}];
-					this.initMenu(menuData);	
-				}
-			}
-			catch(err) {
-				menuData = '[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]';
-				this.initMenu(menuData);
-			}
-
-			
-		},
-
-		methods: {
-			initMenu(menuData){
-
-				let montedself = this;
-
-				var $domenu        = $('#domenu-1'),
-		        domenu             = $('#domenu-1').domenu(),
-		        $outputContainer   = $('#domenu-1-output'),
-		        $jsonOutput        = $outputContainer.find('.jsonOutput'),
-		        $keepChanges       = $outputContainer.find('.keepChanges'),
-		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
+			var $domenu = $('#domenu-1'),
+		        domenu = $('#domenu-1').domenu(),
+		        $outputContainer = $('#domenu-1-output'),
+		        $jsonOutput = $outputContainer.find('.jsonOutput'),
+		        $keepChanges = $outputContainer.find('.keepChanges'),
+		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage')
 
 				    $domenu.domenu({
 			        slideAnimationDuration: 0,
 			        allowListMerging: ['domenu-2'],
-			        select2:                {
+			        select2: {
 			          support: true,
-			          params:  {
+			          params: {
 			            tags: true
 			          }
 			        },
 			        data: menuData
 			      })
 			      // Example: initializing functionality of a custom button #21
-			      .onCreateItem(function(blueprint) {
+			      .onCreateItem(function (blueprint) {
 			        // We look with jQuery for our custom button we denoted with class "custom-button-example"
 			        // Note 1: blueprint holds a reference of the element which is about to be added the list
-			        var customButton = $(blueprint).find('.custom-button-example');
+			        var customButton = $(blueprint).find('.custom-button-example')
 
 			        // Here we define our custom functionality for the button,
 			        // we will forward the click to .dd3-content span and let
 			        // doMenu handle the rest
-			        customButton.click(function() {
-			          blueprint.find('.dd3-content span').first().click();
-			        });
+			        customButton.click(function () {
+			          blueprint.find('.dd3-content span').first().click()
+			        })
 			      })
 			      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
 			      // initialize the functionality our custom button
 			      .parseJson()
-			      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
-			        $jsonOutput.val(domenu.toJson());
-			        montedself.outputJson = JSON.parse(domenu.toJson());
+			      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function (a, b, c) {
+			        $jsonOutput.val(domenu.toJson())
+			        montedself.outputJson = JSON.parse(domenu.toJson())
 			      })
-			      .onToJson(function() {
-			      });
+			      .onToJson(function () {
+			      })
 
 			    // Init textarea
-			    $jsonOutput.val(domenu.toJson());
+			    $jsonOutput.val(domenu.toJson())
 
 			    // var $optionGroup = $("#customSelect").find('optgroup[label="Categories"]');
 
@@ -217,54 +213,52 @@ import domenu from 'domenu'
 					  //   $optionGroup.append('<option value="' + this.categoriesList[i].categoryLink + '">' + this.categoriesList[i].categoryName + '</option>');
 				   //  }
 			    // }
-			  
-			},
-			
-			getMenuJson: function () {
-				this.$store.state.content = $('.jsonOutput').val();
-			},
+		},
 
-			async fetchMenuData () {
+		getMenuJson: function () {
+			this.$store.state.content = $('.jsonOutput').val()
+		},
 
-				// this.fetchDataLoader = true;
+		async fetchMenuData () {
+			// this.fetchDataLoader = true;
 
-				let menuData;
-				let vid = '';
+			let menuData
+			let vid = ''
 
-				let folderPath = this.$store.state.fileUrl.replace(/\\/g, "\/");
-				let folderName = folderPath.split('/')[6];
+			let folderPath = this.$store.state.fileUrl.replace(/\\/g, '\/')
+			let folderName = folderPath.split('/')[6]
 
-				await axios.get(config.baseURL + '/project-configuration/' + folderName , {
-				})
+			await axios.get(config.baseURL + '/project-configuration/' + folderName, {
+			})
 				.then(function (response) {
-				    let configs = response.data.configData;
-				    vid = configs[1].projectSettings[0].ProjectVId.vid;
+				    let configs = response.data.configData
+				    vid = configs[1].projectSettings[0].ProjectVId.vid
 				})
 				.catch(function (error) {
-				    console.log(error);
+				    console.log(error)
 				    // this.fetchDataLoader = false;
-				});
+				})
 
-				if(vid){
-					await axios.get(config.menuCategoriesUrl, {
+			if (vid) {
+				await axios.get(config.menuCategoriesUrl, {
 				    headers: {
 				    	Authorization: Cookies.get('auth_token'),
 				    	vid: vid
 				    }
-					})
+				})
 					.then((res) => {
-						let menuJson = [];
-				    let categories = res.data.aggregations.group_by_category.buckets;
+						let menuJson = []
+				    let categories = res.data.aggregations.group_by_category.buckets
 
-				    for(let i = 0; i < categories.length; i++){
-				    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-') + '"';
+				    for (let i = 0; i < categories.length; i++) {
+				    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-') + '"'
 
 				    	this.categoriesList.push({
 				    		categoryName: categories[i].key.toUpperCase(),
 				    		categoryLink: this.menuBaseUrl + urlName
-				    	});
+				    	})
 
-				      //let menuItem = {
+				      // let menuItem = {
 							// 			    "id": i,
 							// 			    "title": categories[i].key.toUpperCase(),
 							// 			    "customSelect": this.menuBaseUrl + urlName,
@@ -275,7 +269,7 @@ import domenu from 'domenu'
 							// 			    }
 							// 			};
 
-							// menuJson.push(menuItem);								
+							// menuJson.push(menuItem);
 			    	}
 
 			    	// menuData = JSON.stringify(menuJson);
@@ -287,20 +281,20 @@ import domenu from 'domenu'
 				        showClose: true,
 				        message: 'Failed! Please try again.',
 				        type: 'error'
-				    });
-				    console.log(e);
+				    })
+				    console.log(e)
 				    // this.fetchDataLoader = false;
 					})
-				} else {
-					this.$message({
+			} else {
+				this.$message({
 				        showClose: true,
 				        message: 'Please set "VID" in Project settings to get all of your category list.',
 				        type: 'info'
-				    });
-				}
+				    })
 			}
 		}
 	}
+}
 </script>
 
 

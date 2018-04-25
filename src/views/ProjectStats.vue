@@ -220,388 +220,381 @@
 
 import Vue from 'vue'
 import VueSession from 'vue-session'
+
+import axios from 'axios'
+import Cookies from 'js-cookie'
 Vue.use(VueSession)
 
-import axios from 'axios';
-import Cookies from 'js-cookie';
-
-const config = require('../config');
+const config = require('../config')
 
 export default {
-  name: 'ProjectStats',
-  props: {
-    options: {
-      type: Object
-    }
-  },
-  data () {
-    return {
-      websiteName: '',
-      newRepoId: '',
-      repoName: '',
-      seoTitle: '',
-      seoKeywords: '',
-      seoDesc: '',
-      tablePagesData: [],
-      counts: {
-        layouts: 0,
-        pages: 0,
-        variables: 0,
-        partials: 0
-      },
-      commitsData: [],
-      commitMessage: '',
-      fullscreenLoading: false,
-      websiteUsers: [],
-      websiteRolesOptions: [],
-      selectedRole: '',
-      branchesData: []
-    }
-  },
-  component: {
-  },
-  methods: {
+	name: 'ProjectStats',
+	props: {
+		options: {
+			type: Object
+		}
+	},
+	data () {
+		return {
+			websiteName: '',
+			newRepoId: '',
+			repoName: '',
+			seoTitle: '',
+			seoKeywords: '',
+			seoDesc: '',
+			tablePagesData: [],
+			counts: {
+				layouts: 0,
+				pages: 0,
+				variables: 0,
+				partials: 0
+			},
+			commitsData: [],
+			commitMessage: '',
+			fullscreenLoading: false,
+			websiteUsers: [],
+			websiteRolesOptions: [],
+			selectedRole: '',
+			branchesData: []
+		}
+	},
+	component: {
+	},
+	methods: {
 
-    sortBranchesTable(n){
-      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-      table = document.getElementById("revisionsTable");
-      switching = true;
-      // Set the sorting direction to ascending:
-      dir = "asc"; 
-      /* Make a loop that will continue until
+		sortBranchesTable (n) {
+			var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0
+			table = document.getElementById('revisionsTable')
+			switching = true
+			// Set the sorting direction to ascending:
+			dir = 'asc'
+			/* Make a loop that will continue until
       no switching has been done: */
-      while (switching) {
-        // Start by saying: no switching is done:
-        switching = false;
-        rows = table.getElementsByTagName("TR");
-        /* Loop through all table rows (except the
+			while (switching) {
+				// Start by saying: no switching is done:
+				switching = false
+				rows = table.getElementsByTagName('TR')
+				/* Loop through all table rows (except the
         first, which contains table headers): */
-        for (i = 1; i < (rows.length - 1); i++) {
-          // Start by saying there should be no switching:
-          shouldSwitch = false;
-          /* Get the two elements you want to compare,
+				for (i = 1; i < (rows.length - 1); i++) {
+					// Start by saying there should be no switching:
+					shouldSwitch = false
+					/* Get the two elements you want to compare,
           one from current row and one from the next: */
-          x = rows[i].getElementsByTagName("TD")[n];
-          y = rows[i + 1].getElementsByTagName("TD")[n];
-          /* Check if the two rows should switch place,
+					x = rows[i].getElementsByTagName('TD')[n]
+					y = rows[i + 1].getElementsByTagName('TD')[n]
+					/* Check if the two rows should switch place,
           based on the direction, asc or desc: */
-          if (dir == "asc") {
-            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-              // If so, mark as a switch and break the loop:
-              shouldSwitch= true;
-              break;
-            }
-          } else if (dir == "desc") {
-            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-              // If so, mark as a switch and break the loop:
-              shouldSwitch= true;
-              break;
-            }
-          }
-        }
-        if (shouldSwitch) {
-          /* If a switch has been marked, make the switch
+					if (dir == 'asc') {
+						if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+							// If so, mark as a switch and break the loop:
+							shouldSwitch = true
+							break
+						}
+					} else if (dir == 'desc') {
+						if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+							// If so, mark as a switch and break the loop:
+							shouldSwitch = true
+							break
+						}
+					}
+				}
+				if (shouldSwitch) {
+					/* If a switch has been marked, make the switch
           and mark that a switch has been done: */
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-          // Each time a switch is done, increase this count by 1:
-          switchcount ++; 
-        } else {
-          /* If no switching has been done AND the direction is "asc",
+					rows[i].parentNode.insertBefore(rows[i + 1], rows[i])
+					switching = true
+					// Each time a switch is done, increase this count by 1:
+					switchcount++
+				} else {
+					/* If no switching has been done AND the direction is "asc",
           set the direction to "desc" and run the while loop again. */
-          if (switchcount == 0 && dir == "asc") {
-            dir = "desc";
-            switching = true;
-          }
-        }
-      }
-    },
+					if (switchcount == 0 && dir == 'asc') {
+						dir = 'desc'
+						switching = true
+					}
+				}
+			}
+		},
 
-    updateUserRole(index, id){
-      
-      axios.patch(config.baseURL + '/website-users/' + id, {
-          role : this.websiteUsers[index].UserRole
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+		updateUserRole (index, id) {
+			axios.patch(config.baseURL + '/website-users/' + id, {
+				role: this.websiteUsers[index].UserRole
+			})
+				.then((res) => {
+					console.log(res.data)
+				})
+				.catch((e) => {
+					console.log(e)
+				})
+		},
+		deleteUser (id) {
+			this.$confirm('This will permanently delete the user. Continue?', 'Warning', {
+				confirmButtonText: 'OK',
+				cancelButtonText: 'Cancel',
+				type: 'warning'
+			}).then(() => {
+				axios.delete(config.baseURL + '/website-users/' + id, {
+				})
+					.then((res) => {
+						console.log(res.data)
+						this.init()
+					})
+					.catch((e) => {
+						console.log(e)
+					})
+			}).catch(() => {
 
-    },
-    deleteUser(id){
-      this.$confirm('This will permanently delete the user. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(() => {
-        axios.delete(config.baseURL + '/website-users/' + id, {
-        })
-        .then((res) => {
-          console.log(res.data);
-          this.init();
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-      }).catch(() => {
-                 
-      });
-    },
-    revertCommit(index) {
-      this.$store.state.currentIndex = index;
-      $('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row');
-      $('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
+			})
+		},
+		revertCommit (index) {
+			this.$store.state.currentIndex = index
+			$('#tablecommits .el-table__body-wrapper').find('tr').removeClass('positive-row')
+			$('#tablecommits .el-table__body-wrapper').find('tr').eq(index).addClass('positive-row')
 
-      //// console.log(this.commitsData[index].commitSHA);
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
-      }).then(response => {
-        //console.log(response.data);
-        this.$message({
-          message: 'Successfully reverted to selected commit.',
-          type: 'success'
-        });
-      }).catch(error => {
-        //console.log("Some error occured: ", error);
-      })
-    },
+			/// / console.log(this.commitsData[index].commitSHA);
+			axios.post(config.baseURL + '/commit-service?projectId=' + this.newRepoId + '&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName=' + this.repoName + '&userDetailId=' + Cookies.get('userDetailId'), {
+			}).then(response => {
+				// console.log(response.data);
+				this.$message({
+					message: 'Successfully reverted to selected commit.',
+					type: 'success'
+				})
+			}).catch(error => {
+				// console.log("Some error occured: ", error);
+			})
+		},
 
-    tableRowClassName(row, index) {
-      if (index === this.$store.state.currentIndex) {
-        return 'positive-row';
-      }
-      return '';
-    },
+		tableRowClassName (row, index) {
+			if (index === this.$store.state.currentIndex) {
+				return 'positive-row'
+			}
+			return ''
+		},
 
-    previewWebsite(){
-      // Open in new window
-      if(process.env.NODE_ENV !== 'development'){
-        window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.'+ config.ipAddress);
-      } else {
-        window.open(config.ipAddress +'/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
-      } 
-      // window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + this.ipAddress + '/');
-    },
+		previewWebsite () {
+			// Open in new window
+			if (process.env.NODE_ENV !== 'development') {
+				window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.ipAddress)
+			} else {
+				window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/')
+			}
+			// window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + this.ipAddress + '/');
+		},
 
-    async saveProjectSettings() {
-      
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err)=>{ console.log('Error:', err); });
+		async saveProjectSettings () {
+			let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log('Error:', err) })
 
-      if (rethinkdbCheck.data) {
-        // update existing data
-        await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
-            configData: this.settings
-        })
-        .then(async(res) => {
-            //console.log(res.data);
-        })
-        .catch((e) => {
-            this.$message({
-                showClose: true,
-                message: 'Failed! Please try again.',
-                type: 'error'
-            });
-            //console.log(e)
-        });
-
-      } else {
-        this.$message({
-          showClose: true,
-          message: 'Data Error.',
-          type: 'error'
-        });
-      } 
-    },
+			if (rethinkdbCheck.data) {
+				// update existing data
+				await axios.patch(config.baseURL + '/project-configuration/' + rethinkdbCheck.data.id, {
+					configData: this.settings
+				})
+					.then(async (res) => {
+						// console.log(res.data);
+					})
+					.catch((e) => {
+						this.$message({
+							showClose: true,
+							message: 'Failed! Please try again.',
+							type: 'error'
+						})
+						// console.log(e)
+					})
+			} else {
+				this.$message({
+					showClose: true,
+					message: 'Data Error.',
+					type: 'error'
+				})
+			}
+		},
 
   	async init () {
-      let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      localStorage.setItem('folderUrl', folderUrl);
+			let folderUrl = this.$store.state.fileUrl.replace(/\\/g, '\/')
+			localStorage.setItem('folderUrl', folderUrl)
 
-      let foldername = folderUrl.split('/');
-      foldername = foldername[6];
-      
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
+			let foldername = folderUrl.split('/')
+			foldername = foldername[6]
 
-      if(this.configData.status == 200 || this.configData.status == 204){
-        //console.log('Config file found! Updating fields..');
+			this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => { console.log('Error:', err) })
 
-        this.websiteName = this.configData.data.websiteName;
+			if (this.configData.status == 200 || this.configData.status == 204) {
+				// console.log('Config file found! Updating fields..');
 
-        this.settings = this.configData.data.configData;
+				this.websiteName = this.configData.data.websiteName
 
-        this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+				this.settings = this.configData.data.configData
 
-        this.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle;
-        this.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords;
-        this.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription;
+				this.newRepoId = this.settings[0].repoSettings[0].RepositoryId
+				this.repoName = this.settings[0].repoSettings[0].RepositoryName
 
-        this.websiteRolesOptions = this.settings[1].projectSettings[1].WebsiteRoles;
+				this.seoTitle = this.settings[1].projectSettings[0].ProjectSEOTitle
+				this.seoKeywords = this.settings[1].projectSettings[0].ProjectSEOKeywords
+				this.seoDesc = this.settings[1].projectSettings[0].ProjectSEODescription
 
-        this.counts.layouts = 0;
-        this.counts.pages = 0;
-        this.counts.variables = 0;
-        this.counts.partials = 0;
+				this.websiteRolesOptions = this.settings[1].projectSettings[1].WebsiteRoles
 
-        this.counts.layouts = (this.settings[2].layoutOptions[0].Layout.length - 1);
-        this.counts.pages = this.settings[1].pageSettings.length;
-        this.counts.variables = this.settings[1].projectSettings[1].GlobalVariables.length + this.settings[1].projectSettings[1].GlobalCssVariables.length;
+				this.counts.layouts = 0
+				this.counts.pages = 0
+				this.counts.variables = 0
+				this.counts.partials = 0
 
-        let partialItems = Object.keys(this.settings[2].layoutOptions[0]);
-        this.counts.partials = (partialItems.length - 1);
+				this.counts.layouts = (this.settings[2].layoutOptions[0].Layout.length - 1)
+				this.counts.pages = this.settings[1].pageSettings.length
+				this.counts.variables = this.settings[1].projectSettings[1].GlobalVariables.length + this.settings[1].projectSettings[1].GlobalCssVariables.length
 
-        this.tablePagesData = [];
+				let partialItems = Object.keys(this.settings[2].layoutOptions[0])
+				this.counts.partials = (partialItems.length - 1)
 
-        for(var i = 0; i < Object.keys(this.settings[1].pageSettings).length; i++){
-          this.tablePagesData.push({
-            number: i + 1,
-            pageName: this.settings[1].pageSettings[i].PageName,
-            layoutName: this.settings[1].pageSettings[i].PageLayout
-          });
-        }
+				this.tablePagesData = []
 
-      } else {
-        //console.log('Cannot get config file!');
-      } 
+				for (var i = 0; i < Object.keys(this.settings[1].pageSettings).length; i++) {
+					this.tablePagesData.push({
+						number: i + 1,
+						pageName: this.settings[1].pageSettings[i].PageName,
+						layoutName: this.settings[1].pageSettings[i].PageLayout
+					})
+				}
+			} else {
+				// console.log('Cannot get config file!');
+			}
 
-      // get all branch list
-      await axios.get( config.baseURL + '/branch-list/' + this.newRepoId, {
-      }).then(response => {
-        this.branchesData = [];
-        for(var i in response.data){
-          this.branchesData.push({
-            commitDate: response.data[i].commit.created_at,
-            branchName: response.data[i].name,
-            commitSHA: response.data[i].commit.id,
-            commitsMessage: response.data[i].commit.title,
-          });
-        }
-      }).catch(error => {
-        console.log( error);
-      });
+			// get all branch list
+			await axios.get(config.baseURL + '/branch-list/' + this.newRepoId, {
+			}).then(response => {
+				this.branchesData = []
+				for (var i in response.data) {
+					this.branchesData.push({
+						commitDate: response.data[i].commit.created_at,
+						branchName: response.data[i].name,
+						commitSHA: response.data[i].commit.id,
+						commitsMessage: response.data[i].commit.title
+					})
+				}
+			}).catch(error => {
+				console.log(error)
+			})
 
-      // Get all website users
-      await axios.get( config.baseURL + '/website-users?websiteId='+foldername, {
-      }).then(response => {
-        this.websiteUsers = [];
-        for(var i in response.data.data){
-          this.websiteUsers.push({
-            UserId: response.data.data[i].id,
-            UserEmail: response.data.data[i].userEmail,
-            UserRole: response.data.data[i].role, 
-          });
-        }
-      }).catch(error => {
-        //console.log("Some error occured: ", error);
-      });
-      
+			// Get all website users
+			await axios.get(config.baseURL + '/website-users?websiteId=' + foldername, {
+			}).then(response => {
+				this.websiteUsers = []
+				for (var i in response.data.data) {
+					this.websiteUsers.push({
+						UserId: response.data.data[i].id,
+						UserEmail: response.data.data[i].userEmail,
+						UserRole: response.data.data[i].role
+					})
+				}
+			}).catch(error => {
+				// console.log("Some error occured: ", error);
+			})
 
-      // if(this.commitsData[0]){
-      //   return 'positive-row';
-      // } 
-  	},
-
-  },
-
-    // previewWebsite () {
-
-    //   this.previewLoader = true;
-    //   // var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-    //   // window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
-
-    //   // Publish with Zeit Now
-    //   axios.post(config.baseURL + '/publish-now', {
-    //       projectName : this.repoName
-    //   })
-    //   .then((res) => {
-    //     let serverUrl = res.data;
-    //     window.open( serverUrl + '/public/');
-    //     this.$message({
-    //       showClose: true,
-    //       message: 'Successfully Published.',
-    //       type: 'success'
-    //     });
-    ////     console.log(res.data);
-    //     this.previewLoader = false;
-    //   })
-    //   .catch((e) => {
-    //     this.$message({
-    //       showClose: true,
-    //       message: 'Failed! Please try again.',
-    //       type: 'error'
-    //     });
-    ////     console.log(e);
-    //     this.previewLoader = false;
-    //   });
-
-    // }
-  // },
-  async mounted () {
-
-    //// console.log('Folder Url: ', localStorage.getItem('folderUrl'));
-
-  	let response = await this.init();
-
-    let self = this;
-
-    // $.fn.editable.defaults.mode = 'inline';
-
-    // $(document).ready(function() {
-    //   $('#seoTitle').editable();
-    //   $('#seoKeywords').editable();
-    //   $('#seoDesc').editable({
-    //     title: 'Enter Description',
-    //     rows: 10
-    //   });
-
-    //   $('#seoTitle').on('save', function(e, params) {
-    //      // alert('Saved value: ' + params.newValue);
-    //     self.settings[1].projectSettings[0].ProjectSEOTitle = params.newValue;
-    //     self.saveProjectSettings();
-    //   });
-
-    //   $('#seoKeywords').on('save', function(e, params) {
-    //     self.settings[1].projectSettings[0].ProjectSEOKeywords = params.newValue;
-    //     self.saveProjectSettings();
-    //   });
-
-    //   $('#seoDesc').on('save', function(e, params) {
-    //     self.settings[1].projectSettings[0].ProjectSEODescription = params.newValue;
-    //     self.saveProjectSettings();
-    //   });
-    // });
-
-    // // Count Up animation
-    // $('.counter').each(function() {
-    //   var $this = $(this),
-    //       countTo = $this.attr('data-count');
-      
-    //   $({ countNum: $this.text()}).animate({
-    //     countNum: countTo
-    //   },
-
-    //   {
-
-    //     duration: 1000,
-    //     easing:'linear',
-    //     step: function() {
-    //       $this.text(Math.floor(this.countNum));
-    //     },
-    //     complete: function() {
-    //       $this.text(this.countNum);
-    //       //alert('finished');
-    //     }
-
-    //   });  
-      
-    // });
-  },
-  watch: {
-  	'$store.state.fileUrl': function(newvalue) {
-  		this.init();
+			// if(this.commitsData[0]){
+			//   return 'positive-row';
+			// }
   	}
-  }
+
+	},
+
+	// previewWebsite () {
+
+	//   this.previewLoader = true;
+	//   // var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+	//   // window.open(config.ipAddress + folderUrl.replace('var/www/html/', '') + '/public/');
+
+	//   // Publish with Zeit Now
+	//   axios.post(config.baseURL + '/publish-now', {
+	//       projectName : this.repoName
+	//   })
+	//   .then((res) => {
+	//     let serverUrl = res.data;
+	//     window.open( serverUrl + '/public/');
+	//     this.$message({
+	//       showClose: true,
+	//       message: 'Successfully Published.',
+	//       type: 'success'
+	//     });
+	/// /     console.log(res.data);
+	//     this.previewLoader = false;
+	//   })
+	//   .catch((e) => {
+	//     this.$message({
+	//       showClose: true,
+	//       message: 'Failed! Please try again.',
+	//       type: 'error'
+	//     });
+	/// /     console.log(e);
+	//     this.previewLoader = false;
+	//   });
+
+	// }
+	// },
+	async mounted () {
+		/// / console.log('Folder Url: ', localStorage.getItem('folderUrl'));
+
+  	let response = await this.init()
+
+		let self = this
+
+		// $.fn.editable.defaults.mode = 'inline';
+
+		// $(document).ready(function() {
+		//   $('#seoTitle').editable();
+		//   $('#seoKeywords').editable();
+		//   $('#seoDesc').editable({
+		//     title: 'Enter Description',
+		//     rows: 10
+		//   });
+
+		//   $('#seoTitle').on('save', function(e, params) {
+		//      // alert('Saved value: ' + params.newValue);
+		//     self.settings[1].projectSettings[0].ProjectSEOTitle = params.newValue;
+		//     self.saveProjectSettings();
+		//   });
+
+		//   $('#seoKeywords').on('save', function(e, params) {
+		//     self.settings[1].projectSettings[0].ProjectSEOKeywords = params.newValue;
+		//     self.saveProjectSettings();
+		//   });
+
+		//   $('#seoDesc').on('save', function(e, params) {
+		//     self.settings[1].projectSettings[0].ProjectSEODescription = params.newValue;
+		//     self.saveProjectSettings();
+		//   });
+		// });
+
+		// // Count Up animation
+		// $('.counter').each(function() {
+		//   var $this = $(this),
+		//       countTo = $this.attr('data-count');
+
+		//   $({ countNum: $this.text()}).animate({
+		//     countNum: countTo
+		//   },
+
+		//   {
+
+		//     duration: 1000,
+		//     easing:'linear',
+		//     step: function() {
+		//       $this.text(Math.floor(this.countNum));
+		//     },
+		//     complete: function() {
+		//       $this.text(this.countNum);
+		//       //alert('finished');
+		//     }
+
+		//   });
+
+		// });
+	},
+	watch: {
+  	'$store.state.fileUrl': function (newvalue) {
+  		this.init()
+  	}
+	}
 }
 </script>
 

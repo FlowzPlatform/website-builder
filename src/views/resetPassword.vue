@@ -55,216 +55,211 @@
 <script>
 import Vue from 'vue'
 import VueSession from 'vue-session'
- 
+
+import axios from 'axios'
+import psl from 'psl'
+import Cookies from 'js-cookie'
+
 Vue.use(VueSession)
 
-import axios from 'axios';
-import psl from 'psl';
-import Cookies from 'js-cookie';
-
-
-
-const config = require('../config');
+const config = require('../config')
 
 export default {
-  name: 'Login',
-  data () {
-    return {
-      form: {
-        pass: '',
-        cpass: ''
-      },
-      authen: {
-        status: false,
-        success: 'Password Updated',
-        error: 'Reset Password Failed'
-      }
-    }
-  },
-  component: {
-  },
-  methods: {
-    resetPassword() {
+	name: 'Login',
+	data () {
+		return {
+			form: {
+				pass: '',
+				cpass: ''
+			},
+			authen: {
+				status: false,
+				success: 'Password Updated',
+				error: 'Reset Password Failed'
+			}
+		}
+	},
+	component: {
+	},
+	methods: {
+		resetPassword () {
+			$('.login').addClass('test')
+			setTimeout(function () {
+				$('.login').addClass('testtwo')
+			}, 300)
+			setTimeout(function () {
+				$('.authent').show().animate({
+					right: -320
+				}, {
+					easing: 'easeOutQuint',
+					duration: 600,
+					queue: false
+				})
+				$('.authent').animate({
+					opacity: 1
+				}, {
+					duration: 200,
+					queue: false
+				}).addClass('visible')
+			}, 500)
+			setTimeout(function () {
 
-        $('.login').addClass('test')
-        setTimeout(function() {
-          $('.login').addClass('testtwo')
-        }, 300);
-        setTimeout(function() {
-          $(".authent").show().animate({
-            right: -320
-          }, {
-            easing: 'easeOutQuint',
-            duration: 600,
-            queue: false
-          });
-          $(".authent").animate({
-            opacity: 1
-          }, {
-            duration: 200,
-            queue: false
-          }).addClass('visible');
-        }, 500);
-        setTimeout(function() {
+			}, 2500)
 
-        }, 2500);
+			// var params = {};
 
-        // var params = {};
+			// if (location.search) {
+			//     var parts = location.search.substring(1).split('&');
 
-        // if (location.search) {
-        //     var parts = location.search.substring(1).split('&');
+			//     for (var i = 0; i < parts.length; i++) {
+			//         var nv = parts[i].split('=');
+			//         if (!nv[0]) continue;
+			//         params[nv[0]] = nv[1] || true;
+			//     }
+			// }
 
-        //     for (var i = 0; i < parts.length; i++) {
-        //         var nv = parts[i].split('=');
-        //         if (!nv[0]) continue;
-        //         params[nv[0]] = nv[1] || true;
-        //     }
-        // }
+			// let forgetToken = params.forget_token;
+			let forgetToken = this.$route.query.forget_token
+			console.log(forgetToken)
 
-        // let forgetToken = params.forget_token;
-        let forgetToken = this.$route.query.forget_token;
-        console.log(forgetToken);
+			axios.post(config.resetPasswordUrl, {
+				new_password: this.form.pass.trim(),
+				token: forgetToken
+			})
+				.then((response) => {
+					console.log('Inside then')
 
-        axios.post(config.resetPasswordUrl, {
-          new_password: this.form.pass.trim(),
-          token: forgetToken
-        })
-        .then((response) => {
+					this.authen.status = true
 
-          console.log('Inside then')
+					console.log(response)
 
-          this.authen.status = true;
+					$('.authent').show().animate({
+						right: 90
+					}, {
+						easing: 'easeOutQuint',
+						duration: 600,
+						queue: false
+					})
+					$('.authent').animate({
+						opacity: 0
+					}, {
+						duration: 200,
+						queue: false
+					}).addClass('visible')
+					$('.login').removeClass('testtwo')
 
-          console.log(response);
+					$('.login').removeClass('test')
+					$('.login div').fadeOut(123)
 
-          $(".authent").show().animate({
-            right: 90
-          }, {
-            easing: 'easeOutQuint',
-            duration: 600,
-            queue: false
-          });
-          $(".authent").animate({
-            opacity: 0
-          }, {
-            duration: 200,
-            queue: false
-          }).addClass('visible');
-          $('.login').removeClass('testtwo')
+					$('.success').fadeIn()
 
-          $('.login').removeClass('test')
-          $('.login div').fadeOut(123);
+					setTimeout(function () {
+						window.location = '/login'
+					}, 2000)
+				})
+				.catch((error) => {
+					console.log(error.response)
 
-          $('.success').fadeIn();
+					this.$message({
+						showClose: true,
+						message: 'Error: ' + error.response.data,
+						type: 'error'
+					})
 
-          setTimeout(function() {
-            window.location = '/login';
-          }, 2000);
-        })
-        .catch((error) => {
-            console.log(error.response);
+					console.log('Error: ', error.response)
+					this.authen.status = false
+					this.authen.error = error.response.data
 
-            this.$message({
-              showClose: true,
-              message: 'Error: ' + error.response.data,
-              type: 'error'
-            });
+					$('.authent').show().animate({
+						right: 90
+					}, {
+						easing: 'easeOutQuint',
+						duration: 600,
+						queue: false
+					})
+					$('.authent').animate({
+						opacity: 0
+					}, {
+						duration: 200,
+						queue: false
+					}).addClass('visible')
+					$('.login').removeClass('testtwo')
 
-            console.log('Error: ', error.response);
-            this.authen.status = false;
-            this.authen.error = error.response.data;
+					$('.login').removeClass('test')
+					$('.login div').fadeOut(123)
 
-            $(".authent").show().animate({
-              right: 90
-            }, {
-              easing: 'easeOutQuint',
-              duration: 600,
-              queue: false
-            });
-            $(".authent").animate({
-              opacity: 0
-            }, {
-              duration: 200,
-              queue: false
-            }).addClass('visible');
-            $('.login').removeClass('testtwo')
+					$('.authent').fadeOut()
+					$('.login div').fadeIn()
+				})
+		},
+		goToLandingPage () {
+			window.location = '/'
+		}
+	},
+	created () {
 
-            $('.login').removeClass('test')
-            $('.login div').fadeOut(123);
-
-            $(".authent").fadeOut();
-            $('.login div').fadeIn();
-        });
-
-    },
-    goToLandingPage () {
-      window.location = '/';
-    }
-  },
-  created () {
-   
-  },
-  mounted () {
-    let self = this;
-    $('.input-fields').keyup(function(e) {
-      var code = e.which;
-      if (code == 13) e.preventDefault();
-      if (code == 32 || code == 13 || code == 188 || code == 186) {
-        if (self.form.pass != '' && self.form.cpass != '') {
-          self.resetPassword();
-        } else {
-          self.$message({
-            showClose: true,
-            message: 'Please Enter all Fields',
-            type: 'error'
-          });
-        }
-      }
-    });
-    $('input[type="submit"]').click(function() {
-      if (self.form.pass != '' && self.form.cpass != '') {
-        if(self.form.pass == self.form.cpass){
-          self.resetPassword();
-        } else {
-          self.$message({
-            showClose: true,
-            message: 'Password and confirm password did not matched.',
-            type: 'error'
-          });  
-        }
-      } else {
-        self.$message({
-          showClose: true,
-          message: 'Please Enter all Fields',
-          type: 'error'
-        });
-      }
-    });
-    $('input[type="text"],input[type="password"]').focus(function() {
-      $(this).prev().animate({
-        'opacity': '1'
-      }, 200)
-    });
-    $('input[type="text"],input[type="password"]').blur(function() {
-      $(this).prev().animate({
-        'opacity': '.5'
-      }, 200)
-    });
-    $('input[type="text"],input[type="password"]').keyup(function() {
-      if (!$(this).val() == '') {
-        $(this).next().animate({
-          'opacity': '1',
-          'right': '30'
-        }, 200)
-      } else {
-        $(this).next().animate({
-          'opacity': '0',
-          'right': '20'
-        }, 200)
-      }
-    });
-    $('.login div').fadeIn();
-  }
+	},
+	mounted () {
+		let self = this
+		$('.input-fields').keyup(function (e) {
+			var code = e.which
+			if (code == 13) e.preventDefault()
+			if (code == 32 || code == 13 || code == 188 || code == 186) {
+				if (self.form.pass != '' && self.form.cpass != '') {
+					self.resetPassword()
+				} else {
+					self.$message({
+						showClose: true,
+						message: 'Please Enter all Fields',
+						type: 'error'
+					})
+				}
+			}
+		})
+		$('input[type="submit"]').click(function () {
+			if (self.form.pass != '' && self.form.cpass != '') {
+				if (self.form.pass == self.form.cpass) {
+					self.resetPassword()
+				} else {
+					self.$message({
+						showClose: true,
+						message: 'Password and confirm password did not matched.',
+						type: 'error'
+					})
+				}
+			} else {
+				self.$message({
+					showClose: true,
+					message: 'Please Enter all Fields',
+					type: 'error'
+				})
+			}
+		})
+		$('input[type="text"],input[type="password"]').focus(function () {
+			$(this).prev().animate({
+				'opacity': '1'
+			}, 200)
+		})
+		$('input[type="text"],input[type="password"]').blur(function () {
+			$(this).prev().animate({
+				'opacity': '.5'
+			}, 200)
+		})
+		$('input[type="text"],input[type="password"]').keyup(function () {
+			if (!$(this).val() == '') {
+				$(this).next().animate({
+					'opacity': '1',
+					'right': '30'
+				}, 200)
+			} else {
+				$(this).next().animate({
+					'opacity': '0',
+					'right': '20'
+				}, 200)
+			}
+		})
+		$('.login div').fadeIn()
+	}
 }
 </script>
 
