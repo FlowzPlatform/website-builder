@@ -3220,63 +3220,75 @@ export default {
                 repoName: this.repoName,
                 userDetailId: Cookies.get('userDetailId')
               }).then(async response => {
-
-                console.log('Response after bracnh commit : ', response);
-
-                if(response.status == 200 || response.status == 201){
-
-                  await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
-                  }).then(async response => {
-
-                    this.commitsData = [];
-                    for(var i in response.data){
-                      this.commitsData.push({
-                        commitDate: response.data[i].created_at,
-                        commitSHA: response.data[i].id,
-                        commitsMessage: response.data[i].title,
-                      });
-                    }
-
-                    // let lastCommit = (response.data.length) - 1;
-
-                    // console.log('Last Commit SHA: ', response.data[lastCommit].id);
-
-                    // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
-                    // this.currentSha = response.data[lastCommit].id;
-
-                    this.settings[0].repoSettings[0].CurrentBranch = this.commitForm.branchName;
-
-                    // Create entry in configdata-history table
-                    await axios.post(config.baseURL + '/configdata-history', {
-                        configData: this.settings,
-                        currentBranch: this.commitForm.branchName,
-                        commitSHA: this.currentSha,
-                        websiteName: this.repoName,
-                        userId: Cookies.get('userDetailId')
-                    })
-                    .then(function (resp) {
-                        // console.log('Config revision saved in configdata-history. ', resp);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-
-                    this.saveProjectSettings();
-                  }).catch(error => {
-                    console.log("error : ", error);
-                    this.fullscreenLoading = false;
-                  });
-
-                  this.commitForm.commitMessage = '';
-                  this.commitForm.branchName = '';
-                  //console.log(response.data);
+                console.log(response);
+                if(response.data[0].code == 444){
                   this.$message({
-                    message: 'New revision commited. ',
-                    type: 'success'
+                    message: response.data[0].message,
+                    type: 'error'
                   });
                   this.isCommitLoading = false;
-                  await this.init();
+                  this.$refs[commitForm].resetFields();
+                } else {
+                  // console.log('Response after branch commit : ', response);
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                    }).then(async response => {
+
+                      
+
+                      this.commitsData = [];
+                      for(var i in response.data){
+                        this.commitsData.push({
+                          commitDate: response.data[i].created_at,
+                          commitSHA: response.data[i].id,
+                          commitsMessage: response.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch = this.commitForm.branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: this.commitForm.branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          // console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log("error : ", error);
+                      this.fullscreenLoading = false;
+                    });
+
+                    this.commitForm.commitMessage = '';
+                    this.commitForm.branchName = '';
+                    //console.log(response.data);
+                    this.$message({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    await this.init();
+                  }
                 }
+                
               }).catch(error => {
                 console.log("error : ", error);
               })
