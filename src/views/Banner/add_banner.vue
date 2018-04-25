@@ -238,7 +238,7 @@ export default {
   },
   methods: {
     handleRemoveItem (inx) {
-      let finx = _.findIndex(this.assetsImages, {url: this.itemArr[inx].url})
+      let finx = _.findIndex(this.assetsImages, {url: this.itemArr[inx].banner_img})
       if (finx !== undefined && finx !== -1) {
         this.assetsImages[finx].isSelect = false
       }
