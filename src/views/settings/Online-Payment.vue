@@ -71,11 +71,12 @@
 
 <script>
 	import Cookies from 'js-cookie'
-import config from './../../config.js'
-import _ from 'lodash'
-import Vue from 'vue'
-import axios from 'axios'
-let feathersUrl = config.default.serviceUrl
+	import config from './../../config.js'
+	import psl from 'psl'
+	import _ from 'lodash'
+	// import Vue from 'vue'
+	import axios from 'axios'
+	let feathersUrl = config.default.serviceUrl
 	export default {
 		data () {
 			return {
@@ -123,11 +124,11 @@ let feathersUrl = config.default.serviceUrl
 		methods: {
 			goToSettingsList () {
 				this.$emit('addNewConfig', 'settings')
-			// this.$router.push({
-			// 	name: 'Settings'
-			// 	// params: { tabName: 'Online Payment' }
+				// this.$router.push({
+				// 	name: 'Settings'
+				// 	// params: { tabName: 'Online Payment' }
 
-			// });
+				// });
 			},
 			handleSubmit (name) {
 				var self = this
@@ -136,7 +137,7 @@ let feathersUrl = config.default.serviceUrl
 						self.loading = true
 						var data000 = this.formValidate.configuration
 						// console.log("data000----------------------------->",data000)
-						var checkConfig
+						// var checkConfig
 						this.$Modal.confirm({
 							title: '',
 							content: '',
@@ -191,8 +192,7 @@ let feathersUrl = config.default.serviceUrl
 								patchData['isDefault'] = true
 								patchData['isDeleted'] = false
 								params.online_payment[gateway] = [patchData]
-								 let data = {
-								// "configName": "Custom Configuration",
+								let data = {
 									'configName': configId,
 									'domain': 'custom',
 									'isActive': true,
@@ -201,15 +201,14 @@ let feathersUrl = config.default.serviceUrl
 									'subscriptionId': Cookies.get('subscriptionId'),
 									'customer_url': ' https://api.' + config.domainkey + '/crm/customcustomer',
 									'invoice_url': 'https://api.' + config.domainkey + '/crm/custominvoice'
-
-                            		}
-                            		// console.log('data',data)
+								}
+								// console.log('data',data)
 								axios({
 									method: 'post',
 									url: feathersUrl + 'buildersettings',
 									headers: {
 										'Authorization': Cookies.get('auth_token'),
-                        					'subscriptionId': Cookies.get('subscriptionId')
+										'subscriptionId': Cookies.get('subscriptionId')
 									},
 									data: data
 								})
@@ -235,9 +234,9 @@ let feathersUrl = config.default.serviceUrl
 				})
 			},
 			handleReset (name) {
-			    this.$refs[name].resetFields()
-				this.formValidate.gateway = '',
-				this.formValidate.x_api_login = '',
+				this.$refs[name].resetFields()
+				this.formValidate.gateway = ''
+				this.formValidate.x_api_login = ''
 				this.formValidate.x_api_token = ''
 				this.formValidate.configuration = ''
 			},
@@ -250,7 +249,7 @@ let feathersUrl = config.default.serviceUrl
 					}
 				})
 					.then(function (response) {
-					// console.log("response >>>>>>>>>>>>>>>>",response)
+						// console.log("response >>>>>>>>>>>>>>>>",response)
 						if (response.data.data.length != 0) {
 							var newConf = []
 							// console.log("self.configs---------------->before",newConf)
@@ -297,8 +296,8 @@ let feathersUrl = config.default.serviceUrl
 		},
 		mounted () {
 			this.settingData()
+		}
 	}
-}
 </script>
 
 <style scoped>

@@ -77,11 +77,12 @@
 
 <script>
 	import Cookies from 'js-cookie'
-import config from './../../config.js'
-import _ from 'lodash'
-import Vue from 'vue'
-import axios from 'axios'
-let feathersUrl = config.default.serviceUrl
+	import psl from 'psl'
+	import config from './../../config.js'
+	import _ from 'lodash'
+	// import Vue from 'vue'
+	import axios from 'axios'
+	let feathersUrl = config.default.serviceUrl
 	export default {
 		data () {
 			return {
@@ -144,7 +145,7 @@ let feathersUrl = config.default.serviceUrl
 								okText: 'Agree',
 								cancelText: 'Disagree',
 								onOk: () => {
-									var configId = this.formValidate.configuration
+									// var configId = this.formValidate.configuration
 									let patchData = _.cloneDeep(this.formValidate)
 									delete patchData.configuration
 									if (this.formValidate.gateway == 'stripe') {
@@ -173,7 +174,7 @@ let feathersUrl = config.default.serviceUrl
 										params.online_payment[gateway] = patchData
 										// console.log("---------------------params online payment",params);
 										// console.log('iiiiiiiiiiiiiiiiiiiiii',item.id)
-									 axios({
+										axios({
 											method: 'PATCH',
 											url: feathersUrl + 'buildersettings/' + item.id,
 											headers: {
@@ -183,7 +184,7 @@ let feathersUrl = config.default.serviceUrl
 											data: params
 										})
 											.then(function (response) {
-											// console.log('response------------------------>',response)
+												// console.log('response------------------------>',response)
 												self.handleReset(name)
 												self.loading = false
 												self.$emit('addNewConfig', 'settings')
@@ -201,7 +202,7 @@ let feathersUrl = config.default.serviceUrl
 						} else {
 							// console.log('this.configs',this.configs)
 							// console.log('this.formValidate.configuration',this.formValidate.configuration)
-							var data000 = _.filter(this.configs, {'id': this.formValidate.configuration })
+							var data000 = _.filter(this.configs, { 'id': this.formValidate.configuration })
 							// console.log("data000----------------------------->",data000)
 							var checkConfig
 							this.$Modal.confirm({
@@ -285,7 +286,7 @@ let feathersUrl = config.default.serviceUrl
 												data: params
 											})
 												.then(function (response) {
-												// console.log('response------------------------>',response)
+													// console.log('response------------------------>',response)
 													self.handleReset(name)
 													self.loading = false
 													self.$emit('addNewConfig', 'settings')
@@ -307,7 +308,7 @@ let feathersUrl = config.default.serviceUrl
 											data: params
 										})
 											.then(function (response) {
-											// console.log('response------------------------>',response)
+												// console.log('response------------------------>',response)
 												self.handleReset(name)
 												self.loading = false
 												self.$emit('addNewConfig', 'settings')
@@ -330,8 +331,8 @@ let feathersUrl = config.default.serviceUrl
 				})
 			},
 			handleReset (name) {
-				this.formValidate.gateway = '',
-				this.formValidate.x_api_login = '',
+				this.formValidate.gateway = ''
+				this.formValidate.x_api_login = ''
 				this.formValidate.x_api_token = ''
 				this.$refs[name].resetFields()
 				this.formValidate.configuration = 'all'
@@ -389,8 +390,8 @@ let feathersUrl = config.default.serviceUrl
 		},
 		mounted () {
 			this.settingData()
+		}
 	}
-}
 </script>
 
 <style scoped>
