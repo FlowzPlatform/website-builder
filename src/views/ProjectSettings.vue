@@ -1613,7 +1613,7 @@ export default {
       $('.valid').removeClass('correct');
     },
     linktovshop(){
-      window.open('https://www.vshopdata.'+config.domainkey);
+      window.open('https://vshopdata.'+config.domainkey);
     },
     refreshvshop(){
 
@@ -1639,7 +1639,7 @@ export default {
       }).catch(err => { console.log(err); });
     },
     linktocrm(){
-      window.open('https://www.crm.'+config.domainkey);
+      window.open('https://crm.'+config.domainkey);
     },
     refreshaccounts(){
       console.log('refreshaccounts')
