@@ -221,6 +221,8 @@
 import Vue from 'vue'
 import VueSession from 'vue-session'
 
+import $ from 'jquery'
+
 import axios from 'axios'
 import Cookies from 'js-cookie'
 Vue.use(VueSession)
@@ -263,7 +265,16 @@ export default {
 	methods: {
 
 		sortBranchesTable (n) {
-			var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0
+			let table = 0
+			let rows = 0
+			let switching = 0
+			let i = 0
+			let x = 0
+			let y = 0
+			let shouldSwitch = 0
+			let dir = 0
+			let switchcount = 0
+
 			table = document.getElementById('revisionsTable')
 			switching = true
 			// Set the sorting direction to ascending:
@@ -361,7 +372,7 @@ export default {
 					type: 'success'
 				})
 			}).catch(error => {
-				// console.log("Some error occured: ", error);
+				console.log(error)
 			})
 		},
 
@@ -410,7 +421,7 @@ export default {
 			}
 		},
 
-  	async init () {
+		async init () {
 			let folderUrl = this.$store.state.fileUrl.replace(/\\/g, '\/')
 			localStorage.setItem('folderUrl', folderUrl)
 
@@ -488,13 +499,13 @@ export default {
 					})
 				}
 			}).catch(error => {
-				// console.log("Some error occured: ", error);
+				console.log(error)
 			})
 
 			// if(this.commitsData[0]){
 			//   return 'positive-row';
 			// }
-  	}
+		}
 
 	},
 
@@ -534,9 +545,9 @@ export default {
 	async mounted () {
 		/// / console.log('Folder Url: ', localStorage.getItem('folderUrl'));
 
-  	let response = await this.init()
+		// let response = await this.init()
 
-		let self = this
+		// let self = this
 
 		// $.fn.editable.defaults.mode = 'inline';
 
@@ -591,9 +602,9 @@ export default {
 		// });
 	},
 	watch: {
-  	'$store.state.fileUrl': function (newvalue) {
-  		this.init()
-  	}
+		'$store.state.fileUrl': function (newvalue) {
+			this.init()
+		}
 	}
 }
 </script>

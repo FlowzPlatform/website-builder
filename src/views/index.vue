@@ -411,6 +411,7 @@ let checkFileName = (rule, value, callback) => {
 							this.getData()
 						})
 						.catch((err) => {
+              console.log(err)
 							this.getData()
 						})
 				})
@@ -435,10 +436,10 @@ let checkFileName = (rule, value, callback) => {
   				isClosed = false
 
   			trigger.click(function () {
-  				hamburger_cross()
+  				hamburgerCross()
   			})
 
-			function hamburger_cross () {
+			function hamburgerCross () {
   				if (isClosed == true) {
   					overlay.hide()
   					trigger.removeClass('is-open')

@@ -6,8 +6,6 @@ import router from './router'
 import VueRouter from 'vue-router'
 import { sync } from 'vuex-router-sync'
 
-import $ from 'jquery'
-
 import ElementUI from 'element-ui'
 import locale from 'element-ui/src/locale/lang/en'
 import 'element-ui/lib/theme-default/index.css'

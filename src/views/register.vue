@@ -90,6 +90,8 @@
 import Vue from 'vue'
 import VueSession from 'vue-session'
 
+import $ from 'jquery'
+
 import axios from 'axios'
 Vue.use(VueSession)
 const config = require('../config')
@@ -122,8 +124,8 @@ export default {
 					$('.login').addClass('testtwo')
 				}, 300)
 				setTimeout(function () {
-					$('.authent').show().animate({right: -320}, {easing: 'easeOutQuint', duration: 600, queue: false })
-					$('.authent').animate({opacity: 1}, {duration: 200, queue: false }).addClass('visible')
+					$('.authent').show().animate({right: -320}, { easing: 'easeOutQuint', duration: 600, queue: false })
+					$('.authent').animate({opacity: 1}, { duration: 200, queue: false }).addClass('visible')
 				}, 500)
 				setTimeout(function () {
 
@@ -143,8 +145,8 @@ export default {
 						this.authen.status = true
 						let self = this
 
-						$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
-						$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+						$('.authent').show().animate({right: 90}, { easing: 'easeOutQuint', duration: 600, queue: false })
+						$('.authent').animate({opacity: 0}, { duration: 200, queue: false }).addClass('visible')
 						$('.login').removeClass('testtwo')
 
 						$('.login').removeClass('test')
@@ -195,8 +197,8 @@ export default {
 						this.authen.status = false
 						this.authen.error = error.response.data
 
-						$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
-						$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+						$('.authent').show().animate({right: 90}, { easing: 'easeOutQuint', duration: 600, queue: false })
+						$('.authent').animate({opacity: 0}, { duration: 200, queue: false }).addClass('visible')
 						$('.login').removeClass('testtwo')
 
 						$('.login').removeClass('test')
@@ -216,8 +218,8 @@ export default {
 					this.authen.status = false
 					this.authen.error = error.response.data
 
-					$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
-					$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+					$('.authent').show().animate({right: 90}, { easing: 'easeOutQuint', duration: 600, queue: false })
+					$('.authent').animate({opacity: 0}, { duration: 200, queue: false }).addClass('visible')
 					$('.login').removeClass('testtwo')
 
 					$('.login').removeClass('test')
@@ -304,12 +306,12 @@ export default {
 							$('.login').addClass('testtwo')
 						}, 300)
 						setTimeout(function () {
-							$('.authent').show().animate({right: -320}, {easing: 'easeOutQuint', duration: 600, queue: false })
-							$('.authent').animate({opacity: 1}, {duration: 200, queue: false }).addClass('visible')
+							$('.authent').show().animate({right: -320}, { easing: 'easeOutQuint', duration: 600, queue: false })
+							$('.authent').animate({opacity: 1}, { duration: 200, queue: false }).addClass('visible')
 						}, 500)
 						setTimeout(function () {
-							$('.authent').show().animate({right: 90}, {easing: 'easeOutQuint', duration: 600, queue: false })
-							$('.authent').animate({opacity: 0}, {duration: 200, queue: false }).addClass('visible')
+							$('.authent').show().animate({right: 90}, { easing: 'easeOutQuint', duration: 600, queue: false })
+							$('.authent').animate({opacity: 0}, { duration: 200, queue: false }).addClass('visible')
 							$('.login').removeClass('testtwo')
 						}, 2500)
 						setTimeout(function () {

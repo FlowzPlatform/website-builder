@@ -58,7 +58,7 @@
     			for (let role in this.row.role) {
     				// console.log("role",role)
     				// console.log("this.row.role[role]",this.row.role[role])
-    				self.data7.push({ [role]: this.row.role[role]})
+    				self.data7.push({ [role]: this.row.role[role] })
     			}
     			console.log('self.data7', self.data7)
     		}

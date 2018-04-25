@@ -1,4 +1,5 @@
-domainkey = process.env.domainkey
+let domainkey = process.env.domainkey
+let url = ''
 
 if (process.env.baseURL == undefined) {
 	url = 'https://api.' + domainkey + '/serverapi'

@@ -145,7 +145,7 @@ export default {
     				method: 'post',
     				url: 'https://api.' + process.env.domainkey + '/vmailmicro/sendEmail',
     				headers: {Authorization: Cookies.get('auth_token')},
-    				data: { 'to': data.toEmail, 'from': data.fromEmail, 'subject': 'Invitation from Flowz', 'body': SendEmailBody}
+    				data: { 'to': data.toEmail, 'from': data.fromEmail, 'subject': 'Invitation from Flowz', 'body': SendEmailBody }
     			})
     				.then(async (result) => {
     					console.log('result', result)
