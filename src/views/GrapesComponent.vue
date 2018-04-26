@@ -199,13 +199,13 @@ export default {
         //     'https://imgur.com/IbSijwv.jpg', 'https://imgur.com/181uTO9.png', 'https://i.imgur.com/XTo3DiU.png'
         // ];
 
-        images.push('http://placehold.it/350x250/78c5d6/fff/image1.jpg');
-        images.push('http://placehold.it/350x250/459ba8/fff/image2.jpg');
-        images.push('http://placehold.it/350x250/79c267/fff/image3.jpg');
-        images.push('http://placehold.it/350x250/c5d647/fff/image4.jpg');
-        images.push('http://placehold.it/350x250/f28c33/fff/image5.jpg');
-        images.push('http://placehold.it/350x250/e868a2/fff/image6.jpg');
-        images.push('http://placehold.it/350x250/cc4360/fff/image7.jpg');
+        // images.push('http://placehold.it/350x250/78c5d6/fff/image1.jpg');
+        // images.push('http://placehold.it/350x250/459ba8/fff/image2.jpg');
+        // images.push('http://placehold.it/350x250/79c267/fff/image3.jpg');
+        // images.push('http://placehold.it/350x250/c5d647/fff/image4.jpg');
+        // images.push('http://placehold.it/350x250/f28c33/fff/image5.jpg');
+        // images.push('http://placehold.it/350x250/e868a2/fff/image6.jpg');
+        // images.push('http://placehold.it/350x250/cc4360/fff/image7.jpg');
 
 
         // 'gjs-plugin-ckeditor', 'grapesjs-blocks-bootstrap4', 'gjs-plugin-filestack', 'gjs-blocks-flexbox', 'gjs-navbar',
@@ -434,10 +434,11 @@ export default {
     },
     getHtml: function () {
 
-          let uglyCss = editor.getCss();
-          // console.log(editor.getCss());
-          uglyCss = uglyCss.replace(/\s/g,'')
+          // let uglyCss = editor.getCss();
 
+          // uglyCss = uglyCss.replace(/\s/g,'')
+
+          let grapesCss = beautify(editor.getCss(), { format: 'css'});
           let grapesHtml = beautify(editor.getHtml(), { format: 'html'});
 
           // var regex = /body+\{([^}]+)/g;
@@ -459,7 +460,7 @@ export default {
 
           // let grapesCss = beautify(uglyCss, { format: 'css'});
 
-          this.$store.state.content = "<style>\n" + uglyCss + "\n</style>\n"+
+          this.$store.state.content = "<style>\n" + grapesCss + "\n</style>\n"+
               "\n\n\n\n" + grapesHtml;
 
           this.savedFile = true;

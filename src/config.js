@@ -32,11 +32,12 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithGithubUrl = 'https://auth.'+domainkey+'/auth/github';
     loginWithLinkedInUrl = 'https://auth.'+domainkey+'/auth/linkedin';
 
-    paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
+    // paymentApiGateway = 'https://api.' + domainkey + '/payment/availablegateway';
     vshopApi = 'https://api.' + domainkey + '/pdmnew/vshop-list';
     crmsettingapi='https://api.'+domainkey+'/crm/settings'
     flowzDashboardUrl = 'https://dashboard.' + domainkey
-    buildersettings='https://api.'+domainkey+'/crm/buildersettings/'
+    buildersettings='https://api.'+domainkey+'/crm/buildersettings/',
+    menuCategoriesUrl='https://api.'+domainkey+'/pdmnew/categories'
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -59,11 +60,12 @@ if (process.env.NODE_ENV !== 'development') {
     loginWithTwitterUrl = 'https://auth.flowzcluster.tk/auth/twitter';
     loginWithGithubUrl = 'https://auth.flowzcluster.tk/auth/github';
     loginWithLinkedInUrl = 'https://auth.flowzcluster.tk/auth/linkedin';
-    paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
+    // paymentApiGateway = 'https://api.flowzcluster.tk/payment/availablegateway';
     vshopApi = 'https://api.flowzcluster.tk/pdmnew/vshop-list';
     crmsettingapi='https://api.flowzcluster.tk/crm/settings'
     flowzDashboardUrl = 'https://dashboard.flowzcluster.tk'
     buildersettings='https://api.flowzcluster.tk/crm/buildersettings/'
+    menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories'
 }
 
 module.exports = {
@@ -98,9 +100,10 @@ module.exports = {
     loginWithGithubUrl: loginWithGithubUrl,
     loginWithLinkedInUrl: loginWithLinkedInUrl,
 
-    paymentApiGateway: paymentApiGateway,
+    // paymentApiGateway: paymentApiGateway,
 
     vshopApi : vshopApi,
+    menuCategoriesUrl : menuCategoriesUrl, 
 
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',

@@ -46,7 +46,7 @@
     "vue-sweetalert": "^0.1.18",
     "vue-widgets": "^1.0.9",
     "vuedraggable": "^2.15.0",
-    "vuex": "^2.3.1",
+    "vuex": "2.3.1",
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {

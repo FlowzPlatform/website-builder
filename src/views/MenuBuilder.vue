@@ -3,25 +3,25 @@
 		<section class="container" style="margin-top: 2%;">
 		  <h3 id="user-menu">Customize Menu:</h3>
 
-		  	<div class="well">
+		  	<!-- <div class="well">
 		  		<div class="row">
 		  			<div class="col-md-12">
                 	<div class="row">
-                		<div class="col-md-5">
+                		<!-- <div class="col-md-5">
                 			<input type="text" class="form-control" placeholder="Enter API URL" name="apiUrl" v-model="apiUrl">		
-                		</div>
-                		<div class="col-md-5">
-                			<input type="text" class="form-control" placeholder="Enter Base URL" name="apiUrl" v-model="menuBaseUrl">		
+                		</div> --
+                		<div class="col-md-10">
+                			<input type="text" class="form-control" placeholder="Enter Base URL" name="menuBaseUrl" v-model="menuBaseUrl">		
                 		</div>
                 		<div class="col-md-2">
                 			<el-button type="primary" @click="updateMenuData()" :loading="fetchDataLoader">Fetch Data</el-button>
-                			<!-- <button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button> -->
+                			<!-- <button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button> --
                 		</div>
                 	</div>
                 	
 		  			</div>
 		  		</div>
-		  	</div>
+		  	</div> -->
 		  	
 		  	<div class="row" style="margin-bottom: 70px;">
 		  		<div class="col-md-12">
@@ -42,9 +42,9 @@
 					        <!-- .dd-button-container will hide once an item enters the edit mode -->
 					        <div class="dd-button-container">
 					          <!-- @migrating-from 0.13.29 add button-->
-					          <button class="custom-button-example">&#x270E;</button>
-					          <button class="item-add">+</button>
-					          <button class="item-remove" data-confirm-class="item-remove-confirm">&times;</button>
+					          <button class="menu-btn custom-button-example">&#x270E;</button>
+					          <button class="menu-btn item-add">+</button>
+					          <button class="menu-btn item-remove" data-confirm-class="item-remove-confirm">&times;</button>
 					        </div>
 					        <!-- Inside of .dd-edit-box you can add your custom input fields -->
 					        <div class="dd-edit-box" style="display: none;">
@@ -54,21 +54,13 @@
 					          <input type="text" name="title" autocomplete="off" placeholder="Item"
 					                 data-placeholder="Any nice idea for the title?"
 					                 data-default-value="doMenu List Item. {?numeric.increment}">
-					          <select name="custom-select">
+					          <select name="custom-select" id="customSelect">
 					            <!-- <option>select something...</option> -->
 					            <optgroup label="Pages">
-					              <option value="index.html">Home</option>
-					              <option value="product-listing.html">Product Listing</option>
+					              <option v-bind:value="item.pageLink" v-for="item in pageList">{{item.pageName}}</option>
 					            </optgroup>
 					            <optgroup label="Categories">
-					              <option value="./listing.html?category=bags">Bags</option>
-					              <option value="./listing.html?category=pencils">Pencils</option>
-					              <option value="./listing.html?category=Handkerchief">Handkerchief</option>
-					              <option value="./listing.html?category=pens">pens</option>
-					              <option value="./listing.html?category=Mugs">Mugs</option>
-					              <option value="./listing.html?category=Notebooks">Notebooks</option>
-					              <option value="./listing.html?category=Bottles">Bottles</option>
-					              <option value="./listing.html?category=Keychains">Keychains</option>
+					              <option v-bind:value="item.categoryLink" v-for="item in categoriesList">{{item.categoryName}}</option>
 					            </optgroup>
 					          </select>
 					          <!-- @migrating-from 0.13.29 an element ".end-edit" within ".dd-edit-box" exists the edit mode on click -->
@@ -115,14 +107,15 @@ import domenu from 'domenu'
 	export default {
 		name: 'menuBuilder',
 		data: () => ({
-        outputJson: [],
-        MenuJSON: [],
-        apiUrl: 'https://api.flowzcluster.tk/pdmnew/categories',
-        menuBaseUrl: 'search.html?SearchSensor=',
-        fetchDataLoader: false
-	    }),
-	    components: {
-	    },
+      outputJson: [],
+      MenuJSON: [],
+      menuBaseUrl: 'search.html?SearchSensor="',
+      fetchDataLoader: false,
+      pageList: [],
+      categoriesList: []
+    }),
+    components: {
+    },
 		async created () {
 			let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
 			let urlparts = configFileUrl.split("/");
@@ -132,15 +125,28 @@ import domenu from 'domenu'
 			let actualFileNameOnly = fileNameParts[0];
 			var folderUrl = configFileUrl.replace(fileName, '');
 
+			let configData = await axios.get( config.baseURL + '/project-configuration/' + urlparts[6], )
+			.catch(function (error) {
+			    console.log(error);
+			});
+
+			let allPages = configData.data.configData[1].pageSettings;
+			for(let i = 0; i < allPages.length; i++){
+				this.pageList.push({
+					pageName: allPages[i].PageName,
+					pageLink: allPages[i].PageName
+				})
+			}
+
+			await this.fetchMenuData();
+
 			let menuData;
 
 			try {
 		    	let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json').catch((err)=>{ console.log('Error:', err); });
-				//// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
 				if(responseConfig.data){
 					menuData = responseConfig.data;
 					this.initMenu(menuData);
-					// window.localStorage.setItem('domenu-1Json', responseConfig.data);
 				} else {
 					menuData = [{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}];
 					this.initMenu(menuData);	
@@ -156,8 +162,6 @@ import domenu from 'domenu'
 
 		methods: {
 			initMenu(menuData){
-				// console.log('Menu Data: ', menuData);
-				// this.MenuJSON = responseConfig.data;
 
 				let montedself = this;
 
@@ -168,200 +172,132 @@ import domenu from 'domenu'
 		        $keepChanges       = $outputContainer.find('.keepChanges'),
 		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-		    $domenu.domenu({
-		        slideAnimationDuration: 0,
-		        allowListMerging: ['domenu-2'],
-		        select2:                {
-		          support: true,
-		          params:  {
-		            tags: true
-		          }
-		        },
-		        data: menuData
-		        // data: montedself.MenuJSON
-		      })
-		      // Example: initializing functionality of a custom button #21
-		      .onCreateItem(function(blueprint) {
-		        // We look with jQuery for our custom button we denoted with class "custom-button-example"
-		        // Note 1: blueprint holds a reference of the element which is about to be added the list
-		        var customButton = $(blueprint).find('.custom-button-example');
+				    $domenu.domenu({
+			        slideAnimationDuration: 0,
+			        allowListMerging: ['domenu-2'],
+			        select2:                {
+			          support: true,
+			          params:  {
+			            tags: true
+			          }
+			        },
+			        data: menuData
+			      })
+			      // Example: initializing functionality of a custom button #21
+			      .onCreateItem(function(blueprint) {
+			        // We look with jQuery for our custom button we denoted with class "custom-button-example"
+			        // Note 1: blueprint holds a reference of the element which is about to be added the list
+			        var customButton = $(blueprint).find('.custom-button-example');
 
-		        // Here we define our custom functionality for the button,
-		        // we will forward the click to .dd3-content span and let
-		        // doMenu handle the rest
-		        customButton.click(function() {
-		          blueprint.find('.dd3-content span').first().click();
-		        });
-		      })
-		      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
-		      // initialize the functionality our custom button
-		      .parseJson()
-		      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
-		        $jsonOutput.val(domenu.toJson());
-		        montedself.outputJson = JSON.parse(domenu.toJson());
-		        // if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1Json', domenu.toJson());
-		      })
-		      .onToJson(function() {
-		        // if(window.localStorage.length) $clearLocalStorage.show();
-		      });
+			        // Here we define our custom functionality for the button,
+			        // we will forward the click to .dd3-content span and let
+			        // doMenu handle the rest
+			        customButton.click(function() {
+			          blueprint.find('.dd3-content span').first().click();
+			        });
+			      })
+			      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
+			      // initialize the functionality our custom button
+			      .parseJson()
+			      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
+			        $jsonOutput.val(domenu.toJson());
+			        montedself.outputJson = JSON.parse(domenu.toJson());
+			      })
+			      .onToJson(function() {
+			      });
 
-		    // Init textarea
-		    $jsonOutput.val(domenu.toJson());
-		    // montedself.outputJson = JSON.parse(domenu.toJson());
-		    //montedself.outputJson = [{"abc":"test"}]
-		    ////console.log(this.outputJson);
-		    // $keepChanges.on('click', function() {
-		    //   if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
-		    //   if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
-		    // });
+			    // Init textarea
+			    $jsonOutput.val(domenu.toJson());
 
-		    // if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
+			    // var $optionGroup = $("#customSelect").find('optgroup[label="Categories"]');
 
-				// $(document).ready(function() {
-				//     var $domenu            = $('#domenu-1'),
-				//         domenu             = $('#domenu-1').domenu(),
-				//         $outputContainer   = $('#domenu-1-output'),
-				//         $jsonOutput        = $outputContainer.find('.jsonOutput'),
-				//         $keepChanges       = $outputContainer.find('.keepChanges'),
-				//         $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
-
-				//     $domenu.domenu({
-				//         slideAnimationDuration: 0,
-				//         allowListMerging: ['domenu-2'],
-				//         select2:                {
-				//           support: true,
-				//           params:  {
-				//             tags: true
-				//           }
-				//         },
-				//         data: menuData
-				//         // data: montedself.MenuJSON
-				//       })
-				//       // Example: initializing functionality of a custom button #21
-				//       .onCreateItem(function(blueprint) {
-				//         // We look with jQuery for our custom button we denoted with class "custom-button-example"
-				//         // Note 1: blueprint holds a reference of the element which is about to be added the list
-				//         var customButton = $(blueprint).find('.custom-button-example');
-
-				//         // Here we define our custom functionality for the button,
-				//         // we will forward the click to .dd3-content span and let
-				//         // doMenu handle the rest
-				//         customButton.click(function() {
-				//           blueprint.find('.dd3-content span').first().click();
-				//         });
-				//       })
-				//       // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
-				//       // initialize the functionality our custom button
-				//       .parseJson()
-				//       .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
-				//         $jsonOutput.val(domenu.toJson());
-				//         montedself.outputJson = JSON.parse(domenu.toJson());
-				//         // if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1Json', domenu.toJson());
-				//       })
-				//       .onToJson(function() {
-				//         // if(window.localStorage.length) $clearLocalStorage.show();
-				//       });
-
-				//     // Init textarea
-				//     $jsonOutput.val(domenu.toJson());
-				//     // montedself.outputJson = JSON.parse(domenu.toJson());
-				//     //montedself.outputJson = [{"abc":"test"}]
-				//     ////console.log(this.outputJson);
-				//     // $keepChanges.on('click', function() {
-				//     //   if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
-				//     //   if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
-				//     // });
-
-				//     // if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
-				//   });
+			    // if(this.categoriesList.length > 0){
+			    // 	for(var i = 0; i < this.categoriesList.length; i++){
+			    // 		console.log(this.categoriesList[i].categoryLink)
+					  //   $optionGroup.append('<option value="' + this.categoriesList[i].categoryLink + '">' + this.categoriesList[i].categoryName + '</option>');
+				   //  }
+			    // }
+			  
 			},
 			
 			getMenuJson: function () {
 				this.$store.state.content = $('.jsonOutput').val();
 			},
 
-			async updateMenuData () {
+			async fetchMenuData () {
 
-				this.fetchDataLoader = true;
-
-				// window.localStorage.setItem('domenu-1Json', []);
-
+				// this.fetchDataLoader = true;
 
 				let menuData;
 				let vid = '';
 
-				//console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'));
-
 				let folderPath = this.$store.state.fileUrl.replace(/\\/g, "\/");
 				let folderName = folderPath.split('/')[6];
-
-				// let fullUrl = '/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + folderName + '/public/assets/project-details.json';
-
-				// await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + fullUrl, {
-				// })
-				// .then((res) => {
-				// 	let configs = JSON.parse(res.data);
-				// 	// console.log(configs);
-				// 	// console.log(configs[0].Projectvid.vid);
-				// 	vid = configs[0].Projectvid.vid;
-				// })
-				// .catch((e) => {
-				//     console.log(e)
-				// })
 
 				await axios.get(config.baseURL + '/project-configuration/' + folderName , {
 				})
 				.then(function (response) {
-				    console.log(response);
 				    let configs = response.data.configData;
 				    vid = configs[1].projectSettings[0].ProjectVId.vid;
 				})
 				.catch(function (error) {
 				    console.log(error);
-				    this.fetchDataLoader = false;
+				    // this.fetchDataLoader = false;
 				});
 
-				axios.get(this.apiUrl, {
+				if(vid){
+					await axios.get(config.menuCategoriesUrl, {
 				    headers: {
 				    	Authorization: Cookies.get('auth_token'),
 				    	vid: vid
 				    }
-				})
-				.then((res) => {
-					console.log(res);
-					let menuJson = [];
+					})
+					.then((res) => {
+						let menuJson = [];
 				    let categories = res.data.aggregations.group_by_category.buckets;
 
 				    for(let i = 0; i < categories.length; i++){
-				    	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
-				    	let menuItem = {
-										    "id": i,
-										    "title": categories[i].key,
-										    "customSelect": this.menuBaseUrl + urlName,
-										    "__domenu_params": {}
-										    ,
-										    "select2ScrollPosition": {
-										        "x": 0, "y": 0
-										    }
-										};
+				    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-') + '"';
 
-						menuJson.push(menuItem);								
+				    	this.categoriesList.push({
+				    		categoryName: categories[i].key.toUpperCase(),
+				    		categoryLink: this.menuBaseUrl + urlName
+				    	});
+
+				      //let menuItem = {
+							// 			    "id": i,
+							// 			    "title": categories[i].key.toUpperCase(),
+							// 			    "customSelect": this.menuBaseUrl + urlName,
+							// 			    "__domenu_params": {}
+							// 			    ,
+							// 			    "select2ScrollPosition": {
+							// 			        "x": 0, "y": 0
+							// 			    }
+							// 			};
+
+							// menuJson.push(menuItem);								
 			    	}
 
-			    	menuData = JSON.stringify(menuJson);
-			    	// window.localStorage.setItem('domenu-1Json', JSON.stringify(menuJson));
-			    	this.fetchDataLoader = false;
-			    	this.initMenu(menuData);
-				})
-				.catch((e) => {
+			    	// menuData = JSON.stringify(menuJson);
+			    	// this.fetchDataLoader = false;
+			    	// this.initMenu(menuData);
+					})
+					.catch((e) => {
 				    this.$message({
 				        showClose: true,
 				        message: 'Failed! Please try again.',
 				        type: 'error'
 				    });
 				    console.log(e);
-				    this.fetchDataLoader = false;
-				})
+				    // this.fetchDataLoader = false;
+					})
+				} else {
+					this.$message({
+				        showClose: true,
+				        message: 'Please set "VID" in Project settings to get all of your category list.',
+				        type: 'info'
+				    });
+				}
 			}
 		}
 	}
@@ -773,5 +709,11 @@ import domenu from 'domenu'
 		text-shadow: none;
 		border-radius: 3px;
 		border: 1px solid #999;
+	}
+
+	.menu-btn{
+		width: 20px;
+		height: 20px;
+		font-weight: bolder;
 	}
 </style>

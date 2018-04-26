@@ -225,36 +225,36 @@
                             <i class="fa fa-file-image-o">
                                 <span class="icon-bg hh-bg-warning"></span>
                             </i>
-                            <span class="hh-sidebar-item">Banners</span>
+                            <span class="hh-sidebar-item">Banner Management</span>
                         </a>
                     </li>
                     <li v-if="bExpand">
-                        <a href="#" class="" @click='goToBanner("bt_add")'>
-                            <i class="fa fa-plus">
+                        <a href="#" class="inside-items" @click='goToBanner("bt_add")'>
+                            <i class="">
                                 <span class="icon-bg"></span>
                             </i>
                             <span class="hh-sidebar-item">Add Banner Type</span>
                         </a>
                     </li>
                     <li  v-if="bExpand"  @click='goToBanner("bt_list")'>
-                        <a href="#" class="">
-                            <i class="fa fa-list">
+                        <a href="#" class="inside-items">
+                            <i class="">
                                 <span class="icon-bg"></span>
                             </i>
                             <span class="hh-sidebar-item">List BannerType</span>
                         </a>
                     </li>
                     <li  v-if="bExpand"  @click='goToBanner("b_add")'>
-                        <a href="#" class="">
-                            <i class="fa fa-plus">
+                        <a href="#" class="inside-items">
+                            <i class="">
                                 <span class="icon-bg"></span>
                             </i>
                             <span class="hh-sidebar-item">Add Banner</span>
                         </a>
                     </li>
                     <li  v-if="bExpand"  @click='goToBanner("b_list")'>
-                        <a href="#" class="">
-                            <i class="fa fa-list">
+                        <a href="#" class="inside-items">
+                            <i class="">
                                 <span class="icon-bg"></span>
                             </i>
                             <span class="hh-sidebar-item">List Banners</span>
@@ -558,7 +558,7 @@ a, a:hover, a:visited, a:link, a:active {
     -webkit-box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
             box-shadow: 0 0px 9px 4px rgba(0, 0, 0, 0.1), 0 -5px 2px 2px rgba(0, 0, 0, 0.1);
     background: white;
-    z-index: -1;
+    z-index: 1;
     text-align: center;
 }
 
@@ -2134,5 +2134,24 @@ ul.hh-dropmenu-item {
 .skew-logout-btn i{
   color: #fff;
   margin: 5px 7px;
+}
+
+
+
+
+
+
+
+
+
+
+.inside-items{
+  
+}
+
+.inside-items:before{
+  content: '⤷';
+  color: #fff;    
+  margin-left: 25px;    
 }
 </style>

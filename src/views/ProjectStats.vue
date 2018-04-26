@@ -574,32 +574,32 @@ export default {
 
     let self = this;
 
-    $.fn.editable.defaults.mode = 'inline';
+    // $.fn.editable.defaults.mode = 'inline';
 
-    $(document).ready(function() {
-      $('#seoTitle').editable();
-      $('#seoKeywords').editable();
-      $('#seoDesc').editable({
-        title: 'Enter Description',
-        rows: 10
-      });
+    // $(document).ready(function() {
+    //   $('#seoTitle').editable();
+    //   $('#seoKeywords').editable();
+    //   $('#seoDesc').editable({
+    //     title: 'Enter Description',
+    //     rows: 10
+    //   });
 
-      $('#seoTitle').on('save', function(e, params) {
-         // alert('Saved value: ' + params.newValue);
-        self.settings[1].projectSettings[0].ProjectSEOTitle = params.newValue;
-        self.saveProjectSettings();
-      });
+    //   $('#seoTitle').on('save', function(e, params) {
+    //      // alert('Saved value: ' + params.newValue);
+    //     self.settings[1].projectSettings[0].ProjectSEOTitle = params.newValue;
+    //     self.saveProjectSettings();
+    //   });
 
-      $('#seoKeywords').on('save', function(e, params) {
-        self.settings[1].projectSettings[0].ProjectSEOKeywords = params.newValue;
-        self.saveProjectSettings();
-      });
+    //   $('#seoKeywords').on('save', function(e, params) {
+    //     self.settings[1].projectSettings[0].ProjectSEOKeywords = params.newValue;
+    //     self.saveProjectSettings();
+    //   });
 
-      $('#seoDesc').on('save', function(e, params) {
-        self.settings[1].projectSettings[0].ProjectSEODescription = params.newValue;
-        self.saveProjectSettings();
-      });
-    });
+    //   $('#seoDesc').on('save', function(e, params) {
+    //     self.settings[1].projectSettings[0].ProjectSEODescription = params.newValue;
+    //     self.saveProjectSettings();
+    //   });
+    // });
 
     // // Count Up animation
     // $('.counter').each(function() {

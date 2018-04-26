@@ -96,7 +96,7 @@
               </el-dialog>
 
               <!-- New Website Project Dialog if it's not dashboard page -->
-              <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")'>
+              <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")' id="createProjectModal">
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
                   <el-form-item prop="projectName">
                     <div class="row">
@@ -2999,15 +2999,14 @@
                 var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                 await axios.post(config.baseURL + '/flows-dir-listing', {
-                        filename: mainMetal,
-                        text: metalsmithJSON,
-                        type: 'file'
-                    })
-                    .then((res) => {})
-                    .catch((e) => {
-                        console.log(e)
-                    });
-
+                    filename: mainMetal,
+                    text: metalsmithJSON,
+                    type: 'file'
+                })
+                .then((res) => {})
+                .catch((e) => {
+                    console.log(e)
+                });
 
 
                 //create backup_mainVue file
@@ -4915,7 +4914,50 @@
                         }
                         responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
 
-                        // self.form.partials = back_partials
+              this.$message({
+                message: 'File Saved!',
+                showClose: true,
+                type: 'success'
+              });
+            })
+            .catch((e) => {
+              this.saveFileLoading = false
+              this.$message({
+                showClose: true,
+                message: 'File not saved! Please try again.',
+                type: 'error'
+              });
+              console.log(e)
+            })
+        } else {
+          this.newProjectFolderDialog = false;
+          this.fullscreenLoading = false;
+          this.$session.remove('username');
+          localStorage.removeItem('current_sub_id');
+          Cookies.remove('subscriptionId' ,{domain: location});
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+
+          Cookies.remove('auth_token', {
+            domain: location
+          });
+          Cookies.remove('email', {
+            domain: location
+          });
+          Cookies.remove('userDetailId', {
+            domain: location
+          });
+          Cookies.remove('subscriptionId', {
+            domain: location
+          });
+              this.$message({
+              message: 'You\'re Logged Out From System. Please login again!',
+              type: 'error',
+              onClose(){
+                window.location = '/login'
+              }
+            });
+        }
 
                         // console.log("Final metalsmith:", responseMetal.data);
 
@@ -6635,8 +6677,30 @@
                         
                     }
 
-                })
-            },
+            }
+          }
+          
+          if(checkdetail!=false){
+            // console.log('not same found')
+           
+           this.addProjectFolder(projectName)
+          }
+          else{
+            this.fullscreenLoading=false
+            this.$message({
+            showClose: true,
+            message: 'Website with "'+this.formAddProjectFolder.projectName+'" already exists!',
+            type: 'error'
+            });
+           this.$refs[projectName].resetFields();
+          
+          }
+        } else {
+          $('#createProjectModal').scrollTop(0);
+        }
+       
+      })
+      },
 
             // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
 

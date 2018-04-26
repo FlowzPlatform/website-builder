@@ -437,8 +437,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     // Social Media icons designed by gaurav
     bm.add('socialmedia', {
-        label: 'Social Medai Icons',
-        content: '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"><div class="col-md-12"><ul class="social-network social-circle"> <li><a href="#" class="icoRss" title="Rss"><i class="fa fa-rss"></i></a></li><li><a href="#" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li><li><a href="#" class="icoTwitter" title="Twitter"><i class="fa fa-twitter"></i></a></li><li><a href="#" class="icoGoogle" title="Google +"><i class="fa fa-google-plus"></i></a></li><li><a href="#" class="icoLinkedin" title="Linkedin"><i class="fa fa-linkedin"></i></a></li></ul></div>',
+        label: 'Social Media Icons',
+        content: '<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"><style type="text/css"> @charset "UTF-8"; .social__wrap{margin: 0; padding: 0;}.social__wrap:after{content: ""; display: block; clear: both;}.social__item{list-style: none; float: left; width: 12.5%; margin: 0; padding: 0; position: relative;}.social__item a{display: block; text-decoration: none; padding: 50%; cursor: pointer; transition: all .25s ease-in-out; -webkit-font-smoothing: antialiased;}.social__item a:before{text-indent: 0; font: normal normal normal 14px/1 FontAwesome; font-size: 1.5vw; color: #fff; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);}.social__item a span{display: none;}.social__link--facebook{background: #3b5998;}.social__link--facebook:before{content: "";}.social__link--facebook:hover{background: #4c70ba;}.social__link--twitter{background: #55acee;}.social__link--twitter:before{content: "";}.social__link--twitter:hover{background: #83c3f3;}.social__link--google-plus{background: #dc4e41;}.social__link--google-plus:before{content: "";}.social__link--google-plus:hover{background: #e4766c;}.social__link--linkedin{background: #0077b5;}.social__link--linkedin:before{content: "";}.social__link--linkedin:hover{background: #0099e8;}.social__link--instagram{background: #3f729b;}.social__link--instagram:before{content: "";}.social__link--instagram:hover{background: #548cb9;}.social__link--youtube{background: #cd201f;}.social__link--youtube:before{content: "";}.social__link--youtube:hover{background: #e23e3d;}.social__link--twitch{background: #6441a5;}.social__link--twitch:before{content: "";}.social__link--twitch:hover{background: #7e5bbe;}.social__link--paypal{background: #003087;}.social__link--paypal:before{content: "";}.social__link--paypal:hover{background: #0042ba;}</style><ul class="social__wrap"> <li class="social__item"> <a class="social__link--facebook" href=""> <span>facebook</span> </a> </li><li class="social__item"> <a class="social__link--twitter" href=""> <span>twitter</span> </a> </li><li class="social__item"> <a class="social__link--google-plus" href=""> <span>google-plus</span> </a> </li><li class="social__item"> <a class="social__link--linkedin" href=""> <span>linkedin</span> </a> </li><li class="social__item"> <a class="social__link--instagram" href=""> <span>instagram</span> </a> </li><li class="social__item"> <a class="social__link--youtube" href=""> <span>youtube</span> </a> </li><li class="social__item"> <a class="social__link--twitch" href=""> <span>twitch</span> </a> </li><li class="social__item"> <a class="social__link--paypal" href=""> <span>paypal</span> </a> </li></ul>',
         attributes: {
             class: 'fa fa-facebook',
             title: 'socialmedia'
@@ -651,7 +651,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     bm.add('SliderCustom', {
         label: 'Custom Slider',
-        content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script><CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
+        content: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script><style>.row {display: flex !important;}</style><CustomSliderComponent class="c-slider" style="display: block; width: 100%; min-height:60px"><div style="border:solid black 2px"></div></CustomSliderComponent>',
         attributes: {
             class: 'fa fa-sliders',
             title: 'Custom Slider',
@@ -2143,56 +2143,56 @@ editor.TraitManager.addType('content', {
     });
 
 
-    comps.addType('img', {
-        // Define the Model
-        model: defaultModel.extend({
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                        label: 'Data image field',
-                        name: ':src',
-                        type: 'content'
-                    },
-                    {
-                        label: 'image height',
-                        name: 'height',
-                        type: 'text'
-                    },
-                    {
-                        label: 'image width',
-                        name: 'width',
-                        type: 'text'
-                    },
-                    {
-                        label: 'image alt',
-                        name: 'alt',
-                        type: 'text'
-                    }
-                ]
-            }),
+    // comps.addType('img', {
+    //     // Define the Model
+    //     model: defaultModel.extend({
+    //         // Extend default properties
+    //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
+    //             editable: true,
+    //             droppable: true,
+    //             traits: [{
+    //                     label: 'Data image field',
+    //                     name: ':src',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image height',
+    //                     name: 'height',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image width',
+    //                     name: 'width',
+    //                     type: 'text'
+    //                 },
+    //                 {
+    //                     label: 'image alt',
+    //                     name: 'alt',
+    //                     type: 'text'
+    //                 }
+    //             ]
+    //         }),
 
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'IMG') {
-                    return {
-                        type: 'img'
-                    };
-                }
-            },
-        }),
+    //     }, {
+    //         isComponent: function(el) {
+    //             if (el.tagName == 'IMG') {
+    //                 return {
+    //                     type: 'img'
+    //                 };
+    //             }
+    //         },
+    //     }),
 
-        view: defaultType.view,
+    //     view: defaultType.view,
 
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
+    //     // The render() should return 'this'
+    //     render: function() {
+    //         // Extend the original render method
+    //         defaultType.view.prototype.render.apply(this, arguments);
+    //         this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+    //         return this;
+    //     },
+    // });
 
     editor.TraitManager.addType('customConent1', {
 
@@ -2357,12 +2357,59 @@ editor.TraitManager.addType('content', {
                 editable: true,
                 droppable: true,
                 traits: [{
-                    label: 'Banner Type',
+                    label: 'Category',
                     name: 'sliderCustom',
                     type: 'select',
                     options: bannerTypes
                     // options: [{'name' : 'hello', 'value':'hello'}, {'name' : 'hello2', 'value':'hello2'}]
-                }],
+                },
+                {
+                    label: 'Type',
+                    name: 'btype',
+                    type: 'select',
+                    options: [{'name': 'Normal Slider', 'value': 'normal'}, {'name': 'Brand Slider', 'value': 'brand'}]
+                },
+                {
+                    label: 'Autoplay (in ms)',
+                    name: 'aplay',
+                    type: 'number',
+                    value: 5000
+                },
+                {
+                    label: 'Pagination',
+                    name: 'pagination',
+                    type: 'checkbox',
+                    value: true
+                },
+                {
+                    label: 'Navigation',
+                    name: 'navigation',
+                    type: 'checkbox'
+                },
+                {
+                    label: 'Previous Button Text',
+                    name: 'prev',
+                    type: 'text',
+                    value: 'prev'
+                },
+                {
+                    label: 'Next Button Text',
+                    name: 'next',
+                    type: 'text',
+                    value: 'next'
+                },
+                {
+                    label: 'Slide Speed (in ms)',
+                    name: 'slidespeed',
+                    type: 'number',
+                    value: '200'
+                },
+                {
+                    label: 'Items displayed at a time (for brand slider)',
+                    name: 'ditems',
+                    type: 'number',
+                    value: 5
+                }]
             }),
         }, {
             isComponent: function(el) {

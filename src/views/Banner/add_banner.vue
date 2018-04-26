@@ -3,24 +3,97 @@
    <Row >
       <div style="padding-bottom: 10px;">
         <h2 v-if="formItem.id">Edit Banner</h2>
-        <h2 v-else>Add Banner</h2>
+        <h2 v-else>Add Banner
+          <span style="float:right;">
+            <Button type="ghost" shape="circle" style="margin-left: 8px" @click="handleCancel">Cancel</Button>
+            <Button type="primary" shape="circle" @click="handleSubmit('formItem')">Submit</Button>
+          </span>
+        </h2>
       </div>
    </Row>
    <Row style="border: 1px solid #C0C0C0; padding: 20px">
-     <Form :model="formItem" :label-width="300" ref="formItem" :rules="rulesformItem">
-        <FormItem label="Banner Name" prop="banner_name">
+      <div v-if="formItem.id === undefined">
+        <Form :model="formItem" :label-width="150" ref="formItem" :rules="rulesformItem">
+          <FormItem label="Category" prop="banner_type">
+              <Select v-model="formItem.banner_type" @on-change="OnChangeBannerType" :disabled="isdisable" filterable>
+                  <Option v-for="item in bannertypes" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+          </FormItem>
+        </Form>
+        <hr/>
+        <div v-if="isShowimgblock">
+          <el-button icon="upload2" @click="uploadAssetImage()" :loading="uploadAssetImageLoader">Upload</el-button>
+          <el-button icon="search" @click="startFetching" :loading="fetchImagesLoader">Fetch Images</el-button>
+          <Collapse v-model="colOpen" accordion v-if="assetsImages.length > 0" style="margin-top:10px;">
+              <Panel name="1">
+                  Cloudinary Images
+                  <div slot="content" >
+                    <div class="row" style="max-height: 500px; overflow-y: auto;">
+                        <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
+                            <a @click="imageSelection(index)">
+                                <Checkbox v-model="assetsImages[index].isSelect" size="large" style="padding-left:10px;"></Checkbox>
+                                <img class="thumbnail" :src="n.url" width="250" height="150" style="margin-top:-40px"/>
+                            </a>
+                      </div>
+                    </div>
+                  </div>
+              </Panel>
+          </Collapse>
+        </div>
+        <Row style="margin-top:30px;border-bottom: 1px solid #eee;">
+          <h4>Selected/uploaded Banners<span style="float:right;"> {{itemArr.length}} </span></h4>
+        </Row>
+        <Row style="margin-top:10px;background: #eceff1;" v-if="itemArr.length > 0">
+            <div  v-for="(mitem, index) in itemArr">
+              <Col :span="6" style="">
+                <div style="margin: 10px;padding-bottom:20px;border: 1px solid #eee;border-radius: 4px;background: white;padding:10px;">
+                  <a @click="handleRemoveItem(index)"><Icon class="mIcon" type="close-circled" style=""></Icon></a>
+                  <img :src="mitem.banner_img" height="180" class="thumbnail" style="width:-webkit-fill-available;border:unset;padding:0" />
+                  <!-- <hr> -->
+                  <Input v-model.trim="mitem.banner_linkurl" placeholder="Target Url"></Input>
+                  <Select v-model="mitem.linkurl_target" placeholder="Link Open With">
+                      <Option v-for="item in targetOpts" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                </div>
+              </Col>
+            </div>
+        </Row>
+      </div>
+      <div v-else>
+        <Form :model="formItem" :label-width="150" ref="formItem" :rules="updateRules">
+        <!-- <FormItem label="Banner Name" prop="banner_name">
             <Input v-model.trim="formItem.banner_name" placeholder="Banner Name"></Input>
-        </FormItem>
-        <FormItem label="Select Banner Type" prop="banner_type">
-            <Select v-model="formItem.banner_type" @on-change="OnChangeBannerType" :disabled="isdisable">
+        </FormItem> -->
+        <FormItem label="Category" prop="banner_type">
+            <Select v-model="formItem.banner_type" @on-change="OnChangeBannerType" :disabled="isdisable" filterable>
                 <Option v-for="item in bannertypes" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </FormItem>
-        <FormItem label="Upload Banner" prop="banner_img" v-if="isShowimgblock">
+        <FormItem label="Banner Image" prop="banner_img">
+          <a :href="formItem.banner_img" target="_blank">
+            <img :src="formItem.banner_img" width="200" height="100"/>
+          </a>
+        </FormItem>
+        <FormItem label="Upload Banner" v-if="isShowimgblock">
           <div >
-              <!-- <input name="banner_img" @change="handleFileChange" type="file" title="Upload Image" accept="image/*"> -->
               <el-button icon="upload2" @click="uploadAssetImage()" :loading="uploadAssetImageLoader">Upload</el-button>
-              <div v-if="uploadFile.original_filename !== undefined">
+              <el-button icon="search" @click="startFetching" :loading="fetchImagesLoader">Fetch Images</el-button>
+              <Collapse v-model="colOpen" accordion v-if="assetsImages.length > 0" style="margin-top:10px;">
+                <Panel name="1">
+                    Cloudinary Images
+                    <div slot="content" >
+                      <div class="row" style="max-height: 500px; overflow-y: auto;">
+                          <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
+                              <a @click="imageSelection(index, 'edit')">
+                                  <Checkbox v-model="assetsImages[index].isSelect" size="large" style="padding-left:10px;"></Checkbox>
+                                  <img class="thumbnail" :src="n.url" width="250" height="150" style="margin-top:-40px"/>
+                              </a>
+                        </div>
+                      </div>
+                    </div>
+                </Panel>
+            </Collapse>
+              <!-- <div v-if="uploadFile.original_filename !== undefined">
                 <div v-if="formItem.banner_img === ''">
                   <Spin></Spin>     
                 </div>
@@ -29,18 +102,28 @@
                     <img :src="formItem.banner_img" width="200" height="100"/>
                   </a>
                 </div>
-              </div>
-              <div v-else-if="formItem.id">
+              </div> -->
+              <!-- <div >
                 <a :href="formItem.banner_img" target="_blank">
-                    <img :src="formItem.banner_img" width="200" height="100"/>
-                  </a>
-              </div>
+                  <img :src="formItem.banner_img" width="200" height="100"/>
+                </a>
+              </div> -->
           </div>
         </FormItem>
+        <!-- <Row :gutter="16">
+            <Col :span="6" v-for="(mitem, index) in itemArr" style="padding:0px 5px 30px 5px;border: 1px solid #eee">
+                <a @click="handleRemoveItem(index)"><Icon class="mIcon" type="close-circled" style=""></Icon></a>
+                <img :src="mitem.banner_img" height="180" class="thumbnail" style="width:-webkit-fill-available;border:unset;" />
+                <Input v-model.trim="mitem.banner_linkurl" placeholder="Target Url"></Input>
+                <Select v-model="mitem.linkurl_target" placeholder="Link Open With">
+                    <Option v-for="item in targetOpts" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+            </Col>
+        </Row> -->
         <Row>
           <Col :span="16">
-            <FormItem label="Link URL" prop="banner_linkurl">
-                <Input v-model.trim="formItem.banner_linkurl" placeholder="Link Url"></Input>
+            <FormItem label="Target URL" prop="banner_linkurl">
+                <Input v-model.trim="formItem.banner_linkurl" placeholder="Target Url"></Input>
             </FormItem>
           </Col>
           <Col :span="8">
@@ -55,12 +138,13 @@
                 <span slot="close">Off</span>
             </i-switch>
         </FormItem>
-        <FormItem>
-            <Button v-if="formItem.id" type="primary" @click="handleEdit('formItem')">Update</Button>
-            <Button v-else type="primary" @click="handleSubmit('formItem')">Submit</Button>
-            <Button type="ghost" style="margin-left: 8px" @click="handleCancel">Cancel</Button>
-        </FormItem>
     </Form>
+      </div>
+      <Row style="padding-top: 10px">
+          <Button v-if="formItem.id" type="primary" @click="handleEdit('formItem')">Update</Button>
+          <Button v-else type="primary" @click="handleSubmit('formItem')">Submit</Button>
+          <Button type="ghost" style="margin-left: 8px" @click="handleCancel">Cancel</Button>
+      </Row>
    </Row>
   </div>
 </template>
@@ -96,6 +180,7 @@ export default {
       }
     };
     return {
+      colOpen: '0',
       isShowimgblock: false,
       formItem: {
         banner_name: '',
@@ -111,9 +196,6 @@ export default {
       uploadAssetImageLoader: false,
       bannertypes: [],
       rulesformItem: {
-        banner_name: [
-          { required: true, message: 'Please fill in the Banner Name', trigger: 'blur' }
-        ],
         banner_type: [
           { required: true, message: 'Please select the Banner Type', trigger: 'change' }
         ],
@@ -121,38 +203,105 @@ export default {
           { validator: validatelinkURL, trigger: 'blur' }
         ],
         banner_img: [
-          { required: true, message: 'Please select the Banner Image', trigger: 'change' }
+          // { required: true, message: 'Please select the Banner Image', trigger: 'change' }
           // { validator: validateIMG, trigger: 'change' }
         ]
+      },
+      updateRules: {
+          banner_type: [
+            { required: true, message: 'Please select the Banner Type', trigger: 'change' }
+          ],
+          banner_linkurl: [
+            { validator: validatelinkURL, trigger: 'blur' }
+          ],
+          banner_img: [
+            { required: true, message: 'Please select the Banner Image', trigger: 'change' }
+            // { validator: validateIMG, trigger: 'change' }
+          ]
       },
       uploadFile: {},
       targetOpts: [{
         label: 'New Window',
         value: '_blank' 
       }, {
-        label: 'This Window',
+        label: 'Same Window',
         value: 'same' 
       }],
       cloudDetails: {},
       btypeDetail: {},
-      isdisable: false
+      isdisable: false,
+      fetchImagesLoader: false,
+      assetsImages: [],
+      itemArr: []
+      // modelData: []
     }
   },
   methods: {
+    handleRemoveItem (inx) {
+      let finx = _.findIndex(this.assetsImages, {url: this.itemArr[inx].banner_img})
+      if (finx !== undefined && finx !== -1) {
+        this.assetsImages[finx].isSelect = false
+      }
+      this.itemArr.splice(inx, 1)
+    },
+    imageSelection (inx, name) {
+      this.assetsImages[inx].isSelect = !this.assetsImages[inx].isSelect
+      if (name === undefined) {
+        // new image selection
+        if (this.assetsImages[inx].isSelect) {
+          this.itemArr.push({
+            banner_name: '', 
+            banner_img: this.assetsImages[inx].url, 
+            banner_linkurl: '', 
+            banner_type: this.formItem.banner_type, 
+            banner_status: true, 
+            linkurl_target: '_blank'
+          })
+        } else {
+          let finx = _.findIndex(this.itemArr, {banner_img: this.assetsImages[inx].url})
+          if (finx !== undefined && finx !== -1) {
+            this.itemArr.splice(finx, 1)
+          }
+        }
+      } else {
+        // edit image
+        if (this.assetsImages[inx].isSelect) {
+          for (let [minx, obj] of this.assetsImages.entries()) {
+            if (inx !== minx && obj.isSelect) {
+              obj.isSelect = false
+            }
+          }
+          console.log(this.assetsImages[inx].url)
+          this.formItem.banner_img = this.assetsImages[inx].url 
+        } else {
+          this.formItem.banner_img = ''
+          this.assetsImages[inx].isSelect = !this.assetsImages[inx].isSelect
+        }
+      }
+    },
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid && this.isShowimgblock) {
-          this.$Spin.show();
-          this.formItem.createdAt = new Date()
-          // this.formItem.website_id = this.btypeDetail.website_id
-          axios.post(bannersUrl, this.formItem).then(res => {
-            this.$Spin.hide();
-            this.$Notice.success({title: 'Success!!', desc: '', duration: 2})
-            this.$emit('updateBanner', {type: 'bannerlist'})
-          }).catch(err => {
-            this.$Spin.hide();
-            this.$Notice.error({title: 'Error!!', desc: 'Not saved.', duration: 2})
-          })
+          if (this.itemArr.length > 0) {
+            for (let item of this.itemArr) {
+              item.createdAt = new Date()
+              item.userId = Cookies.get('userDetailId')
+            }
+            this.$Spin.show();
+            // console.log('itemArr', this.itemArr)
+            // this.formItem.createdAt = new Date()
+            // this.formItem.website_id = this.btypeDetail.website_id
+            axios.post(bannersUrl, this.itemArr).then(res => {
+              this.$Spin.hide();
+              this.$Notice.success({title: 'Success!!', desc: '', duration: 2})
+              this.$emit('updateBanner', {type: 'bannerlist'})
+            }).catch(err => {
+              this.$Spin.hide();
+              this.$Notice.error({title: 'Error!!', desc: 'Not saved.', duration: 2})
+            })
+          } else {
+            this.$Notice.error({title: 'No Banner uploaded or selected!!', desc: 'Select or Upload at least one Banner.', duration: 4})
+          }
         }
       })
     },
@@ -162,6 +311,7 @@ export default {
       this.$refs[name].validate(async(valid) => {
         if (valid && this.isShowimgblock) {
           this.$Spin.show();
+          item.createdAt = new Date()
           axios.put(bannersUrl + '/' + this.formItem.id, item).then(res => {
             this.$Spin.hide();
             this.$router.push({title: 'Success!!', desc: 'Successfully Edited.', duration: 2})
@@ -185,7 +335,7 @@ export default {
         upload_preset: this.cloudDetails.uploadPreset, 
         sources: ['local', 'camera', 'url', 'facebook']
       }, (error, result) => { 
-        console.log(error, result);
+        // console.log(error, result);
         if(error != null){
 
           if(error.message == 'User closed widget'){
@@ -200,12 +350,56 @@ export default {
           
           this.uploadAssetImageLoader = false;  
         } else {
-          // console.log(result[0])
-          this.uploadFile = result[0]
-          this.formItem.banner_img = result[0].url
+          // console.log('result::', result)
+          if (this.formItem.id === undefined) {
+            for (let item of result) {
+              this.itemArr.push({
+                banner_name: item.original_filename, 
+                banner_img: item.secure_url, 
+                banner_linkurl: '', 
+                banner_type: this.formItem.banner_type, 
+                banner_status: true, 
+                linkurl_target: '_blank'
+              })
+            }
+          } else {
+            this.uploadFile = result[0]
+            this.formItem.banner_img = result[0].url
+          }
           this.uploadAssetImageLoader = false;  
         }
       });
+    },
+    startFetching() {
+      this.colOpen = '1'
+      this.assetsImages = []
+      this.fetchImagesLoader = true;
+      this.fetchcloudinaryImages()
+    },
+    async fetchcloudinaryImages(){
+          await axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudDetails.cloudName + '&apiKey=' + this.cloudDetails.apiKey + '&apiSecret=' + this.cloudDetails.apiSecret + '&nextCursor=' + this.cloudDetails.nextCursor, {
+          })
+          .then((response) => {
+              for(let i = 0; i < response.data.resources.length; i++){
+                if (response.data.resources[i].secure_url === this.formItem.banner_img) {
+                  this.assetsImages.push({isSelect: true, url: response.data.resources[i].secure_url});
+                } else {
+                  this.assetsImages.push({isSelect: false, url: response.data.resources[i].secure_url});
+                }
+              }
+              if(response.data.next_cursor !== undefined){
+                this.cloudDetails.nextCursor = response.data.next_cursor;
+                this.fetchcloudinaryImages();
+              } else {
+                this.cloudDetails.nextCursor = '';
+                this.fetchImagesLoader = false;
+              }
+          })
+          .catch((error) => {
+              console.log(error);
+              // this.$Notice.error({title: 'Network Error', desc: '', duration: 2})
+              this.fetchImagesLoader = false;
+          });
     },
     async OnChangeBannerType (value) {
       // console.log(value)
@@ -255,6 +449,8 @@ export default {
           this.$Spin.hide()
         }
       }
+      this.assetsImages = []
+      this.itemArr = []
     }
   },
   mounted () {
@@ -277,8 +473,21 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 .bannersnew {
   padding: 40px;
+}
+.mIcon:hover {
+  color: red;
+}
+.mIcon {
+  color: #ddd;
+  font-size: 25px;
+  /*float:right;*/
+  /*padding-top: 0px;*/
+  position: absolute;
+  /*text-align: right;*/
+  right: 20px;
+  /*top: 20;*/
 }
 </style>
