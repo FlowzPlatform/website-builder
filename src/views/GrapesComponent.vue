@@ -45,8 +45,6 @@ export default {
 
         this.fileUrl = this.$store.state.fileUrl;
 
-
-
         // // get bootstrap css
         // let bootstrapcss = await axios.get('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
 
@@ -82,7 +80,35 @@ export default {
         //// console.log('Folder Name: ', configFileUrl.replace(fileName, ''));
         localStorage.setItem('folderUrl', configFileUrl.replace(fileName, ''));
 
-        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
+        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((e)=>{ 
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+                    confirmButtonText: 'logout',
+                    cancelButtonText: 'reload',
+                    type: 'error',
+                    center: true
+                  }).then(() => {
+                    localStorage.removeItem('current_sub_id');
+                    this.$session.remove('username');
+                    let location = psl.parse(window.location.hostname)
+                    location = location.domain === null ? location.input : location.domain
+                    Cookies.remove('auth_token' ,{domain: location});
+                    Cookies.remove('email' ,{domain: location});
+                    Cookies.remove('userDetailId' ,{domain: location}); 
+                    Cookies.remove('subscriptionId' ,{domain: location}); 
+                    this.isLoggedIn = false;
+                    // this.$router.push('/login');
+                    window.location = '/login';
+                  }).catch(() => {
+                    location.reload()
+                  }); 
+         });
         this.filename=responseConfig.data.websiteName+'/'+ fileName.replace('/','')
         let rawConfigs = responseConfig.data.configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;

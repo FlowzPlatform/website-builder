@@ -1902,9 +1902,14 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                         name: 'data_api'
                     },
                     {
-                        type: 'checkbox',
+                        type: 'select',
                         label: 'draggable',
                         name: 'draggable',
+                        options: [
+                        {value: '--select--', name: '--select--'},
+                        {value: 'true', name: 'true'},
+                        {value: 'false', name: 'false'}
+                        ]
                     }
                 ]
             }),
@@ -2041,7 +2046,30 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         },
     });
 
+// define custom traits
+// Each new type extends the default Trait
+editor.TraitManager.addType('content', {
+  /**
+  * Returns the input element
+  * @return {HTMLElement}
+  */
+  getInputEl: function() {
+    if (!this.inputEl) {
+      var input = document.createElement('textarea');
+      input.value = this.target.get('content');
+      this.inputEl = input;
+    }
+    return this.inputEl;
+  },
 
+  /**
+   * Triggered when the value of the model is changed
+   */
+  getValueForTarget: function() {
+    console.log("inside getValueForTargetss")
+    return 'item.text.' + this.model.get('value');
+  }
+});
 
     comps.addType('DataFieldText', {
         // Define the Model
@@ -2053,7 +2081,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 traits: [{
                     label: 'Data text field',
                     name: ':text',
-                    type: 'text'
+                    type: 'content'
                 }]
             }),
 
@@ -2077,6 +2105,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             return this;
         },
     });
+    
 
     comps.addType('DataFieldList', {
         // Define the Model
@@ -2088,7 +2117,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                 traits: [{
                     label: 'Data list field',
                     name: ':items',
-                    type: 'text'
+                    type: 'content'
                 }]
             }),
 
@@ -2165,25 +2194,13 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     //     },
     // });
 
-
-
-
-
-
-
-
-
-
-
-
-
     editor.TraitManager.addType('customConent1', {
 
         getInputEl: function() {
             if (!this.inputEl) {
                 var input = document.createElement('select');
-                input.setAttribute("id", "Div1");
-                input.setAttribute("name", "Div1");
+                input.setAttribute("id", "reusetrait");
+                input.setAttribute("name", "reusetrait");
                 input.setAttribute("style", "background:#363636");
                 let partialOptions = {};
 
@@ -2234,8 +2251,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
                             }
                         }
 
-
-
                         $('<option />').html('-- Select --').appendTo(input);
                         $.each(partialOptions, function(key, value) {
                             var group = $('<optgroup label="' + key + '" />');
@@ -2276,9 +2291,10 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             doStuff() {
                 var label, selected_value;
                 var folderUrl = localStorage.getItem("folderUrl");
-                $('#Div1').on('click', function() {
+                $('#reusetrait').on('select', function() {
+                    console.log("hello")
                     label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-                    selected_value = $("#Div1 option:selected").text();
+                    selected_value = $("#reusetrait option:selected").text();
                     let model = editor.getSelected();
                     var split_selected_value = selected_value.split(".");
                     if (split_selected_value[1] == "partial") {
