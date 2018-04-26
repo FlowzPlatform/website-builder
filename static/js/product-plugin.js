@@ -2153,7 +2153,7 @@ editor.TraitManager.addType('content', {
                 traits: [{
                         label: 'Data image field',
                         name: ':src',
-                        type: 'text'
+                        type: 'content'
                     },
                     {
                         label: 'image height',

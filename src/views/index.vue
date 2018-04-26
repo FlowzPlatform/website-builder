@@ -495,12 +495,14 @@
             const app = feathers().configure(socketio(socket1))
             let socketStatus = false;
             socket1.on('disconnect', function (disconnect){
-                socketStatus = true;
+                socketStatus = true    
             })
+            if(socketStatus == true){
+                this.$message("Currently Live updates are not available. Please wait or reload the page")
+            }
 
             // Socket Listen for Creating File or Folder
-            if(socketStatus == true){
-                app.service("flows-dir-listing").on("created", (response) => {
+            app.service("flows-dir-listing").on("created", (response) => {
                 if (response.socketListen) {
                     response.path = response.path.replace(/\//g, "\\")
                     var s = response.path.replace(this.rootpath, '').split('\\');
@@ -571,11 +573,6 @@
                     }
                 }
             });
-            }
-            else{
-                this.$message("Currently Live updates are not available. Please wait or reload the page");
-            }
-            
 
             // Get all subscriptions
             let sub_id = [];
@@ -860,6 +857,7 @@
                             this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '');
                                 })
                                 .catch((e) => {
+                                    let dataMessage = ''
                                   if (e.message != undefined) {
                                     dataMessage = e.message              
                                 } else if (e.response.data.message != undefined) {
@@ -1655,6 +1653,7 @@
                 return this.globalConfigData = rawConfigs;
                 })
                 .catch((e) => {
+                    let dataMessage = ''
                   if (e.message != undefined) {
                     dataMessage = e.message              
                 } else if (e.response.data.message != undefined) {
@@ -1879,6 +1878,7 @@
                             }
                             })
                             .catch((e) => {
+                                let dataMessage = ''
                               if (e.message != undefined) {
                                 dataMessage = e.message              
                             } else if (e.response.data.message != undefined) {
@@ -1989,6 +1989,7 @@
                         })
                         .then(async (res) => {
                             let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((e) => {
+                                let dataMessage = ''
                                 if (e.message != undefined) {
                                     dataMessage = e.message              
                                 } else if (e.response.data.message != undefined) {
@@ -2307,6 +2308,7 @@
                     });
                         })
                         .catch((e) => {
+                            let dataMessage = ''
                             if (e.message != undefined) {
                                 dataMessage = e.message              
                             } else if (e.response.data.message != undefined) {
@@ -2620,6 +2622,7 @@
                                     });
                             })
                             .catch((e) => {
+                                let dataMessage = ''
                                 if (e.message != undefined) {
                                     dataMessage = e.message              
                                 } else if (e.response.data.message != undefined) {
@@ -2897,7 +2900,7 @@
                 let maincss = newFolderName + '/public/main-files/main.css'
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: maincss,
-                        text: '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;} .grid{position: relative;}.item{display: block; position: absolute; width: 100%; max-width: 250px; height: auto; margin: 5px; z-index: 1; background: white; color: black; border: 1px solid black}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}',
+                        text: '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;}',
                         type: 'file'
                     })
                     .then((res) => {})
@@ -4283,6 +4286,7 @@
                         })
                         })
                         .catch((e) => {
+                            let dataMessage = '';
                             if (e.message != undefined) {
                                 dataMessage = e.message              
                             } else if (e.response.data.message != undefined) {
@@ -4949,7 +4953,7 @@
                                         "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
                                     divappstart = '<div id="app">'
                                     divappend = '</div>'
-                                    dfscript = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' + "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
+                                    dfscript = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' +  "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
                                 }
 
                                 let newContent = "<html>\n<head>\n" + tophead +
@@ -5183,6 +5187,7 @@
                             })
                             })
                             .catch((e) => {
+                                let dataMessage = '';
                                 if (e.message != undefined) {
                                     dataMessage = e.message              
                                 } else if (e.response.data.message != undefined) {
@@ -5936,7 +5941,15 @@
                 })
                     })
                     .catch((e) => {
-                        this.$confirm(e.response.data.message, 'Error', {
+                        let dataMessage = '';
+                        if (e.message != undefined) {
+                            dataMessage = e.message              
+                        } else if (e.response.data.message != undefined) {
+                        dataMessage = e.response.data.message
+                        } else{
+                        dataMessage = "Please try again! Some error occured."
+                        }
+                        this.$confirm(dataMessage, 'Error', {
                             confirmButtonText: 'logout',
                             cancelButtonText: 'reload',
                             type: 'error',
@@ -6358,6 +6371,7 @@
 
                                                             })
                                                             .catch((esourceConfig) => {
+                                                                let dataMessage = ''
                                                                 if (e.message != undefined) {
                                                                     dataMessage = e.message              
                                                                 } else if (e.response.data.message != undefined) {
@@ -6396,6 +6410,7 @@
                                                             });
                                                     })
                                                     .catch((e) => {
+                                                        let dataMessage = ''
                                                         if (e.message != undefined) {
                                                             dataMessage = e.message              
                                                         } else if (e.response.data.message != undefined) {
@@ -6588,6 +6603,7 @@
                         }
                         })
                         .catch((e) => {
+                            let dataMessage = ''
                           if (e.message != undefined) {
                             dataMessage = e.message              
                         } else if (e.response.data.message != undefined) {
