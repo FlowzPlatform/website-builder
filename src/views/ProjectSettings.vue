@@ -34,10 +34,10 @@
                 <br>
 
                 <div style="margin-top: 15px;">
-                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Publish</el-button>
+                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" >Publish</el-button>
   
                   <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button><br>
-                  <el-progress v-if='isdisabled==true' style='margin: 21px 0px 6px 0px' :percentage="70"></el-progress>
+                  <el-progress v-if='isdisabled==true' style='margin: 21px 0px 6px 0px' v-bind:percentage="percent"></el-progress>
                 </div>
               </div>
 
@@ -1101,6 +1101,12 @@ import newpaymentsettings from './settings/Online-Payment'
 import addnewpaymentgatway from './settings/addpayment'
 // import newaccountsettings from './settings/new-settings'
 // ProjectName Validator
+
+
+import feathers from 'feathers/client';
+import socketio from 'feathers-socketio/client';
+import io from 'socket.io-client';
+
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('Please enter Project Name.'));
@@ -1235,7 +1241,7 @@ export default {
         content: 'Update Me'
       }],
       Metacharset: '',
-
+      percent:0,
       publishWebsite: false,
       activeName: 'first',
       customDomainName: '',
@@ -1315,10 +1321,23 @@ export default {
 
   async mounted () {
 
+   // let self = this;
+    let socket = config.socketURL;
+    
+    const app = feathers().configure(socketio(io(socket)))
+    // Socket Listen for Creating File or Folder
+    app.service("jobqueue").on("patched", (response) => {
+     if(response.Status!=undefined && response.Status=='completed'){
+      this.isdisabled=false
+     }
+     else if(response.Percentage!=undefined && response.Percentage!=''){
+      this.percent=response.Percentage
+     }
+    });
 
-
-    // Collapsing Divs
+   // Collapsing Divs
     $(document).ready(function($) {
+
 
       $("#tooglePublishWebsite").click(function() {
         $("#togglePublishWebsiteContent").slideToggle("slow");
@@ -3445,7 +3464,9 @@ export default {
           this.fullscreenLoading = true;
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             //Now disabling the publish button.
-            this.isdisabled=true;           
+            this.percent=0
+            this.isdisabled=true;
+
 
             //Now calling api to copy of all folder to a temporary location.
 
@@ -4308,6 +4329,7 @@ export default {
 
     async init () {
       this.fullscreenLoading = true 
+        this.isdisabled=false
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
