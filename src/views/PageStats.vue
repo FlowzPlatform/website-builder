@@ -76,36 +76,7 @@ export default {
       let foldername = folderUrl.split('/');
       foldername = foldername[6];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((e)=>{ 
-        let dataMessage = '';
-            if (e.message != undefined) {
-                dataMessage = e.message              
-            } else if (e.response.data.message != undefined) {
-              dataMessage = e.response.data.message
-            } else{
-              dataMessage = "Please try again! Some error occured."
-            }
-            this.$confirm(dataMessage, 'Error', {
-          confirmButtonText: 'logout',
-          cancelButtonText: 'reload',
-          type: 'error',
-          center: true
-        }).then(() => {
-          localStorage.removeItem('current_sub_id');
-          this.$session.remove('username');
-          let location = psl.parse(window.location.hostname)
-          location = location.domain === null ? location.input : location.domain
-          Cookies.remove('auth_token' ,{domain: location});
-          Cookies.remove('email' ,{domain: location});
-          Cookies.remove('userDetailId' ,{domain: location}); 
-          Cookies.remove('subscriptionId' ,{domain: location}); 
-          this.isLoggedIn = false;
-          // this.$router.push('/login');
-          window.location = '/login';
-        }).catch(() => {
-          location.reload()
-        });
-       });
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
       if(this.configData.status == 200 || this.configData.status == 204){
         //console.log('Config file found! Updating fields..');
 
