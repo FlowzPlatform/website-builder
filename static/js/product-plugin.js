@@ -2199,8 +2199,8 @@ editor.TraitManager.addType('content', {
         getInputEl: function() {
             if (!this.inputEl) {
                 var input = document.createElement('select');
-                input.setAttribute("id", "reusetrait");
-                input.setAttribute("name", "reusetrait");
+                input.setAttribute("id", "Div1");
+                input.setAttribute("name", "Div1");
                 input.setAttribute("style", "background:#363636");
                 let partialOptions = {};
 
@@ -2251,6 +2251,8 @@ editor.TraitManager.addType('content', {
                             }
                         }
 
+
+
                         $('<option />').html('-- Select --').appendTo(input);
                         $.each(partialOptions, function(key, value) {
                             var group = $('<optgroup label="' + key + '" />');
@@ -2291,10 +2293,9 @@ editor.TraitManager.addType('content', {
             doStuff() {
                 var label, selected_value;
                 var folderUrl = localStorage.getItem("folderUrl");
-                $('#reusetrait').on('select', function() {
-                    console.log("hello")
+                $('#Div1').on('click', function() {
                     label = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-                    selected_value = $("#reusetrait option:selected").text();
+                    selected_value = $("#Div1 option:selected").text();
                     let model = editor.getSelected();
                     var split_selected_value = selected_value.split(".");
                     if (split_selected_value[1] == "partial") {
