@@ -5705,7 +5705,10 @@
                   </span>
                   <span class="action-button" style="float: right; padding-right: 5px;">
 
+
                         <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+
+
 
                         <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
                     

@@ -36,7 +36,7 @@
                 <div style="margin-top: 15px;">
                   <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" >Publish</el-button>
   
-                  <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button><br>
+                  <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button><br><small v-if='isdisabled==true'>*{{ textdata }}</small>
                   <el-progress v-if='isdisabled==true' style='margin: 21px 0px 6px 0px' v-bind:percentage="percent"></el-progress>
                 </div>
               </div>
@@ -1160,6 +1160,7 @@ export default {
       faviconhName:'',
       fileList3: [],
       pluginsData: [],
+      textdata:'',
       // commitMessage: '',
       newRepoId: '',
       repoName: '',
@@ -1326,11 +1327,16 @@ export default {
     
     const app = feathers().configure(socketio(io(socket)))
     // Socket Listen for Creating File or Folder
-    app.service("jobqueue").on("patched", (response) => {
+    app.service("jobqueue").on("patched", async (response) => {
      if(response.Status!=undefined && response.Status=='completed'){
+      
       this.isdisabled=false
      }
-     else if(response.Percentage!=undefined && response.Percentage!=''){
+    if(response.Status!=undefined && response.Status=='failed'){
+      this.isdisabled=false
+      console.log('job failed')
+     }
+    if(response.Percentage!=undefined && response.Percentage!=''){
       this.percent=response.Percentage
      }
     });
@@ -2853,9 +2859,9 @@ export default {
           }
 
       }
-      this.fullscreenLoading = false;
       await this.init();
       this.$emit('updateProjectName');
+      this.fullscreenLoading = false;
       // window.location.reload();
     },
 
@@ -3487,8 +3493,17 @@ export default {
                 TempdirURL:folderUrl+'/.temppublish',
                 Websiteid:this.repoName,
                 baseURL:config.baseURL})
-              .then((res)=>{
-
+              .then(async(res)=>{
+                console.log(res)
+                if(res.data.data=='successfull'){
+                  this.textdata='Job added successfull. Please wait you are in Queue.'
+                }
+                else if(res.data.data=='failed'){
+                  this.textdata='Failed. Please try again.'
+                  // this.percent=0
+                  // this.isdisabled=false;
+                }
+                 
                 this.fullscreenLoading=false
                 //Now we will keep listening for jobqueue completion.
                 
@@ -4572,6 +4587,7 @@ export default {
        let status=await axios.get(config.baseURL+'/jobqueue?websiteid='+this.repoName).catch((e)=>{this.fullscreenLoading = false })
        if(status.data.data=='active'){
         this.isdisabled=true
+        this.textdata='Job added successfull. Please wait you are in Queue.'
        }
        this.fullscreenLoading = false
 

@@ -41,6 +41,9 @@ const config = require('./config');
 import psl from 'psl';
 import Cookies from 'js-cookie';
 
+import feathers from 'feathers/client';
+import socketio from 'feathers-socketio/client';
+import io from 'socket.io-client';
 import SiteFooter from './views/footer';
 export default {
   name: 'app',
@@ -65,7 +68,37 @@ export default {
   mounted: function () {
     this.init();
     this.checkDashboard();
+    let socket = config.socketURL;
+    
+    const app = feathers().configure(socketio(io(socket)))
+    // Socket Listen for Creating File or Folder
+    app.service("jobqueue").on("patched", (response) => {
+     if(response.Status!=undefined && response.Status=='completed'){
+      // this.isdisabled=false
+      console.log('completed')
+      this.$message({
+         message: 'Congratulations, your website is published. Visit Website',
+         type: 'success',
+          showClose: true,
+          duration:0
+       });
 
+     }
+     else if(response.Status!=undefined && response.Status=='failed'){
+      // this.isdisabled=false
+      console.log('job failed')
+      this.$message({
+         message: 'Error! website not published.',
+         type: 'error',
+          showClose: true,
+          duration:0
+       });
+       // this.$message.error('Error! website not published.');
+     }
+     // else if(response.Percentage!=undefined && response.Percentage!=''){
+     //  // this.percent=response.Percentage
+     // }
+    });
     // Check for auth token on focusing to current tab
     // $(window).on('focus', function() { 
     //   alert(1);
