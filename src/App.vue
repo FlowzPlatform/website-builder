@@ -74,8 +74,6 @@ export default {
     // Socket Listen for Creating File or Folder
     app.service("jobqueue").on("patched", (response) => {
      if(response.Status!=undefined && response.Status=='completed'){
-      // this.isdisabled=false
-      console.log('completed')
       this.$message({
          message: 'Congratulations, '+response.websiteName+' is published. Visit Website',
          type: 'success',
@@ -84,11 +82,9 @@ export default {
        });
 
      }
-     else if(response.Status!=undefined && response.Status=='failed'){
-      // this.isdisabled=false
-      console.log('job failed')
+     else if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
       this.$message({
-         message: 'Error! website not published.',
+         message: 'Error! '+response.websiteName+' website not published.',
          type: 'error',
           showClose: true,
           duration:0

@@ -1328,22 +1328,25 @@ export default {
     const app = feathers().configure(socketio(io(socket)))
     // Socket Listen for Creating File or Folder
     app.service("jobqueue").on("patched", async (response) => {
+     if(this.repoName==response.websiteid){
      this.isdisabled = true;
       this.textdata='Job added successfull. Please wait you are in Queue.'
      if(response.Status!=undefined && response.Status=='completed'){
-      // this.saveProjectSettings()
-      this.init()
+      // console.log('completed')
       this.isdisabled=false
      }
-    if(response.Status!=undefined && response.Status=='failed'){
+    if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){  
       this.isdisabled=false
-      console.log('job failed')
+      this.percent=0
+      // console.log('job failed')
      }
     if(response.Percentage!=undefined && response.Percentage!=''){
       this.percent=response.Percentage
       // console.log(this.percent)
      }
-    });
+     }
+    })
+      
 
    // Collapsing Divs
     $(document).ready(function($) {
@@ -2471,7 +2474,6 @@ export default {
                         });
 
                         configData = JSON.parse(JSON.stringify(configData.data.configData))
-                        // console.log('configdata',JSON.parse(JSON.stringify(configData)))
                         for (let q = 0; q < Object.keys(configData[2].layoutOptions[0]).length; q++) {
                             //// console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
                             if (Object.keys(configData[2].layoutOptions[0])[q] != ('Layout')) {
@@ -2558,7 +2560,7 @@ export default {
 
                                                     configData[2].layoutOptions[0][namefolder].push(temp)
                                                 }
-                                                this.saveConfigFile(this.repoName, configData);
+                                                // this.saveConfigFile(this.repoName, configData);
                                             } else {
                                                 //console.log('file doesnt exists');
                                             }
@@ -2589,7 +2591,6 @@ export default {
 
                                                     configData[2].layoutOptions[0][namefolder].push(temp)
                                                 }
-                                                this.saveConfigFile(this.repoName, configData);
                                             } else {
                                                 //console.log('file doesnt exists');
                                             }
@@ -2868,9 +2869,9 @@ export default {
                             }
 
                         }
+                         this.settings=configData
                         await this.saveConfigFile(this.repoName, configData);
                         await this.saveProjectSettings();
-                        // await this.init();
                         await this.init();
                         this.$emit('updateProjectName');
                     })
