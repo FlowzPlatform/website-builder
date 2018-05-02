@@ -77,7 +77,7 @@ export default {
       // this.isdisabled=false
       console.log('completed')
       this.$message({
-         message: 'Congratulations, your website is published. Visit Website',
+         message: 'Congratulations, '+response.websiteName+' is published. Visit Website',
          type: 'success',
           showClose: true,
           duration:0

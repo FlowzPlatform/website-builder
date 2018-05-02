@@ -140,8 +140,6 @@ import domenu from 'domenu'
 
 			await this.fetchMenuData();
 
-			console.log(this.categoriesList);
-
 			let menuData;
 
 			try {
@@ -168,57 +166,57 @@ import domenu from 'domenu'
 				let montedself = this;
 
 				var $domenu        = $('#domenu-1'),
-        domenu             = $('#domenu-1').domenu(),
-        $outputContainer   = $('#domenu-1-output'),
-        $jsonOutput        = $outputContainer.find('.jsonOutput'),
-        $keepChanges       = $outputContainer.find('.keepChanges'),
-        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
+		        domenu             = $('#domenu-1').domenu(),
+		        $outputContainer   = $('#domenu-1-output'),
+		        $jsonOutput        = $outputContainer.find('.jsonOutput'),
+		        $keepChanges       = $outputContainer.find('.keepChanges'),
+		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-		    $domenu.domenu({
-	        slideAnimationDuration: 0,
-	        allowListMerging: ['domenu-2'],
-	        select2:                {
-	          support: true,
-	          params:  {
-	            tags: true
-	          }
-	        },
-	        data: menuData
-	      })
-	      // Example: initializing functionality of a custom button #21
-	      .onCreateItem(function(blueprint) {
-	        // We look with jQuery for our custom button we denoted with class "custom-button-example"
-	        // Note 1: blueprint holds a reference of the element which is about to be added the list
-	        var customButton = $(blueprint).find('.custom-button-example');
+				    $domenu.domenu({
+			        slideAnimationDuration: 0,
+			        allowListMerging: ['domenu-2'],
+			        select2:                {
+			          support: true,
+			          params:  {
+			            tags: true
+			          }
+			        },
+			        data: menuData
+			      })
+			      // Example: initializing functionality of a custom button #21
+			      .onCreateItem(function(blueprint) {
+			        // We look with jQuery for our custom button we denoted with class "custom-button-example"
+			        // Note 1: blueprint holds a reference of the element which is about to be added the list
+			        var customButton = $(blueprint).find('.custom-button-example');
 
-	        // Here we define our custom functionality for the button,
-	        // we will forward the click to .dd3-content span and let
-	        // doMenu handle the rest
-	        customButton.click(function() {
-	          blueprint.find('.dd3-content span').first().click();
-	        });
-	      })
-	      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
-	      // initialize the functionality our custom button
-	      .parseJson()
-	      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
-	        $jsonOutput.val(domenu.toJson());
-	        montedself.outputJson = JSON.parse(domenu.toJson());
-	      })
-	      .onToJson(function() {
-	      });
+			        // Here we define our custom functionality for the button,
+			        // we will forward the click to .dd3-content span and let
+			        // doMenu handle the rest
+			        customButton.click(function() {
+			          blueprint.find('.dd3-content span').first().click();
+			        });
+			      })
+			      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
+			      // initialize the functionality our custom button
+			      .parseJson()
+			      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
+			        $jsonOutput.val(domenu.toJson());
+			        montedself.outputJson = JSON.parse(domenu.toJson());
+			      })
+			      .onToJson(function() {
+			      });
 
-		    // Init textarea
-		    $jsonOutput.val(domenu.toJson());
+			    // Init textarea
+			    $jsonOutput.val(domenu.toJson());
 
-		    // var $optionGroup = $("#customSelect").find('optgroup[label="Categories"]');
+			    // var $optionGroup = $("#customSelect").find('optgroup[label="Categories"]');
 
-		    // if(this.categoriesList.length > 0){
-		    // 	for(var i = 0; i < this.categoriesList.length; i++){
-		    // 		console.log(this.categoriesList[i].categoryLink)
-				  //   $optionGroup.append('<option value="' + this.categoriesList[i].categoryLink + '">' + this.categoriesList[i].categoryName + '</option>');
-			   //  }
-		    // }
+			    // if(this.categoriesList.length > 0){
+			    // 	for(var i = 0; i < this.categoriesList.length; i++){
+			    // 		console.log(this.categoriesList[i].categoryLink)
+					  //   $optionGroup.append('<option value="' + this.categoriesList[i].categoryLink + '">' + this.categoriesList[i].categoryName + '</option>');
+				   //  }
+			    // }
 			  
 			},
 			
