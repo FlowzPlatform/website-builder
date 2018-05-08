@@ -280,6 +280,7 @@
         flag: false,
         options: '',
         value:'',
+        statusPublish:[],
         autoFolders: true,
         directoryTree: [],
         currentFile : null,
@@ -734,15 +735,30 @@
       // Get directory listing data
       getData() {
         this.treeLoading = true;
+        this.statusPublish=[]
         if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
            axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
           .then(async response => {
             response.data.children = this.getTreeData(response.data);
+              // console.log('children:',response.data.children.length)
 
-            // setTimeout(async function(){
+              // setTimeout(async function(){
               for (let i = 0; i < response.data.children.length; i++) {
                 // console.log('--------', response.data.children[i].name)
 
+                await axios.get(config.baseURL+'/jobqueue?websiteid='+response.data.children[i].name).then((res)=>{
+                // console.log(res)
+                let obj={}
+                if(res.data.data != undefined && res.data.data == 'active'){
+                  // console.log('active')
+                  obj[response.data.children[i].name]='Active'
+                }
+                else{
+                  // console.log('not active')
+                  obj[response.data.children[i].name]='notActive'
+                }
+                this.statusPublish.push(obj)
+              }).catch((e)=>{console.log(e)})
                 // Map folder name and project id
                 await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {
                 })
@@ -5693,22 +5709,24 @@
       // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
 
       // Displaying icons in tree nodes  
-      renderContent(h, { node, data, store }) {
-
+       renderContent(h, { node, data, store }) {
         if(data.type=='directory' && node.label != 'websites'){
           // If node is a website project directory
           if(node.level == 2){
-            return (<span>
+            
+            let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
+            // console.log('index',index)
+              if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
+                return (<span>
                   <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
                       <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
                       <span>{data.websitename}</span>
                   </span>
                   <span class="action-button" style="float: right; padding-right: 5px;">
 
+                        <i title='website publishing' class="fa fa-spinner fa-spin" aria-hidden="true" style="margin-right: 5px; "></i>
 
                         <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
-
-
 
                         <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
                     
@@ -5718,7 +5736,30 @@
                         <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
                     
                   </span>
-              </span>)  
+              </span>)
+              }else{
+                return (<span>
+                  <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
+                      <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                      <span>{data.websitename}</span>
+                  </span>
+                  <span class="action-button" style="float: right; padding-right: 5px;">
+
+  
+
+                        <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+
+                        <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                    
+                        <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                    
+                    
+                        <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
+                    
+                  </span>
+              </span>)
+              }
+             
           } else {
             // If it's a simple directory
             if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
@@ -5777,7 +5818,7 @@
               </span>);
             }
           }
-            
+          console.log('charo')  
         } else if(data.type=='file'){
           // var filePath = data.path;
           // var pathParts = filePath.split('/');

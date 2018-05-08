@@ -3143,7 +3143,7 @@ export default {
     async saveProjectSettings() {
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
-        axios.get(config.userDetail, {
+        await axios.get(config.userDetail, {
           headers: {
             'Authorization' : Cookies.get('auth_token')
           }   
@@ -3710,13 +3710,18 @@ export default {
           type: 'warning'
         }).then(async () => {
 
-          let canceldata=await axios.delete(config.baseURL+'/jobqueue?websiteid='+this.repoName)
+          await axios.delete(config.baseURL+'/jobqueue?websiteid='+this.repoName).then((res)=>{
+             this.isdisabled=false
+             console.log('canceled called');
+             this.$emit('updateProjectName')
+          }).catch((e)=>{
+
+          })
           // console.log('canceldata',canceldata.data)
 
 
 
-          this.isdisabled=false
-          console.log('canceled called');
+         
 
         })
      } else {
@@ -3791,7 +3796,7 @@ export default {
                 Websiteid:this.repoName,
                 baseURL:config.baseURL})
               .then(async(res)=>{
-                console.log(res)
+                // console.log(res)
                 if(res.data.data=='successfull'){
                   this.textdata='Job added successfull. Please wait you are in Queue.'
                 }
@@ -3800,6 +3805,7 @@ export default {
                   // this.percent=0
                   // this.isdisabled=false;
                 }
+                this.$emit('updateProjectName')
                  
                 this.fullscreenLoading=false
                 //Now we will keep listening for jobqueue completion.
@@ -4986,8 +4992,8 @@ export default {
                 type: 'warning',
               })
             }else{
-              var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
-              var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch(err => { console.log(err); this.fullscreenLoading = false });
+              let userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
+              let alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch(err => { console.log(err); this.fullscreenLoading = false });
               let checkdetail=true
               for(let i=0;i<alldatauser.data.data.length;i++){
                 if(this.form.websitename==alldatauser.data.data[i].websiteName){
