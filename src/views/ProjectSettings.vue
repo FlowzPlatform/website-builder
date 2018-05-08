@@ -1327,23 +1327,52 @@ export default {
     
     const app = feathers().configure(socketio(io(socket)))
     // Socket Listen for Creating File or Folder
+    
+    app.service("jobqueue").on("created", async (response) => {
+      console.log('create..',response);
+
+      if(this.repoName==response.websiteId) {
+        console.log('same id.. set disabled to true..')
+         this.percent=0
+        this.isdisabled = true;
+        this.textdata='Job added successfull. Please wait you are in Queue.'
+        this.$emit('updateProjectName')
+      } 
+    });
+    app.service("jobqueue").on("removed", async (response) => {
+      console.log('remove..',response);
+
+      if(this.repoName==response.websiteId) {
+        console.log('same id.. set disabled to false..')
+         this.percent=0
+        this.isdisabled = false;
+        this.textdata=''
+        this.$emit('updateProjectName')
+      } 
+    });
+
     app.service("jobqueue").on("patched", async (response) => {
+      console.log('response:',response)
      if(this.repoName==response.websiteid){
-     this.isdisabled = true;
-      this.textdata='Job added successfull. Please wait you are in Queue.'
-     if(response.Status!=undefined && response.Status=='completed'){
-      // console.log('completed')
-      this.isdisabled=false
-     }
-    if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){  
-      this.isdisabled=false
-      this.percent=0
-      // console.log('job failed')
-     }
-    if(response.Percentage!=undefined && response.Percentage!=''){
-      this.percent=response.Percentage
-      // console.log(this.percent)
-     }
+        console.log('same id.. set disabled to true..')
+       this.isdisabled = true;
+        this.textdata='Job added successfull. Please wait you are in Queue.'
+       if(response.Status!=undefined && response.Status=='completed'){
+        console.log('completed..', response)
+        this.$emit('updateProjectName')
+        this.isdisabled=false
+       }
+      if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){  
+        console.log('status cancelled..');
+        this.isdisabled=false
+        this.$emit('updateProjectName')
+        this.percent=0
+        // console.log('job failed')
+       }
+      if(response.Percentage!=undefined && response.Percentage!=''){
+        this.percent=response.Percentage
+        console.log('this.percent :: ',this.percent)
+       }
      }
     })
       
