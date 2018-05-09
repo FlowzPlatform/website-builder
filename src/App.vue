@@ -89,20 +89,9 @@ export default {
           showClose: true,
           duration:0
        });
-       // this.$message.error('Error! website not published.');
      }
-     // else if(response.Percentage!=undefined && response.Percentage!=''){
-     //  // this.percent=response.Percentage
-     // }
     });
-    // Check for auth token on focusing to current tab
-    // $(window).on('focus', function() { 
-    //   alert(1);
-    //   // let location = psl.parse(window.location.hostname)
-    //   // location = location.domain === null ? location.input : location.domain
-    //   // Cookies.remove('auth_token' ,{domain: location});
-    // });
-
+  
     this.checkAuth();
   },
   methods: {

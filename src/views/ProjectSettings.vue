@@ -1329,49 +1329,50 @@ export default {
     // Socket Listen for Creating File or Folder
     
     app.service("jobqueue").on("created", async (response) => {
-      console.log('create..',response);
+      // console.log('create..',response);
 
       if(this.repoName==response.websiteId) {
-        console.log('same id.. set disabled to true..')
-         this.percent=0
+        // console.log('same id.. set disabled to true..')
+        this.percent=0
+        console.log(this.isdisabled)
         this.isdisabled = true;
         this.textdata='Job added successfull. Please wait you are in Queue.'
-        this.$emit('updateProjectName')
+        this.$emit('updateName')
       } 
     });
     app.service("jobqueue").on("removed", async (response) => {
-      console.log('remove..',response);
+      // console.log('remove..',response);
 
       if(this.repoName==response.websiteId) {
-        console.log('same id.. set disabled to false..')
-         this.percent=0
+        // console.log('same id.. set disabled to false..')
+        this.percent=0
         this.isdisabled = false;
         this.textdata=''
-        this.$emit('updateProjectName')
+        this.$emit('updateName')
       } 
     });
 
     app.service("jobqueue").on("patched", async (response) => {
-      console.log('response:',response)
+      // console.log('response:',response)
      if(this.repoName==response.websiteid){
-        console.log('same id.. set disabled to true..')
+        // console.log('same id.. set disabled to true..')
        this.isdisabled = true;
         this.textdata='Job added successfull. Please wait you are in Queue.'
        if(response.Status!=undefined && response.Status=='completed'){
-        console.log('completed..', response)
-        this.$emit('updateProjectName')
+        // console.log('completed..', response)
+        this.$emit('updateName')
         this.isdisabled=false
        }
       if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){  
-        console.log('status cancelled..');
+        // console.log('status cancelled..');
         this.isdisabled=false
-        this.$emit('updateProjectName')
+        this.$emit('updateName')
         this.percent=0
         // console.log('job failed')
        }
       if(response.Percentage!=undefined && response.Percentage!=''){
         this.percent=response.Percentage
-        console.log('this.percent :: ',this.percent)
+        // console.log('this.percent :: ',this.percent)
        }
      }
     })
@@ -2902,7 +2903,7 @@ export default {
                         await this.saveConfigFile(this.repoName, configData);
                         await this.saveProjectSettings();
                         await this.init();
-                        this.$emit('updateProjectName');
+                        this.$emit('updateName');
                     })
                     .catch((e) => {
                         this.refreshPluginsLoading = false;
@@ -3429,7 +3430,7 @@ export default {
               console.log(e)
             })
            await this.init();
-          this.$emit('updateProjectName');
+          this.$emit('updateName');
       } else {
         this.$message({
           showClose: true,
@@ -3484,7 +3485,7 @@ export default {
                     type: 'success'
                   });
                   this.init();
-                  this.$emit('updateProjectName');
+                  this.$emit('updateName');
               })
               .catch(function (error) {
                   console.log(error);
@@ -3740,9 +3741,9 @@ export default {
         }).then(async () => {
 
           await axios.delete(config.baseURL+'/jobqueue?websiteid='+this.repoName).then((res)=>{
-             this.isdisabled=false
+             // this.isdisabled=false
              console.log('canceled called');
-             this.$emit('updateProjectName')
+             // this.$emit('updateName')
           }).catch((e)=>{
 
           })
@@ -3830,11 +3831,12 @@ export default {
                   this.textdata='Job added successfull. Please wait you are in Queue.'
                 }
                 else if(res.data.data=='failed'){
-                  this.textdata='Failed. Please try again.'
-                  // this.percent=0
-                  // this.isdisabled=false;
+                  this.textdata=''
+                  this.percent=0
+                  this.isdisabled=false;
+                  console.log('failed')
                 }
-                this.$emit('updateProjectName')
+                // this.$emit('updateName')
                  
                 this.fullscreenLoading=false
                 //Now we will keep listening for jobqueue completion.
@@ -5039,7 +5041,7 @@ export default {
                 await this.saveProjectSettings();
                 await this.init();
                 // location.reload();
-                this.$emit('updateProjectName');
+                this.$emit('updateName');
               }
               else{
                 this.$swal({

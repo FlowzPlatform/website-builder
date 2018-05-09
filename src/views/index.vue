@@ -144,8 +144,8 @@
               </el-dialog>
             </div>
 
-            <div v-if="display = true" style="margin-left: 10px;">
-              <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
+            <div v-if="display == true" style="margin-left: 10px;">
+              <component :is="componentId" ref="contentComponent" v-on:updateName="getData"></component>
             </div>
           </div>
         </div>
@@ -733,11 +733,11 @@
       },
 
       // Get directory listing data
-      getData() {
+      async getData() {
         this.treeLoading = true;
         this.statusPublish=[]
         if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-           axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
+           await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
           .then(async response => {
             response.data.children = this.getTreeData(response.data);
               // console.log('children:',response.data.children.length)
@@ -746,19 +746,20 @@
               for (let i = 0; i < response.data.children.length; i++) {
                 // console.log('--------', response.data.children[i].name)
 
-                await axios.get(config.baseURL+'/jobqueue?websiteid='+response.data.children[i].name).then((res)=>{
-                // console.log(res)
-                let obj={}
-                if(res.data.data != undefined && res.data.data == 'active'){
-                  // console.log('active')
-                  obj[response.data.children[i].name]='Active'
-                }
-                else{
-                  // console.log('not active')
-                  obj[response.data.children[i].name]='notActive'
-                }
-                this.statusPublish.push(obj)
-              }).catch((e)=>{console.log(e)})
+                await axios.get(config.baseURL+'/jobqueue?websiteid='+response.data.children[i].name)
+                .then((res)=>{
+                    // console.log(res)
+                    let obj={}
+                    if(res.data.data != undefined && res.data.data == 'active'){
+                      // console.log('active')
+                      obj[response.data.children[i].name]='Active'
+                    }
+                    else{
+                      // console.log('not active')
+                      obj[response.data.children[i].name]='notActive'
+                    }
+                    this.statusPublish.push(obj)
+                }).catch((e)=>{console.log(e)})
                 // Map folder name and project id
                 await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {
                 })
@@ -5713,9 +5714,11 @@
         if(data.type=='directory' && node.label != 'websites'){
           // If node is a website project directory
           if(node.level == 2){
+            console.log('renderContent')
             
             let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
-            // console.log('index',index)
+            console.log('index',index)
+            console.log(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]])
               if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
                 return (<span>
                   <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
