@@ -1013,6 +1013,7 @@
                       <th @click="sortBranchesTable(2)">Revision Message <i class="fa fa-sort pull-right"></i></th>
                       <!-- <th>Revision SHA</th> -->
                       <th>Rollback</th>
+                      <th>Log</th>
                       <th width="120">Download Code</th>
                     </tr>
                   </thead>
@@ -1027,10 +1028,16 @@
                         <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.branchName == currentBranchName">
                       </td>
                       <td>
+                        <el-tooltip content="View Log" placement="top">
+                          <el-button @click.native.prevent="logfile(index)" type="info" size="small"><i class="fa fa-file-text" aria-hidden="true"></i></el-button>
+                        </el-tooltip>
+                      </td>
+                      <td>
                         <el-tooltip content="Download .zip" placement="top">
                           <el-button @click.native.prevent="exportWebsite(index)" type="info" size="small"><i class="fa fa-download fa-fw"></i></el-button>
                         </el-tooltip>
                       </td>
+                      
                     </tr>
                   </tbody>
                 </table>
@@ -4702,6 +4709,13 @@ export default {
       let branchName = this.branchesData[index].branchName;
       // console.log(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
       window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=' + branchName);
+    },
+
+    logfile(index){
+
+      let branchName = this.branchesData[index].branchName;
+      // console.log(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
+      window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/raw/' + branchName+'/public/log.md');
     },
 
     async init () {

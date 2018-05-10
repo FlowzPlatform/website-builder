@@ -2445,6 +2445,19 @@
             //console.log(e)
         });
 
+        // Create log file
+        let logfile = newFolderName + '/public/log.md'
+        await axios.post(config.baseURL + '/flows-dir-listing', {
+            filename : logfile,
+            text : '# Welcome to Log File!',
+            type : 'file'
+        })
+        .then((res) => {
+        })
+        .catch((e) => {
+            //console.log(e)
+        });
+
         // Create main.js file
         let mainjs = newFolderName + '/public/main-files/main.js'
         await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -5714,11 +5727,11 @@
         if(data.type=='directory' && node.label != 'websites'){
           // If node is a website project directory
           if(node.level == 2){
-            console.log('renderContent')
+            // console.log('renderContent')
             
             let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
-            console.log('index',index)
-            console.log(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]])
+            // console.log('index',index)
+            // console.log(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]])
               if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
                 return (<span>
                   <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
