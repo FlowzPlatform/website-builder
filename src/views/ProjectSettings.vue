@@ -1338,7 +1338,7 @@ export default {
     app.service("jobqueue").on("created", async (response) => {
       console.log('create..',response);
 
-      if(this.repoName==response.websiteId) {
+      if(this.repoName==response.websiteid) {
         // console.log('same id.. set disabled to true..')
         this.percent=0
         this.isdisabled = true;
@@ -1350,7 +1350,7 @@ export default {
     app.service("jobqueue").on("removed", async (response) => {
       console.log('remove..',response);
 
-      if(this.repoName==response.websiteId) {
+      if(this.repoName==response.websiteid) {
         // console.log('same id.. set disabled to false..')
         this.percent=0
         this.isdisabled = false;
@@ -3806,6 +3806,7 @@ export default {
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             //Now disabling the publish button.
             this.percent=0
+            this.textdata=''
             // this.isdisabled=true;
 
 
@@ -3825,17 +3826,15 @@ export default {
 
               await axios.post(config.baseURL+'/jobqueue',{
                 RepojsonData:responseConfig.data,
-                TempdirURL:folderUrl+'/.temppublish',
-                Websiteid:this.repoName,
+                userId:Cookies.get('userDetailId'),
+                websiteId:this.repoName,
                 baseURL:config.baseURL})
               .then(async(res)=>{
-                // console.log(res)
+                console.log(res)
                 if(res.data.data=='successfull'){
                   this.textdata='Job added successfull. Please wait you are in Queue.'
                 }
                 else if(res.data.data=='failed'){
-                  this.textdata=''
-                  this.percent=0
                   // this.isdisabled=false;
                   console.log('failed')
                 }
