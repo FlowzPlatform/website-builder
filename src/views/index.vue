@@ -180,7 +180,7 @@
 
   const uuidv4 = require('uuid/v4');
 
-  var daex = require('json-daex');
+  let daex = require('json-daex');
 
   import Cookies from 'js-cookie';
 
@@ -737,6 +737,7 @@
         this.treeLoading = true;
         this.statusPublish=[]
         if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+          // console.log('getData')
            await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
           .then(async response => {
             response.data.children = this.getTreeData(response.data);
@@ -5728,11 +5729,10 @@
           // If node is a website project directory
           if(node.level == 2){
             // console.log('renderContent')
-            
+            // console.log('this.statusPublish',this.statusPublish)
             let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
-            // console.log('index',index)
-            // console.log(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]])
-              if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
+            if(index!=-1){
+                if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
                 return (<span>
                   <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
                       <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
@@ -5752,8 +5752,9 @@
                         <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
                     
                   </span>
-              </span>)
-              }else{
+                </span>)
+              }
+          else{
                 return (<span>
                   <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
                       <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
@@ -5773,8 +5774,32 @@
                         <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
                     
                   </span>
-              </span>)
+                </span>)
               }
+            }else{
+              // console.log('-1 found ')
+              return (<span>
+                  <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
+                      <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                      <span>{data.websitename}</span>
+                  </span>
+                  <span class="action-button" style="float: right; padding-right: 5px;">
+
+  
+
+                        <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+
+                        <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                    
+                        <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                    
+                    
+                        <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
+                    
+                  </span>
+                </span>)
+            }
+            
              
           } else {
             // If it's a simple directory

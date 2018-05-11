@@ -1336,19 +1336,19 @@ export default {
     // Socket Listen for Creating File or Folder
     
     app.service("jobqueue").on("created", async (response) => {
-      // console.log('create..',response);
+      console.log('create..',response);
 
       if(this.repoName==response.websiteId) {
         // console.log('same id.. set disabled to true..')
         this.percent=0
-        console.log(this.isdisabled)
         this.isdisabled = true;
-        this.textdata='Job added successfull. Please wait you are in Queue.'
+        this.textdata='Job added Successfully. Please wait you are in Queue.'
         this.$emit('updateName')
       } 
     });
+
     app.service("jobqueue").on("removed", async (response) => {
-      // console.log('remove..',response);
+      console.log('remove..',response);
 
       if(this.repoName==response.websiteId) {
         // console.log('same id.. set disabled to false..')
@@ -1364,14 +1364,15 @@ export default {
      if(this.repoName==response.websiteid){
         // console.log('same id.. set disabled to true..')
        this.isdisabled = true;
-        this.textdata='Job added successfull. Please wait you are in Queue.'
+        this.textdata='Job added Successfully. Please wait you are in Queue.'
        if(response.Status!=undefined && response.Status=='completed'){
         // console.log('completed..', response)
+        this.init()
         this.$emit('updateName')
         this.isdisabled=false
        }
-      if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){  
-        // console.log('status cancelled..');
+      if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
+        console.log('status cancelled or failed..');
         this.isdisabled=false
         this.$emit('updateName')
         this.percent=0
@@ -1382,7 +1383,7 @@ export default {
         // console.log('this.percent :: ',this.percent)
        }
      }
-    })
+    });
       
 
    // Collapsing Divs
@@ -3749,17 +3750,12 @@ export default {
 
           await axios.delete(config.baseURL+'/jobqueue?websiteid='+this.repoName).then((res)=>{
              // this.isdisabled=false
-             console.log('canceled called');
+             // console.log('canceled called');
              // this.$emit('updateName')
           }).catch((e)=>{
-
+            console.log(e)
           })
           // console.log('canceldata',canceldata.data)
-
-
-
-         
-
         })
      } else {
          this.newProjectFolderDialog = false;
@@ -3810,7 +3806,7 @@ export default {
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
             //Now disabling the publish button.
             this.percent=0
-            this.isdisabled=true;
+            // this.isdisabled=true;
 
 
             //Now calling api to copy of all folder to a temporary location.
@@ -3840,7 +3836,7 @@ export default {
                 else if(res.data.data=='failed'){
                   this.textdata=''
                   this.percent=0
-                  this.isdisabled=false;
+                  // this.isdisabled=false;
                   console.log('failed')
                 }
                 // this.$emit('updateName')
