@@ -1,29 +1,6 @@
 <template>
   <div class="ProjectSettings">
 
-    <!-- Publish Site Modal -->
-    <el-dialog title="Publish Website" :visible.sync="publishWebsite" size="tiny">
-      <!--<el-tabs v-model="activeName">
-         <el-tab-pane label="Default Domain" name="first">
-          Your Default domain will be: {{userDetailId}}.{{repoName}}.{{ipAddress}}
-          <br>
-          <br>
-            <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
-          <br>
-          <div align="right" style="margin-top: 15px;">
-            <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading">Default Publish</el-button>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="Custom Domain" name="second">
-          <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
-          <div align="right" style="margin-top: 15px;">
-            <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading">Custom Publish</el-button>
-          </div>
-
-        </el-tab-pane>
-      </el-tabs> -->
-    </el-dialog>
-
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
@@ -62,6 +39,18 @@
 
               <div class="col-md-12" v-else>
                 <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+                <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
+                  [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
+                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns1-copy')"><i class="fa fa-copy"></i></a>
+                    </el-tooltip>
+                  </strong> 
+                  [2] <strong><span id="ns2-copy">ns2.flowzdigital.com</span>
+                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns2-copy')"><i class="fa fa-copy"></i></a>
+                    </el-tooltip>
+                  </strong> 
+                </p>
                 <div style="margin-top: 15px;">
                   <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
                 </div>
@@ -99,9 +88,10 @@
                 <!-- <el-form-item label="Favicon Logo">
                    <el-input v-model="faviconhref" placeholder="href" ></el-input>
                 </el-form-item> -->
-
+                <el-row>
+                <el-col :span='20'>
                 <el-form-item label="V Shop ID">
-                   <el-select v-model="form.vid" placeholder="Select vid">
+                   <el-select clearable v-model="form.vid" placeholder="Select vid">
                     <el-option
                       v-for="item in vshopcategory"
                       :key="item.id"
@@ -110,21 +100,19 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                 <el-form-item label="CRM Setting ID">
-                 <el-row><el-col :span='20'>
-                   <el-select v-model="form.crmid" placeholder="Select crm id">
-                    <el-option
-                      v-for="item in crmdata"
-                      :key="item.id"
-                      :label="item.configName"
-                      :value="item.id">
-                    </el-option>
-                  </el-select></el-col>
-                  <el-col :span='4'>
-                  <el-tooltip content="To change/add CRM Setting" placement="top">
-                  <el-button type="primary" icon='setting' @click='linktocrm()'>CRM Setting</el-button></el-tooltip></el-col>
-                  </el-row>
-                </el-form-item>
+                </el-col>
+                <el-col :span='2'>
+                  <el-tooltip content="Go View V-shop Settings" placement="top">
+                  <el-button type="primary" icon='setting' @click='linktovshop()'>V-Shop</el-button></el-tooltip>
+                </el-col>
+                <el-col style='text-align: center;' :span='2'>
+                  <!-- <el-button type="primary" icon="el-icon-refresh"></el-button> -->
+                   <el-tooltip content="Refresh V-shop settings" placement="top">
+                   <el-button type="primary" @click="refreshvshop()"><i class="fa fa-refresh"></i></el-button>
+                   </el-tooltip>
+                </el-col>
+                </el-row>
+               
 
                 <!-- <el-form-item label="Brand name">
                   <el-input v-model="form.brandName" placeholder="My Company"></el-input>
@@ -135,10 +123,13 @@
                     <label for="upload-validation" class="brandLogoUploadLabel">
                       <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
                     </label>
-                    <span><b>Current file:</b><i> {{form.brandLogoName}}</i></span><el-tooltip content="To Remove current file" placement="top"><el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button></el-tooltip>
-
+                    <br>
+                    <span><b>Current file:</b> {{form.brandLogoName}}</span>
+                    <el-tooltip  v-if='form.brandLogoName!="!!!No file uploaded!!!"' content="To Remove current file" placement="top">
+                    <el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button>
+                    </el-tooltip>
                     <input type="file" name="" id="upload-validation">
-                    <span class="dis">( .png/ico only)</span>
+                    <span class="dis">( .png/ico only max size upto 70KB)</span>
 
                   </div>
                    <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
@@ -184,18 +175,45 @@
               <hr>
               <div class="row">
                 <div class="col-md-4">
-                  <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
+                  <div class="thumbnail">
+                    <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                   <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
-                </div>
-                <!-- <div class="col-md-4">
-                  <img src="http://placehold.it/350x150?text=Template%202" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  </div>
                 </div>
                 <div class="col-md-4">
-                  <img src="http://placehold.it/350x150?text=Template%203" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
+                  <div class="thumbnail">
+                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523358756/builder/images/template2.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
                   <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                </div> -->
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="thumbnail">
+                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523358764/builder/images/tempate3.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
+                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="thumbnail">
+                    <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
+                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="thumbnail">
+                    <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" @click="revertToTemplate(template = 'web5')"/>
+                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="thumbnail">
+                    <img src="https://placehold.it/403x190?text=Comming%20Soon" alt="template 6" class="img-responsive template-image" />
+                  <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -240,30 +258,73 @@
       <!-- Image upload Section -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleAssetImages" class="card color-div toggleableDivHeader">Asset Images</a>
+              <a href="javascript:void(0)" id="toggleAssetImages" class="card color-div toggleableDivHeader">Image Library</a>
           </div>
       </div>
       <div id="toggleAssetImagesContent" class="toggleableDivHeaderContent" style="display: none;">
         <div class="row">
           <div class="col-md-12">
+            <el-form label-position="left" label-width="200px" :model="cloudinaryDetails" :rules="rulesCloudinaryDetails" ref="cloudinaryDetails">
+              <el-form-item label="API Key" prop="apiKey">
+                <el-input v-model="cloudinaryDetails.apiKey"></el-input>
+              </el-form-item>
+              <el-form-item label="API Secret" prop="apiSecret">
+                <el-input v-model="cloudinaryDetails.apiSecret"></el-input>
+              </el-form-item>
+              <el-form-item label="Cloud Name" prop="cloudName">
+                <el-input v-model="cloudinaryDetails.cloudName"></el-input>
+              </el-form-item>
+              <el-form-item label="Upload Preset" prop="uploadPreset">
+                <el-input v-model="cloudinaryDetails.uploadPreset"></el-input>
+              </el-form-item>
+              <!-- <el-form-item label="Upload Folder">
+                <el-input v-model="cloudinaryDetails.uploadFolder"></el-input>
+              </el-form-item> -->
+              <!-- <el-form-item label="Upload Sources">
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllSourcesChange">Check all</el-checkbox>
+                <div style="margin: 15px 0;"></div>
+                <el-checkbox-group v-model="checkedSources" @change="handleCheckedSourcesChange">
+                  <el-checkbox v-for="source in cloudinaryDetails.sources" :label="source" :key="source">{{source}}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item> -->
+            </el-form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
 
             <div class="row" style="margin-bottom: 15px; ">
               <div class="col-md-12">
-                <el-button icon="upload2" @click="uploadAssetImage()" :loading="uploadAssetImageLoader">Upload</el-button>
+                <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
+                <el-button icon="search" @click="fetchcloudinaryImages('cloudinaryDetails')" :loading="fetchImagesLoader">Fetch Images</el-button>
+                <span class="cloudinaryFilesCount">Total Images: {{assetsImages.length}}</span>
+                <el-button v-if="assetsImages.length > 0" style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-3" v-for="(n, index) in assetsImages">
+            <div class="row" style="max-height: 600px; overflow-y: auto;" v-loading="fetchImagesLoader" element-loading-text="Loading...">
+              <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
+                <div class="view-icon">
+                  <a :href="n" target="_blank"><i class="fa fa-external-link"></i></a>
+                </div>
                 <div class="delete-icon">
                   <a href="javascript:void(0)" @click="deleteAssetImage(index)"><i class="fa fa-times"></i></a>
                 </div>
                 <div class="thumbnail">
                   <div class="deleteImage"></div>
                   <img :src="n" class="asset-image" />
+                  <input :id="n" type="text" class="form-control" :value="n" name="n">
                 </div>
+
               </div>
             </div>
+
+            <!-- <div class="row" align="center" style="margin: 10px 0;">
+              <div class="col-md-12">
+                <!-- :disabled="isEnabledByNextCursor" --
+                <el-button type="primary" icon="plus" v-if="assetsImages.length > 0" @click="loadMoreImages()" :loading="loadMoreImagesLoader">Load More</el-button>  
+              </div>
+            </div> -->
 
           </div>
         </div>
@@ -375,7 +436,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-md-12" style="margin-top: 4%;">
             <h3>Dynamic Styles</h3>
             <hr>
@@ -384,12 +445,12 @@
                 <el-form-item>
                   <div class="row">
 
-                    <!-- Enter Variable ID -->
+                    <!-- Enter Variable ID --
                     <div class="col-md-5">
                       <el-input placeholder="Variable Name" v-model="n.variableName"></el-input>
                     </div>
 
-                    <!-- Select Type -->
+                    <!-- Select Type --
                     <div class="col-md-2" style="margin: 0; padding: 0">
                       <el-select v-model="n.variableType" placeholder="Select">
                         <el-option
@@ -401,46 +462,46 @@
                       </el-select>
                     </div>
 
-                    <!-- Enter Color Variable Value -->
+                    <!-- Enter Color Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'color'">
                       <el-color-picker v-model="n.variableValue" show-alpha></el-color-picker>
                     </div>
 
-                    <!-- Enter Pixel Variable Value -->
+                    <!-- Enter Pixel Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'px'">
                       <el-input placeholder="Pixels Value" v-model="n.variableValue"></el-input>
                     </div>
 
-                    <!-- Enter Percentage Variable Value -->
+                    <!-- Enter Percentage Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'percent'">
                       <el-slider v-model="n.variableValue"></el-slider>
                     </div>
 
-                    <!-- Enter Number Variable Value -->
+                    <!-- Enter Number Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'number'">
                       <el-input-number v-model="n.variableValue"></el-input-number>
                     </div>
 
-                    <!-- Enter Custom Variable Value -->
+                    <!-- Enter Custom Variable Value --
                     <div class="col-md-4" v-if="n.variableType === 'custom'">
                       <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
                     </div>
 
-                    <!-- Delete Variable -->
+                    <!-- Delete Variable --
                     <div class="col-md-1">
                       <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>
                     </div>
                   </div>
                 </el-form-item>
               </div>
-              <!-- Ends V-FOR looping -->
+              <!-- Ends V-FOR looping --
 
-              <!-- Create new variable -->
+              <!-- Create new variable --
               <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
 
             </el-form>
           </div>
-        </div>
+        </div> -->
       </div>
       <!-- Global Variables section ends -->
 
@@ -794,80 +855,51 @@
       <!-- Payment Block -->
       <div class="collapsingDivWrapper row">
           <div class="col-md-12">
-              <a href="javascript:void(0)" id="togglePaymentgateway" class="card color-div toggleableDivHeader">Payment gateway</a>
+              <a href="javascript:void(0)" id="toggleAccounting" class="card color-div toggleableDivHeader">Accounting</a>
           </div>
       </div>
-      <div id="togglePaymentgatewayContent" class="toggleableDivHeaderContent" style="display: none;">
+      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none;" >
+       
           <div class="row">
               <div class="col-md-12">
                   <div class="row">
-                      <div class="col-md-4">
-                          <h3> Gateways: </h3>
+                      <div class="col-md-12">
+                         <el-form ref="form1" :model="form" label-width="120px">
+                             <el-row>
+                              <el-col :span='18'>
+                                <el-form-item label="Account Used:">
+                                 <el-select clearable v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
+                                  <el-option
+                                    v-for="item in crmdata"
+                                    :key="item.id"
+                                    :label="item.configName"
+                                    :value="item.id">
+                                  </el-option>
+                                </el-select>
+                                </el-form-item>
+                              </el-col>
+                              <el-col v-if="crmdata.length>-1" :span='4'>
+                                <el-tooltip content="Go View Accounting System" placement="top">
+                                <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip>
+                              </el-col>
+                               <el-col style='text-align: center' :span='2'>
+                                 <!-- <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button> -->
+                                 <el-tooltip content="Refresh Accounts settings" placement="top">
+                                   <el-button type="primary" @click="refreshaccounts()"><i class="fa fa-refresh"></i></el-button>
+                                 </el-tooltip>
+                              </el-col>
+                            </el-row>
+                        </el-form>
                       </div>
                   </div>
-                  <hr>
-                  <el-form ref="form" :model="form">
-
-                      <div>
-                          <el-form-item>
-                              <draggable v-model='paymentgateway' @start="drag=true" @end="drag=false">
-                                  <div style="margin-bottom: 25px" v-for='(n, index) in paymentgateway'>
-                                      <div class="row">
-                                          <div class="col-md-1" style="margin: 0; padding-left: 15px">
-                                              <el-checkbox v-model="n.checked"></el-checkbox>
-                                          </div>
-                                          <!-- name of gateway-->
-                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
-                                              <el-input type="text" placeholder="Name" v-model="n.name"></el-input>
-                                          </div>
-                                          <!-- gateway  -->
-                                          <div class="col-md-2" style="margin: 0; padding-left: 0px">
-                                              <el-select v-model="n.gateway" placeholder="Gateways" @change="gatewaychange(n,index)">
-                                                  <el-option v-for="item in Allgateway" :key="item.value" :label="item.name" :value="item.name">
-                                                  </el-option>
-                                              </el-select>
-                                          </div>
-                                          <!-- gateway description -->
-                                          <div class="col-md-5" style="margin: 0; padding: 0px">
-                                              <el-input type="textarea" placeholder="Description" v-model="n.description"></el-input>
-                                          </div>
-                                          <!-- Delete Variable -->
-                                          <div class="col-md-1">
-                                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletepaymentgateway(index)" icon="delete2"></el-button>
-                                          </div>
-                                          <div class="col-md-1">
-                                              <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                               <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                            </el-tooltip>
-
-                                          </div>
-                                      </div>
-                                      <!-- <div> -->
-                                      <div class="row">
-                                          <div class="col-md-4">
-                                              <h5> Fields: </h5>
-                                          </div>
-                                      </div>
-                                      <div class="row">
-                                          <div v-for='i,k in Paymentfields[index]'>
-                                              <el-form ref="form" label-width="120px">
-                                                  <el-form-item style="margin: 0; padding-left:5px" v-bind:label='Paymentfields[index][k]'>
-                                                      <el-input type='text' v-model='n.fields[k][i]'></el-input>
-                                                  </el-form-item>
-                                              </el-form>
-                                          </div>
-                                      </div>
-                                      <!-- </div> -->
-                                      <hr>
-                                  </div>
-                              </draggable>
-                          </el-form-item>
-                      </div>
-
-                      <!-- Create new variable -->
-                      <el-button type="primary" @click="addNewpaymentgateway">New Gateway</el-button>
-                  </el-form>
               </div>
+          </div>
+        <hr>
+          <!-- testing iviewui -->
+          <div class="row">
+          <div class="col-md-12">
+              <component :is="componentsID" v-on:addNewConfig="addNewConfig"></component>
+          </div>
           </div>
       </div>
       <!-- Payment Block -->
@@ -918,8 +950,43 @@
           </div>
       </div>
       <div id="toggleCommitsContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-9">
+          <el-form :model="commitForm" :rules="commitRules" ref="commitForm" class="demo-ruleForm">
+            <div class="row">
+            
+              <div class="col-md-4">
+                <el-form-item label="Revision Name" prop="branchName">
+                  <el-input v-model="commitForm.branchName" placeholder="Enter Revision Name"></el-input>
+                </el-form-item>
+              </div>
+
+              <div class="col-md-5">
+                <el-form-item label="Revision Message" prop="commitMessage">
+                  <el-input v-model="commitForm.commitMessage" placeholder="Enter Revision Message"></el-input>
+                </el-form-item>
+              </div>
+
+              <div class="col-md-3">
+                <el-form-item label="Submit Revision">
+                  <el-button class="publishBtn" type="success" @click="commitProject('commitForm')" :loading="isCommitLoading">Add Revision</el-button>
+                </el-form-item>
+              </div>
+
+              <!-- <div class="col-md-1">
+                <el-form-item label="Download">
+                  <el-tooltip content="Download .zip" placement="top">
+                    <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+                  </el-tooltip>
+                </el-form-item>
+              </div> -->
+
+            </div>
+
+          </el-form>
+
+          <!-- <div class="col-md-4">
+            <el-input v-model="branchName" placeholder="Enter Branch Name"></el-input>
+          </div>
+          <div class="col-md-5">
             <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
           </div>
           <div class="col-md-2">
@@ -929,28 +996,36 @@
             <el-tooltip content="Download .zip" placement="top">
               <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
             </el-tooltip>
-          </div>
-        </div>
+          </div> -->
+        <!-- </div> -->
         <div class="row">
             <div class="col-md-12" style="margin-top: 2%">
               <div class="table-responsive">
-                <table class="table">
+                <table class="table" id="revisionsTable">
                   <thead>
                     <tr>
-                      <th>Commit Date</th>
-                      <th>Commit Message</th>
-                      <th>Commit SHA</th>
-                      <th>Revert To Commit</th>
+                      <th width="260" @click="sortBranchesTable(0)">Revision Date <i class="fa fa-sort pull-right"></i></th>
+                      <th @click="sortBranchesTable(1)">Revision Name <i class="fa fa-sort pull-right"></i></th>
+                      <th @click="sortBranchesTable(2)">Revision Message <i class="fa fa-sort pull-right"></i></th>
+                      <!-- <th>Revision SHA</th> -->
+                      <th>Rollback</th>
+                      <th width="120">Download Code</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(n, index) in commitsData">
+                    <tr v-for="(n, index) in branchesData">
                       <td>{{n.commitDate}}</td>
+                      <td>{{n.branchName}}</td>
                       <td>{{n.commitsMessage}}</td>
-                      <td>{{n.commitSHA}}</td>
+                      <!-- <td>{{n.commitSHA}}</td> -->
                       <td>
-                        <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.commitSHA != currentSha" size="small">Restore</el-button>
-                        <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.commitSHA == currentSha">
+                        <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.branchName != currentBranchName" size="small">Restore</el-button>
+                        <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.branchName == currentBranchName">
+                      </td>
+                      <td>
+                        <el-tooltip content="Download .zip" placement="top">
+                          <el-button @click.native.prevent="exportWebsite(index)" type="info" size="small"><i class="fa fa-download fa-fw"></i></el-button>
+                        </el-tooltip>
                       </td>
                     </tr>
                   </tbody>
@@ -1017,13 +1092,27 @@ const config = require('../config');
 import fileSaver from 'file-saver';
 
 import draggable from 'vuedraggable';
-
+import settings from './settings/settings'
+import newpaymentsettings from './settings/Online-Payment'
+import addnewpaymentgatway from './settings/addpayment'
+// import newaccountsettings from './settings/new-settings'
 // ProjectName Validator
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('Please enter Project Name.'));
     }else if(!(/^[a-z0-9A-Z_]+$/i.test(value))){
         return callback(new Error('Please enter valid Project Name. (Project Name must only contain a-z or A-Z and 0-9. Special characters and spaces are not allowed)'));
+    }else{
+        return callback();
+    }
+}
+  var daex = require('json-daex');
+// ProjectName Validator
+let checkBranchName = (rule, value, callback) => {
+    if (!value) {
+        return callback(new Error('Please enter Branch Name.'));
+    }else if(!(/^[a-z0-9A-Z_]+$/i.test(value))){
+        return callback(new Error('Special characters and spaces are not allowed'));
     }else{
         return callback();
     }
@@ -1054,11 +1143,13 @@ export default {
         crmid:''
       },
       commitsData: [],
+      configurationdata:[],
+      gatewaychecked:'',
       crmdata:[],
       faviconhName:'',
       fileList3: [],
       pluginsData: [],
-      commitMessage: '',
+      // commitMessage: '',
       newRepoId: '',
       repoName: '',
       isCommitLoading: false,
@@ -1105,6 +1196,7 @@ export default {
       imageInputIsDisabled: false,
       uploadedVariableJsonData: '',
       layoutOptions: [],
+      componentsID:'settings',
 
       addPluginLoading: false,
       refreshPluginsLoading: false,
@@ -1144,8 +1236,8 @@ export default {
       customDomainName: '',
       userDetailId: '',
       ipAddress: config.ipAddress,
-      paymentgateway: [],
-      Paymentfields: [],
+      // accountpaymentgateway: [],
+      // Paymentfields: [],
       Allgateway: [],
       currentSha: '',
       publishType: 'default',
@@ -1164,12 +1256,56 @@ export default {
       uploadGlobalImageButtonLoader: false,
       uploadAssetImageLoader: false,
       refreshDisabled: false,
-      loadingText: ''
+      loadingText: '',
+
+      branchesData: [],
+
+      currentBranchName: '',
+
+      commitForm: {
+        branchName: '',
+        commitMessage: ''
+      },      
+
+      commitRules: {
+        branchName: [
+          { required: true, message: 'Please enter Branch name.', trigger: 'blur' },
+          { validator: checkBranchName, trigger: 'blur' }
+        ],
+        commitMessage: [
+          { required: true, message: 'Please enter commit message.', trigger: 'blur' }
+        ]
+      },
+
+      cloudinaryDetails: {},
+      rulesCloudinaryDetails: {
+          apiKey: [
+              { required: true, message: 'Enter Cloudinary API key', trigger: 'blur' }
+          ],
+          apiSecret: [
+              { required: true, message: 'Enter Cloudinary API secret', trigger: 'blur' }
+          ],
+          cloudName: [
+              { required: true, message: 'Enter Cloud Name', trigger: 'blur' }
+          ],
+          uploadPreset: [
+              { required: true, message: 'Enter Upload Preset', trigger: 'blur' }
+          ]
+      },
+      fetchImagesLoader: false,
+      loadMoreImagesLoader: false,
+      isEnabledByNextCursor: true
     }
   },
   components: {
     draggable,
-    vueJsonEditor
+    vueJsonEditor,
+    settings,
+    newpaymentsettings,
+    addnewpaymentgatway
+    // newprofileconfigure,
+    // newaccountsettings
+
   },
 
   async mounted () {
@@ -1216,8 +1352,8 @@ export default {
         $("#toggleMetaTagsContent").slideToggle("slow");
       });
 
-      $("#togglePaymentgateway").click(function() {
-        $("#togglePaymentgatewayContent").slideToggle("slow");
+      $("#toggleAccounting").click(function() {
+        $("#toggleAccountingContent").slideToggle("slow");
 
       });
 
@@ -1246,7 +1382,7 @@ export default {
 
     let self = this;
 
-    $.fn.editable.defaults.mode = 'inline';
+    // $.fn.editable.defaults.mode = 'inline';
 
     // Brand Image uploader
     let scope = this;
@@ -1284,7 +1420,7 @@ export default {
         $('#text2').text('Invalid image file.');
         $('.valid').addClass('error').removeClass('correct');
         $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
-      }else if(iFileSize >= 1024000) {
+      }else if(iFileSize >= 70000) {
         $('#text2').text('Too large file.');
         $('.valid').addClass('error').removeClass('correct');
         $('.valid i').removeClass('fa-paperclip').addClass('fa-exclamation');
@@ -1399,14 +1535,142 @@ export default {
   },
 
   methods: {
+    addNewConfig(value){
+      // console.log('hi');
+      this.componentsID = value;
+    },
+    copyToClipboard(value){
+      let elem = document.getElementById(value);
+      var $temp = $("<input>");
+      $("body").append($temp);
+      $temp.val($(elem).text()).select();
+      document.execCommand("copy");
+      this.$message({
+        message: 'Copied to clipboard.',
+        type: 'success'
+      });
+      $temp.remove();
+    },
+    sortBranchesTable(n){
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("revisionsTable");
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "asc"; 
+      /* Make a loop that will continue until
+      no switching has been done: */
+      while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.getElementsByTagName("TR");
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch= true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch= true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1:
+          switchcount ++; 
+        } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    },
+
     deletefaviconimage(){
       this.form.brandLogoName='!!!No file uploaded!!!';
 
       $('#text2').text('Upload Image');
       $('.valid').removeClass('correct');
     },
+    linktovshop(){
+      window.open('https://www.vshopdata.'+config.domainkey);
+    },
+    refreshvshop(){
+
+      // this.init();
+       axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
+        headers: {
+          'Authorization': Cookies.get('auth_token')
+        }
+      }).then(res=>{
+        
+         this.vshopcategory = res.data;
+         if(this.form.vid!=''){
+          let tempvid=this.form.vid
+          let checkindex=_.findIndex(this.vshopcategory,function(o){
+            return o.id == tempvid
+          })
+         if(checkindex==-1){
+          this.form.vid=''
+         }
+         }
+         
+
+      }).catch(err => { console.log(err); });
+    },
     linktocrm(){
-      window.open('https://crm.'+config.domainkey);
+      window.open('https://www.crm.'+config.domainkey);
+    },
+    refreshaccounts(){
+      console.log('refreshaccounts')
+      // this.init()
+      // var temp=this.componentsID;
+      axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId': Cookies.get('subscriptionId')}})
+      .then(res=>{
+        
+        this.crmdata=res.data.data
+        if(this.form.crmid!=''){
+          let tempcrmid=this.form.crmid
+          let checkindex=_.findIndex(this.crmdata,function(o){
+            return o.id == tempcrmid
+          })
+         if(checkindex==-1){
+          this.form.crmid=''
+         }
+         }
+
+        
+      })
+      .catch(err => { console.log(err);  });
+      this.componentsID=''
+      this.componentsID='settings'
+
+
+    },
+    changeconfiguration(){
+      for(let i=0;i<this.crmdata.length;i++){
+
+      }
     },
 
     setPrimaryRole(index){
@@ -1420,21 +1684,137 @@ export default {
       // this.isProjectDetailsJsonUpdated = true;
     },
 
-    uploadAssetImage() {
-      this.uploadAssetImageLoader = true;
-      var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
+     handleCheckAllSourcesChange(event) {
+      this.checkedSources = event.target.checked ? this.cloudinaryDetails.sources : [];
+      this.isIndeterminate = false;
+    },
 
-      fsClient.pick({
-        accept: 'image/*',
-        fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"]
-      }).then( (response) => {
-        this.uploadAssetImageLoader = false;
-        // declare this function to handle response
-        this.assetsImages.push(response.filesUploaded[0].url);
-        this.saveProjectSettings();
-      }).catch( (error) => {
-        console.log(error);
-        this.uploadAssetImageLoader = false;
+    handleCheckedSourcesChange(value){
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.cloudinaryDetails.sources.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.cloudinaryDetails.sources.length;
+    },
+
+    fetchcloudinaryImages(formName){
+      this.$refs[formName].validate(async (valid) => {
+        if(valid){
+          this.fetchImagesLoader = true;
+          axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudinaryDetails.cloudName + '&apiKey=' + this.cloudinaryDetails.apiKey + '&apiSecret=' + this.cloudinaryDetails.apiSecret + '&nextCursor=' + this.cloudinaryDetails.nextCursor, {
+          })
+          .then(async (response) => {
+              
+              for(let i = 0; i < response.data.resources.length; i++){
+                // console.log(response.data.resources[i].secure_url);
+                this.assetsImages.push(response.data.resources[i].secure_url);
+              }
+
+              if(response.data.next_cursor !== undefined){
+                this.cloudinaryDetails.nextCursor = response.data.next_cursor;
+                await this.fetchcloudinaryImages('cloudinaryDetails');
+              } else {
+                this.cloudinaryDetails.nextCursor = '';
+                this.fetchImagesLoader = false;
+              }
+          })
+          .catch((error) => {
+              console.log(error);
+              this.fetchImagesLoader = false;
+          });
+        }
+      });
+    },
+
+    // loadMoreImages(){
+    //   this.loadMoreImagesLoader = true;
+    //   axios.get(config.baseURL + '/cloudinary-service?cloudName=' + this.cloudinaryDetails.cloudName + '&apiKey=' + this.cloudinaryDetails.apiKey + '&apiSecret=' + this.cloudinaryDetails.apiSecret + '&nextCursor=' + this.cloudinaryDetails.nextCursor, {
+    //   })
+    //   .then((response) => {
+    //       for(let i = 0; i < response.data.resources.length; i++){
+    //         // console.log(response.data.resources[i].secure_url);
+    //         this.assetsImages.push(response.data.resources[i].secure_url);
+    //       }
+    //       console.log('Load More next cursor: ', response.data.next_cursor);
+    //       if(response.data.next_cursor){
+    //         this.nextCursor = response.data.next_cursor;
+    //         this.isEnabledByNextCursor = false;
+    //       } else {
+    //         this.isEnabledByNextCursor = true;
+    //         this.nextCursor = '';
+    //       }
+    //       // this.nextCursor = response.data.next_cursor;
+    //       this.loadMoreImagesLoader = false;
+    //   })
+    //   .catch((error) => {
+    //       console.log(error);
+    //       this.loadMoreImagesLoader = false;
+    //   });
+    // },
+
+    removeAllAssetsImages(){
+      this.$confirm('This will all the images. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.assetsImages = [];
+        this.isEnabledByNextCursor = false;
+        this.cloudinaryDetails.nextCursor = '';
+      }).catch(() => {
+        console.log('Cancelled.');         
+      });
+    },
+
+    uploadAssetImage(formName) {
+
+      this.$refs[formName].validate(async (valid) => {
+        if(valid){
+          this.uploadAssetImageLoader = true;
+          // var fsClient = filestack.init('AgfKKwgZjQ8iLBVKGVXMdz');
+
+          // fsClient.pick({
+          //   accept: 'image/*',
+          //   fromSources:["local_file_system","url","imagesearch","facebook","instagram","googledrive","dropbox","evernote","flickr","box","github","gmail","picasa","onedrive","clouddrive","webcam","customsource"],
+          //   rejectOnCancel: true
+          // }).then( (response) => {
+          //   this.uploadAssetImageLoader = false;
+          //   // declare this function to handle response
+          //   this.assetsImages.push(response.filesUploaded[0].url);
+          //   this.saveProjectSettings();
+          // }).catch( (error) => {
+          //   console.log(error);
+          //   this.uploadAssetImageLoader = false;
+          // });
+
+          cloudinary.openUploadWidget({ 
+            cloud_name: this.cloudinaryDetails.cloudName, 
+            api_key: this.cloudinaryDetails.apiKey,
+            upload_preset: this.cloudinaryDetails.uploadPreset, 
+            folder: this.cloudinaryDetails.uploadFolder,
+            sources: ['local', 'camera', 'url', 'facebook', 'instagram']
+          }, (error, result) => { 
+            console.log(error, result);
+            if(error != null){
+
+              if(error.message == 'User closed widget'){
+
+              } else {
+                console.log('Image upload error: ', error);
+                this.$message({
+                  message: 'Upload image failed. Please try again.',
+                  type: 'error'
+                });  
+              }
+              
+              this.uploadAssetImageLoader = false;  
+            } else {
+              for(var i = 0; i < result.length; i++){
+                this.assetsImages.push(result[i].secure_url);  
+              }
+              this.uploadAssetImageLoader = false;  
+            }
+            
+          });
+        }
       });
 
     },
@@ -1555,11 +1935,11 @@ export default {
       this.localstyles.push(newVariable);
     },
 
-    addNewpaymentgateway(){
-      let newVariable = {checked:true, name:'',gateway:'',fields:[],description:'',};
-      this.paymentgateway.push(newVariable);
-      this.Paymentfields.push([])
-    },
+    // addNewAccountpaymentgateway(){
+    //   let newVariable = {name:'',gateway:'',fields:[]};
+    //   this.accountpaymentgateway.push(newVariable);
+    //   this.Paymentfields.push([])
+    // },
 
     addNewWebsiteRole(){
       let newVariable = { roleName: '' }
@@ -1605,29 +1985,23 @@ export default {
       this.externallinksMeta.splice(deleteIndex, 1);
     },
 
-    deletepaymentgateway(deleteIndex) {
-      this.paymentgateway.splice(deleteIndex,1);
-      this.Paymentfields.splice(deleteIndex,1);
-    },
+    // deleteAccountpaymentgateway(deleteIndex) {
+    //   this.accountpaymentgateway.splice(deleteIndex,1);
+    //   this.Paymentfields.splice(deleteIndex,1);
+    // },
 
-    gatewaychange(n,index){
-     this.paymentgateway[index].fields=[]
-
-     for(let i=0;i<this.Allgateway.length;i++){
-      if(this.Allgateway[i].name==n.gateway){
-
-        for(let j=0;j<this.Allgateway[i].keys.length;j++){
-          var temp={}
-        temp[this.Allgateway[i].keys[j]]=''
-        this.paymentgateway[index].fields.push(temp)
-        }
-        this.Paymentfields[index]=this.Allgateway[i].keys
-      }
-     }
-     var ter=this.paymentgateway[index].description
-     this.paymentgateway[index].description=' '
-     this.paymentgateway[index].description=ter
-    },
+    // gatewaychange(n,index){
+    //   this.accountpaymentgateway[index].fields=[]
+    //   var indexGateway=_.findIndex(this.Allgateway,function(o){
+    //     return o.name==n.gateway
+    //   })
+    //   for(let j=0;j<this.Allgateway[indexGateway].keys.length;j++){
+    //     var temp={}
+    //   temp[this.Allgateway[indexGateway].keys[j]]=''
+    //   this.accountpaymentgateway[index].fields.push(temp)
+    //   }
+    //   this.Paymentfields[index]=this.Allgateway[indexGateway].keys
+    // },
 
     async addNewPlugin(pluginFileData) {
 
@@ -1794,7 +2168,7 @@ export default {
 
       })
       .catch((e)=>{
-        //console.log("Error"+e)
+        console.log("Error"+e)
       });
 
       this.addPluginLoading = false;
@@ -1805,7 +2179,7 @@ export default {
         // let foldername = folderUrl.split('/');
         // foldername = foldername[6];
 
-        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch(err => { console.log(err); this.fullscreenLoading = false });
+        let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + folderUrl ).catch(err => { console.log(err); this.fullscreenLoading = false }).catch((e)=>{console.log(e)});
 
         if(rethinkdbCheck.data){
 
@@ -2063,10 +2437,9 @@ export default {
 
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false });
+      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false }).catch((e)=>{console.log(e)});
 
       configData = JSON.parse(JSON.stringify(configData.data.configData))
-        //// console.log('new config file:',configData);
       for (let q = 0; q < Object.keys(configData[2].layoutOptions[0]).length; q++) {
         //// console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
         if (Object.keys(configData[2].layoutOptions[0])[q] != ('Layout')) {
@@ -2193,17 +2566,9 @@ export default {
       }
       for (let r = 0; r < configData[1].pageSettings.length; r++) {
         var namepage = configData[1].pageSettings[r].PageName
-          //// console.log('namepage:',namepage)
-          //// console.log('this.repoName:',this.repoName)
-          //console.log(config.baseURL + '/flows-dir-listing?website=' + this.repoName+'/Pages/'+namepage)
         var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/' + namepage).catch(err => { console.log(err); this.fullscreenLoading = false });
-        //// console.log('contentpage:',contentpage)
-
-        //// console.log("inside ==pages directory")
         var content1 = ''
-          // content = this.$store.state.content;
         let name = namepage;
-        //// console.log('name:',name)
         name = name.split('.')[0]
         content1 = contentpage.data
         var result1 = [];
@@ -2211,6 +2576,7 @@ export default {
         var DefaultParams = [];
         if (result1.length > 0) {
           var resultParam = result1
+
           for (let i = 0; i < resultParam.length; i++) {
             var temp;
             temp = resultParam[i].trim()
@@ -2246,23 +2612,19 @@ export default {
               }
             }
           }
-          //// console.log("DefaultParams:",DefaultParams)
+
           for (let i = 0; i < configData[1].pageSettings.length; i++) {
             let temp = configData[1].pageSettings[i].PageName
             temp = temp.split('.')[0]
-              //// console.log('temp:',temp)
             if (name == temp) {
-              //console.log('temp:',temp)
               var partials = configData[1].pageSettings[i].partials
               for (let k = 0; k < result1.length; k++) {
                 let checkpartial = false
-                  //// console.log("result[k]:", result[k])
-                for (let r = 0; r < partials.length; r++) {
-                  if (Object.keys(partials[r])[0] == result1[k]) {
-                    checkpartial = true
-                      //// console.log("checkpartial==true")
+                for (let l = 0; l < partials.length; l++) {
+                  if (Object.keys(partials[l])[0] == result1[k]) {
+                    checkpartial = true //partial found in page setting
                     var temp1 = DefaultParams[k][result1[k]]
-                    var temp2 = partials[r][result1[k]]
+                    var temp2 = partials[l][result1[k]]
                     if (temp1.split('.')[0] == temp2.split('.')[0]) {
                       for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
 
@@ -2281,7 +2643,6 @@ export default {
 
                 }
                 if (checkpartial != true) {
-                  //console.log("checkpartial!=true")
                   var obj = {}
                   obj[result1[k]] = DefaultParams[k][result1[k]].split('.')[0]
                   for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
@@ -2294,84 +2655,180 @@ export default {
                   }
                   configData[1].pageSettings[i].partials.push(obj);
                   r = r - 1;
+                  break;
                 }
               }
             } else if (name != temp) {
               //// console.log("file not found in config file")
             }
           }
-          this.saveConfigFile(this.repoName, configData);
         }
-        // this.configData=JSON.parse(JSON.stringify(this.configData.data.data[0].configData))
-        var vueresult = (getFromBetween.get(content1, ":pathname=", ">"));
-        if (vueresult.length > 0) {
-          for (let i = 0; i < vueresult.length; i++) {
-            var tempvue = vueresult[i]
-            var tempvue = tempvue.trim().split(' ')
-            if (tempvue[2] != undefined) {
-              var vuetemp = {
-                partialsName: tempvue[0].replace(/"/g, ''),
-                value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue',
-                options: tempvue[2].split('=')[1].replace(/"/g, '')
-              }
-            } else {
-              var vuetemp = {
-                partialsName: tempvue[0].replace(/"/g, ''),
-                value: tempvue[1].split('=')[1].replace(/"/g, '') + '.vue'
-              }
-            }
-
-            for (let i = 0; i < configData[1].pageSettings.length; i++) {
-              let temp = configData[1].pageSettings[i].PageName
-              temp = temp.split('.')[0]
-              if (name == temp) {
-                if (configData[1].pageSettings[i].VueComponents != undefined) {
-                  let checkvue = false
-                  for (let j = 0; j < configData[1].pageSettings[i].VueComponents.length; j++) {
-                    if (configData[1].pageSettings[i].VueComponents[j].partialsName == tempvue[0].replace(/"/g, '')) {
-                      if (configData[1].pageSettings[i].VueComponents[j].value.split('.')[0] == tempvue[1].split('=')[1].replace(/"/g, '')) {
-                        checkvue = true;
-                        if (configData[1].pageSettings[i].VueComponents[j].options != '') {
-                          if (tempvue[2] != undefined) {
-
-                            configData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
-                          } else {
-                            configData[1].pageSettings[i].VueComponents[j].options = ''
-                          }
-                        } else {
-                          if (tempvue[2] != undefined) {
-
-                            configData[1].pageSettings[i].VueComponents[j]['options'] = ''
-                            configData[1].pageSettings[i].VueComponents[j].options = tempvue[2].split('=')[1].replace(/"/g, '')
-                          } else {
-
-                          }
-                        }
-                      } else {
-                        //console.log("value not matched")
-
-                      }
-
-                    }
-                  }
-                  if (checkvue != true) {
-
-                    configData[1].pageSettings[i].VueComponents.push(vuetemp)
-                  }
-                } else {
-                  configData[1].pageSettings[i]['VueComponents'] = []
-                  configData[1].pageSettings[i].VueComponents.push(vuetemp)
-                }
-              }
-            }
-          }
-          this.saveConfigFile(this.repoName, configData);
-        }
-
         this.saveConfigFile(this.repoName, configData);
-        // }
       }
+      for (let p = 0; p < Object.keys(configData[2].layoutOptions[0]).length; p++) {
+          if (Object.keys(configData[2].layoutOptions[0])[p] == ('Layout')) {
+              for (let y = 0; y < configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[p]].length; y++) {
+                  var namelayout = configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[p]][y].value
+                  // console.log('namelayout:', namelayout)
+                  if (namelayout != 'Blank') {
+                      var content = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Layout/' + namelayout + '.layout').catch(err => {
+                          console.log(err);
+                          this.fullscreenLoading = false
+                      });
+                      content = content.data
+                      // console.log('content', content)
+                      var result = (getFromBetween.get(content, "{{>", "}}"));
+                      var changeresult = JSON.parse(JSON.stringify(result))
+                      // console.log("changeresult:",changeresult)
 
+                      for (let s = 0; s < changeresult.length; s++) {
+                          content = content.replace(changeresult[s], changeresult[s].replace(/&nbsp;/g, '').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g, "").replace(/\s*=\s*/g, '='))
+                      }
+                      await axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename: this.folderUrl + '/Layout/' + namelayout + '.layout',
+                          text: content,
+                          type: 'file'
+                      })
+                      var result = (getFromBetween.get(content, "{{>", "}}"));
+
+                      var DefaultParams = [];
+                      if (result.length > 0) {
+                          var resultParam = result
+                          for (let i = 0; i < resultParam.length; i++) {
+                            // console.log(i)
+                              var temp;
+                              temp = resultParam[i].trim()
+                              result[i] = result[i].trim()
+                              temp = temp.split(' ')
+                              //// console.log('temp:',temp)
+                              for (let j = 0; j < temp.length; j++) {
+                                  temp[j] = temp[j].trim();
+                                  // console.log('temp',temp[j])
+                                  if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+
+                                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'") > -1) {
+                                          result[i] = temp[0];
+                                          if (temp[j]) {
+                                              let x = temp[j]
+                                              x = temp[j].split("'")[1] + '.partial';
+                                              let obj = {}
+                                              obj[temp[0]] = x
+                                              DefaultParams.push(obj)
+                                              break;
+                                          }
+                                      }
+                                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"') > -1) {
+                                          result[i] = temp[0];
+                                          if (temp[j]) {
+                                              let x = temp[j]
+                                              x = temp[j].split('"')[1] + '.partial';
+                                              let obj = {}
+                                              obj[temp[0]] = x
+                                              DefaultParams.push(obj)
+                                              break;
+                                          }
+                                      }
+                                  } else {
+                                      // console.log('error while finding id in layout');
+                                  }
+                              }
+                          }
+
+
+                          //here we are adding new partial added inside layout to all pages who uses this following layout.
+                          // console.log('DefaultParams',DefaultParams)
+                          for (let i = 0; i < result.length; i++) {
+                            // console.log('result',result[i])
+                              let checktvalue = false;
+                              for (let k = 0; k < DefaultParams.length; k++) {
+                                // console.log('DefaultParams',DefaultParams[k])
+                                  if (result[i] == Object.keys(DefaultParams[k])[0]) {
+                                      for (let j = 0; j < configData[1].pageSettings.length; j++) {
+                                          if (configData[1].pageSettings[j].PageLayout == name) {
+                                              let checkdefaultvalue = false;
+                                              for (let x = 0; x < configData[1].pageSettings[j].partials.length; x++) {
+                                                  if (Object.keys(configData[1].pageSettings[j].partials[x])[0] == result[i]) {
+
+                                                      var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
+                                                      defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
+                                                      configData[1].pageSettings[j].partials[x] = defaulttemp
+                                                      checkdefaultvalue = true;
+                                                  }
+                                              }
+                                              if (checkdefaultvalue != true) {
+                                                  var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
+                                                  defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
+                                                  //// console.log('push for DefaultParams:')
+                                                  configData[1].pageSettings[j].partials.push(defaulttemp)
+                                              }
+                                          }
+                                      }
+                                      checktvalue = true
+                                  }
+                              }
+                              if (checktvalue != true) {
+                                  // console.log('!true')
+                                  for (let j = 0; j < configData[1].pageSettings.length; j++) {
+                                      if (configData[1].pageSettings[j].PageLayout == namelayout) {
+                                          let doublecheckvalue = false
+                                          for (let x = 0; x < configData[1].pageSettings[j].partials.length; x++) {
+                                              if (Object.keys(configData[1].pageSettings[j].partials[x])[0] == result[i]) {
+                                                  var defaulttemp = {}
+                                                  defaulttemp[result[i]] = 'default'
+                                                  doublecheckvalue = true
+                                                  configData[1].pageSettings[j].partials[x] = defaulttemp
+                                              }
+                                          }
+                                          if (doublecheckvalue != true) {
+                                              var defaulttemp = {}
+                                              defaulttemp[result[i]] = 'default'
+                                              configData[1].pageSettings[j].partials.push(defaulttemp)
+                                          }
+                                      }
+                                  }
+
+                              }
+                          }
+                      }
+                    //   let temp = {
+                    //   value: namelayout,
+                    //   label: namelayout,
+                    //   partialsList: result,
+                    //   defaultList: DefaultParams
+
+                    // }
+                    //Here we are creating new partial which are not present in our partial folder.
+                    // let checkValue = false;
+                    // for (var i = 0; i < configData[2].layoutOptions[0].Layout.length; i++) {
+                    //   var obj = configData[2].layoutOptions[0].Layout[i];
+                    //   if ((obj.label) == name) {
+                    //     checkValue = true;
+                    //   }
+                    // }
+                    // if (checkValue == true) {
+                      let currentFileIndex = daex.indexFirst(configData[2].layoutOptions[0].Layout, {
+                        'label': namelayout
+                      });
+                      // console.log('currentFileIndex',currentFileIndex)
+                      configData[2].layoutOptions[0].Layout[currentFileIndex].partialsList = result;
+                      configData[2].layoutOptions[0].Layout[currentFileIndex].defaultList = DefaultParams; //here default are having .partial as extension
+                      // this.saveConfigFile(folderUrl);
+
+                    // } else {
+                    //   configData[2].layoutOptions[0].Layout.push(temp);
+
+                    //   // this.saveConfigFile(folderUrl);
+                    // }
+                  }
+                  // console.log('configData',configData)
+                  this.saveConfigFile(this.repoName, configData);
+
+
+              }
+
+          }
+
+      }
       this.fullscreenLoading = false;
       await this.init();
       this.$emit('updateProjectName');
@@ -2434,7 +2891,7 @@ export default {
             message: 'Failed! Please try again.',
             type: 'error'
           });
-          //console.log(e)
+          console.log(e)
         })
 
       }).catch((err) => {
@@ -2501,7 +2958,8 @@ export default {
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
         var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
-        await axios.get(config.baseURL + '/project-configuration?userId=' + userid).then((res)=>{
+        await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
+        .then((res)=>{
           let checkdetail = true
         for (let i = 0; i < res.data.data.length; i++) {
           if (this.form.websitename == res.data.data[i].websiteName) {
@@ -2518,7 +2976,8 @@ export default {
           this.form.websitename = this.configData.data.websiteName;
           return
         }
-        }).catch((err) => { console.log(err);});
+        })
+        .catch((err) => { console.log(err);});
         
       }
 
@@ -2595,6 +3054,7 @@ export default {
         "ProjectVId": {"vid":this.form.vid, "userId":uservid, "password":passvid, "esUser":esuser,"virtualShopName":virtualShopName},
         "CrmSettingId":this.form.crmid
       }, {
+        "CloudinaryDetails": this.cloudinaryDetails,
         "AssetImages": this.assetsImages,
         "GlobalVariables": this.globalVariables,
         "GlobalUrlVariables": this.urlVariables,
@@ -2607,7 +3067,7 @@ export default {
         "ProjectScripts": this.localscripts,
         "ProjectStyles": this.localstyles,
         "WebsiteRoles": this.websiteRoles,
-        "PaymentGateways": this.paymentgateway
+        // "AccountPaymentGateways": this.accountpaymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
       let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
@@ -2670,177 +3130,250 @@ export default {
     },
 
     revertCommit(index) {
-      this.$store.state.currentIndex = index;
 
-      this.currentSha = this.commitsData[index].commitSHA;
-      axios.post( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&branchName=master&sha=' + this.commitsData[index].commitSHA + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
-      }).then(async response => {
-        await axios.get(config.baseURL + '/configdata-history?commitSHA=' + this.currentSha, {
-        })
-        .then(async (resp) => {
-          let configData = resp.data.data[0].configData;
-            console.log('Config data: ', configData);
-            this.settings = null;
-            this.settings = configData;
+      this.$confirm('Do you really want to rollback to "' + this.branchesData[index].branchName + '" revision?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.$store.state.currentIndex = index;
 
-            // update config data
-            axios.patch(config.baseURL + '/project-configuration/' + configData[0].repoSettings[0].RepositoryName, {
-                configData: this.settings
-            })
-            .then((response) => {
-                console.log(response);
-                this.init();
-                this.$emit('updateProjectName');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        this.currentSha = this.branchesData[index].commitSHA;
 
-            // await this.saveProjectSettings();
-            // this.init();
-        })
-        .catch(function (error) {
-            console.log(error);
-            this.fullscreenLoading = false;
-        });
+        this.configData.branchName = this.branchesData[index].branchName;
 
-      }).catch(error => {
-        console.log( error);
-      })
-    },
+        this.currentBranchName = this.branchesData[index].branchName;
 
-    async commitProject() {
-
-      // If .git was successfull
-      if( this.settings[0].repoSettings[0].RepositoryId != undefined){
-
-        this.isCommitLoading = true;
-        this.$store.state.currentIndex = 0;
-
-        // Push repository changes
-        axios.post(config.baseURL + '/gitlab-add-repo', {
-          commitMessage: this.commitMessage,
-          repoName: this.repoName,
-          userDetailId: Cookies.get('userDetailId')
+        //// console.log(this.commitsData[index].commitSHA);
+        axios.get( config.baseURL + '/branch-list?branchName=' + this.branchesData[index].branchName + '&repoName='+ this.repoName + '&userDetailId='+ Cookies.get('userDetailId'), {
         }).then(async response => {
 
-          if(response.status == 200 || response.status == 201){
+          // console.log(response);
 
-            await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
-            }).then(async response => {
-              this.commitsData = [];
-              for(var i in response.data){
-                this.commitsData.push({
-                  commitDate: response.data[i].created_at,
-                  commitSHA: response.data[i].id,
-                  commitsMessage: response.data[i].title,
-                });
-              }
+          // this.settings[0].repoSettings[0].CurrentHeadSHA = this.currentSha;
 
-              this.settings[0].repoSettings[0].CurrentHeadSHA = this.commitsData[0].commitSHA;
-              this.currentSha = this.commitsData[0].commitSHA;
+          // console.log(config.baseURL + '/configdata-history?branchName=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName);
 
-              // Create entry in configdata-history table
-              await axios.post(config.baseURL + '/configdata-history', {
-                  configData: this.settings,
-                  commitSHA: this.currentSha,
-                  websiteName: this.repoName,
-                  userId: Cookies.get('userDetailId')
+          await axios.get(config.baseURL + '/configdata-history?currentBranch=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName, {
+          })
+          .then(async (resp) => {
+            console.log('Config data resp: ', resp);
+            let configData = resp.data.data[0].configData;
+              this.settings = null;
+              this.settings = configData;
+
+              // update config data
+              axios.patch(config.baseURL + '/project-configuration/' + configData[0].repoSettings[0].RepositoryName, {
+                  configData: this.settings
               })
-              .then(function (resp) {
-                  // console.log('Config revision saved in configdata-history. ', resp);
+              .then((response) => {
+                  console.log(response);
+                  this.$message({
+                    message: 'Rollbacked to revision "' + this.branchesData[index].branchName + '" ',
+                    type: 'success'
+                  });
+                  this.init();
+                  this.$emit('updateProjectName');
               })
               .catch(function (error) {
                   console.log(error);
               });
 
-              this.saveProjectSettings();
-            }).catch(error => {
-              console.log("error : ", error);
-              this.fullscreenLoading = false;
-            });
-
-            this.commitMessage = '';
-            //console.log(response.data);
-            this.$message({
-              message: 'New revision commited. ',
-              type: 'success'
-            });
-            this.isCommitLoading = false;
-            await this.init();
-          }
-        }).catch(error => {
-          console.log("error : ", error);
-        })
-      } else {
-        // If first commit was unsuccessfull
-
-        // add repo to git
-        let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.nameOfRepo + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
-
-        if(!(gitResponse.data.statusCode)){
-          this.isCommitLoading = true;
-          this.$store.state.currentIndex = 0;
-
-          // Push repository changes
-          axios.post(config.baseURL + '/gitlab-add-repo', {
-            commitMessage: this.commitMessage,
-            repoName: this.repoName,
-            userDetailId: Cookies.get('userDetailId')
-          }).then(async response => {
-
-            if(response.status == 200 || response.status == 201){
-
-              await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
-              }).then(async response => {
-                this.commitsData = [];
-                for(var i in response.data){
-                  this.commitsData.push({
-                    commitDate: response.data[i].created_at,
-                    commitSHA: response.data[i].id,
-                    commitsMessage: response.data[i].title,
-                  });
-                }
-
-                this.settings[0].repoSettings[0].CurrentHeadSHA = this.commitsData[0].commitSHA;
-                this.currentSha = this.commitsData[0].commitSHA;
-
-                // Create entry in configdata-history table
-                await axios.post(config.baseURL + '/configdata-history', {
-                    configData: this.settings,
-                    commitSHA: this.currentSha,
-                    websiteName: this.repoName,
-                    userId: Cookies.get('userDetailId')
-                })
-                .then(function (resp) {
-                    console.log('Config revision saved in configdata-history. ', resp);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-
-                this.saveProjectSettings();
-              }).catch(error => {
-                console.log(error);
-                this.fullscreenLoading = false;
-              });
-
-              this.commitMessage = '';
-              //console.log(response.data);
-              this.$message({
-                message: 'New revision commited. ',
-                type: 'success'
-              });
-              this.isCommitLoading = false;
-              this.init();
-            }
-          }).catch(error => {
-            //console.log("Some error occured: ", error);
+              // await this.saveProjectSettings();
+              // this.init();
           })
+          .catch(function (error) {
+              console.log(error);
+              this.fullscreenLoading = false;
+          });
+
+        }).catch(error => {
+          console.log( error);
+        })
+      }).catch(() => {
+        console.log('Cancelled.')         
+      });
+    },
+
+    async commitProject(commitForm) {
+
+      this.$refs[commitForm].validate(async (valid) => {
+        if (valid) {
+
+          let self = this;
+
+          // Check if branch exist
+          let indexOfBranchName = _.findIndex(this.branchesData, function(o) { return o.branchName == self.commitForm.branchName; });
+
+          // If branchName is different
+          if(indexOfBranchName == -1){
+            // If .git was successfull
+            if( this.settings[0].repoSettings[0].RepositoryId != undefined){
+
+              this.isCommitLoading = true;
+              this.$store.state.currentIndex = 0;
+
+              // Push repository changes
+              axios.post(config.baseURL + '/gitlab-add-repo', {
+                branchName: this.commitForm.branchName,
+                commitMessage: this.commitForm.commitMessage,
+                repoName: this.repoName,
+                userDetailId: Cookies.get('userDetailId')
+              }).then(async response => {
+
+                console.log('Response after bracnh commit : ', response);
+
+                if(response.status == 200 || response.status == 201){
+
+                  await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                  }).then(async response => {
+
+                    this.commitsData = [];
+                    for(var i in response.data){
+                      this.commitsData.push({
+                        commitDate: response.data[i].created_at,
+                        commitSHA: response.data[i].id,
+                        commitsMessage: response.data[i].title,
+                      });
+                    }
+
+                    // let lastCommit = (response.data.length) - 1;
+
+                    // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                    // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                    // this.currentSha = response.data[lastCommit].id;
+
+                    this.settings[0].repoSettings[0].CurrentBranch = this.commitForm.branchName;
+
+                    // Create entry in configdata-history table
+                    await axios.post(config.baseURL + '/configdata-history', {
+                        configData: this.settings,
+                        currentBranch: this.commitForm.branchName,
+                        commitSHA: this.currentSha,
+                        websiteName: this.repoName,
+                        userId: Cookies.get('userDetailId')
+                    })
+                    .then(function (resp) {
+                        // console.log('Config revision saved in configdata-history. ', resp);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                    this.saveProjectSettings();
+                  }).catch(error => {
+                    console.log("error : ", error);
+                    this.fullscreenLoading = false;
+                  });
+
+                  this.commitForm.commitMessage = '';
+                  this.commitForm.branchName = '';
+                  //console.log(response.data);
+                  this.$message({
+                    message: 'New revision commited. ',
+                    type: 'success'
+                  });
+                  this.isCommitLoading = false;
+                  await this.init();
+                }
+              }).catch(error => {
+                console.log("error : ", error);
+              })
+            } else {
+              // If first commit was unsuccessfull
+
+              // add new repo to git
+              let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.nameOfRepo + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
+
+              if(!(gitResponse.data.statusCode)){
+                this.isCommitLoading = true;
+                this.$store.state.currentIndex = 0;
+
+                // Push repository changes
+                axios.post(config.baseURL + '/gitlab-add-repo', {
+                  branchName: this.commitForm.branchName,
+                  commitMessage: this.commitForm.commitMessage,
+                  repoName: this.repoName,
+                  userDetailId: Cookies.get('userDetailId')
+                }).then(async response => {
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                    }).then(async resp => {
+                      this.commitsData = [];
+                      for(var i in resp.data){
+                        this.commitsData.push({
+                          commitDate: resp.data[i].created_at,
+                          commitSHA: resp.data[i].id,
+                          commitsMessage: resp.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch = this.commitForm.branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: this.commitForm.branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log(error);
+                      this.fullscreenLoading = false;
+                    });
+
+                    this.commitForm.commitMessage = '';
+                    this.commitForm.branchName = '';
+
+                    //console.log(response.data);
+                    this.$message({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    this.init();
+                  }
+                }).catch(error => {
+                  //console.log("Some error occured: ", error);
+                })
+              } else {
+                console.log('Error occured while commiting your changes. ', gitResponse);
+              }
+            }
+          } else {
+            console.log('Branch already exist.');
+            this.$swal({
+              text: 'Branch with name "' + this.commitForm.branchName + '" already exists! Please try different name.',
+              type: 'warning',
+            })
+            return false;
+          }
+
         } else {
-          console.log('Error occured while commiting your changes. ', gitResponse);
+          console.log('Error submit.');
+          return false;
         }
-      }
+      });
+
     },
 
     async publishMetalsmith(publishType) {
@@ -2857,681 +3390,705 @@ export default {
             return;
           }
         }
+        
+        this.$confirm('Do you want to publish your website? This will take a while to process. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(async () => {
 
-        this.fullscreenLoading = true;
+          this.fullscreenLoading = true;
 
-        var folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-        var responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false});
-        var rawConfigs = responseConfig.data.configData;
-        var partialstotal = []
-        var pageSeoTitle;
-        var externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
-        var externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
-        var metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
-        var ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
-        var projectscripts = rawConfigs[1].projectSettings[1].ProjectScripts
-        var projectstyles = rawConfigs[1].projectSettings[1].ProjectStyles
-        var projectseotitle = rawConfigs[1].projectSettings[0].ProjectSEOTitle;
-        var ProjectFaviconName = rawConfigs[1].projectSettings[0].BrandLogoName
-        var favicon = ''
-        var SeoTitle = ''
-        var getFromBetween = {
-          results: [],
-          string: "",
-          getFromBetween: function(sub1, sub2) {
-            if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-            var SP = this.string.indexOf(sub1) + sub1.length;
-            var string1 = this.string.substr(0, SP);
-            var string2 = this.string.substr(SP);
-            var TP = string1.length + string2.indexOf(sub2);
-            return this.string.substring(SP, TP);
-          },
-          removeFromBetween: function(sub1, sub2) {
-            if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-            var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
-            this.string = this.string.replace(removal, "");
-          },
-          getAllResults: function(sub1, sub2) {
-            if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
-            var result = this.getFromBetween(sub1, sub2);
-            this.results.push(result);
-            this.removeFromBetween(sub1, sub2);
-            if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+          let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
+            console.log(err);
+            this.fullscreenLoading = false
+          });
+          let rawConfigs = responseConfig.data.configData;
+          let partialstotal = []
+          let pageSeoTitle;
+          let externalJs = rawConfigs[1].projectSettings[1].ProjectExternalJs;
+          let externalCss = rawConfigs[1].projectSettings[1].ProjectExternalCss;
+          let metaInfo = rawConfigs[1].projectSettings[1].ProjectMetaInfo;
+          let ProjectMetacharset = rawConfigs[1].projectSettings[1].ProjectMetacharset
+          let projectscripts = rawConfigs[1].projectSettings[1].ProjectScripts
+          let projectstyles = rawConfigs[1].projectSettings[1].ProjectStyles
+          let projectseotitle = rawConfigs[1].projectSettings[0].ProjectSEOTitle;
+          let ProjectFaviconName = rawConfigs[1].projectSettings[0].BrandLogoName
+          let favicon = ''
+          let SeoTitle = ''
+          var getFromBetween = {
+            results: [],
+            string: "",
+            getFromBetween: function(sub1, sub2) {
+              if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+              var SP = this.string.indexOf(sub1) + sub1.length;
+              var string1 = this.string.substr(0, SP);
+              var string2 = this.string.substr(SP);
+              var TP = string1.length + string2.indexOf(sub2);
+              return this.string.substring(SP, TP);
+            },
+            removeFromBetween: function(sub1, sub2) {
+              if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+              var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+              this.string = this.string.replace(removal, "");
+            },
+            getAllResults: function(sub1, sub2) {
+              if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+              var result = this.getFromBetween(sub1, sub2);
+              this.results.push(result);
+              this.removeFromBetween(sub1, sub2);
+              if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+                this.getAllResults(sub1, sub2);
+              } else return;
+            },
+            get: function(string, sub1, sub2) {
+              this.results = [];
+              this.string = string;
               this.getAllResults(sub1, sub2);
-            } else return;
-          },
-          get: function(string, sub1, sub2) {
-            this.results = [];
-            this.string = string;
-            this.getAllResults(sub1, sub2);
-            return this.results;
-          }
-        };
+              return this.results;
+            }
+          };
 
-        await axios.get(config.baseURL + '/delete-publish-files', {}).then(async(response) => {
-          // console.log('deleted previous published files.')
-        }).catch((err) => { console.log(err); this.fullscreenLoading = false })
-    for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
-      this.loadingText = ((i/rawConfigs[1].pageSettings.length)*100).toFixed(0)+'% Done.'+'Now publishing ' + rawConfigs[1].pageSettings[i].PageName + ' page.';
-      var tophead = '';
-      var endhead = '';
-      var topbody = '';
-      var endbody = '';
-      if(projectseotitle!=undefined && projectseotitle!=''){
-        SeoTitle=projectseotitle
-      }
-      if(ProjectFaviconName!=undefined&&ProjectFaviconName!=''&&ProjectFaviconName!='!!!No file uploaded!!!'){
+          // await axios.get(config.baseURL + '/delete-publish-files', {}).then(async(response) => {
+          //   // console.log('deleted previous published files.')
+          // }).catch((err) => {
+          //   console.log(err);
+          //   this.fullscreenLoading = false
+          // })
+          for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+            this.loadingText = ((i / rawConfigs[1].pageSettings.length) * 100).toFixed(0) + '% Done.' + 'Now publishing ' + rawConfigs[1].pageSettings[i].PageName + ' page.';
+            var tophead = '';
+            var endhead = '';
+            var topbody = '';
+            var endbody = '';
+            if (projectseotitle != undefined && projectseotitle != '') {
+              SeoTitle = projectseotitle
+            }
+            if (ProjectFaviconName != undefined && ProjectFaviconName != '' && ProjectFaviconName != '!!!No file uploaded!!!') {
 
-       favicon=' <link rel="icon" type="image/png" href="./favicon.'+ProjectFaviconName.split('.')[1]+'">'
-      }
-      // if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
-      //   favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
-      // }
-        if (ProjectMetacharset!=undefined && ProjectMetacharset != '') {
-        tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
-      }
+              favicon = ' <link rel="icon" type="image/png" href="./favicon.' + ProjectFaviconName.split('.')[1] + '">'
+            }
+            // if(projectfaviconhref!=undefined&& projectfaviconhref!=''){
+            //   favicon='<link rel="icon" type="image/png/gif" href="'+projectfaviconhref+'">'
+            // }
+            if (ProjectMetacharset != undefined && ProjectMetacharset != '') {
+              tophead = tophead + '<meta charset="' + ProjectMetacharset + '">'
+            }
 
+            if (metaInfo != undefined && metaInfo.length > 0) {
+              for (let a = 0; a < metaInfo.length; a++) {
 
-          if (metaInfo != undefined && metaInfo.length > 0) {
-            for (let a = 0; a < metaInfo.length; a++) {
-
-              if ((metaInfo[a].name != '' && metaInfo[a].name.trim().length > 0) && (metaInfo[a].content != '' && metaInfo[a].content.trim().length > 0)) {
-                // console.log('metainfo',a)
-                tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+                if ((metaInfo[a].name != '' && metaInfo[a].name.trim().length > 0) && (metaInfo[a].content != '' && metaInfo[a].content.trim().length > 0)) {
+                  // console.log('metainfo',a)
+                  tophead = tophead + '<meta name="' + metaInfo[a].name + '" content="' + metaInfo[a].content + '">'
+                }
               }
             }
-          }
 
-          if (externalJs != undefined && externalJs.length > 0) {
-            for (let a = 0; a < externalJs.length; a++) {
-              if (externalJs[a].linkposition == 'starthead' && externalJs[a].linkurl.trim().length > 0) {
-                tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-              } else if (externalJs[a].linkposition == 'endhead' && externalJs[a].linkurl.trim().length > 0) {
-                endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-              } else if (externalJs[a].linkposition == 'startbody' && externalJs[a].linkurl.trim().length > 0) {
-                topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
-              } else if (externalJs[a].linkposition == 'endbody' && externalJs[a].linkurl.trim().length > 0) {
-                endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+            if (externalJs != undefined && externalJs.length > 0) {
+              for (let a = 0; a < externalJs.length; a++) {
+                if (externalJs[a].linkposition == 'starthead' && externalJs[a].linkurl.trim().length > 0) {
+                  tophead = tophead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+                } else if (externalJs[a].linkposition == 'endhead' && externalJs[a].linkurl.trim().length > 0) {
+                  endhead = endhead + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+                } else if (externalJs[a].linkposition == 'startbody' && externalJs[a].linkurl.trim().length > 0) {
+                  topbody = topbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+                } else if (externalJs[a].linkposition == 'endbody' && externalJs[a].linkurl.trim().length > 0) {
+                  endbody = endbody + '<script src="' + externalJs[a].linkurl + '"><\/script>'
+                }
               }
             }
-          }
 
-          if (externalCss != undefined && externalCss.length > 0) {
-            for (let a = 0; a < externalCss.length; a++) {
-              if (externalCss[a].linkposition == 'starthead' && externalCss[a].linkurl.trim().length > 0) {
-                tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-              } else if (externalCss[a].linkposition == 'endhead' && externalCss[a].linkurl.trim().length > 0) {
-                endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-              } else if (externalCss[a].linkposition == 'startbody' && externalCss[a].linkurl.trim().length > 0) {
-                topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
-              } else if (externalCss[a].linkposition == 'endbody' && externalCss[a].linkurl.trim().length > 0) {
-                endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
-              }
+            if (externalCss != undefined && externalCss.length > 0) {
+              for (let a = 0; a < externalCss.length; a++) {
+                if (externalCss[a].linkposition == 'starthead' && externalCss[a].linkurl.trim().length > 0) {
+                  tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+                } else if (externalCss[a].linkposition == 'endhead' && externalCss[a].linkurl.trim().length > 0) {
+                  endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+                } else if (externalCss[a].linkposition == 'startbody' && externalCss[a].linkurl.trim().length > 0) {
+                  topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '">'
+                } else if (externalCss[a].linkposition == 'endbody' && externalCss[a].linkurl.trim().length > 0) {
+                  endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + externalCss[a].linkurl + '"> '
+                }
 
-            }
-          }
-          if (projectscripts != undefined && projectscripts.length > 0) {
-            for (let a = 0; a < projectscripts.length; a++) {
-              if (projectscripts[a].linkposition == 'starthead' && projectscripts[a].script.trim().length > 0) {
-                tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'endhead' && projectscripts[a].script.trim().length > 0) {
-                endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'startbody' && projectscripts[a].script.trim().length > 0) {
-                topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
-              } else if (projectscripts[a].linkposition == 'endbody' && projectscripts[a].script.trim().length > 0) {
-                endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
               }
             }
-          }
-          if (projectstyles != undefined && projectstyles.length > 0) {
-            for (let a = 0; a < projectstyles.length; a++) {
-              if (projectstyles[a].linkposition == 'starthead' && projectstyles[a].style.trim().length > 0) {
-                tophead = tophead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
-              } else if (projectstyles[a].linkposition == 'endhead' && projectstyles[a].style.trim().length > 0) {
-                endhead = endhead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
-              } else if (projectstyles[a].linkposition == 'startbody' && projectstyles[a].style.trim().length > 0) {
-                topbody = topbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
-              } else if (projectstyles[a].linkposition == 'endbody' && projectstyles[a].style.trim().length > 0) {
-                endbody = endbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+            if (projectscripts != undefined && projectscripts.length > 0) {
+              for (let a = 0; a < projectscripts.length; a++) {
+                if (projectscripts[a].linkposition == 'starthead' && projectscripts[a].script.trim().length > 0) {
+                  tophead = tophead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+                } else if (projectscripts[a].linkposition == 'endhead' && projectscripts[a].script.trim().length > 0) {
+                  endhead = endhead + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+                } else if (projectscripts[a].linkposition == 'startbody' && projectscripts[a].script.trim().length > 0) {
+                  topbody = topbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+                } else if (projectscripts[a].linkposition == 'endbody' && projectscripts[a].script.trim().length > 0) {
+                  endbody = endbody + '<script type="text/javascript">' + projectscripts[a].script + '<\/script>'
+                }
               }
             }
-          }
-
-          var partials = ''
-          let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
-
-          var rawSettings = responseConfigLoop.data.configData;
-          var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
-            // console.log('nameF:', nameF)
-          var Layout = ''
-          var partialsPage = [];
-          var vuepartials = [];
-          var pagescripts = [];
-          var pagestyles = [];
-          var layoutdata = '';
-          var pageexternalJs = [];
-          var pageexternalCss = [];
-          var pageMetaInfo = [];
-
-          var PageMetacharset = '';
-
-          Layout = rawSettings[1].pageSettings[i].PageLayout
-          partialsPage = rawSettings[1].pageSettings[i].partials
-          var back_partials = JSON.parse(JSON.stringify(partialsPage));
-          vuepartials = rawSettings[1].pageSettings[i].VueComponents
-          pageexternalJs = rawSettings[1].pageSettings[i].PageExternalJs;
-          pageexternalCss = rawSettings[1].pageSettings[i].PageExternalCss;
-          pageMetaInfo = rawSettings[1].pageSettings[i].PageMetaInfo;
-          pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
-          PageMetacharset = rawSettings[1].pageSettings[i].PageMetacharset;
-          pagescripts = rawSettings[1].pageSettings[i].PageScripts;
-          pagestyles = rawSettings[1].pageSettings[i].PageStyles;
-
-          if (pageSeoTitle != undefined && pageSeoTitle != '') {
-            SeoTitle = pageSeoTitle
-          }
-          if (PageMetacharset != undefined && PageMetacharset != '' && !(ProjectMetacharset != '')) {
-            tophead = tophead + '<meta charset="' + PageMetacharset + '">'
-          }
-          if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
-            for (let a = 0; a < pageMetaInfo.length; a++) {
-              if ((pageMetaInfo[a].name != '' && pageMetaInfo[a].name.trim().length > 0) && (pageMetaInfo[a].content != '' && pageMetaInfo[a].content.trim().length > 0)) {
-
-                tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
+            if (projectstyles != undefined && projectstyles.length > 0) {
+              for (let a = 0; a < projectstyles.length; a++) {
+                if (projectstyles[a].linkposition == 'starthead' && projectstyles[a].style.trim().length > 0) {
+                  tophead = tophead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+                } else if (projectstyles[a].linkposition == 'endhead' && projectstyles[a].style.trim().length > 0) {
+                  endhead = endhead + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+                } else if (projectstyles[a].linkposition == 'startbody' && projectstyles[a].style.trim().length > 0) {
+                  topbody = topbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+                } else if (projectstyles[a].linkposition == 'endbody' && projectstyles[a].style.trim().length > 0) {
+                  endbody = endbody + '<style type="text/css">' + projectstyles[a].style + '<\/style>'
+                }
               }
             }
-          }
-          if (pageexternalJs != undefined && pageexternalJs.length > 0) {
-            for (let a = 0; a < pageexternalJs.length; a++) {
-              if (pageexternalJs[a].linkposition == 'starthead' && pageexternalJs[a].linkurl.trim().length > 0) {
-                tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-              } else if (pageexternalJs[a].linkposition == 'endhead' && pageexternalJs[a].linkurl.trim().length > 0) {
-                endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-              } else if (pageexternalJs[a].linkposition == 'startbody' && pageexternalJs[a].linkurl.trim().length > 0) {
-                topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-              } else if (pageexternalJs[a].linkposition == 'endbody' && pageexternalJs[a].linkurl.trim().length > 0) {
-                endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
-              }
-            }
-          }
+            var partials = ''
+            let responseConfigLoop = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
+              console.log(err);
+              this.fullscreenLoading = false
+            });
 
+            var rawSettings = responseConfigLoop.data.configData;
+            var nameF = rawSettings[1].pageSettings[i].PageName.split('.')[0]
+              // console.log('nameF:', nameF)
+            var Layout = ''
+            var partialsPage = [];
+            var vuepartials = [];
+            var pagescripts = [];
+            var pagestyles = [];
+            var layoutdata = '';
+            var pageexternalJs = [];
+            var pageexternalCss = [];
+            var pageMetaInfo = [];
 
-          if (pageexternalCss != undefined && pageexternalCss.length > 0) {
-            for (let a = 0; a < pageexternalCss.length; a++) {
-              if (pageexternalCss[a].linkposition == 'starthead' && pageexternalCss[a].linkurl.trim().length > 0) {
-                tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-              } else if (pageexternalCss[a].linkposition == 'endhead' && pageexternalCss[a].linkurl.trim().length > 0) {
-                endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-              } else if (pageexternalCss[a].linkposition == 'startbody' && pageexternalCss[a].linkurl.trim().length > 0) {
-                topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
-              } else if (pageexternalCss[a].linkposition == 'endbody' && pageexternalCss[a].linkurl.trim().length > 0) {
-                endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
-              }
-            }
-          }
-          if (pagescripts != undefined && pagescripts.length > 0) {
-            for (let a = 0; a < pagescripts.length; a++) {
-              if (pagescripts[a].linkposition == 'starthead' && pagescripts[a].script.trim().length > 0) {
-                tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
-              } else if (pagescripts[a].linkposition == 'endhead' && pagescripts[a].script.trim().length > 0) {
-                endhead = endhead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
-              } else if (pagescripts[a].linkposition == 'startbody' && pagescripts[a].script.trim().length > 0) {
-                topbody = topbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
-              } else if (pagescripts[a].linkposition == 'endbody' && pagescripts[a].script.trim().length > 0) {
-                endbody = endbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
-              }
-            }
-          }
-          if (pagestyles != undefined && pagestyles.length > 0) {
-            for (let a = 0; a < pagestyles.length; a++) {
-              if (pagestyles[a].linkposition == 'starthead' && pagestyles[a].style.trim().length > 0) {
-                tophead = tophead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
-              } else if (pagestyles[a].linkposition == 'endhead' && pagestyles[a].style.trim().length > 0) {
-                endhead = endhead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
-              } else if (pagestyles[a].linkposition == 'startbody' && pagestyles[a].style.trim().length > 0) {
-                topbody = topbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
-              } else if (pagestyles[a].linkposition == 'endbody' && pagestyles[a].style.trim().length > 0) {
-                endbody = endbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
-              }
-            }
-          }
+            var PageMetacharset = '';
 
-          if (Layout == 'Blank') {
+            Layout = rawSettings[1].pageSettings[i].PageLayout
+            partialsPage = rawSettings[1].pageSettings[i].partials
+            var back_partials = JSON.parse(JSON.stringify(partialsPage));
+            vuepartials = rawSettings[1].pageSettings[i].VueComponents
+            pageexternalJs = rawSettings[1].pageSettings[i].PageExternalJs;
+            pageexternalCss = rawSettings[1].pageSettings[i].PageExternalCss;
+            pageMetaInfo = rawSettings[1].pageSettings[i].PageMetaInfo;
+            pageSeoTitle = rawSettings[1].pageSettings[i].PageSEOTitle;
+            PageMetacharset = rawSettings[1].pageSettings[i].PageMetacharset;
+            pagescripts = rawSettings[1].pageSettings[i].PageScripts;
+            pagestyles = rawSettings[1].pageSettings[i].PageStyles;
+
+            if (pageSeoTitle != undefined && pageSeoTitle != '') {
+              SeoTitle = pageSeoTitle
+            }
+            if (PageMetacharset != undefined && PageMetacharset != '' && !(ProjectMetacharset != '')) {
+              tophead = tophead + '<meta charset="' + PageMetacharset + '">'
+            }
+            if (pageMetaInfo != undefined && pageMetaInfo.length > 0) {
+              for (let a = 0; a < pageMetaInfo.length; a++) {
+                if ((pageMetaInfo[a].name != '' && pageMetaInfo[a].name.trim().length > 0) && (pageMetaInfo[a].content != '' && pageMetaInfo[a].content.trim().length > 0)) {
+
+                  tophead = tophead + '<meta name="' + pageMetaInfo[a].name + '" content="' + pageMetaInfo[a].content + '">'
+                }
+              }
+            }
+            if (pageexternalJs != undefined && pageexternalJs.length > 0) {
+              for (let a = 0; a < pageexternalJs.length; a++) {
+                if (pageexternalJs[a].linkposition == 'starthead' && pageexternalJs[a].linkurl.trim().length > 0) {
+                  tophead = tophead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+                } else if (pageexternalJs[a].linkposition == 'endhead' && pageexternalJs[a].linkurl.trim().length > 0) {
+                  endhead = endhead + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+                } else if (pageexternalJs[a].linkposition == 'startbody' && pageexternalJs[a].linkurl.trim().length > 0) {
+                  topbody = topbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+                } else if (pageexternalJs[a].linkposition == 'endbody' && pageexternalJs[a].linkurl.trim().length > 0) {
+                  endbody = endbody + '<script src="' + pageexternalJs[a].linkurl + '"><\/script>'
+                }
+              }
+            }
+
+            if (pageexternalCss != undefined && pageexternalCss.length > 0) {
+              for (let a = 0; a < pageexternalCss.length; a++) {
+                if (pageexternalCss[a].linkposition == 'starthead' && pageexternalCss[a].linkurl.trim().length > 0) {
+                  tophead = tophead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+                } else if (pageexternalCss[a].linkposition == 'endhead' && pageexternalCss[a].linkurl.trim().length > 0) {
+                  endhead = endhead + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+                } else if (pageexternalCss[a].linkposition == 'startbody' && pageexternalCss[a].linkurl.trim().length > 0) {
+                  topbody = topbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '">'
+                } else if (pageexternalCss[a].linkposition == 'endbody' && pageexternalCss[a].linkurl.trim().length > 0) {
+                  endbody = endbody + '<link rel="stylesheet" type="text/css" href="' + pageexternalCss[a].linkurl + '"> '
+                }
+              }
+            }
+            if (pagescripts != undefined && pagescripts.length > 0) {
+              for (let a = 0; a < pagescripts.length; a++) {
+                if (pagescripts[a].linkposition == 'starthead' && pagescripts[a].script.trim().length > 0) {
+                  tophead = tophead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+                } else if (pagescripts[a].linkposition == 'endhead' && pagescripts[a].script.trim().length > 0) {
+                  endhead = endhead + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+                } else if (pagescripts[a].linkposition == 'startbody' && pagescripts[a].script.trim().length > 0) {
+                  topbody = topbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+                } else if (pagescripts[a].linkposition == 'endbody' && pagescripts[a].script.trim().length > 0) {
+                  endbody = endbody + '<script type="text/javascript">' + pagescripts[a].script + '<\/script>'
+                }
+              }
+            }
+            if (pagestyles != undefined && pagestyles.length > 0) {
+              for (let a = 0; a < pagestyles.length; a++) {
+                if (pagestyles[a].linkposition == 'starthead' && pagestyles[a].style.trim().length > 0) {
+                  tophead = tophead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+                } else if (pagestyles[a].linkposition == 'endhead' && pagestyles[a].style.trim().length > 0) {
+                  endhead = endhead + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+                } else if (pagestyles[a].linkposition == 'startbody' && pagestyles[a].style.trim().length > 0) {
+                  topbody = topbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+                } else if (pagestyles[a].linkposition == 'endbody' && pagestyles[a].style.trim().length > 0) {
+                  endbody = endbody + '<style type="text/css">' + pagestyles[a].style + '<\/style>'
+                }
+              }
+            }
+
+            if (Layout == 'Blank') {
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: folderUrl + '/Layout/Blank.layout',
+                  text: '{{{ contents }}}',
+                  type: 'file'
+                })
+                .catch((e) => {
+                  //console.log("error while blank file creation")
+                })
+            }
+            layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout').catch((err) => {
+              console.log(err);
+              this.fullscreenLoading = false
+            });
+            var responseMetal = '';
+
+            let backupMetalSmith = '';
+
+            let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html').catch((err) => {
+              console.log(err);
+              this.fullscreenLoading = false
+            });
+            contentpartials = contentpartials.data
+            var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
+            let newFolderName = folderUrl + '/temp';
             await axios.post(config.baseURL + '/flows-dir-listing', {
-                filename: folderUrl + '/Layout/Blank.layout',
-                text: '{{{ contents }}}',
-                type: 'file'
-              })
-              .catch((e) => {
-                //console.log("error while blank file creation")
-              })
-          }
-          layoutdata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Layout/' + Layout + '.layout').catch((err) => { console.log(err); this.fullscreenLoading = false });
-          var responseMetal = '';
+                foldername: newFolderName,
+                type: 'folder'
+              }).then(async(res) => {
+                for (let p = 0; p < back_partials.length; p++) {
+                  let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial').catch((err) => {
+                    console.log(err);
+                    this.fullscreenLoading = false
+                  });
+                  responsepartials = responsepartials.data
+                  let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
+                  var DefaultParams = [];
+                  if (result.length > 0) {
+                    var resultParam = result
+                    for (let q = 0; q < resultParam.length; q++) {
+                      var temp;
+                      temp = resultParam[q].trim()
+                      result[q] = result[q].trim()
+                      temp = temp.replace(/&nbsp;/g, ' ')
+                      temp = temp.replace(/\s+/g, ' ');
+                      temp = temp.trim();
+                      temp = temp.split(' ')
+                      for (let j = 0; j < temp.length; j++) {
+                        if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                          if (temp[j + 1] != undefined) {
+                            result[q] = temp[0];
+                            if (temp[j + 1].indexOf('.') > -1) {
+                              let x = temp[j + 1]
+                              x = temp[j + 1].split(/'/)[1];
+                              let obj = {}
+                              obj[temp[0]] = x
+                              DefaultParams.push(obj)
+                              break;
+                            }
+                          } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                            result[q] = temp[0];
+                            if (temp[j]) {
+                              let x = temp[j]
+                              x = temp[j].split(/'/)[1];
+                              let obj = {}
+                              obj[temp[0]] = x
+                              DefaultParams.push(obj)
+                              break;
+                            }
+                          }
+                        }
+                      }
+                    }
+                    for (let j = 0; j < result.length; j++) {
+                      temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
 
-          let backupMetalSmith = '';
-
-          let contentpartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Pages/' + nameF + '.html').catch((err) => { console.log(err); this.fullscreenLoading = false });
-          contentpartials = contentpartials.data
-          var backlayoutdata = JSON.parse(JSON.stringify(layoutdata));
-          let newFolderName = folderUrl + '/temp';
-          await axios.post(config.baseURL + '/flows-dir-listing', {
-              foldername: newFolderName,
-              type: 'folder'
-            }).then(async(res) => {
-              for (let p = 0; p < back_partials.length; p++) {
-                let responsepartials = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/Partials/' + Object.keys(back_partials[p]) + '/' + back_partials[p][Object.keys(back_partials[p])] + '.partial').catch((err) => { console.log(err); this.fullscreenLoading = false });
-                responsepartials = responsepartials.data
-                let result = (getFromBetween.get(responsepartials, "{{>", "}}"));
-                var DefaultParams = [];
+                      temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+                      responsepartials = responsepartials.split(temp1).join(temp2)
+                    }
+                  }
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename: folderUrl + '/temp/' + Object.keys(back_partials[p]) + '_' + back_partials[p][Object.keys(back_partials[p])] + '.html',
+                    text: responsepartials,
+                    type: 'file'
+                  }).catch((e) => {
+                    console.log(e)
+                  })
+                }
+                let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
+                var changeresult = JSON.parse(JSON.stringify(result))
+                for (let s = 0; s < changeresult.length; s++) {
+                  layoutdata.data = layoutdata.data.replace(changeresult[s], changeresult[s].replace(/&nbsp;/g, '').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g, "").replace(/\s*=\s*/g, '='))
+                }
+                DefaultParams = [];
                 if (result.length > 0) {
                   var resultParam = result
-                  for (let q = 0; q < resultParam.length; q++) {
+                  for (let i = 0; i < resultParam.length; i++) {
                     var temp;
-                    temp = resultParam[q].trim()
-                    result[q] = result[q].trim()
-                    temp = temp.replace(/&nbsp;/g, ' ')
-                    temp = temp.replace(/\s+/g, ' ');
-                    temp = temp.trim();
+                    temp = resultParam[i].trim()
+                    result[i] = result[i].trim()
+
                     temp = temp.split(' ')
                     for (let j = 0; j < temp.length; j++) {
+                      temp[j] = temp[j].trim();
                       if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                        if (temp[j + 1] != undefined) {
-                          result[q] = temp[0];
-                          if (temp[j + 1].indexOf('.') > -1) {
-                            let x = temp[j + 1]
-                            x = temp[j + 1].split(/'/)[1];
-                            let obj = {}
-                            obj[temp[0]] = x
-                            DefaultParams.push(obj)
-                            break;
-                          }
-                        } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                          result[q] = temp[0];
+                        if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'") > -1) {
+                          result[i] = temp[0];
                           if (temp[j]) {
                             let x = temp[j]
-                            x = temp[j].split(/'/)[1];
+                            x = temp[j].split("'")[1] + '.partial';
                             let obj = {}
                             obj[temp[0]] = x
                             DefaultParams.push(obj)
                             break;
                           }
+                        }
+                        if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"') > -1) {
+                          result[i] = temp[0];
+                          if (temp[j]) {
+                            let x = temp[j]
+                            x = temp[j].split('"')[1] + '.partial';
+                            let obj = {}
+                            obj[temp[0]] = x
+                            DefaultParams.push(obj)
+                            break;
+                          }
+                        } else {
+                          //console.log('Error while finding ID in layout');
                         }
                       }
                     }
                   }
                   for (let j = 0; j < result.length; j++) {
-                    temp1 = '{{> ' + Object.keys(DefaultParams[j])[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
+                    for (let i = 0; i < back_partials.length; i++) {
+                      if (Object.keys(back_partials[i])[0] == result[j]) {
 
-                    temp2 = '{{> ' + Object.keys(DefaultParams[j])[0] + '_' + DefaultParams[j][Object.keys(DefaultParams[j])[0]].split('.')[0] + " id='" + DefaultParams[j][Object.keys(DefaultParams[j])[0]] + "' }}"
-                    responsepartials = responsepartials.split(temp1).join(temp2)
+                        temp1 = '{{> ' + Object.keys(back_partials[i])[0] + '}}'
+                        if (layoutdata.data.search(temp1) > 0) {
+
+                          temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + '}}'
+                        } else {
+                          var indexdefault = _.findIndex(DefaultParams, function(o) {
+                            return Object.keys(o)[0] == result[j]
+                          })
+                          temp1 = "{{> " + Object.keys(back_partials[i])[0] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
+
+                          temp2 = "{{> " + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
+                        }
+                        if (layoutdata.data.split(temp1).join(temp2)) {
+                          layoutdata.data = layoutdata.data.split(temp1).join(temp2)
+                          break;
+                        } else {
+                          //console.log('Replacing in layout file failed')
+                        }
+                      }
+                    }
                   }
                 }
+              })
+              .catch((e) => {
+                console.log(e)
+              })
+
+            responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+            backupMetalSmith = JSON.parse(JSON.stringify(responseMetal));
+
+            var index = responseMetal.search('.source')
+
+            responseMetal = responseMetal.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.substr(index + 9)
+            var indexPartial = responseMetal.search("handlebars");
+
+            for (var j = 0; j < partialsPage.length; j++) {
+              var temp1, temp2;
+              temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
+
+              temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
+
+              //// console.log('temp1:',temp1)
+              //// console.log('temp2:',temp2)
+              if (contentpartials.match(temp1)) {
+                contentpartials = contentpartials.split(temp1).join(temp2)
+              }
+              var obj = {}
+              var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
+                //// console.log('key:',key)
+                //// console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
+              obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
+              partialsPage[j] = []
+              partialsPage[j] = obj
+
+            }
+            for (var z = 0; z < partialsPage.length; z++) {
+              let key = Object.keys(partialsPage[z])[0];
+              let value = partialsPage[z]
+              let key2 = key;
+              key = key.trim();
+              if (value[key2].match('partial')) {
+                key = key.split('.')[0]
+                var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + "').toString())\n"
+              } else {
+                var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + ".html').toString())\n"
+              }
+              partials = partials + temp;
+            }
+
+            responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
+            // console.log('final responseMetal:', responseMetal)
+            var mainMetal = folderUrl + '/public/assets/metalsmithPublish.js'
+            var value = true;
+            await axios.post(config.baseURL + '/save-menu', {
+                filename: mainMetal,
+                text: responseMetal,
+                type: 'file'
+              }).then(async(response) => {
+                let vueBodyStart = '';
+                let vueBodyEnd = ''
+                var newFolderName1 = folderUrl + '/Preview';
                 await axios.post(config.baseURL + '/flows-dir-listing', {
-                  filename: folderUrl + '/temp/' + Object.keys(back_partials[p]) + '_' + back_partials[p][Object.keys(back_partials[p])] + '.html',
-                  text: responsepartials,
-                  type: 'file'
-                }).catch((e) => {
-                  console.log(e)
-                })
-              }
-              let result = (getFromBetween.get(layoutdata.data, "{{>", "}}"));
-              var changeresult = JSON.parse(JSON.stringify(result))
-              for (let s = 0; s < changeresult.length; s++) {
-                layoutdata.data = layoutdata.data.replace(changeresult[s], changeresult[s].replace(/&nbsp;/g, '').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g, "").replace(/\s*=\s*/g, '='))
-              }
-              DefaultParams = [];
-              if (result.length > 0) {
-                var resultParam = result
-                for (let i = 0; i < resultParam.length; i++) {
-                  var temp;
-                  temp = resultParam[i].trim()
-                  result[i] = result[i].trim()
-
-                  temp = temp.split(' ')
-                  for (let j = 0; j < temp.length; j++) {
-                    temp[j] = temp[j].trim();
-                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'") > -1) {
-                        result[i] = temp[0];
-                        if (temp[j]) {
-                          let x = temp[j]
-                          x = temp[j].split("'")[1] + '.partial';
-                          let obj = {}
-                          obj[temp[0]] = x
-                          DefaultParams.push(obj)
-                          break;
-                        }
-                      }
-                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"') > -1) {
-                        result[i] = temp[0];
-                        if (temp[j]) {
-                          let x = temp[j]
-                          x = temp[j].split('"')[1] + '.partial';
-                          let obj = {}
-                          obj[temp[0]] = x
-                          DefaultParams.push(obj)
-                          break;
-                        }
-                      } else {
-                        //console.log('Error while finding ID in layout');
-                      }
-                    }
-                  }
-                }
-                for (let j = 0; j < result.length; j++) {
-                  for (let i = 0; i < back_partials.length; i++) {
-                    if (Object.keys(back_partials[i])[0] == result[j]) {
-
-                      temp1 = '{{> ' + Object.keys(back_partials[i])[0] + '}}'
-                      if (layoutdata.data.search(temp1) > 0) {
-
-                        temp2 = '{{> ' + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + '}}'
-                      } else {
-                        var indexdefault = _.findIndex(DefaultParams, function(o) {
-                          return Object.keys(o)[0] == result[j]
-                        })
-                        temp1 = "{{> " + Object.keys(back_partials[i])[0] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
-
-                        temp2 = "{{> " + Object.keys(back_partials[i])[0] + '_' + back_partials[i][Object.keys(back_partials[i])[0]] + " id='" + DefaultParams[indexdefault][Object.keys(back_partials[i])[0]].split('.')[0] + "'}}"
-                      }
-                      if (layoutdata.data.split(temp1).join(temp2)) {
-                        layoutdata.data = layoutdata.data.split(temp1).join(temp2)
-                        break;
-                      } else {
-                        //console.log('Replacing in layout file failed')
-                      }
-                    }
-                  }
-                }
-              }
-
-            })
-            .catch((e) => {
-              console.log(e)
-            })
-
-          responseMetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
-          backupMetalSmith = JSON.parse(JSON.stringify(responseMetal));
-
-          var index = responseMetal.search('.source')
-
-          responseMetal = responseMetal.substr(0, index + 9) + folderUrl + '/Preview' + responseMetal.substr(index + 9)
-          var indexPartial = responseMetal.search("handlebars");
-
-          for (var j = 0; j < partialsPage.length; j++) {
-            var temp1, temp2;
-            temp1 = '{{> ' + Object.keys(partialsPage[j])[0] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
-
-            temp2 = '{{> ' + Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]] + " id='" + partialsPage[j][Object.keys(partialsPage[j])[0]] + ".partial' }}"
-
-            //// console.log('temp1:',temp1)
-            //// console.log('temp2:',temp2)
-            if (contentpartials.match(temp1)) {
-              contentpartials = contentpartials.split(temp1).join(temp2)
-            }
-            var obj = {}
-            var key = Object.keys(partialsPage[j])[0] + '_' + partialsPage[j][Object.keys(partialsPage[j])[0]]
-              //// console.log('key:',key)
-              //// console.log('partialsPage:',partialsPage[j][Object.keys(partialsPage[j])[0]])
-            obj[key] = partialsPage[j][Object.keys(partialsPage[j])[0]]
-            partialsPage[j] = []
-            partialsPage[j] = obj
-
-          }
-          for (var z = 0; z < partialsPage.length; z++) {
-            let key = Object.keys(partialsPage[z])[0];
-            let value = partialsPage[z]
-            let key2 = key;
-            key = key.trim();
-            if (value[key2].match('partial')) {
-              key = key.split('.')[0]
-              var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + "').toString())\n"
-            } else {
-              var temp = "Handlebars.registerPartial('" + key + "', fs.readFileSync('" + folderUrl + "/temp/" + Object.keys(back_partials[z])[0] + "_" + value[key2] + ".html').toString())\n"
-            }
-            partials = partials + temp;
-          }
-
-          responseMetal = responseMetal.substr(0, indexPartial + 14) + partials + responseMetal.substr(indexPartial + 14);
-          // console.log('final responseMetal:', responseMetal)
-          var mainMetal = folderUrl + '/public/assets/metalsmithPublish.js'
-          var value = true;
-          await axios.post(config.baseURL + '/save-menu', {
-              filename: mainMetal,
-              text: responseMetal,
-              type: 'file'
-            }).then(async(response) => {
-              let vueBodyStart = '';
-              let vueBodyEnd = ''
-              var newFolderName1 = folderUrl + '/Preview';
-              await axios.post(config.baseURL + '/flows-dir-listing', {
-                  foldername: newFolderName1,
-                  type: 'folder'
-                })
-                .then(async(res) => {
-                  //console.log(res);
-                  let datadivscript = ''
-                  let divappstart = ''
-                  let divappend = ''
-                  if (contentpartials.indexOf('datafieldgroup') > 0) {
-                    datadivscript = "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
-                      "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
-                      "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n" +
-                      "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n"
-                    divappstart = '<div id="app">'
-                    divappend = '</div>'
-                  }
-
-              let newContent = "<html>\n<head>\n" + tophead +
-                    "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
-                    '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
-                    "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                    "<link rel='stylesheet' href='./main-files/main.css'/>\n" +
-                    datadivscript +
-                    endhead + "\n</head>\n<body>\n" + divappstart +
-                    topbody + layoutdata.data +
-                    '\n' + divappend +
-                    "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                    "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                    "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                    '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                    '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                    '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                    endbody +
-                    '\n</body>\n</html>';
-
-                  // console.log('folderUrl:',folderUrl)
-                  await axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
-                    text: newContent,
-                    type: 'file'
+                    foldername: newFolderName1,
+                    type: 'folder'
                   })
+                  .then(async(res) => {
+                    //console.log(res);
+                    let datadivscript = ''
+                    let divappstart = ''
+                    let divappend = ''
+                    if (contentpartials.indexOf('datafieldgroup') > 0) {
+                      datadivscript = "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
+                        "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
+                        "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n" +
+                        "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n"
+                      divappstart = '<div id="app">'
+                      divappend = '</div>'
+                    }
 
-                  var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
+                    let newContent = "<html>\n<head>\n" + tophead +
+                      "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
+                      '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
+                      "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                      "<link rel='stylesheet' href='./main-files/main.css'/>\n" +
+                      datadivscript +
+                      endhead + "\n</head>\n<body>\n" + divappstart +
+                      topbody + layoutdata.data +
+                      '\n' + divappend +
+                      "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                      "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                      "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                      '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                      '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
+                      '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                      endbody +
+                      '\n</body>\n</html>';
 
-                  if (Layout == 'Blank') {
-
-                    rawContent = '---\nlayout: ' + Layout + '_temp.layout\n---\n' + rawContent
-
-                  } else {
-                    let tempValueLayout = '---\nlayout: ' + Layout + '_temp.layout\n---\n';
-                    rawContent = tempValueLayout + rawContent
-                  }
-
-                  var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
-
-                  await axios.post(config.baseURL + '/flows-dir-listing', {
-                      filename: previewFileName,
-                      text: rawContent,
+                    // console.log('folderUrl:',folderUrl)
+                    await axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: folderUrl + '/Layout/' + Layout + '_temp.layout',
+                      text: newContent,
                       type: 'file'
-                    })
-                    .then(async(res) => {
-                      this.saveFileLoading = false;
+                    }).catch((e)=>{console.log(e)});
 
-                      await axios.get(config.baseURL + '/metalsmith-publish?path=' + folderUrl, {}).then(async(response) => {
-                          await axios.post(config.baseURL + '/save-menu', {
+                    var rawContent = '<div id="flowz_content">' + contentpartials + '</div>';;
+
+                    if (Layout == 'Blank') {
+
+                      rawContent = '---\nlayout: ' + Layout + '_temp.layout\n---\n' + rawContent
+
+                    } else {
+                      let tempValueLayout = '---\nlayout: ' + Layout + '_temp.layout\n---\n';
+                      rawContent = tempValueLayout + rawContent
+                    }
+
+                    var previewFileName = folderUrl + '/Preview/' + nameF + '.hbs';
+
+                    await axios.post(config.baseURL + '/flows-dir-listing', {
+                        filename: previewFileName,
+                        text: rawContent,
+                        type: 'file'
+                      })
+                      .then(async(res) => {
+                        this.saveFileLoading = false;
+
+                        await axios.get(config.baseURL + '/metalsmith-publish?path=' + folderUrl, {}).then(async(response) => {
+                            await axios.post(config.baseURL + '/save-menu', {
+                                filename: mainMetal,
+                                text: backupMetalSmith,
+                                type: 'file'
+                              })
+                              .then(async(res) => {
+                                var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                                previewFile = folderUrl.replace('/var/www/html', '');
+
+                                await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+                                  .then(async(res) => {
+                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                                      console.log(e)
+                                    })
+                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
+                                      //// console.log('deleted extra layout file:', res)
+                                    }).catch((e) => {
+                                      console.log(e)
+                                    })
+                                    if (vuepartials != undefined && vuepartials.length > 0) {
+                                      for (let x = 0; x < vuepartials.length; x++) {
+
+                                        await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
+                                            //console.log(res)
+                                          })
+                                          .catch((e) => {
+                                            console.log(e)
+                                          })
+                                      }
+                                    }
+                                    //console.log("layout file reset")
+                                    if (Layout == 'Blank') {
+                                      await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
+                                        .catch((e) => {
+                                          console.log(e)
+                                          //console.log("error while deleting blank.layout file")
+                                        })
+                                    }
+
+                                    // })
+
+                                  })
+                                  .catch((e) => {
+                                    console.log(e)
+                                  })
+                              }).catch((e)=>{console.log(e)});
+
+                          })
+                          .catch((err) => {
+                            this.saveFileLoading = false;
+                            this.fullscreenLoading = false;
+                            //console.log('error while creating metalsmithJSON file' + err)
+                            axios.post(config.baseURL + '/flows-dir-listing', {
                               filename: mainMetal,
                               text: backupMetalSmith,
                               type: 'file'
+                            }).catch((e)=>{console.log(e)});
+                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                              console.log(e)
                             })
-                            .then(async(res) => {
-                              var previewFile = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                              previewFile = folderUrl.replace('/var/www/html', '');
-
-                              await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                                .then(async(res) => {
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                                    console.log(e)
-                                  })
-                                  await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').then((res) => {
-                                    //// console.log('deleted extra layout file:', res)
-                                  }).catch((e) => {
-                                    console.log(e)
-                                  })
-                                  if (vuepartials != undefined && vuepartials.length > 0) {
-                                    for (let x = 0; x < vuepartials.length; x++) {
-
-                                      await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + vuepartials[x].value.split('.')[0] + '.js').then((res) => {
-                                          //console.log(res)
-                                        })
-                                        .catch((e) => {
-                                          console.log(e)
-                                        })
-                                    }
-                                  }
-                                  //console.log("layout file reset")
-                                  if (Layout == 'Blank') {
-                                    await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
-                                      .catch((e) => {
-                                        //console.log("error while deleting blank.layout file")
-                                      })
-                                  }
-
-                                  // })
-
-                                })
-                                .catch((e) => {
-                                  //console.log(e)
-                                })
-                            })
-
-                        })
-                        .catch((err) => {
-                          this.saveFileLoading = false;
-                          this.fullscreenLoading = false;
-                          //console.log('error while creating metalsmithJSON file' + err)
-                          axios.post(config.baseURL + '/flows-dir-listing', {
-                            filename: mainMetal,
-                            text: backupMetalSmith,
-                            type: 'file'
+                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
+                            console.log(err)
+                            axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
                           })
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                            console.log(e)
-                          })
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                          console.log(err)
-                          axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
+                      })
+                      .catch((e) => {
+                        this.saveFileLoading = false
+                        this.fullscreenLoading = false;
+                        axios.post(config.baseURL + '/flows-dir-listing', {
+                          filename: mainMetal,
+                          text: backupMetalSmith,
+                          type: 'file'
+                        }).catch((e)=>{console.log(e)});
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                          //console.log(e)
                         })
-                    })
-                    .catch((e) => {
-                      this.saveFileLoading = false
-                      this.fullscreenLoading = false;
-                      axios.post(config.baseURL + '/flows-dir-listing', {
-                        filename: mainMetal,
-                        text: backupMetalSmith,
-                        type: 'file'
+                        axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
+                        console.log(e)
                       })
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                        //console.log(e)
-                      })
-                      axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
-                      console.log(e)
-                    })
 
-                })
-                .catch((e) => {
-                  this.saveFileLoading = false;
-                  this.fullscreenLoading = false;
-                  console.log(e)
-                  axios.post(config.baseURL + '/flows-dir-listing', {
-                    filename: mainMetal,
-                    text: backupMetalSmith,
-                    type: 'file'
                   })
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                    //console.log(e)
+                  .catch((e) => {
+                    this.saveFileLoading = false;
+                    this.fullscreenLoading = false;
+                    console.log(e)
+                    axios.post(config.baseURL + '/flows-dir-listing', {
+                      filename: mainMetal,
+                      text: backupMetalSmith,
+                      type: 'file'
+                    }).catch((e)=>{console.log(e)});
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                      //console.log(e)
+                    })
+                    axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview').catch((e)=>{console.log(e)});
                   })
-                  axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
+
+              })
+              .catch((e) => {
+                this.saveFileLoading = false;
+                this.fullscreenLoading = false;
+                console.log(e)
+                axios.post(config.baseURL + '/flows-dir-listing', {
+                  filename: mainMetal,
+                  text: backupMetalSmith,
+                  type: 'file'
+                }).catch((e)=>{console.log(e)});
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout').catch((e)=>{console.log(e)});
+                axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
+                  //console.log(e)
                 })
 
-            })
-            .catch((e) => {
-              this.saveFileLoading = false;
-              this.fullscreenLoading = false;
-              console.log(e)
-              axios.post(config.baseURL + '/flows-dir-listing', {
-                filename: mainMetal,
-                text: backupMetalSmith,
-                type: 'file'
               })
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + Layout + '_temp.layout')
-              axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((e) => {
-                //console.log(e)
-              })
-
-            })
-        }
-
-        if (publishType == 'custom') {
-          //console.log('Custom Domain')
-
-          // Surge.sh API
-          axios.post(config.baseURL + '/publish-surge', {
-              projectPath: Cookies.get('userDetailId') + '/' + this.repoName + '/public',
-              domainName: this.customDomainName
-            })
-            .then((res) => {
-              this.fullscreenLoading = false;
-              this.publishWebsite = false;
-              window.open(this.customDomainName);
-              //console.log(res.data);
-            })
-            .catch((e) => {
-              this.fullscreenLoading = false;
-              this.$message({
-                showClose: true,
-                message: 'Failed! Please try again.',
-                type: 'error'
-              });
-              console.log(e)
-            })
-
-
-        } else {
-          //console.log('Default Publish');
-          this.fullscreenLoading = false;
-          this.publishWebsite = false;
-
-          // Open in new window
-          if (process.env.NODE_ENV !== 'development') {
-            window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.ipAddress);
-          } else {
-            window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
           }
-        }
 
-        var dt = new Date();
-        var utcDate = dt.toUTCString();
+          if (publishType == 'custom') {
+            //console.log('Custom Domain')
 
-        this.commitMessage = 'Publish - ' + utcDate;
+            // Surge.sh API
+            axios.post(config.baseURL + '/publish-surge', {
+                projectPath: Cookies.get('userDetailId') + '/' + this.repoName + '/public',
+                domainName: this.customDomainName
+              })
+              .then((res) => {
+                this.fullscreenLoading = false;
+                this.publishWebsite = false;
+                window.open(this.customDomainName);
+                //console.log(res.data);
+              })
+              .catch((e) => {
+                this.fullscreenLoading = false;
+                this.$message({
+                  showClose: true,
+                  message: 'Failed! Please try again.',
+                  type: 'error'
+                });
+                console.log(e)
+              })
 
-        await this.commitProject();
+          } else {
+            //console.log('Default Publish');
+            this.fullscreenLoading = false;
+            this.publishWebsite = false;
 
-        this.init();
+            // Open in new window
+            if (process.env.NODE_ENV !== 'development') {
+              window.open('http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.ipAddress);
+            } else {
+              window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/');
+            }
+          }
+           this.loadingText=''
+          var dt = new Date();
+          var utcDate = dt.toUTCString();
+
+          this.commitForm.branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
+
+          this.commitForm.commitMessage = 'Publish - ' + utcDate;
+
+          await this.commitProject('commitForm');
+
+          this.init();
+        }).catch(() => {
+        });
 
       } else {
         this.newProjectFolderDialog = false;
@@ -3553,10 +4110,21 @@ export default {
         Cookies.remove('subscriptionId', {
           domain: location
         });
-        this.$swal("You're Logged Out From System. Please login again!")
-        .then((value) => {
-          window.location = '/login'
+
+        this.$message({
+          message: 'You\'re Logged Out From System. Please login again!',
+          duration: 500,
+          type: 'error',
+          onClose() {
+            window.location = '/login'
+          }
         });
+
+        return;
+        // this.$swal("You're Logged Out From System. Please login again!")
+        // .then((value) => {
+        //   window.location = '/login'
+        // });
       }
     },
 
@@ -3579,9 +4147,11 @@ export default {
       return '';
     },
 
-    exportWebsite(){
+    exportWebsite(index){
+
+      let branchName = this.branchesData[index].branchName;
       // console.log(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
-      window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
+      window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=' + branchName);
     },
 
     async init () {
@@ -3607,6 +4177,9 @@ export default {
         this.pluginsTreedata = this.configData.data.pluginsData;
 
         this.currentSha = this.settings[0].repoSettings[0].CurrentHeadSHA;
+
+        this.currentBranchName = this.settings[0].repoSettings[0].CurrentBranch;
+
         this.newRepoId = this.settings[0].repoSettings[0].RepositoryId;
         this.repoName = this.configData.data.id;
 
@@ -3627,13 +4200,41 @@ export default {
         this.Metacharset=this.settings[1].projectSettings[1].ProjectMetacharset;
         this.localscripts=this.settings[1].projectSettings[1].ProjectScripts;
         this.localstyles=this.settings[1].projectSettings[1].ProjectStyles;
-        this.paymentgateway=this.settings[1].projectSettings[1].PaymentGateways;
+        // this.accountpaymentgateway=this.settings[1].projectSettings[1].AccountPaymentGateways;
         // this.faviconhref=this.settings[1].projectSettings[0].ProjectFaviconhref;
         this.form.vid=this.settings[1].projectSettings[0].ProjectVId.vid;
         this.form.crmid=this.settings[1].projectSettings[0].CrmSettingId;
         this.websiteRoles = this.settings[1].projectSettings[1].WebsiteRoles;
+
+        if(!(this.settings[1].projectSettings[1].CloudinaryDetails)){
+          this.cloudinaryDetails = {
+            "apiKey":  "" ,
+            "apiSecret":  "" ,
+            "cloudName":  "" ,
+            "uploadFolder":  "" ,
+            "uploadPreset":  "",
+            "nextCursor": ""
+          }
+        } else {
+          this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
+        }
+
+        
+
+        // if(!(this.settings[1].projectSettings[1].CloudinaryDetails)){
+        //   this.cloudinaryDetails = {
+        //     "apiKey":  "" ,
+        //     "apiSecret":  "" ,
+        //     "cloudName":  "" ,
+        //     "uploadFolder":  "" ,
+        //     "uploadPreset":  ""
+        //   }
+        // } else {
+        //   this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
+        // }
+
       } else {
-        //console.log('Cannot get configurations!');
+        console.log('Cannot get configurations!');
       }
 
       if(this.form.brandLogoName==''){
@@ -3647,15 +4248,16 @@ export default {
       }
 
 
-      // console.log('URL: ', this.projectPublicUrl);
-
-      for(let i=0;i<this.paymentgateway.length;i++){
-        var temp=[]
-        for(let j=0;j<this.paymentgateway[i].fields.length;j++){
-          temp.push(Object.keys(this.paymentgateway[i].fields[j])[0])
-        }
-        this.Paymentfields[i]=temp
-      }
+      // // console.log('URL: ', this.projectPublicUrl);
+      // if(this.accountpaymentgateway != undefined && this.accountpaymentgateway.length>0){
+      // for(let i=0;i<this.accountpaymentgateway.length;i++){
+      //   var temp=[]
+      //   for(let j=0;j<this.accountpaymentgateway[i].fields.length;j++){
+      //     temp.push(Object.keys(this.accountpaymentgateway[i].fields[j])[0])
+      //   }
+      //   this.Paymentfields[i]=temp
+      // }
+      // }
 
       // replace all image tag source with index as name attribute to get the image file preview
 
@@ -3677,20 +4279,40 @@ export default {
       let configData = responseConfig.data.configData;
       let SHA = configData[0].repoSettings[0].CurrentHeadSHA;
 
-      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+      // await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+      // }).then(response => {
+      //   this.commitsData = [];
+      //   for(var i in response.data){
+      //     this.commitsData.push({
+      //       commitDate: response.data[i].created_at,
+      //       commitSHA: response.data[i].id,
+      //       commitsMessage: response.data[i].title,
+      //     });
+      //   }
+      // }).catch(error => {
+      //   console.log( error);
+      //   this.fullscreenLoading = false;
+      // });
+
+      // get all branch list
+      await axios.get( config.baseURL + '/branch-list/' + this.newRepoId, {
       }).then(response => {
-        this.commitsData = [];
+        this.branchesData = [];
         for(var i in response.data){
-          this.commitsData.push({
-            commitDate: response.data[i].created_at,
-            commitSHA: response.data[i].id,
-            commitsMessage: response.data[i].title,
+          this.branchesData.push({
+            commitDate: response.data[i].commit.created_at,
+            branchName: response.data[i].name,
+            commitSHA: response.data[i].commit.id,
+            commitsMessage: response.data[i].commit.title,
           });
         }
       }).catch(error => {
         console.log( error);
         this.fullscreenLoading = false;
       });
+
+      this.sortBranchesTable(0);
+
 
       await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + this.folderUrl + '/public/assets/project-details.json', {
       }).then(response => {
@@ -3700,29 +4322,51 @@ export default {
         this.fullscreenLoading = false;
       });
 
-       await axios.get(config.vshopApi, {
+       await axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }
       }).then(res=>{
         
          this.vshopcategory = res.data;
+         if(this.form.vid!=''){
+          let tempvid=this.form.vid
+          let checkindex=_.findIndex(this.vshopcategory,function(o){
+            return o.id == tempvid
+          })
+         if(checkindex==-1){
+          this.form.vid=''
+         }
+         }
+         
+
       }).catch(err => { console.log(err); });
 
      
 
       
-      await axios.get(config.paymentApiGateway)
-      .then(res=>{
+      // await axios.get(config.paymentApiGateway)
+      // .then(res=>{
         
-        this.Allgateway = res.data.gateways;
-      }).catch(err => { console.log(err); });
+      //   this.Allgateway = res.data.gateways;
+      // }).catch(err => { console.log(err); });
       
       // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-     await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId':localStorage.getItem('current_sub_id')}})
+      // console.log('@@@@@@@@@@@@@@@',localStorage.getItem('current_sub_id'))
+     await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId': Cookies.get('subscriptionId')}})
       .then(res=>{
         
         this.crmdata=res.data.data
+        if(this.form.crmid!=''){
+          let tempcrmid=this.form.crmid
+          let checkindex=_.findIndex(this.crmdata,function(o){
+            return o.id == tempcrmid
+          })
+         if(checkindex==-1){
+          this.form.crmid=''
+         }
+         }
+
         
       })
       .catch(err => { console.log(err);  });
@@ -3745,18 +4389,18 @@ export default {
       var ids = getRemove(this.pluginsTreedata, data.id)
 
       function getRemove (ma, idm) {
-        if (ma instanceof Array) {
-          let k = _.findIndex(ma, {id:idm})
-          if (k >= 0) {
-            ma.splice(k,1)
-            return true
-          }
-          for (let i in ma) {
-            let ii = getRemove(ma[i].children, idm)
-            if (ii) return true
-          }
-        }
-        return false
+        if (ma instanceof Array) {
+          let k = _.findIndex(ma, {id:idm})
+          if (k >= 0) {
+            ma.splice(k,1)
+            return true
+          }
+          for (let i in ma) {
+            let ii = getRemove(ma[i].children, idm)
+            if (ii) return true
+          }
+        }
+        return false
       }
     },
 
@@ -3969,6 +4613,10 @@ export default {
       display: none;
   }
 
+  .box-card {
+    width: 480px;
+    margin:10px;
+  }
 
 
 
@@ -4034,11 +4682,32 @@ export default {
 
   .green-tick-img{
     width: 15px;
+    /*margin-right: 56px;*/
   }
 
   .asset-image{
     height: 100px;
     width: 100%;
+  }
+
+  .view-icon{
+    text-align: right;
+    position: absolute;
+    top: -5px;
+    right: 33px;
+    background-color: #FFC900;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+  }
+
+  .view-icon a i{
+    margin-left: -15px;
+    top: 5px;
+    position: absolute;
+    color: #fff;
+    font-size: 12px;
   }
 
   .delete-icon{
@@ -4090,5 +4759,26 @@ export default {
   .view-template i {
     margin-left: 6px;
     margin-top: 6px;
+  }
+
+  .custom-note{
+    margin: 10px 0;
+  }
+
+  #revisionsTable th {
+      cursor: pointer;
+  }
+
+  #revisionsTable th i {
+      margin-right: 20px;
+  }
+
+  .btn-xs{
+    padding: 5px;
+  }
+
+  .cloudinaryFilesCount{
+    margin-left: 15px;
+    font-weight: 900;
   }
 </style>

@@ -88,7 +88,7 @@
         </div>
       </div>
 
-      <div class="row" style="margin-top: 40px;">
+      <!-- <div class="row" style="margin-top: 40px;">
         <div class="col-md-12">
           <div class="creative-table">
             <div class="table-title ">
@@ -104,7 +104,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- {{tablePagesData}} -->
                   <tr>
                     <td>Website SEO Title:</td>
                     <td><a id="seoTitle" data-title="Project SEO Title">{{seoTitle}}</a></td>
@@ -122,7 +121,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- List of Commits -->
       <div class="row" style="margin-top: 40px; margin-bottom: 50px;">
@@ -133,35 +132,35 @@
               <p>List of your Website revisions</p>
             </div>
             <div class="table-body">
-              <el-table
-                :data="commitsData"
-                border
-                style="width: 100%">
-                <el-table-column
-                  prop="commitDate"
-                  label="Commit Date"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="commitsMessage"
-                  label="Commit Message"
-                  >
-                </el-table-column>
-
-                <el-table-column
-                  prop="commitSHA"
-                  label="Commit SHA"
-                  >
-                </el-table-column>
-                
-                <!-- <el-table-column
-                  label="Revert To Commit"
-                  width="180">
-                  <template scope="scope">
-                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
-                  </template>
-                </el-table-column> -->
-              </el-table>
+              <table class="table" id="revisionsTable">
+                <thead>
+                  <tr>
+                    <th width="260" @click="sortBranchesTable(0)">Revision Date <i class="fa fa-sort pull-right"></i></th>
+                    <th @click="sortBranchesTable(1)">Revision Name <i class="fa fa-sort pull-right"></i></th>
+                    <th @click="sortBranchesTable(2)">Revision Message <i class="fa fa-sort pull-right"></i></th>
+                    <!-- <th>Revision SHA</th> -->
+                    <!-- <th>Rollback</th> -->
+                    <!-- <th width="120">Download Code</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(n, index) in branchesData">
+                    <td>{{n.commitDate}}</td>
+                    <td>{{n.branchName}}</td>
+                    <td>{{n.commitsMessage}}</td>
+                    <!-- <td>{{n.commitSHA}}</td> -->
+                    <!-- <td>
+                      <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.branchName != currentBranchName" size="small">Restore</el-button>
+                      <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.branchName == currentBranchName">
+                    </td> -->
+                    <!-- <td>
+                      <el-tooltip content="Download .zip" placement="top">
+                        <el-button @click.native.prevent="exportWebsite(index)" type="info" size="small"><i class="fa fa-download fa-fw"></i></el-button>
+                      </el-tooltip>
+                    </td> -->
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -255,12 +254,69 @@ export default {
       fullscreenLoading: false,
       websiteUsers: [],
       websiteRolesOptions: [],
-      selectedRole: ''
+      selectedRole: '',
+      branchesData: []
     }
   },
   component: {
   },
   methods: {
+
+    sortBranchesTable(n){
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("revisionsTable");
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "asc"; 
+      /* Make a loop that will continue until
+      no switching has been done: */
+      while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.getElementsByTagName("TR");
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch= true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch= true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1:
+          switchcount ++; 
+        } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    },
+
     updateUserRole(index, id){
       
       axios.patch(config.baseURL + '/website-users/' + id, {
@@ -330,7 +386,7 @@ export default {
 
     async saveProjectSettings() {
       
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName);
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err)=>{ console.log('Error:', err); });
 
       if (rethinkdbCheck.data) {
         // update existing data
@@ -365,7 +421,7 @@ export default {
       let foldername = folderUrl.split('/');
       foldername = foldername[6];
       
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((err)=>{ console.log('Error:', err); });
 
       if(this.configData.status == 200 || this.configData.status == 204){
         //console.log('Config file found! Updating fields..');
@@ -409,19 +465,20 @@ export default {
         //console.log('Cannot get config file!');
       } 
 
-      // Get all commits list
-      await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+this.$session.get('privateToken'), {
+      // get all branch list
+      await axios.get( config.baseURL + '/branch-list/' + this.newRepoId, {
       }).then(response => {
-        this.commitsData = [];
+        this.branchesData = [];
         for(var i in response.data){
-          this.commitsData.push({
-            commitDate: response.data[i].created_at,
-            commitSHA: response.data[i].id,
-            commitsMessage: response.data[i].title, 
+          this.branchesData.push({
+            commitDate: response.data[i].commit.created_at,
+            branchName: response.data[i].name,
+            commitSHA: response.data[i].commit.id,
+            commitsMessage: response.data[i].commit.title,
           });
         }
       }).catch(error => {
-        //console.log("Some error occured: ", error);
+        console.log( error);
       });
 
       // Get all website users
@@ -488,32 +545,32 @@ export default {
 
     let self = this;
 
-    $.fn.editable.defaults.mode = 'inline';
+    // $.fn.editable.defaults.mode = 'inline';
 
-    $(document).ready(function() {
-      $('#seoTitle').editable();
-      $('#seoKeywords').editable();
-      $('#seoDesc').editable({
-        title: 'Enter Description',
-        rows: 10
-      });
+    // $(document).ready(function() {
+    //   $('#seoTitle').editable();
+    //   $('#seoKeywords').editable();
+    //   $('#seoDesc').editable({
+    //     title: 'Enter Description',
+    //     rows: 10
+    //   });
 
-      $('#seoTitle').on('save', function(e, params) {
-         // alert('Saved value: ' + params.newValue);
-        self.settings[1].projectSettings[0].ProjectSEOTitle = params.newValue;
-        self.saveProjectSettings();
-      });
+    //   $('#seoTitle').on('save', function(e, params) {
+    //      // alert('Saved value: ' + params.newValue);
+    //     self.settings[1].projectSettings[0].ProjectSEOTitle = params.newValue;
+    //     self.saveProjectSettings();
+    //   });
 
-      $('#seoKeywords').on('save', function(e, params) {
-        self.settings[1].projectSettings[0].ProjectSEOKeywords = params.newValue;
-        self.saveProjectSettings();
-      });
+    //   $('#seoKeywords').on('save', function(e, params) {
+    //     self.settings[1].projectSettings[0].ProjectSEOKeywords = params.newValue;
+    //     self.saveProjectSettings();
+    //   });
 
-      $('#seoDesc').on('save', function(e, params) {
-        self.settings[1].projectSettings[0].ProjectSEODescription = params.newValue;
-        self.saveProjectSettings();
-      });
-    });
+    //   $('#seoDesc').on('save', function(e, params) {
+    //     self.settings[1].projectSettings[0].ProjectSEODescription = params.newValue;
+    //     self.saveProjectSettings();
+    //   });
+    // });
 
     // // Count Up animation
     // $('.counter').each(function() {
@@ -554,6 +611,7 @@ export default {
 
 .ProjectStats {
   font-family: 'Lato', sans-serif;
+  background-color: #eee;
 }
 
 .card{
@@ -814,5 +872,17 @@ h3.subtitle{
     left: auto;
     right: auto;
   }
+}
+
+#revisionsTable{
+  margin-top: 10px;
+}
+
+#revisionsTable th {
+    cursor: pointer;
+}
+
+#revisionsTable th i {
+    margin-right: 20px;
 }
 </style>

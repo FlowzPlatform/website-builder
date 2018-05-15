@@ -198,7 +198,9 @@
                          render: (h, params) => {
                             
                                 var date1 = moment(params.assignDate).format('DD-MMM-YYYY')
-                                return date1
+                                return h('div', [
+                                    h('span', date1)
+                                ]);
                             
                         }
                         
@@ -209,7 +211,9 @@
                          render: (h, params) => {
                             
                                 var date1 = moment(params.unassignDate).format('DD-MMM-YYYY')
-                                return date1
+                                return h('div', [
+                                    h('span', date1)
+                                ]);
                             
                         }
                         
@@ -263,6 +267,7 @@
                         // this.options2 = sub_id;
                         
                     })
+                    .catch((err)=>{ console.log('Error:', err); })
             },
             async getDataOfSubscriptionUser() {
                 this.$Loading.start();
@@ -293,6 +298,8 @@
                         
                         this.options = Role_id
                     })
+                    .catch((err)=>{ console.log('Error:', err); })
+
                     axios.get(config.userDetail, {
                         headers: {
                             'Authorization': Cookies.get('auth_token')
@@ -328,6 +335,7 @@
                         
                         this.$Loading.finish();
                     })
+                    .catch((err)=>{ console.log('Error:', err); })
             },
             async inviteNow() {
                 
@@ -397,7 +405,7 @@
                             self.$Notice.error(
                                 {duration:0, 
                                 title: error.response.statusText,
-                                desc:error.response.data.message+'. Please <a href="'+config.default.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'}
+                                desc:error.response.data.message+'. Please <a href="'+config.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'}
                                 );
                         
                         }

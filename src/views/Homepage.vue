@@ -1,107 +1,6 @@
 <template>
     <div class="Homepage">
 
-        <!-- <div class="svgs">
-            <h1>welcome to<br/>flowz builder</h1>
-            <h3><span>the next generation</span><br/><span>drag 'n drop website builder...</span></h3>
-            <button @click="startNow()"><span>Start now</span></button>
-            <svg class="svg" width="1440" height="394" preserveAspectRatio="none" viewBox="0 0 1600 794" xmlns="http://www.w3.org/2000/svg">
-                <g>
-                    <path d="M-79,-63L-149,93L119,55Z" fill="#18b49c" stroke="#18b49c" />
-                    <path d="M-79,-63L119,55L148,-65Z" fill="#18b69c" stroke="#18b69c" />
-                    <path d="M-79,-63L148,-65L368,-137Z" fill="#18b99c" stroke="#18b99c" />
-                    <path d="M148,-65L119,55L347,95Z" fill="#18b09b" stroke="#18b09b" />
-                    <path d="M148,-65L347,95L368,-137Z" fill="#18b39c" stroke="#18b39c" />
-                    <path d="M368,-137L347,95L427,65Z" fill="#18ae9b" stroke="#18ae9b" />
-                    <path d="M368,-137L427,65L555,-56Z" fill="#18b19b" stroke="#18b19b" />
-                    <path d="M368,-137L555,-56L691,-77Z" fill="#18b39b" stroke="#18b39b" />
-                    <path d="M368,-137L691,-77L1271,-164Z" fill="#17b29b" stroke="#17b29b" />
-                    <path d="M555,-56L427,65L622,110Z" fill="#18a99a" stroke="#18a99a" />
-                    <path d="M555,-56L622,110L691,-77Z" fill="#17ab9a" stroke="#17ab9a" />
-                    <path d="M691,-77L622,110L920,47Z" fill="#17a79a" stroke="#17a79a" class="transparent" />
-                    <path d="M691,-77L920,47L902,-47Z" fill="#17a99a" stroke="#17a99a" />
-                    <path d="M691,-77L902,-47L1271,-164Z" fill="#17ac9a" stroke="#17ac9a" />
-                    <path d="M902,-47L920,47L1030,58Z" fill="#17a49a" stroke="#17a49a" />
-                    <path d="M902,-47L1030,58L1132,-49Z" fill="#17a59a" stroke="#17a59a" />
-                    <path d="M902,-47L1132,-49L1271,-164Z" fill="#17a99a" stroke="#17a99a" />
-                    <path d="M1132,-49L1030,58L1273,133Z" fill="#179f99" stroke="#179f99" />
-                    <path d="M1132,-49L1273,133L1412,-32Z" fill="#169f99" stroke="#169f99" />
-                    <path d="M1132,-49L1412,-32L1271,-164Z" fill="#16a69a" stroke="#16a69a" />
-                    <path d="M1271,-164L1412,-32L1580,-120Z" fill="#16a69a" stroke="#16a69a" />
-                    <path d="M1412,-32L1273,133L1480,89Z" fill="#169a98" stroke="#169a98" />
-                    <path d="M1412,-32L1480,89L1580,-120Z" fill="#169e99" stroke="#169e99" />
-                    <path d="M1580,-120L1480,89L1665,147Z" fill="#169898" stroke="#169898" />
-                    <path d="M-149,93L-174,488L-144,326Z" fill="#18a19a" stroke="#18a19a" />
-                    <path d="M-149,93L-144,326L51,297Z" fill="#18a59a" stroke="#18a59a" />
-                    <path d="M-149,93L51,297L119,55Z" fill="#18aa9b" stroke="#18aa9b" />
-                    <path d="M119,55L51,297L311,306Z" fill="#18a39a" stroke="#18a39a" />
-                    <path d="M119,55L311,306L347,95Z" fill="#18a69a" stroke="#18a69a" />
-                    <path d="M347,95L311,306L541,327Z" fill="#189d99" stroke="#189d99" />
-                    <path d="M347,95L541,327L427,65Z" fill="#18a29a" stroke="#18a29a" />
-                    <path d="M427,65L541,327L622,110Z" fill="#18a099" stroke="#18a099" />
-                    <path d="M622,110L541,327L615,303Z" fill="#179999" stroke="#179999" />
-                    <path d="M622,110L615,303L820,216Z" fill="#179a99" stroke="#179a99" class="" />
-                    <path d="M622,110L820,216L920,47Z" fill="#179f99" stroke="#179f99" class="transparent" />
-                    <path d="M920,47L820,216L1030,58Z" fill="#179e99" stroke="#179e99" class="transparent" />
-                    <path d="M1030,58L820,216L1029,359Z" fill="#179698" stroke="#179698" class="transparent" />
-                    <path d="M1030,58L1029,359L1273,133Z" fill="#179598" stroke="#179598" class="transparent" />
-                    <path d="M1273,133L1029,359L1186,420Z" fill="#178b97" stroke="#178b97" class="transparent" />
-                    <path d="M1273,133L1186,420L1319,317Z" fill="#178b97" stroke="#178b97" class="transparent" />
-                    <path d="M1273,133L1319,317L1422,219Z" fill="#168e97" stroke="#168e97" class="transparent" />
-                    <path d="M1273,133L1422,219L1480,89Z" fill="#169398" stroke="#169398" />
-                    <path d="M1480,89L1422,219L1665,147Z" fill="#169198" stroke="#169198" />
-                    <path d="M1665,147L1422,219L1635,349Z" fill="#168a96" stroke="#168a96" class="transparent" />
-                    <path d="M1665,147L1635,349L1715,496Z" fill="#168196" stroke="#168196" />
-                    <path d="M-144,326L-174,488L51,297Z" fill="#189b99" stroke="#189b99" />
-                    <path d="M51,297L-174,488L138,550Z" fill="#189498" stroke="#189498" />
-                    <path d="M51,297L138,550L311,306Z" fill="#189698" stroke="#189698" />
-                    <path d="M311,306L138,550L265,562Z" fill="#188e98" stroke="#188e98" />
-                    <path d="M311,306L265,562L437,456Z" fill="#188f98" stroke="#188f98" />
-                    <path d="M311,306L437,456L541,327Z" fill="#189498" stroke="#189498" />
-                    <path d="M541,327L437,456L633,501Z" fill="#188d97" stroke="#188d97" />
-                    <path d="M541,327L633,501L615,303Z" fill="#179098" stroke="#179098" />
-                    <path d="M615,303L633,501L822,424Z" fill="#178c97" stroke="#178c97" />
-                    <path d="M615,303L822,424L820,216Z" fill="#179298" stroke="#179298" />
-                    <path d="M820,216L822,424L1029,359Z" fill="#178e97" stroke="#178e97" class="transparent" />
-                    <path d="M1029,359L822,424L1076,458Z" fill="#178697" stroke="#178697" class="transparent" />
-                    <path d="M1029,359L1076,458L1186,420Z" fill="#178496" stroke="#178496" class="transparent" />
-                    <path d="M1319,317L1186,420L1469,527Z" fill="#168096" stroke="#168096" class="transparent" />
-                    <path d="M1319,317L1469,527L1422,219Z" fill="#168496" stroke="#168496" class="transparent" />
-                    <path d="M1422,219L1469,527L1635,349Z" fill="#168196" stroke="#168196" class="transparent" />
-                    <path d="M1635,349L1469,527L1715,496Z" fill="#167995" stroke="#167995" />
-                    <path d="M-174,488L-104,690L138,550Z" fill="#188c97" stroke="#188c97" />
-                    <path d="M138,550L-104,690L105,721Z" fill="#188497" stroke="#188497" />
-                    <path d="M138,550L105,721L265,562Z" fill="#188597" stroke="#188597" />
-                    <path d="M265,562L105,721L313,683Z" fill="#188196" stroke="#188196" />
-                    <path d="M265,562L313,683L437,649Z" fill="#188196" stroke="#188196" />
-                    <path d="M265,562L437,649L437,456Z" fill="#188697" stroke="#188697" />
-                    <path d="M437,456L437,649L633,501Z" fill="#188597" stroke="#188597" />
-                    <path d="M633,501L437,649L731,643Z" fill="#177f96" stroke="#177f96" />
-                    <path d="M633,501L731,643L822,424Z" fill="#178396" stroke="#178396" />
-                    <path d="M822,424L731,643L839,609Z" fill="#177f96" stroke="#177f96" />
-                    <path d="M822,424L839,609L1076,458Z" fill="#178296" stroke="#178296" />
-                    <path d="M1076,458L839,609L1002,652Z" fill="#177b95" stroke="#177b95" />
-                    <path d="M1076,458L1002,652L1334,732Z" fill="#177595" stroke="#177595" />
-                    <path d="M1076,458L1334,732L1186,420Z" fill="#177a95" stroke="#177a95" />
-                    <path d="M1186,420L1334,732L1379,648Z" fill="#167495" stroke="#167495" />
-                    <path d="M1186,420L1379,648L1469,527Z" fill="#167895" stroke="#167895" />
-                    <path d="M1469,527L1379,648L1641,626Z" fill="#167094" stroke="#167094" />
-                    <path d="M1469,527L1641,626L1715,496Z" fill="#167294" stroke="#167294" />
-                    <path d="M105,721L1334,732L313,683Z" fill="#177795" stroke="#177795" class="hide" />
-                    <path d="M313,683L1334,732L731,643Z" fill="#177695" stroke="#177695" class="hide" />
-                    <path d="M313,683L731,643L437,649Z" fill="#187d96" stroke="#187d96" />
-                    <path d="M731,643L1334,732L1002,652Z" fill="#177395" stroke="#177395" class="hide" />
-                    <path d="M731,643L1002,652L839,609Z" fill="#177895" stroke="#177895" />
-                    <path d="M1334,732L1641,626L1379,648Z" fill="#166c94" stroke="#166c94" />
-                </g>
-            </svg>
-            <svg class="arrows">
-                <path class="a1" d="M0 0 L30 32 L60 0"></path>
-                <path class="a2" d="M0 20 L30 52 L60 20"></path>
-                <path class="a3" d="M0 40 L30 72 L60 40"></path>
-            </svg>
-        </div> -->
-
         <header class="header">
             <vue-particles color="#dedede"></vue-particles>
             <div class="brand-box">
@@ -142,12 +41,9 @@
                 <!-- /.row -->
                 <div class="row">
                     <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
-                        <p>ScrollSpy.js highlights page position by applying an 'active' class to the Navigation link within a Bootstrap nav component. It does this by monitoring the #target element of the nav link within the window, waiting for it to reach a given 'Y' position, usually zero.</p>
+                        <p>Flowz Builder is an open-source, multi-purpose, Web Builder Framework based on <strong>GrapesJS</strong> which combines different tools and features with the goal to help you (or users of your application) to build HTML templates without any knowledge of coding. It's a perfect solution to replace the common WYSIWYG editors, which are good for content editing but inappropriate for creating HTML structures. You can see it in action with the official demos, but using its API you're able to build your own editors. </p>
 
-                        <p>
-                            <strong>This example</strong> demonstrates some rich, additional features including <strong>animated scrolling</strong>, <strong>focus events</strong> as well as how to offset with a fixed navigation bar.</p>
-
-                        <p>It also shows how to ensure that the 'last' #target element is able to scroll to the top for a better user experience (UX)</p>
+                        <p>If you're here just to build stuff faster, open and bookmark the official demos and use them when you need it.</p>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -172,13 +68,13 @@
                     <div class="video-roll--container col-xs-12">
                         <ul class="video-roll">
                             <li>
-                                <a href="#" target="_blank"></a>
+                                <a href="https://www.youtube.com/watch?v=IqySi5XWyVo&t=77s" target="_blank"></a>
                             </li>
                             <li>
-                                <a href="#" target="_blank"></a>
+                                <a href="https://www.youtube.com/watch?v=PyrgoTjlbpI" target="_blank"></a>
                             </li>
                             <li>
-                                <a href="#" target="_blank"></a>
+                                <a href="https://www.youtube.com/watch?v=fHeVbqDPs5k" target="_blank"></a>
                             </li>
                         </ul>
                     </div>
@@ -187,7 +83,7 @@
                 <!-- /.row -->
                 <div class="row">
                     <div class="col-xs-12 text-center">
-                        <a class="tutorials-link" href="#" role="button">Watch Videos</a>
+                        <a class="tutorials-link" href="https://www.youtube.com/channel/UCoH6QdEj_YZK1nN5hbkRF1g" target="_blank" role="button">Watch Videos</a>
                         <h4>Check out YouTube tutorials</h4>
                     </div>
                     <!-- /.col -->
@@ -339,9 +235,26 @@
 
                 <div class="row">
                     <div class="col-xs-12">
-                        <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;body</span> <span class="na">data-spy=</span><span class="s">"scroll"</span> <span class="na">data-target=</span><span class="s">"#navbar-example"</span> <span class="na">data-offset=</span><span class="s">"70"</span><span class="nt">&gt;</span>
-    ...
-  <span class="nt">&lt;/body&gt;</span></code></pre>
+                        <figure class="highlight">
+                            <pre>
+                                <code class="language-html" data-lang="html">Clone FlowzServiceApi project: https://github.com/FlowzPlatform/FlowzServiceApi <br><br>
+
+In terminal: 1)cd FlowzServiceApi 2) npm install 3) npm start <br><br>
+
+Clone FlowzBuilder project: https://github.com/FlowzPlatform/FlowzBuilder and update src/config.json with your credentials <br><br>
+
+In terminal: 1)cd FlowzBuilder 2) npm install 3) baseURL=(FlowzServiceApi hosst and port) npm start <br><br>
+
+In /var/www/html/ create "websites" folder (without quotes) <br><br>
+
+Create new user and Login. <br><br>
+
+Create new Project(Projectname without spaces) <br><br>
+
+Create header files(.partials) in Header Folder, footer files(.partials) in Footer folder, layout file(.layout) in Layout folder and pages file(.html) in Pages folder. <br><br>
+
+Project Settings and Page settings are in Settings icon to their respective names.</code>
+                            </pre>
                         </figure>
                     </div>
                     <!-- /.col -->
@@ -350,47 +263,23 @@
 
                 <div class="row">
                     <div class="col-xs-12">
-                        <figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">$</span><span class="p">(</span><span class="s1">'body'</span><span class="p">).</span><span class="nx">scrollspy</span><span class="p">({</span>
-    <span class="na">offset</span><span class="p">:</span> <span class="s1">offsetHeight</span> <span class="c1">/*A numeric representing pixel count*/</span>
-  <span class="p">})</span></code></pre>
+                        <figure class="highlight"><pre><code class="language-js" data-lang="js"># install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report</code></pre>
                         </figure>
                     </div>
                     <!-- /.col -->
                 </div>
                 <!-- /.row -->
 
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="section-sub-header">
-                            Ensure last #target scrolls to top
-                        </div>
-                        <p>A common problem I see with scrollspy implementations is when the last navigation target doesn't navigation to the top of the screen. This causes issues for scrollspy as well as confusing the user if the target they clicked is half way down the page.</p>
-                        <p>The problem is simple, the document isn't long enough to allow it to scroll to the top.</p>
-
-                        <p>A simple solution is to dynamically add padding-bottom to the body via JQuery, which increases the height to the pixel perfect minimum. We need to do this both at render/page load and if the window is resized. The below code is a simplified and calculates the height of all sibling elements (after the target) to calculate</p>
-
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
-
-                <div class="row">
-                    <div class="col-xs-12">
-                        <figure class="highlight"><pre><code class="language-js" data-lang="js">
-  <span class="kd">var</span> <span class="vg">height</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#targetId'</span><span class="p">).</span><span class="nx">innerHeight</span><span class="p">(</span><span class="p">)</span>
-  <span class="kd">var</span> <span class="vg">windowHeight</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">window</span><span class="p">).</span><span class="nx">height</span><span class="p">(</span><span class="p">)</span>
-  <span class="kd">var</span> <span class="vg">navHeight</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'nav.navbar'</span><span class="p">).</span><span class="nx">innerHeight</span><span class="p">(</span><span class="p">)</span>
-  <span class="kd">var</span> <span class="vg">siblingHeight</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#targetId'</span><span class="p">).</span><span class="nx">nextAll</span><span class="p">(</span><span class="p">).</span><span class="nx">innherHeight</span><span class="p">(</span><span class="p">)</span>
-
-  <span class="nx">if</span><span class="p">(</span><span class="nx">height </span><span class="nx">&lt;</span><span class="nx"> windowHeight</span><span class="p">)</span><span class="p">(</span><span class="p">{</span>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">'body'</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="na">"padding-bottom"</span><span class="p">,</span> <span class="nx">windowHeight</span><span class="p">-</span><span class="nx">navHeight</span><span class="p">-</span><span class="nx">height</span><span class="p">-</span><span class="nx">siblingHeight</span> <span class="p">+</span> <span class="p">"</span><span class="s1">px</span><span class="p">"</span><span class="p">)</span>
-  <span class="p">}</span>  
-  </code></pre>
-                        </figure>
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
             </div>
             <!-- /.container -->
         </section>
@@ -541,9 +430,11 @@ export default {
                     })
                     .then((res) => {
                       self.$router.push('/editor');
-                    });
+                    })
+                    .catch((err)=>{ console.log('Error:', err); window.location = '/login';});
 
                 })
+                .catch((err)=>{ console.log('Error:', err); window.location = '/login'; })
 
             }
     }
