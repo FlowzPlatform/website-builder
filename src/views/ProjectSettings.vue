@@ -3451,7 +3451,7 @@ export default {
 
                   if(response.status == 200 || response.status == 201){
 
-                    await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                    await axios.get( config.baseURL + '/commit-service?projectId=' + this.newRepoId, {
                     }).then(async response => {
 
                       

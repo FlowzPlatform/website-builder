@@ -2950,6 +2950,7 @@
                 let projectDetailsData = [{
                     "projectOwner": Cookies.get('email'),
                     "projectID": projectRepoName,
+                    "subscriptionId" : Cookies.get('subscriptionId'),
                     "UserID": userid,
                     "BasePath": newFolderName,
                     "websiteName": this.currentProjectName,

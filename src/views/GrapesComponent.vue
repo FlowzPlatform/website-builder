@@ -110,7 +110,7 @@ export default {
               location.reload()
             }); 
          });
-        console.log("rawconfig", responseConfig)
+        
         this.filename=responseConfig.data.websiteName+'/'+ fileName.replace('/','')
         let rawConfigs = responseConfig.data.configData;
         this.brandName = rawConfigs[1].projectSettings[0].BrandName;
@@ -124,17 +124,17 @@ export default {
 
         //console.log('Page index out side;', pageIndex);
 
-        // Fetch for existing cssImports
+        // // Fetch for existing cssImports
         let fileData = this.$store.state.content;
         let htmlObject = $('<div/>').append(fileData);
-        // htmlObject.find(".cssImports").remove();
+        // // htmlObject.find(".cssImports").remove();
 
-        htmlObject.find("#bootstrap-3-css").remove();
-        htmlObject.find("#bootstrap-4-css").remove();
-        htmlObject.find("#roboto-fonts-css").remove();
-        htmlObject.find("#font-awesome-css").remove();
-        htmlObject.find("#flowz-blocks-css").remove();
-        htmlObject.find("#base-component-css").remove();
+        // htmlObject.find("#bootstrap-3-css").remove();
+        // htmlObject.find("#bootstrap-4-css").remove();
+        // htmlObject.find("#roboto-fonts-css").remove();
+        // htmlObject.find("#font-awesome-css").remove();
+        // htmlObject.find("#flowz-blocks-css").remove();
+        // htmlObject.find("#base-component-css").remove();
 
         // let cssUrlString = [];
 
@@ -555,4 +555,7 @@ export default {
     font-size: initial !important;
 }
 
+/*.gjs-input-holder select option {
+  color: #000;
+}*/
 </style>
