@@ -733,7 +733,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-object-group',
             title: 'Data Field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
     bm.add('DataFieldObject', {
@@ -743,7 +743,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-archive',
             title: 'Data Field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
     bm.add('DataFieldTable', {
@@ -753,7 +753,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-table',
             title: 'Data Field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
     bm.add('DataFieldText', {
@@ -763,7 +763,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-font',
             title: 'Data Field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
     bm.add('DataFieldList', {
@@ -773,17 +773,17 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-list',
             title: 'Data Field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
     bm.add('DataFieldImage', {
         label: 'Data Field Image',
-        content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="http://themenectar.com/docs/salient/wp-content/uploads/2016/10/basicloader.gif></DataFieldImage>',
+        content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img class="datafieldimage" src="http://themenectar.com/docs/salient/wp-content/uploads/2016/10/basicloader.gif"></DataFieldImage>',
         attributes: {
             class: 'fa fa-picture-o',
             title: 'Progress Bar',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
     // bm.add('DataFieldTemplate', {
@@ -793,7 +793,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     //         class: 'fa fa-database',
     //         title: 'Template-1',
     //     },
-    //     category: 'Data Field Group'
+    //     category: 'Data Field Components'
     // });
 
 
@@ -811,7 +811,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-address-card-o',
             title: 'Data Card',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
 
@@ -822,7 +822,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-sort-amount-desc',
             title: 'Data field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
     bm.add('DataFieldCheckbox', {
@@ -832,7 +832,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-check-square-o',
             title: 'Data field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
     
     
@@ -843,7 +843,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-sliders',
             title: 'Data field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
     
     bm.add('DataFieldSearch', {
@@ -853,7 +853,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-search',
             title: 'Data field',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
     bm.add('DataPagintion', {
@@ -863,7 +863,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
             class: 'fa fa-files-o',
             title: 'Data Pagination',
         },
-        category: 'Data Field Group'
+        category: 'Data Field Components'
     });
 
 
@@ -2261,56 +2261,56 @@ editor.TraitManager.addType('content', {
     });
 
 
-    // comps.addType('img', {
-    //     // Define the Model
-    //     model: defaultModel.extend({
-    //         // Extend default properties
-    //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
-    //             editable: true,
-    //             droppable: true,
-    //             traits: [{
-    //                     label: 'Data image field',
-    //                     name: ':src',
-    //                     type: 'text'
-    //                 },
-    //                 {
-    //                     label: 'image height',
-    //                     name: 'height',
-    //                     type: 'text'
-    //                 },
-    //                 {
-    //                     label: 'image width',
-    //                     name: 'width',
-    //                     type: 'text'
-    //                 },
-    //                 {
-    //                     label: 'image alt',
-    //                     name: 'alt',
-    //                     type: 'text'
-    //                 }
-    //             ]
-    //         }),
+    comps.addType('DataFieldImage', {
+        // Define the Model
+        model: defaultModel.extend({
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [{
+                        label: 'Data image field',
+                        name: ':src',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image height',
+                        name: 'height',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image width',
+                        name: 'width',
+                        type: 'text'
+                    },
+                    {
+                        label: 'image alt',
+                        name: 'alt',
+                        type: 'text'
+                    }
+                ]
+            }),
 
-    //     }, {
-    //         isComponent: function(el) {
-    //             if (el.tagName == 'IMG') {
-    //                 return {
-    //                     type: 'img'
-    //                 };
-    //             }
-    //         },
-    //     }),
+        }, {
+            isComponent: function(el) {
+                if (el.className == 'datafieldimage') {
+                    return {
+                        type: 'DataFieldImage'
+                    };
+                }
+            },
+        }),
 
-    //     view: defaultType.view,
+        view: defaultType.view,
 
-    //     // The render() should return 'this'
-    //     render: function() {
-    //         // Extend the original render method
-    //         defaultType.view.prototype.render.apply(this, arguments);
-    //         this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-    //         return this;
-    //     },
-    // });
+        // The render() should return 'this'
+        render: function() {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+        },
+    });
 
     editor.TraitManager.addType('customConent1', {
 
