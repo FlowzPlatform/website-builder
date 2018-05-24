@@ -37,7 +37,8 @@ if (process.env.NODE_ENV !== 'development') {
     crmsettingapi='https://api.'+domainkey+'/crm/settings'
     flowzDashboardUrl = 'https://dashboard.' + domainkey
     buildersettings='https://api.'+domainkey+'/crm/buildersettings/',
-    menuCategoriesUrl='https://api.'+domainkey+'/pdmnew/categories'
+    menuCategoriesUrl='https://api.'+domainkey+'/pdmnew/categories',
+    colorSwatchUrl='https://api.'+domainkey+'/pdmnew/filters/'
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -65,7 +66,8 @@ if (process.env.NODE_ENV !== 'development') {
     crmsettingapi='https://api.flowzcluster.tk/crm/settings'
     flowzDashboardUrl = 'https://dashboard.flowzcluster.tk'
     buildersettings='https://api.flowzcluster.tk/crm/buildersettings/'
-    menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories'
+    menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories',
+    colorSwatchUrl='https://api.flowzcluster.tk/pdmnew/filters/'
 }
 
 module.exports = {
@@ -103,8 +105,8 @@ module.exports = {
     // paymentApiGateway: paymentApiGateway,
 
     vshopApi : vshopApi,
-    menuCategoriesUrl : menuCategoriesUrl, 
-
+    menuCategoriesUrl : menuCategoriesUrl,
+    colorSwatchUrl : colorSwatchUrl,
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',

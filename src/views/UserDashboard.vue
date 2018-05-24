@@ -261,6 +261,14 @@
                         </a>
                     </li>
                     <li>
+                        <a href="#" @click='goToColors()'>
+                            <i class="fa fa-list">
+                                <span class="icon-bg hh-bg-success"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Product & Imprint Color</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
                                 <span class="icon-bg hh-bg-violet"></span>
@@ -308,6 +316,7 @@ import AddBannerType from './Banner/add_bannertype';
 import AddBanner from './Banner/add_banner';
 import BannerTypeList from './Banner/bannertypeList';
 import BannerList from './Banner/bannersList';
+import ColorSwatch from './ColorSwatch'
 
 export default {
   name: 'UserDashboard',
@@ -354,6 +363,9 @@ export default {
         } else if (name === 'b_list') {
             this.componentId = BannerList;
         } else {}
+    },
+    goToColors() {
+      this.componentId = ColorSwatch;
     },
     goToEditor() {
       // this.$router.push('/editor');
