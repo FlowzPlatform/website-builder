@@ -244,86 +244,106 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         category: 'Bootstrap-Block'
     });
 
-    bm.add('g-form-template', {
-        label: 'Form Full',
-        content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div></div>',
+    bm.add('Bootstrap-Block-8-4', {
+        label: 'Bootstrap-Block-3-9',
+        content: '<div class="row" style="padding: 5px;"><div class="col-md-3 bootstrapblock"></div><div class="col-md-9 bootstrapblock"></div></div>',
         attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Full'
+            class: 'fa fa-th',
+            title: 'Bootstrap-Block-3-9'
         },
-        category: 'Custom Form Controls'
+        category: 'Bootstrap-Block'
     });
 
-    bm.add('g-form', {
-        label: 'G-Form',
-        content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
+    bm.add('fontAwesomeIcon', {
+        label: 'Font Awesome Icon',
+        content: '<i class="fa fa-home"></i>',
         attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form'
+            class: 'fa fa-font-awesome',
+            title: 'Font Awesome Icon'
         },
-        category: 'Custom Form Controls'
+        category: 'Extra'
     });
 
-    bm.add('gformpanel', {
-        label: 'G-Form Panel',
-        content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Panel'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form-template', {
+    //     label: 'Form Full',
+    //     content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div></div>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Full'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
-    bm.add('g-form-add-btn', {
-        label: 'G-Form Add Button',
-        content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Add Button'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form', {
+    //     label: 'G-Form',
+    //     content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
-    bm.add('g-form-delete-btn', {
-        label: 'G-Form Delete Button',
-        content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Delete Button'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('gformpanel', {
+    //     label: 'G-Form Panel',
+    //     content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Panel'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
-    bm.add('g-form-submit-btn', {
-        label: 'G-Form Submit Button',
-        content: '<button class="button" onclick="getValues()" type="button">Submit</button>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Submit Button'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form-add-btn', {
+    //     label: 'G-Form Add Button',
+    //     content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Add Button'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
-    bm.add('formpartial', {
-        label: 'G-Form-Partial',
-        content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form-Partial'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form-delete-btn', {
+    //     label: 'G-Form Delete Button',
+    //     content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Delete Button'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
+
+    // bm.add('g-form-submit-btn', {
+    //     label: 'G-Form Submit Button',
+    //     content: '<button class="button" onclick="getValues()" type="button">Submit</button>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Submit Button'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
+
+    // bm.add('formpartial', {
+    //     label: 'G-Form-Partial',
+    //     content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form-Partial'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
 
-    bm.add('g-form-template2', {
-        label: 'Form Full2',
-        content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name" placeholder="name" /> <span class="error" data-validate-for="name"></span> <label>email</label> <input type="text" name="email" placeholder="email" /> <span class="error" data-validate-for="email"></span> <label>age</label> <input type="text" name="age" placeholder="age" /> <span class="error" data-validate-for="age"></span> <label>phone</label> <input type="text" name="phone" placeholder="phone" /> <span class="error" data-validate-for="phone"></span> <label>birthdate</label> <input type="date" name="birthdate" placeholder="birthdate" /> <span class="error" data-validate-for="birthdate"></span> </div> <div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div> </div> <button class="button" onclick="getValues()" type="button">Submit</button>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Full2'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form-template2', {
+    //     label: 'Form Full2',
+    //     content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name" placeholder="name" /> <span class="error" data-validate-for="name"></span> <label>email</label> <input type="text" name="email" placeholder="email" /> <span class="error" data-validate-for="email"></span> <label>age</label> <input type="text" name="age" placeholder="age" /> <span class="error" data-validate-for="age"></span> <label>phone</label> <input type="text" name="phone" placeholder="phone" /> <span class="error" data-validate-for="phone"></span> <label>birthdate</label> <input type="date" name="birthdate" placeholder="birthdate" /> <span class="error" data-validate-for="birthdate"></span> </div> <div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div> </div> <button class="button" onclick="getValues()" type="button">Submit</button>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Full2'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
 
     // // Sections
@@ -710,7 +730,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         label: 'Data Field Group',
         content: '<div class="grid12"><DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup></div>',
         attributes: {
-            class: 'fa fa-database',
+            class: 'fa fa-object-group',
             title: 'Data Field',
         },
         category: 'Data Field Group'
@@ -718,9 +738,9 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     bm.add('DataFieldObject', {
         label: 'Data Field Object',
-        content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
+        content: '<small class="totalCounter" style="display: block; margin: 10px;">Showing <span v-text="displayedProducts"></span> products of <span v-text="totalProductsCount"></span> products</small><DataFieldObject style="display: block; width: 100%; min-height:350px" v-on:get-data="getUrl"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
         attributes: {
-            class: 'fa fa-database',
+            class: 'fa fa-archive',
             title: 'Data Field',
         },
         category: 'Data Field Group'
@@ -730,7 +750,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         label: 'Data Field Table',
         content: '<DataFieldTable style="display: block; width: 100%; min-height:350px"></DataFieldTable>',
         attributes: {
-            class: 'fa fa-database',
+            class: 'fa fa-table',
             title: 'Data Field',
         },
         category: 'Data Field Group'
@@ -740,7 +760,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         label: 'Data Field Text',
         content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
         attributes: {
-            class: 'fa fa-database',
+            class: 'fa fa-font',
             title: 'Data Field',
         },
         category: 'Data Field Group'
@@ -750,7 +770,7 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         label: 'Data Field List',
         content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
         attributes: {
-            class: 'fa fa-database',
+            class: 'fa fa-list',
             title: 'Data Field',
         },
         category: 'Data Field Group'
@@ -758,20 +778,90 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
     bm.add('DataFieldImage', {
         label: 'Data Field Image',
-        content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
+        content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="http://themenectar.com/docs/salient/wp-content/uploads/2016/10/basicloader.gif></DataFieldImage>',
         attributes: {
-            class: 'fa fa-database',
+            class: 'fa fa-picture-o',
             title: 'Progress Bar',
         },
         category: 'Data Field Group'
     });
 
-    bm.add('DataFieldTemplate', {
-        label: 'Data Field Template',
-        content: '<div class="container"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo" style="width: 100%;">Hot Topics</button> <div id="demo" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> <div class="col-md-6" style="border: 1px solid black; height: 200px"> One </div><div class="col-md-6" style="border: 1px solid black; height: 200px"> Two </div></div></div><div class="row" style="margin-top: 15px"> <div class="col-md-8"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2" style="width: 100%;">Trending Articles</button> <div id="demo2" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> One </div></div></div><div class="col-md-4"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3" style="width: 100%;">Open Positions</button> <div id="demo3" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> two </div></div></div></div></div>',
+    // bm.add('DataFieldTemplate', {
+    //     label: 'Data Field Template',
+    //     content: '<div class="container"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo" style="width: 100%;">Hot Topics</button> <div id="demo" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> <div class="col-md-6" style="border: 1px solid black; height: 200px"> One </div><div class="col-md-6" style="border: 1px solid black; height: 200px"> Two </div></div></div><div class="row" style="margin-top: 15px"> <div class="col-md-8"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2" style="width: 100%;">Trending Articles</button> <div id="demo2" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> One </div></div></div><div class="col-md-4"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3" style="width: 100%;">Open Positions</button> <div id="demo3" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> two </div></div></div></div></div>',
+    //     attributes: {
+    //         class: 'fa fa-database',
+    //         title: 'Template-1',
+    //     },
+    //     category: 'Data Field Group'
+    // });
+
+
+
+
+
+
+
+
+
+    bm.add('DataCard', {
+        label: 'Data Card',
+        content: '<div class="vue-card"> <div class="card-contents" style="padding: 30px;"> </div></div>',
         attributes: {
-            class: 'fa fa-database',
-            title: 'Template-1',
+            class: 'fa fa-address-card-o',
+            title: 'Data Card',
+        },
+        category: 'Data Field Group'
+    });
+
+
+    bm.add('DataFieldSelect', {
+        label: 'Data Field Select',
+        content: '<datafieldselect style="min-height: 15px; border: 1px solid #000; display: block" class="filterComponents" v-on:call-method="callfilteredproducts" :updatechild="updatechild"></datafieldselect>',
+        attributes: {
+            class: 'fa fa-sort-amount-desc',
+            title: 'Data field',
+        },
+        category: 'Data Field Group'
+    });
+
+    bm.add('DataFieldCheckbox', {
+        label: 'Data Field Checkbox',
+        content: '<datafieldcheckbox style="min-height: 15px; border: 1px solid #000; display: block" class="filterComponents" :updatechild="updatechild" v-on:call-method="callfilteredproducts"></datafieldcheckbox>',
+        attributes: {
+            class: 'fa fa-check-square-o',
+            title: 'Data field',
+        },
+        category: 'Data Field Group'
+    });
+    
+    
+    bm.add('DataFieldSlider', {
+        label: 'Data Field Slider',
+        content: '<datafieldslider style="min-height: 15px; border: 1px solid #000; display: block" v-on:call-method2="callfilteredproducts2"></datafieldslider>',
+        attributes: {
+            class: 'fa fa-sliders',
+            title: 'Data field',
+        },
+        category: 'Data Field Group'
+    });
+    
+    bm.add('DataFieldSearch', {
+        label: 'Data Field Search',
+        content:'<datafieldsearch style="min-height: 15px; border: 1px solid #000; display: block" v-on:call-method="searchProduct" label="Search"></datafieldsearch>',
+        attributes: {
+            class: 'fa fa-search',
+            title: 'Data field',
+        },
+        category: 'Data Field Group'
+    });
+
+    bm.add('DataPagintion', {
+        label: 'Data Pagination',
+        content:'<div class="row"> <div class="col-md-8"> <template> <paginate :page-count="totalPages" ref="paginate" :page-range="3" :margin-pages="2" :click-handler="clickCallback" :prev-text="\'Prev\'" :next-text="\'Next\'" :container-class="\'pagination\'" :page-class="\'page-item\'"> </paginate> </template> </div> <div class="col-md-4"> <form class="form-inline numberOfProductsPerPage"> <div class="form-group"> <label for="email">Products per page:</label> <select class="form-control" v-model="numberOfProductsPerPage" v-on:change="changeNumberOfProducts"> <option value="20">20</option> <option value="50">50</option> <option value="100">100</option> <option value="200">200</option> </select> </div> </form> </div> </div>',
+        attributes: {
+            class: 'fa fa-files-o',
+            title: 'Data Pagination',
         },
         category: 'Data Field Group'
     });
@@ -797,6 +887,34 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     var defaultModel = defaultType.model;
     var defaultView = defaultType.view;
     var traits;
+
+
+    editor.TraitManager.addType('filterall', {
+        /**
+        * Returns the input element
+        * @return {HTMLElement}
+        */
+        getInputEl: function () {
+            if (!this.inputEl) {
+                var input = document.createElement('textarea');
+                input.value = this.target.get('content');
+                this.inputEl = input;
+            }
+            return this.inputEl;
+        },
+
+        /**
+         * Triggered when the value of the model is changed
+         */
+        getValueForTarget: function () {
+            console.log("inside getValueForTargetss")
+            return 'filterAll.' + this.model.get('value');
+        }
+    });
+
+    
+
+
 
     // The `input` will be the Component type ID
     comps.addType('productListing', {
@@ -2663,6 +2781,203 @@ editor.TraitManager.addType('content', {
 
         // The render() should return 'this'
         render: function() {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+        },
+    });
+
+
+     editor.TraitManager.addType('filterall', {
+        /**
+        * Returns the input element
+        * @return {HTMLElement}
+        */
+        getInputEl: function () {
+            if (!this.inputEl) {
+                var input = document.createElement('textarea');
+                input.value = this.target.get('content');
+                this.inputEl = input;
+            }
+            return this.inputEl;
+        },
+
+        /**
+         * Triggered when the value of the model is changed
+         */
+        getValueForTarget: function () {
+            console.log("inside getValueForTargetss")
+            return 'filterAll.' + this.model.get('value');
+        }
+    });
+
+    comps.addType('datafieldselect', {
+        // Define the Model
+        model: defaultModel.extend({
+            init() {
+                this.listenTo(this, 'change:connectiondata', this.doStuff);
+            },
+            doStuff() { },
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [{
+                    type: 'text',
+                    label: 'label',
+                    name: 'label'
+                },
+                {
+                    type: 'text',
+                    label: 'filterkey',
+                    name: 'filterkey'
+                },
+                {
+                    label: 'filtervalue',
+                    name: ':filtervalue',
+                    type: 'filterall'
+                }
+                ]
+            }),
+
+        }, {
+                isComponent: function (el) {
+                    if (el.tagName == 'DATAFIELDSELECT') {
+                        return {
+                            type: 'datafieldselect'
+                        };
+                    }
+                    if (el.tagName == 'TEMPLATE') {
+                        return { type: 'template', components: el.innerHTML }
+                    }
+                },
+            }),
+
+        view: defaultView.extend({
+            // '<template>' can't be shown so in canvas use another tag
+            tagName: 'div'
+        }),
+
+        // The render() should return 'this'
+        render: function () {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+        },
+    });
+
+    comps.addType('datafieldcheckbox', {
+        // Define the Model
+        model: defaultModel.extend({
+            init() {
+                this.listenTo(this, 'change:connectiondata', this.doStuff);
+            },
+            doStuff() { },
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [{
+                    type: 'text',
+                    label: 'label',
+                    name: 'label'
+                },
+                {
+                    type: 'text',
+                    label: 'filterkey',
+                    name: 'filterkey'
+                },
+                {
+                    label: 'filtervalue',
+                    name: ':filtervalue',
+                    type: 'filterall'
+                }
+                ]
+            }),
+
+        }, {
+                isComponent: function (el) {
+                    if (el.tagName == 'DATAFIELDCHECKBOX') {
+                        return {
+                            type: 'datafieldcheckbox'
+                        };
+                    }
+                    if (el.tagName == 'TEMPLATE') {
+                        return { type: 'template', components: el.innerHTML }
+                    }
+                },
+            }),
+
+        view: defaultView.extend({
+            // '<template>' can't be shown so in canvas use another tag
+            tagName: 'div'
+        }),
+
+        // The render() should return 'this'
+        render: function () {
+            // Extend the original render method
+            defaultType.view.prototype.render.apply(this, arguments);
+            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+            return this;
+        },
+    });
+
+    comps.addType('datafieldslider', {
+        // Define the Model
+        model: defaultModel.extend({
+            init() {
+                this.listenTo(this, 'change:connectiondata', this.doStuff);
+            },
+            doStuff() { },
+            // Extend default properties
+            defaults: Object.assign({}, defaultModel.prototype.defaults, {
+                editable: true,
+                droppable: true,
+                traits: [{
+                    type: 'text',
+                    label: 'label',
+                    name: 'label'
+                },
+                {
+                    type: 'text',
+                    label: 'filterkey',
+                    name: 'filterkey'
+                },
+                {
+                    type: 'text',
+                    label: 'filterkeysecond',
+                    name: 'filterkeysecond'
+                },
+                {
+                    label: 'filtervalue',
+                    name: ':filtervalue',
+                    type: 'filterall'
+                }
+                ]
+            }),
+
+        }, {
+                isComponent: function (el) {
+                    if (el.tagName == 'DATAFIELDSLIDER') {
+                        return {
+                            type: 'datafieldslider'
+                        };
+                    }
+                    if (el.tagName == 'TEMPLATE') {
+                        return { type: 'template', components: el.innerHTML }
+                    }
+                },
+            }),
+
+        view: defaultView.extend({
+            // '<template>' can't be shown so in canvas use another tag
+            tagName: 'div'
+        }),
+
+        // The render() should return 'this'
+        render: function () {
             // Extend the original render method
             defaultType.view.prototype.render.apply(this, arguments);
             this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
