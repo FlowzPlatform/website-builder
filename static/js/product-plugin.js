@@ -434,6 +434,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         category: 'Extra'
     });
 
+    bm.add('basicDiv', {
+        label: 'Basic Division',
+        content: '<div style="min-height: 20px; display: block;"></div>',
+        attributes: {
+            class: 'fa fa-code',
+            title: 'Basic Div'
+        },
+        category: 'Extra'
+    });
+
     // Copyright
     bm.add('Copyright', {
         label: 'Copyright',

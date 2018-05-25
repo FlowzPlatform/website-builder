@@ -47,7 +47,7 @@
                 <div style="margin-right:10px; margin: 15px;">
                   <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview
                   </el-button>
-                  <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor
+                  <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="componentId === 'MonacoEditorChild'">Go to Editor
                   </el-button>
                   <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectSettings' && componentId != 'PageSettings' && componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save
                   </el-button>
@@ -3770,6 +3770,7 @@
 
                 this.fullscreenLoading = true;
                 await this.getConfigFileData(folderUrl);
+                this.fullscreenLoading = true;
                 
                 // let configFileData = await this.getConfigFileData(folderUrl);
                 // console.log(configFileData)
@@ -3808,6 +3809,8 @@
                 };
                 let self = this;
                 setTimeout(async function() {
+
+                  self.fullscreenLoading = true;
 
                   if(self.globalConfigData == undefined){
                     self.fullscreenLoading = false;
@@ -5933,8 +5936,8 @@
                       </span>
                   </span>);
                   } else if (node.level == 1) {
-                    return(<span>
-                        <span class="nodelabel" on-click={ () => this.goToHomePage() }>
+                    return(<span on-click={ () => this.goToHomePage() }>
+                        <span class="nodelabel" >
                             <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
                             <span>Websites</span>
                         </span>
