@@ -4287,11 +4287,20 @@
                           let divappstart = ''
                           let divappend = ''
                           let dfscript = ''
-                          let indexvuejs = _.findIndex(PageCss, function(o) {
-                              return o == 'VueJs'
-                            })
+
+                          // console.log("PageCss:",PageCss);
+
+                          // let indexvuejs = _.findIndex(PageCss, function(o) {
+                          //     return o == 'VueSearchJS'
+                          //   })
+
+                          // let indexvuedatajs = _.findIndex(PageCss, function(o) {
+                          //     return o == 'VueDataJS'
+                          //   })
+
+                          // console.log(indexvuedatajs);
                             // if (contentpartials.indexOf('datafieldgroup') > 0 || contentpartials.indexOf('datafieldtable') > 0) {
-                          if (indexvuejs != -1) {
+                          if (PageCss == 'VueSearchJS') {
                             divappstart   = '<div id="app">'
                             divappend     = '</div>'
                             dfscript      = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
@@ -4302,6 +4311,20 @@
                                             + '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.8/jquery.lazy.plugins.min.js"><\/script>\n'
                                             + '<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"><\/script>\n'
                                             + '<script src="./../assets/client-plugins/vuelastic.js"><\/script>'
+                          }
+
+                          if (PageCss == 'VueDataJS') {
+                            divappstart   = '<div id="app"><style type="text/css">.grid{position: relative;}.item{display: block; position: absolute; width: 100%; max-width: 250px; height: auto; margin: 5px; z-index: 1; background: white; color: black; border: 1px solid black}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}</style>'
+                            divappend     = '</div>'
+                            dfscript      = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
+                                            + "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n"
+                                            + "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n"
+                                            + "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
+                                            + "<link rel='stylesheet' type='text/css' href='https://res.cloudinary.com/flowz/raw/upload/v1526901609/component-base.css'>\n"
+                                            + "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>"
+                                            + '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>'
+                                            + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">'
+                                            + "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>"
                           }
 
                           let newContent = "<html>\n<head>\n" + tophead +
