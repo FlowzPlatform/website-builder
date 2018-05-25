@@ -1613,7 +1613,7 @@ export default {
       $('.valid').removeClass('correct');
     },
     linktovshop(){
-      window.open('https://www.vshopdata.'+config.domainkey);
+      window.open('https://vshopdata.'+config.domainkey);
     },
     refreshvshop(){
 
@@ -1639,7 +1639,7 @@ export default {
       }).catch(err => { console.log(err); });
     },
     linktocrm(){
-      window.open('https://www.crm.'+config.domainkey);
+      window.open('https://crm.'+config.domainkey);
     },
     refreshaccounts(){
       console.log('refreshaccounts')
@@ -2251,6 +2251,12 @@ export default {
       // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
       // Call Listings API and get Tree
+      axios.get(config.userDetail, {
+        headers: {
+          'Authorization' : Cookies.get('auth_token')
+        }   
+      })
+      .then(async (res) => {
       await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '/' + this.repoName, {})
         .then(async(res) => {
           // console.log(res);
@@ -2384,16 +2390,69 @@ export default {
           await this.init();
         })
         .catch((e) => {
-          this.$message({
-            showClose: true,
-            message: 'Failed to refresh! Please try again.',
-            type: 'error'
-          });
           this.refreshPluginsLoading = false;
           this.fullscreenLoading = false;
+          let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+            confirmButtonText: 'logout',
+            cancelButtonText: 'reload',
+            type: 'error',
+            center: true
+          }).then(() => {
+            localStorage.removeItem('current_sub_id');
+            this.$session.remove('username');
+            let location = psl.parse(window.location.hostname)
+            location = location.domain === null ? location.input : location.domain
+            Cookies.remove('auth_token' ,{domain: location});
+            Cookies.remove('email' ,{domain: location});
+            Cookies.remove('userDetailId' ,{domain: location}); 
+            Cookies.remove('subscriptionId' ,{domain: location}); 
+            this.isLoggedIn = false;
+            // this.$router.push('/login');
+            window.location = '/login';
+          }).catch(() => {
+            location.reload()
+          });
           console.log(e)
         });
-
+      })
+      .catch( (e) => {
+        let dataMessage = '';
+        if (e.message != undefined) {
+            dataMessage = e.message
+        } else if (e.response.data.message != undefined) {
+            dataMessage = e.response.data.message
+        } else {
+            dataMessage = "Please try again! Some error occured."
+        }
+        this.$confirm(dataMessage, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+              localStorage.removeItem('current_sub_id');
+              this.$session.remove('username');
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.remove('auth_token' ,{domain: location});
+              Cookies.remove('email' ,{domain: location});
+              Cookies.remove('userDetailId' ,{domain: location}); 
+              Cookies.remove('subscriptionId' ,{domain: location}); 
+              this.isLoggedIn = false;
+              // this.$router.push('/login');
+              window.location = '/login';
+          }).catch(() => {
+              location.reload()
+          });
+      })
       var getFromBetween = {
         results: [],
         string: "",
@@ -2851,14 +2910,46 @@ export default {
             templateName : template
         })
         .then(async (res) => {
-
-          console.log(res)
           // await this.refreshPlugins();
 
           //Copy data of project_settings.json into project-details.json
-
+          axios.get(config.userDetail, {
+            headers: {
+              'Authorization' : Cookies.get('auth_token')
+            }   
+          })
+          .then(async (res) => {
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json').catch((err) => { console.log(err); this.fullscreenLoading = false });
+          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json').catch((e) => { 
+             let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+                confirmButtonText: 'logout',
+                cancelButtonText: 'reload',
+                type: 'error',
+                center: true
+              }).then(() => {
+                localStorage.removeItem('current_sub_id');
+                this.$session.remove('username');
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+                Cookies.remove('auth_token' ,{domain: location});
+                Cookies.remove('email' ,{domain: location});
+                Cookies.remove('userDetailId' ,{domain: location}); 
+                Cookies.remove('subscriptionId' ,{domain: location}); 
+                this.isLoggedIn = false;
+                // this.$router.push('/login');
+                window.location = '/login';
+              }).catch(() => {
+                location.reload()
+              });
+             this.fullscreenLoading = false });
 
           // console.log('projectSettingsFileData', projectSettingsFileData);
           let data = JSON.parse(projectSettingsFileData.data);
@@ -2883,7 +2974,37 @@ export default {
           this.fullscreenLoading = false;
 
           this.refreshPlugins();
-
+          })
+          .catch((e) => {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message
+            } else if (e.response.data.message != undefined) {
+                dataMessage = e.response.data.message
+            } else {
+                dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+          })
         })
         .catch((e) => {
           this.$message({
@@ -2957,27 +3078,93 @@ export default {
     async saveProjectSettings() {
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
-        var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
-        await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
-        .then((res)=>{
-          let checkdetail = true
-        for (let i = 0; i < res.data.data.length; i++) {
-          if (this.form.websitename == res.data.data[i].websiteName) {
-            checkdetail = false
-          }
-        }
-        if (checkdetail != false) {
-        } else {
-          this.$swal({
-            title:'Save Aborted.',
-            text: 'Website with "'+this.form.websitename+'" already exists!!!!',
-            type: 'warning',
-          })
-          this.form.websitename = this.configData.data.websiteName;
-          return
-        }
+        axios.get(config.userDetail, {
+          headers: {
+            'Authorization' : Cookies.get('auth_token')
+          }   
         })
-        .catch((err) => { console.log(err);});
+        .then(async (res) => {
+          var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
+          await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
+          .then((res)=>{
+            let checkdetail = true
+            for (let i = 0; i < res.data.data.length; i++) {
+              if (this.form.websitename == res.data.data[i].websiteName) {
+                checkdetail = false
+              }
+            }
+            if (checkdetail != false) {
+            } else {
+              this.$swal({
+                title:'Save Aborted.',
+                text: 'Website with "'+this.form.websitename+'" already exists!!!!',
+                type: 'warning',
+              })
+              this.form.websitename = this.configData.data.websiteName;
+              return
+            }
+          })
+          .catch((err) => { 
+            let dataMessage = '';
+              if (e.message != undefined) {
+                  dataMessage = e.message              
+              } else if (e.response.data.message != undefined) {
+                dataMessage = e.response.data.message
+              } else{
+                dataMessage = "Please try again! Some error occured."
+              }
+              this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+              localStorage.removeItem('current_sub_id');
+              this.$session.remove('username');
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.remove('auth_token' ,{domain: location});
+              Cookies.remove('email' ,{domain: location});
+              Cookies.remove('userDetailId' ,{domain: location}); 
+              Cookies.remove('subscriptionId' ,{domain: location}); 
+              this.isLoggedIn = false;
+              // this.$router.push('/login');
+              window.location = '/login';
+            }).catch(() => {
+              location.reload()
+            });
+          });
+        })
+        .catch((e) => {
+          let dataMessage = '';
+          if (e.message != undefined) {
+              dataMessage = e.message
+          } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+          } else {
+              dataMessage = "Please try again! Some error occured."
+          }
+          this.$confirm(dataMessage, 'Error', {
+            confirmButtonText: 'logout',
+            cancelButtonText: 'reload',
+            type: 'error',
+            center: true
+          }).then(() => {
+                localStorage.removeItem('current_sub_id');
+                this.$session.remove('username');
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+                Cookies.remove('auth_token' ,{domain: location});
+                Cookies.remove('email' ,{domain: location});
+                Cookies.remove('userDetailId' ,{domain: location}); 
+                Cookies.remove('subscriptionId' ,{domain: location}); 
+                this.isLoggedIn = false;
+                // this.$router.push('/login');
+                window.location = '/login';
+            }).catch(() => {
+                location.reload()
+            });
+        })
         
       }
 
@@ -3070,7 +3257,37 @@ export default {
         // "AccountPaymentGateways": this.accountpaymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
+
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((e) => { this.fullscreenLoading = false 
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });
+      });
       if (rethinkdbCheck.data) {
 
         // update existing data
@@ -3196,8 +3413,9 @@ export default {
     },
 
     async commitProject(commitForm) {
-
-      this.$refs[commitForm].validate(async (valid) => {
+      axios.get(config.baseURL + '/rethinkservicecheck')
+      .then(async response => {
+        this.$refs[commitForm].validate(async (valid) => {
         if (valid) {
 
           let self = this;
@@ -3220,63 +3438,75 @@ export default {
                 repoName: this.repoName,
                 userDetailId: Cookies.get('userDetailId')
               }).then(async response => {
-
-                console.log('Response after bracnh commit : ', response);
-
-                if(response.status == 200 || response.status == 201){
-
-                  await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
-                  }).then(async response => {
-
-                    this.commitsData = [];
-                    for(var i in response.data){
-                      this.commitsData.push({
-                        commitDate: response.data[i].created_at,
-                        commitSHA: response.data[i].id,
-                        commitsMessage: response.data[i].title,
-                      });
-                    }
-
-                    // let lastCommit = (response.data.length) - 1;
-
-                    // console.log('Last Commit SHA: ', response.data[lastCommit].id);
-
-                    // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
-                    // this.currentSha = response.data[lastCommit].id;
-
-                    this.settings[0].repoSettings[0].CurrentBranch = this.commitForm.branchName;
-
-                    // Create entry in configdata-history table
-                    await axios.post(config.baseURL + '/configdata-history', {
-                        configData: this.settings,
-                        currentBranch: this.commitForm.branchName,
-                        commitSHA: this.currentSha,
-                        websiteName: this.repoName,
-                        userId: Cookies.get('userDetailId')
-                    })
-                    .then(function (resp) {
-                        // console.log('Config revision saved in configdata-history. ', resp);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-
-                    this.saveProjectSettings();
-                  }).catch(error => {
-                    console.log("error : ", error);
-                    this.fullscreenLoading = false;
-                  });
-
-                  this.commitForm.commitMessage = '';
-                  this.commitForm.branchName = '';
-                  //console.log(response.data);
+                console.log(response);
+                if(response.data[0].code == 444){
                   this.$message({
-                    message: 'New revision commited. ',
-                    type: 'success'
+                    message: response.data[0].message,
+                    type: 'error'
                   });
                   this.isCommitLoading = false;
-                  await this.init();
+                  this.$refs[commitForm].resetFields();
+                } else {
+                  // console.log('Response after branch commit : ', response);
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId=' + this.newRepoId, {
+                    }).then(async response => {
+
+                      
+
+                      this.commitsData = [];
+                      for(var i in response.data){
+                        this.commitsData.push({
+                          commitDate: response.data[i].created_at,
+                          commitSHA: response.data[i].id,
+                          commitsMessage: response.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch = this.commitForm.branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: this.commitForm.branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          // console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log("error : ", error);
+                      this.fullscreenLoading = false;
+                    });
+
+                    this.commitForm.commitMessage = '';
+                    this.commitForm.branchName = '';
+                    //console.log(response.data);
+                    this.$message({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    await this.init();
+                  }
                 }
+                
               }).catch(error => {
                 console.log("error : ", error);
               })
@@ -3374,6 +3604,38 @@ export default {
         }
       });
 
+      })
+      .catch(e => {
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });
+      })
+      
     },
 
     async publishMetalsmith(publishType) {
@@ -3400,9 +3662,37 @@ export default {
           this.fullscreenLoading = true;
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
-            console.log(err);
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((e) => {
+            console.log(e);
             this.fullscreenLoading = false
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+              localStorage.removeItem('current_sub_id');
+              this.$session.remove('username');
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.remove('auth_token' ,{domain: location});
+              Cookies.remove('email' ,{domain: location});
+              Cookies.remove('userDetailId' ,{domain: location}); 
+              Cookies.remove('subscriptionId' ,{domain: location}); 
+              this.isLoggedIn = false;
+              // this.$router.push('/login');
+              window.location = '/login';
+            }).catch(() => {
+              location.reload()
+            }); 
           });
           let rawConfigs = responseConfig.data.configData;
           let partialstotal = []
@@ -4168,7 +4458,37 @@ export default {
       //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((err) => { console.log(err); this.fullscreenLoading = false });
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((e) => { 
+        this.fullscreenLoading = false 
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });  
+      });
 
       if(this.configData.status == 200 || this.configData.status == 204){
 
