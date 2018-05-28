@@ -296,7 +296,7 @@
         props: {},
         data() {
           return {
-            templateContentsData: '',
+            statusPublish: [],
             display: true,
             flag: false,
             options: '',
@@ -744,39 +744,66 @@
             },
 
             // Get directory listing data
-            getData() {
+            async getData() {
               this.treeLoading = true;
+              this.statusPublish=[]
               if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
+                // console.log('getData')
+                 await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
                 .then(async response => {
                   response.data.children = this.getTreeData(response.data);
+                    // console.log('children:',response.data.children.length)
 
-                  for (let i = 0; i < response.data.children.length; i++) {
-                    // console.log('--------', response.data.children[i].name)
+                    // setTimeout(async function(){
+                    for (let i = 0; i < response.data.children.length; i++) {
+                      // console.log('--------', response.data.children[i].name)
 
-                    // Map folder name and project id
-                    await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {})
+                      await axios.get(config.baseURL+'/jobqueue?websiteid='+response.data.children[i].name)
+                      .then((res)=>{
+                          // console.log(res)
+                          let obj={}
+                          if(res.data.data != undefined && res.data.data == 'active'){
+                            // console.log('active')
+                            obj[response.data.children[i].name]='Active'
+                          }
+                          else{
+                            // console.log('not active')
+                            obj[response.data.children[i].name]='notActive'
+                          }
+                          this.statusPublish.push(obj)
+                      }).catch((e)=>{console.log(e)})
+                      // Map folder name and project id
+                      await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {
+                      })
                       .then((res) => {
                         // console.log(res);
                         response.data.children[i].websitename = res.data.websiteName;
 
-                        if (response.data.children[i].websitename.length > 20) {
-                          response.data.children[i].websitename = response.data.children[i].websitename.substring(0, 20) + '...'
+                        if(response.data.children[i].websitename.length>20){
+                          response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
                         }
 
                         response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-                          return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
-                            // return !(child.name == '.git')
+                          return !(child.name == 'public' ||child.name == '.temppublish' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
+                          // return !(child.name == '.git')
                         })
 
                         this.treeLoading = false;
                       })
                       .catch((e) => {
-                        console.log('Data Error.');
+                        console.log('Data Error.');  
                         this.treeLoading = false;
                       })
 
-                  }
+                      // let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
+
+                      // response.data.children[i].websitename = rethinkdbCheck.data.websiteName;
+                      //  if(response.data.children[i].websitename.length>20){
+                      //   response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
+                      // }
+                      
+                    }
+                  // },1000);
 
                   if (this.directoryTree.length == 0) {
                     this.directoryTree = [response.data];
@@ -802,7 +829,7 @@
                   });
                   console.log(e);
                 });
-              } else {
+              }else{
                 this.treeLoading = false;
                 this.newProjectFolderDialog = false;
                 this.fullscreenLoading = false;
@@ -811,29 +838,19 @@
 
                 let location = psl.parse(window.location.hostname)
                 location = location.domain === null ? location.input : location.domain
-
-                Cookies.remove('subscriptionId', {
-                  domain: location
-                });
-                Cookies.remove('auth_token', {
-                  domain: location
-                });
-                Cookies.remove('email', {
-                  domain: location
-                });
-                Cookies.remove('userDetailId', {
-                  domain: location
-                });
-                Cookies.remove('subscriptionId', {
-                  domain: location
-                });
+                
+                Cookies.remove('subscriptionId' ,{domain: location});              
+                Cookies.remove('auth_token' ,{domain: location});
+                Cookies.remove('email' ,{domain: location});
+                Cookies.remove('userDetailId' ,{domain: location}); 
+                Cookies.remove('subscriptionId' ,{domain: location}); 
                 this.$message({
-                  message: 'You\'re Logged Out From System. Please login again!',
-                  type: 'error',
-                  onClose() {
-                    window.location = '/login'
-                  }
-                });
+                    message: 'You\'re Logged Out From System. Please login again!',
+                    type: 'error',
+                    onClose(){
+                      window.location = '/login'
+                    }
+                  });
               }
             },
 
@@ -2317,6 +2334,19 @@
                     .catch((e) => {
                         //console.log(e)
                     });
+
+                // Create log file
+                let logfile = newFolderName + '/public/log.md'
+                await axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename : logfile,
+                    text : '# Welcome to Log File!',
+                    type : 'file'
+                })
+                .then((res) => {
+                })
+                .catch((e) => {
+                    //console.log(e)
+                });
 
                 // Create metalsmith file
                 let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
@@ -5905,17 +5935,185 @@
             // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
 
             // Displaying icons in tree nodes  
-            renderContent(h, { node, data, store }) {
+            // renderContent(h, { node, data, store }) {
 
+            //   if(data.type=='directory' && node.label != 'websites'){
+            //     // If node is a website project directory
+            //     if(node.level == 2){
+            //       return (<span on-click={ () => this.isProjectStats = true }>
+            //             <span class="nodelabel">
+            //                 <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+            //                 <span>{data.websitename}</span>
+            //             </span>
+            //             <span class="action-button" style="float: right; padding-right: 5px;">
+
+            //                   <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+
+            //                   <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                          
+            //                   <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                          
+                          
+            //                   <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
+                          
+            //             </span>
+            //         </span>)  
+            //     } else {
+            //       // If it's a simple directory
+            //       if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
+            //         return(<span>
+            //           <span class="nodelabel">
+            //               <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+            //               <span>{node.label}</span>
+            //           </span>
+            //           <span class="action-button" style="float: right; padding-right: 5px;">
+                        
+            //                 <i title="Create New Partial" class="fa fa-plus" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
+                        
+                        
+            //           </span>
+            //       </span>);
+            //       } else if(_.includes(data.path, '/Partials/')){
+            //         return(<span>
+            //           <span class="nodelabel">
+            //               <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+            //               <span>{node.label}</span>
+            //           </span>
+            //           <span class="action-button" style="float: right; padding-right: 5px;">
+                        
+            //               <i title="Create New Variant" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
+                        
+                        
+            //                 <i title="Delete Folder" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
+                        
+            //           </span>
+            //       </span>);
+            //       } else if (node.level == 1) {
+            //         return(<span on-click={ () => this.goToHomePage() }>
+            //             <span class="nodelabel" >
+            //                 <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
+            //                 <span>Websites</span>
+            //             </span>
+            //             <span class="">
+            //                 <el-tooltip content="Create New Website" placement="top">
+            //                     <i class="fa fa-globe" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px; color: #4A8AF4;"  on-click={ () => this.newProjectFolderDialog = true }></i>
+            //                 </el-tooltip>
+            //             </span>
+            //         </span>);
+            //       }else {
+            //         return(<span>
+            //             <span class="nodelabel">
+            //                 <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
+            //                 <span>{node.label}</span>
+            //             </span>
+            //             <span class="action-button" style="float: right; padding-right: 5px;">
+                          
+            //                   <i title="Add File" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
+                          
+                          
+                              
+            //             </span>
+            //         </span>);
+            //       }
+            //     }
+                  
+            //   } else if(data.type=='file'){
+            //     // var filePath = data.path;
+            //     // var pathParts = filePath.split('/');
+            //     // var parentFolderName = pathParts[pathParts.length-2];
+            //     // <i title="Preview File" class="fa fa-eye" style="position:absolute; right: 55px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #00C04F" on-click={ () => this.quickPreview(data.path) }></i>
+            //     // If it's a HTML file
+            //     if(data.extension == '.html'){
+            //       return (<span>
+            //         <span class="filelabel">
+            //             <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
+            //             <span>{node.label}</span>
+            //         </span>
+            //         <span class="action-button">
+                        
+            //                 <i title="Remove" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                        
+                        
+            //               <i title="Page settings" class="fa fa-cog" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #607C8A" on-click={ () => this.isPageEditing = true }></i>
+                        
+                        
+            //               <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 35px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
+
+                          
+                        
+            //         </span>
+            //     </span>)
+            //     } else if(data.extension == '.partial'){
+            //       // If HBS file
+            //       return (<span>
+            //           <span class="filelabel">
+            //               <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
+            //               <span>{node.label}</span>
+            //           </span>
+            //           <span class="action-button">
+                          
+            //                   <i title="Delete file" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                          
+                          
+            //                 <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
+                          
+            //           </span>
+            //       </span>)
+            //     } else if(data.extension == '.layout'){
+            //       // If its a LAYOUT file
+            //       return (<span>
+            //           <span class="filelabel">
+            //               <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
+            //               <span>{node.label}</span>
+            //           </span>
+            //           <span class="action-button">
+                         
+            //                   <i title="Delete File" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                          
+                          
+            //                 <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
+                          
+            //           </span>
+            //       </span>)
+            //     } else {
+            //       // All other files
+            //       return (<span>
+            //             <span class="filelabel">
+            //                 <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
+            //                 <span>{node.label}</span>
+            //             </span>
+            //             <span class="action-button">
+                          
+            //                   <i title="Delete File" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
+                          
+            //             </span>
+            //         </span>)
+            //     }
+                
+            //   }else{
+            //     // Root Folder
+            //     return;
+            //   }
+            // },
+
+            // Displaying icons in tree nodes  
+            renderContent(h, { node, data, store }) {
               if(data.type=='directory' && node.label != 'websites'){
                 // If node is a website project directory
                 if(node.level == 2){
-                  return (<span on-click={ () => this.isProjectStats = true }>
-                        <span class="nodelabel">
+                  // console.log('renderContent')
+                  // console.log('this.statusPublish',this.statusPublish)
+                  let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
+                  if(index!=-1){
+                      if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
+                      return (<span>
+                        <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
                             <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
                             <span>{data.websitename}</span>
                         </span>
                         <span class="action-button" style="float: right; padding-right: 5px;">
+
+                              <i title='website publishing' class="fa fa-spinner fa-spin" aria-hidden="true" style="margin-right: 5px; "></i>
 
                               <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
 
@@ -5927,7 +6125,55 @@
                               <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
                           
                         </span>
-                    </span>)  
+                      </span>)
+                    }
+                else{
+                      return (<span>
+                        <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
+                            <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                            <span>{data.websitename}</span>
+                        </span>
+                        <span class="action-button" style="float: right; padding-right: 5px;">
+
+        
+
+                              <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+
+                              <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                          
+                              <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                          
+                          
+                              <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
+                          
+                        </span>
+                      </span>)
+                    }
+                  }else{
+                    // console.log('-1 found ')
+                    return (<span>
+                        <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
+                            <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                            <span>{data.websitename}</span>
+                        </span>
+                        <span class="action-button" style="float: right; padding-right: 5px;">
+
+        
+
+                              <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+
+                              <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                          
+                              <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                          
+                          
+                              <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
+                          
+                        </span>
+                      </span>)
+                  }
+                  
+                   
                 } else {
                   // If it's a simple directory
                   if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
@@ -5959,8 +6205,8 @@
                       </span>
                   </span>);
                   } else if (node.level == 1) {
-                    return(<span on-click={ () => this.goToHomePage() }>
-                        <span class="nodelabel" >
+                    return(<span>
+                        <span class="nodelabel" on-click={ () => this.goToHomePage() }>
                             <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
                             <span>Websites</span>
                         </span>
@@ -5986,7 +6232,7 @@
                     </span>);
                   }
                 }
-                  
+                console.log('charo')  
               } else if(data.type=='file'){
                 // var filePath = data.path;
                 // var pathParts = filePath.split('/');
@@ -6030,7 +6276,7 @@
                       </span>
                   </span>)
                 } else if(data.extension == '.layout'){
-                  // If its a LAYOUT file
+                  // If it's a LAYOUT file
                   return (<span>
                       <span class="filelabel">
                           <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
