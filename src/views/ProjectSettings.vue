@@ -34,7 +34,7 @@
                 <br>
 
                 <div style="margin-top: 15px;">
-                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" >Publish</el-button>
+                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading">Publish</el-button>
   
                   <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button><br><small v-if='isdisabled==true'>*{{ textdata }}</small>
                   <el-progress v-if='isdisabled==true' style='margin: 21px 0px 6px 0px' v-bind:percentage="percent"></el-progress>
@@ -2321,7 +2321,6 @@ export default {
 
     async refreshPlugins() {
         this.refreshPluginsLoading = true;
-        this.fullscreenLoading = true;
         let getFromBetween = {
             results: [],
             string: "",
@@ -2357,12 +2356,13 @@ export default {
         // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
         // Call Listings API and get Tree
-        axios.get(config.userDetail, {
+        await axios.get(config.userDetail, {
                 headers: {
                     'Authorization': Cookies.get('auth_token')
                 }
             })
             .then(async (res) => {
+              this.fullscreenLoading = true;
                 await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '/' + this.repoName, {})
                     .then(async (res) => {
                         // console.log(res);
@@ -3053,7 +3053,8 @@ export default {
               }).catch(() => {
                 location.reload()
               });
-             this.fullscreenLoading = false });
+             this.fullscreenLoading = false 
+           });
 
           // console.log('projectSettingsFileData', projectSettingsFileData);
           let data = JSON.parse(projectSettingsFileData.data);
@@ -3075,7 +3076,7 @@ export default {
           //   offset: 100
           // });
 
-          this.fullscreenLoading = false;
+          this.fullscreenLoading = true;
 
           this.refreshPlugins();
           })
@@ -4714,8 +4715,7 @@ export default {
       window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/raw/' + branchName+'/public/log.md');
     },
 
-    async init () {
-      this.fullscreenLoading = true 
+    async init () { 
         this.isdisabled=false
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -4730,7 +4730,7 @@ export default {
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
       this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((e) => { 
-        this.fullscreenLoading = false 
+        // this.fullscreenLoading = false 
         let dataMessage = '';
             if (e.message != undefined) {
                 dataMessage = e.message              
@@ -4826,7 +4826,7 @@ export default {
 
       } else {
         console.log('Cannot get configurations!');
-        this.fullscreenLoading = false 
+        // this.fullscreenLoading = false 
       }
 
       if(this.form.brandLogoName==''){
@@ -4900,7 +4900,7 @@ export default {
         }
       }).catch(error => {
         console.log( error);
-        this.fullscreenLoading = false;
+        // this.fullscreenLoading = false;
       });
 
       this.sortBranchesTable(0);
@@ -4911,7 +4911,7 @@ export default {
         this.projectDetailsJson = JSON.parse(response.data);
       }).catch(error => {
         console.log("error occured while project details json: ", error);
-        this.fullscreenLoading = false;
+        // this.fullscreenLoading = false;
       });
 
        await axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
@@ -4934,7 +4934,7 @@ export default {
 
       }).catch(err => { 
         // console.log('111111',err.response);
-          this.fullscreenLoading = false 
+          // this.fullscreenLoading = false 
             if(err.response.data.code==401||err.response.data.code==500){
               console.log(err.response.data.message)
                 this.$swal({
@@ -4980,7 +4980,7 @@ export default {
 
         
       })
-      .catch(err => { this.fullscreenLoading = false ;console.log(err);  });
+      .catch(err => { console.log(err);  });
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
 
@@ -4991,7 +4991,7 @@ export default {
         this.isdisabled=true
         this.textdata='Job added successfull. Please wait you are in Queue.'
        }
-       this.fullscreenLoading = false
+       // this.fullscreenLoading = false
 
       if(this.commitsData[0]){
         return 'positive-row';
