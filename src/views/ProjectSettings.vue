@@ -3023,7 +3023,8 @@ export default {
           })
           .then(async (res) => {
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json').catch((e) => { 
+
+          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/'+process.env.domainkey+'.project_settings.json').catch((e) => { 
              let dataMessage = '';
             if (e.message != undefined) {
                 dataMessage = e.message              

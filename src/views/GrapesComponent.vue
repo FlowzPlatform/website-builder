@@ -294,7 +294,7 @@ export default {
             },
             allowScripts: true,
 
-            plugins: ['gjs-blocks-basic', 'grapesjs-lory-slider', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'global-variables-plugin', 'product-plugin', 'flowz-blocks', 'datafield-components'],
+            plugins: ['gjs-blocks-basic', 'grapesjs-lory-slider', 'gjs-plugin-forms', 'gjs-component-countdown', 'gjs-plugin-export', 'gjs-preset-webpage', 'gjs-aviary', 'global-variables-plugin', 'datafield-components', 'product-plugin', 'flowz-blocks'],
             pluginsOpts: {
               'grapesjs-lory-slider': {
               }

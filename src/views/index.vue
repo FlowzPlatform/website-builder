@@ -296,6 +296,7 @@
         props: {},
         data() {
           return {
+            templateContentsData: '',
             statusPublish: [],
             display: true,
             flag: false,
@@ -706,7 +707,7 @@
 
             // Set template if selected in creating new project
             async setTemplate(template) {
-              let templateData = ';'
+              let templateData = '';
               if (template == 'template1') {
                  templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template1.html');
                  this.templateContentsData = templateData.data;
@@ -6113,8 +6114,8 @@
                   let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
                   if(index!=-1){
                       if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
-                      return (<span>
-                        <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
+                      return (<span on-click={ () => this.isProjectStats = true }>
+                        <span class="nodelabel" >
                             <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
                             <span>{data.websitename}</span>
                         </span>
@@ -6135,8 +6136,8 @@
                       </span>)
                     }
                 else{
-                      return (<span>
-                        <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
+                      return (<span on-click={ () => this.isProjectStats = true }>
+                        <span class="nodelabel" >
                             <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
                             <span>{data.websitename}</span>
                         </span>
@@ -6158,8 +6159,8 @@
                     }
                   }else{
                     // console.log('-1 found ')
-                    return (<span>
-                        <span class="nodelabel" on-click={ () => this.isProjectStats = true }>
+                    return (<span on-click={ () => this.isProjectStats = true }>
+                        <span class="nodelabel" >
                             <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
                             <span>{data.websitename}</span>
                         </span>
@@ -6212,8 +6213,8 @@
                       </span>
                   </span>);
                   } else if (node.level == 1) {
-                    return(<span>
-                        <span class="nodelabel" on-click={ () => this.goToHomePage() }>
+                    return(<span on-click={ () => this.goToHomePage() }>
+                        <span class="nodelabel" >
                             <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
                             <span>Websites</span>
                         </span>
@@ -6283,7 +6284,7 @@
                       </span>
                   </span>)
                 } else if(data.extension == '.layout'){
-                  // If it's a LAYOUT file
+                  // If its a LAYOUT file
                   return (<span>
                       <span class="filelabel">
                           <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
