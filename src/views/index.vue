@@ -2201,6 +2201,13 @@
                 .catch((e) => {
                   //console.log("Error From Layout"+res)
                 });
+                
+               await axios.post(config.baseURL+'/flows-dir-listing' , {
+                  foldername : newFolderName+'/.temppublish',
+                  type : 'folder'
+                }).catch((e)=>{
+                  console.log(e);
+                })
 
               // Create Pages Folder
               await axios.post(config.baseURL + '/flows-dir-listing', {
