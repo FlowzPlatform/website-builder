@@ -52,7 +52,7 @@
       data () {
           return {
               filterobj: {
-                website: null,
+                website: '',
                 attr_type: '',
                 attr_val: ''
               },
@@ -298,7 +298,6 @@
           },
           handleUpload1(file){
               var self = this;
-              // console.log('file',file)
               if(file.size >= 51200){
       					self.$Message.error('File size should be less than or equal to 50Kb.');
                 file = '';
@@ -329,7 +328,6 @@
               let self = this
               let testdata = []
               let websiteInfo = JSON.parse(this.filterobj.website);
-              // console.log("websiteInfo",websiteInfo);
               if(websiteInfo == null){
                 this.$Notice.error({
                     title: "Error",
@@ -340,7 +338,6 @@
                 return false;
               }
               let cdata = _.find(this.cloudinaryDetails, {wid: websiteInfo.id})
-         //   console.log("+++++++++++++++")
               if (websiteInfo != null && websiteInfo.vid == '' || websiteInfo.vid == undefined ) {
                 this.$Notice.error({
                     title: "Error",
@@ -381,15 +378,14 @@
                 colorApiName = 'imprintcolor'
               }
               // Fetch colors data from product api
-             //  console.log("config.colorSwatchUrl+colorApiName",config.colorSwatchUrl+colorApiName);
-              // console.log("auth_token",auth_token,this.vid);
+            
               await axios({
                 method: 'get',
                  url: config.colorSwatchUrl+colorApiName,
               //  url: "http://172.16.230.161:3038/filters/colors",                
                 headers: {'Authorization': auth_token,'vid': this.vid}
               }).then(async function (response) {
-                  // console.log("response",response)
+               
                   let uniqData = _.uniqBy(response.data.aggregations.group_by_attributes.buckets, 'key');
                   // Set uniqData instead of myArr
                   let myArr = [];
@@ -401,12 +397,11 @@
                   }else{
                     myArr = uniqData
                   }
-                  // console.log('uniqData..............', myArr)
+                  
                   await self.getDataFromColorApi()
-                  // console.log("colorData",self.colorData);
+                
                   $.each(myArr,function(index,item){
-                    // console.log("index",index);
-                    // console.log("item",item);
+                   
                       item.checkvalue = 'Hexcode'
                       item.ishexDisable= false
                       item.isimgurlDisable= true
@@ -425,7 +420,6 @@
                             }
                        });
                   })
-                  // console.log("testdata",testdata);
                   self.data1 = myArr
                   $.each(testdata,function(index,item){
                     if(item.hexcode == undefined){
@@ -439,10 +433,10 @@
                       self.data1[item.index].hexcode1 = item.hexcode
                     }
                   })
-                  // console.log("self.data1",self.data1);
+                 
                   // return false;
                   self.list1 = await self.mockTableData1(1,pageSize)
-              //    console.log("self.list1",self.list1);
+             
                   self.$Loading.finish();
               }).catch(function(error){
                   // self.$Message.error(error)
