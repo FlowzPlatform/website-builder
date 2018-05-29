@@ -1336,8 +1336,7 @@ export default {
     // Socket Listen for Creating File or Folder
     
     app.service("jobqueue").on("created", async (response) => {
-      console.log('create..',response);
-
+     if(response.userId==Cookies.get('userDetailId')){
       if(this.repoName==response.websiteid) {
         // console.log('same id.. set disabled to true..')
         this.percent=0
@@ -1345,22 +1344,24 @@ export default {
         this.textdata='Job added Successfully. Please wait you are in Queue.'
         this.$emit('updateName')
       } 
+    }
     });
 
     app.service("jobqueue").on("removed", async (response) => {
-      console.log('remove..',response);
-
+       if(response.userId==Cookies.get('userDetailId')){
       if(this.repoName==response.websiteid) {
         // console.log('same id.. set disabled to false..')
         this.percent=0
         this.isdisabled = false;
         this.textdata=''
         this.$emit('updateName')
-      } 
+      }
+    } 
     });
 
     app.service("jobqueue").on("patched", async (response) => {
       // console.log('response:',response)
+     if(response.userId==Cookies.get('userDetailId')){
      if(this.repoName==response.websiteid){
         // console.log('same id.. set disabled to true..')
        this.isdisabled = true;
@@ -1372,7 +1373,6 @@ export default {
         this.isdisabled=false
        }
       if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
-        console.log('status cancelled or failed..');
         this.isdisabled=false
         this.$emit('updateName')
         this.percent=0
@@ -1383,6 +1383,7 @@ export default {
         // console.log('this.percent :: ',this.percent)
        }
      }
+   }
     });
       
 

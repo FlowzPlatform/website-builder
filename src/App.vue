@@ -73,23 +73,26 @@ export default {
     const app = feathers().configure(socketio(io(socket)))
     // Socket Listen for Creating File or Folder
     app.service("jobqueue").on("patched", (response) => {
-     if(response.Status!=undefined && response.Status=='completed'){
-      this.$message({
-         message: 'Congratulations, '+response.websiteName+' is published. Visit Website',
-         type: 'success',
-          showClose: true,
-          duration:0
-       });
+      if(response.userId==Cookies.get('userDetailId')){
+        if(response.Status!=undefined && response.Status=='completed'){
+          this.$message({
+             message: 'Congratulations, '+response.websiteName+' is published. Visit Website',
+             type: 'success',
+              showClose: true,
+              duration:0
+           });
 
-     }
-     else if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
-      this.$message({
-         message: 'Error! '+response.websiteName+' website not published.',
-         type: 'error',
-          showClose: true,
-          duration:0
-       });
-     }
+         }
+         else if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
+          this.$message({
+             message: 'Error! '+response.websiteName+' website not published.',
+             type: 'error',
+              showClose: true,
+              duration:0
+           });
+         }
+      }
+     
     });
   
     this.checkAuth();
