@@ -1336,7 +1336,7 @@ export default {
     // Socket Listen for Creating File or Folder
     
     app.service("jobqueue").on("created", async (response) => {
-     if(response.userId==Cookies.get('userDetailId')){
+     // if(response.userId==Cookies.get('userDetailId')){
       if(this.repoName==response.websiteid) {
         // console.log('same id.. set disabled to true..')
         this.percent=0
@@ -1344,7 +1344,7 @@ export default {
         this.textdata='Job added Successfully. Please wait you are in Queue.'
         this.$emit('updateName')
       } 
-    }
+    // }
     });
 
     app.service("jobqueue").on("removed", async (response) => {
