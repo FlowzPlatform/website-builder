@@ -5366,8 +5366,10 @@
             },
 
             quickDelete(store, data) {
+              setTimeout(()=>{
                 this.$store.state.fileUrl = data.path;
                 this.removeProject(store, data);
+              },0);
             },
 
             previewWebsite(node, data) {
@@ -6130,7 +6132,7 @@
                               <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
                           
                           
-                              <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
+                              <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.isProjectStats = true, this.quickDelete(store, data) }></i>
                           
                         </span>
                       </span>)
@@ -6240,7 +6242,7 @@
                     </span>);
                   }
                 }
-                console.log('charo')  
+               
               } else if(data.type=='file'){
                 // var filePath = data.path;
                 // var pathParts = filePath.split('/');
