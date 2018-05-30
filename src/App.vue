@@ -79,7 +79,7 @@ export default {
              message: 'Congratulations, '+response.websiteName+' is published. Visit Website',
              type: 'success',
               showClose: true,
-              duration:0
+              // duration:0
            });
 
          }
@@ -88,7 +88,7 @@ export default {
              message: 'Error! '+response.websiteName+' website not published.',
              type: 'error',
               showClose: true,
-              duration:0
+              // duration:0
            });
          }
       }
