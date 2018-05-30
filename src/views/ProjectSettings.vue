@@ -1336,45 +1336,44 @@ export default {
     // Socket Listen for Creating File or Folder
     
     app.service("jobqueue").on("created", async (response) => {
-     // if(response.userId==Cookies.get('userDetailId')){
       if(this.repoName==response.websiteid) {
-        // console.log('same id.. set disabled to true..')
         this.percent=0
         this.isdisabled = true;
         this.textdata='Job added Successfully. Please wait you are in Queue.'
-        this.$emit('updateName')
-      } 
-    // }
+        // this.$emit('updateProjectName')
+      }
     });
 
     app.service("jobqueue").on("removed", async (response) => {
-       if(response.userId==Cookies.get('userDetailId')){
       if(this.repoName==response.websiteid) {
-        // console.log('same id.. set disabled to false..')
         this.percent=0
         this.isdisabled = false;
         this.textdata=''
-        this.$emit('updateName')
+        this.$emit('updateProjectName')
       }
-    } 
     });
 
     app.service("jobqueue").on("patched", async (response) => {
       // console.log('response:',response)
-     if(response.userId==Cookies.get('userDetailId')){
      if(this.repoName==response.websiteid){
         // console.log('same id.. set disabled to true..')
        this.isdisabled = true;
         this.textdata='Job added Successfully. Please wait you are in Queue.'
        if(response.Status!=undefined && response.Status=='completed'){
         // console.log('completed..', response)
-        this.init()
-        this.$emit('updateName')
+         let dt = new Date();
+         let utcDate = dt.toUTCString();
+         this.commitForm.branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
+         this.commitForm.commitMessage = 'Publish - ' + utcDate;            
+         await this.commitProject('commitForm');
+        await this.saveProjectSettings()
+        await this.init()
+        this.$emit('updateProjectName')
         this.isdisabled=false
        }
       if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
         this.isdisabled=false
-        this.$emit('updateName')
+        this.$emit('updateProjectName')
         this.percent=0
         // console.log('job failed')
        }
@@ -1383,7 +1382,6 @@ export default {
         // console.log('this.percent :: ',this.percent)
        }
      }
-   }
     });
       
 
@@ -2357,6 +2355,7 @@ export default {
         // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
         // Call Listings API and get Tree
+        console.log(config.userDetail)
         await axios.get(config.userDetail, {
                 headers: {
                     'Authorization': Cookies.get('auth_token')
@@ -2912,7 +2911,7 @@ export default {
                         await this.saveConfigFile(this.repoName, configData);
                         await this.saveProjectSettings();
                         await this.init();
-                        this.$emit('updateName');
+                        this.$emit('updateProjectName');
                     })
                     .catch((e) => {
                         this.refreshPluginsLoading = false;
@@ -3441,7 +3440,7 @@ export default {
               console.log(e)
             })
            await this.init();
-          this.$emit('updateName');
+          this.$emit('updateProjectName');
       } else {
         this.$message({
           showClose: true,
@@ -3496,7 +3495,7 @@ export default {
                     type: 'success'
                   });
                   this.init();
-                  this.$emit('updateName');
+                  this.$emit('updateProjectName');
               })
               .catch(function (error) {
                   console.log(error);
@@ -3754,7 +3753,7 @@ export default {
           await axios.delete(config.baseURL+'/jobqueue?websiteid='+this.repoName).then((res)=>{
              // this.isdisabled=false
              // console.log('canceled called');
-             // this.$emit('updateName')
+             // this.$emit('updateProjectName')
           }).catch((e)=>{
             console.log(e)
           })
@@ -3824,7 +3823,7 @@ export default {
                   this.fullscreenLoading=false;
                   this.isdisabled=false;
                 });
-
+               // console.log(responseConfig.data)
               //Now we have all necesary data to call jobqueue api
 
               await axios.post(config.baseURL+'/jobqueue',{
@@ -3833,7 +3832,7 @@ export default {
                 websiteId:this.repoName,
                 baseURL:config.baseURL})
               .then(async(res)=>{
-                console.log(res)
+                // console.log(res)
                 if(res.data.data=='successfull'){
                   this.textdata='Job added successfull. Please wait you are in Queue.'
                 }
@@ -3841,7 +3840,7 @@ export default {
                   // this.isdisabled=false;
                   console.log('failed')
                 }
-                // this.$emit('updateName')
+                // this.$emit('updateProjectName')
                  
                 this.fullscreenLoading=false
                 //Now we will keep listening for jobqueue completion.
@@ -4717,7 +4716,7 @@ export default {
     },
 
     async init () { 
-        this.isdisabled=false
+      this.isdisabled=false
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
@@ -5052,7 +5051,7 @@ export default {
                 await this.saveProjectSettings();
                 await this.init();
                 // location.reload();
-                this.$emit('updateName');
+                this.$emit('updateProjectName');
               }
               else{
                 this.$swal({

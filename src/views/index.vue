@@ -749,7 +749,6 @@
               this.treeLoading = true;
               this.statusPublish=[]
               if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                // console.log('getData')
                  await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
                 .then(async response => {
                   response.data.children = this.getTreeData(response.data);
