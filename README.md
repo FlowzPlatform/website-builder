@@ -48,5 +48,6 @@ Start the FlowzServiceApi by npm start
 
 #Changelog
 1. Added New Templates 
+2. Added Jobqueue
 
 

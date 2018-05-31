@@ -48,9 +48,9 @@
                      <el-form-item label="Enable frameworks:">
                         <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox> -->
                         <!-- <div style="margin: 15px 0;"></div> -->
-                        <el-checkbox-group v-model="checkedCss" @change="handleCheckedCssChange">
-                           <el-checkbox v-for="css in csses" :label="css" :key="css">{{css}}</el-checkbox>
-                        </el-checkbox-group>
+                        <el-radio-group v-model="checkedCss" @change="handleCheckedCssChange">
+                           <el-radio v-for="css in csses" :label="css" :key="css">{{css}}</el-radio>
+                        </el-radio-group>
                      </el-form-item>
                   </el-form>
                </div>
@@ -340,7 +340,7 @@ const config = require('../config');
 
 import axios from 'axios';
 
- const cssOptions = ['VueJs'];
+ const cssOptions = ['VueSearchJS', 'VueDataJS'];
 
 export default {
   name: 'PageSettings',

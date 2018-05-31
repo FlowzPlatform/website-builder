@@ -41,6 +41,9 @@ const config = require('./config');
 import psl from 'psl';
 import Cookies from 'js-cookie';
 
+import feathers from 'feathers/client';
+import socketio from 'feathers-socketio/client';
+import io from 'socket.io-client';
 import SiteFooter from './views/footer';
 export default {
   name: 'app',
@@ -65,15 +68,33 @@ export default {
   mounted: function () {
     this.init();
     this.checkDashboard();
+    let socket = config.socketURL;
+    
+    const app = feathers().configure(socketio(io(socket)))
+    // Socket Listen for Creating File or Folder
+    app.service("jobqueue").on("patched", (response) => {
+      if(response.userId==Cookies.get('userDetailId')){
+        if(response.Status!=undefined && response.Status=='completed'){
+          this.$message({
+             message: 'Congratulations, '+response.websiteName+' is published. Visit Website',
+             type: 'success',
+              showClose: true,
+              // duration:0
+           });
 
-    // Check for auth token on focusing to current tab
-    // $(window).on('focus', function() { 
-    //   alert(1);
-    //   // let location = psl.parse(window.location.hostname)
-    //   // location = location.domain === null ? location.input : location.domain
-    //   // Cookies.remove('auth_token' ,{domain: location});
-    // });
-
+         }
+         else if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
+          this.$message({
+             message: 'Error! '+response.websiteName+' website not published.',
+             type: 'error',
+              showClose: true,
+              // duration:0
+           });
+         }
+      }
+     
+    });
+  
     this.checkAuth();
   },
   methods: {
