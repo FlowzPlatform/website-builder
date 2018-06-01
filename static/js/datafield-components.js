@@ -83,7 +83,7 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
 
     bm.add('DataSFieldObject', {
         label: 'Data Field Object',
-        content: '<small class="totalCounter" style="display: block; margin: 10px;">Showing <span v-text="displayedProducts"></span> products of <span v-text="totalProductsCount"></span> products</small><DataSFieldObject style="display: block; width: 100%; min-height:350px" v-on:get-data="getUrl" class="datasfieldobject"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataSFieldObject>',
+        content: '<small class="totalCounter" style="display: block; margin: 10px;">Showing <span v-text="displayedProducts"></span> products of <span v-text="totalProductsCount"></span> products</small><DataSFieldObject style="display: block; width: 100%; min-height:350px" class="datasfieldobject"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataSFieldObject>',
         attributes: {
             class: 'fa fa-archive',
             title: 'Data Field',
@@ -103,7 +103,7 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
 
     bm.add('DataSFieldList', {
         label: 'Data Field List',
-        content: '<DataSFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataSFieldList>',
+        content: '<DataSFieldList style="display: block; width: 100%; min-height:80px" :items="filteredProducts"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataSFieldList>',
         attributes: {
             class: 'fa fa-list',
             title: 'Data Field',
@@ -259,52 +259,52 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
         },
     });
 
-    comps.addType('DataSFieldObject', {
-        // Define the Model
-        model: defaultModel.extend({
-            init() {
-                this.listenTo(this, 'change:connectiondata', this.doStuff);
-            },
-            doStuff() {},
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [
-                    {
-                        type: 'text',
-                        label: 'API_URL',
-                        name: 'data_api'
-                    }
-                ]
-            }),
+    // comps.addType('DataSFieldObject', {
+    //     // Define the Model
+    //     model: defaultModel.extend({
+    //         init() {
+    //             this.listenTo(this, 'change:connectiondata', this.doStuff);
+    //         },
+    //         doStuff() {},
+    //         // Extend default properties
+    //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
+    //             editable: true,
+    //             droppable: true,
+    //             traits: [
+    //                 {
+    //                     type: 'text',
+    //                     label: 'API_URL',
+    //                     name: 'data_api'
+    //                 }
+    //             ]
+    //         }),
 
-        }, {
-            isComponent: function(el) {
-                if (el.className == 'datasfieldobject') {
-                    return {
-                        type: 'DataSFieldObject'
-                    };
-                }
-                if (el.tagName == 'TEMPLATE') {
-                    return { type: 'template', components: el.innerHTML }
-                }
-            },
-        }),
+    //     }, {
+    //         isComponent: function(el) {
+    //             if (el.className == 'datasfieldobject') {
+    //                 return {
+    //                     type: 'DataSFieldObject'
+    //                 };
+    //             }
+    //             if (el.tagName == 'TEMPLATE') {
+    //                 return { type: 'template', components: el.innerHTML }
+    //             }
+    //         },
+    //     }),
 
-        view: defaultView.extend({
-            // '<template>' can't be shown so in canvas use another tag
-            tagName: 'div'
-        }),
+    //     view: defaultView.extend({
+    //         // '<template>' can't be shown so in canvas use another tag
+    //         tagName: 'div'
+    //     }),
 
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
+    //     // The render() should return 'this'
+    //     render: function() {
+    //         // Extend the original render method
+    //         defaultType.view.prototype.render.apply(this, arguments);
+    //         this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+    //         return this;
+    //     },
+    // });
 
     // define custom traits
     // Each new type extends the default Trait
@@ -331,6 +331,56 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
       }
     });
 
+    // define custom traits
+    // Each new type extends the default Trait
+    editor.TraitManager.addType('content2', {
+      /**
+      * Returns the input element
+      * @return {HTMLElement}
+      */
+      getInputEl: function() {
+        if (!this.inputEl) {
+          var input = document.createElement('textarea');
+          input.value = this.target.get('content');
+          this.inputEl = input;
+        }
+        return this.inputEl;
+      },
+
+      /**
+       * Triggered when the value of the model is changed
+       */
+      getValueForTarget: function() {
+        console.log("inside getValueForTargetss")
+        return 'item.text._source.' + this.model.get('value');
+      }
+    });
+
+    // define custom traits
+    // Each new type extends the default Trait
+    editor.TraitManager.addType('contentImg', {
+      /**
+      * Returns the input element
+      * @return {HTMLElement}
+      */
+      getInputEl: function() {
+        if (!this.inputEl) {
+          var input = document.createElement('textarea');
+          input.value = this.target.get('content');
+          this.inputEl = input;
+        }
+        return this.inputEl;
+      },
+
+      /**
+       * Triggered when the value of the model is changed
+       */
+      getValueForTarget: function() {
+        console.log("inside getValueForTargetss")
+        return '\'http://image.promoworld.ca/migration-api-hidden-new/web/images/\' + item.text._source.' + this.model.get('value');
+      }
+    });
+
     comps.addType('DataSFieldText', {
         // Define the Model
         model: defaultModel.extend({
@@ -341,7 +391,7 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
                 traits: [{
                     label: 'Data text field',
                     name: ':text',
-                    type: 'content'
+                    type: 'content2'
                 }]
             }),
 
@@ -366,40 +416,40 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
         },
     });
 
-    comps.addType('DataSFieldList', {
-        // Define the Model
-        model: defaultModel.extend({
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                    label: 'Data list field',
-                    name: ':items',
-                    type: 'content'
-                }]
-            }),
+    // comps.addType('DataSFieldList', {
+    //     // Define the Model
+    //     model: defaultModel.extend({
+    //         // Extend default properties
+    //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
+    //             editable: true,
+    //             droppable: true,
+    //             traits: [{
+    //                 label: 'Data list field',
+    //                 name: ':items',
+    //                 type: 'content'
+    //             }]
+    //         }),
 
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'DATASFIELDLIST') {
-                    return {
-                        type: 'DataSFieldList'
-                    };
-                }
-            },
-        }),
+    //     }, {
+    //         isComponent: function(el) {
+    //             if (el.tagName == 'DATASFIELDLIST') {
+    //                 return {
+    //                     type: 'DataSFieldList'
+    //                 };
+    //             }
+    //         },
+    //     }),
 
-        view: defaultType.view,
+    //     view: defaultType.view,
 
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
+    //     // The render() should return 'this'
+    //     render: function() {
+    //         // Extend the original render method
+    //         defaultType.view.prototype.render.apply(this, arguments);
+    //         this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+    //         return this;
+    //     },
+    // });
 
     comps.addType('DataSFieldImage', {
         // Define the Model
@@ -411,7 +461,7 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
                 traits: [{
                         label: 'Data image field',
                         name: ':src',
-                        type: 'text'
+                        type: 'contentImg'
                     },
                     {
                         label: 'image height',
