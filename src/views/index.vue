@@ -2243,7 +2243,7 @@
                     "UserID": userid,
                     "BasePath": newFolderName,
                     "websiteName": this.currentProjectName,
-                    "BaseURL": 'http://' + userid + '.' + projectRepoName + '.' + config.domainkey + '/',
+                    "BaseURL": 'http://' + projectRepoName + '.' + config.domainkey + '/',
                     "builder_service_api": config.baseURL,
                     "login_api": config.loginUrl,
                     "register_api": config.registerUrl,
@@ -4425,7 +4425,7 @@
                                           projName = projName.split('/')[2];
                                           // console.log("process.env.NODE_ENV",process.env.NODE_ENV)
                                           if (process.env.NODE_ENV !== 'development') {
-                                            window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
+                                            window.open('http://' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
                                           } else {
                                             window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
                                           }
