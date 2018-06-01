@@ -2284,7 +2284,7 @@
                 let maincss = newFolderName + '/public/main-files/main.css'
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: maincss,
-                        text: '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;}',
+                        text: '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;}.grid{position: relative;}.item{display: block; position: absolute; width: 100%; max-width: 250px; height: auto; margin: 5px; z-index: 1; background: white; color: black; border: 1px solid black}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}',
                         type: 'file'
                     })
                     .then((res) => {})
@@ -4344,6 +4344,8 @@
                                             + "<link rel='stylesheet' type='text/css' href='https://res.cloudinary.com/flowz/raw/upload/v1526901609/component-base.css'>\n"
                                             + '<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js"><\/script>\n'
                                             + '<script src="https://unpkg.com/vuejs-paginate@1.9.0/dist/index.js"><\/script>\n'
+                                            + '<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">'
+                                            + '<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"><\/script>'
                                             + '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.8/jquery.lazy.min.js"><\/script>\n'
                                             + '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.8/jquery.lazy.plugins.min.js"><\/script>\n'
                                             + '<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"><\/script>\n'
@@ -4351,7 +4353,7 @@
                           }
 
                           if (PageCss == 'VueDataJS') {
-                            divappstart   = '<div id="app"><style type="text/css">.grid{position: relative;}.item{display: block; position: absolute; width: 100%; max-width: 250px; height: auto; margin: 5px; z-index: 1; background: white; color: black; border: 1px solid black}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}</style>'
+                            divappstart   = '<div id="app">'
                             divappend     = '</div>'
                             dfscript      = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
                                             + "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n"
@@ -5942,168 +5944,6 @@
             },
 
             // <i title="Preview Website" class="fa fa-eye" style="margin-right:5px;"  on-click={ () => this.previewWebsite }></i>
-
-            // Displaying icons in tree nodes  
-            // renderContent(h, { node, data, store }) {
-
-            //   if(data.type=='directory' && node.label != 'websites'){
-            //     // If node is a website project directory
-            //     if(node.level == 2){
-            //       return (<span on-click={ () => this.isProjectStats = true }>
-            //             <span class="nodelabel">
-            //                 <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
-            //                 <span>{data.websitename}</span>
-            //             </span>
-            //             <span class="action-button" style="float: right; padding-right: 5px;">
-
-            //                   <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
-
-            //                   <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
-                          
-            //                   <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
-                          
-                          
-            //                   <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
-                          
-            //             </span>
-            //         </span>)  
-            //     } else {
-            //       // If it's a simple directory
-            //       if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
-            //         return(<span>
-            //           <span class="nodelabel">
-            //               <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
-            //               <span>{node.label}</span>
-            //           </span>
-            //           <span class="action-button" style="float: right; padding-right: 5px;">
-                        
-            //                 <i title="Create New Partial" class="fa fa-plus" style="margin-right:5px;"  on-click={ () => this.newFolderDialog = true }></i>
-                        
-                        
-            //           </span>
-            //       </span>);
-            //       } else if(_.includes(data.path, '/Partials/')){
-            //         return(<span>
-            //           <span class="nodelabel">
-            //               <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
-            //               <span>{node.label}</span>
-            //           </span>
-            //           <span class="action-button" style="float: right; padding-right: 5px;">
-                        
-            //               <i title="Create New Variant" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
-                        
-                        
-            //                 <i title="Delete Folder" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.removefolder(store, data) }></i>
-                        
-            //           </span>
-            //       </span>);
-            //       } else if (node.level == 1) {
-            //         return(<span on-click={ () => this.goToHomePage() }>
-            //             <span class="nodelabel" >
-            //                 <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
-            //                 <span>Websites</span>
-            //             </span>
-            //             <span class="">
-            //                 <el-tooltip content="Create New Website" placement="top">
-            //                     <i class="fa fa-globe" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right:5px; color: #4A8AF4;"  on-click={ () => this.newProjectFolderDialog = true }></i>
-            //                 </el-tooltip>
-            //             </span>
-            //         </span>);
-            //       }else {
-            //         return(<span>
-            //             <span class="nodelabel">
-            //                 <i class="fa fa-folder" style="padding: 10px; color: #FFD500"></i>
-            //                 <span>{node.label}</span>
-            //             </span>
-            //             <span class="action-button" style="float: right; padding-right: 5px;">
-                          
-            //                   <i title="Add File" class="fa fa-file-text-o" style="margin-right:5px; color: #4A8AF4 " on-click={ () => this.newFileDialog = true }></i>
-                          
-                          
-                              
-            //             </span>
-            //         </span>);
-            //       }
-            //     }
-                  
-            //   } else if(data.type=='file'){
-            //     // var filePath = data.path;
-            //     // var pathParts = filePath.split('/');
-            //     // var parentFolderName = pathParts[pathParts.length-2];
-            //     // <i title="Preview File" class="fa fa-eye" style="position:absolute; right: 55px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #00C04F" on-click={ () => this.quickPreview(data.path) }></i>
-            //     // If it's a HTML file
-            //     if(data.extension == '.html'){
-            //       return (<span>
-            //         <span class="filelabel">
-            //             <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
-            //             <span>{node.label}</span>
-            //         </span>
-            //         <span class="action-button">
-                        
-            //                 <i title="Remove" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                        
-                        
-            //               <i title="Page settings" class="fa fa-cog" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #607C8A" on-click={ () => this.isPageEditing = true }></i>
-                        
-                        
-            //               <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 35px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
-
-                          
-                        
-            //         </span>
-            //     </span>)
-            //     } else if(data.extension == '.partial'){
-            //       // If HBS file
-            //       return (<span>
-            //           <span class="filelabel">
-            //               <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
-            //               <span>{node.label}</span>
-            //           </span>
-            //           <span class="action-button">
-                          
-            //                   <i title="Delete file" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                          
-                          
-            //                 <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
-                          
-            //           </span>
-            //       </span>)
-            //     } else if(data.extension == '.layout'){
-            //       // If its a LAYOUT file
-            //       return (<span>
-            //           <span class="filelabel">
-            //               <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
-            //               <span>{node.label}</span>
-            //           </span>
-            //           <span class="action-button">
-                         
-            //                   <i title="Delete File" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                          
-                          
-            //                 <i title="Edit File" class="fa fa-pencil" style="position:absolute; right: 15px; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #4A8AF4" on-click={ () => this.isEditOption = true }></i>
-                          
-            //           </span>
-            //       </span>)
-            //     } else {
-            //       // All other files
-            //       return (<span>
-            //             <span class="filelabel">
-            //                 <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
-            //                 <span>{node.label}</span>
-            //             </span>
-            //             <span class="action-button">
-                          
-            //                   <i title="Delete File" class="fa fa-trash-o" style="position:absolute; right: 0; padding: 10px; float:right; padding-right:0; margin-right: 5px; color: #F44236" on-click={ () => this.remove(store, data) }></i>
-                          
-            //             </span>
-            //         </span>)
-            //     }
-                
-            //   }else{
-            //     // Root Folder
-            //     return;
-            //   }
-            // },
 
             // Displaying icons in tree nodes  
             renderContent(h, { node, data, store }) {
