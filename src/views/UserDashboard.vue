@@ -282,18 +282,18 @@
 
        <section>
             <div class="hh-body-wrapper">
-                <div class="container-fluid">
-                    
+                <!-- <div class="container-fluid"> -->
+                    <!-- 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12"> -->
                             <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner"></component>
-                        </div>
+                        <!-- </div>
                         
                     </div>
-                    
+                     -->
 
 
-                </div>
+                <!-- </div> -->
             </div>
         </section>
 
@@ -647,7 +647,7 @@ a, a:hover, a:visited, a:link, a:active {
 }
 
 .hh-logo-container {
-    width: 225px;
+    width: 230px;
     text-align: center;
     height: 82px;
     float: left;
@@ -905,7 +905,7 @@ ul.hh-dropmenu-item {
     position: fixed;
     font-weight: 600;
     background: white !important;
-    width: 225px;
+    width: 230px;
     height: 100vh;
     top: 50px;
     left: 0;
