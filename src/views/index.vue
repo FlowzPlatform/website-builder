@@ -33,10 +33,10 @@
           <div class="sideMenuOpener">
             <button type="button" class="hamburger is-open" data-toggle="offcanvas">
               <div class="sideOpener">
-                <i class="fa fa-angle-right text-white">
+                <i class="fa fa-bars fa-rotate-90 text-white">
                 </i>
-                <i class="fa fa-angle-left text-white">
-                </i>
+                <!-- <i class="fa fa-angle-left text-white">
+                </i> -->
               </div>
             </button>
           </div>
@@ -6892,8 +6892,8 @@
     .sideOpener i {
         display: table-cell;
         vertical-align: middle;
-        font-weight: bolder;
-        font-size: 18px;
+        /*font-weight: bolder;*/
+        font-size: 14px;
     }
 
 
