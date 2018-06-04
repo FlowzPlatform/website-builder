@@ -4834,7 +4834,7 @@ export default {
       }
 
       if(!(process.env.NODE_ENV == 'development')){
-        this.projectPublicUrl = 'http://' + this.repoName + '.' + config.domainkey + '/';
+        this.projectPublicUrl = 'http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.domainkey + '/';
       } else {
         this.projectPublicUrl = 'http://localhost/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/';
       }
