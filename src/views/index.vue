@@ -5197,7 +5197,7 @@
 
             // Remove Project Folder and Delete GitLab Repository
             async removeProject(store, data) {
-
+              console.log('removeProject')
                 // Get Config File
                 let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 let foldername = folderUrl.split('/');
@@ -5954,29 +5954,29 @@
                   // console.log('this.statusPublish',this.statusPublish)
                   let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
                   if(index!=-1){
-                      if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
-                      return (<span on-click={ () => this.isProjectStats = true }>
-                        <span class="nodelabel" >
-                            <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
-                            <span>{data.websitename}</span>
-                        </span>
-                        <span class="action-button" style="float: right; padding-right: 5px;">
+                    //   if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
+                    //   return (<span on-click={ () => this.isProjectStats = true }>
+                    //     <span class="nodelabel" >
+                    //         <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                    //         <span>{data.websitename}</span>
+                    //     </span>
+                    //     <span class="action-button" style="float: right; padding-right: 5px;">
 
-                              <i title='website publishing' class="fa fa-spinner fa-spin" aria-hidden="true" style="margin-right: 5px; "></i>
+                    //           <i title='website publishing' class="fa fa-spinner fa-spin" aria-hidden="true" style="margin-right: 5px; "></i>
 
-                              <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+                    //           <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
 
-                              <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                    //           <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
                           
-                              <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                    //           <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
                           
                           
-                              <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.isProjectStats = true, this.quickDelete(store, data) }></i>
+                    //           <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.isProjectStats = true, this.quickDelete(store, data) }></i>
                           
-                        </span>
-                      </span>)
-                    }
-                else{
+                    //     </span>
+                    //   </span>)
+                    // }
+                // else{
                       return (<span on-click={ () => this.isProjectStats = true }>
                         <span class="nodelabel" >
                             <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
@@ -5997,7 +5997,7 @@
                           
                         </span>
                       </span>)
-                    }
+                    // }
                   }else{
                     // console.log('-1 found ')
                     return (<span on-click={ () => this.isProjectStats = true }>
