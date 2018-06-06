@@ -1156,6 +1156,11 @@ import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 import io from 'socket.io-client';
 
+
+let socket = config.socketURL;
+const app = feathers().configure(socketio(io(socket)))
+
+
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('Please enter Project Name.'));
@@ -1176,6 +1181,8 @@ let checkBranchName = (rule, value, callback) => {
         return callback();
     }
 }
+
+let srvListen = 0;
 
 export default {
   name: 'ProjectSettings',
@@ -1323,6 +1330,8 @@ export default {
 
       currentBranchName: '',
 
+      serviceListen: 0,
+
       commitForm: {
         branchName: '',
         commitMessage: ''
@@ -1370,61 +1379,68 @@ export default {
   },
 
   async mounted () {
-
+    // console.log('mounted')
+    // console.log( this.$refs['commitForm'])
    // let self = this;
-    let socket = config.socketURL;
-    
-    const app = feathers().configure(socketio(io(socket)))
     // Socket Listen for Creating File or Folder
     
-    app.service("jobqueue").on("created", async (response) => {
-      if(this.repoName==response.websiteid) {
-        this.percent=0
-        this.isdisabled = true;
-        this.textdata='Job added Successfully. Please wait you are in Queue.'
-        // this.$emit('updateProjectName')
-      }
-    });
+    // console.log('this.serviceListen :: ', this.serviceListen);
+    // console.log('srvListen :: ', srvListen);
 
-    app.service("jobqueue").on("removed", async (response) => {
-      if(this.repoName==response.websiteid) {
-        this.percent=0
-        this.isdisabled = false;
-        this.textdata=''
-        this.$emit('updateProjectName')
-      }
-    });
 
-    app.service("jobqueue").on("patched", async (response) => {
-      // console.log('response:',response)
-     if(this.repoName==response.websiteid){
-        // console.log('same id.. set disabled to true..')
-       this.isdisabled = true;
-        this.textdata='Job added Successfully. Please wait you are in Queue.'
-       if(response.Status!=undefined && response.Status=='completed'){
-        // console.log('completed..', response)
-         let dt = new Date();
-         let utcDate = dt.toUTCString();
-         this.commitForm.branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
-         this.commitForm.commitMessage = 'Publish - ' + utcDate;            
-         await this.commitProject('commitForm');
-        await this.saveProjectSettings()
-        await this.init()
-        this.$emit('updateProjectName')
-        this.isdisabled=false
+    if(srvListen == 0)
+    {
+        app.service("jobqueue").on("created", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = true;
+          this.textdata='Job added Successfully. Please wait you are in Queue.'
+          // this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("removed", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = false;
+          this.textdata=''
+          this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("patched", async (response) => {
+        // console.log('response:',response)
+       if(this.repoName==response.websiteid){
+          // console.log('same id.. set disabled to true..')
+         // this.isdisabled = true;
+          // this.textdata='Job added Successfully. Please wait you are in Queue.'
+         if(response.Status!=undefined && response.Status=='completed'){
+            // console.log('completed..', response)
+            let dt = new Date();
+            let utcDate = dt.toUTCString();
+            let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
+            let commitMessage = 'Publish - ' + utcDate;            
+            await this.publishcommitProject(commitMessage,branchName);
+            await this.saveProjectSettings()
+            await this.init()
+            this.$emit('updateProjectName')
+            this.isdisabled=false
+         }
+        if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
+          this.isdisabled=false
+          this.$emit('updateProjectName')
+          this.percent=0
+          // console.log('job failed')
+         }
+        if(response.Percentage!=undefined && response.Percentage!=''){
+          this.percent=response.Percentage
+          // console.log('this.percent :: ',this.percent)
+         }
        }
-      if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
-        this.isdisabled=false
-        this.$emit('updateProjectName')
-        this.percent=0
-        // console.log('job failed')
-       }
-      if(response.Percentage!=undefined && response.Percentage!=''){
-        this.percent=response.Percentage
-        // console.log('this.percent :: ',this.percent)
-       }
-     }
-    });
+      });  
+    }  
+    
+    srvListen++;
       
 
    // Collapsing Divs
@@ -3494,7 +3510,7 @@ export default {
             websiteName: this.form.websitename
           })
           .then(async(res) => {
-            this.$message({
+            this.$notify({
               showClose: true,
               message: 'Successfully Saved.',
               type: 'success'
@@ -3524,7 +3540,7 @@ export default {
             .then((res) => {
             })
             .catch((e) => {
-              this.$message({
+              this.$notify({
                 showClose: true,
                 message: 'Failed saving project details! Please try again.',
                 type: 'error'
@@ -3534,7 +3550,7 @@ export default {
            await this.init();
           this.$emit('updateProjectName');
       } else {
-        this.$message({
+        this.$notify({
           showClose: true,
           message: 'Data Error.',
           type: 'error'
@@ -3582,7 +3598,7 @@ export default {
               })
               .then((response) => {
                   console.log(response);
-                  this.$message({
+                  this.$notify({
                     message: 'Rollbacked to revision "' + this.branchesData[index].branchName + '" ',
                     type: 'success'
                   });
@@ -3609,9 +3625,193 @@ export default {
       });
     },
 
+    async publishcommitProject(commitMessage,branchName){
+      let self = this;
+
+          // Check if branch exist
+          let indexOfBranchName = _.findIndex(this.branchesData, function(o) { return o.branchName == branchName; });
+
+          // If branchName is different
+          if(indexOfBranchName == -1){
+            // If .git was successfull
+            if( this.settings[0].repoSettings[0].RepositoryId != undefined){
+
+              this.isCommitLoading = true;
+              this.$store.state.currentIndex = 0;
+
+              // Push repository changes
+              axios.post(config.baseURL + '/gitlab-add-repo', {
+                branchName: branchName,
+                commitMessage: commitMessage,
+                repoName: this.repoName,
+                userDetailId: Cookies.get('userDetailId')
+              }).then(async response => {
+                console.log(response);
+                if(response.data[0].code == 444){
+                  this.$notify({
+                    message: response.data[0].message,
+                    type: 'warning'
+                  });
+                  this.isCommitLoading = false;
+                  // this.$refs[commitForm].resetFields();
+                } else {
+                  // console.log('Response after branch commit : ', response);
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId=' + this.newRepoId, {
+                    }).then(async response => {
+
+                      
+
+                      this.commitsData = [];
+                      for(var i in response.data){
+                        this.commitsData.push({
+                          commitDate: response.data[i].created_at,
+                          commitSHA: response.data[i].id,
+                          commitsMessage: response.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch = branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          // console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      // this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log("error : ", error);
+                      this.fullscreenLoading = false;
+                    });
+                     // this.$refs[commitForm].resetFields();
+                    // this.commitForm.commitMessage = '';
+                    // this.commitForm.branchName = '';
+                    //console.log(response.data);
+                   this.$notify({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    await this.init();
+                  }
+                }
+                
+              }).catch(error => {
+                console.log("error : ", error);
+              })
+            } else {
+              // If first commit was unsuccessfull
+
+              // add new repo to git
+              let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.repoName + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
+
+              if(!(gitResponse.data.statusCode)){
+                this.isCommitLoading = true;
+                this.$store.state.currentIndex = 0;
+
+                // Push repository changes
+                axios.post(config.baseURL + '/gitlab-add-repo', {
+                  branchName:branchName,
+                  commitMessage: commitMessage,
+                  repoName: this.repoName,
+                  userDetailId: Cookies.get('userDetailId')
+                }).then(async response => {
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                    }).then(async resp => {
+                      this.commitsData = [];
+                      for(var i in resp.data){
+                        this.commitsData.push({
+                          commitDate: resp.data[i].created_at,
+                          commitSHA: resp.data[i].id,
+                          commitsMessage: resp.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch =branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log(error);
+                      this.fullscreenLoading = false;
+                    });
+
+                    commitMessage = '';
+                    branchName = '';
+
+                    //console.log(response.data);
+                    this.$notify({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    this.init();
+                  }
+                }).catch(error => {
+                  //console.log("Some error occured: ", error);
+                })
+              } else {
+                console.log('Error occured while commiting your changes. ', gitResponse);
+              }
+            }
+          } else {
+            console.log('Branch already exist.');
+            this.$swal({
+              text: 'Branch with name "' + branchName + '" already exists! Please try different name.',
+              type: 'warning',
+            })
+            return false;
+          }
+    },
+
+
     async commitProject(commitForm) {
       axios.get(config.baseURL + '/rethinkservicecheck')
       .then(async response => {
+        console.log('commitForm:',this.$refs[commitForm])
         this.$refs[commitForm].validate(async (valid) => {
         if (valid) {
 
@@ -3637,9 +3837,9 @@ export default {
               }).then(async response => {
                 console.log(response);
                 if(response.data[0].code == 444){
-                  this.$message({
+                  this.$notify({
                     message: response.data[0].message,
-                    type: 'error'
+                    type: 'warning'
                   });
                   this.isCommitLoading = false;
                   this.$refs[commitForm].resetFields();
@@ -3691,11 +3891,11 @@ export default {
                       console.log("error : ", error);
                       this.fullscreenLoading = false;
                     });
-
-                    this.commitForm.commitMessage = '';
-                    this.commitForm.branchName = '';
+                     this.$refs[commitForm].resetFields();
+                    // this.commitForm.commitMessage = '';
+                    // this.commitForm.branchName = '';
                     //console.log(response.data);
-                    this.$message({
+                   this.$notify({
                       message: 'New revision commited. ',
                       type: 'success'
                     });
@@ -3772,7 +3972,7 @@ export default {
                     this.commitForm.branchName = '';
 
                     //console.log(response.data);
-                    this.$message({
+                    this.$notify({
                       message: 'New revision commited. ',
                       type: 'success'
                     });
@@ -3803,6 +4003,7 @@ export default {
 
       })
       .catch(e => {
+        console.log('e:',e)
         let dataMessage = '';
             if (e.message != undefined) {
                 dataMessage = e.message              
@@ -3811,7 +4012,7 @@ export default {
             } else{
               dataMessage = "Please try again! Some error occured."
             }
-            this.$confirm(dataMessage, 'Error', {
+          this.$confirm(dataMessage, 'Error', {
           confirmButtonText: 'logout',
           cancelButtonText: 'reload',
           type: 'error',
@@ -3872,7 +4073,7 @@ export default {
              domain: location
          });
 
-         this.$message({
+         this.$notify({
              message: 'You\'re Logged Out From System. Please login again!',
              duration: 500,
              type: 'error',
@@ -3976,7 +4177,7 @@ export default {
           domain: location
         });
 
-        this.$message({
+        this.$notify({
           message: 'You\'re Logged Out From System. Please login again!',
           duration: 500,
           type: 'error',
@@ -4702,7 +4903,7 @@ export default {
               })
               .catch((e) => {
                 this.fullscreenLoading = false;
-                this.$message({
+                this.$notify({
                   showClose: true,
                   message: 'Failed! Please try again.',
                   type: 'error'

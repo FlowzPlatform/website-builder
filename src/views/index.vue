@@ -5208,7 +5208,6 @@
 
             // Remove Project Folder and Delete GitLab Repository
             async removeProject(store, data) {
-              console.log('removeProject')
                 // Get Config File
                 let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 let foldername = folderUrl.split('/');
