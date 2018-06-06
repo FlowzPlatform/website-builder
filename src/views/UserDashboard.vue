@@ -179,13 +179,13 @@
                     <div class="buttons">
                       <ul>
                         <li>
-                          <a href="#"><i class="ti-panel"></i><span> Settings</span></a>
+                          <a href="javascript:void(0)" @click='goToUserSettings()'><i class="ti-panel"></i><span> Settings</span></a>
                         </li>
                         <li>
-                          <a href="#"><i class="ti-user"></i><span> Profile</span></a>
+                          <a href="javascript:void(0)"><i class="ti-user"></i><span> Profile</span></a>
                         </li>
                         <li>
-                          <a href="#"><i class="ti-power-off"></i><span> Logout</span></a>
+                          <a href="javascript:void(0)" @click="doLogout"><i class="ti-power-off"></i><span> Logout</span></a>
                         </li>
                       </ul>
                       
@@ -235,14 +235,14 @@
                             <span class="hh-sidebar-item">Revenue</span>
                         </a>
                     </li> -->
-                    <li>
+                    <!-- <li>
                         <a href="#" @click='goToUserSettings()'>
                             <i class="fa fa-cog">
                                 <span class="icon-bg hh-bg-success"></span>
                             </i>
                             <span class="hh-sidebar-item">Settings</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="#" class="done" @click="bExpand = !bExpand">
                             <i class="fa fa-file-image-o">
@@ -291,14 +291,14 @@
                             <span class="hh-sidebar-item">Product & Imprint Color</span>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
                                 <span class="icon-bg hh-bg-violet"></span>
                             </i>
                             <span class="hh-sidebar-item">Logout</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </nav>
         </aside>
