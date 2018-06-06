@@ -14,8 +14,7 @@
               v-for="item in options"
               :key="item.value"
               :label="item.label"
-              :value="item.value" 
-              :class="subscriptionSelect">
+              :value="item.value">
             </el-option>
             </el-select> 
           </div>
@@ -120,6 +119,7 @@
     import axios from 'axios'
     import Cookies from 'js-cookie';
     const config = require('../config');
+    import psl from 'psl';
 
     export default {
         name: 'HomePage',
@@ -140,7 +140,6 @@
                 window.open(url);
             },
             getData() {
-              console.log("hello")
                 let self = this;
                   if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
                     axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
@@ -205,6 +204,12 @@
               this.websites = []
               this.getData();
 
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.set('subscriptionId', this.value, {
+                domain: location
+              });
+
             }
         },
         async mounted() {
@@ -212,14 +217,19 @@
             let sub_id = []
             await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
             .then(response => {
-              console.log("res----",response)
               let obj_val = Object.values(response.data.data.package)
               let obj_key = Object.keys(response.data.data.package)
               for (let index = 0; index < obj_val.length; index++) {
                 sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
               }
               this.options = sub_id
-              this.value  = sub_id[0].value;
+
+              if(Cookies.get('subscriptionId')){
+                this.value = Cookies.get('subscriptionId');
+              } else {
+                this.value = sub_id[0].value;  
+              }
+              
             })
             .catch((err)=>{ console.log('Error:', err); })
         }
@@ -387,15 +397,24 @@
       color: #58ADFF;
     }
 
+    a.website-add:hover .website-card{
+      color: #58ADFF;
+      transition: 0.2s all linear;
+      transform: translate3d(0px, 5px, 0px);
+    }
+
     a.website-edit:hover .website-card {
       background-color: #f0f0f0;
       transition: 0.2s all linear;
+      transform: translate3d(0px, 5px, 0px);
     }
 
     .btn-link{
-      position: absolute;
+      /*position: absolute;
       bottom: 10px;
-      right: 25px;
+      right: 25px;*/
+      float: right;
+      margin-top: 95px;
     }
 
 

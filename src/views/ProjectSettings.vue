@@ -56,8 +56,8 @@
                       <div class="col-md-12" v-if="publishType === 'default'">
                         Your Default domain will be: <a :href="projectPublicUrl" target="_blank">{{projectPublicUrl}}</a>
                         <br>
-                          <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
-                        <br>
+                          <!-- <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
+                        <br> -->
 
                         <div style="margin-top: 15px;">
                           <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading">Publish</el-button>
