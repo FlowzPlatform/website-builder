@@ -1,8 +1,90 @@
 <template>
   <div class="HomePage">
-    <el-card class="box-card">
+
+    <div class="skewed-bg">
+      <div class="content">
+        <h1 class="title">Welcome to Website Builder</h1>
+        <p class="text">Get started with creating new website or updating existing.</p>
+        <div class="row">
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-4">
+            <el-select v-model="value" @change="changeSubscription()" placeholder="Select Your Subscription" style="transform: scaleX(1); display: block;">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+            </el-select> 
+          </div>
+          <div class="col-md-4">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="start-content">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <a href="#" class="website-add">
+              <div class="website-card" style="text-align: center; padding-top: 70px;">
+                  <i class="fa fa-plus fa-2x"></i>
+                  <h3>Add New</h3>
+              </div>
+            </a>
+          </div>
+
+
+          <div class="col-md-4" v-for="items in websites">
+            <a href="#" class="website-edit">
+              <div class="website-card">
+                <h3>{{ items.website }}</h3>
+                <small>{{ items.id }}</small>
+                 <el-tooltip class="item" effect="dark" content="Open Preview" placement="top">
+                  <a href="#" class="btn btn-primary btn-link" @click="openLink(items.url)"><i class="fa fa-link"></i></a>
+                </el-tooltip>
+              </div>
+            </a>
+          </div>
+
+          <!-- <div class="col-md-4">
+            <a href="#" class="website-edit">
+              <div class="website-card">
+                <h3>Website Name 2</h3>
+                <span>Desc</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-md-4">
+            <a href="#" class="website-edit">
+              <div class="website-card">
+                <h3>Website Name 3</h3>
+                <span>Desc</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-md-4">
+            <a href="#" class="website-edit">
+              <div class="website-card">
+                <h3>Website Name 4</h3>
+                <span>Desc</span>
+              </div>
+            </a>
+          </div> -->
+
+        </div>
+      </div>
+    </div>
+
+    <!-- <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span id="website"><h1 class='elegantshadow'>Websites </h1> </span>
+        <span id="website">
+          <h1 class='elegantshadow'>Websites </h1> 
+        </span>
 
         <div class="row">
           <div class="col-md-4">
@@ -28,7 +110,7 @@
             <a href="#" style="color:white;" @click="openLink(items.url)" target="_blank"> <li>{{ items.website }} </li></a>
         </ol>
           </div>
-    </el-card>
+    </el-card> -->
 
   </div>
 </template>
@@ -37,6 +119,7 @@
     import axios from 'axios'
     import Cookies from 'js-cookie';
     const config = require('../config');
+    import psl from 'psl';
 
     export default {
         name: 'HomePage',
@@ -57,7 +140,6 @@
                 window.open(url);
             },
             getData() {
-              console.log("hello")
                 let self = this;
                   if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
                     axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
@@ -68,18 +150,21 @@
                                 });
 
                                 this.repoName = this.configData.data.id;
-                                let websiteName = this.configData.data.websiteName
+                                let websiteName = this.configData.data.websiteName;
+                                let websiteId = this.repoName;
                                 console.log("websiteName", websiteName)
                                 if (!(process.env.NODE_ENV == 'development')) {
                                     let url_ = 'http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.domainkey + '/'
                                     this.websites.push({
                                         website: websiteName,
+                                        id: websiteId,
                                         url: url_
                                     })
                                 } else {
                                     let url_ = 'http://localhost/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/public/'
                                     this.websites.push({
                                         website: websiteName,
+                                        id: websiteId,
                                         url: url_
                                     });
                                 }
@@ -119,6 +204,12 @@
               this.websites = []
               this.getData();
 
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.set('subscriptionId', this.value, {
+                domain: location
+              });
+
             }
         },
         async mounted() {
@@ -126,14 +217,19 @@
             let sub_id = []
             await axios.get(config.userDetail ,{ headers: { 'Authorization': Cookies.get('auth_token') } })
             .then(response => {
-              console.log("res----",response)
               let obj_val = Object.values(response.data.data.package)
               let obj_key = Object.keys(response.data.data.package)
               for (let index = 0; index < obj_val.length; index++) {
                 sub_id.push({"value":obj_val[index].subscriptionId, "label":obj_val[index].name})
               }
               this.options = sub_id
-              this.value  = sub_id[0].value;
+
+              if(Cookies.get('subscriptionId')){
+                this.value = Cookies.get('subscriptionId');
+              } else {
+                this.value = sub_id[0].value;  
+              }
+              
             })
             .catch((err)=>{ console.log('Error:', err); })
         }
@@ -240,6 +336,86 @@
             -webkit-transform: scale(1.1, 1.1);
         }
     } */
+
+
+    .HomePage {
+      background: #fff;
+      color: #FFF;
+    }
+
+    .skewed-bg {
+      background: #58ADFF;
+      padding-top: 150px;
+      padding-bottom: 100px;
+      -webkit-transform: skew(0deg, -5deg);
+      transform: skew(0deg, -5deg);
+      margin-top: -200px;
+    }
+    .skewed-bg .content {
+      -webkit-transform: skew(0deg, 5deg);
+      transform: skew(0deg, 5deg);
+      text-align: center;
+    }
+    .skewed-bg .content .title {
+      padding-top: 100px;
+      font-weight: normal;
+    }
+    .skewed-bg .content .text {
+      width: 60%;
+      margin: 25px auto;
+      color: #ccfff2;
+    }
+
+    .start-content {
+      padding-bottom:30px;
+      text-align: center;
+      color: #666;
+      margin-top: -80px;
+    }
+
+    .website-card{
+      background-color: #fff;
+      box-shadow: 0px 12px 35px #ccc;
+      border-radius: 5px;
+      padding: 25px 15px;
+      text-align: left;
+      height: 200px;
+      transition: 0.2s all linear;
+      margin-top: 25px;
+    }
+
+    .website-card:hover{
+      box-shadow: 0px 5px 15px #ccc;
+    }
+
+    a.website-add, a.website-edit{
+      text-decoration: none; 
+      color: #292929;
+    }
+
+    a.website-add{
+      color: #58ADFF;
+    }
+
+    a.website-add:hover .website-card{
+      color: #58ADFF;
+      transition: 0.2s all linear;
+      transform: translate3d(0px, 5px, 0px);
+    }
+
+    a.website-edit:hover .website-card {
+      background-color: #f0f0f0;
+      transition: 0.2s all linear;
+      transform: translate3d(0px, 5px, 0px);
+    }
+
+    .btn-link{
+      /*position: absolute;
+      bottom: 10px;
+      right: 25px;*/
+      float: right;
+      margin-top: 95px;
+    }
 
 
 </style>

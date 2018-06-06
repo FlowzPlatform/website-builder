@@ -33,10 +33,10 @@
           <div class="sideMenuOpener">
             <button type="button" class="hamburger is-open" data-toggle="offcanvas">
               <div class="sideOpener">
-                <i class="fa fa-angle-right text-white">
+                <i class="fa fa-bars fa-rotate-90 text-white">
                 </i>
-                <i class="fa fa-angle-left text-white">
-                </i>
+                <!-- <i class="fa fa-angle-left text-white">
+                </i> -->
               </div>
             </button>
           </div>
@@ -149,6 +149,12 @@
                         <li>
                           <input type="radio" name="layout" value="template4" id="myCheckbox4" />
                           <label for="myCheckbox4" class="radio-img imgThumbnail" v-on:click="setTemplate('template4')" title="Photography template">
+                          </label>
+                          <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
+                        </li>
+                        <li>
+                          <input type="radio" name="layout" value="template4" id="myCheckbox5" />
+                          <label for="myCheckbox5" class="radio-img imgThumbnail" v-on:click="setTemplate('template5')" title="Photography template">
                           </label>
                           <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
                         </li>
@@ -719,6 +725,9 @@
                  this.templateContentsData = templateData.data;
               } else if(template == 'template4'){
                 templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template4.html');
+                 this.templateContentsData = templateData.data;
+              } else if(template == 'template5'){
+                templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/flowz-digital-website.html');
                  this.templateContentsData = templateData.data;
               } else if (template == 'none') {
                 this.templateContentsData = '';
@@ -4425,9 +4434,11 @@
                                           projName = projName.split('/')[2];
                                           // console.log("process.env.NODE_ENV",process.env.NODE_ENV)
                                           if (process.env.NODE_ENV !== 'development') {
-                                            window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
+                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
+                                            redirectWindow.location;
                                           } else {
-                                            window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
+                                            let redirectWindow = window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
+                                            redirectWindow.location;
                                           }
                                           await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                             .then(async(res) => {
@@ -6892,8 +6903,8 @@
     .sideOpener i {
         display: table-cell;
         vertical-align: middle;
-        font-weight: bolder;
-        font-size: 18px;
+        /*font-weight: bolder;*/
+        font-size: 14px;
     }
 
 

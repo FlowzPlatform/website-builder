@@ -3,22 +3,22 @@
 
     <div class="tabs">
       <h3>Project Settings</h3>
-      <el-tooltip class="item" effect="dark" placement="bottom" open-delay="1500">
+      <el-tooltip class="item" effect="dark" placement="bottom">
         <div slot="content" style="text-align: center">Website Publish<br> Basic Settings<br> User Roles<br> Commits and Revision</div>
         <a class="tab" id="tab1" data-target="#tab1-content">General Settings</a>  
       </el-tooltip>
 
-      <el-tooltip class="item" effect="dark" placement="bottom" open-delay="1500">
+      <el-tooltip class="item" effect="dark" placement="bottom">
         <div slot="content" style="text-align: center">Import Template<br> Global Variables</div>
         <a class="tab" id="tab2" data-target="#tab2-content">Plugins</a>
       </el-tooltip>
 
-      <el-tooltip class="item" effect="dark" placement="bottom" open-delay="1500">
+      <el-tooltip class="item" effect="dark" placement="bottom">
         <div slot="content" style="text-align: center">Image Library<br> URL Bucket<br> External Links <br> Meta Information <br> Global Styles &amp; Scripts </div>
         <a class="tab" id="tab3" data-target="#tab3-content">Assets Management</a>
       </el-tooltip>
 
-      <el-tooltip class="item" effect="dark" placement="bottom" open-delay="1500">
+      <el-tooltip class="item" effect="dark" placement="bottom">
         <div slot="content" style="text-align: center">Payment Configurations</div>
         <a class="tab" id="tab4" data-target="#tab4-content">Accounting</a>
       </el-tooltip>
@@ -56,8 +56,8 @@
                       <div class="col-md-12" v-if="publishType === 'default'">
                         Your Default domain will be: <a :href="projectPublicUrl" target="_blank">{{projectPublicUrl}}</a>
                         <br>
-                          <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
-                        <br>
+                          <!-- <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
+                        <br> -->
 
                         <div style="margin-top: 15px;">
                           <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading">Publish</el-button>
@@ -1522,7 +1522,7 @@ export default {
             $('.fixeddiv').css({
                 position: 'fixed',
                 top: '20px',
-                right: '140px'
+                right: '100px'
             });
         } else {
             $('.fixeddiv').css({
