@@ -152,12 +152,12 @@
                           </label>
                           <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
                         </li>
-                        <li>
+                        <!-- <li>
                           <input type="radio" name="layout" value="template4" id="myCheckbox5" />
                           <label for="myCheckbox5" class="radio-img imgThumbnail" v-on:click="setTemplate('template5')" title="Photography template">
                           </label>
                           <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
-                        </li>
+                        </li> -->
                       </ul>
                     </div>
                   </el-form-item>
