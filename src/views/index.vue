@@ -6901,10 +6901,13 @@
     }
 
     .sideOpener i {
-        display: table-cell;
-        vertical-align: middle;
+        /*display: table-cell;*/
+        /*vertical-align: middle;*/
         /*font-weight: bolder;*/
         font-size: 14px;
+        position: absolute;
+        top: 50%;
+        left: 0;
     }
 
 
