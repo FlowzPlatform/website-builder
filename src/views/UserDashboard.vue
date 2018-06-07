@@ -174,8 +174,8 @@
                 <div class="profile-bar">
                   <div class="contents">
                     <img src="https://gravatar.com/avatar/cd62d88a83461e0b1daa8f2fa31c4dcb?s=512&d=https://codepen.io/assets/avatars/user-avatar-512x512-6e240cf350d2f1cc07c2bed234c3a3bb5f1b237023c204c782622e80d6b212ba.png" alt="UserAvatar">
-                  <p class="profile-name">Good Job, John!</p>
-                    <p class="profile-description">You haven't miss any task this week!</p>
+                  <p class="profile-name">Welcome, {{userName}}!</p>
+                    <!-- <p class="profile-description">You haven't miss any task this week!</p> -->
                     <div class="buttons">
                       <ul>
                         <li>
@@ -329,6 +329,9 @@
 import psl from 'psl';
 import Cookies from 'js-cookie';
 
+const config = require('../config');
+import axios from 'axios';
+
 import Invite from './invite';
 import HomePage from './Dashboard';
 import UserSettings from './user-settings';
@@ -354,7 +357,8 @@ export default {
       bExpand: false,
       componentId: '',
       userEmailId: '',
-      rowdata: {}
+      rowdata: {},
+      userName: null
     }
   },
   component: {
@@ -434,6 +438,20 @@ export default {
       this.goToDashboard();
 
     this.userEmailId = Cookies.get('email');
+
+    axios.get(config.userDetail, {
+      headers: {
+        'Authorization': Cookies.get('auth_token', {
+          domain: location
+        })
+      }
+    })
+    .then(async(res) => {
+      this.userName = res.data.data.firstname;
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
 
     $(function () {
 
@@ -1095,7 +1113,7 @@ ul.hh-dropmenu-item {
 .hh-body-wrapper {
     position: absolute;
     left: 230px;
-    top: 75px;
+    top: 20px;
     width: auto;
     right: 0;
     -webkit-transition: all .2s ease-in-out;
@@ -1190,7 +1208,7 @@ ul.hh-dropmenu-item {
     }
 
     .hh-body-wrapper {
-        top: 100px;
+        top: 20px;
     }
 
     .flat-theme .hh-toggle-btn {
@@ -1208,7 +1226,7 @@ ul.hh-dropmenu-item {
     }
 
     .flat-theme .hh-body-wrapper {
-        top: 125px !important;
+        top: 20px !important;
     }
 
     .flat-theme .hh-sidebar {
@@ -1325,7 +1343,7 @@ ul.hh-dropmenu-item {
         }
 
     .hh-body-wrapper {
-        top: 125px;
+        top: 20px;
         position: relative;
     }
 
