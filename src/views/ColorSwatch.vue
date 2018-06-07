@@ -1,5 +1,6 @@
 <template>
   <div class="swatch">
+    <div class="container-fluid">
       <Row>
         <div  style="padding-bottom: 10px;">
           <h2>Product & Imprint Color</h2>
@@ -34,6 +35,8 @@
           <Page :total="len" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
+      
   </div>
 
 </template>
