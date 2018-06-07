@@ -366,7 +366,7 @@
 
         <div class="row">
           <div class="col-md-10">
-            <span class="block-title" id="import-template">Import Pre-Build Website Templates</span>
+            <span class="block-title" id="import-template">Import E-Commerce Templates</span>
             <el-tooltip class="item" effect="dark" content="Refresh All Plugins and Directories" placement="top">
               <el-button class="refresh-plugins-btn" @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time" :disabled="refreshDisabled"></el-button>
             </el-tooltip>
@@ -450,6 +450,25 @@
                   </div>
                 </div>
               </div> -->
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title">Import CMS Template</span>
+            <div class="card">
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="http://res.cloudinary.com/flowz/image/upload/v1528348629/builder/images/flowz-website-template.png" alt="template 5" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'flowz-website')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="card-spacer"></div>
@@ -3105,6 +3124,7 @@ export default {
         this.fullscreenLoading = false;
         // window.location.reload();
     },
+
     revertToTemplate(template){
       this.$confirm('This will permanatly overwrite current Pages, Partials, Layouts and Website assets. Do you want to continue?', 'Warning', {
         confirmButtonText: 'Yes',
@@ -3187,6 +3207,84 @@ export default {
           this.fullscreenLoading = true;
 
           this.refreshPlugins();
+          })
+          .catch((e) => {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message
+            } else if (e.response.data.message != undefined) {
+                dataMessage = e.response.data.message
+            } else {
+                dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+          })
+        })
+        .catch((e) => {
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
+
+      }).catch((err) => {
+        //console.log('Some error occured.', err);
+      });
+    },
+
+    revertToCMSTemplate(template){
+      this.$confirm('This will permanatly overwrite current Pages, Partials, Layouts and Website assets. Do you want to continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async () => {
+
+        this.fullscreenLoading = true;
+        this.refreshDisabled = true;
+
+        // Call service to copy files for selected template
+        await axios.post( config.baseURL + '/copy-website', {
+            projectPath : this.userDetailId + '/' + this.repoName,
+            templateName : template
+        })
+        .then(async (res) => {
+          // await this.refreshPlugins();
+
+          //Copy data of project_settings.json into project-details.json
+          axios.get(config.userDetail, {
+            headers: {
+              'Authorization' : Cookies.get('auth_token')
+            }   
+          })
+          .then(async (res) => {
+            this.saveProjectSettings();
+
+            this.refreshDisabled = false;
+
+            this.fullscreenLoading = true;
+
+            this.refreshPlugins();
           })
           .catch((e) => {
             let dataMessage = '';
