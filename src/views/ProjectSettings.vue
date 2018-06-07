@@ -3646,7 +3646,7 @@ export default {
                 repoName: this.repoName,
                 userDetailId: Cookies.get('userDetailId')
               }).then(async response => {
-                console.log(response);
+                // console.log(response);
                 if(response.data[0].code == 444){
                   this.$notify({
                     message: response.data[0].message,
@@ -3691,13 +3691,13 @@ export default {
                           userId: Cookies.get('userDetailId')
                       })
                       .then(function (resp) {
-                          // console.log('Config revision saved in configdata-history. ', resp);
+                          console.log('Config revision saved in configdata-history. ', resp);
                       })
                       .catch(function (error) {
                           console.log(error);
                       });
 
-                      // this.saveProjectSettings();
+                      this.saveProjectSettings();
                     }).catch(error => {
                       console.log("error : ", error);
                       this.fullscreenLoading = false;
@@ -3811,7 +3811,7 @@ export default {
     async commitProject(commitForm) {
       axios.get(config.baseURL + '/rethinkservicecheck')
       .then(async response => {
-        console.log('commitForm:',this.$refs[commitForm])
+        // console.log('commitForm:',this.$refs[commitForm])
         this.$refs[commitForm].validate(async (valid) => {
         if (valid) {
 
@@ -4047,6 +4047,14 @@ export default {
              // this.isdisabled=false
              // console.log('canceled called');
              // this.$emit('updateProjectName')
+                axios.patch(config.baseURL + '/jobqueue', {
+              'Status': 'cancelled',
+              'websiteName': this.form.websitename ,
+              'websiteid': this.repoName,
+              'userId':Cookies.get('userDetailId')
+              }).catch((e) => {
+                  console.log(e)
+              })
           }).catch((e)=>{
             console.log(e)
           })
