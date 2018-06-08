@@ -4419,10 +4419,12 @@
                                 .then(async(res) => {
                                   self.saveFileLoading = false;
                                   // console.log('Metalsmith call FolderUrl: ', folderUrl);
+                                  let previewbackupmetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                                  
                                   await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                                       axios.post(config.baseURL + '/save-menu', {
                                           filename: folderUrl + '/public/assets/metalsmithPreview.js',
-                                          text: backupmetalsmith,
+                                          text: previewbackupmetal,
                                           type: 'file'
                                         })
                                         .then(async(res) => {
