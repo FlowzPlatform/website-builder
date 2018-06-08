@@ -4311,7 +4311,7 @@
                       }
                       responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
                       // self.form.partials = back_partials
-                      // console.log("Final metalsmith:", responseMetal.data);
+                       console.log("Final metalsmith:", responseMetal.data);
                       var mainMetal = folderUrl + '/public/assets/metalsmithPreview.js'
                       axios.post(config.baseURL + '/save-menu', {
                           filename: mainMetal,
