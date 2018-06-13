@@ -115,7 +115,7 @@ module.exports = {
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
-    gitLabIpAddress: 'http://209.50.53.116/',
+    gitLabIpAddress: 'http://209.50.50.225/',
     default:{
     flowzDashboardUrl: 'https://www.dashboard.' + process.env.domainkey,
     serviceUrl: 'https://api.' + process.env.domainkey + '/crm/',

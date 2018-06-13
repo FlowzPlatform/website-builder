@@ -461,7 +461,14 @@
                   <div class="row">
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="http://res.cloudinary.com/flowz/image/upload/v1528348629/builder/images/flowz-website-template.png" alt="template 5" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'flowz-website')"/>
+                        <img src="http://res.cloudinary.com/flowz/image/upload/v1528348629/builder/images/flowz-website-template.png" alt="flowz-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'flowz-website')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="http://res.cloudinary.com/flowz/image/upload/v1528863699/builder/images/OfficeBeacon.png" alt="officebeacon-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'officebeacon-website')"/>
                       <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                       <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
