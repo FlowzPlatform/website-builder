@@ -1,100 +1,106 @@
 <template>
   <div class="index">
-
     <div class="main-contents">
       <div id="wrapper" class="toggled">
-
         <!-- Overlay when sidebar is opened. Currently disabled in CSS -->
-        <div class="overlay"></div>
-    
+        <div class="overlay">
+        </div>
         <!-- Sidebar Wrapper -->
         <nav id="sidebar-wrapper" role="navigation" style="">
           <div class="treeViewBlock" style="transform: scaleX(-1); padding: 5px;">
             <div style="transform: scaleX(-1);">
-              <small>Current Subscription</small>
+              <small>Current Subscription
+              </small>
               <!-- <div v-if="isDataLoading === true" class="tree-data-spinner" style="transform: scaleX(-1);">
                 <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
               </div> -->
               <el-select v-model="value" @change="changeSubscription()" placeholder="Select Your Subscription" style="width: 100%">
-              <el-option style="width: 100%"
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
+                <el-option style="width: 100%"
+                           v-for="item in options"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
               </el-select>
-              <el-tree v-loading="treeLoading" element-loading-text="Loading..." v-if='isTreeVisible === true' :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current=true></el-tree>  
+              <el-tree v-loading="treeLoading" element-loading-text="Loading..." v-if='isTreeVisible === true' :data="directoryTree" empty-text="Loading..." accordion :props="defaultProps" :expand-on-click-node="false" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current=true>
+              </el-tree>  
             </div>
           </div>
         </nav>
         <!-- /#sidebar-wrapper -->
-
         <!-- Page Content -->
         <div id="page-content-wrapper">
           <div class="sideMenuOpener">
             <button type="button" class="hamburger is-open" data-toggle="offcanvas">
-                <div class="sideOpener">
-                  <i class="fa fa-angle-right text-white"></i>
-                  <i class="fa fa-angle-left text-white"></i>
-                </div>
+              <div class="sideOpener">
+                <i class="fa fa-bars fa-rotate-90 text-white">
+                </i>
+                <!-- <i class="fa fa-angle-left text-white">
+                </i> -->
+              </div>
             </button>
           </div>
           <div class="allComponents">
-
             <div class="row" style="margin-top: 0px;">
-
               <!-- Action Buttons -->
               <div class="col-md-4 editor-buttons" align="right" v-if="componentId != null">
-                  <div style="margin-right:10px; margin: 15px;">
-                      <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview</el-button>
-                      <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="isPageCodeEditor">Go to Editor</el-button>
-                      <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectSettings' && componentId != 'PageSettings' && componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save</el-button>
-                  </div>
+                <div style="margin-right:10px; margin: 15px;">
+                  <el-button type="info" size="small" @click="generatePreview();" v-if="componentId === 'GrapesComponent' && isPagesFolder === true">Preview
+                  </el-button>
+                  <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="componentId === 'MonacoEditorChild'">Go to Editor
+                  </el-button>
+                  <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectSettings' && componentId != 'PageSettings' && componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save
+                  </el-button>
+                </div>
               </div>
-
               <!-- New File Dialog if it's not dashboard page -->
               <el-dialog title="File Name" :visible.sync="newFileDialog" size="tiny" >
-                  <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
-                      <el-form-item prop="filename">
-                        <div class="row">
-                          <div class="col-md-10">
-                            <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
-                            <el-input :maxlength=20 v-model="formAddFile.filename" @change="updateFileNameLimitCount()" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter File Name"></el-input>
-                          </div>
-                          <div class="col-md-2">
-                            <span class="inputLimitStatus"> {{fileLimitCount}}/20</span>    
-                          </div>
-                        </div>
-                      </el-form-item> 
-                  </el-form>
-                  <span slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create</el-button>
-                      <el-button @click="canceldialog('formAddFile')">Cancel</el-button>
-                  </span>
+                <el-form :model="formAddFile" :rules="rulesFrmFile" ref="formAddFile">
+                  <el-form-item prop="filename">
+                    <div class="row">
+                      <div class="col-md-10">
+                        <input type="text" style="display: none;" v-model="formAddFile.filename" v-on:keyup.enter="addFile('formAddFile')" name="">
+                        <el-input :maxlength=20 v-model="formAddFile.filename" @change="updateFileNameLimitCount()" @keyup.enter.native="addFile('formAddFile')" auto-complete="off" placeholder="Enter File Name">
+                        </el-input>
+                      </div>
+                      <div class="col-md-2">
+                        <span class="inputLimitStatus"> {{fileLimitCount}}/20
+                        </span>    
+                      </div>
+                    </div>
+                  </el-form-item> 
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                  <el-button type="primary" @click="addFile('formAddFile')" :loading="addNewFileLoading">Create
+                  </el-button>
+                  <el-button @click="canceldialog('formAddFile')">Cancel
+                  </el-button>
+                </span>
               </el-dialog>
-
               <!-- New Folder Dialog if it's not dashboard page -->
               <el-dialog title="Folder Name" :visible.sync="newFolderDialog" size="tiny" >
-                  <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
-                      <el-form-item prop="foldername">
-                        <div class="row">
-                          <div class="col-md-10">
-                            <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
-                            <el-input :maxlength=20 v-model="formAddFolder.foldername" @change="updateFolderNameLimitCount()" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name"></el-input>
-                          </div>
-                          <div class="col-md-2">
-                            <span class="inputLimitStatus"> {{folderLimitCount}}/20</span>    
-                          </div>
-                        </div>
-                        
-                      </el-form-item>
-                  </el-form>
-                  <span slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create</el-button>
-                      <el-button @click="canceldialogfolder('formAddFolder')">Cancel</el-button>
-                  </span>
+                <el-form :model="formAddFolder" :rules="rulesFolderName" ref="formAddFolder">
+                  <el-form-item prop="foldername">
+                    <div class="row">
+                      <div class="col-md-10">
+                        <input type="text" style="display: none;" v-model="formAddFolder.foldername" v-on:keyup.enter="addFolder('formAddFolder')" name="">
+                        <el-input :maxlength=20 v-model="formAddFolder.foldername" @change="updateFolderNameLimitCount()" @keyup.enter.native="addFolder('formAddFolder')" auto-complete="off" placeholder="Enter Folder Name">
+                        </el-input>
+                      </div>
+                      <div class="col-md-2">
+                        <span class="inputLimitStatus"> {{folderLimitCount}}/20
+                        </span>    
+                      </div>
+                    </div>
+                  </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                  <el-button type="primary" @click="addFolder('formAddFolder')" :loading="addNewFolderLoading">Create
+                  </el-button>
+                  <el-button @click="canceldialogfolder('formAddFolder')">Cancel
+                  </el-button>
+                </span>
               </el-dialog>
-
               <!-- New Website Project Dialog if it's not dashboard page -->
               <el-dialog title="Website Name" :visible.sync="newProjectFolderDialog" @close='canceldialogproject("formAddProjectFolder")' id="createProjectModal">
                 <el-form :model="formAddProjectFolder" :rules="rulesProjectName" ref="formAddProjectFolder">
@@ -102,67 +108,81 @@
                     <div class="row">
                       <div class="col-md-11">
                         <input type="text" style="display: none;" v-model="formAddProjectFolder.projectName" v-on:keyup.enter="checknameexist('formAddProjectFolder')" name="">
-                        <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @change="updateProjectNameLimitCount()" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Website Name"></el-input>    
+                        <el-input :maxlength=20 v-model="formAddProjectFolder.projectName" @change="updateProjectNameLimitCount()" @keyup.enter.native="checknameexist('formAddProjectFolder')" auto-complete="off" placeholder="Website Name">
+                        </el-input>    
                       </div>
                       <div class="col-md-1">
-                        <span class="inputLimitStatus"> {{projectLimitCount}}/20</span>    
+                        <span class="inputLimitStatus"> {{projectLimitCount}}/20
+                        </span>    
                       </div>
                     </div>
                   </el-form-item>
-
                   <el-form-item>
                     <div class="templateSelection">
-                      <strong>Select Template</strong>
+                      <strong>Select Template
+                      </strong>
                       <ul>
                         <li>
-                            <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
-                            <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template"></label>
-                            <img src="https://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
+                          <input type="radio" name="layout" value="template1" id="myCheckbox" checked />
+                          <label for="myCheckbox" class="radio-img imgThumbnail" v-on:click="setTemplate('none')" title="No Template">
+                          </label>
+                          <img src="https://placehold.it/250x100/292929?text=BLANK" class="templateThumbnail">
                         </li>
                         <li>
-                            <input type="radio" name="layout" value="template1" id="myCheckbox1" />
-                            <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout"></label>
-                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
+                          <input type="radio" name="layout" value="template1" id="myCheckbox1" />
+                          <label for="myCheckbox1" class="radio-img imgThumbnail" v-on:click="setTemplate('template1')" title="Coming Soon Layout">
+                          </label>
+                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl1.png" class="templateThumbnail">
                         </li>
                         <li>
-                            <input type="radio" name="layout" value="template2" id="myCheckbox2" />
-                            <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout"></label>
-                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
+                          <input type="radio" name="layout" value="template2" id="myCheckbox2" />
+                          <label for="myCheckbox2" class="radio-img imgThumbnail" v-on:click="setTemplate('template2')" title="Portfolio Layout">
+                          </label>
+                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519456356/builder/images/tpl2.png" class="templateThumbnail">
                         </li>
                         <li>
-                            <input type="radio" name="layout" value="template3" id="myCheckbox3" />
-                            <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout"></label>
-                            <img src="https://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
+                          <input type="radio" name="layout" value="template3" id="myCheckbox3" />
+                          <label for="myCheckbox3" class="radio-img imgThumbnail" v-on:click="setTemplate('template3')" title="Default Layout">
+                          </label>
+                          <img src="https://res.cloudinary.com/flowz/raw/upload/v1519452808/builder/images/tpl4.png" class="templateThumbnail">
                         </li>
-
                         <li>
-                            <input type="radio" name="layout" value="template4" id="myCheckbox4" />
-                            <label for="myCheckbox4" class="radio-img imgThumbnail" v-on:click="setTemplate('template4')" title="Photography template"></label>
-                            <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
+                          <input type="radio" name="layout" value="template4" id="myCheckbox4" />
+                          <label for="myCheckbox4" class="radio-img imgThumbnail" v-on:click="setTemplate('template4')" title="Photography template">
+                          </label>
+                          <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
                         </li>
+                        <!-- <li>
+                          <input type="radio" name="layout" value="template4" id="myCheckbox5" />
+                          <label for="myCheckbox5" class="radio-img imgThumbnail" v-on:click="setTemplate('template5')" title="Photography template">
+                          </label>
+                          <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
+                        </li> -->
                       </ul>
                     </div>
                   </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Website</el-button>
+                  <el-button type="primary" @click="checknameexist('formAddProjectFolder')" v-loading.fullscreen.lock="fullscreenLoading">Create Website
+                  </el-button>
                 </span>
               </el-dialog>
             </div>
-
             <div v-if="display = true" style="margin-left: 10px;">
-              <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData"></component>
+              <component :is="componentId" ref="contentComponent" v-on:updateProjectName="getData">
+              </component>
             </div>
           </div>
         </div>
         <!-- /#page-content-wrapper -->
-
       </div>
       <!-- /#wrapper -->
     </div>
-    <SiteFooter></SiteFooter>
+    <SiteFooter>
+    </SiteFooter>
   </div>
 </template>
+
 
 <script>
     import $ from 'jquery'
@@ -281,721 +301,486 @@
         mixins: [Emitter],
         props: {},
         data() {
-            return {
-                templateContentsData: '',
-                display: true,
-                flag: false,
-                options: '',
-                value: '',
-                autoFolders: true,
-                directoryTree: [],
-                currentFile: null,
-                defaultProps: {
-                    children: 'children',
-                    label: 'name',
-                    websitename: 'websitename'
-                },
-                rootpath: '',
-                backuplayout: '',
-                componentId: Dashboard,
-                addNewFileLoading: false,
-                addNewFolderLoading: false,
-                addNewProjectFolderLoading: false,
-                loadingContent: false,
-                saveFileLoading: false,
-                fullscreenLoading: false,
-                previewGrid: false,
-                btnPreview: false,
-                breadcrumbArr: [],
-                showLeftMenu: true,
-                isMenuBuilder: false,
-                isHomePage: true,
-                isSettingsPage: false,
-                isGridPreview: false,
-                isPreviewComponent: false,
-                isPageEditing: false,
-                isProjectEditing: false,
-                isProjectStats: false,
-                isPagesFolder: false,
-                isPageCodeEditor: false,
-                formAddFile: {
-                    filename: null
-                },
-                rulesFrmFile: {
-                    filename: [{
-                        validator: checkFileName,
-                        trigger: 'blur'
-                    }]
-                },
-                formAddFolder: {
-                    foldername: null
-                },
-                rulesFolderName: {
-                    foldername: [{
-                        validator: checkFolderName,
-                        trigger: 'blur'
-                    }]
-                },
-                formAddProjectFolder: {
-                    projectName: ''
-                },
-                currentProjectName: '',
-                rulesProjectName: {
-                    projectName: [{
-                        validator: checkProjectName,
-                        trigger: 'blur'
-                    }]
-                },
-                projectLimitCount: 0,
-                folderLimitCount: 0,
-                fileLimitCount: 0,
-                newFileDialog: false,
-                newFolderDialog: false,
-                newProjectFolderDialog: false,
-                value: '',
-                newRepoId: '',
-                repoName: '',
-                globalConfigData: [],
-                layoutSettings: {},
-                selectedTemplate: '',
-                PageLayout: '',
-                form: {
-                    Header: '',
-                    Footer: '',
-                    Layout: '',
-                    headers: [{
-                        value: 'NOH',
-                        label: 'No Header'
-                    }],
-                    footers: [{
-                        value: 'NOF',
-                        label: 'No Footer'
-                    }],
-                    layouts: [{
-                        value: 'Blank',
-                        label: 'Blank'
-                    }],
-                    partials: ''
-                },
-                dialogFormVisible: false,
-                previewLoading: false,
-                dialogvalue: true,
-                buyNowDialog: false,
-                isDataLoading: true,
-                isTreeVisible: true,
-                treeLoading: false
-            }
+          return {
+            templateContentsData: '',
+            statusPublish: [],
+            display: true,
+            flag: false,
+            options: '',
+            value: '',
+            autoFolders: true,
+            directoryTree: [],
+            currentFile: null,
+            defaultProps: {
+              children: 'children',
+              label: 'name',
+              websitename: 'websitename'
+            },
+            rootpath: '',
+            backuplayout: '',
+            componentId: Dashboard,
+            addNewFileLoading: false,
+            addNewFolderLoading: false,
+            addNewProjectFolderLoading: false,
+            loadingContent: false,
+            saveFileLoading: false,
+            fullscreenLoading: false,
+            previewGrid: false,
+            btnPreview: false,
+            breadcrumbArr: [],
+            showLeftMenu: true,
+            isMenuBuilder: false,
+            isHomePage: true,
+            isSettingsPage: false,
+            isGridPreview: false,
+            isPreviewComponent: false,
+            isPageEditing: false,
+            isProjectEditing: false,
+            isProjectStats: false,
+            isPagesFolder: false,
+            isPageCodeEditor: false,
+            formAddFile: {
+              filename: null
+            },
+            rulesFrmFile: {
+              filename: [{
+                validator: checkFileName,
+                trigger: 'blur'
+              }]
+            },
+            formAddFolder: {
+              foldername: null
+            },
+            rulesFolderName: {
+              foldername: [{
+                validator: checkFolderName,
+                trigger: 'blur'
+              }]
+            },
+            formAddProjectFolder: {
+              projectName: ''
+            },
+            currentProjectName: '',
+            rulesProjectName: {
+              projectName: [{
+                validator: checkProjectName,
+                trigger: 'blur'
+              }]
+            },
+            projectLimitCount: 0,
+            folderLimitCount: 0,
+            fileLimitCount: 0,
+            newFileDialog: false,
+            newFolderDialog: false,
+            newProjectFolderDialog: false,
+            value: '',
+            newRepoId: '',
+            repoName: '',
+            globalConfigData: [],
+            layoutSettings: {},
+            selectedTemplate: '',
+            PageLayout: '',
+            form: {
+              Header: '',
+              Footer: '',
+              Layout: '',
+              headers: [{
+                value: 'NOH',
+                label: 'No Header'
+              }],
+              footers: [{
+                value: 'NOF',
+                label: 'No Footer'
+              }],
+              layouts: [{
+                value: 'Blank',
+                label: 'Blank'
+              }],
+              partials: ''
+            },
+            dialogFormVisible: false,
+            previewLoading: false,
+            dialogvalue: true,
+            buyNowDialog: false,
+            isDataLoading: true,
+            isTreeVisible: true,
+            treeLoading: false
+          }
         },
         components: {
-            CodeMirror,
-            GrapesComponent,
-            JsonViewer,
-            MenuBuilder,
-            Dashboard,
-            GridManager,
-            PageSettings,
-            ProjectSettings,
-            ProjectStats,
-            PartialStats,
-            LayoutStats,
-            PageStats,
-            MonacoEditorChild,
-            SiteFooter
+          CodeMirror,
+          GrapesComponent,
+          JsonViewer,
+          MenuBuilder,
+          Dashboard,
+          GridManager,
+          PageSettings,
+          ProjectSettings,
+          ProjectStats,
+          PartialStats,
+          LayoutStats,
+          PageStats,
+          MonacoEditorChild,
+          SiteFooter
         },
+
         created() {
 
-            let location = psl.parse(window.location.hostname)
-            location = location.domain === null ? location.input : location.domain
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
 
-            // Check if login token in cookie exist or not
-            if (Cookies.get('auth_token', {
+          // Check if login token in cookie exist or not
+          if (Cookies.get('auth_token', { domain: location})) {
+
+            // Set email Session
+
+            axios.get(config.userDetail, {
+                headers: {
+                  'Authorization': Cookies.get('auth_token', {
                     domain: location
-                })) {
+                  })
+                }
+              })
+              .then(async(res) => {
+                this.userDetailId = res.data.data._id;
 
-                // Set email Session
+                // Store Token in Cookie
 
-                axios.get(config.userDetail, {
-                        headers: {
-                            'Authorization': Cookies.get('auth_token', {
-                                domain: location
-                            })
-                        }
-                    })
-                    .then(async (res) => {
-                        this.userDetailId = res.data.data._id;
+                Cookies.set('email', res.data.data.email, { domain: location });
+                Cookies.set('userDetailId', this.userDetailId, { domain: location });
 
-                        // Store Token in Cookie
+                localStorage.setItem('userDetailId', this.userDetailId);
+                localStorage.setItem('email', res.data.data.email);
 
+                await axios.post(config.baseURL + '/save-menu', {
+                    foldername: '/var/www/html/websites/' + this.userDetailId,
+                    type: 'folder'
+                  })
+                  .then((res) => {
+                    this.getData();
+                  })
+                  .catch((err) => {
+                    this.getData();
+                  });
 
-                        Cookies.set('email', res.data.data.email, {
-                            domain: location
-                        });
-                        Cookies.set('userDetailId', this.userDetailId, {
-                            domain: location
-                        });
-
-                        localStorage.setItem('userDetailId', this.userDetailId);
-                        localStorage.setItem('email', res.data.data.email);
-
-                        await axios.post(config.baseURL + '/save-menu', {
-                                foldername: '/var/www/html/websites/' + this.userDetailId,
-                                type: 'folder'
-                            })
-                            .then((res) => {
-                                this.getData();
-                            })
-                            .catch((err) => {
-                                this.getData();
-                            });
-
-                    })
-                    .catch((e) => {
-                        console.log(e)
-                        this.$message({
-                            showClose: true,
-                            message: 'Invalid Token',
-                            type: 'error'
-                        });
-                    })
-            } else {
-                console.log('Token Not found. Please Login.');
-                this.$router.push('/login');
-            }
+              })
+              .catch((e) => {
+                console.log(e)
+                this.$message({
+                  showClose: true,
+                  message: 'Invalid Token',
+                  type: 'error'
+                });
+              })
+          } else {
+            console.log('Token Not found. Please Login.');
+            this.$router.push('/login');
+          }
         },
+
         async mounted() {
 
-            // Sidemenu Toggle
-            $(document).ready(function() {
-                var trigger = $('.hamburger'),
-                    overlay = $('.overlay'),
-                    isClosed = false;
+          // Sidemenu Toggle
+          $(document).ready(function() {
+            var trigger = $('.hamburger'),
+              overlay = $('.overlay'),
+              isClosed = false;
 
-                trigger.click(function() {
-                    hamburger_cross();
-                });
-
-                function hamburger_cross() {
-                    if (isClosed == true) {
-                        overlay.hide();
-                        trigger.removeClass('is-open');
-                        trigger.addClass('is-closed');
-                        isClosed = false;
-                    } else {
-                        overlay.show();
-                        trigger.removeClass('is-closed');
-                        trigger.addClass('is-open');
-                        isClosed = true;
-                    }
-                }
-
+            trigger.click(function() {
+              hamburger_cross();
             });
 
-            $('[data-toggle="offcanvas"]').click(function() {
-                $('#wrapper').toggleClass('toggled');
-            });
-
-            // Project Directory Listing
-            let self = this;
-
-            let socket = config.socketURL;
-            let socket1 = io(socket)
-            const app = feathers().configure(socketio(socket1))
-            let socketStatus = false;
-            socket1.on('disconnect', function (disconnect){
-                socketStatus = true    
-            })
-            if(socketStatus == true){
-                this.$message("Currently Live updates are not available. Please wait or reload the page")
+            function hamburger_cross() {
+              if (isClosed == true) {
+                overlay.hide();
+                trigger.removeClass('is-open');
+                trigger.addClass('is-closed');
+                isClosed = false;
+              } else {
+                overlay.show();
+                trigger.removeClass('is-closed');
+                trigger.addClass('is-open');
+                isClosed = true;
+              }
             }
 
-            // Socket Listen for Creating File or Folder
-            app.service("flows-dir-listing").on("created", (response) => {
-                if (response.socketListen) {
-                    response.path = response.path.replace(/\//g, "\\")
-                    var s = response.path.replace(this.rootpath, '').split('\\');
+          });
 
-                    if (s[5] == Cookies.get('userDetailId')) {
-                        let objCopy = self.directoryTree
-                        let evalStr = 'self.directoryTree'
-                        let $eval = eval(evalStr)
-                        for (var i = 0; i < s.length; i++) {
-                            let inx = _.findIndex($eval, function(d) {
-                                return d.name == s[i]
-                            })
-                            if (inx >= 0 && $eval[inx]["children"] != undefined) {
-                                evalStr += '[' + inx + ']["children"]'
-                                $eval = eval(evalStr)
-                            }
-                        }
-                        let inx = _.findIndex($eval, function(d) {
-                            return d.name == response.name
-                        })
-                        if (inx < 0) {
-                            $eval.push(response)
-                        }
-                    }
+          $('[data-toggle="offcanvas"]').click(function() {
+            $('#wrapper').toggleClass('toggled');
+          });
+
+          // Project Directory Listing
+          let self = this;
+
+          let socket = config.socketURL;
+          let socket1 = io(socket)
+          const app = feathers().configure(socketio(socket1))
+          let socketStatus = false;
+          socket1.on('disconnect', function(disconnect) {
+            socketStatus = true
+          })
+          if (socketStatus == true) {
+            this.$message("Currently Live updates are not available. Please wait or reload the page")
+          }
+
+          // Socket Listen for Creating File or Folder
+          app.service("flows-dir-listing").on("created", (response) => {
+            if (response.socketListen) {
+              response.path = response.path.replace(/\//g, "\\")
+              var s = response.path.replace(this.rootpath, '').split('\\');
+
+              if (s[5] == Cookies.get('userDetailId')) {
+                let objCopy = self.directoryTree
+                let evalStr = 'self.directoryTree'
+                let $eval = eval(evalStr)
+                for (var i = 0; i < s.length; i++) {
+                  let inx = _.findIndex($eval, function(d) {
+                    return d.name == s[i]
+                  })
+                  if (inx >= 0 && $eval[inx]["children"] != undefined) {
+                    evalStr += '[' + inx + ']["children"]'
+                    $eval = eval(evalStr)
+                  }
                 }
-            });
-
-            // Socket Listen for Delete File or Folder
-            app.service("flows-dir-listing").on("removed", (response) => {
-                if (response['errno'] == undefined) {
-                    var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
-
-                    if (s[5] == Cookies.get('userDetailId')) {
-                        let objCopy = self.directoryTree
-                        let evalStr = 'self.directoryTree'
-                        let $eval = eval(evalStr)
-                        for (var i = 0; i < s.length; i++) {
-                            let inx = _.findIndex($eval, function(d) {
-                                return d.name == s[i]
-                            })
-                            if (inx >= 0 && $eval[inx]["children"] != undefined && $eval[inx].path != response) {
-                                if ($eval[inx].children.length > 0) {
-                                    evalStr += '[' + inx + ']["children"]'
-                                    $eval = eval(evalStr)
-                                }
-                            }
-                        }
-                        let inx = _.findIndex($eval, function(d) {
-                            return d.path == response
-                        })
-                        if (inx >= 0) {
-                            $eval.splice(inx, 1)
-                            if (self.currentFile != null) {
-                                if (self.currentFile.path == response) {
-                                    self.$message({
-                                        showClose: true,
-                                        message: 'Successfully Deleted!',
-                                        type: 'error'
-                                    });
-                                    self.currentFile = null
-                                    self.componentId = null
-                                }
-                            }
-                        }
-                        this.getData();
-                    } else {
-                        // Do Nothing
-                    }
+                let inx = _.findIndex($eval, function(d) {
+                  return d.name == response.name
+                })
+                if (inx < 0) {
+                  $eval.push(response)
                 }
-            });
+              }
+            }
+          });
 
-            // Get all subscriptions
-            let sub_id = [];
-            await axios.get(config.userDetail, {
-                    headers: {
-                        'Authorization': Cookies.get('auth_token')
+          // Socket Listen for Delete File or Folder
+          app.service("flows-dir-listing").on("removed", (response) => {
+            if (response['errno'] == undefined) {
+              var s = response.replace(this.rootpath, '').replace(/\//g, "\\").split('\\');
+
+              if (s[5] == Cookies.get('userDetailId')) {
+                let objCopy = self.directoryTree
+                let evalStr = 'self.directoryTree'
+                let $eval = eval(evalStr)
+                for (var i = 0; i < s.length; i++) {
+                  let inx = _.findIndex($eval, function(d) {
+                    return d.name == s[i]
+                  })
+                  if (inx >= 0 && $eval[inx]["children"] != undefined && $eval[inx].path != response) {
+                    if ($eval[inx].children.length > 0) {
+                      evalStr += '[' + inx + ']["children"]'
+                      $eval = eval(evalStr)
                     }
+                  }
+                }
+                let inx = _.findIndex($eval, function(d) {
+                  return d.path == response
                 })
-                .then(response => {
-
-                    if (response.data.data.package) {
-
-                        let obj_val = Object.values(response.data.data.package)
-                        let obj_key = Object.keys(response.data.data.package)
-
-                        for (let index = 0; index < obj_val.length; index++) {
-                            sub_id.push({
-                                "value": obj_val[index].subscriptionId,
-                                "label": obj_val[index].name
-                            })
-                        }
-
-                        this.options = sub_id;
-
-                        if (!(Cookies.get('subscriptionId')) || Cookies.get('subscriptionId') == null || Cookies.get('subscriptionId') == undefined || Cookies.get('subscriptionId') == "") {
-                            this.value = sub_id[0].value;
-                        } else {
-                            this.value = Cookies.get('subscriptionId')
-                        }
-
-                        let location = psl.parse(window.location.hostname)
-                        location = location.domain === null ? location.input : location.domain
-                        Cookies.set('subscriptionId', this.value, {
-                            domain: location
-                        });
-
-                        localStorage.setItem("current_sub_id", this.value);
-                    } else {
-
-                        this.$confirm('No subscriptions found for your user. Subscribe to some package?', 'No Subscriptions found.', {
-                            confirmButtonText: 'Yes',
-                            cancelButtonText: 'No. I\'m just wandering here',
-                            type: 'warning'
-                        }).then(() => {
-                            window.open('https://www.dashboard.' + domainkey + '/');
-                        }).catch(() => {
-                            console.log('Cancelled.')
-                        });
-
+                if (inx >= 0) {
+                  $eval.splice(inx, 1)
+                  if (self.currentFile != null) {
+                    if (self.currentFile.path == response) {
+                      self.$message({
+                        showClose: true,
+                        message: 'Successfully Deleted!',
+                        type: 'error'
+                      });
+                      self.currentFile = null
+                      self.componentId = null
                     }
+                  }
+                }
+                this.getData();
+              } else {
+                // Do Nothing
+              }
+            }
+          });
 
+          // Get all subscriptions
+          let sub_id = [];
+          await axios.get(config.userDetail, {
+            headers: {
+              'Authorization': Cookies.get('auth_token')
+            }
+          })
+          .then(response => {
+
+            if (response.data.data.package) {
+
+              let obj_val = Object.values(response.data.data.package)
+              let obj_key = Object.keys(response.data.data.package)
+
+              for (let index = 0; index < obj_val.length; index++) {
+                sub_id.push({
+                  "value": obj_val[index].subscriptionId,
+                  "label": obj_val[index].name
                 })
-                .catch((err) => {
-                    console.log('Error:', err);
-                });
+              }
+
+              this.options = sub_id;
+
+              if (!(Cookies.get('subscriptionId')) || Cookies.get('subscriptionId') == null || Cookies.get('subscriptionId') == undefined || Cookies.get('subscriptionId') == "") {
+                this.value = sub_id[0].value;
+              } else {
+                this.value = Cookies.get('subscriptionId')
+              }
+
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.set('subscriptionId', this.value, {
+                domain: location
+              });
+
+              localStorage.setItem("current_sub_id", this.value);
+            } else {
+
+              this.$confirm('No subscriptions found for your user. Subscribe to some package?', 'No Subscriptions found.', {
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No. I\'m just wandering here',
+                type: 'warning'
+              }).then(() => {
+                window.open('https://www.dashboard.' + domainkey + '/');
+              }).catch(() => {
+                console.log('Cancelled.')
+              });
+
+            }
+
+          })
+          .catch((err) => {
+            console.log('Error:', err);
+          });
         },
 
         methods: {
 
             updateProjectNameLimitCount() {
-                this.projectLimitCount = this.formAddProjectFolder.projectName.length;
+              this.projectLimitCount = this.formAddProjectFolder.projectName.length;
             },
 
             updateFolderNameLimitCount() {
-                this.folderLimitCount = this.formAddFolder.foldername.length;
+              this.folderLimitCount = this.formAddFolder.foldername.length;
             },
 
             updateFileNameLimitCount() {
-                this.fileLimitCount = this.formAddFile.filename.length;
+              this.fileLimitCount = this.formAddFile.filename.length;
             },
 
             changeSubscription() {
-                this.fullscreenLoading = true
+              this.fullscreenLoading = true
 
-                axios.get(config.subscriptionApi + 'user-subscription/' + this.value, {
-                        headers: {
-                            'Authorization': Cookies.get('auth_token')
-                        }
-                    })
-                    .then(async response => {
+              axios.get(config.subscriptionApi + 'user-subscription/' + this.value, {
+                headers: {
+                  'Authorization': Cookies.get('auth_token')
+                }
+              })
+              .then(async response => {
 
-                        let location = psl.parse(window.location.hostname)
-                        location = location.domain === null ? location.input : location.domain
-                        Cookies.set('subscriptionId', this.value, {
-                            domain: location
-                        });
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+                Cookies.set('subscriptionId', this.value, {
+                  domain: location
+                });
 
-                        localStorage.setItem("current_sub_id", this.value)
-                        Cookies.set('subscriptionId', this.value, {
-                            domain: location
-                        });
-                        await this.getData();
-                        this.componentId = 'Dashboard';
-                        this.fullscreenLoading = false
-                    }).catch((e) => {
-                        console.log(e)
-                        this.fullscreenLoading = false;
-                    })
+                localStorage.setItem("current_sub_id", this.value)
+                Cookies.set('subscriptionId', this.value, {
+                  domain: location
+                });
+                await this.getData();
+                this.componentId = 'Dashboard';
+                this.fullscreenLoading = false
+              }).catch((e) => {
+                console.log(e)
+                this.fullscreenLoading = false;
+              })
             },
 
             canceldialogproject(formAddProjectFolder) {
-                this.$refs[formAddProjectFolder].resetFields();
-                // console.log('cancel')
-                this.newProjectFolderDialog = false;
-                // this.formAddProjectFolder.projectName=''
+              this.$refs[formAddProjectFolder].resetFields();
+              this.newProjectFolderDialog = false;
             },
 
             canceldialog(formAddFile) {
-                this.$refs[formAddFile].resetFields();
-
-                this.newFileDialog = false
-
-                // this.formAddFile.filename=''
+              this.$refs[formAddFile].resetFields();
+              this.newFileDialog = false
             },
 
             canceldialogfolder(formAddFolder) {
-                this.$refs[formAddFolder].resetFields();
-
-                this.newFolderDialog = false
-                // console.log('&&&&')
-                // this.formAddFolder.foldername=''
+              this.$refs[formAddFolder].resetFields();
+              this.newFolderDialog = false
             },
 
             // Set template if selected in creating new project
             async setTemplate(template) {
-              let templateData = ';'
-                if (template == 'template1') {
-                   templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template1.html');
-                   this.templateContentsData = templateData.data;
-                } else if (template == 'template2') {
-                  templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template2.html');
-                   this.templateContentsData = templateData.data;
-                } else if (template == 'template3') {
-                  templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template3.html');
-                   this.templateContentsData = templateData.data;
-                } else if(template == 'template4'){
-                  templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template4.html');
-                   this.templateContentsData = templateData.data;
-                } else if (template == 'none') {
-                  this.templateContentsData = '';
-                } else {
-                  this.templateContentsData = '';
-                }
-                console.log(this.templateContentsData);
+              let templateData = '';
+              if (template == 'template1') {
+                 templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template1.html');
+                 this.templateContentsData = templateData.data;
+              } else if (template == 'template2') {
+                templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template2.html');
+                 this.templateContentsData = templateData.data;
+              } else if (template == 'template3') {
+                templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template3.html');
+                 this.templateContentsData = templateData.data;
+              } else if(template == 'template4'){
+                templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template4.html');
+                 this.templateContentsData = templateData.data;
+              } else if(template == 'template5'){
+                templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/flowz-digital-website.html');
+                 this.templateContentsData = templateData.data;
+              } else if (template == 'none') {
+                this.templateContentsData = '';
+              } else {
+                this.templateContentsData = '';
+              }
             },
 
             // Route to login page on Login Button click
             loginPage() {
-                this.$router.push('/login')
+              this.$router.push('/login')
             },
 
             // Route to GrapesEditor page from code view
             goToGrapesEditor: function() {
-                // this.saveFile('void')
-                this.componentId = 'GrapesComponent';
-                this.isPageCodeEditor = false;
-                // this.display = false;
-                // let url = this.$store.state.fileUrl;
-                // let compId = this.componentId;
-                // let newTabName = ++this.tabIndex + '';
-                // let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
-                // let editableTabValue = this.editableTabsValue
-                // let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
-                // function checkIfExist(filepath,array) {  // The last one is array
-                //     var found = array.some(function (el) {
-                //       return el.filepath == url;
-                //     });
-                //     if (!found)
-                //     {
-                //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                //       array = removedArray  ;
-                //       editableTabValue = newTabName;
-                //         array.push({
-                //           title: tab_file_name,
-                //           name: newTabName,
-                //           content: newTabName,
-                //           componentId : compId,
-                //           filepath : url
-                //         });
-
-                //     }else{
-                //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                //       array = removedArray  ;
-                //       editableTabValue = newTabName;
-                //       array.push({
-                //           title: tab_file_name,
-                //           name: newTabName,
-                //           content: newTabName,
-                //           componentId : compId,
-                //           filepath : url
-                //         });
-                //     }
-                //     return array
-                // }
-                // this.editableTabs =  selectedPagePositionFirstArray ;
-                // this.editableTabs.reverse();
-                // this.editableTabsValue = newTabName;
+              this.componentId = 'GrapesComponent';
+              this.isPageCodeEditor = false;
             },
 
             // If clicked the root folder
             goToHomePage() {
-                this.display = true
-                this.componentId = 'Dashboard';
+              this.display = true
+              this.componentId = 'Dashboard';
             },
 
             // Get directory listing data
-            // async getData() {
-            //     this.treeLoading = true;
-            //     if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-            //         await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
-            //             .then(async response => {
-            //                 response.data.children = this.getTreeData(response.data);
-
-            //                 // setTimeout(async function(){
-            //                 for (let i = 0; i < response.data.children.length; i++) {
-            //                     // console.log('--------', response.data.children[i].name)
-
-            //                     // Map folder name and project id
-            //                     await axios.get(config.userDetail, {
-            //                       headers: {
-            //                         'Authorization' : Cookies.get('auth_token')
-            //                       }   
-            //                     })
-            //                     .then(async (res) => {
-            //                       await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {})
-            //                         .then((res) => {
-            //                             // console.log(res);
-            //                             response.data.children[i].websitename = res.data.websiteName;
-
-            //                             if (response.data.children[i].websitename.length > 20) {
-            //                                 response.data.children[i].websitename = response.data.children[i].websitename.substring(0, 20) + '...'
-            //                             }
-
-            //                             response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-            //                                 return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
-            //                                 // return !(child.name == '.git')
-            //                             })
-
-            //                             this.treeLoading = false;
-            //                         })
-            //                         .catch((e) => {
-            //                             let dataMessage = '';
-            //                             if (e.message != undefined) {
-            //                                 dataMessage = e.message
-            //                             } else if (e.response.data.message != undefined) {
-            //                                 dataMessage = e.response.data.message
-            //                             } else {
-            //                                 dataMessage = "Please try again! Some error occured."
-            //                             }
-            //                             this.$confirm(dataMessage, 'Error', {
-            //                                 confirmButtonText: 'logout',
-            //                                 cancelButtonText: 'reload',
-            //                                 type: 'error',
-            //                                 center: true
-            //                             }).then(() => {
-            //                                 localStorage.removeItem('current_sub_id');
-            //                                 this.$session.remove('username');
-            //                                 let location = psl.parse(window.location.hostname)
-            //                                 location = location.domain === null ? location.input : location.domain
-            //                                 Cookies.remove('auth_token', {
-            //                                     domain: location
-            //                                 });
-            //                                 Cookies.remove('email', {
-            //                                     domain: location
-            //                                 });
-            //                                 Cookies.remove('userDetailId', {
-            //                                     domain: location
-            //                                 });
-            //                                 Cookies.remove('subscriptionId', {
-            //                                     domain: location
-            //                                 });
-            //                                 this.isLoggedIn = false;
-            //                                 // this.$router.push('/login');
-            //                                 window.location = '/login';
-            //                             }).catch(() => {
-            //                                 location.reload()
-            //                             });
-            //                             this.treeLoading = false;
-            //                         })
-            //                         if (this.directoryTree.length == 0) {
-            //                     this.directoryTree = [response.data];
-            //                     this.treeLoading = false;
-            //                 } else {
-            //                     this.directoryTree[0].children = response.data.children;
-            //                     this.treeLoading = false;
-            //                 }
-
-            //                 this.isDataLoading = false;
-            //                 // this.isTreeVisible = false;
-            //                 this.rootpath = this.directoryTree[0].path.replace(this.directoryTree[0].name, '');
-            //                     })
-            //                     .catch((e) => {
-            //                         let dataMessage = ''
-            //                       if (e.message != undefined) {
-            //                         dataMessage = e.message              
-            //                     } else if (e.response.data.message != undefined) {
-            //                     dataMessage = e.response.data.message
-            //                     } else{
-            //                     dataMessage = "Please try again! Some error occured."
-            //                     }
-            //                     this.$confirm(dataMessage, 'Error', {
-            //                         confirmButtonText: 'logout',
-            //                         cancelButtonText: 'reload',
-            //                         type: 'error',
-            //                         center: true
-            //                       }).then(() => {
-            //                             localStorage.removeItem('current_sub_id');
-            //                             this.$session.remove('username');
-            //                             let location = psl.parse(window.location.hostname)
-            //                             location = location.domain === null ? location.input : location.domain
-            //                             Cookies.remove('auth_token' ,{domain: location});
-            //                             Cookies.remove('email' ,{domain: location});
-            //                             Cookies.remove('userDetailId' ,{domain: location}); 
-            //                             Cookies.remove('subscriptionId' ,{domain: location}); 
-            //                             this.isLoggedIn = false;
-            //                             // this.$router.push('/login');
-            //                             window.location = '/login';
-            //                         }).catch(() => {
-            //                             location.reload()
-            //                         });
-            //                     })
-                                
-            //                     // let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name);
-
-            //                     // response.data.children[i].websitename = rethinkdbCheck.data.websiteName;
-            //                     //  if(response.data.children[i].websitename.length>20){
-            //                     //   response.data.children[i].websitename=response.data.children[i].websitename.substring(0,20)+'...'
-            //                     // }
-
-            //                 }
-            //                 // },1000);
-
-                            
-
-            //             })
-            //             .catch(e => {
-            //                 this.treeLoading = false;
-            //                 this.isDataLoading = false;
-            //                 this.isTreeVisible = false;
-            //                 this.$confirm("API service unavailable, please try again.", 'Error', {
-            //                     confirmButtonText: 'logout',
-            //                     cancelButtonText: 'reload',
-            //                     type: 'error',
-            //                     center: true
-            //                 }).then(() => {
-            //                     localStorage.removeItem('current_sub_id');
-            //                     this.$session.remove('username');
-            //                     let location = psl.parse(window.location.hostname)
-            //                     location = location.domain === null ? location.input : location.domain
-            //                     Cookies.remove('auth_token', {
-            //                         domain: location
-            //                     });
-            //                     Cookies.remove('email', {
-            //                         domain: location
-            //                     });
-            //                     Cookies.remove('userDetailId', {
-            //                         domain: location
-            //                     });
-            //                     Cookies.remove('subscriptionId', {
-            //                         domain: location
-            //                     });
-            //                     this.isLoggedIn = false;
-            //                     // this.$router.push('/login');
-            //                     window.location = '/login';
-            //                 }).catch(() => {
-            //                     location.reload()
-            //                 });
-            //                 console.log(e);
-            //             });
-            //     } else {
-            //         this.treeLoading = false;
-            //         this.newProjectFolderDialog = false;
-            //         this.fullscreenLoading = false;
-            //         this.$session.remove('username');
-            //         localStorage.removeItem('current_sub_id');
-
-            //         let location = psl.parse(window.location.hostname)
-            //         location = location.domain === null ? location.input : location.domain
-
-            //         Cookies.remove('subscriptionId', {
-            //             domain: location
-            //         });
-            //         Cookies.remove('auth_token', {
-            //             domain: location
-            //         });
-            //         Cookies.remove('email', {
-            //             domain: location
-            //         });
-            //         Cookies.remove('userDetailId', {
-            //             domain: location
-            //         });
-            //         Cookies.remove('subscriptionId', {
-            //             domain: location
-            //         });
-            //         this.$message({
-            //             message: 'You\'re Logged Out From System. Please login again!',
-            //             type: 'error',
-            //             onClose() {
-            //                 window.location = '/login'
-            //             }
-            //         });
-            //     }
-            //     this.treeLoading = false;
-            // },
-
-            getData() {
+            async getData() {
               this.treeLoading = true;
+              this.statusPublish=[]
               if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                 axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
+                 await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '&subscriptionId=' + this.value)
                 .then(async response => {
                   response.data.children = this.getTreeData(response.data);
+                    // console.log('children:',response.data.children.length)
 
-                  // setTimeout(async function(){
+                    // setTimeout(async function(){
                     for (let i = 0; i < response.data.children.length; i++) {
                       // console.log('--------', response.data.children[i].name)
 
+                      await axios.get(config.baseURL+'/jobqueue?websiteid='+response.data.children[i].name)
+                      .then((res)=>{
+                          // console.log(res)
+                          let obj={}
+                          if(res.data.data != undefined && res.data.data == 'active'){
+                            // console.log('active')
+                            obj[response.data.children[i].name]='Active'
+                          }
+                          else{
+                            // console.log('not active')
+                            obj[response.data.children[i].name]='notActive'
+                          }
+                          this.statusPublish.push(obj)
+                      }).catch((e)=>{console.log(e)})
                       // Map folder name and project id
                       await axios.get(config.baseURL + '/project-configuration/' + response.data.children[i].name, {
                       })
@@ -1008,7 +793,7 @@
                         }
 
                         response.data.children[i].children = _.remove(response.data.children[i].children, (child) => {
-                          return !(child.name == 'public' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
+                          return !(child.name == 'public' ||child.name == '.temppublish' || child.name == '.git' || child.name == 'metalsmith.js' || child.name == 'temp' || child.name == 'Preview')
                           // return !(child.name == '.git')
                         })
 
@@ -1069,1883 +854,1381 @@
                 Cookies.remove('userDetailId' ,{domain: location}); 
                 Cookies.remove('subscriptionId' ,{domain: location}); 
                 this.$message({
+                    message: 'You\'re Logged Out From System. Please login again!',
+                    type: 'error',
+                    onClose(){
+                      window.location = '/login'
+                    }
+                  });
+              }
+            },
+
+            // Get directory listing tree
+            getTreeData: function(data) {
+              let self = this
+              let newData = []
+              _.each(data.children, function(el) {
+                if (el.type == 'directory') {
+                  el.children = self.sortTree(el);
+                }
+                newData.push(el)
+              })
+              return _.sortBy(newData, [function(o) {
+                return o.type;
+              }]);
+            },
+
+            // Sort directory tree
+            sortTree: function(data) {
+              return _.sortBy(data.children, [function(o) {
+                return o.type;
+              }]);
+            },
+
+            // Selecting any node in Listing tree 
+            handleNodeClick(data) {
+              // Store file/folder path
+
+              this.$store.state.fileUrl = data.path;
+              // If PageSettings Clicked
+              if (this.isPageEditing) {
+
+                clearInterval(saveInterval);
+
+                this.isPageEditing = false;
+                this.isProjectEditing = false;
+                this.isSettingsPage = true;
+                this.componentId = 'PageSettings';
+                let url = data.path;
+                let compId = this.componentId;
+
+              }
+              // If ProjectSettings is clicked 
+              else if (this.isProjectEditing) {
+
+                this.isProjectEditing = false;
+                this.$store.state.fileUrl = data.path;
+                this.isSettingsPage = true;
+                this.componentId = 'ProjectSettings';
+
+              }
+              // If Clicked in ProjectName 
+              else if (this.isProjectStats) {
+                this.isProjectEditing = false;
+                this.isProjectStats = false;
+                this.$store.state.fileUrl = data.path;
+                this.isSettingsPage = false;
+                this.componentId = 'ProjectStats';
+                localStorage.setItem("folderUrl", data.path);
+              }
+              // If Clicked in Partials Folder 
+              else if ((_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
+
+                this.isProjectEditing = false;
+                this.isProjectStats = false;
+                this.$store.state.fileUrl = data.path;
+                this.isSettingsPage = false;
+                this.componentId = 'PartialStats';
+              }
+              // If Clicked in Layouts Folder 
+              else if (_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
+
+                this.isProjectEditing = false;
+                this.isProjectStats = false;
+                this.$store.state.fileUrl = data.path;
+                this.isSettingsPage = false;
+                this.componentId = 'LayoutStats';
+              }
+              // If Clicked in Pages Folder 
+              else if (_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
+
+                this.isProjectEditing = false;
+                this.isProjectStats = false;
+                this.$store.state.fileUrl = data.path;
+                this.isSettingsPage = false;
+                this.componentId = 'PageStats';
+              }
+              // Every other clicks
+              else {
+
+                this.isProjectStats = false;
+                this.isPartialStats = false;
+                this.isPageEditing = false;
+                this.isProjectEditing = false;
+                this.previewGrid = false;
+                this.isSettingsPage = false;
+                this.currentFile = data;
+
+                if (data.type == "file") {
+                  this.getFileContent(data.path);
+                }
+
+                this.fullscreenLoading = false;
+
+              }
+            },
+
+           
+
+            // Get File content Locally
+            getFileContent: async function(url) {
+
+              this.fullscreenLoading = true;
+
+              url = url.replace(/\\/g, "\/")
+              this.btnPreview = false
+              this.previewFile = false
+              this.loadingContent = true
+              this.componentId = null
+              let ext = url.split('.').pop();
+
+              this.$store.state.fileUrl = url;
+              let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + url).catch((err) => {
+                console.log('Error:', err);
+              });
+
+              this.$store.dispatch('updateContent', {
+                text: response.data
+              })
+              if (response.status == 200 || response.status == 204) {
+                switch (ext.toLowerCase()) {
+                  case 'grid':
+                    this.isPageCodeEditor = false;
+                    this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    this.componentId = 'GridManager'
+                    this.isGridPreview = true;
+                    this.fullscreenLoading = false;
+                    break;
+                  case 'json':
+                    this.isPageCodeEditor = false;
+                    this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    this.isGridPreview = false;
+                    try {
+                      this.$store.state.content = JSON.parse(response.data)
+                    } catch (e) {
+                      if (response.data.trim() == '') {
+                        this.$store.state.content = {}
+                      } else {
+                        this.$store.state.content = response.data
+                      }
+                    }
+                    this.componentId = 'json-viewer'
+                    this.fullscreenLoading = false;
+                    break;
+                  case 'layout':
+                    this.isGridPreview = false;
+                    this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    this.isPageCodeEditor = false;
+
+                    if (this.isEditOption == true) {
+                      this.componentId = 'CodeMirror'
+                      this.isEditOption = false
+                    } else {
+                      this.componentId = 'GridManager'
+                    }
+                    this.fullscreenLoading = false;
+                    break;
+                  case 'html':
+                    this.isGridPreview = false;
+                    this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    if (this.isEditOption == true) {
+
+                      // For preview button only in HTML file of Pages Folder 
+                      var filePath = url;
+                      var pathParts = filePath.split('/');
+                      var parentFolderName = pathParts[pathParts.length - 2];
+                      if (parentFolderName == 'Pages') {
+                        this.isPageCodeEditor = true;
+                        let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl, {}).catch((err) => {
+                          console.log('Error:', err);
+                        });
+                        this.$store.state.content = response.data
+                      } else {
+                        this.isPageCodeEditor = false;
+                      }
+
+                      this.componentId = 'MonacoEditorChild'
+                      this.isEditOption = false;
+                    } else {
+                      this.isPageCodeEditor = false;
+                      // For preview button only in HTML file of Pages Folder 
+                      var filePath = url;
+                      var pathParts = filePath.split('/');
+                      var parentFolderName = pathParts[pathParts.length - 2];
+                      if (parentFolderName == 'Pages') {
+                        this.isPagesFolder = true;
+                      } else {
+                        this.isPagesFolder = false;
+                      }
+
+                      this.componentId = 'GrapesComponent';
+                    }
+                    this.fullscreenLoading = false;
+                    break;
+                  case 'partial':
+                    this.isGridPreview = false;
+                    this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    if (this.isEditOption == true) {
+
+                      // For preview button only in HTML file of Pages Folder 
+                      var filePath = url;
+                      var pathParts = filePath.split('/');
+                      var parentFolderName = pathParts[pathParts.length - 2];
+                      if (parentFolderName == 'Pages') {
+                        this.isPageCodeEditor = true;
+                      } else {
+                        this.isPageCodeEditor = false;
+                      }
+
+                      this.componentId = 'MonacoEditorChild'
+                      this.isEditOption = false;
+                    } else {
+                      this.isPageCodeEditor = false;
+                      // For preview button only in HTML file of Pages Folder 
+                      var filePath = url;
+                      var pathParts = filePath.split('/');
+                      var parentFolderName = pathParts[pathParts.length - 2];
+                      if (parentFolderName == 'Pages') {
+                        this.isPagesFolder = true;
+                      } else {
+                        this.isPagesFolder = false;
+                      }
+
+                      this.componentId = 'GrapesComponent';
+                    }
+                    this.fullscreenLoading = false;
+                    break;
+                  case 'menu':
+                    this.isGridPreview = false;
+                    this.isMenuBuilder = true;
+                    this.isHomePage = false;
+                    this.isPageCodeEditor = false;
+                    this.componentId = 'MenuBuilder';
+                    this.fullscreenLoading = false;
+                    break;
+                  default:
+                    this.isGridPreview = false;
+                    this.isMenuBuilder = false;
+                    this.isHomePage = false;
+                    this.isPageCodeEditor = false;
+                    this.componentId = 'MonacoEditorChild';
+                    this.fullscreenLoading = false;
+                    break;
+                }
+              }
+
+              this.breadcrumbArr = url.replace(this.rootpath, '').split('\\')
+              this.loadingContent = false
+            },
+
+            // Get particular project's config.json file
+            async getConfigFileData(folderUrl) {
+              let foldername = folderUrl.split('/');
+              foldername = foldername[6];
+
+              axios.get(config.userDetail, {
+                headers: {
+                  'Authorization': Cookies.get('auth_token')
+                }
+              })
+              .then(async(res) => {
+                let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((e) => {
+                  this.fullscreenLoading = false;
+                  let dataMessage = '';
+                  if (e.message != undefined) {
+                    dataMessage = e.message
+                  } else if (e.response.data.message != undefined) {
+                    dataMessage = e.response.data.message
+                  } else {
+                    dataMessage = "Please try again! Some error occured."
+                  }
+                  this.$confirm(dataMessage, 'Error', {
+                    confirmButtonText: 'logout',
+                    cancelButtonText: 'reload',
+                    type: 'error',
+                    center: true
+                  }).then(() => {
+                    localStorage.removeItem('current_sub_id');
+                    this.$session.remove('username');
+                    let location = psl.parse(window.location.hostname)
+                    location = location.domain === null ? location.input : location.domain
+                    Cookies.remove('auth_token', {
+                      domain: location
+                    });
+                    Cookies.remove('email', {
+                      domain: location
+                    });
+                    Cookies.remove('userDetailId', {
+                      domain: location
+                    });
+                    Cookies.remove('subscriptionId', {
+                      domain: location
+                    });
+                    this.isLoggedIn = false;
+                    // this.$router.push('/login');
+                    window.location = '/login';
+                  }).catch(() => {
+                    location.reload()
+                  });
+                });
+                let rawConfigs = responseConfig.data.configData;
+                return this.globalConfigData = rawConfigs;
+              })
+              .catch((e) => {
+                let dataMessage = ''
+                if (e.message != undefined) {
+                  dataMessage = e.message
+                } else if (e.response.data.message != undefined) {
+                  dataMessage = e.response.data.message
+                } else {
+                  dataMessage = "Please try again! Some error occured."
+                }
+                this.$confirm(dataMessage, 'Error', {
+                  confirmButtonText: 'logout',
+                  cancelButtonText: 'reload',
+                  type: 'error',
+                  center: true
+                }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token', {
+                    domain: location
+                  });
+                  Cookies.remove('email', {
+                    domain: location
+                  });
+                  Cookies.remove('userDetailId', {
+                    domain: location
+                  });
+                  Cookies.remove('subscriptionId', {
+                    domain: location
+                  });
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+                }).catch(() => {
+                  location.reload()
+                });
+              })
+
+            },
+
+            // Save config File
+            async saveConfigFile(folderUrl) {
+              let foldername = folderUrl.split('/');
+              foldername = foldername[6];
+              let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => {
+                console.log('Error:', err);
+              });
+
+              if (rethinkdbCheck.data) {
+                return await axios.patch(config.baseURL + '/project-configuration/' + foldername, {
+                    configData: this.globalConfigData
+                  })
+                  .then(async(res) => {
+                  })
+                  .catch((e) => {
+                    this.$message({
+                      showClose: true,
+                      message: 'Failed! Please try again.',
+                      type: 'error'
+                    });
+                    console.log(e)
+                  });
+
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: 'Data Error.',
+                  type: 'error'
+                });
+              }
+            },
+
+            // Create new Folder
+            async addFolder(foldername) {
+              if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+                this.$refs[foldername].validate(async(valid) => {
+                  if (valid) {
+                    this.folderLimitCount = 0;
+                    this.newFolderDialog = false;
+                    this.addNewFolderLoading = false;
+
+                    let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                    let urlparts = configFileUrl.split("/");
+                    let fileNameOrginal = urlparts[urlparts.length - 1];
+                    let fileName = '';
+                    if (_.includes(configFileUrl, 'Partials')) {
+                      fileName = '/' + urlparts[urlparts.length - 1];
+                    }
+                    let folderUrl = configFileUrl.replace(fileName, '');
+                    let foldername = folderUrl.split('/');
+                    foldername = foldername[(foldername.length - 1)];
+                    axios.get(config.userDetail, {
+                        headers: {
+                          'Authorization': Cookies.get('auth_token')
+                        }
+                      })
+                      .then(async(res) => {
+                        let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((e) => {
+                          console.log('Error:', e);
+                          let dataMessage = '';
+                          if (e.message != undefined) {
+                            dataMessage = e.message
+                          } else if (e.response.data.message != undefined) {
+                            dataMessage = e.response.data.message
+                          } else {
+                            dataMessage = "Please try again! Some error occured."
+                          }
+                          this.$confirm(dataMessage, 'Error', {
+                            confirmButtonText: 'logout',
+                            cancelButtonText: 'reload',
+                            type: 'error',
+                            center: true
+                          }).then(() => {
+                            localStorage.removeItem('current_sub_id');
+                            this.$session.remove('username');
+                            let location = psl.parse(window.location.hostname)
+                            location = location.domain === null ? location.input : location.domain
+                            Cookies.remove('auth_token', {
+                              domain: location
+                            });
+                            Cookies.remove('email', {
+                              domain: location
+                            });
+                            Cookies.remove('userDetailId', {
+                              domain: location
+                            });
+                            Cookies.remove('subscriptionId', {
+                              domain: location
+                            });
+                            this.isLoggedIn = false;
+                            window.location = '/login';
+                          }).catch(() => {
+                            location.reload()
+                          });
+                        });
+                        let rawConfigs = responseConfig.data.configData;
+                        let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
+                        let checkfilename = false
+                        for (let i = 0; i < Object.keys(rawConfigs[2].layoutOptions[0]).length; i++) {
+                          if (Object.keys(rawConfigs[2].layoutOptions[0])[i] == newFolderName.split('/')[newFolderName.split('/').length - 1]) {
+
+                            checkfilename = true
+                          }
+                        }
+                        if (checkfilename == true) {
+                          this.addNewFolderLoading = false;
+                          this.$message({
+                            showClose: true,
+                            message: 'Folder already exists!!!',
+                            type: 'error'
+                          });
+                        } else {
+                          this.$store.state.updateStats = Math.random();
+                          return axios.post(config.baseURL + '/flows-dir-listing', {
+                              foldername: newFolderName,
+                              socketListen: true,
+                              type: 'folder'
+                            })
+                            .then(async(res) => {
+
+                              this.globalConfigData = rawConfigs;
+
+                              if (this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')) {
+                                axios.post(config.baseURL + '/flows-dir-listing', {
+                                    filename: newFolderName + '/default.partial',
+                                    socketListen: true,
+                                    text: '',
+                                    type: 'file'
+                                  })
+                                  .then((res) => {
+
+                                    let checkfolder = false
+                                    for (let i = 0; i < Object.keys(this.globalConfigData[2].layoutOptions[0]).length; i++) {
+                                      var temp = Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
+                                      if (temp == this.formAddFolder.foldername) {
+                                        checkfolder = true
+                                      }
+                                    }
+                                    if (checkfolder != true) {
+                                      var obj = {
+                                        value: 'default',
+                                        label: 'default'
+                                      }
+                                      this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername] = []
+                                      this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
+                                    }
+                                    this.formAddFolder.foldername = ''
+                                    this.saveConfigFile(folderUrl)
+
+                                  }).catch((e) => {
+                                    console.log(e)
+                                  })
+
+                              }
+                            })
+                            .catch((e) => {
+                              this.$message({
+                                showClose: true,
+                                message: 'Folder creation failed. Try again.',
+                                type: 'error'
+                              });
+                            })
+                        }
+                      })
+                      .catch((e) => {
+                        let dataMessage = ''
+                        if (e.message != undefined) {
+                          dataMessage = e.message
+                        } else if (e.response.data.message != undefined) {
+                          dataMessage = e.response.data.message
+                        } else {
+                          dataMessage = "Please try again! Some error occured."
+                        }
+                        this.$confirm(dataMessage, 'Error', {
+                          confirmButtonText: 'logout',
+                          cancelButtonText: 'reload',
+                          type: 'error',
+                          center: true
+                        }).then(() => {
+                          localStorage.removeItem('current_sub_id');
+                          this.$session.remove('username');
+                          let location = psl.parse(window.location.hostname)
+                          location = location.domain === null ? location.input : location.domain
+                          Cookies.remove('auth_token', {
+                            domain: location
+                          });
+                          Cookies.remove('email', {
+                            domain: location
+                          });
+                          Cookies.remove('userDetailId', {
+                            domain: location
+                          });
+                          Cookies.remove('subscriptionId', {
+                            domain: location
+                          });
+                          this.isLoggedIn = false;
+                          window.location = '/login';
+                        }).catch(() => {
+                          location.reload()
+                        });
+                      })
+
+                  }
+                })
+              } else {
+                this.newProjectFolderDialog = false;
+                this.fullscreenLoading = false;
+                this.$session.remove('username');
+                localStorage.removeItem('current_sub_id');
+                Cookies.remove('subscriptionId', {
+                  domain: location
+                });
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+
+                Cookies.remove('auth_token', {
+                  domain: location
+                });
+                Cookies.remove('email', {
+                  domain: location
+                });
+                Cookies.remove('userDetailId', {
+                  domain: location
+                });
+                Cookies.remove('subscriptionId', {
+                  domain: location
+                });
+                this.$message({
                   message: 'You\'re Logged Out From System. Please login again!',
                   type: 'error',
-                  onClose(){
+                  onClose() {
                     window.location = '/login'
                   }
                 });
               }
             },
 
-            // Get directory listing tree
-            getTreeData: function(data) {
-                let self = this
-                let newData = []
-                _.each(data.children, function(el) {
-                    if (el.type == 'directory') {
-                        el.children = self.sortTree(el);
-                    }
-                    newData.push(el)
-                })
-                return _.sortBy(newData, [function(o) {
-                    return o.type;
-                }]);
-            },
+            // Create new File
+            async addFile(formName) {
+              if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
 
-            // Sort directory tree
-            sortTree: function(data) {
-                return _.sortBy(data.children, [function(o) {
-                    return o.type;
-                }]);
-            },
+                let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                let urlparts = configFileUrl.split("/");
+                let fileNameOrginal = urlparts[urlparts.length - 1];
+                let foldername = urlparts[urlparts.length - 2];
 
-            // Selecting any node in Listing tree 
-            handleNodeClick(data) {
-                // Store file/folder path
-                // console.log('handle click:',data)
-                // console.log('directoryTree',this.directoryTree)
-                // this.taburl = this.$store.state.fileUrl;
-                this.$store.state.fileUrl = data.path;
-                // If PageSettings Clicked
-                if (this.isPageEditing) {
-
-                    clearInterval(saveInterval);
-
-                    //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-                    //     this.saveFile('getFileContent')
-                    //   }
-
-                    this.isPageEditing = false;
-                    this.isProjectEditing = false;
-                    this.isSettingsPage = true;
-                    this.componentId = 'PageSettings';
-
-                    //   this.display = false;
-
-                    let url = data.path;
-                    let compId = this.componentId;
-
-                    //   remove this
-                    // this.tabIndex = 0
-                    // this.editableTabs = []
-                    //////////////////
-
-                    //   let newTabName = ++this.tabIndex + '';
-                    //   let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
-                    //   let editableTabValue = this.editableTabsValue
-                    //   let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
-                    //   function checkIfExist(filepath,array) {  // The last one is array
-                    //       var found = array.some(function (el) {
-                    //         return el.filepath == url;
-                    //       });
-                    //       if (!found)
-                    //       {
-                    //         let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                    //         array = removedArray  ;
-                    //         editableTabValue = newTabName;
-                    //           array.push({
-                    //             title: tab_file_name,
-                    //             name: newTabName,
-                    //             content: newTabName,
-                    //             componentId : compId,
-                    //             filepath : url
-                    //           });
-
-                    //       }else{
-                    //         let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                    //         array = removedArray  ;
-                    //         editableTabValue = newTabName;
-                    //         array.push({
-                    //             title: tab_file_name,
-                    //             name: newTabName,
-                    //             content: newTabName,
-                    //             componentId : compId,
-                    //             filepath : url
-                    //           });
-                    //       }
-                    //       return array
-                    //   }
-
-                    //   this.editableTabs =  selectedPagePositionFirstArray ;
-
-                    //   this.editableTabs.reverse();
-                    //   this.editableTabsValue = newTabName;
-                }
-                // If ProjectSettings is clicked 
-                else if (this.isProjectEditing) {
-                    // clearInterval(saveInterval);
-                    //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-                    //     this.saveFile('getFileContent')
-                    //   }
-
-                    this.isProjectEditing = false;
-                    this.$store.state.fileUrl = data.path;
-                    this.isSettingsPage = true;
-                    this.componentId = 'ProjectSettings';
-
-                    //   this.display = true;
-
-                    // let url = data.path;
-                    // let compId = this.componentId;
-
-                    // let newTabName = ++this.tabIndex + '';
-                    // let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
-
-                    // let editableTabValue = this.editableTabsValue
-
-                    // let selectedPagePositionFirstArray = checkIfExist(url , this.editableTabs);
-                    // function checkIfExist(filepath,array) {  // The last one is array
-                    //     var found = array.some(function (el) {
-                    //       return el.filepath == url;
-                    //     });
-                    //     if (!found)
-                    //     {
-                    //         array.push({
-                    //           title: tab_file_name,
-                    //           name: newTabName,
-                    //           content: newTabName,
-                    //           componentId : compId,
-                    //           filepath : url
-                    //         });
-
-                    //     }else{
-                    //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                    //       array = removedArray  ;
-                    //       editableTabValue = newTabName;
-                    //       array.push({
-                    //           title: tab_file_name,
-                    //           name: newTabName,
-                    //           content: newTabName,
-                    //           componentId : compId,
-                    //           filepath : url
-                    //         });
-                    //     }
-                    //     return array
-                    // }
-
-                    // this.editableTabs =  selectedPagePositionFirstArray ;
-                    // this.editableTabs.reverse();
-                    // this.editableTabsValue = newTabName;
-                }
-                // If Clicked in ProjectName 
-                else if (this.isProjectStats) {
-                    // clearInterval(saveInterval);
-                    this.isProjectEditing = false;
-                    this.isProjectStats = false;
-                    this.$store.state.fileUrl = data.path;
-                    this.isSettingsPage = false;
-                    this.componentId = 'ProjectStats';
-                    //   this.display = true;
-                    localStorage.setItem("folderUrl", data.path);
-                }
-                // If Clicked in Partials Folder 
-                else if ((_.includes(data.path, '/Partials') || (_.includes(data.path, '/Partials/'))) && !(_.includes(data.path, '.partial')) && !(_.includes(data.path, '.menu'))) {
-                    // clearInterval(saveInterval);
-                    //console.log('Data Path: ', data.path);
-
-                    //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-                    //     this.saveFile('getFileContent')
-                    //   }
-
-                    this.isProjectEditing = false;
-                    this.isProjectStats = false;
-                    this.$store.state.fileUrl = data.path;
-                    this.isSettingsPage = false;
-                    this.componentId = 'PartialStats';
-                    //   this.display = true;
-                }
-                // If Clicked in Layouts Folder 
-                else if (_.includes(data.path, '/Layout') && !(_.includes(data.path, '/Layout/'))) {
-                    // clearInterval(saveInterval);
-
-                    //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-                    //     this.saveFile('getFileContent')
-                    //   }
-
-                    this.isProjectEditing = false;
-                    this.isProjectStats = false;
-                    this.$store.state.fileUrl = data.path;
-                    this.isSettingsPage = false;
-                    this.componentId = 'LayoutStats';
-                    //   this.display = true;
-                }
-                // If Clicked in Pages Folder 
-                else if (_.includes(data.path, '/Pages') && !(_.includes(data.path, '/Pages/'))) {
-
-                    // clearInterval(saveInterval);
-                    //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats'){
-                    //     this.saveFile('getFileContent')        
-                    //   }
-
-                    this.isProjectEditing = false;
-                    this.isProjectStats = false;
-                    this.$store.state.fileUrl = data.path;
-                    this.isSettingsPage = false;
-                    this.componentId = 'PageStats';
-                    //   this.display = true;
-                }
-                // Every other clicks
-                else {
-                    //   this.fullscreenLoading = true;
-                    //   this.display = true;
-                    this.isProjectStats = false;
-                    this.isPartialStats = false;
-                    this.isPageEditing = false;
-                    this.isProjectEditing = false;
-                    this.previewGrid = false;
-                    this.isSettingsPage = false;
-                    this.currentFile = data;
-                    if (data.type == "file") {
-                        // this.display = false;
-                        // if(this.flag != true && this.editableTabs.length > 0){
-                        //   if(this.componentId != 'ProjectStats' && this.componentId != 'LayoutStats' && this.componentId != 'PageStats' && this.componentId != 'PartialStats') {
-                        //     this.saveFile('getFileContent')
-                        //   }
-                        // }
-                        // this.flag = false;
-
-                        // let self = this;
-                        // setTimeout(async function(){
-                        this.getFileContent(data.path);
-                        //   self.fullscreenLoading = false;
-                        // },50)
-                    }
-
-                    this.fullscreenLoading = false;
-
-                }
-            },
-
-            // If Tabs is clicked
-            //   tabClicked : async function(targetName, action) {
-            //     this.fullscreenLoading = true;
-            //     this.saveFile('tabClicked');
-
-            //     let findingValue =  _.filter(this.editableTabs, {name: targetName._props.name});
-            //     this.$store.state.fileUrl = findingValue[0].filepath;
-            //     this.componentId = targetName.$vnode.componentOptions.children[0].componentOptions.tag
-            //     this.flag = true
-            //     this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
-            //     var componentId = this.componentId
-            //     let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            //     let newContent
-            //     // switch (this.componentId) {
-            //     //   case 'GrapesComponent':
-            //     //     this.$refs.contentComponent[myIndex].getSavedHtml();
-            //     //     newContent = this.$store.state.content;
-            //     //     break;
-            //     //   case 'json-viewer':
-            //     //     newContent = JSON.stringify(this.$store.state.content);
-            //     //     break;
-            //     //   case 'GridManager':
-            //     //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //     //     newContent = this.$store.state.content;
-            //     //     break;
-            //     //   case 'MenuBuilder':
-            //     //     // this.saveJsonFile('else');
-            //     //     break;
-            //     //   default:
-            //     //       newContent = this.$store.state.content;
-            //     // }
-            //   },
-
-            // Closing a tab
-            //   handleTabsEdit: async function(targetName, action) {
-            //     let activeName;
-            //     let tabs;
-
-            //     let findingValue =  _.filter(this.editableTabs, {name: targetName});
-            //     this.$store.state.fileUrl =findingValue[0].filepath;
-            //     // save the content
-            //     // this.$refs.contentComponent[0].getHtml();
-            //     // let newContent = this.$store.state.content;
-
-            //     if (action === 'remove') {
-            //       // this.saveFile('savebutton');
-            //       tabs = this.editableTabs;
-            //       activeName = this.editableTabsValue;
-            //       if (activeName === targetName) {
-            //         this.saveFile('void');
-            //         tabs.forEach((tab, index) => {
-            //           if (tab.name === targetName) {
-            //             let nextTab = tabs[index + 1] || tabs[index - 1];
-            //             if (nextTab) {
-            //               activeName = nextTab.name;
-            //               this.$store.state.fileUrl = nextTab.filepath
-            //               this.flag = true
-            //               this.handleNodeClick({path : this.$store.state.fileUrl, type:"file"});
-            //             }
-            //           }
-            //         });
-            //       } else {
-            //         // let componentId = findingValue[0].componentId;
-            //         // this.componentId = findingValue[0].componentId;
-            //         // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            //         // let newContent
-            //         // switch (this.componentId) {
-            //         //   case 'GrapesComponent':
-            //         //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //         //     newContent = this.$store.state.content;
-            //         //     break;
-            //         //   case 'json-viewer':
-            //         //     newContent = JSON.stringify(this.$store.state.content);
-            //         //     break;
-            //         //   case 'GridManager':
-            //         //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //         //     newContent = this.$store.state.content;
-            //         //     break;
-            //         //   case 'MenuBuilder':
-
-            //         //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-            //         //   let tempurlparts = configFileUrl.split("/");
-            //         //   let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
-            //         //   console.log('fileName', fileName)
-            //         //   var folderUrl = fileName
-
-            //         //   let urlparts = this.$store.state.fileUrl.split("/");
-            //         //   let fileNameOrginal = urlparts[urlparts.length - 1];
-            //         //   let fileNameParts = fileNameOrginal.split('.');
-            //         //   let actualFileNameOnly = fileNameParts[0];
-            //         //   let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
-            //         //   console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
-            //         //   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
-            //         //   });
-            //         //   // console.log('response.data', response.data)
-            //         //   this.$store.state.content = response.data
-            //         //   newContent = this.$store.state.content
-            //         //     // this.saveJsonFile('else');
-            //         //     break;
-            //         //   default:
-            //         //       newContent = this.$store.state.content;
-            //         // }
-            //         // this.taburl = this.$store.state.fileUrl
-            //         // this.saveFileData(newContent);
-            //       }
-            //       this.editableTabsValue = activeName;
-            //       this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-
-            //       if(this.editableTabs.length != 0){
-            //         // this.$store.state.fileUrl = this.editableTabs[0].filepath
-            //         // // console.log('this.$store.state.fileUrl', this.$store.state.fileUrl)
-            //         // let componentId = this.editableTabs[0].componentId;
-            //         // this.componentId = this.editableTabs[0].componentId;
-            //         // let myIndex = _.findIndex(this.$refs.contentComponent, function(o) { return o.$vnode.componentOptions.tag === componentId;});
-            //         // let newContent
-            //         // switch (this.componentId) {
-            //         //   case 'GrapesComponent':
-            //         //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //         //     newContent = this.$store.state.content;
-            //         //     break;
-            //         //   case 'json-viewer':
-            //         //     newContent = JSON.stringify(this.$store.state.content);
-            //         //     break;
-            //         //   case 'GridManager':
-            //         //     await this.$refs.contentComponent[myIndex].getSavedHtml();
-            //         //     newContent = this.$store.state.content;
-            //         //     break;
-            //         //   case 'MenuBuilder':
-
-            //         //   let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-            //         //   let tempurlparts = configFileUrl.split("/");
-            //         //   let fileName = tempurlparts[0] + '/' + tempurlparts[1] + '/' + tempurlparts[2] + '/' + tempurlparts[3] + '/' + tempurlparts[4] + '/' + tempurlparts[5] + '/' + tempurlparts[6];
-            //         //   console.log('fileName', fileName)
-            //         //   var folderUrl = fileName
-
-            //         //   let urlparts = this.$store.state.fileUrl.split("/");
-            //         //   let fileNameOrginal = urlparts[urlparts.length - 1];
-            //         //   let fileNameParts = fileNameOrginal.split('.');
-            //         //   let actualFileNameOnly = fileNameParts[0];
-            //         //   let newJsonName = folderUrl + '/public/assets/'+actualFileNameOnly+'.json';
-            //         //   console.log('/var/www/html/websites/59a8e0dd41dc17001aeb1e67/a/public/assets/default.json', newJsonName)
-            //         //   let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' +  newJsonName , {
-            //         //   });
-            //         //   console.log('response.data', response.data)
-            //         //   this.$store.state.content = response.data
-            //         //   newContent = this.$store.state.content
-            //         //     // this.saveJsonFile('else');
-            //         //     break;
-            //         //   default:
-            //         //       newContent = this.$store.state.content;
-            //         // }
-            //       } else {
-            //         // clearInterval(saveInterval);
-            //       }
-            //     }
-            //   },
-
-            // Get File content Locally
-            getFileContent: async function(url) {
-
-                this.fullscreenLoading = true;
-
-                // let configFileUrl = url.replace(/\\/g, "\/");
-                // let urlparts = configFileUrl.split("/");
-                // let fileNameOrginal = urlparts[urlparts.length - 1];
-
-                url = url.replace(/\\/g, "\/")
-                this.btnPreview = false
-                this.previewFile = false
-                this.loadingContent = true
-                this.componentId = null
-                let ext = url.split('.').pop();
-
-                this.$store.state.fileUrl = url;
-                let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + url).catch((err) => {
-                    console.log('Error:', err);
-                });
-
-                this.$store.dispatch('updateContent', {
-                    text: response.data
-                })
-                if (response.status == 200 || response.status == 204) {
-                    switch (ext.toLowerCase()) {
-                        case 'grid':
-                            this.isPageCodeEditor = false;
-                            this.isMenuBuilder = false;
-                            this.isHomePage = false;
-                            this.componentId = 'GridManager'
-                            this.isGridPreview = true;
-                            this.fullscreenLoading = false;
-                            break;
-                        case 'json':
-                            this.isPageCodeEditor = false;
-                            this.isMenuBuilder = false;
-                            this.isHomePage = false;
-                            this.isGridPreview = false;
-                            try {
-                                this.$store.state.content = JSON.parse(response.data)
-                            } catch (e) {
-                                if (response.data.trim() == '') {
-                                    this.$store.state.content = {}
-                                } else {
-                                    this.$store.state.content = response.data
-                                }
-                            }
-                            this.componentId = 'json-viewer'
-                            this.fullscreenLoading = false;
-                            break;
-                        case 'layout':
-                            this.isGridPreview = false;
-                            this.isMenuBuilder = false;
-                            this.isHomePage = false;
-                            this.isPageCodeEditor = false;
-
-                            if (this.isEditOption == true) {
-                                this.componentId = 'CodeMirror'
-                                this.isEditOption = false
-                            } else {
-                                this.componentId = 'GridManager'
-                            }
-                            this.fullscreenLoading = false;
-                            break;
-                        case 'html':
-                            this.isGridPreview = false;
-                            this.isMenuBuilder = false;
-                            this.isHomePage = false;
-                            if (this.isEditOption == true) {
-
-                                // For preview button only in HTML file of Pages Folder 
-                                var filePath = url;
-                                var pathParts = filePath.split('/');
-                                var parentFolderName = pathParts[pathParts.length - 2];
-                                if (parentFolderName == 'Pages') {
-                                    this.isPageCodeEditor = true;
-                                    let response = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + this.$store.state.fileUrl, {}).catch((err) => {
-                                        console.log('Error:', err);
-                                    });
-                                    this.$store.state.content = response.data
-                                } else {
-                                    this.isPageCodeEditor = false;
-                                }
-
-                                this.componentId = 'MonacoEditorChild'
-                                this.isEditOption = false;
-                            } else {
-                                this.isPageCodeEditor = false;
-                                // For preview button only in HTML file of Pages Folder 
-                                var filePath = url;
-                                var pathParts = filePath.split('/');
-                                var parentFolderName = pathParts[pathParts.length - 2];
-                                if (parentFolderName == 'Pages') {
-                                    this.isPagesFolder = true;
-                                } else {
-                                    this.isPagesFolder = false;
-                                }
-                                // 
-
-                                this.componentId = 'GrapesComponent';
-                                // console.log('#############', this.componentId)
-                                // this.getConfigFileData();
-                            }
-                            this.fullscreenLoading = false;
-                            break;
-                        case 'partial':
-                            this.isGridPreview = false;
-                            this.isMenuBuilder = false;
-                            this.isHomePage = false;
-                            if (this.isEditOption == true) {
-
-                                // For preview button only in HTML file of Pages Folder 
-                                var filePath = url;
-                                var pathParts = filePath.split('/');
-                                var parentFolderName = pathParts[pathParts.length - 2];
-                                if (parentFolderName == 'Pages') {
-                                    this.isPageCodeEditor = true;
-                                } else {
-                                    this.isPageCodeEditor = false;
-                                }
-
-                                this.componentId = 'MonacoEditorChild'
-                                this.isEditOption = false;
-                            } else {
-                                this.isPageCodeEditor = false;
-                                // For preview button only in HTML file of Pages Folder 
-                                var filePath = url;
-                                var pathParts = filePath.split('/');
-                                var parentFolderName = pathParts[pathParts.length - 2];
-                                if (parentFolderName == 'Pages') {
-                                    this.isPagesFolder = true;
-                                } else {
-                                    this.isPagesFolder = false;
-                                }
-                                // 
-
-                                this.componentId = 'GrapesComponent';
-                                // this.getConfigFileData();
-                            }
-                            this.fullscreenLoading = false;
-                            break;
-                        case 'menu':
-                            this.isGridPreview = false;
-                            this.isMenuBuilder = true;
-                            this.isHomePage = false;
-                            this.isPageCodeEditor = false;
-                            this.componentId = 'MenuBuilder';
-                            this.fullscreenLoading = false;
-                            break;
-                        default:
-                            this.isGridPreview = false;
-                            this.isMenuBuilder = false;
-                            this.isHomePage = false;
-                            this.isPageCodeEditor = false;
-                            this.componentId = 'MonacoEditorChild';
-                            this.fullscreenLoading = false;
-                            break;
-                    }
+                let fileName = '';
+                if (_.includes(configFileUrl, 'Partials')) {
+                  fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
+                } else if (_.includes(configFileUrl, 'Pages')) {
+                  fileName = '/' + urlparts[urlparts.length - 1];
+                } else if (_.includes(configFileUrl, 'Layout')) {
+                  fileName = '/' + urlparts[urlparts.length - 1];
+                } else {
+                  fileName = '/' + urlparts[urlparts.length - 1];
                 }
 
-                // let compId = this.componentId;
+                var folderUrl = configFileUrl.replace(fileName, '');
 
-                // let newTabName = ++this.tabIndex + '';
-                // let tab_file_name = url.substring(url.lastIndexOf('/') + 1).trim();
-
-                // let editableTabValue = this.editableTabsValue
-                // let selectedPagePositionFirstArray = await checkIfExist(url , this.editableTabs);
-
-                // this.fullscreenLoading = false;
-
-                // var self = this
-                //  function checkIfExist(filepath,array) {  // The last one is array
-
-                //     var found = array.some(function (el) {
-                //       return el.filepath == url;
-                //     });
-
-                //     if (!found)
-                //     {
-                //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                //       array = removedArray  ;
-                //       editableTabValue = newTabName;
-                //         array.push({
-                //           title: tab_file_name,
-                //           name: newTabName,
-                //           content: newTabName,
-                //           componentId : compId,
-                //           filepath : url
-                //         });
-
-                //     }else{
-                //       let removedArray =_.reject(array, function(el) { return el.filepath == url; });
-                //       array = removedArray  ;
-                //       editableTabValue = newTabName;
-                //       array.push({
-                //           title: tab_file_name,
-                //           name: newTabName,
-                //           content: newTabName,
-                //           componentId : compId,
-                //           filepath : url
-                //         });
-                //     }
+                let projectName = folderUrl.split('/');
+                projectName = projectName[6];
 
 
-                //     return array
-                // }
-
-                // this.fullscreenLoading = false;
-                // this.editableTabs =  selectedPagePositionFirstArray ;
-                // this.editableTabs.reverse();
-                // this.editableTabsValue = newTabName;
-                // if(this.editableTabs[0].title){
-                //   // clearInterval(saveInterval);
-                //   var title = this.editableTabs[0].title;
-                //   saveInterval = setInterval(function(){
-                //     self.saveFile('void')
-                //    }, 3000);
-                // }
-
-                // var self = this;
-                // clearInterval(saveInterval);
-
-                // saveInterval = setInterval(function(){
-                //  self.saveFile('void')
-                // }, saveInterval);
-
-
-
-                this.breadcrumbArr = url.replace(this.rootpath, '').split('\\')
-                this.loadingContent = false
-                // this.fullscreenLoading = false
-            },
-
-            // Get particular project's config.json file
-            async getConfigFileData(folderUrl) {
-                let foldername = folderUrl.split('/');
-                foldername = foldername[6];
-                
                 axios.get(config.userDetail, {
-                  headers: {
-                    'Authorization' : Cookies.get('auth_token')
-                  }   
-                })
-                .then(async (res) => {
-                  let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((e) => {
-                    this.fullscreenLoading = false;
-                    let dataMessage = '';
-                    if (e.message != undefined) {
-                        dataMessage = e.message
-                    } else if (e.response.data.message != undefined) {
-                        dataMessage = e.response.data.message
-                    } else {
-                        dataMessage = "Please try again! Some error occured."
+                    headers: {
+                      'Authorization': Cookies.get('auth_token')
                     }
-                    this.$confirm(dataMessage, 'Error', {
+                  })
+                  .then(async(res) => {
+                    let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((e) => {
+                      let dataMessage = ''
+                      if (e.message != undefined) {
+                        dataMessage = e.message
+                      } else if (e.response.data.message != undefined) {
+                        dataMessage = e.response.data.message
+                      } else {
+                        dataMessage = "Please try again! Some error occured."
+                      }
+                      this.$confirm(dataMessage, 'Error', {
                         confirmButtonText: 'logout',
                         cancelButtonText: 'reload',
                         type: 'error',
                         center: true
-                    }).then(() => {
+                      }).then(() => {
                         localStorage.removeItem('current_sub_id');
                         this.$session.remove('username');
                         let location = psl.parse(window.location.hostname)
                         location = location.domain === null ? location.input : location.domain
                         Cookies.remove('auth_token', {
-                            domain: location
+                          domain: location
                         });
                         Cookies.remove('email', {
-                            domain: location
+                          domain: location
                         });
                         Cookies.remove('userDetailId', {
-                            domain: location
+                          domain: location
                         });
                         Cookies.remove('subscriptionId', {
-                            domain: location
+                          domain: location
                         });
                         this.isLoggedIn = false;
-                        // this.$router.push('/login');
                         window.location = '/login';
-                    }).catch(() => {
+                      }).catch(() => {
                         location.reload()
+                      });
                     });
-                });
-                let rawConfigs = responseConfig.data.configData;
-                return this.globalConfigData = rawConfigs;
-                })
-                .catch((e) => {
-                    let dataMessage = ''
-                  if (e.message != undefined) {
-                    dataMessage = e.message              
-                } else if (e.response.data.message != undefined) {
-                dataMessage = e.response.data.message
-                } else{
-                dataMessage = "Please try again! Some error occured."
-                }
-                this.$confirm(dataMessage, 'Error', {
-                    confirmButtonText: 'logout',
-                    cancelButtonText: 'reload',
-                    type: 'error',
-                    center: true
-                  }).then(() => {
-                        localStorage.removeItem('current_sub_id');
-                        this.$session.remove('username');
-                        let location = psl.parse(window.location.hostname)
-                        location = location.domain === null ? location.input : location.domain
-                        Cookies.remove('auth_token' ,{domain: location});
-                        Cookies.remove('email' ,{domain: location});
-                        Cookies.remove('userDetailId' ,{domain: location}); 
-                        Cookies.remove('subscriptionId' ,{domain: location}); 
-                        this.isLoggedIn = false;
-                        // this.$router.push('/login');
-                        window.location = '/login';
-                    }).catch(() => {
-                        location.reload()
-                    });
-                })
-
-                
-                
-            },
-
-            // Save config File
-            async saveConfigFile(folderUrl) {
-                // console.log('inside saveConfigFile')
-                let foldername = folderUrl.split('/');
-                foldername = foldername[6];
-                // console.log('folderUrl:',folderUrl)
-                // console.log('foldername:',foldername)
-                let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((err) => {
-                    console.log('Error:', err);
-                });
-
-                if (rethinkdbCheck.data) {
-                    // console.log('data checked')
-                    // update existing data
-                    return await axios.patch(config.baseURL + '/project-configuration/' + foldername, {
-                            configData: this.globalConfigData
-                        })
-                        .then(async (res) => {
-                            // console.log('successfully patched:')
-                        })
-                        .catch((e) => {
-                            this.$message({
-                                showClose: true,
-                                message: 'Failed! Please try again.',
-                                type: 'error'
-                            });
-                            console.log(e)
-                        });
-
-                } else {
-                    this.$message({
-                        showClose: true,
-                        message: 'Data Error.',
-                        type: 'error'
-                    });
-                }
-            },
-
-            // Create new Folder
-            async addFolder(foldername) {
-                if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                    this.$refs[foldername].validate(async (valid) => {
-                        if (valid) {
-                            this.folderLimitCount = 0;
-                            this.newFolderDialog = false;
-                            this.addNewFolderLoading = false;
-
-                            let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                            let urlparts = configFileUrl.split("/");
-                            let fileNameOrginal = urlparts[urlparts.length - 1];
-                            let fileName = '';
-                            if (_.includes(configFileUrl, 'Partials')) {
-                                fileName = '/' + urlparts[urlparts.length - 1];
-                            }
-                            let folderUrl = configFileUrl.replace(fileName, '');
-                            let foldername = folderUrl.split('/');
-                            foldername = foldername[(foldername.length - 1)];
-                            // this.getConfigFileData(folderUrl);
-                            axios.get(config.userDetail, {
-                              headers: {
-                                'Authorization' : Cookies.get('auth_token')
-                              }   
-                            })
-                            .then(async (res) => {
-                              let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((e) => {
-                                console.log('Error:', e);
-                                let dataMessage = '';
-                                if (e.message != undefined) {
-                                    dataMessage = e.message
-                                } else if (e.response.data.message != undefined) {
-                                    dataMessage = e.response.data.message
-                                } else {
-                                    dataMessage = "Please try again! Some error occured."
-                                }
-                                this.$confirm(dataMessage, 'Error', {
-                                    confirmButtonText: 'logout',
-                                    cancelButtonText: 'reload',
-                                    type: 'error',
-                                    center: true
-                                }).then(() => {
-                                    localStorage.removeItem('current_sub_id');
-                                    this.$session.remove('username');
-                                    let location = psl.parse(window.location.hostname)
-                                    location = location.domain === null ? location.input : location.domain
-                                    Cookies.remove('auth_token', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('email', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('userDetailId', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('subscriptionId', {
-                                        domain: location
-                                    });
-                                    this.isLoggedIn = false;
-                                    // this.$router.push('/login');
-                                    window.location = '/login';
-                                }).catch(() => {
-                                    location.reload()
-                                });
-                            });
-                            let rawConfigs = responseConfig.data.configData;
-                            let newFolderName = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFolder.foldername;
-                            let checkfilename = false
-                            for (let i = 0; i < Object.keys(rawConfigs[2].layoutOptions[0]).length; i++) {
-                                if (Object.keys(rawConfigs[2].layoutOptions[0])[i] == newFolderName.split('/')[newFolderName.split('/').length - 1]) {
-
-                                    checkfilename = true
-                                }
-                            }
-                            if (checkfilename == true) {
-                                //// console.log('file already exists')
-                                this.addNewFolderLoading = false;
-                                this.$message({
-                                    showClose: true,
-                                    message: 'Folder already exists!!!',
-                                    type: 'error'
-                                });
-                            } else {
-                                this.$store.state.updateStats = Math.random();
-                                return axios.post(config.baseURL + '/flows-dir-listing', {
-                                        foldername: newFolderName,
-                                        socketListen: true,
-                                        type: 'folder'
-                                    })
-                                    .then(async (res) => {
-
-                                        // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                                        // let urlparts = configFileUrl.split("/");
-                                        // let fileNameOrginal = urlparts[urlparts.length - 1];
-                                        // let fileName = '';
-                                        // if(_.includes(configFileUrl, 'Partials')){
-                                        //     fileName = '/' + urlparts[urlparts.length - 1];
-                                        // }
-                                        // let folderUrl = configFileUrl.replace(fileName, '');
-                                        // let foldername = folderUrl.split('/');
-                                        // foldername = foldername[(foldername.length - 1)];
-                                        // // this.getConfigFileData(folderUrl);
-                                        // let responseConfig = await axios.get(config.baseURL + '/project-configuration?userEmail=' + Cookies.get('email') + '&websiteName=' + foldername );
-                                        // let rawConfigs = responseConfig.data.data[0].configData;
-                                        this.globalConfigData = rawConfigs;
-
-
-                                        if (this.$store.state.fileUrl.replace(/\\/g, "\/").match('/Partials')) {
-                                            axios.post(config.baseURL + '/flows-dir-listing', {
-                                                    filename: newFolderName + '/default.partial',
-                                                    socketListen: true,
-                                                    text: '',
-                                                    type: 'file'
-                                                })
-                                                .then((res) => {
-
-                                                    let checkfolder = false
-                                                    for (let i = 0; i < Object.keys(this.globalConfigData[2].layoutOptions[0]).length; i++) {
-                                                        var temp = Object.keys(this.globalConfigData[2].layoutOptions[0])[i]
-                                                        if (temp == this.formAddFolder.foldername) {
-                                                            //console.log("File already exists");
-                                                            checkfolder = true
-                                                        }
-                                                    }
-                                                    if (checkfolder != true) {
-                                                        //console.log("As, folder not found in config file. We are adding this folder inside config file:")
-                                                        var obj = {
-                                                            value: 'default',
-                                                            label: 'default'
-                                                        }
-                                                        this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername] = []
-                                                        this.globalConfigData[2].layoutOptions[0][this.formAddFolder.foldername].push(obj)
-                                                    }
-                                                    this.formAddFolder.foldername = ''
-                                                    this.saveConfigFile(folderUrl)
-
-                                                }).catch((e) => {
-                                                    console.log(e)
-                                                })
-
-                                        }
-                                    })
-                                    .catch((e) => {
-                                        this.$message({
-                                            showClose: true,
-                                            message: 'Folder creation failed. Try again.',
-                                            type: 'error'
-                                        });
-                                        //console.log(e)
-                                    })
-                            }
-                            })
-                            .catch((e) => {
-                                let dataMessage = ''
-                              if (e.message != undefined) {
-                                dataMessage = e.message              
-                            } else if (e.response.data.message != undefined) {
-                            dataMessage = e.response.data.message
-                            } else{
-                            dataMessage = "Please try again! Some error occured."
-                            }
-                            this.$confirm(dataMessage, 'Error', {
-                                confirmButtonText: 'logout',
-                                cancelButtonText: 'reload',
-                                type: 'error',
-                                center: true
-                              }).then(() => {
-                                    localStorage.removeItem('current_sub_id');
-                                    this.$session.remove('username');
-                                    let location = psl.parse(window.location.hostname)
-                                    location = location.domain === null ? location.input : location.domain
-                                    Cookies.remove('auth_token' ,{domain: location});
-                                    Cookies.remove('email' ,{domain: location});
-                                    Cookies.remove('userDetailId' ,{domain: location}); 
-                                    Cookies.remove('subscriptionId' ,{domain: location}); 
-                                    this.isLoggedIn = false;
-                                    // this.$router.push('/login');
-                                    window.location = '/login';
-                                }).catch(() => {
-                                    location.reload()
-                                });
-                            })
-                            
-                            
-
-                        }
-                    })
-                } else {
-                    this.newProjectFolderDialog = false;
-                    this.fullscreenLoading = false;
-                    this.$session.remove('username');
-                    localStorage.removeItem('current_sub_id');
-                    Cookies.remove('subscriptionId', {
-                        domain: location
-                    });
-                    let location = psl.parse(window.location.hostname)
-                    location = location.domain === null ? location.input : location.domain
-
-                    Cookies.remove('auth_token', {
-                        domain: location
-                    });
-                    Cookies.remove('email', {
-                        domain: location
-                    });
-                    Cookies.remove('userDetailId', {
-                        domain: location
-                    });
-                    Cookies.remove('subscriptionId', {
-                        domain: location
-                    });
-                    this.$message({
-                        message: 'You\'re Logged Out From System. Please login again!',
-                        type: 'error',
-                        onClose() {
-                            window.location = '/login'
-                        }
-                    });
-                }
-            },
-
-            // Create new File
-            async addFile(formName) {
-                if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                    // let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                    // let urlparts = configFileUrl.split("/");
-                    // let fileNameOrginal = urlparts[urlparts.length - 1];
-                    // let foldername = urlparts[urlparts.length - 1];
-                    // let fileName = '/' + urlparts[urlparts.length - 1];
-                    // var folderUrl = configFileUrl.replace(fileName, '');
-
-
-                    let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                    let urlparts = configFileUrl.split("/");
-                    let fileNameOrginal = urlparts[urlparts.length - 1];
-                    let foldername = urlparts[urlparts.length - 2];
-                    // let fileName = '/' + urlparts[urlparts.length-1];
-
-
-
-                    let fileName = '';
-                    if (_.includes(configFileUrl, 'Partials')) {
-                        fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
-                    } else if (_.includes(configFileUrl, 'Pages')) {
-                        fileName = '/' + urlparts[urlparts.length - 1];
-                    } else if (_.includes(configFileUrl, 'Layout')) {
-                        fileName = '/' + urlparts[urlparts.length - 1];
-                    } else {
-                        fileName = '/' + urlparts[urlparts.length - 1];
-                    }
-
-                    var folderUrl = configFileUrl.replace(fileName, '');
-
-                    let projectName = folderUrl.split('/');
-                    projectName = projectName[6];
-
-                    // this.getConfigFileData(folderUrl);
-
-                    axios.get(config.userDetail, {
-                            headers: {
-                                'Authorization': Cookies.get('auth_token')
-                            }
-                        })
-                        .then(async (res) => {
-                            let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + projectName).catch((e) => {
-                                let dataMessage = ''
-                                if (e.message != undefined) {
-                                    dataMessage = e.message              
-                                } else if (e.response.data.message != undefined) {
-                                dataMessage = e.response.data.message
-                                } else{
-                                dataMessage = "Please try again! Some error occured."
-                                }
-                                this.$confirm(dataMessage, 'Error', {
-                                    confirmButtonText: 'logout',
-                                    cancelButtonText: 'reload',
-                                    type: 'error',
-                                    center: true
-                                }).then(() => {
-                                    localStorage.removeItem('current_sub_id');
-                                    this.$session.remove('username');
-                                    let location = psl.parse(window.location.hostname)
-                                    location = location.domain === null ? location.input : location.domain
-                                    Cookies.remove('auth_token', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('email', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('userDetailId', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('subscriptionId', {
-                                        domain: location
-                                    });
-                                    this.isLoggedIn = false;
-                                    // this.$router.push('/login');
-                                    window.location = '/login';
-                                }).catch(() => {
-                                    location.reload()
-                                });
-                            });
-                            let rawConfigs = responseConfig.data.configData;
+                    let rawConfigs = responseConfig.data.configData;
                     this.globalConfigData = rawConfigs;
 
                     this.$refs[formName].validate((valid) => {
-                        if (valid) {
-                            this.addNewFileLoading = true;
-                            var name = this.formAddFile.filename;
-                            this.fileLimitCount = 0;
-                            var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
-                            let checkfilename = false
-                            if (newfilename.indexOf('Pages') > 0) {
-                                for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
-                                    if (name == rawConfigs[1].pageSettings[i].PageName.split('.')[0]) {
-                                        checkfilename = true
-                                    }
-                                }
-                            } else {
-
-                                for (let i = 0; i < Object.keys(rawConfigs[2].layoutOptions[0]).length; i++) {
-                                    if (Object.keys(rawConfigs[2].layoutOptions[0])[i] == newfilename.split('/')[newfilename.split('/').length - 2])
-                                        for (let p = 0; p < rawConfigs[2].layoutOptions[0][Object.keys(rawConfigs[2].layoutOptions[0])[i]].length; p++) {
-                                            let namepartial = rawConfigs[2].layoutOptions[0][Object.keys(rawConfigs[2].layoutOptions[0])[i]][p].label
-                                            if (name == namepartial) {
-
-                                                checkfilename = true
-                                            }
-                                        }
-                                }
+                      if (valid) {
+                        this.addNewFileLoading = true;
+                        var name = this.formAddFile.filename;
+                        this.fileLimitCount = 0;
+                        var newfilename = this.$store.state.fileUrl.replace(/\\/g, "\/") + '/' + this.formAddFile.filename
+                        let checkfilename = false
+                        if (newfilename.indexOf('Pages') > 0) {
+                          for (let i = 0; i < rawConfigs[1].pageSettings.length; i++) {
+                            if (name == rawConfigs[1].pageSettings[i].PageName.split('.')[0]) {
+                              checkfilename = true
                             }
-
-
-                            if (checkfilename == true) {
-                                //console.log('file already exists')
-                                this.addNewFileLoading = false
-                                this.$message({
-                                    showClose: true,
-                                    message: 'File already exists!!!',
-                                    type: 'error'
-                                });
-                            } else {
-                                if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') == -1) {
-                                    this.$store.state.updateStats = Math.random();
-                                    return axios.post(config.baseURL + '/flows-dir-listing', {
-                                            filename: newfilename + '.partial',
-                                            text: ' ',
-                                            socketListen: true,
-                                            type: 'file'
-                                        })
-                                        .then((res) => {
-                                            this.newFileDialog = false
-                                            this.addNewFileLoading = false
-                                            this.formAddFile.filename = null
-
-                                            let temp = {
-                                                value: name,
-                                                label: name
-                                            }
-
-                                            let checkValue = false;
-                                            var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                                            namefolder = namefolder[namefolder.length - 1];
-
-                                            if (namefolder != 'Pages') {
-                                                if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
-                                                    for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
-                                                        var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
-                                                        if ((obj.label) == name) {
-                                                            checkValue = true;
-                                                        }
-                                                    }
-                                                    if (checkValue == true) {} else {
-                                                        this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
-
-                                                        // saveConfigFile
-                                                        this.saveConfigFile(folderUrl);
-                                                    }
-
-                                                } else {
-                                                    this.globalConfigData[2].layoutOptions[0][namefolder] = [];
-                                                    this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
-                                                    this.saveConfigFile(folderUrl);
-                                                }
-                                            }
-
-
-                                        })
-                                        .catch((e) => {
-                                            //console.log(e)
-                                        })
-                                } else if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') != -1) {
-                                    this.$store.state.updateStats = Math.random();
-                                    return axios.post(config.baseURL + '/flows-dir-listing', {
-                                            filename: newfilename + '.menu',
-                                            socketListen: true,
-                                            text: ' ',
-                                            type: 'file'
-                                        })
-                                        .then((res) => {
-                                            this.newFileDialog = false
-                                            this.addNewFileLoading = false
-                                            this.formAddFile.filename = null;
-
-                                            let temp = {
-                                                value: name,
-                                                label: name
-                                            }
-
-                                            let checkValue = false;
-                                            var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                                            namefolder = namefolder[namefolder.length - 1];
-
-                                            if (namefolder != 'Pages') {
-                                                if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
-                                                    for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
-                                                        var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
-                                                        if ((obj.label) == name) {
-                                                            checkValue = true;
-                                                        }
-                                                    }
-                                                    if (checkValue == true) {} else {
-                                                        this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
-
-                                                        // saveConfigFile
-                                                        this.saveConfigFile(folderUrl);
-                                                    }
-
-                                                } else {
-                                                    this.globalConfigData[2].layoutOptions[0][namefolder] = [];
-                                                    this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
-                                                    this.saveConfigFile(folderUrl);
-                                                }
-                                            }
-
-
-                                        })
-                                        .catch((e) => {
-                                            //console.log(e)
-                                        })
-                                } else if (newfilename.search('/Pages') != -1) {
-                                    this.$store.state.updateStats = Math.random();
-                                    console.log('file new')
-                                    // this.$store.state.updateStats = 'PageUpdate';
-                                    return axios.post(config.baseURL + '/flows-dir-listing', {
-                                            filename: newfilename + '.html',
-                                            socketListen: true,
-                                            text: ' ',
-                                            type: 'file'
-                                        })
-                                        .then((res) => {
-
-
-
-                                            this.newFileDialog = false
-                                            this.addNewFileLoading = false
-                                            this.formAddFile.filename = null
-
-                                            let temp = {
-                                                value: name,
-                                                label: name
-                                            }
-
-                                            let checkValue = false;
-                                            var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                                            namefolder = namefolder[namefolder.length - 1];
-
-                                            if (namefolder == 'Pages') {
-                                                //// console.log('inside pages')
-                                                var totpartial = []
-                                                for (let k = 0; k < this.globalConfigData[2].layoutOptions[0].Layout.length; k++) {
-                                                    if (this.globalConfigData[2].layoutOptions[0].Layout[k].label == 'default') {
-                                                        //console.log('inside default layout');
-                                                        if (this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList.length > 0) {
-                                                            //// console.log('defaultList:',this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList)
-                                                            totpartial = JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList))
-                                                            //// console.log('found some default partial')
-
-                                                        }
-                                                        //// console.log('totpartial:',totpartial);
-                                                        if (this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length > 0) {
-
-                                                            for (let j = 0; j < this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length; j++) {
-                                                                let checklayoutvalue = false;
-                                                                for (let r = 0; r < totpartial.length; r++) {
-                                                                    //// console.log('totpartial[r]:',Object.keys(totpartial[r])[0])
-                                                                    if (Object.keys(totpartial[r])[0] == this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]) {
-                                                                        checklayoutvalue = true;
-                                                                        totpartial[r][Object.keys(totpartial[r])[0]] = totpartial[r][Object.keys(totpartial[r])[0]].split('.')[0]
-                                                                    }
-                                                                }
-                                                                if (checklayoutvalue != true) {
-                                                                    var obj = {}
-                                                                    obj[this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]] = 'default'
-                                                                    totpartial.push(obj);
-                                                                }
-
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-                                                var PageSettings = {
-                                                    "PageName": name + '.html',
-                                                    "PageSEOTitle": "",
-                                                    "PageSEOKeywords": "",
-                                                    "PageSEODescription": "",
-                                                    "PageLayout": "default",
-                                                    "PageCss": [],
-                                                    "PageExternalCss": [],
-                                                    "PageExternalJs": [],
-                                                    "PageMetaInfo": [],
-                                                    "PageMetacharset": 'UTF-8',
-                                                    "PageScripts": [],
-                                                    "PageStyles": [],
-                                                    "partials": totpartial
-                                                };
-
-                                                this.globalConfigData[1].pageSettings.push((PageSettings))
-                                                this.saveConfigFile(folderUrl);
-                                            }
-                                        })
-                                        .catch((e) => {
-                                            console.log(e)
-                                        })
-                                } else if (newfilename.search('/Layout') != -1) {
-                                    this.$store.state.updateStats = Math.random();
-                                    return axios.post(config.baseURL + '/flows-dir-listing', {
-                                            filename: newfilename + '.layout',
-                                            socketListen: true,
-                                            text: ' ',
-                                            type: 'file'
-                                        })
-                                        .then((res) => {
-                                            this.newFileDialog = false
-                                            this.addNewFileLoading = false
-                                            this.formAddFile.filename = null
-
-                                            let temp = {
-                                                value: name,
-                                                label: name
-                                            }
-
-                                            let checkValue = false;
-                                            var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
-                                            namefolder = namefolder[namefolder.length - 1];
-
-                                            if (namefolder != 'Pages') {
-                                                if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
-                                                    for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
-                                                        var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
-                                                        if ((obj.label) == name) {
-                                                            checkValue = true;
-                                                        }
-                                                    }
-                                                    if (checkValue == true) {} else {
-                                                        this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
-
-                                                        // saveConfigFile
-                                                        this.saveConfigFile(folderUrl);
-                                                    }
-
-                                                } else {
-                                                    this.globalConfigData[2].layoutOptions[0][namefolder] = [];
-                                                    this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
-                                                    this.saveConfigFile(folderUrl);
-                                                }
-                                            }
-
-
-                                        })
-                                        .catch((e) => {
-                                            //console.log(e)
-                                        })
-                                }
-                            }
-
+                          }
                         } else {
-                            // console.log('error submit!!');
-                            return false;
-                        }
-                    });
-                        })
-                        .catch((e) => {
-                            let dataMessage = ''
-                            if (e.message != undefined) {
-                                dataMessage = e.message              
-                            } else if (e.response.data.message != undefined) {
-                            dataMessage = e.response.data.message
-                            } else{
-                            dataMessage = "Please try again! Some error occured."
-                            }
-                            this.$confirm(dataMessage, 'Error', {
-                                confirmButtonText: 'logout',
-                                cancelButtonText: 'reload',
-                                type: 'error',
-                                center: true
-                            }).then(() => {
-                                localStorage.removeItem('current_sub_id');
-                                this.$session.remove('username');
-                                let location = psl.parse(window.location.hostname)
-                                location = location.domain === null ? location.input : location.domain
-                                Cookies.remove('auth_token', {
-                                    domain: location
-                                });
-                                Cookies.remove('email', {
-                                    domain: location
-                                });
-                                Cookies.remove('userDetailId', {
-                                    domain: location
-                                });
-                                Cookies.remove('subscriptionId', {
-                                    domain: location
-                                });
-                                this.isLoggedIn = false;
-                                // this.$router.push('/login');
-                                window.location = '/login';
-                            }).catch(() => {
-                                location.reload()
-                            });
-                        })
 
-                    
-                    // this.form.formName=''
-                    // this.formAddFile.filename=''
-                } else {
-                    this.newProjectFolderDialog = false;
-                    this.fullscreenLoading = false;
-                    this.$session.remove('username');
-                    localStorage.removeItem('current_sub_id');
-                    Cookies.remove('subscriptionId', {
-                        domain: location
-                    });
-                    let location = psl.parse(window.location.hostname)
-                    location = location.domain === null ? location.input : location.domain
+                          for (let i = 0; i < Object.keys(rawConfigs[2].layoutOptions[0]).length; i++) {
+                            if (Object.keys(rawConfigs[2].layoutOptions[0])[i] == newfilename.split('/')[newfilename.split('/').length - 2])
+                              for (let p = 0; p < rawConfigs[2].layoutOptions[0][Object.keys(rawConfigs[2].layoutOptions[0])[i]].length; p++) {
+                                let namepartial = rawConfigs[2].layoutOptions[0][Object.keys(rawConfigs[2].layoutOptions[0])[i]][p].label
+                                if (name == namepartial) {
 
-                    Cookies.remove('auth_token', {
-                        domain: location
-                    });
-                    Cookies.remove('email', {
-                        domain: location
-                    });
-                    Cookies.remove('userDetailId', {
-                        domain: location
-                    });
-                    Cookies.remove('subscriptionId', {
-                        domain: location
-                    });
-                    this.$message({
-                        message: 'You\'re Logged Out From System. Please login again!',
-                        type: 'error',
-                        onClose() {
-                            window.location = '/login'
+                                  checkfilename = true
+                                }
+                              }
+                          }
                         }
+
+                        if (checkfilename == true) {
+                          this.addNewFileLoading = false
+                          this.$message({
+                            showClose: true,
+                            message: 'File already exists!!!',
+                            type: 'error'
+                          });
+                        } else {
+                          if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') == -1) {
+                            this.$store.state.updateStats = Math.random();
+                            return axios.post(config.baseURL + '/flows-dir-listing', {
+                                filename: newfilename + '.partial',
+                                text: ' ',
+                                socketListen: true,
+                                type: 'file'
+                              })
+                              .then((res) => {
+                                this.newFileDialog = false
+                                this.addNewFileLoading = false
+                                this.formAddFile.filename = null
+
+                                let temp = {
+                                  value: name,
+                                  label: name
+                                }
+
+                                let checkValue = false;
+                                var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                                namefolder = namefolder[namefolder.length - 1];
+
+                                if (namefolder != 'Pages') {
+                                  if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
+                                    for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
+                                      var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
+                                      if ((obj.label) == name) {
+                                        checkValue = true;
+                                      }
+                                    }
+                                    if (checkValue == true) {} else {
+                                      this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+
+                                      this.saveConfigFile(folderUrl);
+                                    }
+
+                                  } else {
+                                    this.globalConfigData[2].layoutOptions[0][namefolder] = [];
+                                    this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
+                                    this.saveConfigFile(folderUrl);
+                                  }
+                                }
+
+                              })
+                              .catch((e) => {
+                              })
+                          } else if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') != -1) {
+                            this.$store.state.updateStats = Math.random();
+                            return axios.post(config.baseURL + '/flows-dir-listing', {
+                                filename: newfilename + '.menu',
+                                socketListen: true,
+                                text: ' ',
+                                type: 'file'
+                              })
+                              .then((res) => {
+                                this.newFileDialog = false
+                                this.addNewFileLoading = false
+                                this.formAddFile.filename = null;
+
+                                let temp = {
+                                  value: name,
+                                  label: name
+                                }
+
+                                let checkValue = false;
+                                var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                                namefolder = namefolder[namefolder.length - 1];
+
+                                if (namefolder != 'Pages') {
+                                  if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
+                                    for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
+                                      var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
+                                      if ((obj.label) == name) {
+                                        checkValue = true;
+                                      }
+                                    }
+                                    if (checkValue == true) {} else {
+                                      this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+
+                                      this.saveConfigFile(folderUrl);
+                                    }
+
+                                  } else {
+                                    this.globalConfigData[2].layoutOptions[0][namefolder] = [];
+                                    this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
+                                    this.saveConfigFile(folderUrl);
+                                  }
+                                }
+
+                              })
+                              .catch((e) => {
+                              })
+                          } else if (newfilename.search('/Pages') != -1) {
+                            this.$store.state.updateStats = Math.random();
+                            console.log('file new')
+                            return axios.post(config.baseURL + '/flows-dir-listing', {
+                                filename: newfilename + '.html',
+                                socketListen: true,
+                                text: ' ',
+                                type: 'file'
+                              })
+                              .then((res) => {
+
+                                this.newFileDialog = false
+                                this.addNewFileLoading = false
+                                this.formAddFile.filename = null
+
+                                let temp = {
+                                  value: name,
+                                  label: name
+                                }
+
+                                let checkValue = false;
+                                var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                                namefolder = namefolder[namefolder.length - 1];
+
+                                if (namefolder == 'Pages') {
+                                  var totpartial = []
+                                  for (let k = 0; k < this.globalConfigData[2].layoutOptions[0].Layout.length; k++) {
+                                    if (this.globalConfigData[2].layoutOptions[0].Layout[k].label == 'default') {
+                                      if (this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList.length > 0) {
+                                        totpartial = JSON.parse(JSON.stringify(this.globalConfigData[2].layoutOptions[0].Layout[k].defaultList))
+
+                                      }
+                                      if (this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length > 0) {
+
+                                        for (let j = 0; j < this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList.length; j++) {
+                                          let checklayoutvalue = false;
+                                          for (let r = 0; r < totpartial.length; r++) {
+                                            if (Object.keys(totpartial[r])[0] == this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]) {
+                                              checklayoutvalue = true;
+                                              totpartial[r][Object.keys(totpartial[r])[0]] = totpartial[r][Object.keys(totpartial[r])[0]].split('.')[0]
+                                            }
+                                          }
+                                          if (checklayoutvalue != true) {
+                                            var obj = {}
+                                            obj[this.globalConfigData[2].layoutOptions[0].Layout[k].partialsList[j]] = 'default'
+                                            totpartial.push(obj);
+                                          }
+
+                                        }
+                                      }
+                                    }
+                                  }
+
+                                  var PageSettings = {
+                                    "PageName": name + '.html',
+                                    "PageSEOTitle": "",
+                                    "PageSEOKeywords": "",
+                                    "PageSEODescription": "",
+                                    "PageLayout": "default",
+                                    "PageCss": [],
+                                    "PageExternalCss": [],
+                                    "PageExternalJs": [],
+                                    "PageMetaInfo": [],
+                                    "PageMetacharset": 'UTF-8',
+                                    "PageScripts": [],
+                                    "PageStyles": [],
+                                    "partials": totpartial
+                                  };
+
+                                  this.globalConfigData[1].pageSettings.push((PageSettings))
+                                  this.saveConfigFile(folderUrl);
+                                }
+                              })
+                              .catch((e) => {
+                                console.log(e)
+                              })
+                          } else if (newfilename.search('/Layout') != -1) {
+                            this.$store.state.updateStats = Math.random();
+                            return axios.post(config.baseURL + '/flows-dir-listing', {
+                                filename: newfilename + '.layout',
+                                socketListen: true,
+                                text: ' ',
+                                type: 'file'
+                              })
+                              .then((res) => {
+                                this.newFileDialog = false
+                                this.addNewFileLoading = false
+                                this.formAddFile.filename = null
+
+                                let temp = {
+                                  value: name,
+                                  label: name
+                                }
+
+                                let checkValue = false;
+                                var namefolder = this.$store.state.fileUrl.replace(/\\/g, "\/").split('/')
+                                namefolder = namefolder[namefolder.length - 1];
+
+                                if (namefolder != 'Pages') {
+                                  if (this.globalConfigData[2].layoutOptions[0][namefolder]) {
+                                    for (var i = 0; i < this.globalConfigData[2].layoutOptions[0][namefolder].length; i++) {
+                                      var obj = this.globalConfigData[2].layoutOptions[0][namefolder][i];
+                                      if ((obj.label) == name) {
+                                        checkValue = true;
+                                      }
+                                    }
+                                    if (checkValue == true) {} else {
+                                      this.globalConfigData[2].layoutOptions[0][namefolder].push(temp);
+
+                                      this.saveConfigFile(folderUrl);
+                                    }
+
+                                  } else {
+                                    this.globalConfigData[2].layoutOptions[0][namefolder] = [];
+                                    this.globalConfigData[2].layoutOptions[0][namefolder].push(temp)
+                                    this.saveConfigFile(folderUrl);
+                                  }
+                                }
+
+                              })
+                              .catch((e) => {
+                              })
+                          }
+                        }
+
+                      } else {
+                        return false;
+                      }
                     });
-                }
+                  })
+                  .catch((e) => {
+                    let dataMessage = ''
+                    if (e.message != undefined) {
+                      dataMessage = e.message
+                    } else if (e.response.data.message != undefined) {
+                      dataMessage = e.response.data.message
+                    } else {
+                      dataMessage = "Please try again! Some error occured."
+                    }
+                    this.$confirm(dataMessage, 'Error', {
+                      confirmButtonText: 'logout',
+                      cancelButtonText: 'reload',
+                      type: 'error',
+                      center: true
+                    }).then(() => {
+                      localStorage.removeItem('current_sub_id');
+                      this.$session.remove('username');
+                      let location = psl.parse(window.location.hostname)
+                      location = location.domain === null ? location.input : location.domain
+                      Cookies.remove('auth_token', {
+                        domain: location
+                      });
+                      Cookies.remove('email', {
+                        domain: location
+                      });
+                      Cookies.remove('userDetailId', {
+                        domain: location
+                      });
+                      Cookies.remove('subscriptionId', {
+                        domain: location
+                      });
+                      this.isLoggedIn = false;
+                      window.location = '/login';
+                    }).catch(() => {
+                      location.reload()
+                    });
+                  })
+              } else {
+                this.newProjectFolderDialog = false;
+                this.fullscreenLoading = false;
+                this.$session.remove('username');
+                localStorage.removeItem('current_sub_id');
+                Cookies.remove('subscriptionId', {
+                  domain: location
+                });
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+
+                Cookies.remove('auth_token', {
+                  domain: location
+                });
+                Cookies.remove('email', {
+                  domain: location
+                });
+                Cookies.remove('userDetailId', {
+                  domain: location
+                });
+                Cookies.remove('subscriptionId', {
+                  domain: location
+                });
+                this.$message({
+                  message: 'You\'re Logged Out From System. Please login again!',
+                  type: 'error',
+                  onClose() {
+                    window.location = '/login'
+                  }
+                });
+              }
             },
-
-            // async checknameexist(){
-            //  this.fullscreenLoading = true;
-            //  this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName;
-            //  this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-            //    var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-1]
-            //    // console.log('userid',userid)
-            //    var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid)
-            //    let checkdetail=true
-            //    for(let i=0;i<alldatauser.data.data.length;i++){
-            //      if( this.formAddProjectFolder.projectName ==alldatauser.data.data[i].websiteName){
-            //        checkdetail=false
-
-            //      }
-            //    }
-            //    if(checkdetail!=false){
-            //      // console.log('not same found')
-
-            //     this.addProjectFolder()
-            //    }
-            //    else{
-            //      this.fullscreenLoading = false;
-            //      this.$message({
-            //      showClose: true,
-            //      message: 'Same name found.Try again!',
-            //      type: 'error'
-            //    });
-            //    }
-            //    // return boolvalue
-            //  },
 
             // Create new Website
             async addProjectFolder(projectName) {
-                // console.log('this.value:',this.value)
-                if (this.value == '') {
-                    this.newProjectFolderDialog = false;
-                    this.fullscreenLoading = false;
-                    this.$refs[projectName].resetFields();
-                    this.$message({
-                        showClose: true,
-                        duration: 0,
-                        message: 'Subscription not selected.',
-                        type: 'error'
-                    });
-
-                } else {
-                    if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
-                        let token = Cookies.get('auth_token');
-                        this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                        var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
-
-                        // this.formAddProjectFolder.projectName = this.formAddProjectFolder.projectName.toLowerCase();
-
-                        // console.log("'subscriptionId': this.value,'authorization': token",  this.value, token)
-                        axios.get(config.userDetail, {
-                                headers: {
-                                    'Authorization': Cookies.get('auth_token')
-                                }
+              if (this.value == '') {
+                this.newProjectFolderDialog = false;
+                this.fullscreenLoading = false;
+                this.$refs[projectName].resetFields();
+                this.$message({
+                  showClose: true,
+                  duration: 0,
+                  message: 'Subscription not selected.',
+                  type: 'error'
+                });
+              } else {
+                if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+                  let token = Cookies.get('auth_token');
+                  this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                  var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 1]
+                  axios.get(config.userDetail, {
+                      headers: {
+                        'Authorization': Cookies.get('auth_token')
+                      }
+                    })
+                    .then(async(res) => {
+                      axios.post(config.baseURL + '/project-configuration', {
+                          id: uuidv4().replace(/\-/g, ''),
+                          userEmail: Cookies.get('email'),
+                          websiteName: this.formAddProjectFolder.projectName,
+                          userId: userid,
+                          subscriptionId: this.value
+                        }, {
+                          headers: {
+                            'subscriptionId': this.value,
+                            'authorization': token
+                          }
+                        })
+                        .then((res) => {
+                          let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
+                          return axios.post(config.baseURL + '/flows-dir-listing', {
+                              foldername: newFolderName,
+                              type: 'folder'
+                            }, {
+                              headers: {
+                                'authorization': token
+                              }
                             })
-                            .then(async (res) => {
-                                axios.post(config.baseURL + '/project-configuration', {
-                                        id: uuidv4().replace(/\-/g, ''),
-                                        userEmail: Cookies.get('email'),
-                                        websiteName: this.formAddProjectFolder.projectName,
-                                        userId: userid,
-                                        subscriptionId: this.value
-                                    }, {
-                                        headers: {
-                                            'subscriptionId': this.value,
-                                            'authorization': token
-                                        }
-                                    })
-                                    .then((res) => {
-                                        let newFolderName = this.currentFile.path.replace(/\\/g, "\/") + '/' + res.data.id
-                                        // let newFolderName=res.data.id 
-                                        return axios.post(config.baseURL + '/flows-dir-listing', {
-                                                foldername: newFolderName,
-                                                type: 'folder'
-                                            }, {
-                                                headers: {
-                                                    'authorization': token
-                                                }
-                                            })
-                                            .then(async (resp) => {
-                                                // console.log(resp)
-                                                this.newProjectFolderDialog = false
-                                                this.addNewProjectFolderLoading = false;
-
-                                                // var response = resp
-                                                let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
-                                                    console.log('Error:', err);
-                                                });
-
-                                                if (!(gitResponse.data.statusCode)) {
-
-                                                    localStorage.setItem("folderUrl", newFolderName);
-                                                    var folder = localStorage.getItem("folderUrl");
-
-                                                    this.newRepoId = gitResponse.data.id;
-                                                    this.repoName = gitResponse.data.name;
-
-                                                    this.projectLimitCount = 0;
-
-                                                    // Create essential folders
-                                                    this.addOtherFolder(newFolderName);
-
-                                                    // Init ldap for website subscription in ACL
-                                                    axios.post(config.initLdap, {
-                                                            "app": "aaa"
-                                                        })
-                                                        .then((res) => {
-                                                            // console.log(res.data);
-                                                        })
-                                                        .catch((e) => {
-                                                            console.log(e)
-                                                        });
-
-                                                    await axios.post(config.baseURL + '/register-website-subscriptions', {
-                                                            websiteId: this.repoName
-                                                        })
-                                                        .then((res) => {
-                                                            // console.log(res.data);
-                                                        })
-                                                        .catch((e) => {
-                                                            console.log(e)
-                                                        });
-
-                                                    this.currentProjectName = this.formAddProjectFolder.projectName;
-
-                                                    this.formAddProjectFolder.projectName = null;
-                                                } else {
-
-                                                    localStorage.setItem("folderUrl", newFolderName);
-                                                    var folder = localStorage.getItem("folderUrl");
-
-                                                    this.newRepoId = undefined;
-                                                    this.repoName = res.data.id;
-
-                                                    // Create essential folders
-                                                    this.addOtherFolder(newFolderName);
-
-                                                    // Init ldap for website subscription in ACL
-                                                    axios.post(config.initLdap, {
-                                                            "app": "aaa"
-                                                        })
-                                                        .then((res) => {
-                                                            // console.log(res.data);
-                                                        })
-                                                        .catch((e) => {
-                                                            console.log(e)
-                                                        });
-
-                                                    await axios.post(config.baseURL + '/register-website-subscription', {
-                                                            websiteId: this.repoName
-                                                        })
-                                                        .then((res) => {
-                                                            // console.log(res.data);
-                                                        })
-                                                        .catch((e) => {
-                                                            console.log(e)
-                                                        })
-
-                                                    this.formAddProjectFolder.projectName = null;
-
-                                                    // Delete folder from storage
-                                                    // axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + newFolderName)
-                                                    // .then((res) => {
-                                                    // })
-                                                    // .catch((e) => {
-                                                    // })
-
-                                                    // return;
-                                                }
-
-                                            })
-                                            .catch((e) => {
-                                                //console.log(e);
-                                                // this.componentId = 'buyPage';
-                                                this.newProjectFolderDialog = false;
-                                                this.fullscreenLoading = false;
-                                                this.$refs[projectName].resetFields();
-                                                // this.buyNowDialog = true;
-                                                console.log(e)
-                                            });
-                                        // })
-
-                                    })
-                                    .catch((e) => {
-                                        this.newProjectFolderDialog = false;
-                                        this.fullscreenLoading = false;
-                                        this.$refs[projectName].resetFields();
-                                        if (e.response.status = 403) {
-                                            console.log(e.response.status)
-                                            this.$message({
-                                                showClose: true,
-                                                message: e.response.data.message,
-                                                type: 'error'
-                                            });
-                                        }
-                                        return;
-                                        console.log("e........................", e)
-                                        console.log("first", e.response.status)
-                                        let dataMessage = '';
-                                        if (e.message != undefined) {
-                                            dataMessage = e.message
-                                        } else if (e.response.data.message != undefined) {
-                                            dataMessage = e.response.data.message
-                                        } else {
-                                            dataMessage = "Please try again! Some error occured."
-                                        }
-                                        this.$confirm(dataMessage, 'Error', {
-                                            confirmButtonText: 'logout',
-                                            cancelButtonText: 'reload',
-                                            type: 'error',
-                                            center: true
-                                        }).then(() => {
-                                            localStorage.removeItem('current_sub_id');
-                                            this.$session.remove('username');
-                                            let location = psl.parse(window.location.hostname)
-                                            location = location.domain === null ? location.input : location.domain
-                                            Cookies.remove('auth_token', {
-                                                domain: location
-                                            });
-                                            Cookies.remove('email', {
-                                                domain: location
-                                            });
-                                            Cookies.remove('userDetailId', {
-                                                domain: location
-                                            });
-                                            Cookies.remove('subscriptionId', {
-                                                domain: location
-                                            });
-                                            this.isLoggedIn = false;
-                                            // this.$router.push('/login');
-                                            window.location = '/login';
-                                        }).catch(() => {
-                                            location.reload()
-                                        });
-                                    });
+                            .then(async(resp) => {
+                              this.newProjectFolderDialog = false
+                              this.addNewProjectFolderLoading = false;
+                              let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
+                                console.log('Error:', err);
+                              });
+                              if (!(gitResponse.data.statusCode)) {
+                                localStorage.setItem("folderUrl", newFolderName);
+                                var folder = localStorage.getItem("folderUrl");
+                                this.newRepoId = gitResponse.data.id;
+                                this.repoName = gitResponse.data.name;
+                                this.projectLimitCount = 0;
+                                this.addOtherFolder(newFolderName);
+                                axios.post(config.initLdap, {
+                                    "app": "aaa"
+                                  })
+                                  .then((res) => {})
+                                  .catch((e) => {
+                                    console.log(e)
+                                  });
+                                await axios.post(config.baseURL + '/register-website-subscriptions', {
+                                    websiteId: this.repoName
+                                  })
+                                  .then((res) => {})
+                                  .catch((e) => {
+                                    console.log(e)
+                                  });
+                                this.currentProjectName = this.formAddProjectFolder.projectName;
+                                this.formAddProjectFolder.projectName = null;
+                              } else {
+                                localStorage.setItem("folderUrl", newFolderName);
+                                var folder = localStorage.getItem("folderUrl");
+                                this.newRepoId = undefined;
+                                this.repoName = res.data.id;
+                                this.addOtherFolder(newFolderName);
+                                axios.post(config.initLdap, {
+                                    "app": "aaa"
+                                  })
+                                  .then((res) => {})
+                                  .catch((e) => {
+                                    console.log(e)
+                                  });
+                                await axios.post(config.baseURL + '/register-website-subscription', {
+                                    websiteId: this.repoName
+                                  })
+                                  .then((res) => {})
+                                  .catch((e) => {
+                                    console.log(e)
+                                  })
+                                this.formAddProjectFolder.projectName = null;
+                              }
                             })
                             .catch((e) => {
-                                let dataMessage = ''
-                                if (e.message != undefined) {
-                                    dataMessage = e.message              
-                                } else if (e.response.data.message != undefined) {
-                                dataMessage = e.response.data.message
-                                } else{
-                                dataMessage = "Please try again! Some error occured."
-                                }
-                                this.$confirm(dataMessage, 'Error', {
-                                    confirmButtonText: 'logout',
-                                    cancelButtonText: 'reload',
-                                    type: 'error',
-                                    center: true
-                                }).then(() => {
-                                    localStorage.removeItem('current_sub_id');
-                                    this.$session.remove('username');
-                                    let location = psl.parse(window.location.hostname)
-                                    location = location.domain === null ? location.input : location.domain
-                                    Cookies.remove('auth_token', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('email', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('userDetailId', {
-                                        domain: location
-                                    });
-                                    Cookies.remove('subscriptionId', {
-                                        domain: location
-                                    });
-                                    this.isLoggedIn = false;
-                                    // this.$router.push('/login');
-                                    window.location = '/login';
-                                }).catch(() => {
-                                    location.reload()
-                                });
-                            })
-
-                    } else {
-                        this.newProjectFolderDialog = false;
-                        this.fullscreenLoading = false;
-                        this.$refs[projectName].resetFields();
-                        this.$session.remove('username');
-                        localStorage.removeItem('current_sub_id');
-                        Cookies.remove('subscriptionId', {
-                            domain: location
+                              this.newProjectFolderDialog = false;
+                              this.fullscreenLoading = false;
+                              this.$refs[projectName].resetFields();
+                              console.log(e)
+                            });
+                        })
+                        .catch((e) => {
+                          this.newProjectFolderDialog = false;
+                          this.fullscreenLoading = false;
+                          this.$refs[projectName].resetFields();
+                          if (e.response.status = 403) {
+                            console.log(e.response.status)
+                            this.$message({
+                              showClose: true,
+                              message: e.response.data.message,
+                              type: 'error'
+                            });
+                          }
+                          return;
+                          let dataMessage = '';
+                          if (e.message != undefined) {
+                            dataMessage = e.message
+                          } else if (e.response.data.message != undefined) {
+                            dataMessage = e.response.data.message
+                          } else {
+                            dataMessage = "Please try again! Some error occured."
+                          }
+                          this.$confirm(dataMessage, 'Error', {
+                            confirmButtonText: 'logout',
+                            cancelButtonText: 'reload',
+                            type: 'error',
+                            center: true
+                          }).then(() => {
+                            localStorage.removeItem('current_sub_id');
+                            this.$session.remove('username');
+                            let location = psl.parse(window.location.hostname)
+                            location = location.domain === null ? location.input : location.domain
+                            Cookies.remove('auth_token', {
+                              domain: location
+                            });
+                            Cookies.remove('email', {
+                              domain: location
+                            });
+                            Cookies.remove('userDetailId', {
+                              domain: location
+                            });
+                            Cookies.remove('subscriptionId', {
+                              domain: location
+                            });
+                            this.isLoggedIn = false;
+                            window.location = '/login';
+                          }).catch(() => {
+                            location.reload()
+                          });
                         });
+                    })
+                    .catch((e) => {
+                      let dataMessage = ''
+                      if (e.message != undefined) {
+                        dataMessage = e.message
+                      } else if (e.response.data.message != undefined) {
+                        dataMessage = e.response.data.message
+                      } else {
+                        dataMessage = "Please try again! Some error occured."
+                      }
+                      this.$confirm(dataMessage, 'Error', {
+                        confirmButtonText: 'logout',
+                        cancelButtonText: 'reload',
+                        type: 'error',
+                        center: true
+                      }).then(() => {
+                        localStorage.removeItem('current_sub_id');
+                        this.$session.remove('username');
                         let location = psl.parse(window.location.hostname)
                         location = location.domain === null ? location.input : location.domain
-
                         Cookies.remove('auth_token', {
-                            domain: location
+                          domain: location
                         });
                         Cookies.remove('email', {
-                            domain: location
+                          domain: location
                         });
                         Cookies.remove('userDetailId', {
-                            domain: location
+                          domain: location
                         });
                         Cookies.remove('subscriptionId', {
-                            domain: location
+                          domain: location
                         });
-                        this.$message({
-                            message: 'You\'re Logged Out From System. Please login again!',
-                            type: 'error',
-                            onClose() {
-                                window.location = '/login'
-                            }
-                        });
+                        this.isLoggedIn = false;
+                        window.location = '/login';
+                      }).catch(() => {
+                        location.reload()
+                      });
+                    })
+                } else {
+                  this.newProjectFolderDialog = false;
+                  this.fullscreenLoading = false;
+                  this.$refs[projectName].resetFields();
+                  this.$session.remove('username');
+                  localStorage.removeItem('current_sub_id');
+                  Cookies.remove('subscriptionId', {
+                    domain: location
+                  });
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token', {
+                    domain: location
+                  });
+                  Cookies.remove('email', {
+                    domain: location
+                  });
+                  Cookies.remove('userDetailId', {
+                    domain: location
+                  });
+                  Cookies.remove('subscriptionId', {
+                    domain: location
+                  });
+                  this.$message({
+                    message: 'You\'re Logged Out From System. Please login again!',
+                    type: 'error',
+                    onClose() {
+                      window.location = '/login'
                     }
+                  });
                 }
+              }
             },
 
             // Create neccessary folders for project
             async addOtherFolder(newFolderName) {
 
-                // Create Public folder
-                await axios.post(config.baseURL + '/flows-dir-listing', {
-                        foldername: newFolderName + '/public',
-                        type: 'folder'
+              // Create Public folder
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                  foldername: newFolderName + '/public',
+                  type: 'folder'
+                })
+                .then(async(res) => {
+
+                  // Create Assets folder
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                      foldername: newFolderName + '/public/assets',
+                      type: 'folder'
                     })
-                    .then(async (res) => {
-
-                        // Create Assets folder
-                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                foldername: newFolderName + '/public/assets',
-                                type: 'folder'
-                            })
-                            .then(async (res) => {
-                                // Create Assets folder
-                                await axios.post(config.baseURL + '/flows-dir-listing', {
-                                        foldername: newFolderName + '/public/assets/client-plugins',
-                                        type: 'folder'
-                                    })
-                                    .then((res) => {})
-                                    .catch((e) => {
-                                        //console.log("Error from Client-Plugins"+res)
-                                    });
-                            })
-                            .catch((e) => {
-                                //console.log("Error from Assests"+res)
-                            });
-
-                        // Create Main-Files Folder
-                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                foldername: newFolderName + '/public/main-files',
-                                type: 'folder'
-                            })
-                            .then((res) => {})
-                            .catch((e) => {
-                                //console.log("Error from pages"+res)
-                            });
-
+                    .then(async(res) => {
+                      // Create Assets folder
+                      await axios.post(config.baseURL + '/flows-dir-listing', {
+                          foldername: newFolderName + '/public/assets/client-plugins',
+                          type: 'folder'
+                        })
+                        .then((res) => {})
+                        .catch((e) => {
+                          //console.log("Error from Client-Plugins"+res)
+                        });
                     })
                     .catch((e) => {
-                        //console.log("Error from Assests"+res)
+                      //console.log("Error from Assests"+res)
                     });
-                //Create Preview Folder
-                await axios.post(config.baseURL + '/flows-dir-listing', {
-                    foldername: newFolderName + '/public/Preview',
-                    type: 'folder',
-                    folderType: 'preview',
-                    folderBasePath: newFolderName
-                }).then(async (res) => {
+
+                  // Create Main-Files Folder
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                      foldername: newFolderName + '/public/main-files',
+                      type: 'folder'
+                    })
+                    .then((res) => {})
+                    .catch((e) => {
+                      //console.log("Error from pages"+res)
+                    });
+
+                })
+                .catch((e) => {
+                  //console.log("Error from Assests"+res)
+                });
+              //Create Preview Folder
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                  foldername: newFolderName + '/public/Preview',
+                  type: 'folder',
+                  folderType: 'preview',
+                  folderBasePath: newFolderName
+                }).then(async(res) => {
 
                 }).catch((e) => {
-                    console.log(e)
+                  console.log(e)
                 })
                 // Create Partials Folder
-                await axios.post(config.baseURL + '/flows-dir-listing', {
-                        foldername: newFolderName + '/Partials',
-                        type: 'folder'
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                  foldername: newFolderName + '/Partials',
+                  type: 'folder'
+                })
+                .then(async(res) => {
+                  // Create Headers Folder
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                      foldername: newFolderName + '/Partials/Header',
+                      type: 'folder'
                     })
-                    .then(async (res) => {
-                        // Create Headers Folder
-                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                foldername: newFolderName + '/Partials/Header',
-                                type: 'folder'
-                            })
-                            .then((res) => {})
-                            .catch((e) => {
-                                //console.log("Error From Headers"+res)
-                            });
-
-                        // Create menus Folder
-                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                foldername: newFolderName + '/Partials/Menu',
-                                type: 'folder'
-
-                            })
-                            .then((res) => {})
-                            .catch((e) => {
-                                //console.log("Error from Menu"+res)
-                            });
-
-                        // Create Footers Folder
-                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                foldername: newFolderName + '/Partials/Footer',
-                                type: 'folder'
-                            })
-                            .then((res) => {})
-                            .catch((e) => {
-                                //console.log("Error from Footers"+res)
-                            });
-
-                        // Create Templates Folder
-                        // axios.post(config.baseURL+'/flows-dir-listing' , {
-                        //   foldername : newFolderName+'/Partials/Templates',
-                        //   type : 'folder'
-                        // })
-                        // .then((res) => {
-                        ////   console.log('Templates Folder created!');
-                        // })
-                        // .catch((e)=>{
-                        ////   console.log("Error from pages"+res)
-                        // });
-
-                        // Create Sidebars Folder
-                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                foldername: newFolderName + '/Partials/Sidebar',
-                                type: 'folder'
-                            })
-                            .then((res) => {})
-                            .catch((e) => {
-                                //console.log("Error from pages"+res)
-                            });
-
-
-                    })
+                    .then((res) => {})
                     .catch((e) => {
-                        //console.log("Error From Headers"+res)
+                      //console.log("Error From Headers"+res)
                     });
 
-                // Create Layouts Folder
-                await axios.post(config.baseURL + '/flows-dir-listing', {
-                        foldername: newFolderName + '/Layout',
-                        type: 'folder'
+                  // Create menus Folder
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                      foldername: newFolderName + '/Partials/Menu',
+                      type: 'folder'
 
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log("Error From Layout"+res)
+                      //console.log("Error from Menu"+res)
                     });
 
-                // Create Pages Folder
-                await axios.post(config.baseURL + '/flows-dir-listing', {
-                        foldername: newFolderName + '/Pages',
-                        type: 'folder'
+                  // Create Footers Folder
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                      foldername: newFolderName + '/Partials/Footer',
+                      type: 'folder'
                     })
-                    .then((res) => {
-                        this.createEssentialFiles(newFolderName);
-                    })
+                    .then((res) => {})
                     .catch((e) => {
-                        //console.log("Error from pages"+res)
+                      //console.log("Error from Footers"+res)
                     });
+
+                  // Create Templates Folder
+                  // axios.post(config.baseURL+'/flows-dir-listing' , {
+                  //   foldername : newFolderName+'/Partials/Templates',
+                  //   type : 'folder'
+                  // })
+                  // .then((res) => {
+                  ////   console.log('Templates Folder created!');
+                  // })
+                  // .catch((e)=>{
+                  ////   console.log("Error from pages"+res)
+                  // });
+
+                  // Create Sidebars Folder
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                      foldername: newFolderName + '/Partials/Sidebar',
+                      type: 'folder'
+                    })
+                    .then((res) => {})
+                    .catch((e) => {
+                      //console.log("Error from pages"+res)
+                    });
+
+                })
+                .catch((e) => {
+                  //console.log("Error From Headers"+res)
+                });
+
+              // Create Layouts Folder
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                  foldername: newFolderName + '/Layout',
+                  type: 'folder'
+
+                })
+                .then((res) => {})
+                .catch((e) => {
+                  //console.log("Error From Layout"+res)
+                });
+                
+               await axios.post(config.baseURL+'/flows-dir-listing' , {
+                  foldername : newFolderName+'/.temppublish',
+                  type : 'folder'
+                }).catch((e)=>{
+                  console.log(e);
+                })
+
+              // Create Pages Folder
+              await axios.post(config.baseURL + '/flows-dir-listing', {
+                  foldername: newFolderName + '/Pages',
+                  type: 'folder'
+                })
+                .then((res) => {
+                  this.createEssentialFiles(newFolderName);
+                })
+                .catch((e) => {
+                  //console.log("Error from pages"+res)
+                });
 
             },
 
@@ -3010,7 +2293,7 @@
                 let maincss = newFolderName + '/public/main-files/main.css'
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: maincss,
-                        text: '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;}',
+                        text: '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;}.grid{position: relative;}.item{display: block; position: absolute; width: 100%; max-width: 250px; height: auto; margin: 5px; z-index: 1; background: white; color: black; border: 1px solid black}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}',
                         type: 'file'
                     })
                     .then((res) => {})
@@ -3067,6 +2350,19 @@
                     .catch((e) => {
                         //console.log(e)
                     });
+
+                // Create log file
+                let logfile = newFolderName + '/public/log.md'
+                await axios.post(config.baseURL + '/flows-dir-listing', {
+                    filename : logfile,
+                    text : '# Welcome to Log File!',
+                    type : 'file'
+                })
+                .then((res) => {
+                })
+                .catch((e) => {
+                    //console.log(e)
+                });
 
                 // Create metalsmith file
                 let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
@@ -3195,32 +2491,7 @@
                         //console.log(e)
                     });
 
-                // // Product Listing Plugin
-                // let listingPlugin = newFolderName + '/assets/client-plugins/client-product-listing-plugin.js';
-                // let pluginJsData = '';
-                // axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/product-listing-plugin-cleaned.js', {
-
-                // })
-                // .then((response) => {
-                //   pluginJsData = response.data;
-                //   let ProjectName = newFolderName.replace('/var/www/html/websites/', '')
-                //   pluginJsData = pluginJsData.replace('setNameHere', ProjectName);
-
-                //   axios.post(config.baseURL + '/flows-dir-listing', {
-                //       filename : listingPlugin,
-                //       text : pluginJsData,
-                //       type : 'file'
-                //   })
-                //   .then((res) => {
-                ////     console.log(listingPlugin + ' file created');
-                //   })
-                //   .catch((e) => {
-                ////       console.log(e)
-                //   })
-                // })
-                // .catch((e) => {
-                ////     console.log(e)
-                // });
+                
 
                 // Flowz Engine JS
                 let flowzBuilderEngine = newFolderName + '/public/assets/client-plugins/flowz-builder-engine.js';
@@ -3274,6 +2545,27 @@
                         await axios.post(config.baseURL + '/flows-dir-listing', {
                                 filename: shoppingCartJs,
                                 text: shoppingCartData,
+                                type: 'file'
+                            })
+                            .then((res) => {})
+                            .catch((e) => {
+                                //console.log(e)
+                            })
+                    })
+                    .catch((e) => {
+                        //console.log(e)
+                    });
+
+                    // Shopping cart js
+                let vuelastic = newFolderName + '/public/assets/client-plugins/vuelastic.js';
+                await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/js/vuelastic.js', {
+
+                    })
+                    .then(async (res) => {
+                        let vuelasticData = res.data;
+                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                                filename: vuelastic,
+                                text: vuelasticData,
                                 type: 'file'
                             })
                             .then((res) => {})
@@ -3550,6 +2842,7 @@
 
             // Save File
             async saveFile(arg) {
+              this.fullscreenLoading = true;
                 if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
                     this.saveFileLoading = true
                     let newContent = this.$store.state.content
@@ -3969,6 +3262,7 @@
                                     // }
 
                                 }
+                                this.fullscreenLoading = false;
                             } else {
                                 if (fileName.search('.partial') != -1 && fileName.search('/Pages') == -1) {
                                     var content = ''
@@ -4371,11 +3665,13 @@
                                     }
                                 }
                                 this.saveConfigFile(folderUrl);
+                                this.fullscreenLoading = false;
                             }
 
                         })
                         .catch((e) => {
-                            this.saveFileLoading = false
+                            this.saveFileLoading = false;
+                            this.fullscreenLoading = false;
                             this.$message({
                                 showClose: true,
                                 message: 'File not saved! Please try again.',
@@ -4385,6 +3681,7 @@
                         })
                         })
                         .catch((e) => {
+                          this.fullscreenLoading = false;
                             let dataMessage = '';
                             if (e.message != undefined) {
                                 dataMessage = e.message              
@@ -4499,8 +3796,8 @@
             async generatePreview() {
               if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
                 this.previewLoading = true;
-                this.fullscreenLoading = true;
                 await this.saveFile('void');
+                
 
                 let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
 
@@ -4517,7 +3814,9 @@
                 }
                 let folderUrl = configFileUrl.replace(fileName, '');
 
+                this.fullscreenLoading = true;
                 await this.getConfigFileData(folderUrl);
+                this.fullscreenLoading = true;
                 
                 // let configFileData = await this.getConfigFileData(folderUrl);
                 // console.log(configFileData)
@@ -4556,6 +3855,8 @@
                 };
                 let self = this;
                 setTimeout(async function() {
+
+                  self.fullscreenLoading = true;
 
                   if(self.globalConfigData == undefined){
                     self.fullscreenLoading = false;
@@ -5010,7 +4311,7 @@
                       }
                       responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
                       // self.form.partials = back_partials
-                      // console.log("Final metalsmith:", responseMetal.data);
+                       // console.log("Final metalsmith:", responseMetal.data);
                       var mainMetal = folderUrl + '/public/assets/metalsmithPreview.js'
                       axios.post(config.baseURL + '/save-menu', {
                           filename: mainMetal,
@@ -5032,35 +4333,69 @@
                           let divappstart = ''
                           let divappend = ''
                           let dfscript = ''
-                          let indexvuejs = _.findIndex(PageCss, function(o) {
-                              return o == 'VueJs'
-                            })
+
+                          // console.log("PageCss:",PageCss);
+
+                          // let indexvuejs = _.findIndex(PageCss, function(o) {
+                          //     return o == 'VueSearchJS'
+                          //   })
+
+                          // let indexvuedatajs = _.findIndex(PageCss, function(o) {
+                          //     return o == 'VueDataJS'
+                          //   })
+
+                          // console.log(indexvuedatajs);
                             // if (contentpartials.indexOf('datafieldgroup') > 0 || contentpartials.indexOf('datafieldtable') > 0) {
-                          if (indexvuejs != -1) {
-                            datadivscript = "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n" +
-                              "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n" +
-                              "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
-                            divappstart = '<div id="app">'
-                            divappend = '</div>'
-                            dfscript = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" + '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' + "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
+                          if (PageCss == 'VueSearchJS') {
+                            divappstart   = '<div id="app">'
+                            divappend     = '</div>'
+                            dfscript      = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
+                                            + "<link rel='stylesheet' type='text/css' href='https://res.cloudinary.com/flowz/raw/upload/v1526901609/component-base.css'>\n"
+                                            + '<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js"><\/script>\n'
+                                            + '<script src="https://unpkg.com/vuejs-paginate@1.9.0/dist/index.js"><\/script>\n'
+                                            + '<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">'
+                                            + '<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"><\/script>'
+                                            + '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.8/jquery.lazy.min.js"><\/script>\n'
+                                            + '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.8/jquery.lazy.plugins.min.js"><\/script>\n'
+                                            + '<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"><\/script>\n'
+                                            + '<script src="./../assets/client-plugins/vuelastic.js"><\/script>'
                           }
+
+                          if (PageCss == 'VueDataJS') {
+                            divappstart   = '<div id="app">'
+                            divappend     = '</div>'
+                            dfscript      = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
+                                            + "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n"
+                                            + "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n"
+                                            + "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
+                                            + "<link rel='stylesheet' type='text/css' href='https://res.cloudinary.com/flowz/raw/upload/v1526901609/component-base.css'>\n"
+                                            + "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>"
+                                            + '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>'
+                                            + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">'
+                                            + "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>"
+                          }
+
                           let newContent = "<html>\n<head>\n" + tophead +
-                            "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
-                            '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
-                            "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                            "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
-                            datadivscript +
-                            endhead + "\n</head>\n<body>\n" + divappstart + topbody +
-                            layoutdata.data +
-                            '\n' + divappend +
-                            "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
-                            "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
-                            "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
-                            '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                            '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                            '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
-                            endbody + dfscript +
-                            '\n</body>\n</html>';
+                                          "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
+                                          '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
+                                          "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
+                                          '<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">\n' +
+                                          "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
+                                          endhead + "\n</head>\n<body>\n" + divappstart + topbody +
+                                          layoutdata.data +
+                                          '\n' + divappend +
+                                          "<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'><\/script>\n" +
+                                          "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
+                                          "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
+                                          '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                                          '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
+                                          '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                                          endbody + dfscript +
+                                          '\n</body>\n</html>';
+
+                            // + "<script type='text/javascript' src=' https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>\n"
+                            // '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+
                           axios.post(config.baseURL + '/flows-dir-listing', {
                               filename: folderUrl + '/Layout/' + self.form.Layout + '_temp.layout',
                               text: newContent,
@@ -5084,10 +4419,12 @@
                                 .then(async(res) => {
                                   self.saveFileLoading = false;
                                   // console.log('Metalsmith call FolderUrl: ', folderUrl);
+                                  let previewbackupmetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                                  
                                   await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                                       axios.post(config.baseURL + '/save-menu', {
                                           filename: folderUrl + '/public/assets/metalsmithPreview.js',
-                                          text: backupmetalsmith,
+                                          text: previewbackupmetal,
                                           type: 'file'
                                         })
                                         .then(async(res) => {
@@ -5099,9 +4436,11 @@
                                           projName = projName.split('/')[2];
                                           // console.log("process.env.NODE_ENV",process.env.NODE_ENV)
                                           if (process.env.NODE_ENV !== 'development') {
-                                            window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
+                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
+                                            redirectWindow.location;
                                           } else {
-                                            window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
+                                            let redirectWindow = window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
+                                            redirectWindow.location;
                                           }
                                           await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                             .then(async(res) => {
@@ -5871,7 +5210,6 @@
 
             // Remove Project Folder and Delete GitLab Repository
             async removeProject(store, data) {
-
                 // Get Config File
                 let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 let foldername = folderUrl.split('/');
@@ -6041,8 +5379,10 @@
             },
 
             quickDelete(store, data) {
+              setTimeout(()=>{
                 this.$store.state.fileUrl = data.path;
                 this.removeProject(store, data);
+              },0);
             },
 
             previewWebsite(node, data) {
@@ -6619,16 +5959,44 @@
 
             // Displaying icons in tree nodes  
             renderContent(h, { node, data, store }) {
-
               if(data.type=='directory' && node.label != 'websites'){
                 // If node is a website project directory
                 if(node.level == 2){
-                  return (<span on-click={ () => this.isProjectStats = true }>
-                        <span class="nodelabel">
+                  // console.log('renderContent')
+                  // console.log('this.statusPublish',this.statusPublish)
+                  let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
+                  if(index!=-1){
+                    //   if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
+                    //   return (<span on-click={ () => this.isProjectStats = true }>
+                    //     <span class="nodelabel" >
+                    //         <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                    //         <span>{data.websitename}</span>
+                    //     </span>
+                    //     <span class="action-button" style="float: right; padding-right: 5px;">
+
+                    //           <i title='website publishing' class="fa fa-spinner fa-spin" aria-hidden="true" style="margin-right: 5px; "></i>
+
+                    //           <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+
+                    //           <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                          
+                    //           <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                          
+                          
+                    //           <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.isProjectStats = true, this.quickDelete(store, data) }></i>
+                          
+                    //     </span>
+                    //   </span>)
+                    // }
+                // else{
+                      return (<span on-click={ () => this.isProjectStats = true }>
+                        <span class="nodelabel" >
                             <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
                             <span>{data.websitename}</span>
                         </span>
                         <span class="action-button" style="float: right; padding-right: 5px;">
+
+        
 
                               <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
 
@@ -6640,7 +6008,33 @@
                               <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
                           
                         </span>
-                    </span>)  
+                      </span>)
+                    // }
+                  }else{
+                    // console.log('-1 found ')
+                    return (<span on-click={ () => this.isProjectStats = true }>
+                        <span class="nodelabel" >
+                            <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                            <span>{data.websitename}</span>
+                        </span>
+                        <span class="action-button" style="float: right; padding-right: 5px;">
+
+        
+
+                              <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+
+                              <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                          
+                              <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                          
+                          
+                              <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.quickDelete(store, data) }></i>
+                          
+                        </span>
+                      </span>)
+                  }
+                  
+                   
                 } else {
                   // If it's a simple directory
                   if(_.includes(data.path, '/Partials') && !(_.includes(data.path, '/Partials/'))){
@@ -6672,8 +6066,8 @@
                       </span>
                   </span>);
                   } else if (node.level == 1) {
-                    return(<span>
-                        <span class="nodelabel" on-click={ () => this.goToHomePage() }>
+                    return(<span on-click={ () => this.goToHomePage() }>
+                        <span class="nodelabel" >
                             <i class="fa fa-list-ul" style="padding: 10px; color: #333"></i>
                             <span>Websites</span>
                         </span>
@@ -6699,7 +6093,7 @@
                     </span>);
                   }
                 }
-                  
+               
               } else if(data.type=='file'){
                 // var filePath = data.path;
                 // var pathParts = filePath.split('/');
@@ -6743,7 +6137,7 @@
                       </span>
                   </span>)
                 } else if(data.extension == '.layout'){
-                  // If it's a LAYOUT file
+                  // If its a LAYOUT file
                   return (<span>
                       <span class="filelabel">
                           <i class="fa fa-file-text" style="padding: 10px; color: #4A8AF4"></i>
@@ -7508,10 +6902,13 @@
     }
 
     .sideOpener i {
-        display: table-cell;
-        vertical-align: middle;
-        font-weight: bolder;
-        font-size: 18px;
+        /*display: table-cell;*/
+        /*vertical-align: middle;*/
+        /*font-weight: bolder;*/
+        font-size: 14px;
+        position: absolute;
+        top: 50%;
+        left: 0;
     }
 
 

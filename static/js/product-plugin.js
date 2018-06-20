@@ -141,8 +141,8 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     bm.add('LoginComponent', {
         label: 'Login Component',
         content: {
-            script: 'let projectID="";let loginUrl="";let userDetailsUrl="";let socialLoginUrl="";let baseURL="";$(document).ready(function(){if ($.cookie("auth_token") !=null){window.location="index.html";}else{$.getJSON("./assets/project-details.json", function(data){projectID=data[0].projectID; loginUrl=data[0].login_api; userDetailsUrl=data[0].user_details_api; socialLoginUrl=data[0].social_login_api; baseURL=data[0].builder_service_api;});}});$(".input-fields").keyup(function(e){var code=e.which; if (code==13) e.preventDefault(); if (code==32 || code==13 || code==188 || code==186){authenticateUser();}});$(".login-submit").click(function(){authenticateUser();});$(".socialMedCls").on("click", function(){var action_url=$(this).attr("title"); $("#form-social-icons").attr("action", socialLoginUrl + action_url); $("#form-social-icons").submit();});function authenticateUser(){if ($(".user_email").val() !="" && $(".user_pass").val() !=""){axios.post(loginUrl,{email: $(".user_email").val(), password: $(".user_pass").val()}).then(function(response){$.cookie("auth_token", response.data.logintoken,{path: window.location.hostname}); axios.get(userDetailsUrl,{headers:{"Authorization": response.data.logintoken}}).then(async(resp)=>{$.cookie("user_id", resp.data.data._id,{path: window.location.hostname}); await axios.get(baseURL + "/website-users?websiteId=" + projectID + "&userEmail=" + $(".user_email").val(),{}).then(async(res)=>{if (res.data.data.length > 0){console.log("User already exist");}else{console.log("New User"); await axios.post(baseURL + "/website-users",{userEmail: resp.data.data.email, role: "registered", websiteId: projectID}).then((respo)=>{console.log(respo.data);}).catch((e)=>{console.log(e)});}}).catch((e)=>{console.log(e);}); if (document.referrer.trim() !=""){if (document.referrer.indexOf(baseURL) >=0){window.location=document.referrer;}else{window.location="index.html";}}else{window.location="index.html";}}).catch((e)=>{console.log(e)})}).catch(function(error){$(".alert-box").css("display", "block"); $("#error-message").text(error.response.data);});}else if ($(".user_email").val()=="" && $(".user_pass").val() !=""){$(".alert-box").css("display", "block"); $("#error-message").text("Please enter your email");}else if ($(".user_email").val() !="" && $(".user_pass").val()==""){$(".alert-box").css("display", "block"); $("#error-message").text("Please enter password");}else{$(".alert-box").css("display", "block"); $("#error-message").text("Please enter login credentials");}}',
-            content: '<div> <div class="login-section"> <div class="innerpage"> <div class="row justify-content-center"> <div class="col-md-12 text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1>Log In</h1> </div></div><div class="row"> <div class="col-md-12"> <div class="alert alert-danger alert-dismissible alert-box" style="display: none"> <strong>Error!</strong> <span id="error-message"></span></div></div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields user_email" type="text" placeholder="Email" required="true"/> </div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields mb-1 user_pass" type="password" placeholder="Password" required="true"/> <p class="text-right"><a href="signup.html">New User?</a> </p></div></div><div class="row mt-4"> <div class="col"> <button class="btn login-submit" type="button">Submit</button> </div></div><div class="col-md-12 mt-4"> <form id="form-social-icons" name="form-google" method="post"> <input type="hidden" name="success_url" id="success_url"/> <ul class="social-network social-circle"> <li><a class="icoFacebook socialMedCls" href="javascript:;" title="facebook"><i class="fa fa-facebook"></i></a> </li><li><a class="icoTwitter socialMedCls" href="javascript:;" title="twitter"><i class="fa fa-twitter"></i></a> </li><li><a class="icoGoogle socialMedCls" href="javascript:;" title="Gplus"><i class="fa fa-google-plus"></i></a> </li><li><a class="icoLinkedin socialMedCls" href="javascript:;" title="linkedin"><i class="fa fa-linkedin"></i></a> </li><li><a class="icoRss socialMedCls" href="javascript:;" title="github"><i class="fa fa-github"></i></a> </li></ul> </form> </div></div></div></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"></script>'
+            script: 'let projectID=""; let loginUrl=""; let userDetailsUrl=""; let socialLoginUrl=""; let baseURL=""; $(document).ready(function(){if ($.cookie("user_id") !=null && $.cookie("user_auth_token") !=null){window.location="index.html"}else{$.getJSON("./assets/project-details.json", function(data){projectID=data[0].projectID; loginUrl=data[0].login_api; userDetailsUrl=data[0].user_details_api; socialLoginUrl=data[0].social_login_api; baseURL=data[0].builder_service_api; $(".success_url").val(data[0].BaseURL); $(".failure_url").val(data[0].BaseURL + \'error404.html\')})}}); $(".input-fields").keyup(function(e){var code=e.which; if (code==13) e.preventDefault(); if (code==32 || code==13 || code==188 || code==186){authenticateUser()}}); $(".login-submit").click(function(){authenticateUser()}); $(".socialMedCls").on("click", function(){var action_url=$(this).attr("title"); $("#form-social-icons").attr("action", socialLoginUrl + action_url); $("#form-social-icons").submit()}); function authenticateUser(){if ($(".user_email").val() !="" && $(".user_pass").val() !=""){axios.post(loginUrl,{email: $(".user_email").val(), password: $(".user_pass").val()}).then(function(response){$.cookie("user_auth_token", response.data.logintoken,{path: window.location.hostname}); axios.get(userDetailsUrl,{headers:{"Authorization": response.data.logintoken}}).then(async(resp)=>{$.cookie("user_id", resp.data.data._id,{path: window.location.hostname}); await axios.get(baseURL + "/website-users?websiteId=" + projectID + "&userEmail=" + $(".user_email").val(),{}).then(async(res)=>{if (res.data.data.length > 0){console.log("User already exist")}else{console.log("New User"); await axios.post(baseURL + "/website-users",{userEmail: resp.data.data.email, userRole: "registered", websiteId: projectID}).then((respo)=>{console.log(respo.data)}).catch((e)=>{console.log(e)})}}).catch((e)=>{console.log(e)}); if (document.referrer.trim() !=""){if (document.referrer.indexOf(baseURL) >=0){window.location=document.referrer}else{window.location="index.html"}}else{window.location="index.html"}}).catch((e)=>{console.log(e)})}).catch(function(error){$(".alert-box").addClass("show"); $("#error-message").text(error.response.data); setTimeout(function(){$(".alert-box").removeClass("show")}, 5000)})}else if ($(".user_email").val()=="" && $(".user_pass").val() !=""){$(".alert-box").addClass("show"); $("#error-message").text("Please enter your email"); setTimeout(function(){$(".alert-box").removeClass("show")}, 5000)}else if ($(".user_email").val() !="" && $(".user_pass").val()==""){$(".alert-box").addClass("show"); $("#error-message").text("Please enter password"); setTimeout(function(){$(".alert-box").removeClass("show")}, 5000)}else{$(".alert-box").addClass("show"); $("#error-message").text("Please enter login credentials"); setTimeout(function(){$(".alert-box").removeClass("show")}, 5000)}}',
+            content: '<div> <div class="login-section"> <div class="innerpage row"> <div class="row justify-content-center"> <div class="text-center"> <div class="fdb-box fdb-touch"> <div class="row"> <div class="col"> <h1 class="mt-4">Log In</h1> </div></div><div class="row"> <div class="col-md-12"> <div class="alert alert-danger alert-dismissible alert-box"> <strong>Error! </strong><span id="error-message"></span> </div></div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields user_email" type="text" placeholder="Email" required="true"/> </div></div><div class="row mt-4"> <div class="col"> <input class="form-control input-fields mb-1 user_pass" type="password" placeholder="Password" required="true"/> <p class="text-right"><a href="signup.html">New User?</a> </p></div></div><div class="row mt-4"> <div class="col"> <button class="btn login-submit" type="button">Submit</button> </div></div><div class="col-md-12 mt-4"> <form id="form-social-icons" name="form-google" method="get"> <ul class="social-network social-circle"><!-- <li><a class="icoFacebook socialMedCls" href="javascript:;" title="facebook"><i class="fa fa-facebook"></i></a> </li>--> <li><a class="icoTwitter socialMedCls" href="javascript:;" title="twitter"><i class="fa fa-twitter"></i></a> </li><li><a class="icoGoogle socialMedCls" href="javascript:;" title="google"><i class="fa fa-google-plus"></i></a> </li><!-- <li><a class="icoLinkedin socialMedCls" href="javascript:;" title="linkedin"><i class="fa fa-linkedin"></i></a> </li>--> <li><a class="icoRss socialMedCls" href="javascript:;" title="github"><i class="fa fa-github"></i></a> </li></ul> <input type="hidden" name="success_url" value="" class="success_url"> <input type="hidden" name="failure_url" value="" class="failure_url"> </form> </div></div></div></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"></script>'
         },
         attributes: {
             class: 'fa fa-sign-in',
@@ -244,86 +244,106 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         category: 'Bootstrap-Block'
     });
 
-    bm.add('g-form-template', {
-        label: 'Form Full',
-        content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div></div>',
+    bm.add('Bootstrap-Block-8-4', {
+        label: 'Bootstrap-Block-3-9',
+        content: '<div class="row" style="padding: 5px;"><div class="col-md-3 bootstrapblock"></div><div class="col-md-9 bootstrapblock"></div></div>',
         attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Full'
+            class: 'fa fa-th',
+            title: 'Bootstrap-Block-3-9'
         },
-        category: 'Custom Form Controls'
+        category: 'Bootstrap-Block'
     });
 
-    bm.add('g-form', {
-        label: 'G-Form',
-        content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
+    bm.add('fontAwesomeIcon', {
+        label: 'Font Awesome Icon',
+        content: '<i class="fa fa-home"></i>',
         attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form'
+            class: 'fa fa-font-awesome',
+            title: 'Font Awesome Icon'
         },
-        category: 'Custom Form Controls'
+        category: 'Extra'
     });
 
-    bm.add('gformpanel', {
-        label: 'G-Form Panel',
-        content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Panel'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form-template', {
+    //     label: 'Form Full',
+    //     content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name"/> <label>age</label> <input type="text" name="age"/> <label>address</label> <div attr-id="address" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>Add 1</label> <input type="text" name="add1"/> <label> city </label> <div attr-id="cities" style="padding: 15px;"> <div class="g-form"> <div class="g-form-panel"> <label>city test</label> <input type="text" name="city"/> <button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div><button onclick="handleDelete(event)">Delete</button> </div><div class="g-form-group-button"> <button onclick="handleAdd(event)">Add</button> </div></div></div></div><div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div></div>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Full'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
-    bm.add('g-form-add-btn', {
-        label: 'G-Form Add Button',
-        content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Add Button'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form', {
+    //     label: 'G-Form',
+    //     content: '<gform class="g-form" style="display: block; padding: 10px;"></gform>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
-    bm.add('g-form-delete-btn', {
-        label: 'G-Form Delete Button',
-        content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Delete Button'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('gformpanel', {
+    //     label: 'G-Form Panel',
+    //     content: '<gformpanel class="g-form-panel" style="display: block; padding: 5px;"><form class="form"><div class="form-group" style="display: block; padding: 20px; margin: 5px"></div></form></gformpanel>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Panel'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
-    bm.add('g-form-submit-btn', {
-        label: 'G-Form Submit Button',
-        content: '<button class="button" onclick="getValues()" type="button">Submit</button>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Submit Button'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form-add-btn', {
+    //     label: 'G-Form Add Button',
+    //     content: '<div class="g-form-group-button"> <button type="button" onclick="handleAdd(event)">Add</button> </div>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Add Button'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
-    bm.add('formpartial', {
-        label: 'G-Form-Partial',
-        content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form-Partial'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form-delete-btn', {
+    //     label: 'G-Form Delete Button',
+    //     content: '<div class="g-form-group-button"> <button type="button" onclick="handleDelete(event)">Delete</button> </div>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Delete Button'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
+
+    // bm.add('g-form-submit-btn', {
+    //     label: 'G-Form Submit Button',
+    //     content: '<button class="button" onclick="getValues()" type="button">Submit</button>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Submit Button'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
+
+    // bm.add('formpartial', {
+    //     label: 'G-Form-Partial',
+    //     content: '<formpartial style="display: block; padding: 10px; min-height: 20px;"></formpartial>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form-Partial'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
 
-    bm.add('g-form-template2', {
-        label: 'Form Full2',
-        content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name" placeholder="name" /> <span class="error" data-validate-for="name"></span> <label>email</label> <input type="text" name="email" placeholder="email" /> <span class="error" data-validate-for="email"></span> <label>age</label> <input type="text" name="age" placeholder="age" /> <span class="error" data-validate-for="age"></span> <label>phone</label> <input type="text" name="phone" placeholder="phone" /> <span class="error" data-validate-for="phone"></span> <label>birthdate</label> <input type="date" name="birthdate" placeholder="birthdate" /> <span class="error" data-validate-for="birthdate"></span> </div> <div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div> </div> <button class="button" onclick="getValues()" type="button">Submit</button>',
-        attributes: {
-            class: 'fa fa-html5',
-            title: 'G-Form Full2'
-        },
-        category: 'Custom Form Controls'
-    });
+    // bm.add('g-form-template2', {
+    //     label: 'Form Full2',
+    //     content: '<div class="g-form"> <div class="g-form-panel"> <label>name</label> <input type="text" name="name" placeholder="name" /> <span class="error" data-validate-for="name"></span> <label>email</label> <input type="text" name="email" placeholder="email" /> <span class="error" data-validate-for="email"></span> <label>age</label> <input type="text" name="age" placeholder="age" /> <span class="error" data-validate-for="age"></span> <label>phone</label> <input type="text" name="phone" placeholder="phone" /> <span class="error" data-validate-for="phone"></span> <label>birthdate</label> <input type="date" name="birthdate" placeholder="birthdate" /> <span class="error" data-validate-for="birthdate"></span> </div> <div class="g-form-group-button"> <button onclick="handleDelete(event)">Delete</button><button onclick="handleAdd(event)">Add</button> </div> </div> <button class="button" onclick="getValues()" type="button">Submit</button>',
+    //     attributes: {
+    //         class: 'fa fa-html5',
+    //         title: 'G-Form Full2'
+    //     },
+    //     category: 'Custom Form Controls'
+    // });
 
 
     // // Sections
@@ -410,6 +430,16 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         attributes: {
             class: 'fa fa-file-o',
             title: 'Content Block'
+        },
+        category: 'Extra'
+    });
+
+    bm.add('basicDiv', {
+        label: 'Basic Division',
+        content: '<div style="min-height: 20px; display: block;"></div>',
+        attributes: {
+            class: 'fa fa-code',
+            title: 'Basic Div'
         },
         category: 'Extra'
     });
@@ -705,78 +735,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-    // // dataField component
-    bm.add('DataFieldGroup', {
-        label: 'Data Field Group',
-        content: '<div class="grid12"><DataFieldGroup style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroup></div>',
-        attributes: {
-            class: 'fa fa-database',
-            title: 'Data Field',
-        },
-        category: 'Data Field Group'
-    });
-
-    bm.add('DataFieldObject', {
-        label: 'Data Field Object',
-        content: '<DataFieldObject style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
-        attributes: {
-            class: 'fa fa-database',
-            title: 'Data Field',
-        },
-        category: 'Data Field Group'
-    });
-
-    bm.add('DataFieldTable', {
-        label: 'Data Field Table',
-        content: '<DataFieldTable style="display: block; width: 100%; min-height:350px"></DataFieldTable>',
-        attributes: {
-            class: 'fa fa-database',
-            title: 'Data Field',
-        },
-        category: 'Data Field Group'
-    });
-
-    bm.add('DataFieldText', {
-        label: 'Data Field Text',
-        content: '<DataFieldText style="display: block; width: 100%; min-height:20px"><p>Insert your text here</p></DataFieldText>',
-        attributes: {
-            class: 'fa fa-database',
-            title: 'Data Field',
-        },
-        category: 'Data Field Group'
-    });
-
-    bm.add('DataFieldList', {
-        label: 'Data Field List',
-        content: '<DataFieldList style="display: block; width: 100%; min-height:80px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:70px"><div class="fieldListRepeater"></div><template scope="item"></DataFieldList>',
-        attributes: {
-            class: 'fa fa-database',
-            title: 'Data Field',
-        },
-        category: 'Data Field Group'
-    });
-
-    bm.add('DataFieldImage', {
-        label: 'Data Field Image',
-        content: '<DataFieldImage style="display: block; width: 100%; min-height:40px"><img src="home.jpg" ></DataFieldImage>',
-        attributes: {
-            class: 'fa fa-database',
-            title: 'Progress Bar',
-        },
-        category: 'Data Field Group'
-    });
-
-    bm.add('DataFieldTemplate', {
-        label: 'Data Field Template',
-        content: '<div class="container"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo" style="width: 100%;">Hot Topics</button> <div id="demo" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> <div class="col-md-6" style="border: 1px solid black; height: 200px"> One </div><div class="col-md-6" style="border: 1px solid black; height: 200px"> Two </div></div></div><div class="row" style="margin-top: 15px"> <div class="col-md-8"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2" style="width: 100%;">Trending Articles</button> <div id="demo2" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> One </div></div></div><div class="col-md-4"> <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3" style="width: 100%;">Open Positions</button> <div id="demo3" class="collapse in" aria-expended="true" style="margin-top:10px;"> <div class="row"> two </div></div></div></div></div>',
-        attributes: {
-            class: 'fa fa-database',
-            title: 'Template-1',
-        },
-        category: 'Data Field Group'
-    });
-
-
 
     // bm.add('ShoppingCart', {
     //     label: 'Shopping Cart',
@@ -797,6 +755,34 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
     var defaultModel = defaultType.model;
     var defaultView = defaultType.view;
     var traits;
+
+
+    editor.TraitManager.addType('filterall', {
+        /**
+        * Returns the input element
+        * @return {HTMLElement}
+        */
+        getInputEl: function () {
+            if (!this.inputEl) {
+                var input = document.createElement('textarea');
+                input.value = this.target.get('content');
+                this.inputEl = input;
+            }
+            return this.inputEl;
+        },
+
+        /**
+         * Triggered when the value of the model is changed
+         */
+        getValueForTarget: function () {
+            console.log("inside getValueForTargetss")
+            return 'filterAll.' + this.model.get('value');
+        }
+    });
+
+    
+
+
 
     // The `input` will be the Component type ID
     comps.addType('productListing', {
@@ -1878,321 +1864,6 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
 
 
 
-    let arr_coll_schema = []
-    comps.addType('DataFieldGroup', {
-        // Define the Model
-        model: defaultModel.extend({
-            init() {
-                this.listenTo(this, 'change:connectiondata', this.doStuff);
-            },
-            doStuff() {},
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                        type: 'select',
-                        label: 'data-schema',
-                        name: 'data_schema',
-                        options: arr_coll_schema,
-                    },
-                    {
-                        type: 'text',
-                        label: 'API_URL',
-                        name: 'data_api'
-                    },
-                    {
-                        type: 'select',
-                        label: 'draggable',
-                        name: 'draggable',
-                        options: [
-                        {value: '--select--', name: '--select--'},
-                        {value: 'true', name: 'true'},
-                        {value: 'false', name: 'false'}
-                        ]
-                    }
-                ]
-            }),
-
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'DATAFIELDGROUP') {
-                    return {
-                        type: 'DataFieldGroup'
-                    };
-                }
-                if (el.tagName == 'TEMPLATE') {
-                    return { type: 'template', components: el.innerHTML }
-                }
-            },
-        }),
-
-        view: defaultView.extend({
-            // '<template>' can't be shown so in canvas use another tag
-            tagName: 'div'
-        }),
-
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
-
-
-    comps.addType('DataFieldTable', {
-        // Define the Model
-        model: defaultModel.extend({
-            init() {
-                this.listenTo(this, 'change:connectiondata', this.doStuff);
-            },
-            doStuff() {},
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                        type: 'text',
-                        label: 'column_value',
-                        name: 'column_value'
-                    },
-                    {
-                        type: 'text',
-                        label: 'API_URL',
-                        name: 'data_api'
-                    }
-                ]
-            }),
-
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'DATAFIELDTABLE') {
-                    return {
-                        type: 'DataFieldTable'
-                    };
-                }
-                if (el.tagName == 'TEMPLATE') {
-                    return { type: 'template', components: el.innerHTML }
-                }
-            },
-        }),
-
-        view: defaultView.extend({
-            // '<template>' can't be shown so in canvas use another tag
-            tagName: 'div'
-        }),
-
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
-
-
-    comps.addType('DataFieldObject', {
-        // Define the Model
-        model: defaultModel.extend({
-            init() {
-                this.listenTo(this, 'change:connectiondata', this.doStuff);
-            },
-            doStuff() {},
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                        type: 'select',
-                        label: 'data-schema',
-                        name: 'data_schema',
-                        options: arr_coll_schema,
-                    },
-                    {
-                        type: 'text',
-                        label: 'API_URL',
-                        name: 'data_api'
-                    }
-                ]
-            }),
-
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'DATAFIELDOBJECT') {
-                    return {
-                        type: 'DataFieldObject'
-                    };
-                }
-                if (el.tagName == 'TEMPLATE') {
-                    return { type: 'template', components: el.innerHTML }
-                }
-            },
-        }),
-
-        view: defaultView.extend({
-            // '<template>' can't be shown so in canvas use another tag
-            tagName: 'div'
-        }),
-
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
-
-// define custom traits
-// Each new type extends the default Trait
-editor.TraitManager.addType('content', {
-  /**
-  * Returns the input element
-  * @return {HTMLElement}
-  */
-  getInputEl: function() {
-    if (!this.inputEl) {
-      var input = document.createElement('textarea');
-      input.value = this.target.get('content');
-      this.inputEl = input;
-    }
-    return this.inputEl;
-  },
-
-  /**
-   * Triggered when the value of the model is changed
-   */
-  getValueForTarget: function() {
-    console.log("inside getValueForTargetss")
-    return 'item.text.' + this.model.get('value');
-  }
-});
-
-    comps.addType('DataFieldText', {
-        // Define the Model
-        model: defaultModel.extend({
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                    label: 'Data text field',
-                    name: ':text',
-                    type: 'content'
-                }]
-            }),
-
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'DATAFIELDTEXT') {
-                    return {
-                        type: 'DataFieldText'
-                    };
-                }
-            },
-        }),
-
-        view: defaultType.view,
-
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
-    
-
-    comps.addType('DataFieldList', {
-        // Define the Model
-        model: defaultModel.extend({
-            // Extend default properties
-            defaults: Object.assign({}, defaultModel.prototype.defaults, {
-                editable: true,
-                droppable: true,
-                traits: [{
-                    label: 'Data list field',
-                    name: ':items',
-                    type: 'content'
-                }]
-            }),
-
-        }, {
-            isComponent: function(el) {
-                if (el.tagName == 'DATAFIELDLIST') {
-                    return {
-                        type: 'DataFieldList'
-                    };
-                }
-            },
-        }),
-
-        view: defaultType.view,
-
-        // The render() should return 'this'
-        render: function() {
-            // Extend the original render method
-            defaultType.view.prototype.render.apply(this, arguments);
-            this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-            return this;
-        },
-    });
-
-
-    // comps.addType('img', {
-    //     // Define the Model
-    //     model: defaultModel.extend({
-    //         // Extend default properties
-    //         defaults: Object.assign({}, defaultModel.prototype.defaults, {
-    //             editable: true,
-    //             droppable: true,
-    //             traits: [{
-    //                     label: 'Data image field',
-    //                     name: ':src',
-    //                     type: 'text'
-    //                 },
-    //                 {
-    //                     label: 'image height',
-    //                     name: 'height',
-    //                     type: 'text'
-    //                 },
-    //                 {
-    //                     label: 'image width',
-    //                     name: 'width',
-    //                     type: 'text'
-    //                 },
-    //                 {
-    //                     label: 'image alt',
-    //                     name: 'alt',
-    //                     type: 'text'
-    //                 }
-    //             ]
-    //         }),
-
-    //     }, {
-    //         isComponent: function(el) {
-    //             if (el.tagName == 'IMG') {
-    //                 return {
-    //                     type: 'img'
-    //                 };
-    //             }
-    //         },
-    //     }),
-
-    //     view: defaultType.view,
-
-    //     // The render() should return 'this'
-    //     render: function() {
-    //         // Extend the original render method
-    //         defaultType.view.prototype.render.apply(this, arguments);
-    //         this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
-    //         return this;
-    //     },
-    // });
 
     editor.TraitManager.addType('customConent1', {
 
@@ -2669,6 +2340,32 @@ editor.TraitManager.addType('content', {
             return this;
         },
     });
+
+
+     editor.TraitManager.addType('filterall', {
+        /**
+        * Returns the input element
+        * @return {HTMLElement}
+        */
+        getInputEl: function () {
+            if (!this.inputEl) {
+                var input = document.createElement('textarea');
+                input.value = this.target.get('content');
+                this.inputEl = input;
+            }
+            return this.inputEl;
+        },
+
+        /**
+         * Triggered when the value of the model is changed
+         */
+        getValueForTarget: function () {
+            console.log("inside getValueForTargetss")
+            return 'filterAll.' + this.model.get('value');
+        }
+    });
+
+    
 
 
 })

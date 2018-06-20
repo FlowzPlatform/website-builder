@@ -1,330 +1,348 @@
 <template>
    <div class="PageSettings">
+
+
+    <div class="tabs">
+      <h3>Page Settings</h3>
+
+      <a class="tab" id="tab1" data-target="#tab1-content">General Settings</a>  
+    
+      <a class="tab" id="tab2" data-target="#tab2-content">Meta Information</a>
+    
+      <a class="tab" id="tab3" data-target="#tab3-content">External Links</a>
+
+      <a class="tab" id="tab3" data-target="#tab4-content">Local Links</a>
+      
+      <span class="tab-active-bar"></span>
+    </div>
+
+
+
+
+    <!-- <div class="tab-contents">
+      <div id="tab1-content" class="tab-content">
+        <span class="block-title">Website Details</span>
+        <div class="card">
+          
+        </div>
+      </div>
+    </div> -->
+
+    <!-- <div class="card-spacer"></div>
+
+    <span class="block-title">Website Details</span>
+    <div class="card">
+      
+    </div> -->
+
+    <div class="tab-contents">
+      <div id="tab1-content" class="tab-content">
+        <!-- <span class="block-title">Page Details</span> -->
+        <div class="card">
+          <el-form ref="form" :model="form" label-width="160px">
+             <el-form-item label="Page name">
+                <el-input v-model="form.name" :disabled="true"></el-input>
+             </el-form-item>
+             <el-form-item label="Page Layout">
+                <el-select v-model="form.Layout" @change="layoutChange()" placeholder="Please select Layout">
+                   <el-option
+                      v-for="item in form.layouts"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                   </el-option>
+                </el-select>
+             </el-form-item>
+             <div id="demo">
+                <div v-for='(n,index) in partialsList'>
+                   <el-form-item :label="n ">
+                      <el-select @visible-change="layoutChange()" v-model="form.parent_id[n]" placeholder="Please select " >
+                         <el-option v-for="item in AllData[index]" 
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item"
+                            :disabled="item.disabled">
+                         </el-option>
+                      </el-select>
+                   </el-form-item>
+                </div>
+             </div>
+             <el-form-item label="Page SEO Title">
+                <el-input v-model="form.seoTitle"></el-input>
+             </el-form-item>
+             <hr>
+             <el-form-item label="Enable frameworks:">
+                <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox> -->
+                <!-- <div style="margin: 15px 0;"></div> -->
+                <el-radio-group v-model="checkedCss" @change="handleCheckedCssChange">
+                   <el-radio v-for="css in csses" :label="css" :key="css">{{css}}</el-radio>
+                </el-radio-group>
+             </el-form-item>
+          </el-form>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-contents">
+      <div id="tab2-content" class="tab-content">
+        <!-- <span class="block-title">Meta Information</span> -->
+        <div class="card">
+          <div class="row">
+             <div class="col-md-12" >
+                <el-form :inline="true">
+                   <el-form-item label="Meta Charset">
+                      <el-input placeholder="charset value" v-model="Metacharset"></el-input>
+                   </el-form-item>
+                </el-form>
+             </div>
+             <div class="col-md-12" style="margin-top: 2%">
+                <table class="table table-hover  table-bordered">
+                   <!-- <draggable @start="drag=true" @end="drag=false"> -->
+                   <thead class="thead">
+                      <tr>
+                         <th>Name</th>
+                         <th>Content</th>
+                         <th></th>
+                         <!-- <th></th> -->
+                      </tr>
+                   </thead>
+                   <tbody>
+                      <tr v-for="(n, index) in externallinksMeta" >
+                         <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                         <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                         <td>
+                            <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button>
+                         </td>
+                         <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
+                      </tr>
+                      <tr>
+                         <td colspan="4">
+                            <el-button type="danger" @click="addNewexternallinkMeta">New Meta Link</el-button>
+                         </td>
+                      </tr>
+                   </tbody>
+                   <!-- </draggable> -->
+                </table>
+                <!-- Create new variable -->
+                <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+                <!-- </el-form> -->
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-contents">
+      <div id="tab3-content" class="tab-content">
+        <!-- <span class="block-title">External JS &amp; CSS</span> -->
+        <div class="card">
+          <div class="row">
+             <div class="col-md-12">
+                <div class="row">
+                   <div class="col-md-11">
+                      <h3> JS Links </h3>
+                   </div>
+                   <!-- <div style="float: right;" class="col-md-1">
+                      <el-tooltip class="item" effect="dark" content="To ProjectSetting links" placement="top-start">
+                         <el-button type='info' icon="setting"></el-button>
+                      </el-tooltip>
+                   </div> -->
+                </div>
+                <hr>
+                <el-form ref="form" :model="form">
+                   <div >
+                      <el-form-item>
+                         <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
+                            <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
+                               <!-- position  -->
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-6" style="margin: 0; padding: 0px">
+                                  <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete2"></el-button>
+                               </div>
+                               <div class="col-md-1">
+                                  <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                    <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                  </el-tooltip>
+                                  
+                               </div>
+                            </div>
+                         </draggable>
+                      </el-form-item>
+                   </div>
+                   <!-- Create new variable -->
+                   <el-button type="danger" @click="addNewexternallinkJS">New JS Link</el-button>
+                </el-form>
+             </div>
+             <div class="col-md-12" style="margin-top: 4%;">
+                <div class="row">
+                   <div class="col-md-4">
+                      <h3> CSS Links </h3>
+                   </div>
+                </div>
+                <hr>
+                <el-form ref="form" :model="form">
+                   <draggable v-model='externallinksCSS' @start="drag=true" @end="drag=false">
+                      <div v-for="(n, index) in externallinksCSS">
+                         <el-form-item>
+                            <div class="row">
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-6" style="margin: 0; padding-left: 0px">
+                                  <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete2"></el-button>
+                               </div>
+                               <div class="col-md-1">
+                                <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                  <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                </el-tooltip>
+                               </div>
+                            </div>
+                         </el-form-item>
+                      </div>
+                      <!-- Create new variable -->
+                   </draggable>
+                </el-form>
+                <el-button type="danger" @click="addNewexternallinkCSS">New CSS Link</el-button>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-contents">
+      <div id="tab4-content" class="tab-content">
+        <!-- <span class="block-title">Local Styles &amp; Scripts</span> -->
+        <div class="card">
+          <div class="row">
+             <div class="col-md-12">
+                <div class="row">
+                   <div class="col-md-4">
+                      <h3> Scripts: </h3>
+                   </div>
+                </div>
+                <hr>
+                <el-form ref="form" :model="form">
+                   <div >
+                      <el-form-item>
+                         <draggable v-model='localpagescripts' @start="drag=true" @end="drag=false">
+                            <div style="margin-bottom: 25px" v-for='(n, index) in localpagescripts' class="row">
+                               <!-- position  -->
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-6" style="margin: 0; padding: 0px">
+                                  <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
+                               </div>
+                               <div class="col-md-1">
+                                  <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                    <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                </el-tooltip>
+                               </div>
+                            </div>
+                         </draggable>
+                      </el-form-item>
+                   </div>
+                   <!-- Create new variable -->
+                   <el-button type="danger" @click="addNewlocalscripts">New script</el-button>
+                </el-form>
+             </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+             <div class="col-md-12">
+                <div class="row">
+                   <div class="col-md-4">
+                      <h3> Styles: </h3>
+                   </div>
+                </div>
+                <hr>
+                <el-form ref="form" :model="form">
+                   <div >
+                      <el-form-item>
+                         <draggable v-model='localpagestyles' @start="drag=true" @end="drag=false">
+                            <div style="margin-bottom: 25px" v-for='(n, index) in localpagestyles' class="row">
+                               <!-- position  -->
+                               <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                  <el-select v-model="n.linkposition" placeholder="Position">
+                                     <el-option
+                                        v-for="item in Allposition"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                     </el-option>
+                                  </el-select>
+                               </div>
+                               <!-- link url -->
+                               <div class="col-md-6" style="margin: 0; padding: 0px">
+                                  <el-input type="textarea" :rows="5" placeholder="css" v-model="n.style"></el-input>
+                               </div>
+                               <!-- Delete Variable -->
+                               <div class="col-md-1">
+                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
+                               </div>
+                               <div class="col-md-1">
+                                <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                  <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                </el-tooltip>
+                               </div>
+                            </div>
+                         </draggable>
+                      </el-form-item>
+                   </div>
+                   <!-- Create new variable -->
+                   <el-button type="danger" @click="addNewlocalstyles">New Style</el-button>
+                </el-form>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
       <!-- Save/Publish/Cancel Buttons -->
       <div class="page-buttons">
          <el-button type="primary" size="small" @click="savePageSettings">Save</el-button>
       </div>
-      <div class="container" style="margin-bottom: 100px;">
-         <div class="row">
-            <div class="col-md-12">
-            <div class="collapsingDivWrapper row">
-                   <div class="col-md-12">
-                       <a href="javascript:void(0)" id="pageSettings" class="card color-div toggleableDivHeader">Page Settings</a>
-                   </div>
-             </div>
-               <div class="toggleableDivHeaderContent" style="" id='pageSettingsContent'>
-                  <el-form ref="form" :model="form" label-width="160px">
-                     <el-form-item label="Page name">
-                        <el-input v-model="form.name" :disabled="true"></el-input>
-                     </el-form-item>
-                     <el-form-item label="Page Layout">
-                        <el-select v-model="form.Layout" @change="layoutChange()" placeholder="Please select Layout">
-                           <el-option
-                              v-for="item in form.layouts"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value">
-                           </el-option>
-                        </el-select>
-                     </el-form-item>
-                     <div id="demo">
-                        <div v-for='(n,index) in partialsList'>
-                           <el-form-item :label="n ">
-                              <el-select @visible-change="layoutChange()" v-model="form.parent_id[n]" placeholder="Please select " >
-                                 <el-option v-for="item in AllData[index]" 
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item"
-                                    :disabled="item.disabled">
-                                 </el-option>
-                              </el-select>
-                           </el-form-item>
-                        </div>
-                     </div>
-                     <el-form-item label="Page SEO Title">
-                        <el-input v-model="form.seoTitle"></el-input>
-                     </el-form-item>
-                     <hr>
-                     <el-form-item label="Enable frameworks:">
-                        <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox> -->
-                        <!-- <div style="margin: 15px 0;"></div> -->
-                        <el-checkbox-group v-model="checkedCss" @change="handleCheckedCssChange">
-                           <el-checkbox v-for="css in csses" :label="css" :key="css">{{css}}</el-checkbox>
-                        </el-checkbox-group>
-                     </el-form-item>
-                  </el-form>
-               </div>
-            </div>
-         </div>
-         <div class="row">
-           <div class="col-md-12">
-
-              <div class="collapsingDivWrapper row">
-                 <div class="col-md-12">
-                     <a href="javascript:void(0)" id="add-meta-tag" class="card color-div toggleableDivHeader">External Meta Tags</a>
-                 </div>
-             </div>
-             <div  id='add-meta-tagContent' class="toggleableDivHeaderContent" style="display: none;">
-                <div class="row">
-                   <div class="col-md-12" >
-                      <div class="row">
-                         <div class="col-md-4">
-                            <h3>Add External meta tags </h3>
-                         </div>
-                      </div>
-                      <hr>
-                      <el-form :inline="true">
-                         <el-form-item label="Meta Charset">
-                            <el-input placeholder="charset value" v-model="Metacharset"></el-input>
-                         </el-form-item>
-                      </el-form>
-                   </div>
-                   <div class="col-md-12" style="margin-top: 2%">
-                      <table class="table table-hover  table-bordered">
-                         <!-- <draggable @start="drag=true" @end="drag=false"> -->
-                         <thead class="thead">
-                            <tr>
-                               <th>Name</th>
-                               <th>Content</th>
-                               <th></th>
-                               <!-- <th></th> -->
-                            </tr>
-                         </thead>
-                         <tbody>
-                            <tr v-for="(n, index) in externallinksMeta" >
-                               <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
-                               <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
-                               <td>
-                                  <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button>
-                               </td>
-                               <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
-                            </tr>
-                            <tr>
-                               <td colspan="4">
-                                  <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button>
-                               </td>
-                            </tr>
-                         </tbody>
-                         <!-- </draggable> -->
-                      </table>
-                      <!-- Create new variable -->
-                      <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
-                      <!-- </el-form> -->
-                   </div>
-                </div>
-             </div>
-              <div class="collapsingDivWrapper row">
-                 <div class="col-md-12">
-                     <a href="javascript:void(0)" id="add-js-css" class="card color-div toggleableDivHeader">Add JS/CSS Links</a>
-                 </div>
-             </div>
-             <div class="toggleableDivHeaderContent" style="display: none;" id='add-js-cssContent'>
-                <div class="row">
-                   <div class="col-md-12">
-                      <div class="row">
-                         <div class="col-md-11">
-                            <h3> JS Links </h3>
-                         </div>
-                         <!-- <div style="float: right;" class="col-md-1">
-                            <el-tooltip class="item" effect="dark" content="To ProjectSetting links" placement="top-start">
-                               <el-button type='info' icon="setting"></el-button>
-                            </el-tooltip>
-                         </div> -->
-                      </div>
-                      <hr>
-                      <el-form ref="form" :model="form">
-                         <div >
-                            <el-form-item>
-                               <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
-                                  <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
-                                     <!-- position  -->
-                                     <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                        <el-select v-model="n.linkposition" placeholder="Position">
-                                           <el-option
-                                              v-for="item in Allposition"
-                                              :key="item.value"
-                                              :label="item.label"
-                                              :value="item.value">
-                                           </el-option>
-                                        </el-select>
-                                     </div>
-                                     <!-- link url -->
-                                     <div class="col-md-6" style="margin: 0; padding: 0px">
-                                        <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
-                                     </div>
-                                     <!-- Delete Variable -->
-                                     <div class="col-md-1">
-                                        <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete2"></el-button>
-                                     </div>
-                                     <div class="col-md-1">
-                                        <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                          <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                        </el-tooltip>
-                                        
-                                     </div>
-                                  </div>
-                               </draggable>
-                            </el-form-item>
-                         </div>
-                         <!-- Create new variable -->
-                         <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
-                      </el-form>
-                   </div>
-                   <div class="col-md-12" style="margin-top: 4%;">
-                      <div class="row">
-                         <div class="col-md-4">
-                            <h3> CSS Links </h3>
-                         </div>
-                      </div>
-                      <hr>
-                      <el-form ref="form" :model="form">
-                         <draggable v-model='externallinksCSS' @start="drag=true" @end="drag=false">
-                            <div v-for="(n, index) in externallinksCSS">
-                               <el-form-item>
-                                  <div class="row">
-                                     <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                        <el-select v-model="n.linkposition" placeholder="Position">
-                                           <el-option
-                                              v-for="item in Allposition"
-                                              :key="item.value"
-                                              :label="item.label"
-                                              :value="item.value">
-                                           </el-option>
-                                        </el-select>
-                                     </div>
-                                     <!-- link url -->
-                                     <div class="col-md-6" style="margin: 0; padding-left: 0px">
-                                        <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
-                                     </div>
-                                     <!-- Delete Variable -->
-                                     <div class="col-md-1">
-                                        <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete2"></el-button>
-                                     </div>
-                                     <div class="col-md-1">
-                                      <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                      </el-tooltip>
-                                     </div>
-                                  </div>
-                               </el-form-item>
-                            </div>
-                            <!-- Create new variable -->
-                         </draggable>
-                      </el-form>
-                      <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
-                   </div>
-                </div>
-             </div>
-
-             <div class="collapsingDivWrapper row">
-                 <div class="col-md-12">
-                     <a href="javascript:void(0)" id="add-local-scripts" class="card color-div toggleableDivHeader">Add Local Scripts</a>
-                 </div>
-             </div>
-             <div class="toggleableDivHeaderContent" style="display: none;" id='add-local-scriptsContent'>
-                <div class="row">
-                   <div class="col-md-12">
-                      <div class="row">
-                         <div class="col-md-4">
-                            <h3> Scripts: </h3>
-                         </div>
-                      </div>
-                      <hr>
-                      <el-form ref="form" :model="form">
-                         <div >
-                            <el-form-item>
-                               <draggable v-model='localpagescripts' @start="drag=true" @end="drag=false">
-                                  <div style="margin-bottom: 25px" v-for='(n, index) in localpagescripts' class="row">
-                                     <!-- position  -->
-                                     <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                        <el-select v-model="n.linkposition" placeholder="Position">
-                                           <el-option
-                                              v-for="item in Allposition"
-                                              :key="item.value"
-                                              :label="item.label"
-                                              :value="item.value">
-                                           </el-option>
-                                        </el-select>
-                                     </div>
-                                     <!-- link url -->
-                                     <div class="col-md-6" style="margin: 0; padding: 0px">
-                                        <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
-                                     </div>
-                                     <!-- Delete Variable -->
-                                     <div class="col-md-1">
-                                        <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
-                                     </div>
-                                     <div class="col-md-1">
-                                        <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                          <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                      </el-tooltip>
-                                     </div>
-                                  </div>
-                               </draggable>
-                            </el-form-item>
-                         </div>
-                         <!-- Create new variable -->
-                         <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
-                      </el-form>
-                   </div>
-                </div>
-             </div>
-             <div class="collapsingDivWrapper row">
-                 <div class="col-md-12">
-                     <a href="javascript:void(0)" id="add-local-styles" class="card color-div toggleableDivHeader">Add Local Styles</a>
-                 </div>
-             </div>
-             <div class="toggleableDivHeaderContent" style="" id='add-local-stylesContent' style="margin-bottom: 100px;display: none;">
-                <div class="row">
-                   <div class="col-md-12">
-                      <div class="row">
-                         <div class="col-md-4">
-                            <h3> Styles: </h3>
-                         </div>
-                      </div>
-                      <hr>
-                      <el-form ref="form" :model="form">
-                         <div >
-                            <el-form-item>
-                               <draggable v-model='localpagestyles' @start="drag=true" @end="drag=false">
-                                  <div style="margin-bottom: 25px" v-for='(n, index) in localpagestyles' class="row">
-                                     <!-- position  -->
-                                     <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                        <el-select v-model="n.linkposition" placeholder="Position">
-                                           <el-option
-                                              v-for="item in Allposition"
-                                              :key="item.value"
-                                              :label="item.label"
-                                              :value="item.value">
-                                           </el-option>
-                                        </el-select>
-                                     </div>
-                                     <!-- link url -->
-                                     <div class="col-md-6" style="margin: 0; padding: 0px">
-                                        <el-input type="textarea" :rows="5" placeholder="css" v-model="n.style"></el-input>
-                                     </div>
-                                     <!-- Delete Variable -->
-                                     <div class="col-md-1">
-                                        <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
-                                     </div>
-                                     <div class="col-md-1">
-                                      <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                      </el-tooltip>
-                                     </div>
-                                  </div>
-                               </draggable>
-                            </el-form-item>
-                         </div>
-                         <!-- Create new variable -->
-                         <el-button type="primary" @click="addNewlocalstyles">New Style</el-button>
-                      </el-form>
-                   </div>
-                </div>
-             </div>
-           </div>
-         </div>
-      </div>
+      
    </div>
 </template>
 
@@ -340,7 +358,7 @@ const config = require('../config');
 
 import axios from 'axios';
 
- const cssOptions = ['VueJs'];
+ const cssOptions = ['VueSearchJS', 'VueDataJS'];
 
 export default {
   name: 'PageSettings',
@@ -951,13 +969,40 @@ export default {
                 $("#add-local-styles").text("Add Local Styles")
             }
         });
-   });
+    });
+
+
+    // Tabs Click Handle and Iint
+    $(document).ready(function(){
+      $('.tab').on('click', function(){
+        showTab($(this));
+      });
+      
+      function showTab(tab){
+        var tabBar = tab.parent().find('.tab-active-bar');
+        tabBar.animate({
+          left: parseInt(tab.position().left)+'px',
+          width: parseInt(tab.innerWidth())+'px'
+        });
+        $('.tab-content').hide().promise().done(function(){
+          $(tab.data('target')).show();
+        });
+        
+      }
+      
+      showTab($('#tab1'));
+    });
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .PageSettings{
+    background-color: #f5f5f5;
+    height: 100vh;
+  }
 
   .toggleableDivHeaderContent {
       margin-top: 0px;
@@ -1030,5 +1075,60 @@ export default {
       left: auto;
       right: auto;
     }
+  }
+
+
+  /*Implementation Of Tabs UI*/
+
+  .tabs {
+    padding: 15px 0px;
+    background-color: #FF3500;
+    color: #fff;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+  .tabs h3 {
+    font-size: 28px;
+    font-weight: 400;
+    margin: 15px;
+    margin-left: 30px;
+  }
+  .tabs .tab {
+    text-transform: uppercase;
+    padding: 10px 32px;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .tabs .tab-active-bar {
+    position: absolute;
+    height: 3px;
+    width: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #fff;
+  }
+
+  .tab-content {
+    padding: 24px;
+    font-size: 16px !important;
+    color: #616161;
+  }
+  .tab-content span.block-title {
+    margin-left: 24px;
+    font-size: 20px;
+  }
+  .tab-content .card-spacer {
+    min-height: 50px;
+  }
+  .tab-content .card {
+    background-color: #fff;
+    font-size: 16px;
+    font-weight: 300;
+    margin: 24px;
+    padding: 24px;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
   }
 </style>

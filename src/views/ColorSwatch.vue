@@ -1,5 +1,6 @@
 <template>
   <div class="swatch">
+    <div class="container-fluid">
       <Row>
         <div  style="padding-bottom: 10px;">
           <h2>Product & Imprint Color</h2>
@@ -34,6 +35,8 @@
           <Page :total="len" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
+
   </div>
 
 </template>
@@ -52,7 +55,7 @@
       data () {
           return {
               filterobj: {
-                website: null,
+                website: '',
                 attr_type: '',
                 attr_val: ''
               },
@@ -77,7 +80,7 @@
                        key: '',
                        align: 'center',
                        render: (h, params) => {
-                      
+
                          return h('RadioGroup', {
                            props: {
                              vertical: true,
@@ -298,7 +301,6 @@
           },
           handleUpload1(file){
               var self = this;
-              // console.log('file',file)
               if(file.size >= 51200){
       					self.$Message.error('File size should be less than or equal to 50Kb.');
                 file = '';
@@ -329,7 +331,6 @@
               let self = this
               let testdata = []
               let websiteInfo = JSON.parse(this.filterobj.website);
-              // console.log("websiteInfo",websiteInfo);
               if(websiteInfo == null){
                 this.$Notice.error({
                     title: "Error",
@@ -340,7 +341,6 @@
                 return false;
               }
               let cdata = _.find(this.cloudinaryDetails, {wid: websiteInfo.id})
-         //   console.log("+++++++++++++++")
               if (websiteInfo != null && websiteInfo.vid == '' || websiteInfo.vid == undefined ) {
                 this.$Notice.error({
                     title: "Error",
@@ -381,15 +381,14 @@
                 colorApiName = 'imprintcolor'
               }
               // Fetch colors data from product api
-             //  console.log("config.colorSwatchUrl+colorApiName",config.colorSwatchUrl+colorApiName);
-              // console.log("auth_token",auth_token,this.vid);
+
               await axios({
                 method: 'get',
                  url: config.colorSwatchUrl+colorApiName,
-              //  url: "http://172.16.230.161:3038/filters/colors",                
+              //  url: "http://172.16.230.161:3038/filters/colors",
                 headers: {'Authorization': auth_token,'vid': this.vid}
               }).then(async function (response) {
-                  // console.log("response",response)
+
                   let uniqData = _.uniqBy(response.data.aggregations.group_by_attributes.buckets, 'key');
                   // Set uniqData instead of myArr
                   let myArr = [];
@@ -401,12 +400,11 @@
                   }else{
                     myArr = uniqData
                   }
-                  // console.log('uniqData..............', myArr)
+
                   await self.getDataFromColorApi()
-                  // console.log("colorData",self.colorData);
+
                   $.each(myArr,function(index,item){
-                    // console.log("index",index);
-                    // console.log("item",item);
+
                       item.checkvalue = 'Hexcode'
                       item.ishexDisable= false
                       item.isimgurlDisable= true
@@ -425,7 +423,6 @@
                             }
                        });
                   })
-                  // console.log("testdata",testdata);
                   self.data1 = myArr
                   $.each(testdata,function(index,item){
                     if(item.hexcode == undefined){
@@ -439,10 +436,10 @@
                       self.data1[item.index].hexcode1 = item.hexcode
                     }
                   })
-                  // console.log("self.data1",self.data1);
+
                   // return false;
                   self.list1 = await self.mockTableData1(1,pageSize)
-              //    console.log("self.list1",self.list1);
+
                   self.$Loading.finish();
               }).catch(function(error){
                   // self.$Message.error(error)
@@ -482,7 +479,7 @@
                   })
               //    this.errorFlag = true
                   return false;
-            //    } 
+            //    }
               } else {
                   let methodType = '';
                   let url = '';
@@ -493,12 +490,12 @@
                   let data = _.find(this.colorData, function(o) {
                                   return o.colorname == self.list1[index].key;
                               });
-                  
+
                   if(data != undefined && data.id != ''){
                       methodType = 'PATCH';
                       url = baseUrl + '/color-table/'+ data.id;
                   }else{
-                                              
+
                       methodType = 'POST';
                       url = baseUrl + '/color-table';
                   }
@@ -528,14 +525,14 @@
                                self.data1[(self.page - 1) * 10 + (index)].hexcode1 = self.list1[index].hexcode1
                                self.list1[index].imageBox1 = '';
                                self.data1[(self.page - 1) * 10 + (index)].imageBox1 = '';
-                              //  self.list1[index] = 
+                              //  self.list1[index] =
                               //  self.$Message.success("Hexcode is saved successfully.")
                                self.$Notice.success({
                                    title: 'Success',
                                    desc: "Hexcode is saved successfully."
                                });
                                self.$Loading.finish();
-                         
+
                         }).catch(function (error) {
                             self.$Notice.error({
                                 title: "Error",
@@ -567,7 +564,7 @@
 
                       param1['file'] = {filename: this.list1[index].imgurl1.original_filename+"."+this.list1[index].imgurl1.format}
                       param1.file['url'] = this.list1[index].imgurl1.url
-                  
+
                       // convert file to base64
                       /*param1['file'] = {filename: this.list1[index].imgurl1.name}
                       let reader = new FileReader();
@@ -576,7 +573,7 @@
                           let filebase64 = reader.result
                           param1.file['url'] = filebase64*/
                           // Save Image
-                          
+
                           axios({
                              method: methodType,
                              url: url,
@@ -609,7 +606,7 @@
           uploadAssetImage(index) {
             this.$Spin.show();
             let cdata = _.find(this.cloudinaryDetails, {wid: this.websiteid})
-         
+
             cloudinary.openUploadWidget({
               cloud_name: cdata.cloudName,
               api_key: cdata.apiKey,
@@ -628,7 +625,7 @@
                   });
                 }
               } else {
-              
+
                 let imageObj = result[0]
                 this.list1[this.rowIndex].imgurl1 = imageObj
                 return false;
@@ -639,24 +636,24 @@
       mounted(){
           this.$Loading.start();
           let userId = Cookies.get('userDetailId')
-          
+
           axios.get(baseUrl + '/project-configuration?userId=' + userId).then(response => {
-         
+
             for (let item of response.data.data) {
-          
+
               let VID = ''
               let cdetails = {};
               if(typeof item.configData[1].projectSettings[1].CloudinaryDetails != "undefined") {
                 cdetails = item.configData[1].projectSettings[1].CloudinaryDetails;
               }
-            
+
               if(item.configData[1].projectSettings != undefined && item.configData[1].projectSettings[0].ProjectVId != undefined && item.configData[1].projectSettings[0].ProjectVId.vid != ''){
                   VID = item.configData[1].projectSettings[0].ProjectVId.vid
               }
               cdetails.wid = item.id
               this.cloudinaryDetails.push(cdetails)
               let websiteObj = {id:item.id, vid:VID, subscription_id:item.subscriptionId, websitename:item.websiteName}
-          
+
               this.webOptions.push({label: item.websiteName, value:JSON.stringify(websiteObj)})
             }
             this.$Loading.finish();
@@ -683,4 +680,9 @@
 .ivu-input{
   text-align: center;
 }
+</style>
+<style scoped>
+	.swatch{
+	  padding: 40px;
+	}
 </style>
