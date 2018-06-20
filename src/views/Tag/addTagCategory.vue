@@ -1,0 +1,159 @@
+<template>
+  <div class="tagcategorynew">
+   <Row>
+      <div style="padding-bottom: 10px;">
+        <h2 v-if="formItem.id">Edit Tag Category</h2>
+        <h2 v-else>Add Tag Category</h2>
+      </div>
+   </Row>
+   <Row style="border: 1px solid #C0C0C0; padding: 20px">
+     <Form :model="formItem" :label-width="300" ref="formItem" :rules="rulesformItem">
+        <FormItem label="Website" prop="website" filterable>
+            <Select v-model="formItem.website" placeholder="Select Website" :disabled="isdisable">
+                <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+        </FormItem>      
+        <FormItem label="Category Name" prop="tc_name">
+            <Input v-model.trim="formItem.tc_name" placeholder="Tag Category Name"></Input>
+        </FormItem>
+        <FormItem  v-if="formItem.id" label="Status">
+            <i-switch v-model="formItem.status" size="large">
+                <span slot="open">On</span>
+                <span slot="close">Off</span>
+            </i-switch>
+        </FormItem>
+        <FormItem>
+            <Button v-if="formItem.id" type="primary" @click="handleEdit('formItem')">Update</Button>
+            <Button v-else type="primary" @click="handleSubmit('formItem')">Submit</Button>
+            <Button type="ghost" style="margin-left: 8px" @click="handleCancel">Cancel</Button>
+        </FormItem>
+    </Form>
+   </Row>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+import config from '../../config'
+import Cookies from 'js-cookie';
+import _ from 'lodash'
+
+let baseUrl = config.baseURL
+let tagcategoryUrl = baseUrl + '/tagcategory'
+
+export default {
+  name: 'tagcategorynew',
+  props: {
+    tdata: Object
+  },
+  data () {
+    const validatetcname = async(rule, value, callback) => {
+      let userId = Cookies.get('userDetailId')
+      if (value !== '' && this.formItem.website !== '') {
+        let resp = await (axios.get(tagcategoryUrl + '?userId=' + userId +'&website=' + this.formItem.website + '&tc_name=' + value).then(res => {
+          if (this.formItem.id) {
+            let arr = _.reject(res.data.data, {tc_name: this.tcname})
+            return arr
+          } else {
+            return res.data.data
+          }
+        }).catch(err => {
+          return []
+        }))
+        if (resp.length > 0) {
+          callback(new Error('Tag Category Name already Exist in Selected Website. Please try another.'))
+        } else {
+          callback();
+        }
+      }
+    };
+    return {
+      formItem: {
+          website: '',
+          tc_name: '',
+          status: true,
+          createdAt: '',
+          userId: Cookies.get('userDetailId')
+      },
+      rulesformItem: {
+        website: [
+          { required: true, message: 'Please select the Website', trigger: 'change' }
+        ],
+        tc_name: [
+          { required: true, message: 'Please fill in the Tag Category Name', trigger: 'blur' },
+          { validator: validatetcname, trigger: 'blur' }
+        ]
+      },
+      webOptions: [],
+      isdisable: false,
+      tcname: ''
+    }
+  },
+  methods: {
+    handleSubmit (name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.formItem.createdAt = new Date()
+          axios.post(tagcategoryUrl, this.formItem).then(res => {
+            this.$Notice.success({title: 'Success', desc: 'Successfully saved.', duration: 3})
+            this.$emit('updateTag', {type: 'tagcategorylist'})
+          }).catch(err => {
+            console.log('error', err)
+            this.$Notice.error({title: 'Error', desc: 'Not saved.', duration: 3})
+          })
+        }
+      })
+    },
+    handleEdit (name) {
+      let item = _.cloneDeep(this.formItem)
+      delete item.id
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          item.createdAt = new Date()
+          axios.put(tagcategoryUrl + '/' + this.formItem.id, item).then(res => {
+            this.$Notice.success({title: 'Success!!', desc: 'Successfully Edited.', duration: 3})
+            this.$emit('updateTag', {type: 'tagcategorylist'})
+            // this.$router.push('/tagcategory')
+          }).catch(err => {
+            console.log('Error', err)
+          })
+        }
+      })
+    },
+    handleCancel () {
+      this.$emit('updateTag', {type: 'tagcategorylist'})
+    }
+  },
+  mounted () {
+    let userId = Cookies.get('userDetailId')
+    if (userId !== '' && userId !== undefined) {
+      this.$Spin.show();
+      axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
+        for (let item of res.data.data) {
+          this.webOptions.push({label: item.websiteName, value: item.id})
+        }
+        this.$Spin.hide();
+      }).catch(err => {
+        this.$Spin.hide();
+      })
+    }
+    if (!_.isEmpty(this.tdata)) {
+      if (this.tdata.type === 'tagcategory' && this.tdata.id !== '') {
+        axios.get(tagcategoryUrl + '/' + this.tdata.id).then(res => {
+          this.formItem = res.data
+          this.tcname = res.data.tc_name
+          this.isdisable = true
+        }).catch(err => {
+          console.log('Error::', err)
+        })
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.tagcategorynew {
+  padding: 40px;
+}
+</style>
