@@ -69,6 +69,15 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
 
 
 
+    bm.add('DataSSet', {
+        label: 'Data Field Set',
+        content: '<div style="display: block; width: 100%; min-height:350px" class="datasset"></div>',
+        attributes: {
+            class: 'fa fa-object-group',
+            title: 'Data Field',
+        },
+        category: 'Data Field Search'
+    });
 
 
     bm.add('DataSFieldGroup', {

@@ -1,7 +1,8 @@
 <template>
   <div class="UserDashboard">
     <div class="flat-theme">
-        <section>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+        <!-- <section>
             <header>
                 <nav class="hh-navigation">
                     <div class="hh-logo-container">
@@ -54,7 +55,7 @@
                                     </li>
                                 </ul>
                             </li> -->
-                            <!-- <span><h5>Welcome<b> {{userEmailId}}</b></h5></span> -->
+                            <!-- <span><h5>Welcome<b> {{userEmailId}}</b></h5></span> ->
                             <div class="skewedbox">
                               <span>Welcome: <span>{{userEmailId}}</span></span>
                             </div>
@@ -76,13 +77,13 @@
                                         <a class="hh-notification-content lg-text" href="#" @click="doLogout"><i class="fa fa-power-off"></i>Log out</a>
                                     </li>
                                 </ul>
-                            </li> -->
+                            </li> ->
                         </ul>
                         <ul class="pull-right links">
                             <!-- <li>
                                 <a class="hh-menu-item" href="#"><i class="fa fa-comment-o"><span class="hh-menu-badge hh-bg-success">0</span></i></a>
-                            </li> -->
-                            <!-- <li class="hh-dropdown"><a class="hh-menu-item" href="#"><i class="fa fa-envelope-o"><span class="hh-menu-badge hh-bg-primary">23</span></i></a>
+                            </li> ->
+                            <li class="hh-dropdown"><a class="hh-menu-item" href="#"><i class="fa fa-envelope-o"><span class="hh-menu-badge hh-bg-primary">23</span></i></a>
                                 <ul class="hh-dropmenu-item">
                                     <li class="hh-dropmenu-header"><a href="#">Your Notifications</a></li>
                                     <li class="hh-notification-item text-left">
@@ -162,15 +163,37 @@
                                     </li>
                                     <li class="hh-dropmenu-footer"><a href="#">See all alerts</a></li>
                                 </ul>
-                            </li> -->
+                            </li>
                         </ul>
                     </div>
                 </nav>
             </header>
-        </section>
+        </section> -->
         <aside>
             <nav class="hh-sidebar">
-                <ul>
+                <div class="profile-bar">
+                  <div class="contents">
+                    <img src="https://gravatar.com/avatar/cd62d88a83461e0b1daa8f2fa31c4dcb?s=512&d=https://codepen.io/assets/avatars/user-avatar-512x512-6e240cf350d2f1cc07c2bed234c3a3bb5f1b237023c204c782622e80d6b212ba.png" alt="UserAvatar">
+                  <p class="profile-name">Welcome, {{userName}}!</p>
+                    <!-- <p class="profile-description">You haven't miss any task this week!</p> -->
+                    <div class="buttons">
+                      <ul>
+                        <li>
+                          <a href="javascript:void(0)" @click='goToUserSettings()'><i class="ti-panel"></i><span> Settings</span></a>
+                        </li>
+                        <li>
+                          <a href="javascript:void(0)"><i class="ti-user"></i><span> Profile</span></a>
+                        </li>
+                        <li>
+                          <a href="javascript:void(0)" @click="doLogout"><i class="ti-power-off"></i><span> Logout</span></a>
+                        </li>
+                      </ul>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+                <ul class="main-links">
                     <li>
                         <a href="#" class="inbox" @click='goToDashboard()'>
                             <i class="fa fa-dashboard">
@@ -212,12 +235,20 @@
                             <span class="hh-sidebar-item">Revenue</span>
                         </a>
                     </li> -->
-                    <li>
+                    <!-- <li>
                         <a href="#" @click='goToUserSettings()'>
                             <i class="fa fa-cog">
                                 <span class="icon-bg hh-bg-success"></span>
                             </i>
                             <span class="hh-sidebar-item">Settings</span>
+                        </a>
+                    </li> -->
+		    <li>
+                        <a href="#" @click='goToWebsiteSetting()'>
+                            <i class="fa fa-cog">
+                                <span class="icon-bg hh-bg-success"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Website Configuration</span>
                         </a>
                     </li>
                     <li>
@@ -268,32 +299,32 @@
                             <span class="hh-sidebar-item">Product & Imprint Color</span>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
                                 <span class="icon-bg hh-bg-violet"></span>
                             </i>
                             <span class="hh-sidebar-item">Logout</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </nav>
         </aside>
 
        <section>
             <div class="hh-body-wrapper">
-                <div class="container-fluid">
-                    
+                <!-- <div class="container-fluid"> -->
+                    <!-- 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12"> -->
                             <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner"></component>
-                        </div>
+                        <!-- </div>
                         
                     </div>
-                    
+                     -->
 
 
-                </div>
+                <!-- </div> -->
             </div>
         </section>
 
@@ -306,6 +337,9 @@
 import psl from 'psl';
 import Cookies from 'js-cookie';
 
+const config = require('../config');
+import axios from 'axios';
+
 import Invite from './invite';
 import HomePage from './Dashboard';
 import UserSettings from './user-settings';
@@ -316,7 +350,8 @@ import AddBannerType from './Banner/add_bannertype';
 import AddBanner from './Banner/add_banner';
 import BannerTypeList from './Banner/bannertypeList';
 import BannerList from './Banner/bannersList';
-import ColorSwatch from './ColorSwatch'
+import ColorSwatch from './ColorSwatch';
+import WebsiteConfig from './WebsiteConfig';
 
 export default {
   name: 'UserDashboard',
@@ -331,7 +366,8 @@ export default {
       bExpand: false,
       componentId: '',
       userEmailId: '',
-      rowdata: {}
+      rowdata: {},
+      userName: null
     }
   },
   component: {
@@ -364,6 +400,9 @@ export default {
             this.componentId = BannerList;
         } else {}
     },
+    goToWebsiteSetting(){
+       this.componentId = WebsiteConfig;
+     },
     goToColors() {
       this.componentId = ColorSwatch;
     },
@@ -411,6 +450,20 @@ export default {
       this.goToDashboard();
 
     this.userEmailId = Cookies.get('email');
+
+    axios.get(config.userDetail, {
+      headers: {
+        'Authorization': Cookies.get('auth_token', {
+          domain: location
+        })
+      }
+    })
+    .then(async(res) => {
+      this.userName = res.data.data.firstname;
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
 
     $(function () {
 
@@ -647,7 +700,7 @@ a, a:hover, a:visited, a:link, a:active {
 }
 
 .hh-logo-container {
-    width: 225px;
+    width: 230px;
     text-align: center;
     height: 82px;
     float: left;
@@ -905,9 +958,9 @@ ul.hh-dropmenu-item {
     position: fixed;
     font-weight: 600;
     background: white !important;
-    width: 225px;
+    width: 230px;
     height: 100vh;
-    top: 50px;
+    /*top: 50px;*/
     left: 0;
     bottom: 0;
     -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 2px 4px 8px rgba(0, 0, 0, 0.28);
@@ -916,12 +969,12 @@ ul.hh-dropmenu-item {
     transition: all .2s ease-in-out;
 }
 
-.hh-sidebar ul {
+.hh-sidebar ul.main-links {
   list-style: none;
   -webkit-padding-start: 0px;
 }
 
-    .hh-sidebar li {
+    .hh-sidebar ul.main-links li {
         text-align: left;
         height: 45px;
         font-size: 14px;
@@ -930,25 +983,25 @@ ul.hh-dropmenu-item {
         line-height: 1.5;
     }
 
-        .hh-sidebar li a {
+        .hh-sidebar ul.main-links li a {
             text-decoration: none;
             display: block;
             color: #515d6e;
         }
 
-            .hh-sidebar li a i {
+            .hh-sidebar ul.main-links li a i {
                 position: relative;
                 width: 45px;
                 line-height: 45px;
                 text-align: center;
             }
 
-                .hh-sidebar li a i:before {
+                .hh-sidebar ul.main-links li a i:before {
                     z-index: 10;
                     position: relative;
                 }
 
-            .hh-sidebar li a > span {
+            .hh-sidebar ul.main-links li a > span {
                 display: inline-block;
                 visibility: visible;
                 opacity: 1;
@@ -960,16 +1013,16 @@ ul.hh-dropmenu-item {
                 font-size: 11px;
             }
 
-        .hh-sidebar li:hover {
+        .hh-sidebar ul.main-links li:hover {
             background: #f2f2f2;
         }
 
-            .hh-sidebar li:hover .icon-bg {
+            .hh-sidebar ul.main-links li:hover .icon-bg {
                 -webkit-transform: translate3d(0, 0, 0);
                 transform: translate3d(0, 0, 0);
             }
 
-            .hh-sidebar li:hover a > i {
+            .hh-sidebar ul.main-links li:hover a > i {
                 color: white;
             }
 
@@ -1072,7 +1125,7 @@ ul.hh-dropmenu-item {
 .hh-body-wrapper {
     position: absolute;
     left: 230px;
-    top: 75px;
+    top: 20px;
     width: auto;
     right: 0;
     -webkit-transition: all .2s ease-in-out;
@@ -1163,11 +1216,11 @@ ul.hh-dropmenu-item {
     }
 
     .hh-sidebar {
-        top: 75px;
+        /*top: 75px;*/
     }
 
     .hh-body-wrapper {
-        top: 100px;
+        top: 20px;
     }
 
     .flat-theme .hh-toggle-btn {
@@ -1185,7 +1238,7 @@ ul.hh-dropmenu-item {
     }
 
     .flat-theme .hh-body-wrapper {
-        top: 125px !important;
+        top: 20px !important;
     }
 
     .flat-theme .hh-sidebar {
@@ -1293,7 +1346,7 @@ ul.hh-dropmenu-item {
     }
 
     .hh-sidebar {
-        top: 100px;
+        /*top: 100px;*/
     }
 
         .hh-sidebar.hh-nav-min {
@@ -1302,7 +1355,7 @@ ul.hh-dropmenu-item {
         }
 
     .hh-body-wrapper {
-        top: 125px;
+        top: 20px;
         position: relative;
     }
 
@@ -1816,23 +1869,23 @@ ul.hh-dropmenu-item {
         background: #32323a !important;
     }
 
-        .flat-theme .hh-sidebar li {
+        .flat-theme .hh-sidebar ul.main-links li {
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-            .flat-theme .hh-sidebar li:hover {
+            .flat-theme .hh-sidebar ul.main-links li:hover {
                 background: #28282a !important;
             }
 
-                .flat-theme .hh-sidebar li:hover span {
+                .flat-theme .hh-sidebar ul.main-links li:hover span {
                     color: #3680F4;
                 }
 
-            .flat-theme .hh-sidebar li a i {
+            .flat-theme .hh-sidebar ul.main-links li a i {
                 color: white;
             }
 
-            .flat-theme .hh-sidebar li a > span {
+            .flat-theme .hh-sidebar ul.main-links li a > span {
                 color: #aeb2b7 !important;
                 -webkit-transition: none;
             }
@@ -1894,7 +1947,7 @@ ul.hh-dropmenu-item {
         border-color: #ad102f transparent;
     }
 
-.flat-theme.crimson .hh-sidebar li:hover a > span {
+.flat-theme.crimson .hh-sidebar ul.main-links li:hover a > span {
     color: #3680f4 !important;
 }
 
@@ -1940,7 +1993,7 @@ ul.hh-dropmenu-item {
         border-color: #188983 transparent;
     }
 
-.flat-theme.teal .hh-sidebar li:hover a > span {
+.flat-theme.teal .hh-sidebar ul.main-links li:hover a > span {
     color: #1fb5ad !important;
 }
 
@@ -1986,7 +2039,7 @@ ul.hh-dropmenu-item {
         border-color: #ff220c transparent;
     }
 
-.flat-theme.orange .hh-sidebar li:hover a > span {
+.flat-theme.orange .hh-sidebar ul.main-links li:hover a > span {
     color: #ff503f !important;
 }
 
@@ -2032,7 +2085,7 @@ ul.hh-dropmenu-item {
         border-color: #4d2673 transparent;
     }
 
-.flat-theme.purple .hh-sidebar li:hover a > span {
+.flat-theme.purple .hh-sidebar ul.main-links li:hover a > span {
     color: rebeccapurple !important;
 }
 
@@ -2078,7 +2131,7 @@ ul.hh-dropmenu-item {
         border-color: #2795e9 transparent;
     }
 
-.flat-theme.twitter .hh-sidebar li:hover a > span {
+.flat-theme.twitter .hh-sidebar ul.main-links li:hover a > span {
     color: #55acee !important;
 }
 
@@ -2165,5 +2218,81 @@ ul.hh-dropmenu-item {
   content: '⤷';
   color: #fff;    
   margin-left: 25px;    
+}
+
+
+
+
+
+
+
+
+
+.profile-bar{
+  background-image: url(https://i.pinimg.com/originals/ae/84/18/ae8418bc8397210c37ba7fc802dbc020.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  max-height: 100%;
+  max-width: 100%;
+  color: #eee;
+}
+
+.profile-bar .contents{
+  background-color: rgba(0,0,0,0.65);
+}
+
+.profile-bar .contents img{
+  display: block;
+  width: 70px;
+  margin: auto;
+  padding-top: 25px;
+}
+
+.profile-bar .contents .profile-name{
+  text-align: center;
+  margin: 10px 0px;
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.profile-bar .contents .profile-description{
+  text-align: center;
+  margin: 10px 0px;
+  font-weight: 300;
+}
+
+.profile-bar .contents .buttons{
+  text-align: center;
+  background-color: rgba(31,45,61,.7);
+}
+
+.profile-bar .contents .buttons ul{
+  list-style: none;
+  -webkit-padding-start: 0;
+}
+
+.profile-bar .contents .buttons ul li{
+  display: inline-block;
+  margin: 5px 10px;
+}
+
+.profile-bar .contents .buttons ul li a{
+  color: #eee;
+  font-size: 22px;
+  display: block;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: 0.2s all linear;
+}
+
+.profile-bar .contents .buttons ul li a:hover{
+  opacity: 1;
+  transition: 0.2s all linear;
+}
+
+.profile-bar .contents .buttons ul li a span{
+  font-size: 14px;
+  display: block;
 }
 </style>

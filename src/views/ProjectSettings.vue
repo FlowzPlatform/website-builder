@@ -1,6 +1,1145 @@
 <template>
   <div class="ProjectSettings">
 
+    <div class="tabs">
+      <h3>Project Settings</h3>
+      <el-tooltip class="item" effect="dark" placement="bottom">
+        <div slot="content" style="text-align: center">Website Publish<br> Basic Settings<br> User Roles<br> Commits and Revision</div>
+        <a class="tab" id="tab1" data-target="#tab1-content">General Settings</a>  
+      </el-tooltip>
+
+      <el-tooltip class="item" effect="dark" placement="bottom">
+        <div slot="content" style="text-align: center">Import Template<br> Global Variables</div>
+        <a class="tab" id="tab2" data-target="#tab2-content">Plugins</a>
+      </el-tooltip>
+
+      <el-tooltip class="item" effect="dark" placement="bottom">
+        <div slot="content" style="text-align: center">Image Library<br> URL Bucket<br> External Links <br> Meta Information <br> Global Styles &amp; Scripts </div>
+        <a class="tab" id="tab3" data-target="#tab3-content">Assets Management</a>
+      </el-tooltip>
+
+      <el-tooltip class="item" effect="dark" placement="bottom">
+        <div slot="content" style="text-align: center">Payment Configurations</div>
+        <a class="tab" id="tab4" data-target="#tab4-content">Accounting</a>
+      </el-tooltip>
+    
+      <span class="tab-active-bar"></span>
+    </div>
+
+
+    <!-- <div class="tab-contents">
+      <div id="tab1-content" class="tab-content">
+      </div>
+    </div> -->
+
+    <!-- <div class="card-spacer"></div>
+
+    <span class="block-title">Website Details</span>
+    <div class="card">
+      
+    </div> -->
+
+    <div class="tab-contents">
+      <div id="tab1-content" class="tab-content">
+
+        <div class="row">
+          <div class="col-md-10">
+            <span class="block-title" id="publish-website">Publish Website</span>
+              <div class="card">
+                <div class="row">
+                  <div class="col-md-12">
+
+                    <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
+                    <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
+
+                    <div class="row">
+                      <div class="col-md-12" v-if="publishType === 'default'">
+                        Your Default domain will be: <a :href="projectPublicUrl" target="_blank">{{projectPublicUrl}}</a>
+                        <br>
+                          <!-- <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
+                        <br> -->
+
+                        <div style="margin-top: 15px;">
+                          <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading">Publish</el-button>
+          
+                          <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button><br><small v-if='isdisabled==true'>*{{ textdata }}</small>
+                          <el-progress v-if='isdisabled==true' style='margin: 21px 0px 6px 0px' v-bind:percentage="percent"></el-progress>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12" v-else>
+                        <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+                        <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
+                          [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
+                            <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                              <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns1-copy')"><i class="fa fa-copy"></i></a>
+                            </el-tooltip>
+                          </strong> 
+                          [2] <strong><span id="ns2-copy">ns2.flowzdigital.com</span>
+                            <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                              <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns2-copy')"><i class="fa fa-copy"></i></a>
+                            </el-tooltip>
+                          </strong> 
+                        </p>
+                        <div style="margin-top: 15px;">
+                          <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-spacer"></div>
+
+              <span class="block-title" id="basic-settings">Basic Settings</span>
+              <div class="card">
+                <div class="row">
+                  <div class="col-md-12">
+                    <el-form ref="form1" :model="form" label-width="180px" :rules="rulesProjectSettings">
+
+                      <el-form-item label="Website Id:">
+                          <el-input v-model="newRepoId" :disabled="true"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="Website name" prop="websitename">
+                          <!-- <el-input v-model="websitename"></el-input> -->
+                          <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
+                            <el-button slot="append" @click="updateProjectName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
+                          </el-input>
+                          <!-- {{websitename}} -->
+                          <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
+                        </el-form-item>
+
+                        <!-- <el-form-item label="Favicon Logo">
+                           <el-input v-model="faviconhref" placeholder="href" ></el-input>
+                        </el-form-item> -->
+                        <el-row>
+                        <el-col :span='20'>
+                        <el-form-item label="V Shop ID">
+                           <el-select clearable v-model="form.vid" placeholder="Select vid">
+                            <el-option
+                              v-for="item in vshopcategory"
+                              :key="item.id"
+                              :label="item.virtualShopName"
+                              :value="item.id">
+                            </el-option>
+                          </el-select>
+                        </el-form-item>
+                        </el-col>
+                        <el-col :span='2'>
+                          <el-tooltip content="Go View V-shop Settings" placement="top">
+                          <el-button type="primary" icon='setting' @click='linktovshop()'>V-Shop</el-button></el-tooltip>
+                        </el-col>
+                        <el-col style='text-align: center;' :span='2'>
+                          <!-- <el-button type="primary" icon="el-icon-refresh"></el-button> -->
+                           <el-tooltip content="Refresh V-shop settings" placement="top">
+                           <el-button type="primary" @click="refreshvshop()"><i class="fa fa-refresh"></i></el-button>
+                           </el-tooltip>
+                        </el-col>
+                        </el-row>
+                       
+
+                        <!-- <el-form-item label="Brand name">
+                          <el-input v-model="form.brandName" placeholder="My Company"></el-input>
+                        </el-form-item> -->
+
+                        <el-form-item label="Website Favicon Logo">
+                          <div class="col6 valid">
+                            <label for="upload-validation" class="brandLogoUploadLabel">
+                              <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
+                            </label>
+                            <br>
+                            <span><b>Current file:</b> {{form.brandLogoName}}</span>
+                            <el-tooltip  v-if='form.brandLogoName!="!!!No file uploaded!!!"' content="To Remove current file" placement="top">
+                            <el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button>
+                            </el-tooltip>
+                            <input type="file" name="" id="upload-validation">
+                            <span class="dis">( .png/ico only max size upto 70KB)</span>
+
+                          </div>
+                           <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
+                        </el-form-item>
+
+                        <el-form-item label="Website SEO Title">
+                          <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
+                        </el-form-item>
+
+                       <!--  <el-form-item label="Website SEO Keywords">
+                          <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="Website SEO Description">
+                          <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
+                        </el-form-item> -->
+
+                    </el-form>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-spacer"></div>
+
+              <span class="block-title" id="website-details">Details</span>
+              <div class="card">
+                <div class="row">
+                  <div class="col-md-12">
+                    <vue-json-editor style="background-color: #fff; margin-top: 2%;" v-model="projectDetailsJson" :showBtns="false" @json-change="onJsonChange"></vue-json-editor>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-spacer"></div>
+
+              <span class="block-title" id="website-roles">Roles</span>
+              <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="margin: 5px 0;" v-for="(n, index) in websiteRoles">
+                          <div class="row">
+                            <div class="col-md-11">
+                              <el-input v-if="n.roleName != 'guest' && n.roleName != 'registered' " v-model="n.roleName" placeholder="Enter Role Name"></el-input>
+                              <el-input v-else v-model="n.roleName" placeholder="Enter Role Name" :disabled="true"></el-input>
+                            </div>
+                            <!-- <div class="col-md-1">
+                              <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary
+                              <el-radio class="radio" v-model="isPrimaryRole" @click="setPrimaryRole(index)" :label="index">Primary</el-radio>
+                            </div> -->
+                            <div class="col-md-1">
+                              <el-button v-if="n.roleName != 'guest' && n.roleName != 'registered' " class="pull-right" style="min-width: 100%;" type="danger" @click="deleteWebsiteRole(index)" icon="delete2"></el-button>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <!-- Create new variable -->
+                        <el-button type="primary" @click="addNewWebsiteRole">New Role</el-button>
+                    </div>
+                </div>
+              </div>
+
+              <div class="card-spacer"></div>
+
+              <span class="block-title" id="website-revisions">Revisions</span>
+              <div class="card">
+                <el-form :model="commitForm" :rules="commitRules" ref="commitForm" class="demo-ruleForm">
+                  <div class="row">
+                  
+                    <div class="col-md-4">
+                      <el-form-item label="Revision Name" prop="branchName">
+                        <el-input v-model="commitForm.branchName" placeholder="Enter Revision Name"></el-input>
+                      </el-form-item>
+                    </div>
+
+                    <div class="col-md-5">
+                      <el-form-item label="Revision Message" prop="commitMessage">
+                        <el-input v-model="commitForm.commitMessage" placeholder="Enter Revision Message"></el-input>
+                      </el-form-item>
+                    </div>
+
+                    <div class="col-md-3">
+                      <el-form-item label="Submit Revision">
+                        <el-button class="publishBtn" type="success" @click="commitProject('commitForm')" :loading="isCommitLoading">Add Revision</el-button>
+                      </el-form-item>
+                    </div>
+
+                    <!-- <div class="col-md-1">
+                      <el-form-item label="Download">
+                        <el-tooltip content="Download .zip" placement="top">
+                          <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+                        </el-tooltip>
+                      </el-form-item>
+                    </div> -->
+
+                  </div>
+
+                </el-form>
+
+                <!-- <div class="col-md-4">
+                  <el-input v-model="branchName" placeholder="Enter Branch Name"></el-input>
+                </div>
+                <div class="col-md-5">
+                  <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
+                </div>
+                <div class="col-md-2">
+                  <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
+                </div>
+                <div class="col-md-1">
+                  <el-tooltip content="Download .zip" placement="top">
+                    <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+                  </el-tooltip>
+                </div> -->
+                <!-- </div> -->
+                <div class="row">
+                    <div class="col-md-12" style="margin-top: 2%">
+                      <div class="table-responsive">
+                        <table class="table" id="revisionsTable">
+                          <thead>
+                            <tr>
+                              <th width="260" @click="sortBranchesTable(0)">Revision Date <i class="fa fa-sort pull-right"></i></th>
+                              <th @click="sortBranchesTable(1)">Revision Name <i class="fa fa-sort pull-right"></i></th>
+                              <th @click="sortBranchesTable(2)">Revision Message <i class="fa fa-sort pull-right"></i></th>
+                              <!-- <th>Revision SHA</th> -->
+                              <th>Rollback</th>
+                              <th>Log</th>
+                              <th width="120">Download Code</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(n, index) in branchesData">
+                              <td>{{n.commitDate}}</td>
+                              <td>{{n.branchName}}</td>
+                              <td>{{n.commitsMessage}}</td>
+                              <!-- <td>{{n.commitSHA}}</td> -->
+                              <td>
+                                <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.branchName != currentBranchName" size="small">Restore</el-button>
+                                <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.branchName == currentBranchName">
+                              </td>
+                              <td>
+                                <el-tooltip content="View Log" placement="top">
+                                  <el-button @click.native.prevent="logfile(index)" type="info" size="small"><i class="fa fa-file-text" aria-hidden="true"></i></el-button>
+                                </el-tooltip>
+                              </td>
+                              <td>
+                                <el-tooltip content="Download .zip" placement="top">
+                                  <el-button @click.native.prevent="exportWebsite(index)" type="info" size="small"><i class="fa fa-download fa-fw"></i></el-button>
+                                </el-tooltip>
+                              </td>
+                              
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- <el-table
+                        :data="commitsData"
+                        :row-class-name="tableRowClassName"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="commitDate"
+                          label="Commit Date"
+                          width="180">
+                        </el-table-column>
+                        <el-table-column
+                          prop="commitsMessage"
+                          label="Commit Message"
+                          >
+                        </el-table-column>
+
+                        <el-table-column
+                          prop="commitSHA"
+                          label="Commit SHA"
+                          >
+                        </el-table-column>
+
+                        <el-table-column
+                          label="Revert To Commit"
+                          width="180">
+                          <template scope="scope">
+                            <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="(scope.$index, commitSHA) == currentSha">
+                            <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
+                          </template>
+                        </el-table-column>
+                      </el-table> -->
+                    </div>
+                </div>
+              </div>
+          </div>
+          <div class="col-md-2">
+            <div class="fixeddiv">
+              <strong>Jump To:</strong>
+              <ul class="jumper-links">
+                <li><a class="jumper-links-redirect active" href="#publish-website">Publish Website</a></li>
+                <li><a class="jumper-links-redirect" href="#basic-settings">Basic Settings</a></li>
+                <li><a class="jumper-links-redirect" href="#website-details">Details</a></li>
+                <li><a class="jumper-links-redirect" href="#website-roles">Roles</a></li>
+                <li><a class="jumper-links-redirect" href="#website-revisions">Revisions</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-spacer"></div>
+
+      </div>
+
+      <div id="tab2-content" class="tab-content">
+
+        <div class="row">
+          <div class="col-md-10">
+            <span class="block-title" id="import-template">Import E-Commerce Templates</span>
+            <el-tooltip class="item" effect="dark" content="Refresh All Plugins and Directories" placement="top">
+              <el-button class="refresh-plugins-btn" @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time" :disabled="refreshDisabled"></el-button>
+            </el-tooltip>
+            <div class="card">
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/v1523358756/builder/images/template2.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/v1523358764/builder/images/tempate3.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" @click="revertToTemplate(template = 'web5')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://placehold.it/403x190?text=Comming%20Soon" alt="template 6" class="img-responsive template-image" />
+                      <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- <div class="row">
+                <div class="col-md-12" align="right" style="margin-bottom: 10px;">
+                  
+                  <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
+                    <el-button size="small" type="primary">Click to upload</el-button>
+
+                  </el-upload> ->
+                </div>
+                <div class="col-md-12">
+                  <el-tree
+                    :data="pluginsTreedata"
+                    node-key="id"
+                    :default-expand-all="true"
+                    :props="defaultProps"
+                    :default-checked-keys=checkedList>
+                  </el-tree>
+
+                  <!-- :render-content="renderContent" ->
+
+                  <br>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <button class="btn btn-primary" id="pluginJsonUploaderBtn"><i class="fa fa-upload"></i> Upload Plugin</button>
+                      <input type="file" name="uploaderPluginJson">
+                    </div>
+                    <div class="col-md-6" align="right">
+
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title">Import CMS Template</span>
+            <div class="card">
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="http://res.cloudinary.com/flowz/image/upload/v1528348629/builder/images/flowz-website-template.png" alt="flowz-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'flowz-website')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="http://res.cloudinary.com/flowz/image/upload/v1528863699/builder/images/OfficeBeacon.png" alt="officebeacon-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'officebeacon-website')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="global-variables">Global Variables</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12" align="right" style="margin-bottom: 10px;">
+                  <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
+                    <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
+                    <input type="file" name="uploaderVariableJson">
+                  <!-- </el-tooltip> -->
+                  <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
+                    <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
+                  <!-- </el-tooltip> -->
+                </div>
+                <div class="col-md-12">
+                  <el-form ref="form" :model="form">
+                    <div v-for="(n, index) in globalVariables">
+                      <el-form-item>
+                        <div class="row">
+
+                          <!-- Enter Variable ID -->
+                          <div class="col-md-2">
+                            <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
+                          </div>
+
+                          <!-- Select Type -->
+                          <div class="col-md-2" style="margin: 0; padding: 0">
+                            <el-select v-model="n.variableType" placeholder="Select">
+                              <el-option
+                                v-for="item in selectVariableType"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                          </div>
+
+                          <!-- If type is Text or HTML -->
+                          <div class="col-md-7" v-if="n.variableType != 'image' && n.variableType != 'hyperlink'" style="margin: 0; padding-left: 10px">
+                            <el-input type="textarea" :rows="5" placeholder="Variable Value" v-model="n.variableValue"></el-input>
+                          </div>
+
+                          <!-- If type is Hyperlink -->
+                          <div class="col-md-7" v-if="n.variableType === 'hyperlink'" style="margin: 0; padding-left: 10px">
+                            <div class="col-md-6" style="margin: 0; padding: 0">
+                              <el-input placeholder="Link Title" v-model="n.variableTitle"></el-input>
+                            </div>
+                            <div class="col-md-6" style="margin-right: 0; padding-right: 0">
+                              <el-input placeholder="Link URL" v-model="n.variableValue"></el-input>
+                            </div>
+                          </div>
+
+                          <!-- If type is Image -->
+                          <div class="col-md-7" v-if="n.variableType === 'image'" style="margin: 0; padding-left: 10px">
+
+                            <div class="row">
+
+                              <!-- Image Value as Name -->
+                              <div class="col-md-8" style="margin-right: 0; padding-right: 0">
+                                <el-input placeholder="Image URL" v-model="n.variableValue" :disabled="imageInputIsDisabled"></el-input>
+                              </div>
+
+                              <!-- Image Thumbnail Preview -->
+                              <div class="col-md-3" style="margin-right: 0; padding-right: 0">
+                                <img :src="n.variableValue" v-bind:name="index" class="img-responsive">
+                              </div>
+
+                              <!-- Image upload Button -->
+                              <div class="col-md-1" style="padding-left: 5px">
+                                <el-tooltip content="Upload Image" placement="top">
+                                  <!-- <div class="file-upload">
+                                      <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label">
+                                        <i class="fa fa-upload"></i>
+                                      </label>
+                                      <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
+                                  </div> -->
+                                  <el-button type="primary" icon="upload" @click="globalImageUploading(index, $event)" :loading="uploadGlobalImageButtonLoader"></el-button>
+                                </el-tooltip>
+                              </div>
+
+                            </div>
+
+                          </div>
+
+                          <!-- Delete Variable -->
+                          <div class="col-md-1">
+                            <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>
+                          </div>
+                        </div>
+                      </el-form-item>
+                    </div>
+                    <!-- Ends V-FOR looping -->
+
+                    <!-- Create new variable -->
+                    <el-button type="primary" @click="addNewVariable">New Variable</el-button>
+                  </el-form>
+                </div>
+              </div>
+
+              <!-- <div class="row">
+                <div class="col-md-12" style="margin-top: 4%;">
+                  <h3>Dynamic Styles</h3>
+                  <hr>
+                  <el-form ref="form" :model="form">
+                    <div v-for="(n, index) in globalCssVariables">
+                      <el-form-item>
+                        <div class="row">
+
+                          <!-- Enter Variable ID --
+                          <div class="col-md-5">
+                            <el-input placeholder="Variable Name" v-model="n.variableName"></el-input>
+                          </div>
+
+                          <!-- Select Type --
+                          <div class="col-md-2" style="margin: 0; padding: 0">
+                            <el-select v-model="n.variableType" placeholder="Select">
+                              <el-option
+                                v-for="item in selectCssVariableType"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                          </div>
+
+                          <!-- Enter Color Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'color'">
+                            <el-color-picker v-model="n.variableValue" show-alpha></el-color-picker>
+                          </div>
+
+                          <!-- Enter Pixel Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'px'">
+                            <el-input placeholder="Pixels Value" v-model="n.variableValue"></el-input>
+                          </div>
+
+                          <!-- Enter Percentage Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'percent'">
+                            <el-slider v-model="n.variableValue"></el-slider>
+                          </div>
+
+                          <!-- Enter Number Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'number'">
+                            <el-input-number v-model="n.variableValue"></el-input-number>
+                          </div>
+
+                          <!-- Enter Custom Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'custom'">
+                            <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
+                          </div>
+
+                          <!-- Delete Variable --
+                          <div class="col-md-1">
+                            <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>
+                          </div>
+                        </div>
+                      </el-form-item>
+                    </div>
+                    <!-- Ends V-FOR looping --
+
+                    <!-- Create new variable --
+                    <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
+
+                  </el-form>
+                </div>
+              </div> -->
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="fixeddiv">
+              <strong>Jump To:</strong>
+              <ul class="jumper-links">
+                <li><a class="jumper-links-redirect active" href="#import-template">Import Template</a></li>
+                <li><a class="jumper-links-redirect" href="#global-variables">Global Variables</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-spacer"></div>
+      </div>
+
+      <div id="tab3-content" class="tab-content">
+
+        <div class="row">
+          <div class="col-md-10">
+            <span class="block-title" id="image-library">Image Library</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                  <el-form label-position="left" label-width="200px" :model="cloudinaryDetails" :rules="rulesCloudinaryDetails" ref="cloudinaryDetails">
+                    <el-form-item label="API Key" prop="apiKey">
+                      <el-input v-model="cloudinaryDetails.apiKey"></el-input>
+                    </el-form-item>
+                    <el-form-item label="API Secret" prop="apiSecret">
+                      <el-input v-model="cloudinaryDetails.apiSecret"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Cloud Name" prop="cloudName">
+                      <el-input v-model="cloudinaryDetails.cloudName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Upload Preset" prop="uploadPreset">
+                      <el-input v-model="cloudinaryDetails.uploadPreset"></el-input>
+                    </el-form-item>
+                    <!-- <el-form-item label="Upload Folder">
+                      <el-input v-model="cloudinaryDetails.uploadFolder"></el-input>
+                    </el-form-item> -->
+                    <!-- <el-form-item label="Upload Sources">
+                      <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllSourcesChange">Check all</el-checkbox>
+                      <div style="margin: 15px 0;"></div>
+                      <el-checkbox-group v-model="checkedSources" @change="handleCheckedSourcesChange">
+                        <el-checkbox v-for="source in cloudinaryDetails.sources" :label="source" :key="source">{{source}}</el-checkbox>
+                      </el-checkbox-group>
+                    </el-form-item> -->
+                  </el-form>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+
+                  <div class="row" style="margin-bottom: 15px; ">
+                    <div class="col-md-12">
+                      <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
+                      <el-button icon="search" @click="fetchcloudinaryImages('cloudinaryDetails')" :loading="fetchImagesLoader">Fetch Images</el-button>
+                      <span class="cloudinaryFilesCount">Total Images: {{assetsImages.length}}</span>
+                      <el-button v-if="assetsImages.length > 0" style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
+                    </div>
+                  </div>
+
+                  <div class="row" style="max-height: 600px; overflow-y: auto;" v-loading="fetchImagesLoader" element-loading-text="Loading...">
+                    <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
+                      <div class="view-icon">
+                        <a :href="n" target="_blank"><i class="fa fa-external-link"></i></a>
+                      </div>
+                      <div class="delete-icon">
+                        <a href="javascript:void(0)" @click="deleteAssetImage(index)"><i class="fa fa-times"></i></a>
+                      </div>
+                      <div class="thumbnail">
+                        <div class="deleteImage"></div>
+                        <img :src="n" class="asset-image" />
+                        <input :id="n" type="text" class="form-control" :value="n" name="n">
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- <div class="row" align="center" style="margin: 10px 0;">
+                    <div class="col-md-12">
+                      <!-- :disabled="isEnabledByNextCursor" --
+                      <el-button type="primary" icon="plus" v-if="assetsImages.length > 0" @click="loadMoreImages()" :loading="loadMoreImagesLoader">Load More</el-button>  
+                    </div>
+                  </div> -->
+
+                </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="url-bucket">URL Bucket</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                  <el-form ref="form" :model="form">
+
+                    <div v-for="(n, index) in urlVariables">
+                    <h5>URL {{ index +1}}:</h5>
+                      <el-form-item>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <el-input placeholder="URL ID" v-model="n.urlId"></el-input>
+                          </div>
+                          <div class="col-md-6">
+                            <el-input placeholder="URL Value" v-model="n.urlValue"></el-input>
+                          </div>
+                          <div class="col-md-1">
+                            <el-tooltip class="item" effect="dark" content="Add Headers" placement="top-start">
+                             <el-button type="primary" icon="plus"  @click="addNewHeader(n,index)"></el-button>
+                            </el-tooltip>
+                          </div>
+                          <!-- Delete Variable -->
+                          <div class="col-md-1">
+                            <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>
+                          </div>
+                        </div>
+                      </el-form-item>
+                      <div class="row">
+                        <div class="col-md-12">
+                         <!--  <el-form ref="form" :model="form"> -->
+                            <!-- <h5>Headers:-</h5> -->
+                            <div v-for="(m, indexH) in n.urlHeaderVariables">
+                              <el-form-item>
+                                <div class="row">
+
+                                  <div class="col-md-5">
+                                    <el-input placeholder="Header Name" v-model="m.headerName"></el-input>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <el-input placeholder="Header Value" v-model="m.headerValue"></el-input>
+                                  </div>
+
+                                  <!-- Delete Variable -->
+                                  <div class="col-md-1">
+                                    <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index,indexH)" icon="delete"></el-button>
+                                  </div>
+                                </div>
+                              </el-form-item>
+                            </div>
+
+                            <!-- Create new header variable -->
+                           <!--  <el-button type="primary" @click="addNewHeader">New Header</el-button> -->
+                          <!-- </el-form> -->
+                          <hr>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Create new url variable -->
+                    <el-button type="primary" @click="addNewUrl">New URL</el-button>
+                  </el-form>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="external-links">External Links</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <h3> JS Links </h3>
+                        </div>
+                     </div>
+                     <hr>
+                     <el-form ref="form" :model="form">
+
+                        <div >
+                           <el-form-item>
+                              <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
+                                <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
+                                   <!-- position  -->
+                                   <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                      <el-select v-model="n.linkposition" placeholder="Position">
+                                         <el-option
+                                            v-for="item in Allposition"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                         </el-option>
+                                      </el-select>
+                                   </div>
+                                   <!-- link url -->
+                                   <div class="col-md-6" style="margin: 0; padding: 0px">
+                                      <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                                   </div>
+                                   <!-- Delete Variable -->
+                                   <div class="col-md-1">
+                                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete2"></el-button>
+                                   </div>
+                                   <div class="col-md-1">
+                                      <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                      </el-tooltip>
+
+                                   </div>
+
+                                </div>
+                              </draggable>
+                           </el-form-item>
+                        </div>
+
+                        <!-- Create new variable -->
+                        <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
+                     </el-form>
+                  </div>
+                  <div class="col-md-12" style="margin-top: 4%;">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <h3> CSS Links </h3>
+                        </div>
+                     </div>
+                     <hr>
+                     <el-form ref="form" :model="form">
+                     <draggable v-model='externallinksCSS' @start="drag=true" @end="drag=false">
+
+                        <div v-for="(n, index) in externallinksCSS">
+                           <el-form-item>
+                              <div class="row">
+                                 <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                    <el-select v-model="n.linkposition" placeholder="Position">
+                                       <el-option
+                                          v-for="item in Allposition"
+                                          :key="item.value"
+                                          :label="item.label"
+                                          :value="item.value">
+                                       </el-option>
+                                    </el-select>
+                                 </div>
+                                 <!-- link url -->
+                                 <div class="col-md-6" style="margin: 0; padding-left: 0px">
+                                    <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                                 </div>
+                                 <!-- Delete Variable -->
+                                 <div class="col-md-1">
+                                    <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete2"></el-button>
+                                 </div>
+                                 <div class="col-md-1">
+                                   <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                      <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                    </el-tooltip>
+
+                                 </div>
+                              </div>
+                           </el-form-item>
+                        </div>
+                        <!-- Create new variable -->
+                     </draggable></el-form>
+                        <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
+                  </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="meta-information">Meta Information</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                   <el-form :inline="true">
+                     <el-form-item label="Meta Charset">
+                        <el-input placeholder="charset value" v-model="Metacharset"></el-input>
+                      </el-form-item>
+                    </el-form>
+                 </div>
+                  <div class="col-md-12" style="margin-top: 2%">
+                      <table class="table table-hover  table-bordered">
+                          <!-- <draggable @start="drag=true" @end="drag=false"> -->
+                          <thead class="thead">
+                            <tr>
+                              <th>Name</th>
+                              <th>Content</th>
+                              <th></th>
+                              <!-- <th></th> -->
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(n, index) in externallinksMeta" >
+                              <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                              <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                              <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
+                              <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
+                            </tr>
+                            <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                          </tbody>
+                            <!-- </draggable> -->
+                        </table>
+                        <!-- Create new variable -->
+                        <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+                     <!-- </el-form> -->
+                  </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="styles-scripts">Global Styles and Scripts</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <h3> Styles: </h3>
+                        </div>
+                     </div>
+                     <hr>
+                     <el-form ref="form" :model="form">
+
+                        <div >
+                           <el-form-item>
+                              <draggable v-model='localstyles' @start="drag=true" @end="drag=false">
+                                <div style="margin-bottom: 25px" v-for='(n, index) in localstyles' class="row">
+                                   <!-- position  -->
+                                   <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                      <el-select v-model="n.linkposition" placeholder="Position">
+                                         <el-option
+                                            v-for="item in Allposition"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                         </el-option>
+                                      </el-select>
+                                   </div>
+                                   <!-- link url -->
+                                   <div class="col-md-6" style="margin: 0; padding: 0px">
+                                      <el-input type="textarea" :rows="5" placeholder="css" v-model="n.style"></el-input>
+                                   </div>
+                                   <!-- Delete Variable -->
+                                   <div class="col-md-1">
+                                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
+                                   </div>
+                                   <div class="col-md-1">
+                                     <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                      </el-tooltip>
+                                   </div>
+
+
+                                </div>
+                              </draggable>
+                           </el-form-item>
+                        </div>
+
+                        <!-- Create new variable -->
+                        <el-button type="primary" @click="addNewlocalstyles">New Style</el-button>
+                     </el-form>
+                </div>
+              </div>
+
+              <br><br>
+
+              <div class="row">
+                <div class="col-md-12">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <h3> Scripts: </h3>
+                        </div>
+                     </div>
+                     <hr>
+                     <el-form ref="form" :model="form">
+
+                        <div >
+                           <el-form-item>
+                              <draggable v-model='localscripts' @start="drag=true" @end="drag=false">
+                                <div style="margin-bottom: 25px" v-for='(n, index) in localscripts' class="row">
+                                   <!-- position  -->
+                                   <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                      <el-select v-model="n.linkposition" placeholder="Position">
+                                         <el-option
+                                            v-for="item in Allposition"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                         </el-option>
+                                      </el-select>
+                                   </div>
+                                   <!-- link url -->
+                                   <div class="col-md-6" style="margin: 0; padding: 0px">
+                                      <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
+                                   </div>
+                                   <!-- Delete Variable -->
+                                   <div class="col-md-1">
+                                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
+                                   </div>
+                                   <div class="col-md-1">
+                                      <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                      </el-tooltip>
+
+                                   </div>
+
+
+                                </div>
+                              </draggable>
+                           </el-form-item>
+                        </div>
+
+                        <!-- Create new variable -->
+                        <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
+                     </el-form>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="fixeddiv">
+              <strong>Jump To:</strong>
+              <ul class="jumper-links">
+                <li><a class="jumper-links-redirect active" href="#image-library">Image Library</a></li>
+                <li><a class="jumper-links-redirect" href="#url-bucket">URL Bucket</a></li>
+                <li><a class="jumper-links-redirect" href="#external-links">External Links</a></li>
+                <li><a class="jumper-links-redirect" href="#meta-information">Meta Information</a></li>
+                <li><a class="jumper-links-redirect" href="#styles-scripts">Styles &amp; Scripts</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-spacer"></div>
+      </div>
+
+      <div id="tab4-content" class="tab-content">
+
+        <div class="row">
+          <div class="col-md-10">
+            <span class="block-title" id="payment-config">Payment Configurations</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <el-form ref="form1" :model="form" label-width="120px">
+                        <el-row>
+                          <el-col :span='18'>
+                            <el-form-item label="Account Used:">
+                              <el-select clearable v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
+                                <el-option
+                                           v-for="item in crmdata"
+                                           :key="item.id"
+                                           :label="item.configName"
+                                           :value="item.id">
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
+                          </el-col>
+                          <el-col v-if="crmdata.length>-1" :span='4'>
+                            <el-tooltip content="Go View Accounting System" placement="top">
+                              <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System
+                              </el-button>
+                            </el-tooltip>
+                          </el-col>
+                          <el-col style='text-align: center' :span='2'>
+                            <!-- <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button> -->
+                            <el-tooltip content="Refresh Accounts settings" placement="top">
+                              <el-button type="primary" @click="refreshaccounts()">
+                                <i class="fa fa-refresh">
+                                </i>
+                              </el-button>
+                            </el-tooltip>
+                          </el-col>
+                        </el-row>
+                      </el-form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <!-- testing iviewui -->
+              <div class="row">
+                <div class="col-md-12">
+                  <component :is="componentsID" v-on:addNewConfig="addNewConfig">
+                  </component>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="fixeddiv">
+              <strong>Jump To:</strong>
+              <ul class="jumper-links">
+                <li><a class="jumper-links-redirect active" href="#payment-config">Payment configurations</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-spacer"></div>
+      </div>
+    </div>
+
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
@@ -9,1077 +1148,6 @@
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="info" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
       </el-tooltip>
-    </div>
-
-    <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
-
-      <!-- Publish Project Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="tooglePublishWebsite" class="card color-div toggleableDivHeader">Publish Website</a>
-          </div>
-      </div>
-      <div id="togglePublishWebsiteContent" class="toggleableDivHeaderContent" style="">
-        <div class="row">
-          <div class="col-md-12">
-
-            <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
-            <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
-
-            <div class="row">
-              <div class="col-md-12" v-if="publishType === 'default'">
-                Your Default domain will be: <a :href="projectPublicUrl" target="_blank">{{projectPublicUrl}}</a>
-                <br>
-                  <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
-                <br>
-
-                <div style="margin-top: 15px;">
-                  <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading">Publish</el-button>
-  
-                  <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button><br><small v-if='isdisabled==true'>*{{ textdata }}</small>
-                  <el-progress v-if='isdisabled==true' style='margin: 21px 0px 6px 0px' v-bind:percentage="percent"></el-progress>
-                </div>
-              </div>
-
-              <div class="col-md-12" v-else>
-                <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
-                <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
-                  [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
-                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
-                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns1-copy')"><i class="fa fa-copy"></i></a>
-                    </el-tooltip>
-                  </strong> 
-                  [2] <strong><span id="ns2-copy">ns2.flowzdigital.com</span>
-                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
-                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns2-copy')"><i class="fa fa-copy"></i></a>
-                    </el-tooltip>
-                  </strong> 
-                </p>
-                <div style="margin-top: 15px;">
-                  <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Publish Project section ends -->
-
-      <!-- Project Settings Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Website Settings</a>
-          </div>
-      </div>
-      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12">
-            <el-form ref="form1" :model="form" label-width="180px" :rules="rulesProjectSettings">
-
-              <el-form-item label="Website Id:">
-                  <el-input v-model="newRepoId" :disabled="true"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Website name" prop="websitename">
-                  <!-- <el-input v-model="websitename"></el-input> -->
-                  <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
-                    <el-button slot="append" @click="updateProjectName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
-                  </el-input>
-                  <!-- {{websitename}} -->
-                  <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
-                </el-form-item>
-
-                <!-- <el-form-item label="Favicon Logo">
-                   <el-input v-model="faviconhref" placeholder="href" ></el-input>
-                </el-form-item> -->
-                <el-row>
-                <el-col :span='20'>
-                <el-form-item label="V Shop ID">
-                   <el-select clearable v-model="form.vid" placeholder="Select vid">
-                    <el-option
-                      v-for="item in vshopcategory"
-                      :key="item.id"
-                      :label="item.virtualShopName"
-                      :value="item.id">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-                </el-col>
-                <el-col :span='2'>
-                  <el-tooltip content="Go View V-shop Settings" placement="top">
-                  <el-button type="primary" icon='setting' @click='linktovshop()'>V-Shop</el-button></el-tooltip>
-                </el-col>
-                <el-col style='text-align: center;' :span='2'>
-                  <!-- <el-button type="primary" icon="el-icon-refresh"></el-button> -->
-                   <el-tooltip content="Refresh V-shop settings" placement="top">
-                   <el-button type="primary" @click="refreshvshop()"><i class="fa fa-refresh"></i></el-button>
-                   </el-tooltip>
-                </el-col>
-                </el-row>
-               
-
-                <!-- <el-form-item label="Brand name">
-                  <el-input v-model="form.brandName" placeholder="My Company"></el-input>
-                </el-form-item> -->
-
-                <el-form-item label="Website Favicon Logo">
-                  <div class="col6 valid">
-                    <label for="upload-validation" class="brandLogoUploadLabel">
-                      <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
-                    </label>
-                    <br>
-                    <span><b>Current file:</b> {{form.brandLogoName}}</span>
-                    <el-tooltip  v-if='form.brandLogoName!="!!!No file uploaded!!!"' content="To Remove current file" placement="top">
-                    <el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button>
-                    </el-tooltip>
-                    <input type="file" name="" id="upload-validation">
-                    <span class="dis">( .png/ico only max size upto 70KB)</span>
-
-                  </div>
-                   <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
-                </el-form-item>
-
-                <el-form-item label="Website SEO Title">
-                  <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
-                </el-form-item>
-
-               <!--  <el-form-item label="Website SEO Keywords">
-                  <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Website SEO Description">
-                  <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
-                </el-form-item> -->
-
-            </el-form>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <h3>Website Details</h3>
-            <vue-json-editor style="background-color: #fff; margin-top: 2%;" v-model="projectDetailsJson" :showBtns="false" @json-change="onJsonChange"></vue-json-editor>
-          </div>
-        </div>
-
-      </div>
-      <!-- Project Settings section ends -->
-
-      <!-- Plugins Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleImportPlugin" class="card color-div toggleableDivHeader">Import Plugin</a>
-          </div>
-      </div>
-      <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row" style="margin-top: 15px;">
-          <div class="col-md-12">
-            <div class="thumbnail" style="padding: 20px;">
-              <h3>Ecommerce Website Templates</h3>
-              <hr>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523358756/builder/images/template2.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523358764/builder/images/tempate3.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" @click="revertToTemplate(template = 'web5')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://placehold.it/403x190?text=Comming%20Soon" alt="template 6" class="img-responsive template-image" />
-                  <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12" align="right" style="margin-bottom: 10px;">
-            <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
-              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time" :disabled="refreshDisabled">Refresh</el-button>
-            </el-tooltip>
-            <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
-              <el-button size="small" type="primary">Click to upload</el-button>
-
-            </el-upload> -->
-          </div>
-          <div class="col-md-12">
-            <el-tree
-              :data="pluginsTreedata"
-              node-key="id"
-              :default-expand-all="true"
-              :props="defaultProps"
-              :default-checked-keys=checkedList>
-            </el-tree>
-
-            <!-- :render-content="renderContent" -->
-
-            <br>
-
-            <div class="row">
-              <div class="col-md-6">
-                <button class="btn btn-primary" id="pluginJsonUploaderBtn"><i class="fa fa-upload"></i> Upload Plugin</button>
-                <input type="file" name="uploaderPluginJson">
-              </div>
-              <div class="col-md-6" align="right">
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Plugins section ends -->
-
-      <!-- Image upload Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleAssetImages" class="card color-div toggleableDivHeader">Image Library</a>
-          </div>
-      </div>
-      <div id="toggleAssetImagesContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12">
-            <el-form label-position="left" label-width="200px" :model="cloudinaryDetails" :rules="rulesCloudinaryDetails" ref="cloudinaryDetails">
-              <el-form-item label="API Key" prop="apiKey">
-                <el-input v-model="cloudinaryDetails.apiKey"></el-input>
-              </el-form-item>
-              <el-form-item label="API Secret" prop="apiSecret">
-                <el-input v-model="cloudinaryDetails.apiSecret"></el-input>
-              </el-form-item>
-              <el-form-item label="Cloud Name" prop="cloudName">
-                <el-input v-model="cloudinaryDetails.cloudName"></el-input>
-              </el-form-item>
-              <el-form-item label="Upload Preset" prop="uploadPreset">
-                <el-input v-model="cloudinaryDetails.uploadPreset"></el-input>
-              </el-form-item>
-              <!-- <el-form-item label="Upload Folder">
-                <el-input v-model="cloudinaryDetails.uploadFolder"></el-input>
-              </el-form-item> -->
-              <!-- <el-form-item label="Upload Sources">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllSourcesChange">Check all</el-checkbox>
-                <div style="margin: 15px 0;"></div>
-                <el-checkbox-group v-model="checkedSources" @change="handleCheckedSourcesChange">
-                  <el-checkbox v-for="source in cloudinaryDetails.sources" :label="source" :key="source">{{source}}</el-checkbox>
-                </el-checkbox-group>
-              </el-form-item> -->
-            </el-form>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="row" style="margin-bottom: 15px; ">
-              <div class="col-md-12">
-                <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
-                <el-button icon="search" @click="fetchcloudinaryImages('cloudinaryDetails')" :loading="fetchImagesLoader">Fetch Images</el-button>
-                <span class="cloudinaryFilesCount">Total Images: {{assetsImages.length}}</span>
-                <el-button v-if="assetsImages.length > 0" style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
-              </div>
-            </div>
-
-            <div class="row" style="max-height: 600px; overflow-y: auto;" v-loading="fetchImagesLoader" element-loading-text="Loading...">
-              <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
-                <div class="view-icon">
-                  <a :href="n" target="_blank"><i class="fa fa-external-link"></i></a>
-                </div>
-                <div class="delete-icon">
-                  <a href="javascript:void(0)" @click="deleteAssetImage(index)"><i class="fa fa-times"></i></a>
-                </div>
-                <div class="thumbnail">
-                  <div class="deleteImage"></div>
-                  <img :src="n" class="asset-image" />
-                  <input :id="n" type="text" class="form-control" :value="n" name="n">
-                </div>
-
-              </div>
-            </div>
-
-            <!-- <div class="row" align="center" style="margin: 10px 0;">
-              <div class="col-md-12">
-                <!-- :disabled="isEnabledByNextCursor" --
-                <el-button type="primary" icon="plus" v-if="assetsImages.length > 0" @click="loadMoreImages()" :loading="loadMoreImagesLoader">Load More</el-button>  
-              </div>
-            </div> -->
-
-          </div>
-        </div>
-      </div>
-      <!-- Image Upload -->
-
-      <!-- Global Variables Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleGlobalVariables" class="card color-div toggleableDivHeader">Global Variables</a>
-          </div>
-      </div>
-      <div id="toggleGlobalVariablesContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-4">
-            <h3>Dynamic Values</h3>
-          </div>
-          <div class="col-md-8" align="right" style="margin-bottom: 10px;">
-            <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
-              <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
-              <input type="file" name="uploaderVariableJson">
-            <!-- </el-tooltip> -->
-            <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
-              <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
-            <!-- </el-tooltip> -->
-          </div>
-          <div class="col-md-12">
-            <el-form ref="form" :model="form">
-              <div v-for="(n, index) in globalVariables">
-                <el-form-item>
-                  <div class="row">
-
-                    <!-- Enter Variable ID -->
-                    <div class="col-md-2">
-                      <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
-                    </div>
-
-                    <!-- Select Type -->
-                    <div class="col-md-2" style="margin: 0; padding: 0">
-                      <el-select v-model="n.variableType" placeholder="Select">
-                        <el-option
-                          v-for="item in selectVariableType"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-
-                    <!-- If type is Text or HTML -->
-                    <div class="col-md-7" v-if="n.variableType != 'image' && n.variableType != 'hyperlink'" style="margin: 0; padding-left: 10px">
-                      <el-input type="textarea" :rows="5" placeholder="Variable Value" v-model="n.variableValue"></el-input>
-                    </div>
-
-                    <!-- If type is Hyperlink -->
-                    <div class="col-md-7" v-if="n.variableType === 'hyperlink'" style="margin: 0; padding-left: 10px">
-                      <div class="col-md-6" style="margin: 0; padding: 0">
-                        <el-input placeholder="Link Title" v-model="n.variableTitle"></el-input>
-                      </div>
-                      <div class="col-md-6" style="margin-right: 0; padding-right: 0">
-                        <el-input placeholder="Link URL" v-model="n.variableValue"></el-input>
-                      </div>
-                    </div>
-
-                    <!-- If type is Image -->
-                    <div class="col-md-7" v-if="n.variableType === 'image'" style="margin: 0; padding-left: 10px">
-
-                      <div class="row">
-
-                        <!-- Image Value as Name -->
-                        <div class="col-md-8" style="margin-right: 0; padding-right: 0">
-                          <el-input placeholder="Image URL" v-model="n.variableValue" :disabled="imageInputIsDisabled"></el-input>
-                        </div>
-
-                        <!-- Image Thumbnail Preview -->
-                        <div class="col-md-3" style="margin-right: 0; padding-right: 0">
-                          <img :src="n.variableValue" v-bind:name="index" class="img-responsive">
-                        </div>
-
-                        <!-- Image upload Button -->
-                        <div class="col-md-1" style="padding-left: 5px">
-                          <el-tooltip content="Upload Image" placement="top">
-                            <!-- <div class="file-upload">
-                                <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label">
-                                  <i class="fa fa-upload"></i>
-                                </label>
-                                <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
-                            </div> -->
-                            <el-button type="primary" icon="upload" @click="globalImageUploading(index, $event)" :loading="uploadGlobalImageButtonLoader"></el-button>
-                          </el-tooltip>
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <!-- Delete Variable -->
-                    <div class="col-md-1">
-                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>
-                    </div>
-                  </div>
-                </el-form-item>
-              </div>
-              <!-- Ends V-FOR looping -->
-
-              <!-- Create new variable -->
-              <el-button type="primary" @click="addNewVariable">New Variable</el-button>
-            </el-form>
-          </div>
-        </div>
-
-        <!-- <div class="row">
-          <div class="col-md-12" style="margin-top: 4%;">
-            <h3>Dynamic Styles</h3>
-            <hr>
-            <el-form ref="form" :model="form">
-              <div v-for="(n, index) in globalCssVariables">
-                <el-form-item>
-                  <div class="row">
-
-                    <!-- Enter Variable ID --
-                    <div class="col-md-5">
-                      <el-input placeholder="Variable Name" v-model="n.variableName"></el-input>
-                    </div>
-
-                    <!-- Select Type --
-                    <div class="col-md-2" style="margin: 0; padding: 0">
-                      <el-select v-model="n.variableType" placeholder="Select">
-                        <el-option
-                          v-for="item in selectCssVariableType"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-
-                    <!-- Enter Color Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'color'">
-                      <el-color-picker v-model="n.variableValue" show-alpha></el-color-picker>
-                    </div>
-
-                    <!-- Enter Pixel Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'px'">
-                      <el-input placeholder="Pixels Value" v-model="n.variableValue"></el-input>
-                    </div>
-
-                    <!-- Enter Percentage Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'percent'">
-                      <el-slider v-model="n.variableValue"></el-slider>
-                    </div>
-
-                    <!-- Enter Number Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'number'">
-                      <el-input-number v-model="n.variableValue"></el-input-number>
-                    </div>
-
-                    <!-- Enter Custom Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'custom'">
-                      <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
-                    </div>
-
-                    <!-- Delete Variable --
-                    <div class="col-md-1">
-                      <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>
-                    </div>
-                  </div>
-                </el-form-item>
-              </div>
-              <!-- Ends V-FOR looping --
-
-              <!-- Create new variable --
-              <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
-
-            </el-form>
-          </div>
-        </div> -->
-      </div>
-      <!-- Global Variables section ends -->
-
-      <!-- URL Bucket Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleUrlBucket" class="card color-div toggleableDivHeader">URL Bucket</a>
-          </div>
-      </div>
-      <div id="toggleUrlBucketContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12">
-            <el-form ref="form" :model="form">
-
-              <div v-for="(n, index) in urlVariables">
-              <h5>URL {{ index +1}}:</h5>
-                <el-form-item>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <el-input placeholder="URL ID" v-model="n.urlId"></el-input>
-                    </div>
-                    <div class="col-md-6">
-                      <el-input placeholder="URL Value" v-model="n.urlValue"></el-input>
-                    </div>
-                    <div class="col-md-1">
-                      <el-tooltip class="item" effect="dark" content="Add Headers" placement="top-start">
-                       <el-button type="primary" icon="plus"  @click="addNewHeader(n,index)"></el-button>
-                      </el-tooltip>
-                    </div>
-                    <!-- Delete Variable -->
-                    <div class="col-md-1">
-                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>
-                    </div>
-                  </div>
-                </el-form-item>
-                <div class="row">
-                  <div class="col-md-12">
-                   <!--  <el-form ref="form" :model="form"> -->
-                      <!-- <h5>Headers:-</h5> -->
-                      <div v-for="(m, indexH) in n.urlHeaderVariables">
-                        <el-form-item>
-                          <div class="row">
-
-                            <div class="col-md-5">
-                              <el-input placeholder="Header Name" v-model="m.headerName"></el-input>
-                            </div>
-                            <div class="col-md-6">
-                              <el-input placeholder="Header Value" v-model="m.headerValue"></el-input>
-                            </div>
-
-                            <!-- Delete Variable -->
-                            <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index,indexH)" icon="delete"></el-button>
-                            </div>
-                          </div>
-                        </el-form-item>
-                      </div>
-
-                      <!-- Create new header variable -->
-                     <!--  <el-button type="primary" @click="addNewHeader">New Header</el-button> -->
-                    <!-- </el-form> -->
-                    <hr>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Create new url variable -->
-              <el-button type="primary" @click="addNewUrl">New URL</el-button>
-            </el-form>
-          </div>
-        </div>
-        <!-- <hr> -->
-
-      </div>
-      <!-- URL Bucket section ends -->
-
-      <!-- External Links Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleExternalLinks" class="card color-div toggleableDivHeader">External Links</a>
-          </div>
-      </div>
-      <div id="toggleExternalLinksContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3> JS Links </h3>
-                  </div>
-               </div>
-               <hr>
-               <el-form ref="form" :model="form">
-
-                  <div >
-                     <el-form-item>
-                        <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
-                          <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
-                             <!-- position  -->
-                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                <el-select v-model="n.linkposition" placeholder="Position">
-                                   <el-option
-                                      v-for="item in Allposition"
-                                      :key="item.value"
-                                      :label="item.label"
-                                      :value="item.value">
-                                   </el-option>
-                                </el-select>
-                             </div>
-                             <!-- link url -->
-                             <div class="col-md-6" style="margin: 0; padding: 0px">
-                                <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
-                             </div>
-                             <!-- Delete Variable -->
-                             <div class="col-md-1">
-                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete2"></el-button>
-                             </div>
-                             <div class="col-md-1">
-                                <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                  <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                </el-tooltip>
-
-                             </div>
-
-                          </div>
-                        </draggable>
-                     </el-form-item>
-                  </div>
-
-                  <!-- Create new variable -->
-                  <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
-               </el-form>
-            </div>
-            <div class="col-md-12" style="margin-top: 4%;">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3> CSS Links </h3>
-                  </div>
-               </div>
-               <hr>
-               <el-form ref="form" :model="form">
-               <draggable v-model='externallinksCSS' @start="drag=true" @end="drag=false">
-
-                  <div v-for="(n, index) in externallinksCSS">
-                     <el-form-item>
-                        <div class="row">
-                           <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                              <el-select v-model="n.linkposition" placeholder="Position">
-                                 <el-option
-                                    v-for="item in Allposition"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                 </el-option>
-                              </el-select>
-                           </div>
-                           <!-- link url -->
-                           <div class="col-md-6" style="margin: 0; padding-left: 0px">
-                              <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
-                           </div>
-                           <!-- Delete Variable -->
-                           <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete2"></el-button>
-                           </div>
-                           <div class="col-md-1">
-                             <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                              </el-tooltip>
-
-                           </div>
-                        </div>
-                     </el-form-item>
-                  </div>
-                  <!-- Create new variable -->
-               </draggable></el-form>
-                  <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
-            </div>
-        </div>
-      </div>
-      <!-- External Links section ends -->
-
-      <!-- Meta Tags -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleMetaTags" class="card color-div toggleableDivHeader">Meta Tags</a>
-          </div>
-      </div>
-      <div id="toggleMetaTagsContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12" >
-              <div class="row">
-                    <div class="col-md-4">
-                       <h3>Add External meta tags </h3>
-                    </div>
-                 </div>
-                 <hr>
-               <el-form :inline="true">
-                 <el-form-item label="Meta Charset">
-                    <el-input placeholder="charset value" v-model="Metacharset"></el-input>
-                  </el-form-item>
-                </el-form>
-           </div>
-            <div class="col-md-12" style="margin-top: 2%">
-                <table class="table table-hover  table-bordered">
-                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
-                    <thead class="thead">
-                      <tr>
-                        <th>Name</th>
-                        <th>Content</th>
-                        <th></th>
-                        <!-- <th></th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(n, index) in externallinksMeta" >
-                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
-                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
-                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
-                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
-                      </tr>
-                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
-                    </tbody>
-                      <!-- </draggable> -->
-                  </table>
-                  <!-- Create new variable -->
-                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
-               <!-- </el-form> -->
-            </div>
-        </div>
-      </div>
-      <!-- Meta Tags Ends -->
-
-      <!-- Local style/css-->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleLocalstyles" class="card color-div toggleableDivHeader">Global Styles</a>
-          </div>
-      </div>
-      <div id="toggleLocalstylesContent" class="toggleableDivHeaderContent" style="display: none;">
-         <div class="row">
-          <div class="col-md-12">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3> Styles: </h3>
-                  </div>
-               </div>
-               <hr>
-               <el-form ref="form" :model="form">
-
-                  <div >
-                     <el-form-item>
-                        <draggable v-model='localstyles' @start="drag=true" @end="drag=false">
-                          <div style="margin-bottom: 25px" v-for='(n, index) in localstyles' class="row">
-                             <!-- position  -->
-                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                <el-select v-model="n.linkposition" placeholder="Position">
-                                   <el-option
-                                      v-for="item in Allposition"
-                                      :key="item.value"
-                                      :label="item.label"
-                                      :value="item.value">
-                                   </el-option>
-                                </el-select>
-                             </div>
-                             <!-- link url -->
-                             <div class="col-md-6" style="margin: 0; padding: 0px">
-                                <el-input type="textarea" :rows="5" placeholder="css" v-model="n.style"></el-input>
-                             </div>
-                             <!-- Delete Variable -->
-                             <div class="col-md-1">
-                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
-                             </div>
-                             <div class="col-md-1">
-                               <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                  <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                </el-tooltip>
-                             </div>
-
-
-                          </div>
-                        </draggable>
-                     </el-form-item>
-                  </div>
-
-                  <!-- Create new variable -->
-                  <el-button type="primary" @click="addNewlocalstyles">New Style</el-button>
-               </el-form>
-            </div>
-        </div>
-      </div>
-
-      <!-- Local script-->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Global Scripts</a>
-          </div>
-      </div>
-      <div id="toggleLocalscriptsContent" class="toggleableDivHeaderContent" style="display: none;">
-         <div class="row">
-          <div class="col-md-12">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3> Scripts: </h3>
-                  </div>
-               </div>
-               <hr>
-               <el-form ref="form" :model="form">
-
-                  <div >
-                     <el-form-item>
-                        <draggable v-model='localscripts' @start="drag=true" @end="drag=false">
-                          <div style="margin-bottom: 25px" v-for='(n, index) in localscripts' class="row">
-                             <!-- position  -->
-                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                <el-select v-model="n.linkposition" placeholder="Position">
-                                   <el-option
-                                      v-for="item in Allposition"
-                                      :key="item.value"
-                                      :label="item.label"
-                                      :value="item.value">
-                                   </el-option>
-                                </el-select>
-                             </div>
-                             <!-- link url -->
-                             <div class="col-md-6" style="margin: 0; padding: 0px">
-                                <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
-                             </div>
-                             <!-- Delete Variable -->
-                             <div class="col-md-1">
-                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
-                             </div>
-                             <div class="col-md-1">
-                                <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                  <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                </el-tooltip>
-
-                             </div>
-
-
-                          </div>
-                        </draggable>
-                     </el-form-item>
-                  </div>
-
-                  <!-- Create new variable -->
-                  <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
-               </el-form>
-            </div>
-        </div>
-      </div>
-
-      <!-- Payment Block -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleAccounting" class="card color-div toggleableDivHeader">Accounting</a>
-          </div>
-      </div>
-      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none;" >
-       
-          <div class="row">
-              <div class="col-md-12">
-                  <div class="row">
-                      <div class="col-md-12">
-                         <el-form ref="form1" :model="form" label-width="120px">
-                             <el-row>
-                              <el-col :span='18'>
-                                <el-form-item label="Account Used:">
-                                 <el-select clearable v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
-                                  <el-option
-                                    v-for="item in crmdata"
-                                    :key="item.id"
-                                    :label="item.configName"
-                                    :value="item.id">
-                                  </el-option>
-                                </el-select>
-                                </el-form-item>
-                              </el-col>
-                              <el-col v-if="crmdata.length>-1" :span='4'>
-                                <el-tooltip content="Go View Accounting System" placement="top">
-                                <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip>
-                              </el-col>
-                               <el-col style='text-align: center' :span='2'>
-                                 <!-- <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button> -->
-                                 <el-tooltip content="Refresh Accounts settings" placement="top">
-                                   <el-button type="primary" @click="refreshaccounts()"><i class="fa fa-refresh"></i></el-button>
-                                 </el-tooltip>
-                              </el-col>
-                            </el-row>
-                        </el-form>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        <hr>
-          <!-- testing iviewui -->
-          <div class="row">
-          <div class="col-md-12">
-              <component :is="componentsID" v-on:addNewConfig="addNewConfig"></component>
-          </div>
-          </div>
-      </div>
-      <!-- Payment Block -->
-
-      <!-- Roles Block -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleRoles" class="card color-div toggleableDivHeader">Website Roles</a>
-          </div>
-      </div>
-      <div id="toggleRolesContent" class="toggleableDivHeaderContent" style="display: none;">
-          <div class="row">
-              <div class="col-md-12">
-                  <div class="row">
-                      <div class="col-md-4">
-                          <h3> Roles: </h3>
-                      </div>
-                  </div>
-                  <hr>
-
-                  <div style="margin: 5px 0;" v-for="(n, index) in websiteRoles">
-                    <div class="row">
-                      <div class="col-md-11">
-                        <el-input v-if="n.roleName != 'guest' && n.roleName != 'registered' " v-model="n.roleName" placeholder="Enter Role Name"></el-input>
-                        <el-input v-else v-model="n.roleName" placeholder="Enter Role Name" :disabled="true"></el-input>
-                      </div>
-                      <!-- <div class="col-md-1">
-                        <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary
-                        <el-radio class="radio" v-model="isPrimaryRole" @click="setPrimaryRole(index)" :label="index">Primary</el-radio>
-                      </div> -->
-                      <div class="col-md-1">
-                        <el-button v-if="n.roleName != 'guest' && n.roleName != 'registered' " class="pull-right" style="min-width: 100%;" type="danger" @click="deleteWebsiteRole(index)" icon="delete2"></el-button>
-                      </div>
-                    </div>
-                  </div>
-                  <br>
-                  <!-- Create new variable -->
-                  <el-button type="primary" @click="addNewWebsiteRole">New Role</el-button>
-              </div>
-          </div>
-      </div>
-      <!-- Roles Block -->
-
-      <!-- List of Commits Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleCommits" class="card color-div toggleableDivHeader">List of Commits</a>
-          </div>
-      </div>
-      <div id="toggleCommitsContent" class="toggleableDivHeaderContent" style="display: none;">
-          <el-form :model="commitForm" :rules="commitRules" ref="commitForm" class="demo-ruleForm">
-            <div class="row">
-            
-              <div class="col-md-4">
-                <el-form-item label="Revision Name" prop="branchName">
-                  <el-input v-model="commitForm.branchName" placeholder="Enter Revision Name"></el-input>
-                </el-form-item>
-              </div>
-
-              <div class="col-md-5">
-                <el-form-item label="Revision Message" prop="commitMessage">
-                  <el-input v-model="commitForm.commitMessage" placeholder="Enter Revision Message"></el-input>
-                </el-form-item>
-              </div>
-
-              <div class="col-md-3">
-                <el-form-item label="Submit Revision">
-                  <el-button class="publishBtn" type="success" @click="commitProject('commitForm')" :loading="isCommitLoading">Add Revision</el-button>
-                </el-form-item>
-              </div>
-
-              <!-- <div class="col-md-1">
-                <el-form-item label="Download">
-                  <el-tooltip content="Download .zip" placement="top">
-                    <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
-                  </el-tooltip>
-                </el-form-item>
-              </div> -->
-
-            </div>
-
-          </el-form>
-
-          <!-- <div class="col-md-4">
-            <el-input v-model="branchName" placeholder="Enter Branch Name"></el-input>
-          </div>
-          <div class="col-md-5">
-            <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
-          </div>
-          <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
-          </div>
-          <div class="col-md-1">
-            <el-tooltip content="Download .zip" placement="top">
-              <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
-            </el-tooltip>
-          </div> -->
-        <!-- </div> -->
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 2%">
-              <div class="table-responsive">
-                <table class="table" id="revisionsTable">
-                  <thead>
-                    <tr>
-                      <th width="260" @click="sortBranchesTable(0)">Revision Date <i class="fa fa-sort pull-right"></i></th>
-                      <th @click="sortBranchesTable(1)">Revision Name <i class="fa fa-sort pull-right"></i></th>
-                      <th @click="sortBranchesTable(2)">Revision Message <i class="fa fa-sort pull-right"></i></th>
-                      <!-- <th>Revision SHA</th> -->
-                      <th>Rollback</th>
-                      <th>Log</th>
-                      <th width="120">Download Code</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(n, index) in branchesData">
-                      <td>{{n.commitDate}}</td>
-                      <td>{{n.branchName}}</td>
-                      <td>{{n.commitsMessage}}</td>
-                      <!-- <td>{{n.commitSHA}}</td> -->
-                      <td>
-                        <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.branchName != currentBranchName" size="small">Restore</el-button>
-                        <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.branchName == currentBranchName">
-                      </td>
-                      <td>
-                        <el-tooltip content="View Log" placement="top">
-                          <el-button @click.native.prevent="logfile(index)" type="info" size="small"><i class="fa fa-file-text" aria-hidden="true"></i></el-button>
-                        </el-tooltip>
-                      </td>
-                      <td>
-                        <el-tooltip content="Download .zip" placement="top">
-                          <el-button @click.native.prevent="exportWebsite(index)" type="info" size="small"><i class="fa fa-download fa-fw"></i></el-button>
-                        </el-tooltip>
-                      </td>
-                      
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- <el-table
-                :data="commitsData"
-                :row-class-name="tableRowClassName"
-                border
-                style="width: 100%">
-                <el-table-column
-                  prop="commitDate"
-                  label="Commit Date"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="commitsMessage"
-                  label="Commit Message"
-                  >
-                </el-table-column>
-
-                <el-table-column
-                  prop="commitSHA"
-                  label="Commit SHA"
-                  >
-                </el-table-column>
-
-                <el-table-column
-                  label="Revert To Commit"
-                  width="180">
-                  <template scope="scope">
-                    <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="(scope.$index, commitSHA) == currentSha">
-                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
-                  </template>
-                </el-table-column>
-              </el-table> -->
-            </div>
-        </div>
-      </div>
-      <!-- List of Commits Ends -->
-
-      <div class="margin-50"></div>
-
     </div>
 
   </div>
@@ -1114,6 +1182,11 @@ import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 import io from 'socket.io-client';
 
+
+let socket = config.socketURL;
+const app = feathers().configure(socketio(io(socket)))
+
+
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('Please enter Project Name.'));
@@ -1134,6 +1207,8 @@ let checkBranchName = (rule, value, callback) => {
         return callback();
     }
 }
+
+let srvListen = 0;
 
 export default {
   name: 'ProjectSettings',
@@ -1281,6 +1356,8 @@ export default {
 
       currentBranchName: '',
 
+      serviceListen: 0,
+
       commitForm: {
         branchName: '',
         commitMessage: ''
@@ -1328,61 +1405,68 @@ export default {
   },
 
   async mounted () {
-
+    // console.log('mounted')
+    // console.log( this.$refs['commitForm'])
    // let self = this;
-    let socket = config.socketURL;
-    
-    const app = feathers().configure(socketio(io(socket)))
     // Socket Listen for Creating File or Folder
     
-    app.service("jobqueue").on("created", async (response) => {
-      if(this.repoName==response.websiteid) {
-        this.percent=0
-        this.isdisabled = true;
-        this.textdata='Job added Successfully. Please wait you are in Queue.'
-        // this.$emit('updateProjectName')
-      }
-    });
+    // console.log('this.serviceListen :: ', this.serviceListen);
+    // console.log('srvListen :: ', srvListen);
 
-    app.service("jobqueue").on("removed", async (response) => {
-      if(this.repoName==response.websiteid) {
-        this.percent=0
-        this.isdisabled = false;
-        this.textdata=''
-        this.$emit('updateProjectName')
-      }
-    });
 
-    app.service("jobqueue").on("patched", async (response) => {
-      // console.log('response:',response)
-     if(this.repoName==response.websiteid){
-        // console.log('same id.. set disabled to true..')
-       this.isdisabled = true;
-        this.textdata='Job added Successfully. Please wait you are in Queue.'
-       if(response.Status!=undefined && response.Status=='completed'){
-        // console.log('completed..', response)
-         let dt = new Date();
-         let utcDate = dt.toUTCString();
-         this.commitForm.branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
-         this.commitForm.commitMessage = 'Publish - ' + utcDate;            
-         await this.commitProject('commitForm');
-        await this.saveProjectSettings()
-        await this.init()
-        this.$emit('updateProjectName')
-        this.isdisabled=false
+    if(srvListen == 0)
+    {
+        app.service("jobqueue").on("created", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = true;
+          this.textdata='Job added Successfully. Please wait you are in Queue.'
+          // this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("removed", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = false;
+          this.textdata=''
+          this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("patched", async (response) => {
+        // console.log('response:',response)
+       if(this.repoName==response.websiteid){
+          // console.log('same id.. set disabled to true..')
+         // this.isdisabled = true;
+          // this.textdata='Job added Successfully. Please wait you are in Queue.'
+         if(response.Status!=undefined && response.Status=='completed'){
+            // console.log('completed..', response)
+            let dt = new Date();
+            let utcDate = dt.toUTCString();
+            let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
+            let commitMessage = 'Publish - ' + utcDate;            
+            await this.publishcommitProject(commitMessage,branchName);
+            await this.saveProjectSettings()
+            await this.init()
+            this.$emit('updateProjectName')
+            this.isdisabled=false
+         }
+        if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
+          this.isdisabled=false
+          this.$emit('updateProjectName')
+          this.percent=0
+          // console.log('job failed')
+         }
+        if(response.Percentage!=undefined && response.Percentage!=''){
+          this.percent=response.Percentage
+          // console.log('this.percent :: ',this.percent)
+         }
        }
-      if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
-        this.isdisabled=false
-        this.$emit('updateProjectName')
-        this.percent=0
-        // console.log('job failed')
-       }
-      if(response.Percentage!=undefined && response.Percentage!=''){
-        this.percent=response.Percentage
-        // console.log('this.percent :: ',this.percent)
-       }
-     }
-    });
+      });  
+    }  
+    
+    srvListen++;
       
 
    // Collapsing Divs
@@ -1449,6 +1533,56 @@ export default {
         $("#toggleAssetImagesContent").slideToggle("slow");
       });
 
+    });
+
+
+    // Tabs Click Handle and Iint
+    $(document).ready(function(){
+      $('.tab').on('click', function(){
+        showTab($(this));
+      });
+      
+      function showTab(tab){
+        var tabBar = tab.parent().find('.tab-active-bar');
+        tabBar.animate({
+          left: parseInt(tab.position().left)+'px',
+          width: parseInt(tab.innerWidth())+'px'
+        });
+        $('.tab-content').hide().promise().done(function(){
+          $(tab.data('target')).show();
+        });
+        
+      }
+      
+      showTab($('#tab1'));
+    });
+
+    var fixmeTop = $('.fixeddiv').offset().top;
+    $(window).scroll(function() {
+        var currentScroll = $(window).scrollTop();
+        if (currentScroll >= fixmeTop) {
+            $('.fixeddiv').css({
+                position: 'fixed',
+                top: '20px',
+                right: '100px'
+            });
+        } else {
+            $('.fixeddiv').css({
+                position: 'static'
+            });
+        }
+    });
+
+    // Smooth Scroll
+    $(document).on('click', '.jumper-links-redirect', function(event) {
+        event.preventDefault();
+
+        $('.jumper-links li a.active').removeClass('active');
+        $(this).addClass('active');
+
+        $('html, body').animate({
+            scrollTop: $($.attr(this, 'href')).offset().top
+        }, 500);
     });
 
 
@@ -2997,6 +3131,7 @@ export default {
         this.fullscreenLoading = false;
         // window.location.reload();
     },
+
     revertToTemplate(template){
       this.$confirm('This will permanatly overwrite current Pages, Partials, Layouts and Website assets. Do you want to continue?', 'Warning', {
         confirmButtonText: 'Yes',
@@ -3079,6 +3214,84 @@ export default {
           this.fullscreenLoading = true;
 
           this.refreshPlugins();
+          })
+          .catch((e) => {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message
+            } else if (e.response.data.message != undefined) {
+                dataMessage = e.response.data.message
+            } else {
+                dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+          })
+        })
+        .catch((e) => {
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
+
+      }).catch((err) => {
+        //console.log('Some error occured.', err);
+      });
+    },
+
+    revertToCMSTemplate(template){
+      this.$confirm('This will permanatly overwrite current Pages, Partials, Layouts and Website assets. Do you want to continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async () => {
+
+        this.fullscreenLoading = true;
+        this.refreshDisabled = true;
+
+        // Call service to copy files for selected template
+        await axios.post( config.baseURL + '/copy-website', {
+            projectPath : this.userDetailId + '/' + this.repoName,
+            templateName : template
+        })
+        .then(async (res) => {
+          // await this.refreshPlugins();
+
+          //Copy data of project_settings.json into project-details.json
+          axios.get(config.userDetail, {
+            headers: {
+              'Authorization' : Cookies.get('auth_token')
+            }   
+          })
+          .then(async (res) => {
+            this.saveProjectSettings();
+
+            this.refreshDisabled = false;
+
+            this.fullscreenLoading = true;
+
+            this.refreshPlugins();
           })
           .catch((e) => {
             let dataMessage = '';
@@ -3402,7 +3615,7 @@ export default {
             websiteName: this.form.websitename
           })
           .then(async(res) => {
-            this.$message({
+            this.$notify({
               showClose: true,
               message: 'Successfully Saved.',
               type: 'success'
@@ -3432,7 +3645,7 @@ export default {
             .then((res) => {
             })
             .catch((e) => {
-              this.$message({
+              this.$notify({
                 showClose: true,
                 message: 'Failed saving project details! Please try again.',
                 type: 'error'
@@ -3442,7 +3655,7 @@ export default {
            await this.init();
           this.$emit('updateProjectName');
       } else {
-        this.$message({
+        this.$notify({
           showClose: true,
           message: 'Data Error.',
           type: 'error'
@@ -3490,7 +3703,7 @@ export default {
               })
               .then((response) => {
                   console.log(response);
-                  this.$message({
+                  this.$notify({
                     message: 'Rollbacked to revision "' + this.branchesData[index].branchName + '" ',
                     type: 'success'
                   });
@@ -3517,9 +3730,193 @@ export default {
       });
     },
 
+    async publishcommitProject(commitMessage,branchName){
+      let self = this;
+
+          // Check if branch exist
+          let indexOfBranchName = _.findIndex(this.branchesData, function(o) { return o.branchName == branchName; });
+
+          // If branchName is different
+          if(indexOfBranchName == -1){
+            // If .git was successfull
+            if( this.settings[0].repoSettings[0].RepositoryId != undefined){
+
+              this.isCommitLoading = true;
+              this.$store.state.currentIndex = 0;
+
+              // Push repository changes
+              axios.post(config.baseURL + '/gitlab-add-repo', {
+                branchName: branchName,
+                commitMessage: commitMessage,
+                repoName: this.repoName,
+                userDetailId: Cookies.get('userDetailId')
+              }).then(async response => {
+                // console.log(response);
+                if(response.data[0].code == 444){
+                  this.$notify({
+                    message: response.data[0].message,
+                    type: 'warning'
+                  });
+                  this.isCommitLoading = false;
+                  // this.$refs[commitForm].resetFields();
+                } else {
+                  // console.log('Response after branch commit : ', response);
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId=' + this.newRepoId, {
+                    }).then(async response => {
+
+                      
+
+                      this.commitsData = [];
+                      for(var i in response.data){
+                        this.commitsData.push({
+                          commitDate: response.data[i].created_at,
+                          commitSHA: response.data[i].id,
+                          commitsMessage: response.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch = branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log("error : ", error);
+                      this.fullscreenLoading = false;
+                    });
+                     // this.$refs[commitForm].resetFields();
+                    // this.commitForm.commitMessage = '';
+                    // this.commitForm.branchName = '';
+                    //console.log(response.data);
+                   this.$notify({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    await this.init();
+                  }
+                }
+                
+              }).catch(error => {
+                console.log("error : ", error);
+              })
+            } else {
+              // If first commit was unsuccessfull
+
+              // add new repo to git
+              let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.repoName + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
+
+              if(!(gitResponse.data.statusCode)){
+                this.isCommitLoading = true;
+                this.$store.state.currentIndex = 0;
+
+                // Push repository changes
+                axios.post(config.baseURL + '/gitlab-add-repo', {
+                  branchName:branchName,
+                  commitMessage: commitMessage,
+                  repoName: this.repoName,
+                  userDetailId: Cookies.get('userDetailId')
+                }).then(async response => {
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                    }).then(async resp => {
+                      this.commitsData = [];
+                      for(var i in resp.data){
+                        this.commitsData.push({
+                          commitDate: resp.data[i].created_at,
+                          commitSHA: resp.data[i].id,
+                          commitsMessage: resp.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch =branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log(error);
+                      this.fullscreenLoading = false;
+                    });
+
+                    commitMessage = '';
+                    branchName = '';
+
+                    //console.log(response.data);
+                    this.$notify({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    this.init();
+                  }
+                }).catch(error => {
+                  //console.log("Some error occured: ", error);
+                })
+              } else {
+                console.log('Error occured while commiting your changes. ', gitResponse);
+              }
+            }
+          } else {
+            console.log('Branch already exist.');
+            this.$swal({
+              text: 'Branch with name "' + branchName + '" already exists! Please try different name.',
+              type: 'warning',
+            })
+            return false;
+          }
+    },
+
+
     async commitProject(commitForm) {
       axios.get(config.baseURL + '/rethinkservicecheck')
       .then(async response => {
+        // console.log('commitForm:',this.$refs[commitForm])
         this.$refs[commitForm].validate(async (valid) => {
         if (valid) {
 
@@ -3545,9 +3942,9 @@ export default {
               }).then(async response => {
                 console.log(response);
                 if(response.data[0].code == 444){
-                  this.$message({
+                  this.$notify({
                     message: response.data[0].message,
-                    type: 'error'
+                    type: 'warning'
                   });
                   this.isCommitLoading = false;
                   this.$refs[commitForm].resetFields();
@@ -3599,11 +3996,11 @@ export default {
                       console.log("error : ", error);
                       this.fullscreenLoading = false;
                     });
-
-                    this.commitForm.commitMessage = '';
-                    this.commitForm.branchName = '';
+                     this.$refs[commitForm].resetFields();
+                    // this.commitForm.commitMessage = '';
+                    // this.commitForm.branchName = '';
                     //console.log(response.data);
-                    this.$message({
+                   this.$notify({
                       message: 'New revision commited. ',
                       type: 'success'
                     });
@@ -3680,7 +4077,7 @@ export default {
                     this.commitForm.branchName = '';
 
                     //console.log(response.data);
-                    this.$message({
+                    this.$notify({
                       message: 'New revision commited. ',
                       type: 'success'
                     });
@@ -3711,6 +4108,7 @@ export default {
 
       })
       .catch(e => {
+        console.log('e:',e)
         let dataMessage = '';
             if (e.message != undefined) {
                 dataMessage = e.message              
@@ -3719,7 +4117,7 @@ export default {
             } else{
               dataMessage = "Please try again! Some error occured."
             }
-            this.$confirm(dataMessage, 'Error', {
+          this.$confirm(dataMessage, 'Error', {
           confirmButtonText: 'logout',
           cancelButtonText: 'reload',
           type: 'error',
@@ -3754,6 +4152,14 @@ export default {
              // this.isdisabled=false
              // console.log('canceled called');
              // this.$emit('updateProjectName')
+                axios.patch(config.baseURL + '/jobqueue', {
+              'Status': 'cancelled',
+              'websiteName': this.form.websitename ,
+              'websiteid': this.repoName,
+              'userId':Cookies.get('userDetailId')
+              }).catch((e) => {
+                  console.log(e)
+              })
           }).catch((e)=>{
             console.log(e)
           })
@@ -3780,7 +4186,7 @@ export default {
              domain: location
          });
 
-         this.$message({
+         this.$notify({
              message: 'You\'re Logged Out From System. Please login again!',
              duration: 500,
              type: 'error',
@@ -3884,7 +4290,7 @@ export default {
           domain: location
         });
 
-        this.$message({
+        this.$notify({
           message: 'You\'re Logged Out From System. Please login again!',
           duration: 500,
           type: 'error',
@@ -4610,7 +5016,7 @@ export default {
               })
               .catch((e) => {
                 this.fullscreenLoading = false;
-                this.$message({
+                this.$notify({
                   showClose: true,
                   message: 'Failed! Please try again.',
                   type: 'error'
@@ -5098,6 +5504,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  .ProjectSettings{
+    background-color: #f5f5f5;
+  }
+
   div.jsoneditor{
     min-height: 700px;
     margin-bottom: 80px;
@@ -5400,5 +5810,82 @@ export default {
   .cloudinaryFilesCount{
     margin-left: 15px;
     font-weight: 900;
+  }
+
+  /*Implementation Of Tabs UI*/
+
+  .tabs {
+    padding: 15px 0px;
+    background-color: #008BE8;
+    color: #fff;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+  .tabs h3 {
+    font-size: 28px;
+    font-weight: 400;
+    margin: 15px;
+    margin-left: 30px;
+  }
+  .tabs .tab {
+    text-transform: uppercase;
+    padding: 10px 32px;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .tabs .tab-active-bar {
+    position: absolute;
+    height: 3px;
+    width: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #fff;
+  }
+
+  .tab-content {
+    padding: 24px;
+    font-size: 16px !important;
+    color: #616161;
+  }
+  .tab-content span.block-title {
+    margin-left: 24px;
+    font-size: 20px;
+  }
+  .tab-content .card-spacer {
+    min-height: 50px;
+  }
+  .tab-content .card {
+    background-color: #fff;
+    font-size: 16px;
+    font-weight: 300;
+    margin: 24px;
+    padding: 24px;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+  }
+
+  .refresh-plugins-btn{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 7px;
+    position: absolute;
+    right: 50px;
+  }
+
+  ul.jumper-links{
+    list-style: none;
+  }
+
+  .jumper-links-redirect{
+    text-decoration: none;
+    color: #999;
+  }
+
+  .jumper-links-redirect.active{
+    /*font-weight: bolder;*/
+    color: #2C72EB;
   }
 </style>

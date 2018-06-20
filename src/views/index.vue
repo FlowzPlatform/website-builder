@@ -33,10 +33,10 @@
           <div class="sideMenuOpener">
             <button type="button" class="hamburger is-open" data-toggle="offcanvas">
               <div class="sideOpener">
-                <i class="fa fa-angle-right text-white">
+                <i class="fa fa-bars fa-rotate-90 text-white">
                 </i>
-                <i class="fa fa-angle-left text-white">
-                </i>
+                <!-- <i class="fa fa-angle-left text-white">
+                </i> -->
               </div>
             </button>
           </div>
@@ -152,6 +152,12 @@
                           </label>
                           <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
                         </li>
+                        <!-- <li>
+                          <input type="radio" name="layout" value="template4" id="myCheckbox5" />
+                          <label for="myCheckbox5" class="radio-img imgThumbnail" v-on:click="setTemplate('template5')" title="Photography template">
+                          </label>
+                          <img src="http://res.cloudinary.com/flowz/image/upload/v1526625886/builder/images/photography-template.jpg" class="templateThumbnail">
+                        </li> -->
                       </ul>
                     </div>
                   </el-form-item>
@@ -719,6 +725,9 @@
                  this.templateContentsData = templateData.data;
               } else if(template == 'template4'){
                 templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/template4.html');
+                 this.templateContentsData = templateData.data;
+              } else if(template == 'template5'){
+                templateData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + config.pluginsPath + '/StaticTemplates/flowz-digital-website.html');
                  this.templateContentsData = templateData.data;
               } else if (template == 'none') {
                 this.templateContentsData = '';
@@ -4302,7 +4311,7 @@
                       }
                       responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
                       // self.form.partials = back_partials
-                      // console.log("Final metalsmith:", responseMetal.data);
+                       // console.log("Final metalsmith:", responseMetal.data);
                       var mainMetal = folderUrl + '/public/assets/metalsmithPreview.js'
                       axios.post(config.baseURL + '/save-menu', {
                           filename: mainMetal,
@@ -4410,10 +4419,12 @@
                                 .then(async(res) => {
                                   self.saveFileLoading = false;
                                   // console.log('Metalsmith call FolderUrl: ', folderUrl);
+                                  let previewbackupmetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                                  
                                   await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                                       axios.post(config.baseURL + '/save-menu', {
                                           filename: folderUrl + '/public/assets/metalsmithPreview.js',
-                                          text: backupmetalsmith,
+                                          text: previewbackupmetal,
                                           type: 'file'
                                         })
                                         .then(async(res) => {
@@ -4425,9 +4436,11 @@
                                           projName = projName.split('/')[2];
                                           // console.log("process.env.NODE_ENV",process.env.NODE_ENV)
                                           if (process.env.NODE_ENV !== 'development') {
-                                            window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
+                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
+                                            redirectWindow.location;
                                           } else {
-                                            window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
+                                            let redirectWindow = window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
+                                            redirectWindow.location;
                                           }
                                           await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                             .then(async(res) => {
@@ -5197,7 +5210,6 @@
 
             // Remove Project Folder and Delete GitLab Repository
             async removeProject(store, data) {
-
                 // Get Config File
                 let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 let foldername = folderUrl.split('/');
@@ -5954,29 +5966,29 @@
                   // console.log('this.statusPublish',this.statusPublish)
                   let index=_.findIndex(this.statusPublish,function(o){return Object.keys(o)[0]==data.name})
                   if(index!=-1){
-                      if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
-                      return (<span on-click={ () => this.isProjectStats = true }>
-                        <span class="nodelabel" >
-                            <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
-                            <span>{data.websitename}</span>
-                        </span>
-                        <span class="action-button" style="float: right; padding-right: 5px;">
+                    //   if(this.statusPublish[index][Object.keys(this.statusPublish[index])[0]]=='Active'){
+                    //   return (<span on-click={ () => this.isProjectStats = true }>
+                    //     <span class="nodelabel" >
+                    //         <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
+                    //         <span>{data.websitename}</span>
+                    //     </span>
+                    //     <span class="action-button" style="float: right; padding-right: 5px;">
 
-                              <i title='website publishing' class="fa fa-spinner fa-spin" aria-hidden="true" style="margin-right: 5px; "></i>
+                    //           <i title='website publishing' class="fa fa-spinner fa-spin" aria-hidden="true" style="margin-right: 5px; "></i>
 
-                              <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
+                    //           <i title="Visit Website" class="fa fa-external-link" style="margin-right: 5px; color: #3E50B4" on-click={ () => this.previewWebsite(node, data) }></i>
 
-                              <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
+                    //           <i title="Clone Website" class="fa fa-clone" style="margin-right: 5px; color: #FEC107" on-click={ () => this.cloneWebsite(node, data) }></i>
                           
-                              <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
+                    //           <i title="Website Settings" class="fa fa-cog" style="margin-right: 5px; color: #607C8A" on-click={ () => this.isProjectEditing = true }></i>
                           
                           
-                              <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.isProjectStats = true, this.quickDelete(store, data) }></i>
+                    //           <i title="Delete Website" class="fa fa-trash-o" style="color: #F44236" on-click={ () => this.isProjectStats = true, this.quickDelete(store, data) }></i>
                           
-                        </span>
-                      </span>)
-                    }
-                else{
+                    //     </span>
+                    //   </span>)
+                    // }
+                // else{
                       return (<span on-click={ () => this.isProjectStats = true }>
                         <span class="nodelabel" >
                             <i class="fa fa-globe" style="padding: 10px; color: #4A8AF4"></i>
@@ -5997,7 +6009,7 @@
                           
                         </span>
                       </span>)
-                    }
+                    // }
                   }else{
                     // console.log('-1 found ')
                     return (<span on-click={ () => this.isProjectStats = true }>
@@ -6890,10 +6902,13 @@
     }
 
     .sideOpener i {
-        display: table-cell;
-        vertical-align: middle;
-        font-weight: bolder;
-        font-size: 18px;
+        /*display: table-cell;*/
+        /*vertical-align: middle;*/
+        /*font-weight: bolder;*/
+        font-size: 14px;
+        position: absolute;
+        top: 50%;
+        left: 0;
     }
 
 
