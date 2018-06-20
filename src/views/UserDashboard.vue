@@ -243,6 +243,14 @@
                             <span class="hh-sidebar-item">Settings</span>
                         </a>
                     </li> -->
+		    <li>
+                        <a href="#" @click='goToWebsiteSetting()'>
+                            <i class="fa fa-cog">
+                                <span class="icon-bg hh-bg-success"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Website Configuration</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="#" class="done" @click="bExpand = !bExpand">
                             <i class="fa fa-file-image-o">
@@ -342,7 +350,8 @@ import AddBannerType from './Banner/add_bannertype';
 import AddBanner from './Banner/add_banner';
 import BannerTypeList from './Banner/bannertypeList';
 import BannerList from './Banner/bannersList';
-import ColorSwatch from './ColorSwatch'
+import ColorSwatch from './ColorSwatch';
+import WebsiteConfig from './WebsiteConfig';
 
 export default {
   name: 'UserDashboard',
@@ -391,6 +400,9 @@ export default {
             this.componentId = BannerList;
         } else {}
     },
+    goToWebsiteSetting(){
+       this.componentId = WebsiteConfig;
+     },
     goToColors() {
       this.componentId = ColorSwatch;
     },
