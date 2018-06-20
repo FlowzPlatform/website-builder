@@ -269,6 +269,46 @@
                         </a>
                     </li>
                     <li>
+                        <a href="#" class="done" @click="tExpand = !tExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Tag Management</span>
+                        </a>
+                    </li>
+                    <li v-if="tExpand">
+                        <a href="#" class="inside-items" @click='goToTag("tc_add")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Tag Category</span>
+                        </a>
+                    </li>
+                    <li v-if="tExpand"  @click='goToTag("tc_list")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Tag Categories</span>
+                        </a>
+                    </li>
+                    <li  v-if="tExpand"  @click='goToTag("t_add")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Tag</span>
+                        </a>
+                    </li>
+                    <li  v-if="tExpand"  @click='goToTag("t_list")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Tags</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
                                 <span class="icon-bg hh-bg-violet"></span>
@@ -286,7 +326,7 @@
                     
                     <div class="row">
                         <div class="col-md-12">
-                            <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner"></component>
+                            <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner" :tdata="rdata" v-on:updateTag="EditTag"></component>
                         </div>
                         
                     </div>
@@ -318,6 +358,14 @@ import BannerTypeList from './Banner/bannertypeList';
 import BannerList from './Banner/bannersList';
 import ColorSwatch from './ColorSwatch'
 
+// Tag Templates
+import AddTagCategory from './Tag/addTagCategory';
+import TagCategoryList from './Tag/tagCategoryList';
+import AddTag from './Tag/addTag';
+import TagList from './Tag/tagsList';
+import productTags from './Tag/productTags';
+import productMapping from './Tag/productMapping';
+
 export default {
   name: 'UserDashboard',
   props: {
@@ -329,9 +377,11 @@ export default {
     return {
       data: 'data',
       bExpand: false,
+      tExpand: false,
       componentId: '',
       userEmailId: '',
-      rowdata: {}
+      rowdata: {},
+      rdata: {}
     }
   },
   component: {
@@ -352,6 +402,25 @@ export default {
           this.rowdata = {}
         }
     },
+    EditTag (item) {
+        // console.log(item)
+        this.rdata = item
+        if (item.type === 'tagcategory') {
+          this.componentId = AddTagCategory
+        } else if (item.type == 'tag') {
+          this.componentId = AddTag
+        } else if (item.type == 'tagcategorylist') {
+          this.componentId = TagCategoryList
+        } else if (item.type == 'taglist') {
+          this.componentId = TagList
+        } else if (item.type == 'producttags') {
+          this.componentId = productTags
+        } else if (item.type == 'productmapping') {
+          this.componentId = productMapping
+        } else {
+          this.rdata = {}
+        }
+    },
     goToBanner (name) {
       this.rowdata = {}
         if (name === 'bt_add') {
@@ -362,6 +431,19 @@ export default {
             this.componentId = BannerTypeList;
         } else if (name === 'b_list') {
             this.componentId = BannerList;
+        } else {}
+    },
+    goToTag (name) {
+        this.rdata = {}
+        if (name === 'tc_add') {
+            console.log('nnn')
+            this.componentId = AddTagCategory;
+        } else if (name === 't_add') {
+            this.componentId = AddTag;
+        } else if (name === 'tc_list') {
+            this.componentId = TagCategoryList;
+        } else if (name === 't_list') {
+            this.componentId = TagList;
         } else {}
     },
     goToColors() {
