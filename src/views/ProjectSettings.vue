@@ -404,8 +404,8 @@
                     </div>
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" @click="revertToTemplate(template = 'web5')"/>
-                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                        <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" />
+                      <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       </div>
                     </div>
                     <div class="col-md-4">
@@ -469,6 +469,13 @@
                     <div class="col-md-4">
                       <div class="thumbnail">
                         <img src="http://res.cloudinary.com/flowz/image/upload/v1528863699/builder/images/OfficeBeacon.png" alt="officebeacon-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'officebeacon-website')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/v1529667007/builder/images/ss_golf.png" alt="officebeacon-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'staticwebsite')"/>
                       <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
                       <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
