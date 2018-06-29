@@ -243,6 +243,102 @@
                             <span class="hh-sidebar-item">Settings</span>
                         </a>
                     </li> -->
+		    <li>
+                        <a href="#" @click='goToWebsiteSetting()'>
+                            <i class="fa fa-cog">
+                                <span class="icon-bg hh-bg-success"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Website Configuration</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="done" @click="bExpand = !bExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Banner Management</span>
+                        </a>
+                    </li>
+                    <li v-if="bExpand">
+                        <a href="#" class="inside-items" @click='goToBanner("bt_add")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Banner Type</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("bt_list")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List BannerType</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("b_add")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Banner</span>
+                        </a>
+                    </li>
+                    <li  v-if="bExpand"  @click='goToBanner("b_list")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Banners</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" @click='goToColors()'>
+                            <i class="fa fa-list">
+                                <span class="icon-bg hh-bg-success"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Product & Imprint Color</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="done" @click="tExpand = !tExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Tag Management</span>
+                        </a>
+                    </li>
+                    <li v-if="tExpand">
+                        <a href="#" class="inside-items" @click='goToTag("tc_add")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Tag Category</span>
+                        </a>
+                    </li>
+                    <li v-if="tExpand"  @click='goToTag("tc_list")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Tag Categories</span>
+                        </a>
+                    </li>
+                    <li  v-if="tExpand"  @click='goToTag("t_add")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Tag</span>
+                        </a>
+                    </li>
+                    <li  v-if="tExpand"  @click='goToTag("t_list")'>
+                        <a href="#" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Tags</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="#" class="done" @click="bExpand = !bExpand">
                             <i class="fa fa-file-image-o">
@@ -309,7 +405,7 @@
                     <!-- 
                     <div class="row">
                         <div class="col-md-12"> -->
-                            <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner"></component>
+                            <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner" :tdata="rdata" v-on:updateTag="EditTag"></component>
                         <!-- </div>
                         
                     </div>
@@ -342,7 +438,16 @@ import AddBannerType from './Banner/add_bannertype';
 import AddBanner from './Banner/add_banner';
 import BannerTypeList from './Banner/bannertypeList';
 import BannerList from './Banner/bannersList';
-import ColorSwatch from './ColorSwatch'
+import ColorSwatch from './ColorSwatch';
+import WebsiteConfig from './WebsiteConfig';
+
+// Tag Templates
+import AddTagCategory from './Tag/addTagCategory';
+import TagCategoryList from './Tag/tagCategoryList';
+import AddTag from './Tag/addTag';
+import TagList from './Tag/tagsList';
+import productTags from './Tag/productTags';
+import productMapping from './Tag/productMapping';
 
 export default {
   name: 'UserDashboard',
@@ -355,9 +460,11 @@ export default {
     return {
       data: 'data',
       bExpand: false,
+      tExpand: false,
       componentId: '',
       userEmailId: '',
       rowdata: {},
+      rdata: {},
       userName: null
     }
   },
@@ -379,6 +486,25 @@ export default {
           this.rowdata = {}
         }
     },
+    EditTag (item) {
+        // console.log(item)
+        this.rdata = item
+        if (item.type === 'tagcategory') {
+          this.componentId = AddTagCategory
+        } else if (item.type == 'tag') {
+          this.componentId = AddTag
+        } else if (item.type == 'tagcategorylist') {
+          this.componentId = TagCategoryList
+        } else if (item.type == 'taglist') {
+          this.componentId = TagList
+        } else if (item.type == 'producttags') {
+          this.componentId = productTags
+        } else if (item.type == 'productmapping') {
+          this.componentId = productMapping
+        } else {
+          this.rdata = {}
+        }
+    },
     goToBanner (name) {
       this.rowdata = {}
         if (name === 'bt_add') {
@@ -391,6 +517,22 @@ export default {
             this.componentId = BannerList;
         } else {}
     },
+    goToTag (name) {
+        this.rdata = {}
+        if (name === 'tc_add') {
+            console.log('nnn')
+            this.componentId = AddTagCategory;
+        } else if (name === 't_add') {
+            this.componentId = AddTag;
+        } else if (name === 'tc_list') {
+            this.componentId = TagCategoryList;
+        } else if (name === 't_list') {
+            this.componentId = TagList;
+        } else {}
+    },
+    goToWebsiteSetting(){
+       this.componentId = WebsiteConfig;
+     },
     goToColors() {
       this.componentId = ColorSwatch;
     },
