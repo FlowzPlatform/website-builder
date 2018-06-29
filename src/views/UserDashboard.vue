@@ -243,7 +243,7 @@
                             <span class="hh-sidebar-item">Settings</span>
                         </a>
                     </li> -->
-		    <li>
+		            <li>
                         <a href="#" @click='goToWebsiteSetting()'>
                             <i class="fa fa-cog">
                                 <span class="icon-bg hh-bg-success"></span>
@@ -264,7 +264,7 @@
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
-                            <span class="hh-sidebar-item">Add Banner Type</span>
+                            <span class="hh-sidebar-item">Add Category</span>
                         </a>
                     </li>
                     <li  v-if="bExpand"  @click='goToBanner("bt_list")'>
@@ -272,7 +272,7 @@
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
-                            <span class="hh-sidebar-item">List BannerType</span>
+                            <span class="hh-sidebar-item">List Category</span>
                         </a>
                     </li>
                     <li  v-if="bExpand"  @click='goToBanner("b_add")'>
@@ -339,7 +339,7 @@
                             <span class="hh-sidebar-item">List Tags</span>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="#" class="done" @click="bExpand = !bExpand">
                             <i class="fa fa-file-image-o">
                                 <span class="icon-bg hh-bg-warning"></span>
@@ -386,7 +386,7 @@
                             </i>
                             <span class="hh-sidebar-item">Product & Imprint Color</span>
                         </a>
-                    </li>
+                    </li> -->
                     <!-- <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">

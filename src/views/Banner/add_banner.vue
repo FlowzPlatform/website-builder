@@ -232,7 +232,8 @@ export default {
       isdisable: false,
       fetchImagesLoader: false,
       assetsImages: [],
-      itemArr: []
+      itemArr: [],
+      webOptions: []
       // modelData: []
     }
   },
@@ -453,21 +454,37 @@ export default {
       this.itemArr = []
     }
   },
-  mounted () {
+  async mounted () {
     let userId = Cookies.get('userDetailId')
-    axios.get(bannertypeUrl + '?userId=' + userId + '&status=true&$paginate=false').then(res=> {
-      for(let item of res.data) {
-        this.bannertypes.push({
-          label: item.bt_name,
-          value: item.id
+    if (userId !== '' && userId !== undefined) {
+      this.$Spin.show();
+      await axios.get(baseURL + '/project-configuration?userId=' + userId).then(res => {
+        for (let item of res.data.data) {
+          this.webOptions.push({label: item.websiteName, value: item.id})
+        }
+      }).catch(err => {
+      })
+      await axios.get(bannertypeUrl + '?userId=' + userId + '&status=true&$paginate=false').then(res=> {
+        console.log('res.data ::', res.data)
+        for(let item of res.data) {
+          let webname = ''
+          let finx = _.findIndex(this.webOptions, {value: item.website_id})
+          if (finx !== -1) {
+            webname = ' (' + this.webOptions[finx].label + ') '
+          }
+          this.bannertypes.push({
+            label: item.bt_name + webname,
+            value: item.id
+          })
+        }
+      })
+      if (this.bdata.type === 'banner' && this.bdata.id !== undefined) {
+        await axios.get(bannersUrl + '/' + this.bdata.id).then(res => {
+          this.formItem = res.data
+          this.isdisable = true
         })
       }
-    })
-    if (this.bdata.type === 'banner' && this.bdata.id !== undefined) {
-      axios.get(bannersUrl + '/' + this.bdata.id).then(res => {
-        this.formItem = res.data
-        this.isdisable = true
-      })
+      this.$Spin.hide();
     }
   }
 }
