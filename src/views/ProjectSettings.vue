@@ -1404,6 +1404,67 @@ export default {
 
   },
 
+  async created() {
+
+
+        app.service("jobqueue").on("created", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = true;
+          this.textdata='Job added Successfully. Please wait you are in Queue.'
+          // this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("removed", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = false;
+          this.textdata=''
+          this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("patched", async (response) => {
+        // console.log('response:',response)
+       if(this.repoName==response.websiteid){
+
+          console.log('===========================================');
+          console.log("**"+this.repoName+"--"+response.websiteid);
+          console.log(response);
+          console.log(1111111 + '===' + this.isdisabled);
+          // console.log('same id.. set disabled to true..')
+         // this.isdisabled = true;
+          // this.textdata='Job added Successfully. Please wait you are in Queue.'
+         if(response.Status!=undefined && response.Status=='completed'){
+            // console.log('completed..', response)
+            let dt = new Date();
+            let utcDate = dt.toUTCString();
+            let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
+            let commitMessage = 'Publish - ' + utcDate;            
+            await this.publishcommitProject(commitMessage,branchName);
+            await this.saveProjectSettings()
+            await this.init()
+            this.$emit('updateProjectName')
+            this.isdisabled=false
+         }
+        if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
+          this.isdisabled=false
+          this.$emit('updateProjectName')
+          this.percent=0
+          // console.log('job failed')
+         }
+        if(response.Percentage!=undefined && response.Percentage!=''){
+          console.log(1111111 + '===' + this.isdisabled);
+
+          this.percent=response.Percentage
+          // console.log('this.percent :: ',this.percent)
+         }
+       }
+      });  
+    
+  },
+
   async mounted () {
     // console.log('mounted')
     // console.log( this.$refs['commitForm'])
@@ -1414,6 +1475,7 @@ export default {
     // console.log('srvListen :: ', srvListen);
 
 
+    /*
     if(srvListen == 0)
     {
         app.service("jobqueue").on("created", async (response) => {
@@ -1437,6 +1499,11 @@ export default {
       app.service("jobqueue").on("patched", async (response) => {
         // console.log('response:',response)
        if(this.repoName==response.websiteid){
+
+          console.log('===========================================');
+          console.log("**"+this.repoName+"--"+response.websiteid);
+          console.log(response);
+          console.log(1111111 + '===' + this.isdisabled);
           // console.log('same id.. set disabled to true..')
          // this.isdisabled = true;
           // this.textdata='Job added Successfully. Please wait you are in Queue.'
@@ -1459,12 +1526,14 @@ export default {
           // console.log('job failed')
          }
         if(response.Percentage!=undefined && response.Percentage!=''){
+          console.log(1111111 + '===' + this.isdisabled);
+
           this.percent=response.Percentage
           // console.log('this.percent :: ',this.percent)
          }
        }
       });  
-    }  
+    } */  
     
     srvListen++;
       
@@ -1915,6 +1984,8 @@ export default {
                 // console.log(response.data.resources[i].secure_url);
                 this.assetsImages.push(response.data.resources[i].secure_url);
               }
+
+              console.log('Cursor: ', response.data.next_cursor);
 
               if(response.data.next_cursor !== undefined){
                 this.cloudinaryDetails.nextCursor = response.data.next_cursor;
