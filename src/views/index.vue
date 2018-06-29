@@ -5281,7 +5281,22 @@
 
                             // Delete Repository from GitLab Server
                             let response = await axios.get(config.baseURL + '/gitlab-add-repo/' + repositoryId, {})
-                                .then((response) => {
+                                .then(async (response) => {
+
+                                    // all banners and categories delete associated with website
+                                    await axios.get(config.baseURL + '/bannertype?website_id=' + foldername + '&$paginate=false')
+                                        .then(async resp => {
+                                          // console.log(resp.data)
+                                          for (let item of resp.data) {
+                                            await axios.get(config.baseURL + '/banners?banner_type=' + item.id + '&$paginate=false')
+                                              .then(async respp => {
+                                                for (let item1 of respp.data) {
+                                                  await axios.delete(config.baseURL + '/banners/' + item1.id)
+                                                }
+                                                await axios.delete(config.baseURL + '/bannertype/' + item.id)  
+                                              })
+                                          }
+                                        })
 
                                     // delete project configuration from RethinkDB
                                     axios.delete(config.baseURL + '/project-configuration/' + foldername, {})
