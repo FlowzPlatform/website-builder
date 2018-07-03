@@ -14,7 +14,7 @@
       </el-tooltip>
 
       <el-tooltip class="item" effect="dark" placement="bottom">
-        <div slot="content" style="text-align: center">Image Library<br> URL Bucket<br> External Links <br> Meta Information <br> Global Styles &amp; Scripts </div>
+        <div slot="content" style="text-align: center">Image Library<br>Tax Cloud<br> URL Bucket<br> External Links <br> Meta Information <br> Global Styles &amp; Scripts </div>
         <a class="tab" id="tab3" data-target="#tab3-content">Assets Management</a>
       </el-tooltip>
 
@@ -743,6 +743,24 @@
 
             <div class="card-spacer"></div>
 
+            <span class="block-title" id="tax-cloud">Tax Cloud</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                  <el-form label-position="left" label-width="200px" :model="taxcloud" :rules="rulesTaxCloud" ref="refTaxCloud">
+                    <el-form-item label="API ID" prop="apiId">
+                      <el-input v-model.trim="taxcloud.apiId"></el-input>
+                    </el-form-item>
+                    <el-form-item label="API KEY" prop="apiKey">
+                      <el-input v-model.trim="taxcloud.apiKey"></el-input>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
             <span class="block-title" id="url-bucket">URL Bucket</span>
             <div class="card">
               <div class="row">
@@ -1065,6 +1083,7 @@
               <strong>Jump To:</strong>
               <ul class="jumper-links">
                 <li><a class="jumper-links-redirect active" href="#image-library">Image Library</a></li>
+                <li><a class="jumper-links-redirect" href="#tax-cloud">Tax Cloud</a></li>
                 <li><a class="jumper-links-redirect" href="#url-bucket">URL Bucket</a></li>
                 <li><a class="jumper-links-redirect" href="#external-links">External Links</a></li>
                 <li><a class="jumper-links-redirect" href="#meta-information">Meta Information</a></li>
@@ -1397,7 +1416,19 @@ export default {
       },
       fetchImagesLoader: false,
       loadMoreImagesLoader: false,
-      isEnabledByNextCursor: true
+      isEnabledByNextCursor: true,
+      taxcloud: {
+        apiId: '',
+        apiKey: ''
+      },
+      rulesTaxCloud: {
+        apiId: [
+            { required: true, message: 'Enter TaxCloud API ID', trigger: 'blur' }
+        ],
+        apiKey: [
+            { required: true, message: 'Enter TaxCloud API Key', trigger: 'blur' }
+        ]
+      }
     }
   },
   components: {
@@ -3638,6 +3669,7 @@ export default {
         "CrmSettingId":this.form.crmid
       }, {
         "CloudinaryDetails": this.cloudinaryDetails,
+        "TaxCloud": this.taxcloud,
         "AssetImages": this.assetsImages,
         "GlobalVariables": this.globalVariables,
         "GlobalUrlVariables": this.urlVariables,
@@ -5292,6 +5324,14 @@ export default {
           }
         } else {
           this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
+        }
+        if(!(this.settings[1].projectSettings[1].TaxCloud)){
+          this.taxcloud = {
+            "apiId":  "",
+            "apiKey":  "" 
+          }
+        } else {
+          this.taxcloud = this.settings[1].projectSettings[1].TaxCloud;
         }
 
         
