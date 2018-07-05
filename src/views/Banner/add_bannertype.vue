@@ -48,6 +48,7 @@ import _ from 'lodash'
 
 let baseUrl = config.baseURL
 let bannertypeUrl = baseUrl + '/bannertype'
+let bannersUrl = config.baseURL + '/banners'
 
 export default {
   name: 'bannertypenew',
@@ -95,7 +96,8 @@ export default {
       },
       webOptions: [],
       isdisable: false,
-      btname: ''
+      btname: '',
+      status: false
     }
   },
   methods: {
@@ -116,21 +118,72 @@ export default {
     handleEdit (name) {
       let item = _.cloneDeep(this.formItem)
       delete item.id
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(async (valid) => {
         if (valid) {
           item.createdAt = new Date()
-          axios.put(bannertypeUrl + '/' + this.formItem.id, item).then(res => {
-            this.$Notice.success({title: 'Success!!', desc: 'Successfully Edited.', duration: 3})
-            this.$emit('updateBanner', {type: 'bannertypelist'})
-            // this.$router.push('/bannertype')
-          }).catch(err => {
-            console.log('Error', err)
-          })
+          if (this.status === item.status) {
+            console.log('No Status Change')
+            axios.put(bannertypeUrl + '/' + this.formItem.id, item).then(res => {
+              this.$Notice.success({title: 'Success!!', desc: 'Successfully Edited.', duration: 3})
+              this.$emit('updateBanner', {type: 'bannertypelist'})
+            }).catch(err => {
+              console.log('Error', err)
+            })
+          } else {
+            let res = await this.handleTagClick(this.formItem.id, item.status)
+            if (res.status === 'success') {
+              if (res.msg === 'found') {
+                console.log('item.status', item.status, this.formItem.status)
+                this.$Modal.confirm({
+                  title: 'Confirm',
+                  content: '<p><b style="color: #f90;">'+ res.data.length + ((res.data.length === 1) ? ' Banner' : ' Banners') +' </b> found with <b>'+ item.bt_name +'</b>. </p><p>Are you sure you want to '+(item.status ? 'ACTIVE': 'INACTIVE')+' all?</p>',
+                  loading: true,
+                  onOk: async () => {
+                    for (let item1 of res.data) {
+                      let s = await axios.patch(bannersUrl + '/' + item1.id, {banner_status: item.status})
+                    }
+                    await axios.patch(bannertypeUrl + '/' + this.formItem.id, {status: item.status}).then(res => {
+                      this.$Notice.success({ title: 'Success!', desc: '', duration: 3})
+                      this.$Modal.remove()
+                      this.$emit('updateBanner', {type: 'bannertypelist'})
+                    }).catch(err => {
+                      console.log('Error', err)
+                      this.$Notice.error({ title: 'Error', desc: '', duration: 3})
+                      this.$Modal.remove()
+                    })
+                  }
+                })
+              } else {
+                await axios.patch(bannertypeUrl + '/' + this.formItem.id, {status: item.status}).then(res => {
+                  this.$Notice.success({ title: 'Success!', desc: '', duration: 3})
+                  this.$emit('updateBanner', {type: 'bannertypelist'})
+                }).catch(err => {
+                  console.log('Error', err)
+                  this.$Notice.error({ title: 'Error', desc: '', duration: 3})
+                })
+              }
+            } else {
+              this.$Notice.error({ title: 'Error', desc: '', duration: 3})
+            }
+          }
         }
       })
     },
     handleCancel () {
       this.$emit('updateBanner', {type: 'bannertypelist'})
+    },
+    async handleTagClick(id, status) {
+      let userId = Cookies.get('userDetailId')
+      let resp = await axios.get(bannersUrl + '?userId=' + userId + '&banner_type=' + id).then(res => {
+        if (res.data.data.length > 0) {
+          return {status: 'success', msg: 'found', data: res.data.data}
+        } else {
+          return {status: 'success', msg: 'notfound'}
+        }
+      }).catch(err => {
+        return {status: 'error'}
+      })
+      return resp
     }
   },
   mounted () {
@@ -152,6 +205,7 @@ export default {
           this.formItem = res.data
           this.btname = res.data.bt_name
           this.isdisable = true
+          this.status = res.data.status
         }).catch(err => {
           console.log('Error::', err)
         })
