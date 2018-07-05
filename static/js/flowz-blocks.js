@@ -278,7 +278,7 @@ grapesjs.plugins.add('flowz-blocks', function(editor, options) {
   bm.add('froala-contacts-style-1', {
     label: 'Style 1',
     content: '<style>.fdb-block{border-bottom: solid 1px #EEE;}</style>' +
-      '<section class="fdb-block pt-0"> <div class="container-fluid p-0 pb-md-5"> <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8444388087937!2d26.101253041406952!3d44.43635311654287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b7%3A0x58147f39579fe6fa!2zR3J1cHVsIFN0YXR1YXIgIkPEg3J1yJthIEN1IFBhaWHIm2Ui!5e0!3m2!1sen!2sro!4v1507381157656" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> </div><div class="container"> <div class="row mt-5"> <div class="col-12 col-md-6 col-lg-5"> <h2 style="font-size:18px">Contact Us</h2> <p class="text-h3" style="font-size:16px"> Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove. </p><p class="text-h3" style="font-size:16px"> It is a paradisematic country, in which roasted parts of sentences fly into your mouth. </p><p class="text-h3 mt-5" style="font-size:16px"> <strong>Email:</strong> <a href="#">hello@website.com</a> </p><p class="text-h3" style="font-size:16px"> <strong>Phone:</strong> <a href="#">+44 123 123 1232</a> </p></div><div class="col-12 col-md-6 ml-auto pt-5 pt-md-0"> <form> <div class="row"> <div class="col" style="font-size:16px"> <input type="text" class="form-control" placeholder="First name"> </div><div class="col" style="font-size:16px"> <input type="text" class="form-control" placeholder="Last name"> </div></div><div class="row mt-4"> <div class="col" style="font-size:16px"> <input type="email" class="form-control" placeholder="Enter email"> </div></div><div class="row mt-4"> <div class="col" style="font-size:16px"> <input type="email" class="form-control" placeholder="Subject"> </div></div><div class="row mt-4"> <div class="col" style="font-size:16px"> <textarea class="form-control" name="message" rows="3" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col" style="font-size:16px"> <button type="submit" class="btn">Submit</button> </div></div></form> </div></div></div></section>',
+      '<section class="fdb-block pt-0"> <div class="container-fluid p-0 pb-md-5"> <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8444388087937!2d26.101253041406952!3d44.43635311654287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b7%3A0x58147f39579fe6fa!2zR3J1cHVsIFN0YXR1YXIgIkPEg3J1yJthIEN1IFBhaWHIm2Ui!5e0!3m2!1sen!2sro!4v1507381157656" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> </div><div class="container"> <div class="row mt-5"> <div class="col-12 col-md-6 col-lg-5"> <h2 style="font-size:18px">Contact Us</h2> <p class="text-h3" style="font-size:16px"> Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove. </p><p class="text-h3" style="font-size:16px"> It is a paradisematic country, in which roasted parts of sentences fly into your mouth. </p><p class="text-h3 mt-5" style="font-size:16px"> <strong>Email:</strong> <a href="#">hello@website.com</a> </p><p class="text-h3" style="font-size:16px"> <strong>Phone:</strong> <a href="#">+44 123 123 1232</a> </p></div><div class="col-12 col-md-6 ml-auto pt-5 pt-md-0"> <form id="frmContact"> <fcontact> <div class="row"> <div class="col" style="font-size:16px"> <input name="fname" type="text" class="form-control fname" placeholder="First name"> </div><div class="col" style="font-size:16px"> <input type="text" name="lname" class="form-control lname" placeholder="Last name"> </div></div><div class="row mt-4"> <div class="col" style="font-size:16px"> <input type="email" name="email" class="form-control email" placeholder="Enter email"> </div></div><div class="row mt-4"> <div class="col" style="font-size:16px"> <input type="email" name="subject" class="form-control fsubject" placeholder="Subject"> </div></div><div class="row mt-4"> <div class="col" style="font-size:16px"> <textarea class="form-control fcontent" name="fcontent" name="message" rows="3" placeholder="How can we help?"></textarea> </div></div><div class="row mt-4"> <div class="col" style="font-size:16px"> <button type="submit" class="btn">Submit</button> </div></div></fcontact></form> </div></div></div></section>',
     attributes: {
       class: 'custom-icon froala-contacts-style-1',
       title: 'Style 1',
@@ -395,6 +395,51 @@ grapesjs.plugins.add('flowz-blocks', function(editor, options) {
   });
 
 
+  //contact traits
+
+  var comps = editor.DomComponents;
+
+  // Get the model and the view from the default Component type
+  var defaultType = comps.getType('default');
+  var defaultModel = defaultType.model;
+  var defaultView = defaultType.view;
+  var traits;
+
+
+  comps.addType('fcontact', {
+    // Define the Model
+    model: defaultModel.extend({
+      // Extend default properties
+      defaults: Object.assign({}, defaultModel.prototype.defaults, {
+        editable: true,
+        droppable: true,
+        traits: [{
+          label: 'email',
+          name: 'email',
+          type: 'text'
+        }],
+      }),
+
+    }, {
+        isComponent: function (el) {
+          if (el.tagName == 'FCONTACT') {
+            return {
+              type: 'fcontact'
+            };
+          }
+        },
+      }),
+
+    view: defaultType.view,
+
+    // The render() should return 'this'
+    render: function () {
+      // Extend the original render method
+      defaultType.view.prototype.render.apply(this, arguments);
+      this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+      return this;
+    },
+  });
 
 
   // Contents Blocks
