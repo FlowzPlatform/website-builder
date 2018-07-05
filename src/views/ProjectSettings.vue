@@ -1449,7 +1449,7 @@ export default {
         if(this.repoName==response.websiteid) {
           this.percent=0
           this.isdisabled = true;
-          this.textdata='Job added Successfully. Please wait you are in Queue.'
+          this.textdata='Your request to Publish website is received. Please wait while you are in a Queue.'
           // this.$emit('updateProjectName')
         }
       });
