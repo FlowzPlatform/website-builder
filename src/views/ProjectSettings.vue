@@ -4222,6 +4222,7 @@ export default {
             //Now disabling the publish button.
             this.percent=0
             this.textdata=''
+            //alert(this.isdisabled);
             // this.isdisabled=true;
 
 
@@ -5400,9 +5401,9 @@ export default {
 
 
        let status=await axios.get(config.baseURL+'/jobqueue?websiteid='+this.repoName).catch((e)=>{this.fullscreenLoading = false })
-       if(status.data.data=='active'){
+       if(status.data.data=='active') {
         this.isdisabled=true
-        this.textdata='Job added successfull. Please wait you are in Queue.'
+        this.textdata='Your request to Publish website is received. Please wait while you are in a Queue.'
        }
        // this.fullscreenLoading = false
 
