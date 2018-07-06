@@ -1128,16 +1128,22 @@
 
             // Get particular project's config.json file
             async getConfigFileData(folderUrl) {
+
+              let objResponse;  
               let foldername = folderUrl.split('/');
               foldername = foldername[6];
 
-              axios.get(config.userDetail, {
+              await axios.get(config.userDetail, {
                 headers: {
                   'Authorization': Cookies.get('auth_token')
                 }
               })
               .then(async(res) => {
-                let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((e) => {
+                let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).then((objRes) => {
+                    //console.log('objRes :: ', objRes);
+                    let rawConfigs = objRes.data.configData;                
+                    objResponse = this.globalConfigData = rawConfigs;
+                }).catch((e) => {
                   this.fullscreenLoading = false;
                   let dataMessage = '';
                   if (e.message != undefined) {
@@ -1176,8 +1182,10 @@
                     location.reload()
                   });
                 });
-                let rawConfigs = responseConfig.data.configData;
-                return this.globalConfigData = rawConfigs;
+
+                // console.log('resConfig :: ', responseConfig.data.configData);
+                // let rawConfigs = responseConfig.data.configData;
+                // return this.globalConfigData = rawConfigs;
               })
               .catch((e) => {
                 let dataMessage = ''
@@ -1218,6 +1226,9 @@
                 });
               })
 
+              //console.log(objResponse);
+
+              return objResponse;
             },
 
             // Save config File
