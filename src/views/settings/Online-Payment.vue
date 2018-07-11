@@ -77,6 +77,8 @@
 	import _ from 'lodash'
 	import Vue from 'vue'
 	import axios from "axios"
+	import swal from 'sweetalert';
+
 	export default {
 		data () {
 			return {
@@ -215,7 +217,10 @@
 										data: data
 									})  
 									.then(function (response) {
-										// console.log('response',response)
+										console.log('response',response)
+										if(response.data=='Custom Config is already available for this user'){
+											swal("Warning", "Custom Config is already available for this user");
+										}
 										self.handleReset(name);
 										self.loading = false;
 										self.$emit('addNewConfig','settings');
