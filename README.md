@@ -51,7 +51,7 @@ Start the FlowzServiceApi by npm start
 
 #Changelog
 1. Added New Templates 
-2. Added Jobqueue to publish website
+2. Added Jobqueue to publish website using metalsmith
 3. User Interface 2.0
 
 
