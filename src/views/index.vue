@@ -49,7 +49,7 @@
                   </el-button>
                   <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="componentId === 'MonacoEditorChild'">Go to Editor
                   </el-button>
-                  <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectSettings' && componentId != 'PageSettings' && componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save
+                  <el-button type="primary" size="small" @click="saveFile('void1')" v-if="componentId != 'ProjectSettings' && componentId != 'PageSettings' && componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save
                   </el-button>
                 </div>
               </div>
@@ -3676,7 +3676,9 @@
                                     }
                                 }
                                 this.saveConfigFile(folderUrl);
-                                this.fullscreenLoading = false;
+                                if(arg!='void'){
+                                this.fullscreenLoading = false;   
+                                }
                             }
 
                         })
@@ -3809,7 +3811,6 @@
                 this.previewLoading = true;
                 await this.saveFile('void');
                 
-
                 let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
 
                 let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -3825,9 +3826,9 @@
                 }
                 let folderUrl = configFileUrl.replace(fileName, '');
 
-                this.fullscreenLoading = true;
+                // this.fullscreenLoading = true;
                 await this.getConfigFileData(folderUrl);
-                this.fullscreenLoading = true;
+                // this.fullscreenLoading = true;
                 
                 // let configFileData = await this.getConfigFileData(folderUrl);
                 // console.log(configFileData)
