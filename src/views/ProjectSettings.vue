@@ -1,6 +1,1171 @@
 <template>
   <div class="ProjectSettings">
 
+    <div class="tabs">
+      <h3>Project Settings</h3>
+      <el-tooltip class="item" effect="dark" placement="bottom">
+        <div slot="content" style="text-align: center">Website Publish<br> Basic Settings<br> User Roles<br> Commits and Revision</div>
+        <a class="tab" id="tab1" data-target="#tab1-content">General Settings</a>  
+      </el-tooltip>
+
+      <el-tooltip class="item" effect="dark" placement="bottom">
+        <div slot="content" style="text-align: center">Import Template<br> Global Variables</div>
+        <a class="tab" id="tab2" data-target="#tab2-content">Plugins</a>
+      </el-tooltip>
+
+      <el-tooltip class="item" effect="dark" placement="bottom">
+        <div slot="content" style="text-align: center">Image Library<br>Tax Cloud<br> URL Bucket<br> External Links <br> Meta Information <br> Global Styles &amp; Scripts </div>
+        <a class="tab" id="tab3" data-target="#tab3-content">Assets Management</a>
+      </el-tooltip>
+
+      <el-tooltip class="item" effect="dark" placement="bottom">
+        <div slot="content" style="text-align: center">Payment Configurations</div>
+        <a class="tab" id="tab4" data-target="#tab4-content">Accounting</a>
+      </el-tooltip>
+    
+      <span class="tab-active-bar"></span>
+    </div>
+
+
+    <!-- <div class="tab-contents">
+      <div id="tab1-content" class="tab-content">
+      </div>
+    </div> -->
+
+    <!-- <div class="card-spacer"></div>
+
+    <span class="block-title">Website Details</span>
+    <div class="card">
+      
+    </div> -->
+
+    <div class="tab-contents">
+      <div id="tab1-content" class="tab-content">
+
+        <div class="row">
+          <div class="col-md-10">
+            <span class="block-title" id="publish-website">Publish Website</span>
+              <div class="card">
+                <div class="row">
+                  <div class="col-md-12">
+
+                    <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
+                    <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
+
+                    <div class="row">
+                      <div class="col-md-12" v-if="publishType === 'default'">
+                        Your Default domain will be: <a :href="projectPublicUrl" target="_blank">{{projectPublicUrl}}</a>
+                        <br>
+                          <!-- <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
+                        <br> -->
+
+                        <div style="margin-top: 15px;">
+                          <el-button type="primary" v-bind:disabled="isdisabled" @click="publishjobqueue()" v-loading.fullscreen.lock="fullscreenLoading">Publish</el-button>
+          
+                          <el-button  v-if='isdisabled==true' @click='cancelpublishjobqueue()' type="primary">Cancel Publish</el-button><br><small v-if='isdisabled==true'>*{{ textdata }}</small>
+                          <el-progress v-if='isdisabled==true' style='margin: 21px 0px 6px 0px' v-bind:percentage="percent"></el-progress>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12" v-else>
+                        <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+                        <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
+                          [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
+                            <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                              <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns1-copy')"><i class="fa fa-copy"></i></a>
+                            </el-tooltip>
+                          </strong> 
+                          [2] <strong><span id="ns2-copy">ns2.flowzdigital.com</span>
+                            <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
+                              <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns2-copy')"><i class="fa fa-copy"></i></a>
+                            </el-tooltip>
+                          </strong> 
+                        </p>
+                        <div style="margin-top: 15px;">
+                          <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-spacer"></div>
+
+              <span class="block-title" id="basic-settings">Basic Settings</span>
+              <div class="card">
+                <div class="row">
+                  <div class="col-md-12">
+                    <el-form ref="form1" :model="form" label-width="180px" :rules="rulesProjectSettings">
+
+                      <el-form-item label="Website Id:">
+                          <el-input v-model="newRepoId" :disabled="true"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="Website name" prop="websitename">
+                          <!-- <el-input v-model="websitename"></el-input> -->
+                          <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
+                            <el-button slot="append" @click="updateProjectName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
+                          </el-input>
+                          <!-- {{websitename}} -->
+                          <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
+                        </el-form-item>
+
+                        <!-- <el-form-item label="Favicon Logo">
+                           <el-input v-model="faviconhref" placeholder="href" ></el-input>
+                        </el-form-item> -->
+                        <el-row>
+                        <el-col :span='20'>
+                        <el-form-item label="V Shop ID">
+                           <el-select clearable v-model="form.vid" placeholder="Select vid">
+                            <el-option
+                              v-for="item in vshopcategory"
+                              :key="item.id"
+                              :label="item.virtualShopName"
+                              :value="item.id">
+                            </el-option>
+                          </el-select>
+                        </el-form-item>
+                        </el-col>
+                        <el-col :span='2'>
+                          <el-tooltip content="Go View V-shop Settings" placement="top">
+                          <el-button type="primary" icon='setting' @click='linktovshop()'>V-Shop</el-button></el-tooltip>
+                        </el-col>
+                        <el-col style='text-align: center;' :span='2'>
+                          <!-- <el-button type="primary" icon="el-icon-refresh"></el-button> -->
+                           <el-tooltip content="Refresh V-shop settings" placement="top">
+                           <el-button type="primary" @click="refreshvshop()"><i class="fa fa-refresh"></i></el-button>
+                           </el-tooltip>
+                        </el-col>
+                        </el-row>
+                       
+
+                        <!-- <el-form-item label="Brand name">
+                          <el-input v-model="form.brandName" placeholder="My Company"></el-input>
+                        </el-form-item> -->
+
+                        <el-form-item label="Website Favicon Logo">
+                          <div class="col6 valid">
+                            <label for="upload-validation" class="brandLogoUploadLabel">
+                              <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
+                            </label>
+                            <br>
+                            <span><b>Current file:</b> {{form.brandLogoName}}</span>
+                            <el-tooltip  v-if='form.brandLogoName!="!!!No file uploaded!!!"' content="To Remove current file" placement="top">
+                            <el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button>
+                            </el-tooltip>
+                            <input type="file" name="" id="upload-validation">
+                            <span class="dis">( .png/ico only max size upto 70KB)</span>
+
+                          </div>
+                           <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
+                        </el-form-item>
+
+                        <el-form-item label="Website SEO Title">
+                          <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
+                        </el-form-item>
+
+                       <!--  <el-form-item label="Website SEO Keywords">
+                          <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="Website SEO Description">
+                          <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
+                        </el-form-item> -->
+
+                    </el-form>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-spacer"></div>
+
+              <span class="block-title" id="website-details">Details</span>
+              <div class="card">
+                <div class="row">
+                  <div class="col-md-12">
+                    <vue-json-editor style="background-color: #fff; margin-top: 2%;" v-model="projectDetailsJson" :showBtns="false" @json-change="onJsonChange"></vue-json-editor>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-spacer"></div>
+
+              <span class="block-title" id="website-roles">Roles</span>
+              <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="margin: 5px 0;" v-for="(n, index) in websiteRoles">
+                          <div class="row">
+                            <div class="col-md-11">
+                              <el-input v-if="n.roleName != 'guest' && n.roleName != 'registered' " v-model="n.roleName" placeholder="Enter Role Name"></el-input>
+                              <el-input v-else v-model="n.roleName" placeholder="Enter Role Name" :disabled="true"></el-input>
+                            </div>
+                            <!-- <div class="col-md-1">
+                              <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary
+                              <el-radio class="radio" v-model="isPrimaryRole" @click="setPrimaryRole(index)" :label="index">Primary</el-radio>
+                            </div> -->
+                            <div class="col-md-1">
+                              <el-button v-if="n.roleName != 'guest' && n.roleName != 'registered' " class="pull-right" style="min-width: 100%;" type="danger" @click="deleteWebsiteRole(index)" icon="delete2"></el-button>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <!-- Create new variable -->
+                        <el-button type="primary" @click="addNewWebsiteRole">New Role</el-button>
+                    </div>
+                </div>
+              </div>
+
+              <div class="card-spacer"></div>
+
+              <span class="block-title" id="website-revisions">Revisions</span>
+              <div class="card">
+                <el-form :model="commitForm" :rules="commitRules" ref="commitForm" class="demo-ruleForm">
+                  <div class="row">
+                  
+                    <div class="col-md-4">
+                      <el-form-item label="Revision Name" prop="branchName">
+                        <el-input v-model="commitForm.branchName" placeholder="Enter Revision Name"></el-input>
+                      </el-form-item>
+                    </div>
+
+                    <div class="col-md-5">
+                      <el-form-item label="Revision Message" prop="commitMessage">
+                        <el-input v-model="commitForm.commitMessage" placeholder="Enter Revision Message"></el-input>
+                      </el-form-item>
+                    </div>
+
+                    <div class="col-md-3">
+                      <el-form-item label="Submit Revision">
+                        <el-button class="publishBtn" type="success" @click="commitProject('commitForm')" :loading="isCommitLoading">Add Revision</el-button>
+                      </el-form-item>
+                    </div>
+
+                    <!-- <div class="col-md-1">
+                      <el-form-item label="Download">
+                        <el-tooltip content="Download .zip" placement="top">
+                          <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+                        </el-tooltip>
+                      </el-form-item>
+                    </div> -->
+
+                  </div>
+
+                </el-form>
+
+                <!-- <div class="col-md-4">
+                  <el-input v-model="branchName" placeholder="Enter Branch Name"></el-input>
+                </div>
+                <div class="col-md-5">
+                  <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
+                </div>
+                <div class="col-md-2">
+                  <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
+                </div>
+                <div class="col-md-1">
+                  <el-tooltip content="Download .zip" placement="top">
+                    <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
+                  </el-tooltip>
+                </div> -->
+                <!-- </div> -->
+                <div class="row">
+                    <div class="col-md-12" style="margin-top: 2%">
+                      <div class="table-responsive">
+                        <table class="table" id="revisionsTable">
+                          <thead>
+                            <tr>
+                              <th width="260" @click="sortBranchesTable(0)">Revision Date <i class="fa fa-sort pull-right"></i></th>
+                              <th @click="sortBranchesTable(1)">Revision Name <i class="fa fa-sort pull-right"></i></th>
+                              <th @click="sortBranchesTable(2)">Revision Message <i class="fa fa-sort pull-right"></i></th>
+                              <!-- <th>Revision SHA</th> -->
+                              <th>Rollback</th>
+                              <th>Log</th>
+                              <th width="120">Download Code</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(n, index) in branchesData">
+                              <td>{{n.commitDate}}</td>
+                              <td>{{n.branchName}}</td>
+                              <td>{{n.commitsMessage}}</td>
+                              <!-- <td>{{n.commitSHA}}</td> -->
+                              <td>
+                                <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.branchName != currentBranchName" size="small">Restore</el-button>
+                                <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.branchName == currentBranchName">
+                              </td>
+                              <td>
+                                <el-tooltip content="View Log" placement="top">
+                                  <el-button @click.native.prevent="logfile(index)" type="info" size="small"><i class="fa fa-file-text" aria-hidden="true"></i></el-button>
+                                </el-tooltip>
+                              </td>
+                              <td>
+                                <el-tooltip content="Download .zip" placement="top">
+                                  <el-button @click.native.prevent="exportWebsite(index)" type="info" size="small"><i class="fa fa-download fa-fw"></i></el-button>
+                                </el-tooltip>
+                              </td>
+                              
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- <el-table
+                        :data="commitsData"
+                        :row-class-name="tableRowClassName"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="commitDate"
+                          label="Commit Date"
+                          width="180">
+                        </el-table-column>
+                        <el-table-column
+                          prop="commitsMessage"
+                          label="Commit Message"
+                          >
+                        </el-table-column>
+
+                        <el-table-column
+                          prop="commitSHA"
+                          label="Commit SHA"
+                          >
+                        </el-table-column>
+
+                        <el-table-column
+                          label="Revert To Commit"
+                          width="180">
+                          <template scope="scope">
+                            <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="(scope.$index, commitSHA) == currentSha">
+                            <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
+                          </template>
+                        </el-table-column>
+                      </el-table> -->
+                    </div>
+                </div>
+              </div>
+          </div>
+          <div class="col-md-2">
+            <div class="fixeddiv">
+              <strong>Jump To:</strong>
+              <ul class="jumper-links">
+                <li><a class="jumper-links-redirect active" href="#publish-website">Publish Website</a></li>
+                <li><a class="jumper-links-redirect" href="#basic-settings">Basic Settings</a></li>
+                <li><a class="jumper-links-redirect" href="#website-details">Details</a></li>
+                <li><a class="jumper-links-redirect" href="#website-roles">Roles</a></li>
+                <li><a class="jumper-links-redirect" href="#website-revisions">Revisions</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-spacer"></div>
+
+      </div>
+
+      <div id="tab2-content" class="tab-content">
+
+        <div class="row">
+          <div class="col-md-10">
+            <span class="block-title" id="import-template">Import E-Commerce Templates</span>
+            <el-tooltip class="item" effect="dark" content="Refresh All Plugins and Directories" placement="top">
+              <el-button class="refresh-plugins-btn" @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time" :disabled="refreshDisabled"></el-button>
+            </el-tooltip>
+            <div class="card">
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/v1523358756/builder/images/template2.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/v1523358764/builder/images/tempate3.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" />
+                      <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://placehold.it/403x190?text=Comming%20Soon" alt="template 6" class="img-responsive template-image" />
+                      <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- <div class="row">
+                <div class="col-md-12" align="right" style="margin-bottom: 10px;">
+                  
+                  <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
+                    <el-button size="small" type="primary">Click to upload</el-button>
+
+                  </el-upload> ->
+                </div>
+                <div class="col-md-12">
+                  <el-tree
+                    :data="pluginsTreedata"
+                    node-key="id"
+                    :default-expand-all="true"
+                    :props="defaultProps"
+                    :default-checked-keys=checkedList>
+                  </el-tree>
+
+                  <!-- :render-content="renderContent" ->
+
+                  <br>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <button class="btn btn-primary" id="pluginJsonUploaderBtn"><i class="fa fa-upload"></i> Upload Plugin</button>
+                      <input type="file" name="uploaderPluginJson">
+                    </div>
+                    <div class="col-md-6" align="right">
+
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title">Import CMS Template</span>
+            <div class="card">
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/v1529670155/builder/images/Webp.png" alt="flowz-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'flowz-website')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="http://res.cloudinary.com/flowz/image/upload/v1528863699/builder/images/OfficeBeacon.png" alt="officebeacon-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'officebeacon-website')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/v1529667007/builder/images/ss_golf.png" alt="officebeacon-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'staticwebsite')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="global-variables">Global Variables</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12" align="right" style="margin-bottom: 10px;">
+                  <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
+                    <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
+                    <input type="file" name="uploaderVariableJson">
+                  <!-- </el-tooltip> -->
+                  <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
+                    <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
+                  <!-- </el-tooltip> -->
+                </div>
+                <div class="col-md-12">
+                  <el-form ref="form" :model="form">
+                    <div v-for="(n, index) in globalVariables">
+                      <el-form-item>
+                        <div class="row">
+
+                          <!-- Enter Variable ID -->
+                          <div class="col-md-2">
+                            <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
+                          </div>
+
+                          <!-- Select Type -->
+                          <div class="col-md-2" style="margin: 0; padding: 0">
+                            <el-select v-model="n.variableType" placeholder="Select">
+                              <el-option
+                                v-for="item in selectVariableType"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                          </div>
+
+                          <!-- If type is Text or HTML -->
+                          <div class="col-md-7" v-if="n.variableType != 'image' && n.variableType != 'hyperlink'" style="margin: 0; padding-left: 10px">
+                            <el-input type="textarea" :rows="5" placeholder="Variable Value" v-model="n.variableValue"></el-input>
+                          </div>
+
+                          <!-- If type is Hyperlink -->
+                          <div class="col-md-7" v-if="n.variableType === 'hyperlink'" style="margin: 0; padding-left: 10px">
+                            <div class="col-md-6" style="margin: 0; padding: 0">
+                              <el-input placeholder="Link Title" v-model="n.variableTitle"></el-input>
+                            </div>
+                            <div class="col-md-6" style="margin-right: 0; padding-right: 0">
+                              <el-input placeholder="Link URL" v-model="n.variableValue"></el-input>
+                            </div>
+                          </div>
+
+                          <!-- If type is Image -->
+                          <div class="col-md-7" v-if="n.variableType === 'image'" style="margin: 0; padding-left: 10px">
+
+                            <div class="row">
+
+                              <!-- Image Value as Name -->
+                              <div class="col-md-8" style="margin-right: 0; padding-right: 0">
+                                <el-input placeholder="Image URL" v-model="n.variableValue" :disabled="imageInputIsDisabled"></el-input>
+                              </div>
+
+                              <!-- Image Thumbnail Preview -->
+                              <div class="col-md-3" style="margin-right: 0; padding-right: 0">
+                                <img :src="n.variableValue" v-bind:name="index" class="img-responsive">
+                              </div>
+
+                              <!-- Image upload Button -->
+                              <div class="col-md-1" style="padding-left: 5px">
+                                <el-tooltip content="Upload Image" placement="top">
+                                  <!-- <div class="file-upload">
+                                      <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label">
+                                        <i class="fa fa-upload"></i>
+                                      </label>
+                                      <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
+                                  </div> -->
+                                  <el-button type="primary" icon="upload" @click="globalImageUploading(index, $event)" :loading="uploadGlobalImageButtonLoader"></el-button>
+                                </el-tooltip>
+                              </div>
+
+                            </div>
+
+                          </div>
+
+                          <!-- Delete Variable -->
+                          <div class="col-md-1">
+                            <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>
+                          </div>
+                        </div>
+                      </el-form-item>
+                    </div>
+                    <!-- Ends V-FOR looping -->
+
+                    <!-- Create new variable -->
+                    <el-button type="primary" @click="addNewVariable">New Variable</el-button>
+                  </el-form>
+                </div>
+              </div>
+
+              <!-- <div class="row">
+                <div class="col-md-12" style="margin-top: 4%;">
+                  <h3>Dynamic Styles</h3>
+                  <hr>
+                  <el-form ref="form" :model="form">
+                    <div v-for="(n, index) in globalCssVariables">
+                      <el-form-item>
+                        <div class="row">
+
+                          <!-- Enter Variable ID --
+                          <div class="col-md-5">
+                            <el-input placeholder="Variable Name" v-model="n.variableName"></el-input>
+                          </div>
+
+                          <!-- Select Type --
+                          <div class="col-md-2" style="margin: 0; padding: 0">
+                            <el-select v-model="n.variableType" placeholder="Select">
+                              <el-option
+                                v-for="item in selectCssVariableType"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                          </div>
+
+                          <!-- Enter Color Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'color'">
+                            <el-color-picker v-model="n.variableValue" show-alpha></el-color-picker>
+                          </div>
+
+                          <!-- Enter Pixel Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'px'">
+                            <el-input placeholder="Pixels Value" v-model="n.variableValue"></el-input>
+                          </div>
+
+                          <!-- Enter Percentage Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'percent'">
+                            <el-slider v-model="n.variableValue"></el-slider>
+                          </div>
+
+                          <!-- Enter Number Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'number'">
+                            <el-input-number v-model="n.variableValue"></el-input-number>
+                          </div>
+
+                          <!-- Enter Custom Variable Value --
+                          <div class="col-md-4" v-if="n.variableType === 'custom'">
+                            <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
+                          </div>
+
+                          <!-- Delete Variable --
+                          <div class="col-md-1">
+                            <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>
+                          </div>
+                        </div>
+                      </el-form-item>
+                    </div>
+                    <!-- Ends V-FOR looping --
+
+                    <!-- Create new variable --
+                    <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
+
+                  </el-form>
+                </div>
+              </div> -->
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="fixeddiv">
+              <strong>Jump To:</strong>
+              <ul class="jumper-links">
+                <li><a class="jumper-links-redirect active" href="#import-template">Import Template</a></li>
+                <li><a class="jumper-links-redirect" href="#global-variables">Global Variables</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-spacer"></div>
+      </div>
+
+      <div id="tab3-content" class="tab-content">
+
+        <div class="row">
+          <div class="col-md-10">
+            <span class="block-title" id="image-library">Image Library</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                  <el-form label-position="left" label-width="200px" :model="cloudinaryDetails" :rules="rulesCloudinaryDetails" ref="cloudinaryDetails">
+                    <el-form-item label="API Key" prop="apiKey">
+                      <el-input v-model="cloudinaryDetails.apiKey"></el-input>
+                    </el-form-item>
+                    <el-form-item label="API Secret" prop="apiSecret">
+                      <el-input v-model="cloudinaryDetails.apiSecret"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Cloud Name" prop="cloudName">
+                      <el-input v-model="cloudinaryDetails.cloudName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Upload Preset" prop="uploadPreset">
+                      <el-input v-model="cloudinaryDetails.uploadPreset"></el-input>
+                    </el-form-item>
+                    <!-- <el-form-item label="Upload Folder">
+                      <el-input v-model="cloudinaryDetails.uploadFolder"></el-input>
+                    </el-form-item> -->
+                    <!-- <el-form-item label="Upload Sources">
+                      <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllSourcesChange">Check all</el-checkbox>
+                      <div style="margin: 15px 0;"></div>
+                      <el-checkbox-group v-model="checkedSources" @change="handleCheckedSourcesChange">
+                        <el-checkbox v-for="source in cloudinaryDetails.sources" :label="source" :key="source">{{source}}</el-checkbox>
+                      </el-checkbox-group>
+                    </el-form-item> -->
+                  </el-form>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+
+                  <div class="row" style="margin-bottom: 15px; ">
+                    <div class="col-md-12">
+                      <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
+                      <el-button icon="search" @click="fetchcloudinaryImages('cloudinaryDetails')" :loading="fetchImagesLoader">Fetch Images</el-button>
+                      <span class="cloudinaryFilesCount">Total Images: {{assetsImages.length}}</span>
+                      <el-button v-if="assetsImages.length > 0" style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
+                    </div>
+                  </div>
+
+                  <div class="row" style="max-height: 600px; overflow-y: auto;" v-loading="fetchImagesLoader" element-loading-text="Loading...">
+                    <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
+                      <div class="view-icon">
+                        <a :href="n" target="_blank"><i class="fa fa-external-link"></i></a>
+                      </div>
+                      <div class="delete-icon">
+                        <a href="javascript:void(0)" @click="deleteAssetImage(index)"><i class="fa fa-times"></i></a>
+                      </div>
+                      <div class="thumbnail">
+                        <div class="deleteImage"></div>
+                        <img :src="n" class="asset-image" />
+                        <input :id="n" type="text" class="form-control" :value="n" name="n">
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- <div class="row" align="center" style="margin: 10px 0;">
+                    <div class="col-md-12">
+                      <!-- :disabled="isEnabledByNextCursor" --
+                      <el-button type="primary" icon="plus" v-if="assetsImages.length > 0" @click="loadMoreImages()" :loading="loadMoreImagesLoader">Load More</el-button>  
+                    </div>
+                  </div> -->
+
+                </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="tax-cloud">Tax Cloud</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                  <el-form label-position="left" label-width="200px" :model="taxcloud" :rules="rulesTaxCloud" ref="refTaxCloud">
+                    <el-form-item label="API ID" prop="apiId">
+                      <el-input v-model.trim="taxcloud.apiId"></el-input>
+                    </el-form-item>
+                    <el-form-item label="API KEY" prop="apiKey">
+                      <el-input v-model.trim="taxcloud.apiKey"></el-input>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="url-bucket">URL Bucket</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                  <el-form ref="form" :model="form">
+
+                    <div v-for="(n, index) in urlVariables">
+                    <h5>URL {{ index +1}}:</h5>
+                      <el-form-item>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <el-input placeholder="URL ID" v-model="n.urlId"></el-input>
+                          </div>
+                          <div class="col-md-6">
+                            <el-input placeholder="URL Value" v-model="n.urlValue"></el-input>
+                          </div>
+                          <div class="col-md-1">
+                            <el-tooltip class="item" effect="dark" content="Add Headers" placement="top-start">
+                             <el-button type="primary" icon="plus"  @click="addNewHeader(n,index)"></el-button>
+                            </el-tooltip>
+                          </div>
+                          <!-- Delete Variable -->
+                          <div class="col-md-1">
+                            <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>
+                          </div>
+                        </div>
+                      </el-form-item>
+                      <div class="row">
+                        <div class="col-md-12">
+                         <!--  <el-form ref="form" :model="form"> -->
+                            <!-- <h5>Headers:-</h5> -->
+                            <div v-for="(m, indexH) in n.urlHeaderVariables">
+                              <el-form-item>
+                                <div class="row">
+
+                                  <div class="col-md-5">
+                                    <el-input placeholder="Header Name" v-model="m.headerName"></el-input>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <el-input placeholder="Header Value" v-model="m.headerValue"></el-input>
+                                  </div>
+
+                                  <!-- Delete Variable -->
+                                  <div class="col-md-1">
+                                    <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index,indexH)" icon="delete"></el-button>
+                                  </div>
+                                </div>
+                              </el-form-item>
+                            </div>
+
+                            <!-- Create new header variable -->
+                           <!--  <el-button type="primary" @click="addNewHeader">New Header</el-button> -->
+                          <!-- </el-form> -->
+                          <hr>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Create new url variable -->
+                    <el-button type="primary" @click="addNewUrl">New URL</el-button>
+                  </el-form>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="external-links">External Links</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <h3> JS Links </h3>
+                        </div>
+                     </div>
+                     <hr>
+                     <el-form ref="form" :model="form">
+
+                        <div >
+                           <el-form-item>
+                              <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
+                                <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
+                                   <!-- position  -->
+                                   <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                      <el-select v-model="n.linkposition" placeholder="Position">
+                                         <el-option
+                                            v-for="item in Allposition"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                         </el-option>
+                                      </el-select>
+                                   </div>
+                                   <!-- link url -->
+                                   <div class="col-md-6" style="margin: 0; padding: 0px">
+                                      <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                                   </div>
+                                   <!-- Delete Variable -->
+                                   <div class="col-md-1">
+                                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete2"></el-button>
+                                   </div>
+                                   <div class="col-md-1">
+                                      <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                      </el-tooltip>
+
+                                   </div>
+
+                                </div>
+                              </draggable>
+                           </el-form-item>
+                        </div>
+
+                        <!-- Create new variable -->
+                        <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
+                     </el-form>
+                  </div>
+                  <div class="col-md-12" style="margin-top: 4%;">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <h3> CSS Links </h3>
+                        </div>
+                     </div>
+                     <hr>
+                     <el-form ref="form" :model="form">
+                     <draggable v-model='externallinksCSS' @start="drag=true" @end="drag=false">
+
+                        <div v-for="(n, index) in externallinksCSS">
+                           <el-form-item>
+                              <div class="row">
+                                 <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                    <el-select v-model="n.linkposition" placeholder="Position">
+                                       <el-option
+                                          v-for="item in Allposition"
+                                          :key="item.value"
+                                          :label="item.label"
+                                          :value="item.value">
+                                       </el-option>
+                                    </el-select>
+                                 </div>
+                                 <!-- link url -->
+                                 <div class="col-md-6" style="margin: 0; padding-left: 0px">
+                                    <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
+                                 </div>
+                                 <!-- Delete Variable -->
+                                 <div class="col-md-1">
+                                    <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete2"></el-button>
+                                 </div>
+                                 <div class="col-md-1">
+                                   <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                      <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                    </el-tooltip>
+
+                                 </div>
+                              </div>
+                           </el-form-item>
+                        </div>
+                        <!-- Create new variable -->
+                     </draggable></el-form>
+                        <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
+                  </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="meta-information">Meta Information</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                   <el-form :inline="true">
+                     <el-form-item label="Meta Charset">
+                        <el-input placeholder="charset value" v-model="Metacharset"></el-input>
+                      </el-form-item>
+                    </el-form>
+                 </div>
+                  <div class="col-md-12" style="margin-top: 2%">
+                      <table class="table table-hover  table-bordered">
+                          <!-- <draggable @start="drag=true" @end="drag=false"> -->
+                          <thead class="thead">
+                            <tr>
+                              <th>Name</th>
+                              <th>Content</th>
+                              <th></th>
+                              <!-- <th></th> -->
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(n, index) in externallinksMeta" >
+                              <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
+                              <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
+                              <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
+                              <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
+                            </tr>
+                            <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
+                          </tbody>
+                            <!-- </draggable> -->
+                        </table>
+                        <!-- Create new variable -->
+                        <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
+                     <!-- </el-form> -->
+                  </div>
+              </div>
+            </div>
+
+            <div class="card-spacer"></div>
+
+            <span class="block-title" id="styles-scripts">Global Styles and Scripts</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <h3> Styles: </h3>
+                        </div>
+                     </div>
+                     <hr>
+                     <el-form ref="form" :model="form">
+
+                        <div >
+                           <el-form-item>
+                              <draggable v-model='localstyles' @start="drag=true" @end="drag=false">
+                                <div style="margin-bottom: 25px" v-for='(n, index) in localstyles' class="row">
+                                   <!-- position  -->
+                                   <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                      <el-select v-model="n.linkposition" placeholder="Position">
+                                         <el-option
+                                            v-for="item in Allposition"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                         </el-option>
+                                      </el-select>
+                                   </div>
+                                   <!-- link url -->
+                                   <div class="col-md-6" style="margin: 0; padding: 0px">
+                                      <el-input type="textarea" :rows="5" placeholder="css" v-model="n.style"></el-input>
+                                   </div>
+                                   <!-- Delete Variable -->
+                                   <div class="col-md-1">
+                                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
+                                   </div>
+                                   <div class="col-md-1">
+                                     <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                      </el-tooltip>
+                                   </div>
+
+
+                                </div>
+                              </draggable>
+                           </el-form-item>
+                        </div>
+
+                        <!-- Create new variable -->
+                        <el-button type="primary" @click="addNewlocalstyles">New Style</el-button>
+                     </el-form>
+                </div>
+              </div>
+
+              <br><br>
+
+              <div class="row">
+                <div class="col-md-12">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <h3> Scripts: </h3>
+                        </div>
+                     </div>
+                     <hr>
+                     <el-form ref="form" :model="form">
+
+                        <div >
+                           <el-form-item>
+                              <draggable v-model='localscripts' @start="drag=true" @end="drag=false">
+                                <div style="margin-bottom: 25px" v-for='(n, index) in localscripts' class="row">
+                                   <!-- position  -->
+                                   <div class="col-md-3" style="margin: 0; padding-left: 15px">
+                                      <el-select v-model="n.linkposition" placeholder="Position">
+                                         <el-option
+                                            v-for="item in Allposition"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                         </el-option>
+                                      </el-select>
+                                   </div>
+                                   <!-- link url -->
+                                   <div class="col-md-6" style="margin: 0; padding: 0px">
+                                      <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
+                                   </div>
+                                   <!-- Delete Variable -->
+                                   <div class="col-md-1">
+                                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
+                                   </div>
+                                   <div class="col-md-1">
+                                      <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
+                                        <el-button style="min-width: 100%;" icon="d-caret"></el-button>
+                                      </el-tooltip>
+
+                                   </div>
+
+
+                                </div>
+                              </draggable>
+                           </el-form-item>
+                        </div>
+
+                        <!-- Create new variable -->
+                        <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
+                     </el-form>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="fixeddiv">
+              <strong>Jump To:</strong>
+              <ul class="jumper-links">
+                <li><a class="jumper-links-redirect active" href="#image-library">Image Library</a></li>
+                <li><a class="jumper-links-redirect" href="#tax-cloud">Tax Cloud</a></li>
+                <li><a class="jumper-links-redirect" href="#url-bucket">URL Bucket</a></li>
+                <li><a class="jumper-links-redirect" href="#external-links">External Links</a></li>
+                <li><a class="jumper-links-redirect" href="#meta-information">Meta Information</a></li>
+                <li><a class="jumper-links-redirect" href="#styles-scripts">Styles &amp; Scripts</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-spacer"></div>
+      </div>
+
+      <div id="tab4-content" class="tab-content">
+
+        <div class="row">
+          <div class="col-md-10">
+            <span class="block-title" id="payment-config">Payment Configurations</span>
+            <div class="card">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <el-form ref="form1" :model="form" label-width="120px">
+                        <el-row>
+                          <el-col :span='18'>
+                            <el-form-item label="Account Used:">
+                              <el-select clearable v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
+                                <el-option
+                                           v-for="item in crmdata"
+                                           :key="item.id"
+                                           :label="item.configName"
+                                           :value="item.id">
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
+                          </el-col>
+                          <el-col v-if="crmdata.length>-1" :span='4'>
+                            <el-tooltip content="Go View Accounting System" placement="top">
+                              <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System
+                              </el-button>
+                            </el-tooltip>
+                          </el-col>
+                          <el-col style='text-align: center' :span='2'>
+                            <!-- <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button> -->
+                            <el-tooltip content="Refresh Accounts settings" placement="top">
+                              <el-button type="primary" @click="refreshaccounts()">
+                                <i class="fa fa-refresh">
+                                </i>
+                              </el-button>
+                            </el-tooltip>
+                          </el-col>
+                        </el-row>
+                      </el-form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <!-- testing iviewui -->
+              <div class="row">
+                <div class="col-md-12">
+                  <component :is="componentsID" v-on:addNewConfig="addNewConfig">
+                  </component>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="fixeddiv">
+              <strong>Jump To:</strong>
+              <ul class="jumper-links">
+                <li><a class="jumper-links-redirect active" href="#payment-config">Payment configurations</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-spacer"></div>
+      </div>
+    </div>
+
     <!-- Save/Publish/Cancel Buttons -->
     <div class="page-buttons">
       <el-button type="primary" size="small" @click="saveProjectSettings">Save Settings</el-button>
@@ -9,1066 +1174,6 @@
       <el-tooltip class="item" effect="dark" content="Download Project Configurations" placement="top-start">
         <el-button type="info" size="small" @click="downloadConfigFile"><i class="fa fa-download"></i></el-button>
       </el-tooltip>
-    </div>
-
-    <div class="container" style="margin-top: 2%; margin-bottom: 2%;">
-
-      <!-- Publish Project Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="tooglePublishWebsite" class="card color-div toggleableDivHeader">Publish Website</a>
-          </div>
-      </div>
-      <div id="togglePublishWebsiteContent" class="toggleableDivHeaderContent" style="">
-        <div class="row">
-          <div class="col-md-12">
-
-            <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
-            <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
-
-            <div class="row">
-              <div class="col-md-12" v-if="publishType === 'default'">
-                Your Default domain will be: <a :href="projectPublicUrl" target="_blank">{{projectPublicUrl}}</a>
-                <br>
-                  <small>*Preview will open in new tab. Please allow popup to preview your site.</small>
-                <br>
-                <div style="margin-top: 15px;">
-                  <el-button type="primary" @click="publishMetalsmith(publishType = 'default')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Default Publish</el-button>
-                </div>
-              </div>
-
-              <div class="col-md-12" v-else>
-                <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
-                <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
-                  [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
-                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
-                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns1-copy')"><i class="fa fa-copy"></i></a>
-                    </el-tooltip>
-                  </strong> 
-                  [2] <strong><span id="ns2-copy">ns2.flowzdigital.com</span>
-                    <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
-                      <a href="#" class="btn btn-info btn-xs" @click="copyToClipboard('ns2-copy')"><i class="fa fa-copy"></i></a>
-                    </el-tooltip>
-                  </strong> 
-                </p>
-                <div style="margin-top: 15px;">
-                  <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Publish Project section ends -->
-
-      <!-- Project Settings Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toogleProjectSettings" class="card color-div toggleableDivHeader">Website Settings</a>
-          </div>
-      </div>
-      <div id="toogleProjectSettingsContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12">
-            <el-form ref="form1" :model="form" label-width="180px" :rules="rulesProjectSettings">
-
-              <el-form-item label="Website Id:">
-                  <el-input v-model="newRepoId" :disabled="true"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Website name" prop="websitename">
-                  <!-- <el-input v-model="websitename"></el-input> -->
-                  <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
-                    <el-button slot="append" @click="updateProjectName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
-                  </el-input>
-                  <!-- {{websitename}} -->
-                  <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
-                </el-form-item>
-
-                <!-- <el-form-item label="Favicon Logo">
-                   <el-input v-model="faviconhref" placeholder="href" ></el-input>
-                </el-form-item> -->
-                <el-row>
-                <el-col :span='20'>
-                <el-form-item label="V Shop ID">
-                   <el-select clearable v-model="form.vid" placeholder="Select vid">
-                    <el-option
-                      v-for="item in vshopcategory"
-                      :key="item.id"
-                      :label="item.virtualShopName"
-                      :value="item.id">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-                </el-col>
-                <el-col :span='2'>
-                  <el-tooltip content="Go View V-shop Settings" placement="top">
-                  <el-button type="primary" icon='setting' @click='linktovshop()'>V-Shop</el-button></el-tooltip>
-                </el-col>
-                <el-col style='text-align: center;' :span='2'>
-                  <!-- <el-button type="primary" icon="el-icon-refresh"></el-button> -->
-                   <el-tooltip content="Refresh V-shop settings" placement="top">
-                   <el-button type="primary" @click="refreshvshop()"><i class="fa fa-refresh"></i></el-button>
-                   </el-tooltip>
-                </el-col>
-                </el-row>
-               
-
-                <!-- <el-form-item label="Brand name">
-                  <el-input v-model="form.brandName" placeholder="My Company"></el-input>
-                </el-form-item> -->
-
-                <el-form-item label="Website Favicon Logo">
-                  <div class="col6 valid">
-                    <label for="upload-validation" class="brandLogoUploadLabel">
-                      <i class="fa fa-paperclip" aria-hidden="true"></i><span class="uploadText" id="text2">Upload image</span>
-                    </label>
-                    <br>
-                    <span><b>Current file:</b> {{form.brandLogoName}}</span>
-                    <el-tooltip  v-if='form.brandLogoName!="!!!No file uploaded!!!"' content="To Remove current file" placement="top">
-                    <el-button style='margin-left: 10px' @click='deletefaviconimage()' type="primary" icon="delete"></el-button>
-                    </el-tooltip>
-                    <input type="file" name="" id="upload-validation">
-                    <span class="dis">( .png/ico only max size upto 70KB)</span>
-
-                  </div>
-                   <!-- <el-input v-model="faviconhref" placeholder="href" ></el-input> -->
-                </el-form-item>
-
-                <el-form-item label="Website SEO Title">
-                  <el-input v-model="form.seoTitle" placeholder="My Company"></el-input>
-                </el-form-item>
-
-               <!--  <el-form-item label="Website SEO Keywords">
-                  <el-input v-model="form.seoKeywords" placeholder="Design, development, SEO"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Website SEO Description">
-                  <el-input type="textarea" :rows="5" v-model="form.seoDesc" placeholder="Some little description about your project"></el-input>
-                </el-form-item> -->
-
-            </el-form>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <h3>Website Details</h3>
-            <vue-json-editor style="background-color: #fff; margin-top: 2%;" v-model="projectDetailsJson" :showBtns="false" @json-change="onJsonChange"></vue-json-editor>
-          </div>
-        </div>
-
-      </div>
-      <!-- Project Settings section ends -->
-
-      <!-- Plugins Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleImportPlugin" class="card color-div toggleableDivHeader">Import Plugin</a>
-          </div>
-      </div>
-      <div id="toggleImportPluginContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row" style="margin-top: 15px;">
-          <div class="col-md-12">
-            <div class="thumbnail" style="padding: 20px;">
-              <h3>Ecommerce Website Templates</h3>
-              <hr>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://res.cloudinary.com/flowz/image/upload/c_scale,w_403/v1520244745/builder/images/template1.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web1')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523358756/builder/images/template2.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web2')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://res.cloudinary.com/flowz/image/upload/v1523358764/builder/images/tempate3.png" alt="template 1" class="img-responsive template-image" @click="revertToTemplate(template = 'web3')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" @click="revertToTemplate(template = 'web5')"/>
-                  <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src="https://placehold.it/403x190?text=Comming%20Soon" alt="template 6" class="img-responsive template-image" />
-                  <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12" align="right" style="margin-bottom: 10px;">
-            <el-tooltip class="item" effect="dark" content="Refresh Project Directories" placement="top">
-              <el-button @click.native.prevent="refreshPlugins()" :loading="refreshPluginsLoading" type="warning" icon="time" :disabled="refreshDisabled">Refresh</el-button>
-            </el-tooltip>
-            <!-- <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-change="handleChange" :file-list="fileList3">
-              <el-button size="small" type="primary">Click to upload</el-button>
-
-            </el-upload> -->
-          </div>
-          <div class="col-md-12">
-            <el-tree
-              :data="pluginsTreedata"
-              node-key="id"
-              :default-expand-all="true"
-              :props="defaultProps"
-              :default-checked-keys=checkedList>
-            </el-tree>
-
-            <!-- :render-content="renderContent" -->
-
-            <br>
-
-            <div class="row">
-              <div class="col-md-6">
-                <button class="btn btn-primary" id="pluginJsonUploaderBtn"><i class="fa fa-upload"></i> Upload Plugin</button>
-                <input type="file" name="uploaderPluginJson">
-              </div>
-              <div class="col-md-6" align="right">
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Plugins section ends -->
-
-      <!-- Image upload Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleAssetImages" class="card color-div toggleableDivHeader">Image Library</a>
-          </div>
-      </div>
-      <div id="toggleAssetImagesContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12">
-            <el-form label-position="left" label-width="200px" :model="cloudinaryDetails" :rules="rulesCloudinaryDetails" ref="cloudinaryDetails">
-              <el-form-item label="API Key" prop="apiKey">
-                <el-input v-model="cloudinaryDetails.apiKey"></el-input>
-              </el-form-item>
-              <el-form-item label="API Secret" prop="apiSecret">
-                <el-input v-model="cloudinaryDetails.apiSecret"></el-input>
-              </el-form-item>
-              <el-form-item label="Cloud Name" prop="cloudName">
-                <el-input v-model="cloudinaryDetails.cloudName"></el-input>
-              </el-form-item>
-              <el-form-item label="Upload Preset" prop="uploadPreset">
-                <el-input v-model="cloudinaryDetails.uploadPreset"></el-input>
-              </el-form-item>
-              <!-- <el-form-item label="Upload Folder">
-                <el-input v-model="cloudinaryDetails.uploadFolder"></el-input>
-              </el-form-item> -->
-              <!-- <el-form-item label="Upload Sources">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllSourcesChange">Check all</el-checkbox>
-                <div style="margin: 15px 0;"></div>
-                <el-checkbox-group v-model="checkedSources" @change="handleCheckedSourcesChange">
-                  <el-checkbox v-for="source in cloudinaryDetails.sources" :label="source" :key="source">{{source}}</el-checkbox>
-                </el-checkbox-group>
-              </el-form-item> -->
-            </el-form>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="row" style="margin-bottom: 15px; ">
-              <div class="col-md-12">
-                <el-button icon="upload2" @click="uploadAssetImage('cloudinaryDetails')" :loading="uploadAssetImageLoader">Upload</el-button>
-                <el-button icon="search" @click="fetchcloudinaryImages('cloudinaryDetails')" :loading="fetchImagesLoader">Fetch Images</el-button>
-                <span class="cloudinaryFilesCount">Total Images: {{assetsImages.length}}</span>
-                <el-button v-if="assetsImages.length > 0" style="float: right" type="danger" icon="delete" @click="removeAllAssetsImages()">Remove All</el-button>
-              </div>
-            </div>
-
-            <div class="row" style="max-height: 600px; overflow-y: auto;" v-loading="fetchImagesLoader" element-loading-text="Loading...">
-              <div class="col-md-3" v-for="(n, index) in assetsImages" style="margin-top: 15px;">
-                <div class="view-icon">
-                  <a :href="n" target="_blank"><i class="fa fa-external-link"></i></a>
-                </div>
-                <div class="delete-icon">
-                  <a href="javascript:void(0)" @click="deleteAssetImage(index)"><i class="fa fa-times"></i></a>
-                </div>
-                <div class="thumbnail">
-                  <div class="deleteImage"></div>
-                  <img :src="n" class="asset-image" />
-                  <input :id="n" type="text" class="form-control" :value="n" name="n">
-                </div>
-
-              </div>
-            </div>
-
-            <!-- <div class="row" align="center" style="margin: 10px 0;">
-              <div class="col-md-12">
-                <!-- :disabled="isEnabledByNextCursor" --
-                <el-button type="primary" icon="plus" v-if="assetsImages.length > 0" @click="loadMoreImages()" :loading="loadMoreImagesLoader">Load More</el-button>  
-              </div>
-            </div> -->
-
-          </div>
-        </div>
-      </div>
-      <!-- Image Upload -->
-
-      <!-- Global Variables Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleGlobalVariables" class="card color-div toggleableDivHeader">Global Variables</a>
-          </div>
-      </div>
-      <div id="toggleGlobalVariablesContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-4">
-            <h3>Dynamic Values</h3>
-          </div>
-          <div class="col-md-8" align="right" style="margin-bottom: 10px;">
-            <!-- <el-tooltip class="item" effect="dark" content="Upload JSON" placement="top"> -->
-              <button class="btn btn-primary" id="jsonUploaderBtn"><i class="fa fa-upload"></i> Import</button>
-              <input type="file" name="uploaderVariableJson">
-            <!-- </el-tooltip> -->
-            <!-- <el-tooltip class="item" effect="dark" content="Download JSON" placement="top"> -->
-              <button class="btn btn-warning" @click="downloadGlobalVariables"><i class="fa fa-download"></i> Export</button>
-            <!-- </el-tooltip> -->
-          </div>
-          <div class="col-md-12">
-            <el-form ref="form" :model="form">
-              <div v-for="(n, index) in globalVariables">
-                <el-form-item>
-                  <div class="row">
-
-                    <!-- Enter Variable ID -->
-                    <div class="col-md-2">
-                      <el-input placeholder="Variable ID" v-model="n.variableId"></el-input>
-                    </div>
-
-                    <!-- Select Type -->
-                    <div class="col-md-2" style="margin: 0; padding: 0">
-                      <el-select v-model="n.variableType" placeholder="Select">
-                        <el-option
-                          v-for="item in selectVariableType"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-
-                    <!-- If type is Text or HTML -->
-                    <div class="col-md-7" v-if="n.variableType != 'image' && n.variableType != 'hyperlink'" style="margin: 0; padding-left: 10px">
-                      <el-input type="textarea" :rows="5" placeholder="Variable Value" v-model="n.variableValue"></el-input>
-                    </div>
-
-                    <!-- If type is Hyperlink -->
-                    <div class="col-md-7" v-if="n.variableType === 'hyperlink'" style="margin: 0; padding-left: 10px">
-                      <div class="col-md-6" style="margin: 0; padding: 0">
-                        <el-input placeholder="Link Title" v-model="n.variableTitle"></el-input>
-                      </div>
-                      <div class="col-md-6" style="margin-right: 0; padding-right: 0">
-                        <el-input placeholder="Link URL" v-model="n.variableValue"></el-input>
-                      </div>
-                    </div>
-
-                    <!-- If type is Image -->
-                    <div class="col-md-7" v-if="n.variableType === 'image'" style="margin: 0; padding-left: 10px">
-
-                      <div class="row">
-
-                        <!-- Image Value as Name -->
-                        <div class="col-md-8" style="margin-right: 0; padding-right: 0">
-                          <el-input placeholder="Image URL" v-model="n.variableValue" :disabled="imageInputIsDisabled"></el-input>
-                        </div>
-
-                        <!-- Image Thumbnail Preview -->
-                        <div class="col-md-3" style="margin-right: 0; padding-right: 0">
-                          <img :src="n.variableValue" v-bind:name="index" class="img-responsive">
-                        </div>
-
-                        <!-- Image upload Button -->
-                        <div class="col-md-1" style="padding-left: 5px">
-                          <el-tooltip content="Upload Image" placement="top">
-                            <!-- <div class="file-upload">
-                                <label for="globalImageVariableFileUploader" :for="index" class="file-upload__label">
-                                  <i class="fa fa-upload"></i>
-                                </label>
-                                <input id="globalImageVariableFileUploader" :id="index" class="file-upload__input" type="file" name="file-upload" @change="globalImageUploading(index, $event)">
-                            </div> -->
-                            <el-button type="primary" icon="upload" @click="globalImageUploading(index, $event)" :loading="uploadGlobalImageButtonLoader"></el-button>
-                          </el-tooltip>
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <!-- Delete Variable -->
-                    <div class="col-md-1">
-                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteVariable(index)" icon="delete"></el-button>
-                    </div>
-                  </div>
-                </el-form-item>
-              </div>
-              <!-- Ends V-FOR looping -->
-
-              <!-- Create new variable -->
-              <el-button type="primary" @click="addNewVariable">New Variable</el-button>
-            </el-form>
-          </div>
-        </div>
-
-        <!-- <div class="row">
-          <div class="col-md-12" style="margin-top: 4%;">
-            <h3>Dynamic Styles</h3>
-            <hr>
-            <el-form ref="form" :model="form">
-              <div v-for="(n, index) in globalCssVariables">
-                <el-form-item>
-                  <div class="row">
-
-                    <!-- Enter Variable ID --
-                    <div class="col-md-5">
-                      <el-input placeholder="Variable Name" v-model="n.variableName"></el-input>
-                    </div>
-
-                    <!-- Select Type --
-                    <div class="col-md-2" style="margin: 0; padding: 0">
-                      <el-select v-model="n.variableType" placeholder="Select">
-                        <el-option
-                          v-for="item in selectCssVariableType"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-
-                    <!-- Enter Color Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'color'">
-                      <el-color-picker v-model="n.variableValue" show-alpha></el-color-picker>
-                    </div>
-
-                    <!-- Enter Pixel Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'px'">
-                      <el-input placeholder="Pixels Value" v-model="n.variableValue"></el-input>
-                    </div>
-
-                    <!-- Enter Percentage Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'percent'">
-                      <el-slider v-model="n.variableValue"></el-slider>
-                    </div>
-
-                    <!-- Enter Number Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'number'">
-                      <el-input-number v-model="n.variableValue"></el-input-number>
-                    </div>
-
-                    <!-- Enter Custom Variable Value --
-                    <div class="col-md-4" v-if="n.variableType === 'custom'">
-                      <el-input placeholder="Custom Value" v-model="n.variableValue"></el-input>
-                    </div>
-
-                    <!-- Delete Variable --
-                    <div class="col-md-1">
-                      <el-button class="pull-right" type="danger" @click="deleteCssVariable(index)" icon="delete"></el-button>
-                    </div>
-                  </div>
-                </el-form-item>
-              </div>
-              <!-- Ends V-FOR looping --
-
-              <!-- Create new variable --
-              <el-button type="primary" @click="addNewCssVariable">New Variable</el-button>
-
-            </el-form>
-          </div>
-        </div> -->
-      </div>
-      <!-- Global Variables section ends -->
-
-      <!-- URL Bucket Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleUrlBucket" class="card color-div toggleableDivHeader">URL Bucket</a>
-          </div>
-      </div>
-      <div id="toggleUrlBucketContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12">
-            <el-form ref="form" :model="form">
-
-              <div v-for="(n, index) in urlVariables">
-              <h5>URL {{ index +1}}:</h5>
-                <el-form-item>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <el-input placeholder="URL ID" v-model="n.urlId"></el-input>
-                    </div>
-                    <div class="col-md-6">
-                      <el-input placeholder="URL Value" v-model="n.urlValue"></el-input>
-                    </div>
-                    <div class="col-md-1">
-                      <el-tooltip class="item" effect="dark" content="Add Headers" placement="top-start">
-                       <el-button type="primary" icon="plus"  @click="addNewHeader(n,index)"></el-button>
-                      </el-tooltip>
-                    </div>
-                    <!-- Delete Variable -->
-                    <div class="col-md-1">
-                      <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlVariable(index)" icon="delete"></el-button>
-                    </div>
-                  </div>
-                </el-form-item>
-                <div class="row">
-                  <div class="col-md-12">
-                   <!--  <el-form ref="form" :model="form"> -->
-                      <!-- <h5>Headers:-</h5> -->
-                      <div v-for="(m, indexH) in n.urlHeaderVariables">
-                        <el-form-item>
-                          <div class="row">
-
-                            <div class="col-md-5">
-                              <el-input placeholder="Header Name" v-model="m.headerName"></el-input>
-                            </div>
-                            <div class="col-md-6">
-                              <el-input placeholder="Header Value" v-model="m.headerValue"></el-input>
-                            </div>
-
-                            <!-- Delete Variable -->
-                            <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deleteUrlHeaderVariable(index,indexH)" icon="delete"></el-button>
-                            </div>
-                          </div>
-                        </el-form-item>
-                      </div>
-
-                      <!-- Create new header variable -->
-                     <!--  <el-button type="primary" @click="addNewHeader">New Header</el-button> -->
-                    <!-- </el-form> -->
-                    <hr>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Create new url variable -->
-              <el-button type="primary" @click="addNewUrl">New URL</el-button>
-            </el-form>
-          </div>
-        </div>
-        <!-- <hr> -->
-
-      </div>
-      <!-- URL Bucket section ends -->
-
-      <!-- External Links Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleExternalLinks" class="card color-div toggleableDivHeader">External Links</a>
-          </div>
-      </div>
-      <div id="toggleExternalLinksContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3> JS Links </h3>
-                  </div>
-               </div>
-               <hr>
-               <el-form ref="form" :model="form">
-
-                  <div >
-                     <el-form-item>
-                        <draggable v-model='externallinksJS' @start="drag=true" @end="drag=false">
-                          <div style="margin-bottom: 25px" v-for='(n, index) in externallinksJS' class="row">
-                             <!-- position  -->
-                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                <el-select v-model="n.linkposition" placeholder="Position">
-                                   <el-option
-                                      v-for="item in Allposition"
-                                      :key="item.value"
-                                      :label="item.label"
-                                      :value="item.value">
-                                   </el-option>
-                                </el-select>
-                             </div>
-                             <!-- link url -->
-                             <div class="col-md-6" style="margin: 0; padding: 0px">
-                                <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
-                             </div>
-                             <!-- Delete Variable -->
-                             <div class="col-md-1">
-                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkJS(index)" icon="delete2"></el-button>
-                             </div>
-                             <div class="col-md-1">
-                                <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                  <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                </el-tooltip>
-
-                             </div>
-
-                          </div>
-                        </draggable>
-                     </el-form-item>
-                  </div>
-
-                  <!-- Create new variable -->
-                  <el-button type="primary" @click="addNewexternallinkJS">New JS Link</el-button>
-               </el-form>
-            </div>
-            <div class="col-md-12" style="margin-top: 4%;">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3> CSS Links </h3>
-                  </div>
-               </div>
-               <hr>
-               <el-form ref="form" :model="form">
-               <draggable v-model='externallinksCSS' @start="drag=true" @end="drag=false">
-
-                  <div v-for="(n, index) in externallinksCSS">
-                     <el-form-item>
-                        <div class="row">
-                           <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                              <el-select v-model="n.linkposition" placeholder="Position">
-                                 <el-option
-                                    v-for="item in Allposition"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                 </el-option>
-                              </el-select>
-                           </div>
-                           <!-- link url -->
-                           <div class="col-md-6" style="margin: 0; padding-left: 0px">
-                              <el-input type="text" :rows="5" placeholder="Link URL" v-model="n.linkurl"></el-input>
-                           </div>
-                           <!-- Delete Variable -->
-                           <div class="col-md-1">
-                              <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkCSS(index)" icon="delete2"></el-button>
-                           </div>
-                           <div class="col-md-1">
-                             <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                              </el-tooltip>
-
-                           </div>
-                        </div>
-                     </el-form-item>
-                  </div>
-                  <!-- Create new variable -->
-               </draggable></el-form>
-                  <el-button type="primary" @click="addNewexternallinkCSS">New CSS Link</el-button>
-            </div>
-        </div>
-      </div>
-      <!-- External Links section ends -->
-
-      <!-- Meta Tags -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleMetaTags" class="card color-div toggleableDivHeader">Meta Tags</a>
-          </div>
-      </div>
-      <div id="toggleMetaTagsContent" class="toggleableDivHeaderContent" style="display: none;">
-        <div class="row">
-          <div class="col-md-12" >
-              <div class="row">
-                    <div class="col-md-4">
-                       <h3>Add External meta tags </h3>
-                    </div>
-                 </div>
-                 <hr>
-               <el-form :inline="true">
-                 <el-form-item label="Meta Charset">
-                    <el-input placeholder="charset value" v-model="Metacharset"></el-input>
-                  </el-form-item>
-                </el-form>
-           </div>
-            <div class="col-md-12" style="margin-top: 2%">
-                <table class="table table-hover  table-bordered">
-                    <!-- <draggable @start="drag=true" @end="drag=false"> -->
-                    <thead class="thead">
-                      <tr>
-                        <th>Name</th>
-                        <th>Content</th>
-                        <th></th>
-                        <!-- <th></th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(n, index) in externallinksMeta" >
-                        <td><input type='text' class="form-control" value="n.name" v-model="n.name"></td>
-                        <td><textarea class="form-control" rows="1" v-model="n.content">{{n.content}}</textarea></td>
-                        <td><el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelinkMeta(index)" icon="delete2"></el-button></td>
-                        <!-- <td><el-button style="min-width: 100%;" icon="plus"></el-button></td> -->
-                      </tr>
-                      <tr><td colspan="4"><el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button></td></tr>
-                    </tbody>
-                      <!-- </draggable> -->
-                  </table>
-                  <!-- Create new variable -->
-                  <!-- <el-button type="primary" @click="addNewexternallinkMeta">New Meta Link</el-button> -->
-               <!-- </el-form> -->
-            </div>
-        </div>
-      </div>
-      <!-- Meta Tags Ends -->
-
-      <!-- Local style/css-->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleLocalstyles" class="card color-div toggleableDivHeader">Global Styles</a>
-          </div>
-      </div>
-      <div id="toggleLocalstylesContent" class="toggleableDivHeaderContent" style="display: none;">
-         <div class="row">
-          <div class="col-md-12">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3> Styles: </h3>
-                  </div>
-               </div>
-               <hr>
-               <el-form ref="form" :model="form">
-
-                  <div >
-                     <el-form-item>
-                        <draggable v-model='localstyles' @start="drag=true" @end="drag=false">
-                          <div style="margin-bottom: 25px" v-for='(n, index) in localstyles' class="row">
-                             <!-- position  -->
-                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                <el-select v-model="n.linkposition" placeholder="Position">
-                                   <el-option
-                                      v-for="item in Allposition"
-                                      :key="item.value"
-                                      :label="item.label"
-                                      :value="item.value">
-                                   </el-option>
-                                </el-select>
-                             </div>
-                             <!-- link url -->
-                             <div class="col-md-6" style="margin: 0; padding: 0px">
-                                <el-input type="textarea" :rows="5" placeholder="css" v-model="n.style"></el-input>
-                             </div>
-                             <!-- Delete Variable -->
-                             <div class="col-md-1">
-                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalstyles(index)" icon="delete2"></el-button>
-                             </div>
-                             <div class="col-md-1">
-                               <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                  <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                </el-tooltip>
-                             </div>
-
-
-                          </div>
-                        </draggable>
-                     </el-form-item>
-                  </div>
-
-                  <!-- Create new variable -->
-                  <el-button type="primary" @click="addNewlocalstyles">New Style</el-button>
-               </el-form>
-            </div>
-        </div>
-      </div>
-
-      <!-- Local script-->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleLocalscripts" class="card color-div toggleableDivHeader">Global Scripts</a>
-          </div>
-      </div>
-      <div id="toggleLocalscriptsContent" class="toggleableDivHeaderContent" style="display: none;">
-         <div class="row">
-          <div class="col-md-12">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3> Scripts: </h3>
-                  </div>
-               </div>
-               <hr>
-               <el-form ref="form" :model="form">
-
-                  <div >
-                     <el-form-item>
-                        <draggable v-model='localscripts' @start="drag=true" @end="drag=false">
-                          <div style="margin-bottom: 25px" v-for='(n, index) in localscripts' class="row">
-                             <!-- position  -->
-                             <div class="col-md-3" style="margin: 0; padding-left: 15px">
-                                <el-select v-model="n.linkposition" placeholder="Position">
-                                   <el-option
-                                      v-for="item in Allposition"
-                                      :key="item.value"
-                                      :label="item.label"
-                                      :value="item.value">
-                                   </el-option>
-                                </el-select>
-                             </div>
-                             <!-- link url -->
-                             <div class="col-md-6" style="margin: 0; padding: 0px">
-                                <el-input type="textarea" :rows="5" placeholder="script" v-model="n.script"></el-input>
-                             </div>
-                             <!-- Delete Variable -->
-                             <div class="col-md-1">
-                                <el-button class="pull-right" style="min-width: 100%;" type="danger" @click="deletelocalscripts(index)" icon="delete2"></el-button>
-                             </div>
-                             <div class="col-md-1">
-                                <el-tooltip class="item" effect="dark" content="Re-position" placement="top-start">
-                                  <el-button style="min-width: 100%;" icon="d-caret"></el-button>
-                                </el-tooltip>
-
-                             </div>
-
-
-                          </div>
-                        </draggable>
-                     </el-form-item>
-                  </div>
-
-                  <!-- Create new variable -->
-                  <el-button type="primary" @click="addNewlocalscripts">New script</el-button>
-               </el-form>
-            </div>
-        </div>
-      </div>
-
-      <!-- Payment Block -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleAccounting" class="card color-div toggleableDivHeader">Accounting</a>
-          </div>
-      </div>
-      <div id="toggleAccountingContent" class="toggleableDivHeaderContent" style="display: none;" >
-       
-          <div class="row">
-              <div class="col-md-12">
-                  <div class="row">
-                      <div class="col-md-12">
-                         <el-form ref="form1" :model="form" label-width="120px">
-                             <el-row>
-                              <el-col :span='18'>
-                                <el-form-item label="Account Used:">
-                                 <el-select clearable v-model="form.crmid" placeholder="Select" @change='changeconfiguration()'>
-                                  <el-option
-                                    v-for="item in crmdata"
-                                    :key="item.id"
-                                    :label="item.configName"
-                                    :value="item.id">
-                                  </el-option>
-                                </el-select>
-                                </el-form-item>
-                              </el-col>
-                              <el-col v-if="crmdata.length>-1" :span='4'>
-                                <el-tooltip content="Go View Accounting System" placement="top">
-                                <el-button type="primary" icon='setting' @click='linktocrm()'>Accounts System</el-button></el-tooltip>
-                              </el-col>
-                               <el-col style='text-align: center' :span='2'>
-                                 <!-- <Button type="primary" shape="circle" @click="refreshaccounts()" icon="refresh"></Button> -->
-                                 <el-tooltip content="Refresh Accounts settings" placement="top">
-                                   <el-button type="primary" @click="refreshaccounts()"><i class="fa fa-refresh"></i></el-button>
-                                 </el-tooltip>
-                              </el-col>
-                            </el-row>
-                        </el-form>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        <hr>
-          <!-- testing iviewui -->
-          <div class="row">
-          <div class="col-md-12">
-              <component :is="componentsID" v-on:addNewConfig="addNewConfig"></component>
-          </div>
-          </div>
-      </div>
-      <!-- Payment Block -->
-
-      <!-- Roles Block -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleRoles" class="card color-div toggleableDivHeader">Website Roles</a>
-          </div>
-      </div>
-      <div id="toggleRolesContent" class="toggleableDivHeaderContent" style="display: none;">
-          <div class="row">
-              <div class="col-md-12">
-                  <div class="row">
-                      <div class="col-md-4">
-                          <h3> Roles: </h3>
-                      </div>
-                  </div>
-                  <hr>
-
-                  <div style="margin: 5px 0;" v-for="(n, index) in websiteRoles">
-                    <div class="row">
-                      <div class="col-md-11">
-                        <el-input v-if="n.roleName != 'guest' && n.roleName != 'registered' " v-model="n.roleName" placeholder="Enter Role Name"></el-input>
-                        <el-input v-else v-model="n.roleName" placeholder="Enter Role Name" :disabled="true"></el-input>
-                      </div>
-                      <!-- <div class="col-md-1">
-                        <input type="radio" v-model="isPrimaryRole" :value="n.roleName"> Primary
-                        <el-radio class="radio" v-model="isPrimaryRole" @click="setPrimaryRole(index)" :label="index">Primary</el-radio>
-                      </div> -->
-                      <div class="col-md-1">
-                        <el-button v-if="n.roleName != 'guest' && n.roleName != 'registered' " class="pull-right" style="min-width: 100%;" type="danger" @click="deleteWebsiteRole(index)" icon="delete2"></el-button>
-                      </div>
-                    </div>
-                  </div>
-                  <br>
-                  <!-- Create new variable -->
-                  <el-button type="primary" @click="addNewWebsiteRole">New Role</el-button>
-              </div>
-          </div>
-      </div>
-      <!-- Roles Block -->
-
-      <!-- List of Commits Section -->
-      <div class="collapsingDivWrapper row">
-          <div class="col-md-12">
-              <a href="javascript:void(0)" id="toggleCommits" class="card color-div toggleableDivHeader">List of Commits</a>
-          </div>
-      </div>
-      <div id="toggleCommitsContent" class="toggleableDivHeaderContent" style="display: none;">
-          <el-form :model="commitForm" :rules="commitRules" ref="commitForm" class="demo-ruleForm">
-            <div class="row">
-            
-              <div class="col-md-4">
-                <el-form-item label="Revision Name" prop="branchName">
-                  <el-input v-model="commitForm.branchName" placeholder="Enter Revision Name"></el-input>
-                </el-form-item>
-              </div>
-
-              <div class="col-md-5">
-                <el-form-item label="Revision Message" prop="commitMessage">
-                  <el-input v-model="commitForm.commitMessage" placeholder="Enter Revision Message"></el-input>
-                </el-form-item>
-              </div>
-
-              <div class="col-md-3">
-                <el-form-item label="Submit Revision">
-                  <el-button class="publishBtn" type="success" @click="commitProject('commitForm')" :loading="isCommitLoading">Add Revision</el-button>
-                </el-form-item>
-              </div>
-
-              <!-- <div class="col-md-1">
-                <el-form-item label="Download">
-                  <el-tooltip content="Download .zip" placement="top">
-                    <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
-                  </el-tooltip>
-                </el-form-item>
-              </div> -->
-
-            </div>
-
-          </el-form>
-
-          <!-- <div class="col-md-4">
-            <el-input v-model="branchName" placeholder="Enter Branch Name"></el-input>
-          </div>
-          <div class="col-md-5">
-            <el-input v-model="commitMessage" placeholder="Enter Commit Message"></el-input>
-          </div>
-          <div class="col-md-2">
-            <el-button class="publishBtn" type="success" @click="commitProject()" :loading="isCommitLoading">Commit Project</el-button>
-          </div>
-          <div class="col-md-1">
-            <el-tooltip content="Download .zip" placement="top">
-              <el-button class="publishBtn" @click="exportWebsite()"><i class="fa fa-download" title="Download .zip"></i></el-button>
-            </el-tooltip>
-          </div> -->
-        <!-- </div> -->
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 2%">
-              <div class="table-responsive">
-                <table class="table" id="revisionsTable">
-                  <thead>
-                    <tr>
-                      <th width="260" @click="sortBranchesTable(0)">Revision Date <i class="fa fa-sort pull-right"></i></th>
-                      <th @click="sortBranchesTable(1)">Revision Name <i class="fa fa-sort pull-right"></i></th>
-                      <th @click="sortBranchesTable(2)">Revision Message <i class="fa fa-sort pull-right"></i></th>
-                      <!-- <th>Revision SHA</th> -->
-                      <th>Rollback</th>
-                      <th width="120">Download Code</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(n, index) in branchesData">
-                      <td>{{n.commitDate}}</td>
-                      <td>{{n.branchName}}</td>
-                      <td>{{n.commitsMessage}}</td>
-                      <!-- <td>{{n.commitSHA}}</td> -->
-                      <td>
-                        <el-button @click.native.prevent="revertCommit(index)" type="primary" v-if="n.branchName != currentBranchName" size="small">Restore</el-button>
-                        <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="n.branchName == currentBranchName">
-                      </td>
-                      <td>
-                        <el-tooltip content="Download .zip" placement="top">
-                          <el-button @click.native.prevent="exportWebsite(index)" type="info" size="small"><i class="fa fa-download fa-fw"></i></el-button>
-                        </el-tooltip>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- <el-table
-                :data="commitsData"
-                :row-class-name="tableRowClassName"
-                border
-                style="width: 100%">
-                <el-table-column
-                  prop="commitDate"
-                  label="Commit Date"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="commitsMessage"
-                  label="Commit Message"
-                  >
-                </el-table-column>
-
-                <el-table-column
-                  prop="commitSHA"
-                  label="Commit SHA"
-                  >
-                </el-table-column>
-
-                <el-table-column
-                  label="Revert To Commit"
-                  width="180">
-                  <template scope="scope">
-                    <img src="../../static/img/green-tick.png" class="green-tick-img" v-if="(scope.$index, commitSHA) == currentSha">
-                    <el-button @click.native.prevent="revertCommit(scope.$index, commitsData)" type="primary" size="small">Restore</el-button>
-                  </template>
-                </el-table-column>
-              </el-table> -->
-            </div>
-        </div>
-      </div>
-      <!-- List of Commits Ends -->
-
-      <div class="margin-50"></div>
-
     </div>
 
   </div>
@@ -1090,13 +1195,24 @@ import _ from 'lodash';
 import Cookies from 'js-cookie';
 const config = require('../config');
 import fileSaver from 'file-saver';
-
+ import psl from 'psl';
 import draggable from 'vuedraggable';
 import settings from './settings/settings'
 import newpaymentsettings from './settings/Online-Payment'
 import addnewpaymentgatway from './settings/addpayment'
 // import newaccountsettings from './settings/new-settings'
 // ProjectName Validator
+
+
+import feathers from 'feathers/client';
+import socketio from 'feathers-socketio/client';
+import io from 'socket.io-client';
+
+
+let socket = config.socketURL;
+const app = feathers().configure(socketio(io(socket)))
+
+
 let checkProjectName = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('Please enter Project Name.'));
@@ -1117,6 +1233,8 @@ let checkBranchName = (rule, value, callback) => {
         return callback();
     }
 }
+
+let srvListen = 0;
 
 export default {
   name: 'ProjectSettings',
@@ -1142,6 +1260,7 @@ export default {
         vid:'',
         crmid:''
       },
+      isdisabled:false,
       commitsData: [],
       configurationdata:[],
       gatewaychecked:'',
@@ -1149,6 +1268,7 @@ export default {
       faviconhName:'',
       fileList3: [],
       pluginsData: [],
+      textdata:'',
       // commitMessage: '',
       newRepoId: '',
       repoName: '',
@@ -1230,7 +1350,7 @@ export default {
         content: 'Update Me'
       }],
       Metacharset: '',
-
+      percent:0,
       publishWebsite: false,
       activeName: 'first',
       customDomainName: '',
@@ -1261,6 +1381,8 @@ export default {
       branchesData: [],
 
       currentBranchName: '',
+
+      serviceListen: 0,
 
       commitForm: {
         branchName: '',
@@ -1294,7 +1416,19 @@ export default {
       },
       fetchImagesLoader: false,
       loadMoreImagesLoader: false,
-      isEnabledByNextCursor: true
+      isEnabledByNextCursor: true,
+      taxcloud: {
+        apiId: '',
+        apiKey: ''
+      },
+      rulesTaxCloud: {
+        apiId: [
+            { required: true, message: 'Enter TaxCloud API ID', trigger: 'blur' }
+        ],
+        apiKey: [
+            { required: true, message: 'Enter TaxCloud API Key', trigger: 'blur' }
+        ]
+      }
     }
   },
   components: {
@@ -1308,12 +1442,143 @@ export default {
 
   },
 
+  async created() {
+
+
+        app.service("jobqueue").on("created", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = true;
+          this.textdata='Your request to Publish website is received. Please wait while you are in a Queue.'
+          // this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("removed", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = false;
+          this.textdata=''
+          this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("patched", async (response) => {
+        // console.log('response:',response)
+       if(this.repoName==response.websiteid){
+
+          console.log('===========================================');
+          console.log("**"+this.repoName+"--"+response.websiteid);
+          console.log(response);
+          console.log(1111111 + '===' + this.isdisabled);
+          // console.log('same id.. set disabled to true..')
+         // this.isdisabled = true;
+          // this.textdata='Job added Successfully. Please wait you are in Queue.'
+         if(response.Status!=undefined && response.Status=='completed'){
+            // console.log('completed..', response)
+            let dt = new Date();
+            let utcDate = dt.toUTCString();
+            let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
+            let commitMessage = 'Publish - ' + utcDate;            
+            await this.publishcommitProject(commitMessage,branchName);
+            await this.saveProjectSettings()
+            await this.init()
+            this.$emit('updateProjectName')
+            this.isdisabled=false
+         }
+        if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
+          this.isdisabled=false
+          this.$emit('updateProjectName')
+          this.percent=0
+          // console.log('job failed')
+         }
+        if(response.Percentage!=undefined && response.Percentage!=''){
+          console.log(1111111 + '===' + this.isdisabled);
+
+          this.percent=response.Percentage
+          // console.log('this.percent :: ',this.percent)
+         }
+       }
+      });  
+    
+  },
+
   async mounted () {
+    // console.log('mounted')
+    // console.log( this.$refs['commitForm'])
+   // let self = this;
+    // Socket Listen for Creating File or Folder
+    
+    // console.log('this.serviceListen :: ', this.serviceListen);
+    // console.log('srvListen :: ', srvListen);
 
 
+    /*
+    if(srvListen == 0)
+    {
+        app.service("jobqueue").on("created", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = true;
+          this.textdata='Job added Successfully. Please wait you are in Queue.'
+          // this.$emit('updateProjectName')
+        }
+      });
 
-    // Collapsing Divs
+      app.service("jobqueue").on("removed", async (response) => {
+        if(this.repoName==response.websiteid) {
+          this.percent=0
+          this.isdisabled = false;
+          this.textdata=''
+          this.$emit('updateProjectName')
+        }
+      });
+
+      app.service("jobqueue").on("patched", async (response) => {
+        // console.log('response:',response)
+       if(this.repoName==response.websiteid){
+
+          console.log('===========================================');
+          console.log("**"+this.repoName+"--"+response.websiteid);
+          console.log(response);
+          console.log(1111111 + '===' + this.isdisabled);
+          // console.log('same id.. set disabled to true..')
+         // this.isdisabled = true;
+          // this.textdata='Job added Successfully. Please wait you are in Queue.'
+         if(response.Status!=undefined && response.Status=='completed'){
+            // console.log('completed..', response)
+            let dt = new Date();
+            let utcDate = dt.toUTCString();
+            let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
+            let commitMessage = 'Publish - ' + utcDate;            
+            await this.publishcommitProject(commitMessage,branchName);
+            await this.saveProjectSettings()
+            await this.init()
+            this.$emit('updateProjectName')
+            this.isdisabled=false
+         }
+        if(response.Status!=undefined && (response.Status=='failed'||response.Status=='cancelled')){
+          this.isdisabled=false
+          this.$emit('updateProjectName')
+          this.percent=0
+          // console.log('job failed')
+         }
+        if(response.Percentage!=undefined && response.Percentage!=''){
+          console.log(1111111 + '===' + this.isdisabled);
+
+          this.percent=response.Percentage
+          // console.log('this.percent :: ',this.percent)
+         }
+       }
+      });  
+    } */  
+    
+    srvListen++;
+      
+
+   // Collapsing Divs
     $(document).ready(function($) {
+
 
       $("#tooglePublishWebsite").click(function() {
         $("#togglePublishWebsiteContent").slideToggle("slow");
@@ -1375,6 +1640,56 @@ export default {
         $("#toggleAssetImagesContent").slideToggle("slow");
       });
 
+    });
+
+
+    // Tabs Click Handle and Iint
+    $(document).ready(function(){
+      $('.tab').on('click', function(){
+        showTab($(this));
+      });
+      
+      function showTab(tab){
+        var tabBar = tab.parent().find('.tab-active-bar');
+        tabBar.animate({
+          left: parseInt(tab.position().left)+'px',
+          width: parseInt(tab.innerWidth())+'px'
+        });
+        $('.tab-content').hide().promise().done(function(){
+          $(tab.data('target')).show();
+        });
+        
+      }
+      
+      showTab($('#tab1'));
+    });
+
+    var fixmeTop = $('.fixeddiv').offset().top;
+    $(window).scroll(function() {
+        var currentScroll = $(window).scrollTop();
+        if (currentScroll >= fixmeTop) {
+            $('.fixeddiv').css({
+                position: 'fixed',
+                top: '20px',
+                right: '100px'
+            });
+        } else {
+            $('.fixeddiv').css({
+                position: 'static'
+            });
+        }
+    });
+
+    // Smooth Scroll
+    $(document).on('click', '.jumper-links-redirect', function(event) {
+        event.preventDefault();
+
+        $('.jumper-links li a.active').removeClass('active');
+        $(this).addClass('active');
+
+        $('html, body').animate({
+            scrollTop: $($.attr(this, 'href')).offset().top
+        }, 500);
     });
 
 
@@ -1613,7 +1928,7 @@ export default {
       $('.valid').removeClass('correct');
     },
     linktovshop(){
-      window.open('https://www.vshopdata.'+config.domainkey);
+      window.open('https://vshopdata.'+config.domainkey);
     },
     refreshvshop(){
 
@@ -1639,7 +1954,7 @@ export default {
       }).catch(err => { console.log(err); });
     },
     linktocrm(){
-      window.open('https://www.crm.'+config.domainkey);
+      window.open('https://crm.'+config.domainkey);
     },
     refreshaccounts(){
       console.log('refreshaccounts')
@@ -1707,6 +2022,8 @@ export default {
                 // console.log(response.data.resources[i].secure_url);
                 this.assetsImages.push(response.data.resources[i].secure_url);
               }
+
+              console.log('Cursor: ', response.data.next_cursor);
 
               if(response.data.next_cursor !== undefined){
                 this.cloudinaryDetails.nextCursor = response.data.next_cursor;
@@ -2245,594 +2562,683 @@ export default {
     },
 
     async refreshPlugins() {
-      this.refreshPluginsLoading = true;
-      this.fullscreenLoading = true;
+        this.refreshPluginsLoading = true;
+        let getFromBetween = {
+            results: [],
+            string: "",
+            getFromBetween: function(sub1, sub2) {
+                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+                var SP = this.string.indexOf(sub1) + sub1.length;
+                var string1 = this.string.substr(0, SP);
+                var string2 = this.string.substr(SP);
+                var TP = string1.length + string2.indexOf(sub2);
+                return this.string.substring(SP, TP);
+            },
+            removeFromBetween: function(sub1, sub2) {
+                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+                var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
+                this.string = this.string.replace(removal, "");
+            },
+            getAllResults: function(sub1, sub2) {
+                if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+                var result = this.getFromBetween(sub1, sub2);
+                this.results.push(result);
+                this.removeFromBetween(sub1, sub2);
+                if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+                    this.getAllResults(sub1, sub2);
+                } else return;
+            },
+            get: function(string, sub1, sub2) {
+                this.results = [];
+                this.string = string;
+                this.getAllResults(sub1, sub2);
+                return this.results;
+            }
+        };
+        // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
-      // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
-
-      // Call Listings API and get Tree
-      await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '/' + this.repoName, {})
-        .then(async(res) => {
-          // console.log(res);
-          this.refreshPluginsLoading = false;
-
-          let directoryListing = res.data.children;
-
-          // For Partials
-          let partialsFolderIndex = _.findIndex(directoryListing, function(o) {
-            return o.name == 'Partials';
-          });
-
-          for (var i = 0; i < directoryListing[partialsFolderIndex].children.length; i++) {
-            if ((_.indexOf(Object.keys(this.settings[2].layoutOptions[0]), directoryListing[partialsFolderIndex].children[i].name)) > -1) {
-              // Partial is registered but check for new partial variants
-
-              let updates = false;
-
-              this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name] = [];
-
-              // Create Partial Files Entry
-              for (let j = 0; j < directoryListing[partialsFolderIndex].children[i].children.length; j++) {
-
-                let fileName = directoryListing[partialsFolderIndex].children[i].children[j].name;
-                fileName = fileName.split('.');
-                fileName = fileName[0];
-
-                if (_.find(this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex]], function(o) {
-                    return o.value = fileName;
-                  })) {} else {
-                  updates = true;
-
-                  let newFtpPartial = {
-                    value: fileName,
-                    label: fileName
-                  }
-                  this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
+        // Call Listings API and get Tree
+        console.log(config.userDetail)
+        await axios.get(config.userDetail, {
+                headers: {
+                    'Authorization': Cookies.get('auth_token')
                 }
-              }
+            })
+            .then(async (res) => {
+              this.fullscreenLoading = true;
+                await axios.get(config.baseURL + '/flows-dir-listing?website=' + Cookies.get('userDetailId') + '/' + this.repoName, {})
+                    .then(async (res) => {
+                        // console.log(res);
+                        this.refreshPluginsLoading = false;
 
-              // Only Save file when there are any new files found in already registered partials
-              // if(updates){
-              //   await this.saveProjectSettings();
-              // }
+                        let directoryListing = res.data.children;
 
-              // this.init();
+                        // For Partials
+                        let partialsFolderIndex = _.findIndex(directoryListing, function(o) {
+                            return o.name == 'Partials';
+                        });
 
-            } else {
-              // Partial not Registered
+                        for (var i = 0; i < directoryListing[partialsFolderIndex].children.length; i++) {
+                            if ((_.indexOf(Object.keys(this.settings[2].layoutOptions[0]), directoryListing[partialsFolderIndex].children[i].name)) > -1) {
+                                // Partial is registered but check for new partial variants
 
-              // Create Partial Entry
-              this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name] = [];
+                                let updates = false;
 
-              // Push New Object in plugins tree
-              let refreshPluginsParentObject = {
-                children: [],
-                label: directoryListing[partialsFolderIndex].children[i].name,
-                isActive: true
-              };
+                                this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name] = [];
 
-              this.pluginsTreedata.push(refreshPluginsParentObject);
+                                // Create Partial Files Entry
+                                for (let j = 0; j < directoryListing[partialsFolderIndex].children[i].children.length; j++) {
 
-              // Create Partial Files Entry
-              for (let j = 0; j < directoryListing[partialsFolderIndex].children[i].children.length; j++) {
+                                    let fileName = directoryListing[partialsFolderIndex].children[i].children[j].name;
+                                    fileName = fileName.split('.');
+                                    fileName = fileName[0];
 
-                let fileName = directoryListing[partialsFolderIndex].children[i].children[j].name;
-                fileName = fileName.split('.');
-                fileName = fileName[0];
+                                    if (_.find(this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex]], function(o) {
+                                            return o.value = fileName;
+                                        })) {} else {
+                                        updates = true;
 
-                let newFtpPartial = {
-                  value: fileName,
-                  label: fileName
+                                        let newFtpPartial = {
+                                            value: fileName,
+                                            label: fileName
+                                        }
+                                        this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
+                                    }
+                                }
+
+                                // Only Save file when there are any new files found in already registered partials
+                                // if(updates){
+                                //   await this.saveProjectSettings();
+                                // }
+
+                                // this.init();
+
+                            } else {
+                                // Partial not Registered
+
+                                // Create Partial Entry
+                                this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name] = [];
+
+                                // Push New Object in plugins tree
+                                let refreshPluginsParentObject = {
+                                    children: [],
+                                    label: directoryListing[partialsFolderIndex].children[i].name,
+                                    isActive: true
+                                };
+
+                                this.pluginsTreedata.push(refreshPluginsParentObject);
+
+                                // Create Partial Files Entry
+                                for (let j = 0; j < directoryListing[partialsFolderIndex].children[i].children.length; j++) {
+
+                                    let fileName = directoryListing[partialsFolderIndex].children[i].children[j].name;
+                                    fileName = fileName.split('.');
+                                    fileName = fileName[0];
+
+                                    let newFtpPartial = {
+                                        value: fileName,
+                                        label: fileName
+                                    }
+
+                                    this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
+
+                                    let refreshIndexOfParentInTreeData = _.findIndex(this.pluginsTreedata, function(o) {
+                                        return o.label == directoryListing[partialsFolderIndex].children[i].name;
+                                    });
+
+                                    let refreshPluginsChildObject = {
+                                        children: [],
+                                        label: fileName,
+                                        isActive: true
+                                    };
+                                    this.pluginsTreedata[refreshIndexOfParentInTreeData].children.push(refreshPluginsChildObject);
+                                }
+                            }
+                        }
+
+                        // For Pages
+                        let pagesFolderIndex = _.findIndex(directoryListing, function(o) {
+                            return o.name == 'Pages';
+                        });
+
+                        for (var i = 0; i < directoryListing[pagesFolderIndex].children.length; i++) {
+                            let pageNameIndex = _.findIndex(this.settings[1].pageSettings, function(o) {
+                                return o.PageName == directoryListing[pagesFolderIndex].children[i].name;
+                            });
+
+                            if (pageNameIndex > -1) {
+                                //console.log('Page already registered: ', directoryListing[pagesFolderIndex].children[i].name);
+                            } else {
+
+                                let notRegisteredPageSettings = {
+                                    "PageName": directoryListing[pagesFolderIndex].children[i].name,
+                                    "PageSEOTitle": "",
+                                    "PageSEOKeywords": "",
+                                    "PageSEODescription": "",
+                                    "PageLayout": "default",
+                                    "partials": [{
+                                        "Header": "default"
+                                    }, {
+                                        "Footer": "default"
+                                    }],
+                                    "PageCss": [],
+                                    "PageExternalCss": [],
+                                    "PageExternalJs": [],
+                                    "PageMetaInfo": [],
+                                    "PageMetacharset": '',
+                                    "ProjectScripts": [],
+                                    "ProjectStyles": []
+
+                                };
+
+                                this.settings[1].pageSettings.push(notRegisteredPageSettings);
+                            }
+                        }
+                        // await this.saveConfigFile(this.repoName, this.settings);
+                        await this.saveProjectSettings();
+                        // console.log('this.Setting',this.settings)
+                        this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                        let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
+
+                        let splitUrl = url.split('/');
+
+                        let websiteName = splitUrl[6];
+
+
+                        // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
+
+                        let configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => {
+                            console.log(err);
+                            this.fullscreenLoading = false
+                        }).catch((e) => {
+                            console.log(e)
+                        });
+
+                        configData = JSON.parse(JSON.stringify(configData.data.configData))
+                        for (let q = 0; q < Object.keys(configData[2].layoutOptions[0]).length; q++) {
+                            //// console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
+                            if (Object.keys(configData[2].layoutOptions[0])[q] != ('Layout')) {
+                                if (Object.keys(configData[2].layoutOptions[0])[q] != ('Menu')) {
+                                    for (let p = 0; p < configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length; p++) {
+                                        var namepartial = configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
+                                        //// console.log('name:',namepartial)
+                                        var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Partials/' + Object.keys(configData[2].layoutOptions[0])[q] + '/' + namepartial + '.partial').catch(err => {
+                                            console.log(err);
+                                            this.fullscreenLoading = false
+                                        });
+                                        //// console.log('content of partial:',contentpage.data)
+                                        //// console.log("inside !=pages directory")
+                                        var content = ''
+                                        content = contentpage.data;
+                                        var result = (getFromBetween.get(content, "{{>", "}}"));
+                                        var DefaultParams = [];
+                                        if (result.length > 0) {
+                                            var resultParam = result
+                                            for (let i = 0; i < resultParam.length; i++) {
+                                                var temp;
+                                                temp = resultParam[i].trim()
+                                                result[i] = result[i].trim()
+                                                result[i] = result[i].replace(/&nbsp;/g, ' ').trim()
+                                                temp = temp.replace(/&nbsp;/g, ' ')
+                                                temp = temp.replace(/\s+/g, ' ');
+                                                temp = temp.split(' ')
+                                                for (let j = 0; j < temp.length; j++) {
+                                                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                                                        if (temp[j + 1] != undefined) {
+                                                            result[i] = temp[0];
+                                                            if (temp[j + 1].indexOf('.') > -1) {
+                                                                let x = temp[j + 1]
+                                                                x = temp[j + 1].split(/'/)[1];
+                                                                let obj = {}
+                                                                obj[temp[0]] = x
+                                                                DefaultParams.push(obj)
+                                                                break;
+                                                            }
+                                                        } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                                                            result[i] = temp[0];
+                                                            if (temp[j]) {
+                                                                let x = temp[j]
+                                                                x = temp[j].split(/'/)[1];
+                                                                let obj = {}
+                                                                obj[temp[0]] = x
+                                                                DefaultParams.push(obj)
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            let totalPartial = content.match(/{{>/g).length;
+
+                                            let namefile = namepartial
+                                            let namefolder = Object.keys(configData[2].layoutOptions[0])[q];
+                                            let temp = {
+                                                value: namefile,
+                                                label: namefile,
+                                                partialsList: result,
+                                                defaultList: DefaultParams
+                                            }
+                                            let checkValue = false;
+                                            for (var i = 0; i < Object.keys(configData[2].layoutOptions[0]).length; i++) {
+                                                var obj = Object.keys(configData[2].layoutOptions[0])[i];
+                                                if ((obj) == namefolder) {
+                                                    checkValue = true;
+                                                }
+                                            }
+                                            if (checkValue == true) {
+                                                let checkFileNamevalue = false;
+                                                for (let j = 0; j < configData[2].layoutOptions[0][namefolder].length; j++) {
+                                                    if (configData[2].layoutOptions[0][namefolder][j].label == namefile) {
+                                                        checkFileNamevalue = true
+                                                        configData[2].layoutOptions[0][namefolder][j].partialsList = [];
+                                                        configData[2].layoutOptions[0][namefolder][j].defaultList = [];
+                                                        configData[2].layoutOptions[0][namefolder][j].partialsList = result;
+                                                        configData[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
+
+                                                    }
+                                                }
+                                                if (checkFileNamevalue != true) {
+
+                                                    configData[2].layoutOptions[0][namefolder].push(temp)
+                                                }
+                                                // this.saveConfigFile(this.repoName, configData);
+                                            } else {
+                                                //console.log('file doesnt exists');
+                                            }
+                                        } else {
+                                            let namefile = namepartial;
+                                            let namefolder = Object.keys(configData[2].layoutOptions[0])[q];
+                                            let temp = {
+                                                value: namefile,
+                                                label: namefile,
+                                            }
+                                            let checkValue = false;
+                                            for (var i = 0; i < Object.keys(configData[2].layoutOptions[0]).length; i++) {
+                                                var obj = Object.keys(configData[2].layoutOptions[0])[i];
+                                                if ((obj) == namefolder) {
+                                                    checkValue = true;
+                                                }
+                                            }
+                                            if (checkValue == true) {
+                                                let checkFileNamevalue = false;
+                                                for (let j = 0; j < configData[2].layoutOptions[0][namefolder].length; j++) {
+                                                    if (configData[2].layoutOptions[0][namefolder][j].label == namefile) {
+                                                        checkFileNamevalue = true
+                                                        delete configData[2].layoutOptions[0][namefolder][j].partialsList;
+                                                        delete configData[2].layoutOptions[0][namefolder][j].defaultList;
+                                                    }
+                                                }
+                                                if (checkFileNamevalue != true) {
+
+                                                    configData[2].layoutOptions[0][namefolder].push(temp)
+                                                }
+                                            } else {
+                                                //console.log('file doesnt exists');
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        for (let r = 0; r < configData[1].pageSettings.length; r++) {
+                            let namepage = configData[1].pageSettings[r].PageName
+                            let contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/' + namepage).catch(err => {
+                                console.log(err);
+                                this.fullscreenLoading = false
+                            });
+                            let content1 = ''
+                            let name = namepage;
+                            name = name.split('.')[0]
+                            content1 = contentpage.data
+                            let result1 = [];
+                            result1 = (getFromBetween.get(content1, "{{>", "}}"));
+                            let DefaultParams = [];
+                            if (result1.length > 0) {
+                                let resultParam = result1
+
+                                for (let i = 0; i < resultParam.length; i++) {
+                                    var temp;
+                                    temp = resultParam[i].trim()
+                                    result1[i] = result1[i].trim()
+                                    result1[i] = result1[i].replace(/&nbsp;/g, ' ').trim()
+                                    temp = temp.replace(/&nbsp;/g, ' ')
+                                    temp = temp.replace(/\s+/g, ' ');
+                                    temp = temp.trim();
+                                    temp = temp.split(' ')
+                                    for (let j = 0; j < temp.length; j++) {
+                                        if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+                                            if (temp[j + 1] != undefined) {
+                                                result1[i] = temp[0];
+                                                if (temp[j + 1].indexOf('.') > -1) {
+                                                    let x = temp[j + 1]
+                                                    x = temp[j + 1].split(/'/)[1];
+                                                    let obj = {}
+                                                    obj[temp[0]] = x
+                                                    DefaultParams.push(obj)
+                                                    break;
+                                                }
+                                            } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
+                                                result1[i] = temp[0];
+                                                if (temp[j]) {
+                                                    let x = temp[j]
+                                                    x = temp[j].split(/'/)[1];
+                                                    let obj = {}
+                                                    obj[temp[0]] = x
+                                                    DefaultParams.push(obj)
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                for (let i = 0; i < configData[1].pageSettings.length; i++) {
+                                    let temp = configData[1].pageSettings[i].PageName
+                                    temp = temp.split('.')[0]
+                                    if (name == temp) {
+                                        let partials = configData[1].pageSettings[i].partials
+                                        for (let k = 0; k < result1.length; k++) {
+                                            let checkpartial = false
+                                            for (let l = 0; l < partials.length; l++) {
+
+                                                if (Object.keys(partials[l])[0] == result1[k]) {
+                                                    checkpartial = true //partial found in page setting
+                                                    let temp1 = DefaultParams[k][result1[k]]
+                                                    let temp2 = partials[l][result1[k]]
+                                                    if (temp1.split('.')[0] == temp2.split('.')[0]) {
+                                                        for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
+
+                                                            if (configData[2].layoutOptions[0][result1[k]][z].value == DefaultParams[k][result1[k]].split('.')[0]) {
+                                                                if (configData[2].layoutOptions[0][result1[k]][z].defaultList != undefined) {
+                                                                    let defaultListtemp = configData[2].layoutOptions[0][result1[k]][z].defaultList
+                                                                    this.recursivecall(name, partials, defaultListtemp, configData)
+                                                                }
+                                                            }
+                                                        }
+                                                        break;
+                                                    } else {
+                                                        checkpartial = false
+                                                    }
+                                                }
+
+                                            }
+                                            if (checkpartial != true) {
+                                                let obj = {}
+                                                obj[result1[k]] = DefaultParams[k][result1[k]].split('.')[0]
+                                                for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
+                                                    if (configData[2].layoutOptions[0][result1[k]][z].value == DefaultParams[k][result1[k]].split('.')[0]) {
+                                                        if (configData[2].layoutOptions[0][result1[k]][z].defaultList != undefined) {
+                                                            let defaultListtemp = configData[2].layoutOptions[0][result1[k]][z].defaultList
+                                                            this.recursivecall(name, partials, defaultListtemp, configData)
+                                                        }
+                                                    }
+                                                }
+                                                configData[1].pageSettings[i].partials.push(obj);
+                                                r = r - 1;
+                                                break;
+                                            }
+                                        }
+                                    } else if (name != temp) {
+                                        //// console.log("file not found in config file")
+                                    }
+                                }
+                            }
+
+                        }
+                        for (let p = 0; p < Object.keys(configData[2].layoutOptions[0]).length; p++) {
+                            if (Object.keys(configData[2].layoutOptions[0])[p] == ('Layout')) {
+                                for (let y = 0; y < configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[p]].length; y++) {
+                                    var namelayout = configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[p]][y].value
+                                    // console.log('namelayout:', namelayout)
+                                    if (namelayout != 'Blank') {
+                                        var content = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Layout/' + namelayout + '.layout').catch(err => {
+                                            console.log(err);
+                                            this.fullscreenLoading = false
+                                        });
+                                        content = content.data
+                                        // console.log('content', content)
+                                        var result = (getFromBetween.get(content, "{{>", "}}"));
+                                        var changeresult = JSON.parse(JSON.stringify(result))
+                                        // console.log("changeresult:",changeresult)
+
+                                        for (let s = 0; s < changeresult.length; s++) {
+                                            content = content.replace(changeresult[s], changeresult[s].replace(/&nbsp;/g, '').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g, "").replace(/\s*=\s*/g, '='))
+                                        }
+                                        await axios.post(config.baseURL + '/flows-dir-listing', {
+                                            filename: this.folderUrl + '/Layout/' + namelayout + '.layout',
+                                            text: content,
+                                            type: 'file'
+                                        })
+                                        var result = (getFromBetween.get(content, "{{>", "}}"));
+
+                                        var DefaultParams = [];
+                                        if (result.length > 0) {
+                                            var resultParam = result
+                                            for (let i = 0; i < resultParam.length; i++) {
+                                                // console.log(i)
+                                                var temp;
+                                                temp = resultParam[i].trim()
+                                                result[i] = result[i].trim()
+                                                temp = temp.split(' ')
+                                                //// console.log('temp:',temp)
+                                                for (let j = 0; j < temp.length; j++) {
+                                                    temp[j] = temp[j].trim();
+                                                    // console.log('temp',temp[j])
+                                                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
+
+                                                        if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'") > -1) {
+                                                            result[i] = temp[0];
+                                                            if (temp[j]) {
+                                                                let x = temp[j]
+                                                                x = temp[j].split("'")[1] + '.partial';
+                                                                let obj = {}
+                                                                obj[temp[0]] = x
+                                                                DefaultParams.push(obj)
+                                                                break;
+                                                            }
+                                                        }
+                                                        if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"') > -1) {
+                                                            result[i] = temp[0];
+                                                            if (temp[j]) {
+                                                                let x = temp[j]
+                                                                x = temp[j].split('"')[1] + '.partial';
+                                                                let obj = {}
+                                                                obj[temp[0]] = x
+                                                                DefaultParams.push(obj)
+                                                                break;
+                                                            }
+                                                        }
+                                                    } else {
+                                                        // console.log('error while finding id in layout');
+                                                    }
+                                                }
+                                            }
+
+
+                                            //here we are adding new partial added inside layout to all pages who uses this following layout.
+                                            // console.log('DefaultParams',DefaultParams)
+                                            for (let i = 0; i < result.length; i++) {
+                                                // console.log('result',result[i])
+                                                let checktvalue = false;
+                                                for (let k = 0; k < DefaultParams.length; k++) {
+                                                    // console.log('DefaultParams',DefaultParams[k])
+                                                    if (result[i] == Object.keys(DefaultParams[k])[0]) {
+                                                        for (let j = 0; j < configData[1].pageSettings.length; j++) {
+                                                            if (configData[1].pageSettings[j].PageLayout == name) {
+                                                                let checkdefaultvalue = false;
+                                                                for (let x = 0; x < configData[1].pageSettings[j].partials.length; x++) {
+                                                                    if (Object.keys(configData[1].pageSettings[j].partials[x])[0] == result[i]) {
+
+                                                                        var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
+                                                                        defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
+                                                                        configData[1].pageSettings[j].partials[x] = defaulttemp
+                                                                        checkdefaultvalue = true;
+                                                                    }
+                                                                }
+                                                                if (checkdefaultvalue != true) {
+                                                                    var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
+                                                                    defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
+                                                                    //// console.log('push for DefaultParams:')
+                                                                    configData[1].pageSettings[j].partials.push(defaulttemp)
+                                                                }
+                                                            }
+                                                        }
+                                                        checktvalue = true
+                                                    }
+                                                }
+                                                if (checktvalue != true) {
+                                                    // console.log('!true')
+                                                    for (let j = 0; j < configData[1].pageSettings.length; j++) {
+                                                        if (configData[1].pageSettings[j].PageLayout == namelayout) {
+                                                            let doublecheckvalue = false
+                                                            for (let x = 0; x < configData[1].pageSettings[j].partials.length; x++) {
+                                                                if (Object.keys(configData[1].pageSettings[j].partials[x])[0] == result[i]) {
+                                                                    var defaulttemp = {}
+                                                                    defaulttemp[result[i]] = 'default'
+                                                                    doublecheckvalue = true
+                                                                    configData[1].pageSettings[j].partials[x] = defaulttemp
+                                                                }
+                                                            }
+                                                            if (doublecheckvalue != true) {
+                                                                var defaulttemp = {}
+                                                                defaulttemp[result[i]] = 'default'
+                                                                configData[1].pageSettings[j].partials.push(defaulttemp)
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                        //   let temp = {
+                                        //   value: namelayout,
+                                        //   label: namelayout,
+                                        //   partialsList: result,
+                                        //   defaultList: DefaultParams
+
+                                        // }
+                                        //Here we are creating new partial which are not present in our partial folder.
+                                        // let checkValue = false;
+                                        // for (var i = 0; i < configData[2].layoutOptions[0].Layout.length; i++) {
+                                        //   var obj = configData[2].layoutOptions[0].Layout[i];
+                                        //   if ((obj.label) == name) {
+                                        //     checkValue = true;
+                                        //   }
+                                        // }
+                                        // if (checkValue == true) {
+                                        let currentFileIndex = daex.indexFirst(configData[2].layoutOptions[0].Layout, {
+                                            'label': namelayout
+                                        });
+                                        // console.log('currentFileIndex',currentFileIndex)
+                                        configData[2].layoutOptions[0].Layout[currentFileIndex].partialsList = result;
+                                        configData[2].layoutOptions[0].Layout[currentFileIndex].defaultList = DefaultParams; //here default are having .partial as extension
+                                        // this.saveConfigFile(folderUrl);
+
+                                        // } else {
+                                        //   configData[2].layoutOptions[0].Layout.push(temp);
+
+                                        //   // this.saveConfigFile(folderUrl);
+                                        // }
+                                    }
+                                    // console.log('configData',configData)
+                                    // this.saveConfigFile(this.repoName, configData);
+
+
+                                }
+
+                            }
+
+                        }
+                         this.settings=configData
+                        await this.saveConfigFile(this.repoName, configData);
+                        await this.saveProjectSettings();
+                        await this.init();
+                        this.$emit('updateProjectName');
+                    })
+                    .catch((e) => {
+                        this.refreshPluginsLoading = false;
+                        this.fullscreenLoading = false;
+                        let dataMessage = '';
+                        if (e.message != undefined) {
+                            dataMessage = e.message
+                        } else if (e.response.data.message != undefined) {
+                            dataMessage = e.response.data.message
+                        } else {
+                            dataMessage = "Please try again! Some error occured."
+                        }
+                        this.$confirm(dataMessage, 'Error', {
+                            confirmButtonText: 'logout',
+                            cancelButtonText: 'reload',
+                            type: 'error',
+                            center: true
+                        }).then(() => {
+                            localStorage.removeItem('current_sub_id');
+                            this.$session.remove('username');
+                            let location = psl.parse(window.location.hostname)
+                            location = location.domain === null ? location.input : location.domain
+                            Cookies.remove('auth_token', {
+                                domain: location
+                            });
+                            Cookies.remove('email', {
+                                domain: location
+                            });
+                            Cookies.remove('userDetailId', {
+                                domain: location
+                            });
+                            Cookies.remove('subscriptionId', {
+                                domain: location
+                            });
+                            this.isLoggedIn = false;
+                            // this.$router.push('/login');
+                            window.location = '/login';
+                        }).catch(() => {
+                            location.reload()
+                        });
+                        console.log(e)
+                    });
+            })
+            .catch((e) => {
+                let dataMessage = '';
+                if (e.message != undefined) {
+                    dataMessage = e.message
+                } else if (e.response.data.message != undefined) {
+                    dataMessage = e.response.data.message
+                } else {
+                    dataMessage = "Please try again! Some error occured."
                 }
-
-                this.settings[2].layoutOptions[0][directoryListing[partialsFolderIndex].children[i].name].push(newFtpPartial);
-
-                let refreshIndexOfParentInTreeData = _.findIndex(this.pluginsTreedata, function(o) {
-                  return o.label == directoryListing[partialsFolderIndex].children[i].name;
+                this.$confirm(dataMessage, 'Error', {
+                    confirmButtonText: 'logout',
+                    cancelButtonText: 'reload',
+                    type: 'error',
+                    center: true
+                }).then(() => {
+                    localStorage.removeItem('current_sub_id');
+                    this.$session.remove('username');
+                    let location = psl.parse(window.location.hostname)
+                    location = location.domain === null ? location.input : location.domain
+                    Cookies.remove('auth_token', {
+                        domain: location
+                    });
+                    Cookies.remove('email', {
+                        domain: location
+                    });
+                    Cookies.remove('userDetailId', {
+                        domain: location
+                    });
+                    Cookies.remove('subscriptionId', {
+                        domain: location
+                    });
+                    this.isLoggedIn = false;
+                    // this.$router.push('/login');
+                    window.location = '/login';
+                }).catch(() => {
+                    location.reload()
                 });
-
-                let refreshPluginsChildObject = {
-                  children: [],
-                  label: fileName,
-                  isActive: true
-                };
-                this.pluginsTreedata[refreshIndexOfParentInTreeData].children.push(refreshPluginsChildObject);
-              }
-            }
-          }
-
-          // For Pages
-          let pagesFolderIndex = _.findIndex(directoryListing, function(o) {
-            return o.name == 'Pages';
-          });
-
-          for (var i = 0; i < directoryListing[pagesFolderIndex].children.length; i++) {
-            let pageNameIndex = _.findIndex(this.settings[1].pageSettings, function(o) {
-              return o.PageName == directoryListing[pagesFolderIndex].children[i].name;
-            });
-
-            if (pageNameIndex > -1) {
-              //console.log('Page already registered: ', directoryListing[pagesFolderIndex].children[i].name);
-            } else {
-
-              let notRegisteredPageSettings = {
-                "PageName": directoryListing[pagesFolderIndex].children[i].name,
-                "PageSEOTitle": "",
-                "PageSEOKeywords": "",
-                "PageSEODescription": "",
-                "PageLayout": "default",
-                "partials": [{
-                  "Header": "default"
-                }, {
-                  "Footer": "default"
-                }],
-                "PageCss": [],
-                "PageExternalCss": [],
-                "PageExternalJs": [],
-                "PageMetaInfo": [],
-                "PageMetacharset": '',
-                "ProjectScripts": [],
-                "ProjectStyles": []
-
-              };
-
-              this.settings[1].pageSettings.push(notRegisteredPageSettings);
-            }
-          }
-
-          await this.saveProjectSettings();
-          await this.init();
-        })
-        .catch((e) => {
-          this.$message({
-            showClose: true,
-            message: 'Failed to refresh! Please try again.',
-            type: 'error'
-          });
-          this.refreshPluginsLoading = false;
-          this.fullscreenLoading = false;
-          console.log(e)
-        });
-
-      var getFromBetween = {
-        results: [],
-        string: "",
-        getFromBetween: function(sub1, sub2) {
-          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-          var SP = this.string.indexOf(sub1) + sub1.length;
-          var string1 = this.string.substr(0, SP);
-          var string2 = this.string.substr(SP);
-          var TP = string1.length + string2.indexOf(sub2);
-          return this.string.substring(SP, TP);
-        },
-        removeFromBetween: function(sub1, sub2) {
-          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
-          var removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
-          this.string = this.string.replace(removal, "");
-        },
-        getAllResults: function(sub1, sub2) {
-          if (this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
-          var result = this.getFromBetween(sub1, sub2);
-          this.results.push(result);
-          this.removeFromBetween(sub1, sub2);
-          if (this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
-            this.getAllResults(sub1, sub2);
-          } else return;
-        },
-        get: function(string, sub1, sub2) {
-          this.results = [];
-          this.string = string;
-          this.getAllResults(sub1, sub2);
-          return this.results;
-        }
-      };
-      //console.log('now running loop for saving every file in page and in partial')
-      this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-      let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
-
-      let splitUrl = url.split('/');
-
-      let websiteName = splitUrl[6];
-
-
-      // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
-
-      var configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName).catch(err => { console.log(err); this.fullscreenLoading = false }).catch((e)=>{console.log(e)});
-
-      configData = JSON.parse(JSON.stringify(configData.data.configData))
-      for (let q = 0; q < Object.keys(configData[2].layoutOptions[0]).length; q++) {
-        //// console.log('partial:',Object.keys(configData[2].layoutOptions[0])[q])
-        if (Object.keys(configData[2].layoutOptions[0])[q] != ('Layout')) {
-          if (Object.keys(configData[2].layoutOptions[0])[q] != ('Menu')) {
-            for (let p = 0; p < configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]].length; p++) {
-              var namepartial = configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[q]][p].value
-                //// console.log('name:',namepartial)
-              var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Partials/' + Object.keys(configData[2].layoutOptions[0])[q] + '/' + namepartial + '.partial').catch(err => { console.log(err); this.fullscreenLoading = false });
-              //// console.log('content of partial:',contentpage.data)
-              //// console.log("inside !=pages directory")
-              var content = ''
-              content = contentpage.data;
-              var result = (getFromBetween.get(content, "{{>", "}}"));
-              var DefaultParams = [];
-              if (result.length > 0) {
-                var resultParam = result
-                for (let i = 0; i < resultParam.length; i++) {
-                  var temp;
-                  temp = resultParam[i].trim()
-                  result[i] = result[i].trim()
-                  result[i] = result[i].replace(/&nbsp;/g, ' ').trim()
-                  temp = temp.replace(/&nbsp;/g, ' ')
-                  temp = temp.replace(/\s+/g, ' ');
-                  temp = temp.split(' ')
-                  for (let j = 0; j < temp.length; j++) {
-                    if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                      if (temp[j + 1] != undefined) {
-                        result[i] = temp[0];
-                        if (temp[j + 1].indexOf('.') > -1) {
-                          let x = temp[j + 1]
-                          x = temp[j + 1].split(/'/)[1];
-                          let obj = {}
-                          obj[temp[0]] = x
-                          DefaultParams.push(obj)
-                          break;
-                        }
-                      } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                        result[i] = temp[0];
-                        if (temp[j]) {
-                          let x = temp[j]
-                          x = temp[j].split(/'/)[1];
-                          let obj = {}
-                          obj[temp[0]] = x
-                          DefaultParams.push(obj)
-                          break;
-                        }
-                      }
-                    }
-                  }
-                }
-                let totalPartial = content.match(/{{>/g).length;
-
-                let namefile = namepartial
-                let namefolder = Object.keys(configData[2].layoutOptions[0])[q];
-                let temp = {
-                  value: namefile,
-                  label: namefile,
-                  partialsList: result,
-                  defaultList: DefaultParams
-                }
-                let checkValue = false;
-                for (var i = 0; i < Object.keys(configData[2].layoutOptions[0]).length; i++) {
-                  var obj = Object.keys(configData[2].layoutOptions[0])[i];
-                  if ((obj) == namefolder) {
-                    checkValue = true;
-                  }
-                }
-                if (checkValue == true) {
-                  let checkFileNamevalue = false;
-                  for (let j = 0; j < configData[2].layoutOptions[0][namefolder].length; j++) {
-                    if (configData[2].layoutOptions[0][namefolder][j].label == namefile) {
-                      checkFileNamevalue = true
-                      configData[2].layoutOptions[0][namefolder][j].partialsList = [];
-                      configData[2].layoutOptions[0][namefolder][j].defaultList = [];
-                      configData[2].layoutOptions[0][namefolder][j].partialsList = result;
-                      configData[2].layoutOptions[0][namefolder][j].defaultList = DefaultParams;
-
-                    }
-                  }
-                  if (checkFileNamevalue != true) {
-
-                    configData[2].layoutOptions[0][namefolder].push(temp)
-                  }
-                  this.saveConfigFile(this.repoName, configData);
-                } else {
-                  //console.log('file doesnt exists');
-                }
-              } else {
-                let namefile = namepartial;
-                let namefolder = Object.keys(configData[2].layoutOptions[0])[q];
-                let temp = {
-                  value: namefile,
-                  label: namefile,
-                }
-                let checkValue = false;
-                for (var i = 0; i < Object.keys(configData[2].layoutOptions[0]).length; i++) {
-                  var obj = Object.keys(configData[2].layoutOptions[0])[i];
-                  if ((obj) == namefolder) {
-                    checkValue = true;
-                  }
-                }
-                if (checkValue == true) {
-                  let checkFileNamevalue = false;
-                  for (let j = 0; j < configData[2].layoutOptions[0][namefolder].length; j++) {
-                    if (configData[2].layoutOptions[0][namefolder][j].label == namefile) {
-                      checkFileNamevalue = true
-                      delete configData[2].layoutOptions[0][namefolder][j].partialsList;
-                      delete configData[2].layoutOptions[0][namefolder][j].defaultList;
-                    }
-                  }
-                  if (checkFileNamevalue != true) {
-
-                    configData[2].layoutOptions[0][namefolder].push(temp)
-                  }
-                  this.saveConfigFile(this.repoName, configData);
-                } else {
-                  //console.log('file doesnt exists');
-                }
-              }
-            }
-          }
-
-        }
-      }
-      for (let r = 0; r < configData[1].pageSettings.length; r++) {
-        var namepage = configData[1].pageSettings[r].PageName
-        var contentpage = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + this.userDetailId + '/' + this.repoName + '/Pages/' + namepage).catch(err => { console.log(err); this.fullscreenLoading = false });
-        var content1 = ''
-        let name = namepage;
-        name = name.split('.')[0]
-        content1 = contentpage.data
-        var result1 = [];
-        result1 = (getFromBetween.get(content1, "{{>", "}}"));
-        var DefaultParams = [];
-        if (result1.length > 0) {
-          var resultParam = result1
-
-          for (let i = 0; i < resultParam.length; i++) {
-            var temp;
-            temp = resultParam[i].trim()
-            result1[i] = result1[i].trim()
-            result1[i] = result1[i].replace(/&nbsp;/g, ' ').trim()
-            temp = temp.replace(/&nbsp;/g, ' ')
-            temp = temp.replace(/\s+/g, ' ');
-            temp = temp.trim();
-            temp = temp.split(' ')
-            for (let j = 0; j < temp.length; j++) {
-              if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-                if (temp[j + 1] != undefined) {
-                  result1[i] = temp[0];
-                  if (temp[j + 1].indexOf('.') > -1) {
-                    let x = temp[j + 1]
-                    x = temp[j + 1].split(/'/)[1];
-                    let obj = {}
-                    obj[temp[0]] = x
-                    DefaultParams.push(obj)
-                    break;
-                  }
-                } else if ((temp[j].indexOf('.') > -1) && (temp[j + 1] == undefined)) {
-                  result1[i] = temp[0];
-                  if (temp[j]) {
-                    let x = temp[j]
-                    x = temp[j].split(/'/)[1];
-                    let obj = {}
-                    obj[temp[0]] = x
-                    DefaultParams.push(obj)
-                    break;
-                  }
-                }
-              }
-            }
-          }
-
-          for (let i = 0; i < configData[1].pageSettings.length; i++) {
-            let temp = configData[1].pageSettings[i].PageName
-            temp = temp.split('.')[0]
-            if (name == temp) {
-              var partials = configData[1].pageSettings[i].partials
-              for (let k = 0; k < result1.length; k++) {
-                let checkpartial = false
-                for (let l = 0; l < partials.length; l++) {
-                  if (Object.keys(partials[l])[0] == result1[k]) {
-                    checkpartial = true //partial found in page setting
-                    var temp1 = DefaultParams[k][result1[k]]
-                    var temp2 = partials[l][result1[k]]
-                    if (temp1.split('.')[0] == temp2.split('.')[0]) {
-                      for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
-
-                        if (configData[2].layoutOptions[0][result1[k]][z].value == DefaultParams[k][result1[k]].split('.')[0]) {
-                          if (configData[2].layoutOptions[0][result1[k]][z].defaultList != undefined) {
-                            var defaultListtemp = configData[2].layoutOptions[0][result1[k]][z].defaultList
-                            this.recursivecall(name, partials, defaultListtemp, configData)
-                          }
-                        }
-                      }
-                      break;
-                    } else {
-                      checkpartial = false
-                    }
-                  }
-
-                }
-                if (checkpartial != true) {
-                  var obj = {}
-                  obj[result1[k]] = DefaultParams[k][result1[k]].split('.')[0]
-                  for (let z = 0; z < configData[2].layoutOptions[0][result1[k]].length; z++) {
-                    if (configData[2].layoutOptions[0][result1[k]][z].value == DefaultParams[k][result1[k]].split('.')[0]) {
-                      if (configData[2].layoutOptions[0][result1[k]][z].defaultList != undefined) {
-                        var defaultListtemp = configData[2].layoutOptions[0][result1[k]][z].defaultList
-                        this.recursivecall(name, partials, defaultListtemp, configData)
-                      }
-                    }
-                  }
-                  configData[1].pageSettings[i].partials.push(obj);
-                  r = r - 1;
-                  break;
-                }
-              }
-            } else if (name != temp) {
-              //// console.log("file not found in config file")
-            }
-          }
-        }
-        this.saveConfigFile(this.repoName, configData);
-      }
-      for (let p = 0; p < Object.keys(configData[2].layoutOptions[0]).length; p++) {
-          if (Object.keys(configData[2].layoutOptions[0])[p] == ('Layout')) {
-              for (let y = 0; y < configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[p]].length; y++) {
-                  var namelayout = configData[2].layoutOptions[0][Object.keys(configData[2].layoutOptions[0])[p]][y].value
-                  // console.log('namelayout:', namelayout)
-                  if (namelayout != 'Blank') {
-                      var content = await axios.get(config.baseURL + '/flows-dir-listing/0?path=/var/www/html/websites/' + Cookies.get('userDetailId') + '/' + this.repoName + '/Layout/' + namelayout + '.layout').catch(err => {
-                          console.log(err);
-                          this.fullscreenLoading = false
-                      });
-                      content = content.data
-                      // console.log('content', content)
-                      var result = (getFromBetween.get(content, "{{>", "}}"));
-                      var changeresult = JSON.parse(JSON.stringify(result))
-                      // console.log("changeresult:",changeresult)
-
-                      for (let s = 0; s < changeresult.length; s++) {
-                          content = content.replace(changeresult[s], changeresult[s].replace(/&nbsp;/g, '').replace(/\"\s+\b/g, '"').replace(/\'\s+\b/g, "'").replace(/\b\s+\'/g, "'").replace(/\b\s+\"/g, '"').replace(/\s+/g, " ").replace(/\s*$/g, "").replace(/\s*=\s*/g, '='))
-                      }
-                      await axios.post(config.baseURL + '/flows-dir-listing', {
-                          filename: this.folderUrl + '/Layout/' + namelayout + '.layout',
-                          text: content,
-                          type: 'file'
-                      })
-                      var result = (getFromBetween.get(content, "{{>", "}}"));
-
-                      var DefaultParams = [];
-                      if (result.length > 0) {
-                          var resultParam = result
-                          for (let i = 0; i < resultParam.length; i++) {
-                            // console.log(i)
-                              var temp;
-                              temp = resultParam[i].trim()
-                              result[i] = result[i].trim()
-                              temp = temp.split(' ')
-                              //// console.log('temp:',temp)
-                              for (let j = 0; j < temp.length; j++) {
-                                  temp[j] = temp[j].trim();
-                                  // console.log('temp',temp[j])
-                                  if ((temp[j].indexOf('id') != -1 || temp[j].indexOf('=') != -1)) {
-
-                                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf("'") > -1) {
-                                          result[i] = temp[0];
-                                          if (temp[j]) {
-                                              let x = temp[j]
-                                              x = temp[j].split("'")[1] + '.partial';
-                                              let obj = {}
-                                              obj[temp[0]] = x
-                                              DefaultParams.push(obj)
-                                              break;
-                                          }
-                                      }
-                                      if ((temp[j].indexOf('=') > -1) && (temp[j + 1] == undefined) && temp[j].indexOf('"') > -1) {
-                                          result[i] = temp[0];
-                                          if (temp[j]) {
-                                              let x = temp[j]
-                                              x = temp[j].split('"')[1] + '.partial';
-                                              let obj = {}
-                                              obj[temp[0]] = x
-                                              DefaultParams.push(obj)
-                                              break;
-                                          }
-                                      }
-                                  } else {
-                                      // console.log('error while finding id in layout');
-                                  }
-                              }
-                          }
-
-
-                          //here we are adding new partial added inside layout to all pages who uses this following layout.
-                          // console.log('DefaultParams',DefaultParams)
-                          for (let i = 0; i < result.length; i++) {
-                            // console.log('result',result[i])
-                              let checktvalue = false;
-                              for (let k = 0; k < DefaultParams.length; k++) {
-                                // console.log('DefaultParams',DefaultParams[k])
-                                  if (result[i] == Object.keys(DefaultParams[k])[0]) {
-                                      for (let j = 0; j < configData[1].pageSettings.length; j++) {
-                                          if (configData[1].pageSettings[j].PageLayout == name) {
-                                              let checkdefaultvalue = false;
-                                              for (let x = 0; x < configData[1].pageSettings[j].partials.length; x++) {
-                                                  if (Object.keys(configData[1].pageSettings[j].partials[x])[0] == result[i]) {
-
-                                                      var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
-                                                      defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
-                                                      configData[1].pageSettings[j].partials[x] = defaulttemp
-                                                      checkdefaultvalue = true;
-                                                  }
-                                              }
-                                              if (checkdefaultvalue != true) {
-                                                  var defaulttemp = JSON.parse(JSON.stringify(DefaultParams[k]))
-                                                  defaulttemp[Object.keys(defaulttemp)[0]] = defaulttemp[Object.keys(defaulttemp)[0]].split('.')[0]
-                                                  //// console.log('push for DefaultParams:')
-                                                  configData[1].pageSettings[j].partials.push(defaulttemp)
-                                              }
-                                          }
-                                      }
-                                      checktvalue = true
-                                  }
-                              }
-                              if (checktvalue != true) {
-                                  // console.log('!true')
-                                  for (let j = 0; j < configData[1].pageSettings.length; j++) {
-                                      if (configData[1].pageSettings[j].PageLayout == namelayout) {
-                                          let doublecheckvalue = false
-                                          for (let x = 0; x < configData[1].pageSettings[j].partials.length; x++) {
-                                              if (Object.keys(configData[1].pageSettings[j].partials[x])[0] == result[i]) {
-                                                  var defaulttemp = {}
-                                                  defaulttemp[result[i]] = 'default'
-                                                  doublecheckvalue = true
-                                                  configData[1].pageSettings[j].partials[x] = defaulttemp
-                                              }
-                                          }
-                                          if (doublecheckvalue != true) {
-                                              var defaulttemp = {}
-                                              defaulttemp[result[i]] = 'default'
-                                              configData[1].pageSettings[j].partials.push(defaulttemp)
-                                          }
-                                      }
-                                  }
-
-                              }
-                          }
-                      }
-                    //   let temp = {
-                    //   value: namelayout,
-                    //   label: namelayout,
-                    //   partialsList: result,
-                    //   defaultList: DefaultParams
-
-                    // }
-                    //Here we are creating new partial which are not present in our partial folder.
-                    // let checkValue = false;
-                    // for (var i = 0; i < configData[2].layoutOptions[0].Layout.length; i++) {
-                    //   var obj = configData[2].layoutOptions[0].Layout[i];
-                    //   if ((obj.label) == name) {
-                    //     checkValue = true;
-                    //   }
-                    // }
-                    // if (checkValue == true) {
-                      let currentFileIndex = daex.indexFirst(configData[2].layoutOptions[0].Layout, {
-                        'label': namelayout
-                      });
-                      // console.log('currentFileIndex',currentFileIndex)
-                      configData[2].layoutOptions[0].Layout[currentFileIndex].partialsList = result;
-                      configData[2].layoutOptions[0].Layout[currentFileIndex].defaultList = DefaultParams; //here default are having .partial as extension
-                      // this.saveConfigFile(folderUrl);
-
-                    // } else {
-                    //   configData[2].layoutOptions[0].Layout.push(temp);
-
-                    //   // this.saveConfigFile(folderUrl);
-                    // }
-                  }
-                  // console.log('configData',configData)
-                  this.saveConfigFile(this.repoName, configData);
-
-
-              }
-
-          }
-
-      }
-      this.fullscreenLoading = false;
-      await this.init();
-      this.$emit('updateProjectName');
-      // window.location.reload();
+            })
+        
+        this.fullscreenLoading = false;
+        // window.location.reload();
     },
 
     revertToTemplate(template){
@@ -2851,14 +3257,48 @@ export default {
             templateName : template
         })
         .then(async (res) => {
-
-          console.log(res)
           // await this.refreshPlugins();
 
           //Copy data of project_settings.json into project-details.json
-
+          axios.get(config.userDetail, {
+            headers: {
+              'Authorization' : Cookies.get('auth_token')
+            }   
+          })
+          .then(async (res) => {
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/project_settings.json').catch((err) => { console.log(err); this.fullscreenLoading = false });
+
+          var projectSettingsFileData = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/'+process.env.domainkey+'.project_settings.json').catch((e) => { 
+             let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+                confirmButtonText: 'logout',
+                cancelButtonText: 'reload',
+                type: 'error',
+                center: true
+              }).then(() => {
+                localStorage.removeItem('current_sub_id');
+                this.$session.remove('username');
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+                Cookies.remove('auth_token' ,{domain: location});
+                Cookies.remove('email' ,{domain: location});
+                Cookies.remove('userDetailId' ,{domain: location}); 
+                Cookies.remove('subscriptionId' ,{domain: location}); 
+                this.isLoggedIn = false;
+                // this.$router.push('/login');
+                window.location = '/login';
+              }).catch(() => {
+                location.reload()
+              });
+             this.fullscreenLoading = false 
+           });
 
           // console.log('projectSettingsFileData', projectSettingsFileData);
           let data = JSON.parse(projectSettingsFileData.data);
@@ -2880,10 +3320,118 @@ export default {
           //   offset: 100
           // });
 
-          this.fullscreenLoading = false;
+          this.fullscreenLoading = true;
 
           this.refreshPlugins();
+          })
+          .catch((e) => {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message
+            } else if (e.response.data.message != undefined) {
+                dataMessage = e.response.data.message
+            } else {
+                dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+          })
+        })
+        .catch((e) => {
+          this.$message({
+            showClose: true,
+            message: 'Failed! Please try again.',
+            type: 'error'
+          });
+          console.log(e)
+        })
 
+      }).catch((err) => {
+        //console.log('Some error occured.', err);
+      });
+    },
+
+    revertToCMSTemplate(template){
+      this.$confirm('This will permanatly overwrite current Pages, Partials, Layouts and Website assets. Do you want to continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async () => {
+
+        this.fullscreenLoading = true;
+        this.refreshDisabled = true;
+
+        // Call service to copy files for selected template
+        await axios.post( config.baseURL + '/copy-website', {
+            projectPath : this.userDetailId + '/' + this.repoName,
+            templateName : template
+        })
+        .then(async (res) => {
+          // await this.refreshPlugins();
+
+          //Copy data of project_settings.json into project-details.json
+          axios.get(config.userDetail, {
+            headers: {
+              'Authorization' : Cookies.get('auth_token')
+            }   
+          })
+          .then(async (res) => {
+            this.saveProjectSettings();
+
+            this.refreshDisabled = false;
+
+            this.fullscreenLoading = true;
+
+            this.refreshPlugins();
+          })
+          .catch((e) => {
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message
+            } else if (e.response.data.message != undefined) {
+                dataMessage = e.response.data.message
+            } else {
+                dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+                  localStorage.removeItem('current_sub_id');
+                  this.$session.remove('username');
+                  let location = psl.parse(window.location.hostname)
+                  location = location.domain === null ? location.input : location.domain
+                  Cookies.remove('auth_token' ,{domain: location});
+                  Cookies.remove('email' ,{domain: location});
+                  Cookies.remove('userDetailId' ,{domain: location}); 
+                  Cookies.remove('subscriptionId' ,{domain: location}); 
+                  this.isLoggedIn = false;
+                  // this.$router.push('/login');
+                  window.location = '/login';
+              }).catch(() => {
+                  location.reload()
+              });
+          })
         })
         .catch((e) => {
           this.$message({
@@ -2957,27 +3505,93 @@ export default {
     async saveProjectSettings() {
       if (this.form.websitename == this.configData.data.websiteName) {
       } else {
-        var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
-        await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
-        .then((res)=>{
-          let checkdetail = true
-        for (let i = 0; i < res.data.data.length; i++) {
-          if (this.form.websitename == res.data.data[i].websiteName) {
-            checkdetail = false
-          }
-        }
-        if (checkdetail != false) {
-        } else {
-          this.$swal({
-            title:'Save Aborted.',
-            text: 'Website with "'+this.form.websitename+'" already exists!!!!',
-            type: 'warning',
-          })
-          this.form.websitename = this.configData.data.websiteName;
-          return
-        }
+        await axios.get(config.userDetail, {
+          headers: {
+            'Authorization' : Cookies.get('auth_token')
+          }   
         })
-        .catch((err) => { console.log(err);});
+        .then(async (res) => {
+          var userid = this.folderUrl.split('/')[this.folderUrl.split('/').length - 2]
+          await axios.get(config.baseURL + '/project-configuration?userId=' + userid)
+          .then((res)=>{
+            let checkdetail = true
+            for (let i = 0; i < res.data.data.length; i++) {
+              if (this.form.websitename == res.data.data[i].websiteName) {
+                checkdetail = false
+              }
+            }
+            if (checkdetail != false) {
+            } else {
+              this.$swal({
+                title:'Save Aborted.',
+                text: 'Website with "'+this.form.websitename+'" already exists!!!!',
+                type: 'warning',
+              })
+              this.form.websitename = this.configData.data.websiteName;
+              return
+            }
+          })
+          .catch((err) => { 
+            let dataMessage = '';
+              if (e.message != undefined) {
+                  dataMessage = e.message              
+              } else if (e.response.data.message != undefined) {
+                dataMessage = e.response.data.message
+              } else{
+                dataMessage = "Please try again! Some error occured."
+              }
+              this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+              localStorage.removeItem('current_sub_id');
+              this.$session.remove('username');
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.remove('auth_token' ,{domain: location});
+              Cookies.remove('email' ,{domain: location});
+              Cookies.remove('userDetailId' ,{domain: location}); 
+              Cookies.remove('subscriptionId' ,{domain: location}); 
+              this.isLoggedIn = false;
+              // this.$router.push('/login');
+              window.location = '/login';
+            }).catch(() => {
+              location.reload()
+            });
+          });
+        })
+        .catch((e) => {
+          let dataMessage = '';
+          if (e.message != undefined) {
+              dataMessage = e.message
+          } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+          } else {
+              dataMessage = "Please try again! Some error occured."
+          }
+          this.$confirm(dataMessage, 'Error', {
+            confirmButtonText: 'logout',
+            cancelButtonText: 'reload',
+            type: 'error',
+            center: true
+          }).then(() => {
+                localStorage.removeItem('current_sub_id');
+                this.$session.remove('username');
+                let location = psl.parse(window.location.hostname)
+                location = location.domain === null ? location.input : location.domain
+                Cookies.remove('auth_token' ,{domain: location});
+                Cookies.remove('email' ,{domain: location});
+                Cookies.remove('userDetailId' ,{domain: location}); 
+                Cookies.remove('subscriptionId' ,{domain: location}); 
+                this.isLoggedIn = false;
+                // this.$router.push('/login');
+                window.location = '/login';
+            }).catch(() => {
+                location.reload()
+            });
+        })
         
       }
 
@@ -3055,6 +3669,7 @@ export default {
         "CrmSettingId":this.form.crmid
       }, {
         "CloudinaryDetails": this.cloudinaryDetails,
+        "TaxCloud": this.taxcloud,
         "AssetImages": this.assetsImages,
         "GlobalVariables": this.globalVariables,
         "GlobalUrlVariables": this.urlVariables,
@@ -3070,7 +3685,37 @@ export default {
         // "AccountPaymentGateways": this.accountpaymentgateway
       }];
       this.settings[1].projectSettings = ProjectSettings;
-      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => { console.log(err); this.fullscreenLoading = false });
+
+      let rethinkdbCheck = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((e) => { this.fullscreenLoading = false 
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });
+      });
       if (rethinkdbCheck.data) {
 
         // update existing data
@@ -3080,7 +3725,7 @@ export default {
             websiteName: this.form.websitename
           })
           .then(async(res) => {
-            this.$message({
+            this.$notify({
               showClose: true,
               message: 'Successfully Saved.',
               type: 'success'
@@ -3110,7 +3755,7 @@ export default {
             .then((res) => {
             })
             .catch((e) => {
-              this.$message({
+              this.$notify({
                 showClose: true,
                 message: 'Failed saving project details! Please try again.',
                 type: 'error'
@@ -3120,7 +3765,7 @@ export default {
            await this.init();
           this.$emit('updateProjectName');
       } else {
-        this.$message({
+        this.$notify({
           showClose: true,
           message: 'Data Error.',
           type: 'error'
@@ -3168,7 +3813,7 @@ export default {
               })
               .then((response) => {
                   console.log(response);
-                  this.$message({
+                  this.$notify({
                     message: 'Rollbacked to revision "' + this.branchesData[index].branchName + '" ',
                     type: 'success'
                   });
@@ -3195,9 +3840,194 @@ export default {
       });
     },
 
-    async commitProject(commitForm) {
+    async publishcommitProject(commitMessage,branchName){
+      let self = this;
 
-      this.$refs[commitForm].validate(async (valid) => {
+          // Check if branch exist
+          let indexOfBranchName = _.findIndex(this.branchesData, function(o) { return o.branchName == branchName; });
+
+          // If branchName is different
+          if(indexOfBranchName == -1){
+            // If .git was successfull
+            if( this.settings[0].repoSettings[0].RepositoryId != undefined){
+
+              this.isCommitLoading = true;
+              this.$store.state.currentIndex = 0;
+
+              // Push repository changes
+              axios.post(config.baseURL + '/gitlab-add-repo', {
+                branchName: branchName,
+                commitMessage: commitMessage,
+                repoName: this.repoName,
+                userDetailId: Cookies.get('userDetailId')
+              }).then(async response => {
+                // console.log(response);
+                if(response.data[0].code == 444){
+                  this.$notify({
+                    message: response.data[0].message,
+                    type: 'warning'
+                  });
+                  this.isCommitLoading = false;
+                  // this.$refs[commitForm].resetFields();
+                } else {
+                  // console.log('Response after branch commit : ', response);
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId=' + this.newRepoId, {
+                    }).then(async response => {
+
+                      
+
+                      this.commitsData = [];
+                      for(var i in response.data){
+                        this.commitsData.push({
+                          commitDate: response.data[i].created_at,
+                          commitSHA: response.data[i].id,
+                          commitsMessage: response.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch = branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log("error : ", error);
+                      this.fullscreenLoading = false;
+                    });
+                     // this.$refs[commitForm].resetFields();
+                    // this.commitForm.commitMessage = '';
+                    // this.commitForm.branchName = '';
+                    //console.log(response.data);
+                   this.$notify({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    await this.init();
+                  }
+                }
+                
+              }).catch(error => {
+                console.log("error : ", error);
+              })
+            } else {
+              // If first commit was unsuccessfull
+
+              // add new repo to git
+              let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.repoName + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
+
+              if(!(gitResponse.data.statusCode)){
+                this.isCommitLoading = true;
+                this.$store.state.currentIndex = 0;
+
+                // Push repository changes
+                axios.post(config.baseURL + '/gitlab-add-repo', {
+                  branchName:branchName,
+                  commitMessage: commitMessage,
+                  repoName: this.repoName,
+                  userDetailId: Cookies.get('userDetailId')
+                }).then(async response => {
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
+                    }).then(async resp => {
+                      this.commitsData = [];
+                      for(var i in resp.data){
+                        this.commitsData.push({
+                          commitDate: resp.data[i].created_at,
+                          commitSHA: resp.data[i].id,
+                          commitsMessage: resp.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch =branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log(error);
+                      this.fullscreenLoading = false;
+                    });
+
+                    commitMessage = '';
+                    branchName = '';
+
+                    //console.log(response.data);
+                    this.$notify({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    this.init();
+                  }
+                }).catch(error => {
+                  //console.log("Some error occured: ", error);
+                })
+              } else {
+                console.log('Error occured while commiting your changes. ', gitResponse);
+              }
+            }
+          } else {
+            console.log('Branch already exist.');
+            this.$swal({
+              text: 'Branch with name "' + branchName + '" already exists! Please try different name.',
+              type: 'warning',
+            })
+            return false;
+          }
+    },
+
+
+    async commitProject(commitForm) {
+      axios.get(config.baseURL + '/rethinkservicecheck')
+      .then(async response => {
+        // console.log('commitForm:',this.$refs[commitForm])
+        this.$refs[commitForm].validate(async (valid) => {
         if (valid) {
 
           let self = this;
@@ -3220,63 +4050,75 @@ export default {
                 repoName: this.repoName,
                 userDetailId: Cookies.get('userDetailId')
               }).then(async response => {
-
-                console.log('Response after bracnh commit : ', response);
-
-                if(response.status == 200 || response.status == 201){
-
-                  await axios.get( config.baseURL + '/commit-service?projectId='+this.newRepoId+'&privateToken='+Cookies.get('auth_token'), {
-                  }).then(async response => {
-
-                    this.commitsData = [];
-                    for(var i in response.data){
-                      this.commitsData.push({
-                        commitDate: response.data[i].created_at,
-                        commitSHA: response.data[i].id,
-                        commitsMessage: response.data[i].title,
-                      });
-                    }
-
-                    // let lastCommit = (response.data.length) - 1;
-
-                    // console.log('Last Commit SHA: ', response.data[lastCommit].id);
-
-                    // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
-                    // this.currentSha = response.data[lastCommit].id;
-
-                    this.settings[0].repoSettings[0].CurrentBranch = this.commitForm.branchName;
-
-                    // Create entry in configdata-history table
-                    await axios.post(config.baseURL + '/configdata-history', {
-                        configData: this.settings,
-                        currentBranch: this.commitForm.branchName,
-                        commitSHA: this.currentSha,
-                        websiteName: this.repoName,
-                        userId: Cookies.get('userDetailId')
-                    })
-                    .then(function (resp) {
-                        // console.log('Config revision saved in configdata-history. ', resp);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-
-                    this.saveProjectSettings();
-                  }).catch(error => {
-                    console.log("error : ", error);
-                    this.fullscreenLoading = false;
-                  });
-
-                  this.commitForm.commitMessage = '';
-                  this.commitForm.branchName = '';
-                  //console.log(response.data);
-                  this.$message({
-                    message: 'New revision commited. ',
-                    type: 'success'
+                console.log(response);
+                if(response.data[0].code == 444){
+                  this.$notify({
+                    message: response.data[0].message,
+                    type: 'warning'
                   });
                   this.isCommitLoading = false;
-                  await this.init();
+                  this.$refs[commitForm].resetFields();
+                } else {
+                  // console.log('Response after branch commit : ', response);
+
+                  if(response.status == 200 || response.status == 201){
+
+                    await axios.get( config.baseURL + '/commit-service?projectId=' + this.newRepoId, {
+                    }).then(async response => {
+
+                      
+
+                      this.commitsData = [];
+                      for(var i in response.data){
+                        this.commitsData.push({
+                          commitDate: response.data[i].created_at,
+                          commitSHA: response.data[i].id,
+                          commitsMessage: response.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch = this.commitForm.branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: this.commitForm.branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          // console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log("error : ", error);
+                      this.fullscreenLoading = false;
+                    });
+                     this.$refs[commitForm].resetFields();
+                    // this.commitForm.commitMessage = '';
+                    // this.commitForm.branchName = '';
+                    //console.log(response.data);
+                   this.$notify({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    await this.init();
+                  }
                 }
+                
               }).catch(error => {
                 console.log("error : ", error);
               })
@@ -3284,7 +4126,7 @@ export default {
               // If first commit was unsuccessfull
 
               // add new repo to git
-              let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.nameOfRepo + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
+              let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.repoName + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
               if(!(gitResponse.data.statusCode)){
                 this.isCommitLoading = true;
@@ -3345,7 +4187,7 @@ export default {
                     this.commitForm.branchName = '';
 
                     //console.log(response.data);
-                    this.$message({
+                    this.$notify({
                       message: 'New revision commited. ',
                       type: 'success'
                     });
@@ -3374,6 +4216,206 @@ export default {
         }
       });
 
+      })
+      .catch(e => {
+        console.log('e:',e)
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+          this.$confirm(dataMessage, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });
+      })
+      
+    },
+    cancelpublishjobqueue(){
+     if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+        this.$confirm('Do you wish to Cancel publishling your website !!! Continue ?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(async () => {
+
+          await axios.delete(config.baseURL+'/jobqueue?websiteid='+this.repoName).then((res)=>{
+             // this.isdisabled=false
+             // console.log('canceled called');
+             // this.$emit('updateProjectName')
+                axios.patch(config.baseURL + '/jobqueue', {
+              'Status': 'cancelled',
+              'websiteName': this.form.websitename ,
+              'websiteid': this.repoName,
+              'userId':Cookies.get('userDetailId')
+              }).catch((e) => {
+                  console.log(e)
+              })
+          }).catch((e)=>{
+            console.log(e)
+          })
+          // console.log('canceldata',canceldata.data)
+        })
+     } else {
+         this.newProjectFolderDialog = false;
+         this.fullscreenLoading = false;
+         this.$session.remove('username');
+         localStorage.removeItem('current_sub_id');
+         let location = psl.parse(window.location.hostname)
+         location = location.domain === null ? location.input : location.domain
+
+         Cookies.remove('auth_token', {
+             domain: location
+         });
+         Cookies.remove('email', {
+             domain: location
+         });
+         Cookies.remove('userDetailId', {
+             domain: location
+         });
+         Cookies.remove('subscriptionId', {
+             domain: location
+         });
+
+         this.$notify({
+             message: 'You\'re Logged Out From System. Please login again!',
+             duration: 500,
+             type: 'error',
+             onClose() {
+                 window.location = '/login'
+             }
+         });
+
+         return;
+         // this.$swal("You're Logged Out From System. Please login again!")
+         // .then((value) => {
+         //   window.location = '/login'
+         // });
+     }
+    },
+    async publishjobqueue(){
+      if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
+
+        this.$confirm('Do you wish to Publish your website: '+this.form.websitename+' ?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(async () => {
+          this.fullscreenLoading = true;
+          let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+            //Now disabling the publish button.
+            this.percent=0
+            this.textdata=''
+            //alert(this.isdisabled);
+            // this.isdisabled=true;
+
+
+            //Now calling api to copy of all folder to a temporary location.
+
+            await axios.post(config.baseURL+'/copy-jobqueue-publish-files?projectPath='+folderUrl)
+            .then(async(res)=>{
+              // console.log('Copy Successfull!!') 
+
+               let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
+                  console.log(err);
+                  this.fullscreenLoading=false;
+                  this.isdisabled=false;
+                });
+               // console.log(responseConfig.data)
+              //Now we have all necesary data to call jobqueue api
+
+              await axios.post(config.baseURL+'/jobqueue',{
+                RepojsonData:responseConfig.data,
+                userId:Cookies.get('userDetailId'),
+                websiteId:this.repoName,
+                baseURL:config.baseURL})
+              .then(async(res)=>{
+                // console.log(res)
+                if(res.data.data=='successfull'){
+                  this.textdata='Job added successfull. Please wait you are in Queue.'
+                }
+                else if(res.data.data=='failed'){
+                  // this.isdisabled=false;
+                  console.log('failed')
+                }
+                // this.$emit('updateProjectName')
+                 
+                this.fullscreenLoading=false
+                //Now we will keep listening for jobqueue completion.
+                
+                // this.isdisabled=false;
+                
+              }).catch((err)=>{
+                this.fullscreenLoading=false
+                this.isdisabled=false;
+                console.log(err);
+              })
+            })
+            .catch((err)=>{ 
+              this.isdisabled=false;
+              this.fullscreenLoading=false;
+              console.log(err)
+            })         
+    
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      } else {
+        this.newProjectFolderDialog = false;
+        this.fullscreenLoading = false;
+        this.$session.remove('username');
+        localStorage.removeItem('current_sub_id');
+        let location = psl.parse(window.location.hostname)
+        location = location.domain === null ? location.input : location.domain
+
+        Cookies.remove('auth_token', {
+          domain: location
+        });
+        Cookies.remove('email', {
+          domain: location
+        });
+        Cookies.remove('userDetailId', {
+          domain: location
+        });
+        Cookies.remove('subscriptionId', {
+          domain: location
+        });
+
+        this.$notify({
+          message: 'You\'re Logged Out From System. Please login again!',
+          duration: 500,
+          type: 'error',
+          onClose() {
+            window.location = '/login'
+          }
+        });
+
+        return;
+        // this.$swal("You're Logged Out From System. Please login again!")
+        // .then((value) => {
+        //   window.location = '/login'
+        // });
+      }
     },
 
     async publishMetalsmith(publishType) {
@@ -3400,9 +4442,38 @@ export default {
           this.fullscreenLoading = true;
 
           let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((err) => {
-            console.log(err);
+
+          let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + this.repoName).catch((e) => {
+            console.log(e);
             this.fullscreenLoading = false
+            let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+              confirmButtonText: 'logout',
+              cancelButtonText: 'reload',
+              type: 'error',
+              center: true
+            }).then(() => {
+              localStorage.removeItem('current_sub_id');
+              this.$session.remove('username');
+              let location = psl.parse(window.location.hostname)
+              location = location.domain === null ? location.input : location.domain
+              Cookies.remove('auth_token' ,{domain: location});
+              Cookies.remove('email' ,{domain: location});
+              Cookies.remove('userDetailId' ,{domain: location}); 
+              Cookies.remove('subscriptionId' ,{domain: location}); 
+              this.isLoggedIn = false;
+              // this.$router.push('/login');
+              window.location = '/login';
+            }).catch(() => {
+              location.reload()
+            }); 
           });
           let rawConfigs = responseConfig.data.configData;
           let partialstotal = []
@@ -4056,7 +5127,7 @@ export default {
               })
               .catch((e) => {
                 this.fullscreenLoading = false;
-                this.$message({
+                this.$notify({
                   showClose: true,
                   message: 'Failed! Please try again.',
                   type: 'error'
@@ -4154,8 +5225,15 @@ export default {
       window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=' + branchName);
     },
 
-    async init () {
+    logfile(index){
 
+      let branchName = this.branchesData[index].branchName;
+      // console.log(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
+      window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/raw/' + branchName+'/public/log.md');
+    },
+
+    async init () { 
+      this.isdisabled=false
       this.folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       let url = this.$store.state.fileUrl.replace(/\\/g, "\/");
 
@@ -4168,7 +5246,37 @@ export default {
       //console.log('website name:', websiteName);
       // this.configData = await axios.get( config.baseURL + '/flows-dir-listing/0?path=' + url + '/assets/config.json');
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((err) => { console.log(err); this.fullscreenLoading = false });
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + websiteName ).catch((e) => { 
+        // this.fullscreenLoading = false 
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });  
+      });
 
       if(this.configData.status == 200 || this.configData.status == 204){
 
@@ -4218,6 +5326,14 @@ export default {
         } else {
           this.cloudinaryDetails = this.settings[1].projectSettings[1].CloudinaryDetails;
         }
+        if(!(this.settings[1].projectSettings[1].TaxCloud)){
+          this.taxcloud = {
+            "apiId":  "",
+            "apiKey":  "" 
+          }
+        } else {
+          this.taxcloud = this.settings[1].projectSettings[1].TaxCloud;
+        }
 
         
 
@@ -4235,6 +5351,7 @@ export default {
 
       } else {
         console.log('Cannot get configurations!');
+        // this.fullscreenLoading = false 
       }
 
       if(this.form.brandLogoName==''){
@@ -4308,7 +5425,7 @@ export default {
         }
       }).catch(error => {
         console.log( error);
-        this.fullscreenLoading = false;
+        // this.fullscreenLoading = false;
       });
 
       this.sortBranchesTable(0);
@@ -4319,7 +5436,7 @@ export default {
         this.projectDetailsJson = JSON.parse(response.data);
       }).catch(error => {
         console.log("error occured while project details json: ", error);
-        this.fullscreenLoading = false;
+        // this.fullscreenLoading = false;
       });
 
        await axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
@@ -4340,19 +5457,38 @@ export default {
          }
          
 
-      }).catch(err => { console.log(err); });
+      }).catch(err => { 
+        // console.log('111111',err.response);
+          // this.fullscreenLoading = false 
+            if(err.response.data.code==401||err.response.data.code==500){
+              console.log(err.response.data.message)
+                this.$swal({
+                  title: 'Authentication token expired',
+                  text: 'Please Login Again!!!',
+                  type: 'warning',
+                  showCancelButton: true,
+                }).then(()=>{
+                  let location = psl.parse(window.location.hostname)
+                    location = location.domain === null ? location.input : location.domain
+
+                    Cookies.remove('auth_token', {
+                      domain: location
+                    });
+                    Cookies.remove('email', {
+                      domain: location
+                    });
+                    Cookies.remove('userDetailId', {
+                      domain: location
+                    });
+                    Cookies.remove('subscriptionId', {
+                      domain: location
+                    });
+                    window.location='/login'
+                })
+            }
+       });
 
      
-
-      
-      // await axios.get(config.paymentApiGateway)
-      // .then(res=>{
-        
-      //   this.Allgateway = res.data.gateways;
-      // }).catch(err => { console.log(err); });
-      
-      // console.log('$$$$$$$$$$$$$$$$$$$$$$',localstorage.get('current_sub_id'))
-      // console.log('@@@@@@@@@@@@@@@',localStorage.getItem('current_sub_id'))
      await axios.get(config.crmsettingapi,{headers:{'Authorization': Cookies.get('auth_token'),'subscriptionId': Cookies.get('subscriptionId')}})
       .then(res=>{
         
@@ -4372,6 +5508,15 @@ export default {
       .catch(err => { console.log(err);  });
       // console.log(this.crmdata)
       // console.log('+++++++++++++++',crmdata.data)
+
+
+
+       let status=await axios.get(config.baseURL+'/jobqueue?websiteid='+this.repoName).catch((e)=>{this.fullscreenLoading = false })
+       if(status.data.data=='active') {
+        this.isdisabled=true
+        this.textdata='Your request to Publish website is received. Please wait while you are in a Queue.'
+       }
+       // this.fullscreenLoading = false
 
       if(this.commitsData[0]){
         return 'positive-row';
@@ -4413,8 +5558,8 @@ export default {
                 type: 'warning',
               })
             }else{
-              var userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
-              var alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch(err => { console.log(err); this.fullscreenLoading = false });
+              let userid=this.folderUrl.split('/')[this.folderUrl.split('/').length-2]
+              let alldatauser=await axios.get( config.baseURL + '/project-configuration?userId='+userid).catch(err => { console.log(err); this.fullscreenLoading = false });
               let checkdetail=true
               for(let i=0;i<alldatauser.data.data.length;i++){
                 if(this.form.websitename==alldatauser.data.data[i].websiteName){
@@ -4477,6 +5622,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .ProjectSettings{
+    background-color: #f5f5f5;
+  }
 
   div.jsoneditor{
     min-height: 700px;
@@ -4780,5 +5929,82 @@ export default {
   .cloudinaryFilesCount{
     margin-left: 15px;
     font-weight: 900;
+  }
+
+  /*Implementation Of Tabs UI*/
+
+  .tabs {
+    padding: 15px 0px;
+    background-color: #008BE8;
+    color: #fff;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+  .tabs h3 {
+    font-size: 28px;
+    font-weight: 400;
+    margin: 15px;
+    margin-left: 30px;
+  }
+  .tabs .tab {
+    text-transform: uppercase;
+    padding: 10px 32px;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .tabs .tab-active-bar {
+    position: absolute;
+    height: 3px;
+    width: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #fff;
+  }
+
+  .tab-content {
+    padding: 24px;
+    font-size: 16px !important;
+    color: #616161;
+  }
+  .tab-content span.block-title {
+    margin-left: 24px;
+    font-size: 20px;
+  }
+  .tab-content .card-spacer {
+    min-height: 50px;
+  }
+  .tab-content .card {
+    background-color: #fff;
+    font-size: 16px;
+    font-weight: 300;
+    margin: 24px;
+    padding: 24px;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+  }
+
+  .refresh-plugins-btn{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 7px;
+    position: absolute;
+    right: 50px;
+  }
+
+  ul.jumper-links{
+    list-style: none;
+  }
+
+  .jumper-links-redirect{
+    text-decoration: none;
+    color: #999;
+  }
+
+  .jumper-links-redirect.active{
+    /*font-weight: bolder;*/
+    color: #2C72EB;
   }
 </style>

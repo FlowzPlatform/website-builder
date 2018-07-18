@@ -30,7 +30,7 @@
                                                     <div class="ivu-table ivu-table-border">
                                                         <div v-if="v.length > 0" class="ivu-table-body">
                                                             <table cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
-                                                                <thead>
+                                                                <thead :id='k'>
                                                                     <tr>
                                                                         <th class="" v-for="(value, key) in v[0]" v-if="key !== 'isDeleted'">
                                                                             <div class="ivu-table-cell">
@@ -206,7 +206,7 @@
                 this.exData = this.data6[card].online_payment[tabname][rowinx];
                 let oldData = _.cloneDeep(this.data6[card].online_payment[tabname][rowinx])
                 oldData = _.omit(oldData, ['_index', '_rowKey'])
-                console.log('oldData:',oldData)
+                // console.log('oldData:',oldData)
                 this.$Modal.confirm({
                     title: 'Edit',
                     closable: true,
@@ -234,6 +234,7 @@
                                 ])
                             )    
                             } else {
+
                                 myFormItem.push(
                                     h('FormItem', {
                                         props: {
@@ -299,12 +300,16 @@
                     },
                     onCancel() {
                         console.log('CANCEL!!')
+
                     }
                 })
             },
             handleDelete (card, tabname, rowinx) {
+                // console.log("in handleDelete-------------->",handleDelete)
                 let self = this;
+                // console.log('Delete :: ', card, tabname, rowinx, '--data--', this.data6[card].online_payment[tabname][rowinx])
                 let configId = self.data6[card].id;
+                let isDeleatedArray = [];
                 this.$Modal.confirm({ 
                     title: 'Confirm Delete',
                     okText : "Delete",
@@ -312,7 +317,20 @@
                     content: '',
                     onOk: () => {
                         self.exData = self.data6[card].online_payment[tabname][rowinx];
+                        // console.log("self.exData",self.exData);
                         self.exData.isDeleted = true;
+                        // console.log("outside",self.data6[card].online_payment[tabname])
+                        for (let i=0; i<self.data6[card].online_payment[tabname].length; i++) {
+                                // console.log("inside if self.data6[card].online_payment[tabname][i]",self.data6[card].online_payment[tabname][i])
+                            if(self.data6[card].online_payment[tabname][i].isDeleted == false) {
+                                isDeleatedArray.push(self.data6[card].online_payment[tabname][i])
+                                // console.log("isDeleatedArray.length",isDeleatedArray.length)
+                            }
+                        }
+                        if(isDeleatedArray.length == 0) {
+                            self.data6[card].online_payment[tabname].alldeleted = true
+                            document.getElementById(tabname).style.display = "none";
+                        }
                         let patchData = {
                             id : configId,
                             rowIndex : rowinx,
@@ -320,30 +338,52 @@
                                 [tabname] : self.exData
                             }
                         };
+                        // console.log("patchData",patchData)
                         axios({
                             method:'patch',
-                            url:feathersUrl +'buildersettings/'+configId,
+                            url:feathersUrl +'settings/'+configId,
                             data: patchData,
                             headers:{
-                                'Authorization' : Cookies.get('auth_token'),
-                                'subscriptionId' : Cookies.get('subscriptionId')
+                                Authorization : Cookies.get('auth_token'),
+                                subscriptionId : Cookies.get('subscriptionId')
                             },
                         }).then(response => {
                             if(response.status == 200){
                                 this.$Message.success("Configuaration deleated successfully")
-                            }   
+                            }
+                            // console.log("YYYYYYYYYYYYy",self.exData);
+                            // console.log("EEEEEEEEEEEEe",self.data6[card].online_payment[tabname][rowinx])
                         })
                         .catch(error => {
-                                console.log(error)
+                            console.log(error)
+                            if(error.response.status == 401){
+                                let location = psl.parse(window.location.hostname)
+                                location = location.domain === null ? location.input : location.domain
                                 
-                                if(error.response.status == 401){
-                                    let location = psl.parse(window.location.hostname)
-                                    location = location.domain === null ? location.input : location.domain
-                                    
-                                    Cookies.remove('auth_token' ,{domain: location})
-                                    Cookies.remove('subscriptionId' ,{domain: location})  
-                                    this.$store.commit('logout', this);
-                                }
+                                Cookies.remove('auth_token' ,{domain: location}) 
+                                self.$store.commit('logout', self);
+                                
+                                self.$router.push({
+                                    name: 'login'
+                                });
+                                self.$Notice.error({
+                                    title: error.response.data.name,
+                                    desc: error.response.data.message,
+                                    duration: 10
+                                })
+                            }else if(error.response.status == 403){
+                                self.$Notice.error({
+                                duration:0, 
+                                title: error.response.statusText,
+                                desc:error.response.data.message+'. Please <a href="'+config.default.flowzDashboardUrl+'/subscription-list" target="_blank">Subscribe</a>'
+                                });
+                            }else {
+                                self.$Notice.error({
+                                    title: error.response.data.name,
+                                    desc: error.response.data.message,
+                                    duration: 10
+                                })
+                            }
                         });
                     },
                     render: (h) => {

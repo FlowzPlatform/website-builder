@@ -37,7 +37,10 @@ if (process.env.NODE_ENV !== 'development') {
     crmsettingapi='https://api.'+domainkey+'/crm/settings'
     flowzDashboardUrl = 'https://dashboard.' + domainkey
     buildersettings='https://api.'+domainkey+'/crm/buildersettings/',
-    menuCategoriesUrl='https://api.'+domainkey+'/pdmnew/categories'
+    menuCategoriesUrl='https://api.'+domainkey+'/pdmnew/categories',
+    colorSwatchUrl='https://api.'+domainkey+'/pdmnew/filters/'
+    productApiUrl='https://api.'+domainkey+'/pdmnew/pdm/US'
+    productApiImageUrl = 'http://image.promoworld.ca/migration-api-hidden-new/web/images/'
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -65,7 +68,10 @@ if (process.env.NODE_ENV !== 'development') {
     crmsettingapi='https://api.flowzcluster.tk/crm/settings'
     flowzDashboardUrl = 'https://dashboard.flowzcluster.tk'
     buildersettings='https://api.flowzcluster.tk/crm/buildersettings/'
-    menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories'
+    menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories',
+    colorSwatchUrl='https://api.flowzcluster.tk/pdmnew/filters/'
+    productApiUrl = 'https://api.flowzcluster.tk/pdmnew/pdm/US'
+    productApiImageUrl = 'http://image.promoworld.ca/migration-api-hidden-new/web/images/'
 }
 
 module.exports = {
@@ -103,8 +109,10 @@ module.exports = {
     // paymentApiGateway: paymentApiGateway,
 
     vshopApi : vshopApi,
-    menuCategoriesUrl : menuCategoriesUrl, 
-
+    menuCategoriesUrl : menuCategoriesUrl,
+    colorSwatchUrl : colorSwatchUrl,
+    productApiUrl : productApiUrl,
+    productApiImageUrl : productApiImageUrl,
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
@@ -113,7 +121,7 @@ module.exports = {
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
-    gitLabIpAddress: 'http://209.50.53.116/',
+    gitLabIpAddress: 'http://209.50.50.225/',
     default:{
     flowzDashboardUrl: 'https://www.dashboard.' + process.env.domainkey,
     serviceUrl: 'https://api.' + process.env.domainkey + '/crm/',
