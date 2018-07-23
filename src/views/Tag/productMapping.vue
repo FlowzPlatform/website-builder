@@ -49,7 +49,7 @@ import config from '../../config'
 import moment from 'moment'
 import _ from 'lodash'
 import Cookies from 'js-cookie'
-import elasticsearch from 'elasticsearch'
+// import elasticsearch from 'elasticsearch'
 
 let baseUrl = config.baseURL
 let tagsUrl = config.baseURL + '/tags'
