@@ -49,7 +49,7 @@
                   </el-button>
                   <el-button type="primary" size="small" @click="goToGrapesEditor()" v-if="componentId === 'MonacoEditorChild'">Go to Editor
                   </el-button>
-                  <el-button type="primary" size="small" @click="saveFile('void')" v-if="componentId != 'ProjectSettings' && componentId != 'PageSettings' && componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save
+                  <el-button type="primary" size="small" @click="saveFile('void1')" v-if="componentId != 'ProjectSettings' && componentId != 'PageSettings' && componentId != 'ProjectStats' && componentId != 'PageStats' && componentId != 'LayoutStats' && componentId != 'PartialStats'  && componentId != 'Dashboard'">Save
                   </el-button>
                 </div>
               </div>
@@ -1128,16 +1128,22 @@
 
             // Get particular project's config.json file
             async getConfigFileData(folderUrl) {
+
+              let objResponse;  
               let foldername = folderUrl.split('/');
               foldername = foldername[6];
 
-              axios.get(config.userDetail, {
+              await axios.get(config.userDetail, {
                 headers: {
                   'Authorization': Cookies.get('auth_token')
                 }
               })
               .then(async(res) => {
-                let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).catch((e) => {
+                let responseConfig = await axios.get(config.baseURL + '/project-configuration/' + foldername).then((objRes) => {
+                    //console.log('objRes :: ', objRes);
+                    let rawConfigs = objRes.data.configData;                
+                    objResponse = this.globalConfigData = rawConfigs;
+                }).catch((e) => {
                   this.fullscreenLoading = false;
                   let dataMessage = '';
                   if (e.message != undefined) {
@@ -1176,8 +1182,10 @@
                     location.reload()
                   });
                 });
-                let rawConfigs = responseConfig.data.configData;
-                return this.globalConfigData = rawConfigs;
+
+                // console.log('resConfig :: ', responseConfig.data.configData);
+                // let rawConfigs = responseConfig.data.configData;
+                // return this.globalConfigData = rawConfigs;
               })
               .catch((e) => {
                 let dataMessage = ''
@@ -1218,6 +1226,9 @@
                 });
               })
 
+              //console.log(objResponse);
+
+              return objResponse;
             },
 
             // Save config File
@@ -3665,7 +3676,9 @@
                                     }
                                 }
                                 this.saveConfigFile(folderUrl);
-                                this.fullscreenLoading = false;
+                                if(arg!='void'){
+                                this.fullscreenLoading = false;   
+                                }
                             }
 
                         })
@@ -3798,7 +3811,6 @@
                 this.previewLoading = true;
                 await this.saveFile('void');
                 
-
                 let nameF = this.$store.state.fileUrl.substring(this.$store.state.fileUrl.indexOf('Pages/') + 6, this.$store.state.fileUrl.indexOf('.html'));
 
                 let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -3814,9 +3826,9 @@
                 }
                 let folderUrl = configFileUrl.replace(fileName, '');
 
-                this.fullscreenLoading = true;
+                // this.fullscreenLoading = true;
                 await this.getConfigFileData(folderUrl);
-                this.fullscreenLoading = true;
+                // this.fullscreenLoading = true;
                 
                 // let configFileData = await this.getConfigFileData(folderUrl);
                 // console.log(configFileData)
@@ -5281,7 +5293,22 @@
 
                             // Delete Repository from GitLab Server
                             let response = await axios.get(config.baseURL + '/gitlab-add-repo/' + repositoryId, {})
-                                .then((response) => {
+                                .then(async (response) => {
+
+                                    // all banners and categories delete associated with website
+                                    await axios.get(config.baseURL + '/bannertype?website_id=' + foldername + '&$paginate=false')
+                                        .then(async resp => {
+                                          // console.log(resp.data)
+                                          for (let item of resp.data) {
+                                            await axios.get(config.baseURL + '/banners?banner_type=' + item.id + '&$paginate=false')
+                                              .then(async respp => {
+                                                for (let item1 of respp.data) {
+                                                  await axios.delete(config.baseURL + '/banners/' + item1.id)
+                                                }
+                                                await axios.delete(config.baseURL + '/bannertype/' + item.id)  
+                                              })
+                                          }
+                                        })
 
                                     // delete project configuration from RethinkDB
                                     axios.delete(config.baseURL + '/project-configuration/' + foldername, {})

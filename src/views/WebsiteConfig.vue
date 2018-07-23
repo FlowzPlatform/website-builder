@@ -135,7 +135,7 @@
                   }
               }else{
                 //http://res.cloudinary.com/flowz/raw/upload/v1527571205/websites/json/website-settings.json
-                $.getJSON("http://res.cloudinary.com/flowz/raw/upload/v1528801912/websites/json/website-settings.json", function(result){
+                $.getJSON("https://res.cloudinary.com/flowz/raw/upload/v1531213067/websites/json/website-config.json", function(result){
                   // let result = require("/var/www/html/websites/5a586a92450a3100124ce7cf/e16a18b3-5163-4576-b238-c200c311a5ad/public/assets/website-settings.json")
                   // let result = require("http://res.cloudinary.com/flowz/raw/upload/v1528801912/websites/json/website-settings.json")
                   // console.log("jsonData",jsonData);

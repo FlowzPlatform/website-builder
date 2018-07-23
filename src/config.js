@@ -71,6 +71,7 @@ if (process.env.NODE_ENV !== 'development') {
     menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories',
     colorSwatchUrl='https://api.flowzcluster.tk/pdmnew/filters/'
     productApiUrl = 'https://api.flowzcluster.tk/pdmnew/pdm/US'
+    //productLocalApiUrl = 'http://localhost:9200/pdm1/product'  //temperary
     productApiImageUrl = 'http://image.promoworld.ca/migration-api-hidden-new/web/images/'
 }
 
@@ -112,6 +113,7 @@ module.exports = {
     menuCategoriesUrl : menuCategoriesUrl,
     colorSwatchUrl : colorSwatchUrl,
     productApiUrl : productApiUrl,
+    //productLocalApiUrl : productLocalApiUrl,
     productApiImageUrl : productApiImageUrl,
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',

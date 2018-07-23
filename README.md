@@ -4,7 +4,7 @@
 
 ## Documentation
 
-View overview of Website Builder [here](https://github.com/FlowzPlatform/website-builder/wiki/Overview)
+View overview   of Website   Builder [here](https://github.com/FlowzPlatform/website-builder/wiki/Overview)
 
 ## Build Setup
 
@@ -51,7 +51,7 @@ Start the FlowzServiceApi by npm start
 
 #Changelog
 1. Added New Templates 
-2. Added Jobqueue
+2. Added Jobqueue to publish website using metalsmith
 3. User Interface 2.0
 
 
