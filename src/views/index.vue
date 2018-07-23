@@ -4362,7 +4362,7 @@
                             divappstart   = '<div id="app">'
                             divappend     = '</div>'
                             dfscript      = "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>\n" 
-                                            + "<link rel='stylesheet' type='text/css' href='https://res.cloudinary.com/flowz/raw/upload/v1526901609/component-base.css'>\n"
+                                            + "<link rel='stylesheet' type='text/css' href='https://res.cloudinary.com/flowz/raw/upload/v1532335463/builder/css/component-base.css'>\n"
                                             + '<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js"><\/script>\n'
                                             + '<script src="https://unpkg.com/vuejs-paginate@1.9.0/dist/index.js"><\/script>\n'
                                             + '<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">'
@@ -4380,7 +4380,7 @@
                                             + "<script type='text/javascript' src='https://cdn.jsdelivr.net/web-animations/latest/web-animations.min.js'><\/script>\n"
                                             + "<script type='text/javascript' src='https://hammerjs.github.io/dist/hammer.min.js'><\/script>\n"
                                             + "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.3/muuri.min.js'><\/script>\n"
-                                            + "<link rel='stylesheet' type='text/css' href='https://res.cloudinary.com/flowz/raw/upload/v1526901609/component-base.css'>\n"
+                                            + "<link rel='stylesheet' type='text/css' href='https://res.cloudinary.com/flowz/raw/upload/v1532335463/builder/css/component-base.css'>\n"
                                             + "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>"
                                             + '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>'
                                             + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">'
