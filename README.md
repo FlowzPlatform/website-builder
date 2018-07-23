@@ -4,7 +4,7 @@
 
 ## Documentation
 
-View overview of Website Builder [here](https://github.com/FlowzPlatform/website-builder/wiki/Overview)
+View overview   of Website   Builder [here](https://github.com/FlowzPlatform/website-builder/wiki/Overview)
 
 ## Build Setup
 
