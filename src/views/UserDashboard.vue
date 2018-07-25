@@ -1174,6 +1174,7 @@ ul.hh-dropmenu-item {
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 2px 4px 8px rgba(0, 0, 0, 0.28);
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
+    overflow-y: auto;
 }
 
 .hh-sidebar ul.main-links {

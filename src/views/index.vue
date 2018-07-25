@@ -1472,6 +1472,8 @@
             async addFile(formName) {
               if (Cookies.get('auth_token') != null && Cookies.get('auth_token') != undefined) {
 
+                this.addNewFileLoading = true;
+
                 let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
                 let urlparts = configFileUrl.split("/");
                 let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -1620,6 +1622,7 @@
 
                               })
                               .catch((e) => {
+                                this.addNewFileLoading = false;
                               })
                           } else if (newfilename.search('/Partials') != -1 && newfilename.search('/Menu') != -1) {
                             this.$store.state.updateStats = Math.random();
@@ -1666,6 +1669,7 @@
 
                               })
                               .catch((e) => {
+                                this.addNewFileLoading = false;
                               })
                           } else if (newfilename.search('/Pages') != -1) {
                             this.$store.state.updateStats = Math.random();
@@ -1741,7 +1745,8 @@
                                 }
                               })
                               .catch((e) => {
-                                console.log(e)
+                                console.log(e);
+                                this.addNewFileLoading = false;
                               })
                           } else if (newfilename.search('/Layout') != -1) {
                             this.$store.state.updateStats = Math.random();
@@ -1788,11 +1793,13 @@
 
                               })
                               .catch((e) => {
+                                this.addNewFileLoading = false;
                               })
                           }
                         }
 
                       } else {
+                        this.addNewFileLoading = false;
                         return false;
                       }
                     });
