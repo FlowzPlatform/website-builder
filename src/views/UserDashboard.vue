@@ -300,7 +300,31 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="done" @click="tExpand = !tExpand">
+                        <a href="javascript:;" class="done" @click="cExpand = !cExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Category Management</span>
+                        </a>
+                    </li>
+                    <li v-if="cExpand">
+                        <a href="javascript:;" class="inside-items" @click='goToCategory("c_add")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Category</span>
+                        </a>
+                    </li>
+                    <li v-if="cExpand"  @click='goToCategory("c_list")'>
+                        <a href="javascript:;" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Categories</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="done" @click="tExpand = !tExpand">
                             <i class="fa fa-file-image-o">
                                 <span class="icon-bg hh-bg-warning"></span>
                             </i>
@@ -308,7 +332,7 @@
                         </a>
                     </li>
                     <li v-if="tExpand">
-                        <a href="#" class="inside-items" @click='goToTag("tc_add")'>
+                        <a href="javascript:;" class="inside-items" @click='goToTag("tc_add")'>
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -316,7 +340,7 @@
                         </a>
                     </li>
                     <li v-if="tExpand"  @click='goToTag("tc_list")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -324,7 +348,7 @@
                         </a>
                     </li>
                     <li  v-if="tExpand"  @click='goToTag("t_add")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -332,7 +356,7 @@
                         </a>
                     </li>
                     <li  v-if="tExpand"  @click='goToTag("t_list")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -340,7 +364,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="done" @click="mExpand = !mExpand">
+                        <a href="javascript:;" class="done" @click="mExpand = !mExpand">
                             <i class="fa fa-file-image-o">
                                 <span class="icon-bg hh-bg-primary"></span>
                             </i>
@@ -348,7 +372,7 @@
                         </a>
                     </li>
                     <li v-if="mExpand">
-                        <a href="#" class="inside-items" @click='goToTools("fc_add")'>
+                        <a href="javascript:;" class="inside-items" @click='goToTools("fc_add")'>
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -356,7 +380,7 @@
                         </a>
                     </li>
                     <li v-if="mExpand"  @click='goToTools("fc_list")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -364,7 +388,7 @@
                         </a>
                     </li>
                     <li  v-if="mExpand"  @click='goToTools("f_add")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -372,7 +396,7 @@
                         </a>
                     </li>
                     <li  v-if="mExpand"  @click='goToTools("f_list")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -380,7 +404,7 @@
                         </a>
                     </li>
                     <li v-if="mExpand">
-                        <a href="#" class="inside-items" @click='goToTools("ec_add")'>
+                        <a href="javascript:;" class="inside-items" @click='goToTools("ec_add")'>
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -388,7 +412,7 @@
                         </a>
                     </li>
                     <li v-if="mExpand"  @click='goToTools("ec_list")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -396,7 +420,7 @@
                         </a>
                     </li>
                     <li  v-if="mExpand"  @click='goToTools("e_add")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -404,7 +428,7 @@
                         </a>
                     </li>
                     <li  v-if="mExpand"  @click='goToTools("e_list")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -483,6 +507,10 @@ import EcatalogCategoryList from './MarketingTools/ecatalogCategoryList';
 import AddEcatalog from './MarketingTools/addEcatalog';
 import EcatalogList from './MarketingTools/ecatalogsList';
 
+// Category Templates
+import AddCategory from './Category/addCategory';
+import CategoryList from './Category/categoriesList';
+
 export default {
   name: 'UserDashboard',
   props: {
@@ -494,6 +522,7 @@ export default {
     return {
       data: 'data',
       bExpand: false,
+      cExpand: false,
       tExpand: false,
       mExpand: false,
       componentId: '',
@@ -559,6 +588,10 @@ export default {
           this.componentId = EcatalogCategoryList
         } else if (item.type == 'ecataloglist') {
           this.componentId = EcatalogList
+        } else if (item.type == 'editCategory') {
+          this.componentId = AddCategory
+        } else if (item.type == 'categoryList') {
+          this.componentId = CategoryList
         } else {
           this.mtdata = {}
         }
@@ -573,6 +606,14 @@ export default {
             this.componentId = BannerTypeList;
         } else if (name === 'b_list') {
             this.componentId = BannerList;
+        } else {}
+    },
+    goToCategory (name) {
+        this.mtdata = {}
+        if (name === 'c_add') {
+            this.componentId = AddCategory;
+        } else if (name === 'c_list') {
+            this.componentId = CategoryList;
         } else {}
     },
     goToTag (name) {
@@ -1174,7 +1215,6 @@ ul.hh-dropmenu-item {
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 2px 4px 8px rgba(0, 0, 0, 0.28);
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
-    overflow-y: auto;
 }
 
 .hh-sidebar ul.main-links {
