@@ -4393,13 +4393,19 @@
                                             + '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">'
                                             + "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/v1519124435/builder/js/vuecomponent.js'><\/script>"
                           }
-
+                          let cdnhandlebar;
+                          if(contentpartials.search('<handlebarcomponent')!=-1){
+                            cdnhandlebar='<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"><\/script>\n'
+                          }
+                          else{
+                            cdnhandlebar=''
+                          }
                           let newContent = "<html>\n<head>\n" + tophead +
                                           "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                                           '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                                           "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
                                           '<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">\n' +
-                                          "<link rel='stylesheet' href='./../main-files/main.css'/>\n" +
+                                          "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + cdnhandlebar+
                                           endhead + "\n</head>\n<body>\n" + divappstart + topbody +
                                           layoutdata.data +
                                           '\n' + divappend +
@@ -4448,6 +4454,24 @@
                                           type: 'file'
                                         })
                                         .then(async(res) => {
+                                            let filedata=await axios.get(config.baseURL + '/flows-dir-listing/0?path='+folderUrl + '/public/Preview/' + nameF  + '.html',{})
+                                            .then(async (response)=>{
+
+                                              //checking for handlebar component
+                                              if(rawContent.search('<handlebarcomponent')!=-1){
+                                                let handlebar=response.data.substring(response.data.indexOf('<handlebarcomponent'),response.data.indexOf('</handlebarcomponent>')+21)
+                                                let newhanadlebar=('<script id="handlebarcomponent-template" type="text/x-handlebars-template">{{'+handlebar.replace(/<(.|\n)*?>/g, '')+'}}<\/script>').trim()
+                                                newhanadlebar=response.data.replace(handlebar,newhanadlebar).trim()
+                                                await axios.post(config.baseURL + '/flows-dir-listing', {
+                                                  filename: folderUrl + '/public/Preview/' + nameF  + '.html',
+                                                  text: newhanadlebar,
+                                                  type: 'file'
+                                                }).catch((e)=>{console.log(e)})
+                                                }
+
+                                            }).catch((e)=>{
+                                              console.log(e)
+                                            })
                                           self.fullscreenLoading = false;
                                           self.previewLoading = false;
                                           let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
