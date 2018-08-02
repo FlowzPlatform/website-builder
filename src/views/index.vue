@@ -4069,35 +4069,6 @@
                         }
 
                         var contentpartials = self.$store.state.content;
-                        // if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
-
-                        //   var mainVuefile = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/back_main.js');
-                        //   mainVuefile = mainVuefile.data
-
-                        //   for (let x = 0; x < self.form.vuepartials.length; x++) {
-                        //     let temp = mainVuefile.replace(/@@vuecomponent@@/g, self.form.vuepartials[x].value.split('.')[0])
-                        //     temp = temp.replace('./' + self.form.vuepartials[x].value.split('.')[0], folderUrl + '/Partials/' + self.form.vuepartials[x].partialsName + '/' + self.form.vuepartials[x].value.split('.')[0])
-
-                        //     await axios.post(config.baseURL + '/flows-dir-listing', {
-                        //         filename: config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js',
-                        //         text: temp,
-                        //         type: 'file'
-                        //       }).then(async(res) => {
-                        //         contentpartials = contentpartials + '<script src="./assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js' + '"><\/script>'
-
-                        //         axios.get(config.baseURL + '/webpack-api?path=' + folderUrl + '/public/assets/client-plugins/' + self.form.vuepartials[x].value.split('.')[0] + '.js', {})
-                        //           .then((response) => {
-
-                        //           })
-                        //           .catch((e) => {
-                        //             //console.log(e)
-                        //           })
-                        //       })
-                        //       .catch((e) => {
-                        //         //console.log(e)
-                        //       })
-                        //   }
-                        // }
                         if (self.form.Layout == 'Blank') {
                             await axios.post(config.baseURL + '/flows-dir-listing', {
                                     filename: folderUrl + '/Layout/Blank.layout',
