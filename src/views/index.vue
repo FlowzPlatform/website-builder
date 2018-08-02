@@ -4407,6 +4407,7 @@
                                           "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                                           "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                                           '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
+                                          '<script src="https://res.cloudinary.com/flowz/raw/upload/v1533202314/builder/js/g-form.js"><\/script>\n' +
                                           '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
                                           '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                                           endbody + dfscript +
