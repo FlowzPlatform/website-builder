@@ -657,6 +657,17 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         category: 'Special Component'
     });
 
+    // HandlebarComponent
+    bm.add('HandlebarComponent', {
+        label: 'Handlebar Component',
+        content: '<HandlebarComponent id="handlebarcomponent" style="padding:10px;display: block; width: 100%; min-height:60px"></HandlebarComponent>',
+        attributes: {
+            class: 'fa fa-code',
+            title: 'Handlebar Component'
+        },
+        category: 'Special Component'
+    });
+
     // VueComponent
     // bm.add('VueComponent', {
     //   label: 'Vue Component',
