@@ -404,7 +404,7 @@
                     </div>
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" />
+                        <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" @click="revertToTemplate(template = 'innovation-line')" />
                       <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       </div>
                     </div>
