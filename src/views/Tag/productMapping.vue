@@ -30,7 +30,7 @@
       </Col>
     </Row>
     <Row>
-        
+
       <Table :loading="loading" :columns="pmcolumns" :data="pdata.data" stripe  @on-sort-change="handleSorting"></Table>
     </Row>
     <Row >
@@ -219,7 +219,7 @@ export default {
               // axios.get(tagsUrl + '/' + this.tdata.id).then(res => {
               //     axios.get(productApiUrl + '/' + productData._id).then(res2 => {
               //         let tag_list = res2.data._source.tags;
-                      
+
               //         if(tag_list.includes(res.data.tag_name)) {
               //             this.$Spin.hide();
               //             this.$Notice.error({title: 'Error!!', desc: 'Tag already mapped.', duration: 2})
@@ -286,12 +286,10 @@ export default {
         if (this.filterobj.sku !== '') {
           query += '&sku=' + this.filterobj.sku
         }
-        console.log("websiteid",this.tdata.website);
-        console.log("this.webOptions",this.webOptions)
         let websiteDetails = _.find(this.webOptions, {value: this.tdata.website})
         this.pdata = await axios
             .get(
-              productApiUrl + query, 
+              productApiUrl + query,
               { headers: { 'vid': websiteDetails.vid } }
             )
             .then(res => {
@@ -300,7 +298,7 @@ export default {
                 result.total = res.data.hits.total;
                 return result;
             })
-        
+
         this.loading = false
       }
       this.loading = false
