@@ -286,7 +286,8 @@ export default {
         if (this.filterobj.sku !== '') {
           query += '&sku=' + this.filterobj.sku
         }
-        
+        console.log("websiteid",this.tdata.website);
+        console.log("this.webOptions",this.webOptions)
         let websiteDetails = _.find(this.webOptions, {value: this.tdata.website})
         this.pdata = await axios
             .get(
@@ -313,6 +314,7 @@ export default {
       }
       this.$Spin.hide();
     }).catch(err => {
+    console.log("error",err)
       this.$Spin.hide();
     })
 
