@@ -435,6 +435,30 @@
                             <span class="hh-sidebar-item">List Ecatalogs</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="javascript:;" class="done" @click="wExpand = !wExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">WebTools</span>
+                        </a>
+                    </li>
+                    <li v-if="wExpand">
+                        <a href="javascript:;" class="inside-items" @click='goToWebtools("w_add")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add WebTool</span>
+                        </a>
+                    </li>
+                    <li v-if="wExpand"  @click='goToWebtools("w_list")'>
+                        <a href="javascript:;" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List WebTools</span>
+                        </a>
+                    </li>
                     <!-- <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
@@ -511,6 +535,10 @@ import EcatalogList from './MarketingTools/ecatalogsList';
 import AddCategory from './Category/addCategory';
 import CategoryList from './Category/categoriesList';
 
+// Webtools Templates
+import AddWebtool from './Webtools/addWebtool';
+import WebtoolsList from './Webtools/webtoolsList';
+
 export default {
   name: 'UserDashboard',
   props: {
@@ -525,6 +553,7 @@ export default {
       cExpand: false,
       tExpand: false,
       mExpand: false,
+      wExpand: false,
       componentId: '',
       userEmailId: '',
       rowdata: {},
@@ -592,6 +621,10 @@ export default {
           this.componentId = AddCategory
         } else if (item.type == 'categoryList') {
           this.componentId = CategoryList
+        } else if (item.type == 'editWebtool') {
+          this.componentId = AddWebtool
+        } else if (item.type == 'webtoolsList') {
+          this.componentId = WebtoolsList
         } else {
           this.mtdata = {}
         }
@@ -614,6 +647,14 @@ export default {
             this.componentId = AddCategory;
         } else if (name === 'c_list') {
             this.componentId = CategoryList;
+        } else {}
+    },
+    goToWebtools (name) {
+        this.mtdata = {}
+        if (name === 'w_add') {
+            this.componentId = AddWebtool;
+        } else if (name === 'w_list') {
+            this.componentId = WebtoolsList;
         } else {}
     },
     goToTag (name) {
