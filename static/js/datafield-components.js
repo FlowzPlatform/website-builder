@@ -14,6 +14,16 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
     category: 'Data Field Group'
   });
 
+     bm.add('DataFieldGroupSearch', {
+    label: 'Data Field with Search',
+    content: '<div class="grid12"><DataFieldGroupSearch style="display: block; width: 100%; min-height:350px" class="datafieldgroupsearch"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldGroupSearch></div>',
+    attributes: {
+      class: 'fa fa-database',
+      title: 'Data Field Search',
+    },
+    category: 'Data Field Group'
+  });
+
   bm.add('DataFieldObject', {
     label: 'Data Field Object',
     content: '<DataFieldObject class="datafieldobject" style="display: block; width: 100%; min-height:350px"><template scope="item" style="border:solid black 2px;display: block; width: 100%; min-height:330px"></template></DataFieldObject>',
@@ -700,9 +710,73 @@ grapesjs.plugins.add('datafield-components', function(editor, options) {
 
 
 
-
-
     let arr_coll_schema = [];
+    
+    comps.addType('DataFieldGroupSearch', {
+      // Define the Model
+      model: defaultModel.extend({
+        init() {
+          this.listenTo(this, 'change:connectiondata', this.doStuff);
+        },
+        doStuff() {
+        },
+        // Extend default properties
+        defaults: Object.assign({}, defaultModel.prototype.defaults, {
+          editable: true,
+          droppable: true,
+          traits: [
+            {
+              type: 'select',
+              label: 'data-schema',
+              name: 'data_schema',
+              options: arr_coll_schema,
+            },
+            {
+              type: 'text',
+              label: 'API_URL',
+              name: 'data_api'
+            },
+            {
+              type: 'select',
+              label: 'draggable',
+              name: 'draggable',
+              options: [
+                { value: '--select--', name: '--select--' },
+                { value: 'true', name: 'true' },
+                { value: 'false', name: 'false' }
+              ]
+            }
+          ]
+        }),
+
+      }, {
+          isComponent: function (el) {
+            if (el.tagName == 'DATAFIELDGROUPSEARCH') {
+              return {
+                type: 'DataFieldGroupSearch'
+              };
+            }
+            if (el.tagName == 'TEMPLATE') {
+              return { type: 'template', components: el.innerHTML }
+            }
+          },
+        }),
+
+      view: defaultView.extend({
+        // '<template>' can't be shown so in canvas use another tag
+        tagName: 'div'
+      }),
+
+      // The render() should return 'this'
+      render: function () {
+        // Extend the original render method
+        defaultType.view.prototype.render.apply(this, arguments);
+        this.el.placeholder = 'Text here'; // <- Doesn't affect the final HTML code
+        return this;
+      },
+    });
+
+    arr_coll_schema = [];
     
     comps.addType('DataFieldGroup', {
       // Define the Model

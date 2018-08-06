@@ -453,8 +453,6 @@ export default {
           location.reload()
         });
        });
-        console.log("this.configData",this.configData)
-        console.log("this.configData.status",this.configData.status)
       if(this.configData.status == 200 || this.configData.status == 204){
         //console.log('Config file found! Updating fields..');
 

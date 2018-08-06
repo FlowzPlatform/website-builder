@@ -197,7 +197,7 @@ export default {
         }
       ],
       cloudDetails: {},
-      fCategoryDetail: {},
+      //eCategoryDetail: {},
       isdisable: false,
       fetchImagesLoader: false,
       assetsImages: [],
@@ -211,7 +211,7 @@ export default {
         if (valid) {
           this.$Spin.show();
           this.formItem.createdAt = new Date()
-          this.formItem.website = this.fCategoryDetail.website
+          //this.formItem.website = this.eCategoryDetail
           axios.post(ecatalogsUrl, this.formItem).then(res => {
             this.$Spin.hide();
             this.$Notice.success({title: 'Success!!', desc: 'Successfully saved.', duration: 2})
@@ -316,16 +316,20 @@ export default {
       this.fetchImagesLoader = true;
     },
     onChangeWebsite (value) {
-      this.formItem.ecatalog_category = ''
-      this.ecatalogcategories = [];
-      axios.get(ecatalogCategoryUrl + '?userId=' + Cookies.get('userDetailId') + '&website='+value+'&status=true&$paginate=false').then(res=> {
-        for(let item of res.data) {
-          this.ecatalogcategories.push({
-            label: item.fc_name,
-            value: item.id
-          })
-        }
-      })
+      if(this.fdata != undefined) {
+        this.ecatalogcategories = [];
+        axios.get(ecatalogCategoryUrl + '?userId=' + Cookies.get('userDetailId') + '&website='+value+'&status=true&$paginate=false').then(res=> {
+          for(let item of res.data) {
+            this.ecatalogcategories.push({
+              label: item.fc_name,
+              value: item.id
+            })
+          }
+        })
+      }
+      else {
+        this.formItem.ecatalog_category = ''
+      }
     },
     async onChangeEcatalogCategory (value) {
       this.isShowimgblock = false
@@ -336,6 +340,8 @@ export default {
           }).catch(err => {
             return {}
           })
+
+          //this.eCategoryDetail = this.formItem.website
           if (!_.isEmpty(result)) {
             if (result.hasOwnProperty('configData')) {
               let cDetails = result.configData[1].projectSettings[1].CloudinaryDetails
