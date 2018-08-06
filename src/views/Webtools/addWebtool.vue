@@ -143,10 +143,13 @@ export default {
       formItem: {
         website: '',
         product_pdf: '',
+        product_pdf_thumb: '',
         product_pdf_name: '',
         art_pdf: '',
+        art_pdf_thumb: '',
         art_pdf_name: '',
         gcc_pdf: '',
+        gcc_pdf_thumb: '',
         gcc_pdf_name: '',
         brand_video_url: '',
         nonbrand_video_url: '',
@@ -161,24 +164,24 @@ export default {
       art_pdf_loader: false,
       gcc_pdf_loader: false,
       rulesformItem: {
-        website: [
-          { required: true, message: 'Please select website', trigger: 'change' }
-        ],
-        sku: [
-          { required: true, message: 'Please select sku', trigger: 'change' }
-        ],
-        product_pdf: [
-          { required: true, message: 'Please select product pdf', trigger: 'change' }
-        ],
-        art_pdf: [
-          { required: true, message: 'Please select art pdf', trigger: 'change' }
-        ],
-        gcc_pdf: [
-          { required: true, message: 'Please select gcc pdf', trigger: 'change' }
-        ],
-        brand_video_url: [
-          { required: true, validator: validateUrlCheck, trigger: 'blur' }
-        ]
+          website: [
+            { required: true, message: 'Please select website', trigger: 'change' }
+          ],
+          sku: [
+            { required: true, message: 'Please select sku', trigger: 'change' }
+          ],
+          product_pdf: [
+            { required: true, message: 'Please select product pdf', trigger: 'change' }
+          ],
+          art_pdf: [
+            { required: true, message: 'Please select art pdf', trigger: 'change' }
+          ],
+          gcc_pdf: [
+            { required: true, message: 'Please select gcc pdf', trigger: 'change' }
+          ],
+          brand_video_url: [
+            { required: true, validator: validateUrlCheck, trigger: 'blur' }
+          ]
       },
       updateRules: {
           website: [
@@ -273,6 +276,7 @@ export default {
         upload_preset: this.cloudDetails.uploadPreset, 
         sources: ['local', 'url']
       }, (error, result) => { 
+        console.log('result == ',result)
         if(error != null){
             if(error.message != 'User closed widget'){
                 this.$message({
@@ -285,8 +289,10 @@ export default {
         else {
             if(result[0].format == 'pdf') {
                 let pdf_name = template+"_name";
+                let pdf_thumb = template+"_thumb";
                 this.formItem[template] = result[0].url
                 this.formItem[pdf_name] = result[0].original_filename
+                this.formItem[pdf_thumb] = result[0].thumbnail_url
                 this[loader] = false;
             }
             else {

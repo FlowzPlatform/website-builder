@@ -316,16 +316,20 @@ export default {
       this.fetchImagesLoader = true;
     },
     onChangeWebsite (value) {
-      this.formItem.ecatalog_category = ''
-      this.ecatalogcategories = [];
-      axios.get(ecatalogCategoryUrl + '?userId=' + Cookies.get('userDetailId') + '&website='+value+'&status=true&$paginate=false').then(res=> {
-        for(let item of res.data) {
-          this.ecatalogcategories.push({
-            label: item.fc_name,
-            value: item.id
-          })
-        }
-      })
+      if(this.fdata != undefined) {
+        this.ecatalogcategories = [];
+        axios.get(ecatalogCategoryUrl + '?userId=' + Cookies.get('userDetailId') + '&website='+value+'&status=true&$paginate=false').then(res=> {
+          for(let item of res.data) {
+            this.ecatalogcategories.push({
+              label: item.fc_name,
+              value: item.id
+            })
+          }
+        })
+      }
+      else {
+        this.formItem.ecatalog_category = ''
+      }
     },
     async onChangeEcatalogCategory (value) {
       this.isShowimgblock = false
