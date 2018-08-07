@@ -1445,13 +1445,13 @@ export default {
   async created() {
 
 
-        app.service("jobqueue").on("created", async (response) => {
-        if(this.repoName==response.websiteid) {
-          this.percent=0
-          this.isdisabled = true;
-          this.textdata='Your request to Publish website is received. Please wait while you are in a Queue.'
-          // this.$emit('updateProjectName')
-        }
+      app.service("jobqueue").on("created", async (response) => {
+      if(this.repoName==response.websiteid) {
+        this.percent=0
+        this.isdisabled = true;
+        this.textdata='Your request to Publish website is received. Please wait while you are in a Queue.'
+        // this.$emit('updateProjectName')
+      }
       });
 
       app.service("jobqueue").on("removed", async (response) => {
@@ -1467,15 +1467,15 @@ export default {
         // console.log('response:',response)
        if(this.repoName==response.websiteid){
 
-          console.log('===========================================');
-          console.log("**"+this.repoName+"--"+response.websiteid);
-          console.log(response);
-          console.log(1111111 + '===' + this.isdisabled);
+          // console.log('===========================================');
+          // console.log("**"+this.repoName+"--"+response.websiteid);
+          // console.log(response);
+          // console.log(1111111 + '===' + this.isdisabled);
           // console.log('same id.. set disabled to true..')
          // this.isdisabled = true;
           // this.textdata='Job added Successfully. Please wait you are in Queue.'
          if(response.Status!=undefined && response.Status=='completed'){
-            // console.log('completed..', response)
+            console.log('completed..', response)
             let dt = new Date();
             let utcDate = dt.toUTCString();
             let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
@@ -1493,7 +1493,7 @@ export default {
           // console.log('job failed')
          }
         if(response.Percentage!=undefined && response.Percentage!=''){
-          console.log(1111111 + '===' + this.isdisabled);
+          // console.log(1111111 + '===' + this.isdisabled);
 
           this.percent=response.Percentage
           // console.log('this.percent :: ',this.percent)
