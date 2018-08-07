@@ -24,7 +24,7 @@
                   </FormItem>
               </Col>
               <Col span="12">
-                  <FormItem label="Sku" prop="sku">
+                  <FormItem label="SKU" prop="sku">
                       <Select v-model="formItem.sku" placeholder="Select SKU">
                           <Option v-for="item in skuOptions" :value="item.sku" :key="item.sku">{{ item.sku }}</Option>
                       </Select>
@@ -170,15 +170,6 @@ export default {
           sku: [
             { required: true, message: 'Please select sku', trigger: 'change' }
           ],
-          product_pdf: [
-            { required: true, message: 'Please select product pdf', trigger: 'change' }
-          ],
-          art_pdf: [
-            { required: true, message: 'Please select art pdf', trigger: 'change' }
-          ],
-          gcc_pdf: [
-            { required: true, message: 'Please select gcc pdf', trigger: 'change' }
-          ],
           brand_video_url: [
             { required: true, validator: validateUrlCheck, trigger: 'blur' }
           ]
@@ -189,15 +180,6 @@ export default {
           ],
           sku: [
             { required: true, message: 'Please select sku', trigger: 'change' }
-          ],
-          product_pdf: [
-            { required: true, message: 'Please select product pdf', trigger: 'change' }
-          ],
-          art_pdf: [
-            { required: true, message: 'Please select art pdf', trigger: 'change' }
-          ],
-          gcc_pdf: [
-            { required: true, message: 'Please select gcc pdf', trigger: 'change' }
           ],
           brand_video_url: [
             { required: true, validator: validateUrlCheck, trigger: 'blur' }
