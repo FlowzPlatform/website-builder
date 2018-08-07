@@ -56,7 +56,7 @@ let tagsUrl = config.baseURL + '/tags'
 let productmappingUrl = config.baseURL + '/productTags'
 let productApiUrl = config.productApiUrl
 //let productLocalApiUrl = config.productLocalApiUrl
-let productApiImageUrl = config.productApiImageUrl
+let productImageUrl = "https://res.cloudinary.com/flowz/image/upload/v1531481668/websites/images/no-image.png"
 
 export default {
   name: 'productmapping',
@@ -85,16 +85,20 @@ export default {
           title: 'Product Image',
           align: 'center',
           render: (h, params) => {
+            if(params.row._source.images != undefined) {
+                productImageUrl =  params.row._source.images[0].images[0].secure_url
+            }
+            
             return h('div', [
               h('a', {
                 attrs: {
-                  href: productApiImageUrl+params.row._source.default_image,
+                  href: productImageUrl,
                   target: '_blank'
                 }
               }, [
                 h('img', {
                   attrs: {
-                    src: productApiImageUrl+params.row._source.default_image,
+                    src: productImageUrl,
                     width: 130,
                     height: 65
                   },

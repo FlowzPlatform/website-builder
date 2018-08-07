@@ -179,11 +179,11 @@
                     <div class="buttons">
                       <ul>
                         <li>
-                          <a href="javascript:void(0)" @click='goToUserSettings()'><i class="ti-panel"></i><span> Settings</span></a>
+                          <a href="javascript:void(0)" @click='goToDashboard()'><i class="fa fa-dashboard"></i><span> Dashboard</span></a>
                         </li>
-                        <li>
+                        <!-- <li>
                           <a href="javascript:void(0)"><i class="ti-user"></i><span> Profile</span></a>
-                        </li>
+                        </li> -->
                         <li>
                           <a href="javascript:void(0)" @click="doLogout"><i class="ti-power-off"></i><span> Logout</span></a>
                         </li>
@@ -194,14 +194,14 @@
                   
                 </div>
                 <ul class="main-links">
-                    <li>
+                    <!-- <li>
                         <a href="#" class="inbox" @click='goToDashboard()'>
                             <i class="fa fa-dashboard">
                                 <span class="icon-bg hh-bg-success"></span>
                             </i>
                             <span class="hh-sidebar-item">Dashboard</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="#" @click='goToEditor()'>
                             <i class="fa fa-globe">
