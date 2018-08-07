@@ -5378,7 +5378,7 @@
                                                                         projName = projName.split('/')[2];
                                                                         // console.log("process.env.NODE_ENV",process.env.NODE_ENV)
                                                                         if (process.env.NODE_ENV !== 'development') {
-                                                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/public/' + nameF + '.html');
+                                                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/' + nameF + '.html');
                                                                             redirectWindow.location;
                                                                         } else {
                                                                             let redirectWindow = window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
