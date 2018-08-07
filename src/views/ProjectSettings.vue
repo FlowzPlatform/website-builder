@@ -1464,7 +1464,7 @@ export default {
       });
 
       app.service("jobqueue").on("patched", async (response) => {
-        // console.log('response:',response)
+        // console.log('patch response:',response)
        if(this.repoName==response.websiteid){
 
           // console.log('===========================================');
@@ -3855,13 +3855,12 @@ export default {
               this.$store.state.currentIndex = 0;
 
               // Push repository changes
-              axios.post(config.baseURL + '/gitlab-add-repo', {
+              await axios.post(config.baseURL + '/gitlab-add-repo', {
                 branchName: branchName,
                 commitMessage: commitMessage,
                 repoName: this.repoName,
                 userDetailId: Cookies.get('userDetailId')
               }).then(async response => {
-                // console.log(response);
                 if(response.data[0].code == 444){
                   this.$notify({
                     message: response.data[0].message,
@@ -5576,7 +5575,7 @@ export default {
                 await this.saveProjectSettings();
                 await this.init();
                 // location.reload();
-                this.$emit('updateProjectName');
+                this.$emit('updateProjectName'); /*it is to be noted that emit event with updateProjectName is for calling get dataof index.vue and is different from function in this components.*/
               }
               else{
                 this.$swal({

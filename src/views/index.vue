@@ -2623,7 +2623,6 @@
                                         // get Current SHA
                                         let SHA;
                                         await axios.get(config.baseURL + '/commit-service?projectId=' + this.newRepoId + '&privateToken=' + Cookies.get('auth_token'), {}).then(response => {
-                                            console.log('Response commit : ', response);
                                             SHA = response.data[0].id;
                                             // console.log('SHA: ', SHA);
                                         }).catch(error => {
@@ -5172,7 +5171,7 @@
                                 }
                                 responseMetal.data = responseMetal.data.substr(0, indexPartial + 14) + partials + responseMetal.data.substr(indexPartial + 14);
                                 // self.form.partials = back_partials
-                                console.log("Final metalsmith:", responseMetal.data);
+                                // console.log("Final metalsmith:", responseMetal.data);
                                 var mainMetal = folderUrl + '/public/assets/metalsmithPublish.js'
                                 axios.post(config.baseURL + '/save-menu', {
                                         filename: mainMetal,
@@ -5288,7 +5287,51 @@
                                                         // console.log('Metalsmith call FolderUrl: ', folderUrl);
                                                         let previewbackupmetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                                                        await axios.get(config.baseURL + '/metalsmith-publish?path=' + folderUrl, {}).then((response) => {
+                                                        await axios.get(config.baseURL + '/metalsmith-publish?path=' + folderUrl, {}).then(async(response) => {
+                                                                //calling commit functions of projectsetting
+                                                                 let dt = new Date();
+                                                                 let utcDate = dt.toUTCString();
+                                                                 let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
+                                                                 let commitMessage = nameF+'-PagePublish - ' + utcDate;
+                                                                  await axios.post(config.baseURL + '/gitlab-add-repo', {
+                                                                   branchName: branchName,
+                                                                   commitMessage: commitMessage,
+                                                                   repoName: self.globalConfigData[0].repoSettings[0].RepositoryName,
+                                                                   userDetailId: Cookies.get('userDetailId')
+                                                                 }).then(async response => {
+                                                                  if(response.data[0].code == 444){
+                                                                     self.$notify({
+                                                                       message: response.data[0].message,
+                                                                       type: 'warning'
+                                                                     });
+                                                                    
+                                                                   } else {
+                                                                      if(response.status == 200 || response.status == 201){
+
+                                                                        await axios.get( config.baseURL + '/commit-service?projectId=' + self.globalConfigData[0].repoSettings[0].RepositoryId, {
+                                                                        }).then(async response => {
+                                                                           await axios.post(config.baseURL + '/configdata-history', {
+                                                                               configData: self.globalConfigData,
+                                                                               currentBranch: branchName,
+                                                                               commitSHA: self.globalConfigData[0].repoSettings[0].CurrentHeadSHA,
+                                                                               websiteName: self.globalConfigData[0].repoSettings[0].RepositoryName,
+                                                                               userId: Cookies.get('userDetailId')
+                                                                           })
+                                                                           .then(function (resp) {
+                                                                               console.log('Config revision saved in configdata-history. ', resp);
+                                                                           })
+                                                                           .catch(function (error) {
+                                                                               console.log(error);
+                                                                           });
+                                                                        })
+                                                                      }
+
+                                                                   }
+                                                                 }).catch((e)=>{
+                                                                  console.log('error:',e)
+                                                                 })
+                                                                 self.globalConfigData[0].repoSettings[0].CurrentBranch=branchName
+                                                                 self.saveConfigFile(folderUrl)
                                                                 axios.post(config.baseURL + '/save-menu', {
                                                                         filename: folderUrl + '/public/assets/metalsmithPublish.js',
                                                                         text: previewbackupmetal,
