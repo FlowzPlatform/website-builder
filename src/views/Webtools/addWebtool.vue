@@ -359,20 +359,10 @@ export default {
     async onChangeWebsite (value) {
       this.$Spin.show();
 
-      // if(this.formItem.id !== '') {
-      //     let userId = Cookies.get('userDetailId')
-      //     if (userId !== '' && userId !== undefined) {
-      //         await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
-      //           for (let item of res.data.data) {
-      //             this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
-      //           }
-      //         }).catch(err => {
-      //         })
-      //     }
-      // }
-      // else {
-      //   this.formItem.sku = "";
-      // }
+      if(this.formItem.id == undefined) {
+          this.formItem.sku = '';
+          this.skuOptions = [];
+      }
 
       // get sku's of website
       let websiteDetails = _.find(this.webOptions, {value: this.formItem.website})
@@ -388,6 +378,9 @@ export default {
               this.$Message.error('Records not found.')
           }
       })
+      .catch(res => {
+          this.$Spin.hide()
+      })
 
       if(skuTotal > 0) {
         await axios.get(
@@ -398,6 +391,9 @@ export default {
             for (let item of res.data.hits.hits) {
                 this.skuOptions.push({sku: item._source.sku, product_id: item._source.product_id})
             }
+            this.$Spin.hide()
+        })
+        .catch(res => {
             this.$Spin.hide()
         })
       }
@@ -436,11 +432,11 @@ export default {
       }
     }
   },
-  mounted () {
+  async mounted () {
     let userId = Cookies.get('userDetailId')
     
     if (userId !== '' && userId !== undefined) {
-        axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
+        await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
           for (let item of res.data.data) {
             this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
           }
