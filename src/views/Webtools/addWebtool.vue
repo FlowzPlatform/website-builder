@@ -74,6 +74,12 @@
                   </FormItem>
               </Col>
               <Col span="12">
+                  <FormItem label="Special Pricing" prop="special_pricing">
+                      <el-button icon="special_pricing" @click="uploadWebtoolImage('special_pricing')" :loading="special_pricing_loader">Upload Image</el-button>
+                      <a :href="formItem.special_pricing" target="_blank" class="upload_image">
+                        <img v-if="formItem.special_pricing" :src="this.formItem.special_pricing" height="100"/>
+                      </a>
+                  </FormItem>
               </Col>
           </Row>
         </Form>
@@ -108,6 +114,30 @@ export default {
     fdata: Object
   },
   data () {
+    const validateSku = async(rule, value, callback) => {
+      let userId = Cookies.get('userDetailId')
+      if (value !== '' && this.formItem.website !== '') {
+        let resp = await (axios.get(webtoolsUrl + '?userId=' + userId +'&website=' + this.formItem.website + '&sku=' + value).then(res => {
+          if (this.formItem.id) {
+            let arr = [];
+            if(this.skuIgnore != undefined && this.skuIgnore != '') {
+                arr = _.reject(res.data.data, {sku: this.skuIgnore})  
+            }
+            return arr
+          } 
+          else {
+            return res.data.data
+          }
+        }).catch(err => {
+          return []
+        }))
+        if (resp.length > 0) {
+          callback(new Error('SKU already Exist.'))
+        } else {
+          callback();
+        }
+      }
+    };
     const validatelinkURL = async(rule, value, callback) => {
       if (value !== '') {
         var patt = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
@@ -153,13 +183,15 @@ export default {
         gcc_pdf_name: '',
         brand_video_url: '',
         nonbrand_video_url: '',
+        special_pricing: '',
+        special_pricing_name: '',
+        special_pricing_thumb: '',
         sku: '',
-        product_id: '',
         status: true,
         createdAt: '',
         userId: Cookies.get('userDetailId')
       },
-      uploadWebtoolImageLoader: false,
+      special_pricing_loader: false,
       product_pdf_loader: false,
       art_pdf_loader: false,
       gcc_pdf_loader: false,
@@ -168,22 +200,24 @@ export default {
             { required: true, message: 'Please select website', trigger: 'change' }
           ],
           sku: [
-            { required: true, message: 'Please select sku', trigger: 'change' }
-          ],
-          brand_video_url: [
-            { required: true, validator: validateUrlCheck, trigger: 'blur' }
+            { required: true, message: 'Please select sku', trigger: 'change' },
+            { validator: validateSku, trigger: 'change' }
           ]
+          // brand_video_url: [
+          //   { required: true, validator: validateUrlCheck, trigger: 'blur' }
+          // ]
       },
       updateRules: {
           website: [
             { required: true, message: 'Please select website', trigger: 'change' }
           ],
           sku: [
-            { required: true, message: 'Please select sku', trigger: 'change' }
-          ],
-          brand_video_url: [
-            { required: true, validator: validateUrlCheck, trigger: 'blur' }
+            { required: true, message: 'Please select sku', trigger: 'change' },
+            { validator: validateSku, trigger: 'change' }
           ]
+          // brand_video_url: [
+          //   { required: true, validator: validateUrlCheck, trigger: 'blur' }
+          // ]
       },
       uploadFile: {},
       targetOpts: [
@@ -202,7 +236,8 @@ export default {
       assetsImages: [],
       itemArr: [],
       webOptions: [],
-      skuOptions: []
+      skuOptions: [],
+      skuIgnore: ''
     }
   },
   methods: {
@@ -211,9 +246,8 @@ export default {
         if (valid) {
           this.$Spin.show();
           let productDetails = _.find(this.skuOptions, {value: this.formItem.sku})
-          console.log('productDetails == ',productDetails)
           this.formItem.createdAt = new Date()
-          //this.formItem.website = this.eCategoryDetail
+
           axios.post(webtoolsUrl, this.formItem).then(res => {
             this.$Spin.hide();
             this.$Notice.success({title: 'Success!!', desc: 'Successfully saved.', duration: 2})
@@ -283,6 +317,39 @@ export default {
             }
         }
       });
+    },
+    uploadWebtoolImage(template) {
+        this.special_pricing_loader = true;
+
+        cloudinary.openUploadWidget({ 
+            cloud_name: this.cloudDetails.cloudName, 
+            api_key: this.cloudDetails.apiKey,
+            upload_preset: this.cloudDetails.uploadPreset, 
+            sources: ['local', 'url']
+        }, (error, result) => { 
+          if(error != null){
+              if(error.message != 'User closed widget') {
+                  this.$message({
+                      message: 'Upload image failed. Please try again.',
+                      type: 'error'
+                  }); 
+              }
+              this.special_pricing_loader = false;  
+          } 
+          else {
+              let imageFromates = ['jpeg','jpg','gif','png','bmp','tiff'];
+              if(imageFromates.includes(result[0].format)) {
+                  this.formItem.special_pricing = result[0].url
+                  this.formItem.special_pricing_name = result[0].original_filename
+                  this.formItem.special_pricing_thumb = result[0].thumbnail_url
+                  this.special_pricing_loader = false;
+              }
+              else {
+                  this.$Notice.error({ title: 'Error', desc: 'Please upload image file.', duration: 2})
+                  this.special_pricing_loader = false;
+              }
+          }
+        });
     },
     startFetching() {
       this.colOpen = '1'
@@ -381,6 +448,7 @@ export default {
     if (this.fdata != undefined && this.fdata.type === 'editWebtool' && this.fdata.id !== undefined) {
         axios.get(webtoolsUrl + '/' + this.fdata.id).then(res => {
           this.formItem = res.data
+          this.skuIgnore = res.data.sku
           this.isdisable = true
         })
     }
