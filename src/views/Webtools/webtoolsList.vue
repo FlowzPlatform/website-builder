@@ -6,22 +6,25 @@
       </div>
     </Row>
     <Row style="border: 1px solid #dddee1; background: #f8f8f9; padding: 10px;margin-bottom: 20px;" :gutter="4">
-      <Col :span="8">
+      <Col :span="6">
         <Select v-model="filterobj.website" placeholder="Search by Website" filterable @on-change="handleSearch">
           <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </Col>
-      <Col :span="8">
+      <Col :span="6">
+        <Input v-model.trim="filterobj.sku" placeholder="Search by SKU" filterable @on-blur="handleSearch"></Input>
+      </Col>
+      <Col :span="6">
         <Select v-model="filterobj.status" placeholder="Search by Status" filterable @on-change="handleSearch">
           <Option v-for="item in statusOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </Col>
-      <Col :span="8">
+      <Col :span="6">
         <Row>
-          <Col :span="(filterobj.webste === '' && filterobj.status === '') ? 24 : 12">
+          <Col :span="(filterobj.website === '' && filterobj.sku === '' && filterobj.status === '') ? 24 : 12">
             <Button type="primary" shape="circle" style="font-size:14px;" icon="ios-search" long @click="handleSearch">Search</Button>
           </Col>
-          <Col :span="12" v-if="filterobj.webste !== '' || filterobj.status !== ''">
+          <Col :span="12" v-if="filterobj.website !== '' || filterobj.sku !== '' || filterobj.status !== ''">
             <Button type="ghost" shape="circle" style="font-size:14px;" icon="ios-reload" long @click="handleFileterReset">Reset</Button>
           </Col>
         </Row>
@@ -57,6 +60,7 @@ export default {
     return {
       filterobj: {
         website: '',
+        sku: '',
         status: ''
       },
       fcolumns: [
@@ -301,7 +305,7 @@ export default {
       this.init(item)
     },
     handleSearch () {
-      if (this.filterobj.status !== '' || this.filterobj.website !== '') {
+      if (this.filterobj.status !== '' || this.filterobj.sku !== '' || this.filterobj.website !== '') {
         this.cpage = 1
         this.skip = this.cpage * this.limit - this.limit
         this.init()
@@ -309,6 +313,7 @@ export default {
     },
     handleFileterReset () {
       this.filterobj.website = ''
+      this.filterobj.sku = ''
       this.filterobj.status = ''
       this.init()
     },
@@ -365,6 +370,9 @@ export default {
         }
         if (this.filterobj.website !== '') {
           query += '&website=' + this.filterobj.website
+        }
+        if (this.filterobj.sku !== '') {
+          query += '&sku=' + this.filterobj.sku
         }
         if (this.filterobj.status !== '') {
           query += '&status=' + JSON.parse(this.filterobj.status)
