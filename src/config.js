@@ -40,7 +40,6 @@ if (process.env.NODE_ENV !== 'development') {
     menuCategoriesUrl='https://api.'+domainkey+'/pdmnew/categories',
     colorSwatchUrl='https://api.'+domainkey+'/pdmnew/filters/'
     productApiUrl='https://api.'+domainkey+'/pdmnew/pdm/US'
-    productApiImageUrl = 'http://image.promoworld.ca/migration-api-hidden-new/web/images/'
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
@@ -71,7 +70,7 @@ if (process.env.NODE_ENV !== 'development') {
     menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories',
     colorSwatchUrl='https://api.flowzcluster.tk/pdmnew/filters/'
     productApiUrl = 'https://api.flowzcluster.tk/pdmnew/pdm/US'
-    productApiImageUrl = 'http://image.promoworld.ca/migration-api-hidden-new/web/images/'
+    //productLocalApiUrl = 'http://localhost:9200/pdm1/product'  //temperary
 }
 
 module.exports = {
@@ -112,7 +111,7 @@ module.exports = {
     menuCategoriesUrl : menuCategoriesUrl,
     colorSwatchUrl : colorSwatchUrl,
     productApiUrl : productApiUrl,
-    productApiImageUrl : productApiImageUrl,
+    // productLocalApiUrl : productLocalApiUrl,  //temperary
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',

@@ -1,9 +1,9 @@
 <template>
-  <div class="tagsnew">
+  <div class="flyersnew">
     <Row>
       <div style="padding-bottom: 10px;">
-        <h2 v-if="formItem.id">Edit Tag</h2>
-        <h2 v-else>Add Tag
+        <h2 v-if="formItem.id">Edit Flyer</h2>
+        <h2 v-else>Add Flyer
           <span style="float:right;">
             <Button type="ghost" shape="circle" style="margin-left: 8px" @click="handleCancel">Cancel</Button>
             <Button type="primary" shape="circle" @click="handleSubmit('formItem')">Submit</Button>
@@ -17,13 +17,13 @@
         <Form :model="formItem" :label-width="150" ref="formItem" :rules="rulesformItem">
           <Row :gutter="16">
             <Col span="12">
-                <FormItem label="Name" prop="tag_name">
-                    <Input v-model.trim="formItem.tag_name"></Input>
+                <FormItem label="Name" prop="flyer_name">
+                    <Input v-model.trim="formItem.flyer_name"></Input>
                 </FormItem>
             </Col>
             <Col span="12">
-                <FormItem label="Slug" prop="tag_slug">
-                    <Input v-model.trim="formItem.tag_slug"></Input>
+                <FormItem label="Valid Until Date" prop="flyer_end_date">
+                    <DatePicker type="date" :options="dateOptions" v-model="formItem.flyer_end_date" placeholder="Select End Date"></DatePicker>
                 </FormItem>
             </Col>
           </Row>
@@ -33,40 +33,31 @@
                     <Select v-model="formItem.website" placeholder="Select Website"  @on-change="OnChangeWebsite" :disabled="isdisable">
                         <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
-                </FormItem> 
+                </FormItem>
             </Col>
             <Col span="12">
-                <FormItem label="Category" prop="tag_category">
-                    <Select v-model="formItem.tag_category" placeholder="Select Category" @on-change="OnChangeTagCategory" filterable>
-                        <Option v-for="item in tagcategories" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <FormItem label="Category" prop="flyer_category">
+                    <Select v-model="formItem.flyer_category" @on-change="OnChangeFlyerCategory" filterable>
+                        <Option v-for="item in flyercategories" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
             </Col>
           </Row>
           <Row :gutter="16">
             <Col span="12">
-                <FormItem label="Color" prop="tag_color">
-                    <ColorPicker v-model="formItem.tag_color" />
-                </FormItem>
-            </Col>
-            <Col span="12">
-                <FormItem label="Icon" prop="tag_icon">
-                    <el-button icon="tag_icon" @click="uploadTagIcon()" :loading="uploadTagIconLoader">Upload</el-button>
-                    <a :href="formItem.tag_icon" target="_blank" class="upload_image">
-                      <img v-if="formItem.tag_icon" :src="formItem.tag_icon" />
+                <FormItem label="Image" prop="flyer_image">
+                    <el-button icon="flyer_image" @click="uploadFlyerImage()" :loading="uploadFlyerImageLoader">Upload Image</el-button>
+                    <a :href="formItem.flyer_image" target="_blank" class="upload_image">
+                      <img v-if="formItem.flyer_image" :src="formItem.flyer_image" height="100"/>
                     </a>
                 </FormItem>
             </Col>
-          </Row>
-          <Row :gutter="16">
             <Col span="12">
-                <FormItem label="Description" prop="tag_description">
-                    <Input v-model="formItem.tag_description" type="textarea" :rows="4" placeholder="Enter something..."></Input>
-                </FormItem>
-            </Col>
-            <Col span="12">
-                <FormItem label="Date Range" prop="tag_start_date">
-                    <DatePicker type="daterange" :options="dateOptions" v-model="tag_date_range" placeholder="Select Date Range" style="width:50%"></DatePicker>
+                <FormItem label="PDF" prop="flyer_pdf">
+                    <el-button icon="flyer_pdf" @click="uploadFlyerPdf()" :loading="uploadFlyerPdfLoader">Upload PDF</el-button>
+                    <a :href="formItem.flyer_pdf" target="_blank" class="upload_image">
+                      <img v-if="formItem.flyer_pdf" :src="pdf_download" height="100"/>
+                    </a>
                 </FormItem>
             </Col>
           </Row>
@@ -91,16 +82,15 @@ import _ from 'lodash'
 import moment from 'moment'
 import configs from '@/config'
 import { log } from 'util';
-import { constants } from 'zlib';
 
 let baseUrl = config.baseURL
-let tagCategoryUrl = baseUrl + '/tagcategory'
-let tagsUrl = baseUrl + '/tags'
+let flyerCategoryUrl = config.baseURL + '/flyer-category'
+let flyersUrl = config.baseURL + '/flyers'
 
 export default {
-  name: 'tagsnew',
+  name: 'flyersnew',
   props: {
-    tdata: Object
+    fdata: Object
   },
   data () {
     const validatelinkURL = async(rule, value, callback) => {
@@ -117,68 +107,60 @@ export default {
     return {
       colOpen: '0',
       isShowimgblock: false,
-      tag_date_range: [],
+      pdf_download: '../../static/img/pdf.png',
       dateOptions: {
         disabledDate (date) {
             return date && date.valueOf() < Date.now() - 86400000;
         }
       },
       formItem: {
-        tag_name: '',
-        tag_slug: '',
+        flyer_name: '',
         website: '',
-        tag_category: '',
-        tag_color: '',
-        tag_icon: '',
-        tag_image_name: '',
-        tag_description: '',
-        tag_start_date: '',
-        tag_end_date: '',
-        tag_status: true,
+        flyer_category: '',
+        flyer_image: '',
+        flyer_image_name: '',
+        flyer_pdf: '',
+        flyer_pdf_name: '',
+        flyer_end_date: '',
+        flyer_status: true,
         createdAt: '',
-        userId: Cookies.get('userDetailId'),
+        userId: Cookies.get('userDetailId')
       },
-      uploadTagIconLoader: false,
-      tagcategories: [],
+      uploadFlyerImageLoader: false,
+      uploadFlyerPdfLoader: false,
+      flyercategories: [],
       rulesformItem: {
-        tag_name: [
-          { required: true, message: 'Please enter tag name', trigger: 'change' }
-        ],
-        tag_slug: [
-          { required: true, message: 'Please enter tag slug', trigger: 'change' }
+        flyer_name: [
+          { required: true, message: 'Please enter flyer name', trigger: 'change' }
         ],
         website: [
           { required: true, message: 'Please select website', trigger: 'change' }
         ],
-        tag_category: [
-          { required: true, message: 'Please select the tag category', trigger: 'change' }
+        flyer_category: [
+          { required: true, message: 'Please select the flyer category', trigger: 'change' }
         ],
-        tag_color: [
-          { required: true, message: 'Please enter tag color', trigger: 'change' }
+        flyer_image: [
+          { required: true, message: 'Please select the flyer image', trigger: 'change' }
         ],
-        tag_icon: [
-          { required: true, message: 'Please select the tag image', trigger: 'change' }
+        flyer_pdf: [
+          { required: true, message: 'Please select the flyer pdf', trigger: 'change' }
         ]
       },
       updateRules: {
-          tag_name: [
-            { required: true, message: 'Please enter tag name', trigger: 'change' }
-          ],
-          tag_slug: [
-            { required: true, message: 'Please enter tag slug', trigger: 'change' }
+          flyer_name: [
+            { required: true, message: 'Please enter flyer name', trigger: 'change' }
           ],
           website: [
             { required: true, message: 'Please select website', trigger: 'change' }
           ],
-          tag_category: [
-            { required: true, message: 'Please select the tag category', trigger: 'change' }
+          flyer_category: [
+            { required: true, message: 'Please select the flyer category', trigger: 'change' }
           ],
-          tag_color: [
-            { required: true, message: 'Please enter tag color', trigger: 'change' }
+          flyer_image: [
+            { required: true, message: 'Please select the flyer image', trigger: 'change' }
           ],
-          tag_icon: [
-            { required: true, message: 'Please select the tag image', trigger: 'change' }
-            // { validator: validateIMG, trigger: 'change' }
+          flyer_pdf: [
+            { required: true, message: 'Please select the flyer pdf', trigger: 'change' }
           ]
       },
       uploadFile: {},
@@ -193,18 +175,12 @@ export default {
         }
       ],
       cloudDetails: {},
-      tcategoryDetail: {},
+      fCategoryDetail: {},
       isdisable: false,
       fetchImagesLoader: false,
       assetsImages: [],
       itemArr: [],
       webOptions: []
-    }
-  },
-  watch: {
-    tag_date_range: function(value) {
-      this.formItem.tag_start_date = value[0]
-      this.formItem.tag_end_date = value[1]
     }
   },
   methods: {
@@ -213,11 +189,11 @@ export default {
         if (valid) {
           this.$Spin.show();
           this.formItem.createdAt = new Date()
-          this.formItem.website = this.tcategoryDetail.website
-          axios.post(tagsUrl, this.formItem).then(res => {
+          this.formItem.website = this.fCategoryDetail.website
+          axios.post(flyersUrl, this.formItem).then(res => {
             this.$Spin.hide();
-            this.$Notice.success({title: 'Success!!', desc: '', duration: 2})
-            this.$emit('updateTag', {type: 'taglist'})
+            this.$Notice.success({title: 'Success!!', desc: 'Successfully saved.', duration: 2})
+            this.$emit('updateDocument', {type: 'flyerlist'})
           }).catch(err => {
             this.$Spin.hide();
             this.$Notice.error({title: 'Error!!', desc: 'Not saved.', duration: 2})
@@ -234,10 +210,10 @@ export default {
         if (valid && this.isShowimgblock) {
           this.$Spin.show();
           item.createdAt = new Date()
-          axios.put(tagsUrl + '/' + this.formItem.id, item).then(res => {
+          axios.put(flyersUrl + '/' + this.formItem.id, item).then(res => {
             this.$Spin.hide();
             this.$router.push({title: 'Success!!', desc: 'Successfully Edited.', duration: 2})
-            this.$emit('updateTag', {type: 'taglist'})
+            this.$emit('updateDocument', {type: 'flyerlist'})
           }).catch(err => {
             this.$Spin.hide();
             console.log('Error', err)
@@ -246,97 +222,98 @@ export default {
       })
     },
     handleCancel () {
-      this.$emit('updateTag', {type: 'taglist'})
+      this.$emit('updateDocument', {type: 'flyerlist'})
     },
-    uploadTagIcon() {
-      if(this.formItem.tag_category != '') {
-          this.uploadTagIconLoader = true;
+    uploadFlyerImage() {
+      //this.formItem.flyer_image = ''
+      if(this.formItem.flyer_category != '') {
+          this.uploadFlyerImageLoader = true;
+          cloudinary.openUploadWidget({ 
+              cloud_name: this.cloudDetails.cloudName, 
+              api_key: this.cloudDetails.apiKey,
+              upload_preset: this.cloudDetails.uploadPreset, 
+              sources: ['local', 'camera', 'url']
+          }, (error, result) => { 
+              if(error != null){
+                if(error.message != 'User closed widget'){
+                  this.$message({
+                    message: 'Upload image failed. Please try again.',
+                    type: 'error'
+                  }); 
+                } 
+                this.uploadFlyerImageLoader = false;  
+              } 
+              else {
+                this.formItem.flyer_image = result[0].url
+                this.formItem.flyer_image_name = result[0].original_filename
+                this.uploadFlyerImageLoader = false;  
+              }
+          });
+      }
+      else {
+          this.$Notice.error({ title: 'Error', desc: 'Please select flyer category first.', duration: 2})
+      }
+    },
+    uploadFlyerPdf() {
+      if(this.formItem.flyer_category != '') {
+          this.uploadFlyerPdfLoader = true;
           cloudinary.openUploadWidget({ 
             cloud_name: this.cloudDetails.cloudName, 
             api_key: this.cloudDetails.apiKey,
             upload_preset: this.cloudDetails.uploadPreset, 
-            sources: ['local', 'camera', 'url', 'facebook']
+            sources: ['local', 'camera', 'url']
           }, (error, result) => { 
             if(error != null){
-
-              if(error.message == 'User closed widget'){
-
-              } else {
-                console.log('Image upload error: ', error);
+              if(error.message != 'User closed widget'){
                 this.$message({
-                  message: 'Upload image failed. Please try again.',
+                  message: 'Upload PDF failed. Please try again.',
                   type: 'error'
-                });  
+                }); 
               }
-              
-              this.uploadTagIconLoader = false;  
-            } else {
-              this.formItem.tag_icon = result[0].url
-              this.formItem.tag_image_name = result[0].original_filename
-              this.uploadTagIconLoader = false;  
+              this.uploadFlyerPdfLoader = false;  
+            } 
+            else {
+              if(result[0].format == 'pdf') {
+                  this.formItem.flyer_pdf = result[0].url
+                  this.formItem.flyer_pdf_name = result[0].original_filename
+                  this.uploadFlyerPdfLoader = false;
+              }
+              else {
+                  this.$Notice.error({ title: 'Error', desc: 'Please upload pdf file.', duration: 2})
+              }
             }
           });
       }
       else {
-          if(this.formItem.website == '') {
-            this.$Notice.error({ title: 'Error', desc: 'Please select website & category.', duration: 2})
-          }
-          else {
-            this.$Notice.error({ title: 'Error', desc: 'Please select category.', duration: 2})
-          }
+          this.$Notice.error({ title: 'Error', desc: 'Please select flyer category first.', duration: 2})
       }
     },
     startFetching() {
       this.colOpen = '1'
       this.assetsImages = []
       this.fetchImagesLoader = true;
-      this.fetchcloudinaryImages()
-    },
-    async fetchcloudinaryImages(){
-          await axios.get(baseUrl + '/cloudinary-service?cloudName=' + this.cloudDetails.cloudName + '&apiKey=' + this.cloudDetails.apiKey + '&apiSecret=' + this.cloudDetails.apiSecret + '&nextCursor=' + this.cloudDetails.nextCursor, {
-          })
-          .then((response) => {
-              for(let i = 0; i < response.data.resources.length; i++){
-                if (response.data.resources[i].secure_url === this.formItem.tag_icon) {
-                  this.assetsImages.push({isSelect: true, url: response.data.resources[i].secure_url});
-                } else {
-                  this.assetsImages.push({isSelect: false, url: response.data.resources[i].secure_url});
-                }
-              }
-              if(response.data.next_cursor !== undefined){
-                this.cloudDetails.nextCursor = response.data.next_cursor;
-                this.fetchcloudinaryImages();
-              } else {
-                this.cloudDetails.nextCursor = '';
-                this.fetchImagesLoader = false;
-              }
-          })
-          .catch((error) => {
-              console.log(error);
-              this.fetchImagesLoader = false;
-          });
     },
     OnChangeWebsite (value) {
-      this.tagcategories = [];
-      axios.get(tagCategoryUrl + '?userId=' + Cookies.get('userDetailId') + '&website='+value+'&status=true&$paginate=false').then(res=> {
+      this.flyercategories = [];
+      axios.get(flyerCategoryUrl + '?userId=' + Cookies.get('userDetailId') + '&website='+value+'&status=true&$paginate=false').then(res=> {
         for(let item of res.data) {
-          this.tagcategories.push({
-            label: item.tc_name,
+          this.flyercategories.push({
+            label: item.fc_name,
             value: item.id
           })
         }
       })
     },
-    async OnChangeTagCategory (value) {
+    async OnChangeFlyerCategory (value) {
       this.isShowimgblock = false
       this.$Spin.show()
       if (value !== '') {
-        let resp = await axios.get(tagCategoryUrl + '/' + value).then(res => {
+        let resp = await axios.get(flyerCategoryUrl + '/' + value).then(res => {
           return res.data
         }).catch(err => {
           return {}
         })
-        this.tcategoryDetail = resp
+        this.fCategoryDetail = resp
         if (!_.isEmpty(resp)) {
           let result = await axios(baseUrl + '/project-configuration/' + resp.website).then(res => {
             return res.data
@@ -390,22 +367,10 @@ export default {
       })
     }
 
-    if(this.formItem.website !== '') {
-      axios.get(tagCategoryUrl + '?userId=' + userId + '&website='+this.formItem.website+'&status=true&$paginate=false').then(res=> {
-        for(let item of res.data) {
-          this.tagcategories.push({
-            label: item.tc_name,
-            value: item.id
-          })
-        }
-      })
-    }
-
-    if (this.tdata != undefined && this.tdata.type === 'tag' && this.tdata.id !== undefined) {
-        axios.get(tagsUrl + '/' + this.tdata.id).then(res => {
+    if (this.fdata != undefined && this.fdata.type === 'flyer' && this.fdata.id !== undefined) {
+        axios.get(flyersUrl + '/' + this.fdata.id).then(res => {
           this.formItem = res.data
           this.isdisable = true
-          this.tag_date_range = [this.formItem.tag_start_date,this.formItem.tag_end_date];
         })
     }
   }
@@ -413,13 +378,13 @@ export default {
 </script>
 
 <style >
-.tagsnew {
+.flyersnew {
   padding: 40px;
 }
-.mIcon:hover {
+.mImage:hover {
   color: red;
 }
-.mIcon {
+.mImage {
   color: #ddd;
   font-size: 25px;
   /*float:right;*/
@@ -430,10 +395,6 @@ export default {
   /*top: 20;*/
 }
 .upload_image {
-  margin-left: 20px;
-}
-.upload_image img {
-  max-width: 250px;
-  height: 100px; 
+  float: right;
 }
 </style>

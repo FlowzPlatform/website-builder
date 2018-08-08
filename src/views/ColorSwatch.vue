@@ -677,9 +677,6 @@
 .ivu-upload-select{
   margin-top: 10px;
 }
-.ivu-input{
-  text-align: center;
-}
 </style>
 <style scoped>
 	.swatch{

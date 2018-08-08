@@ -417,11 +417,8 @@ export default {
   	async init () {
       let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
       localStorage.setItem('folderUrl...', folderUrl);
-      console.log("folderUrl", folderUrl)
       let foldername = folderUrl.split('/');
-      console.log("foldername", foldername)
       let foldername_ = foldername[6];
-      console.log("foldername", foldername_)
         if (foldername_ != undefined) {
           this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername_ ).catch((e)=>{
         let dataMessage = '';
@@ -453,8 +450,6 @@ export default {
           location.reload()
         });
        });
-        console.log("this.configData",this.configData)
-        console.log("this.configData.status",this.configData.status)
       if(this.configData.status == 200 || this.configData.status == 204){
         //console.log('Config file found! Updating fields..');
 

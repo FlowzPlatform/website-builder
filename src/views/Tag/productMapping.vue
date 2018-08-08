@@ -30,7 +30,7 @@
       </Col>
     </Row>
     <Row>
-        
+
       <Table :loading="loading" :columns="pmcolumns" :data="pdata.data" stripe  @on-sort-change="handleSorting"></Table>
     </Row>
     <Row >
@@ -48,13 +48,15 @@ import axios from 'axios'
 import config from '../../config'
 import moment from 'moment'
 import _ from 'lodash'
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
+// import elasticsearch from 'elasticsearch'
 
 let baseUrl = config.baseURL
 let tagsUrl = config.baseURL + '/tags'
 let productmappingUrl = config.baseURL + '/productTags'
 let productApiUrl = config.productApiUrl
-let productApiImageUrl = config.productApiImageUrl
+//let productLocalApiUrl = config.productLocalApiUrl
+let productImageUrl = "https://res.cloudinary.com/flowz/image/upload/v1531481668/websites/images/no-image.png"
 
 export default {
   name: 'productmapping',
@@ -83,16 +85,20 @@ export default {
           title: 'Product Image',
           align: 'center',
           render: (h, params) => {
+            if(params.row._source.images != undefined) {
+                productImageUrl =  params.row._source.images[0].images[0].secure_url
+            }
+            
             return h('div', [
               h('a', {
                 attrs: {
-                  href: productApiImageUrl+params.row._source.default_image,
+                  href: productImageUrl,
                   target: '_blank'
                 }
               }, [
                 h('img', {
                   attrs: {
-                    src: productApiImageUrl+params.row._source.default_image,
+                    src: productImageUrl,
                     width: 130,
                     height: 65
                   },
@@ -151,7 +157,8 @@ export default {
       cpage: 1,
       limit: 10,
       skip: 0,
-      webOptions: []
+      webOptions: [],
+      tagData: []
     }
   },
   methods: {
@@ -211,10 +218,52 @@ export default {
           } else {
               this.$Spin.show();
               pmData.createdAt = new Date()
+
+              //change in elasticsearch product
+              // axios.get(tagsUrl + '/' + this.tdata.id).then(res => {
+              //     axios.get(productApiUrl + '/' + productData._id).then(res2 => {
+              //         let tag_list = res2.data._source.tags;
+
+              //         if(tag_list.includes(res.data.tag_name)) {
+              //             this.$Spin.hide();
+              //             this.$Notice.error({title: 'Error!!', desc: 'Tag already mapped.', duration: 2})
+              //         }
+              //         else {
+              //             let websiteDetails = _.find(this.webOptions, {value: this.tdata.website});
+              //             let esData;
+              //             if(tag_list !== undefined && tag_list != '') {
+              //               //esData =  { "doc":{ "tags":tag_list+"|"+res.data.tag_name } };
+              //               esData =  { "supplier_id":productData._source.supplier_id, "tags":tag_list+"|"+res.data.tag_name };
+              //             }
+              //             else {
+              //               //esData =  { "doc":{ "tags":res.data.tag_name } };
+              //               esData =  { "supplier_id":productData._source.supplier_id, "tags":res.data.tag_name };
+              //             }
+
+              //             // axios({
+              //             //     method: 'POST',
+              //             //     url: productLocalApiUrl+"/"+productData._id+"/_update?pretty",
+              //             //     data: esData
+              //             axios({
+              //                 method: 'PATCH',
+              //                 url: productApiUrl+"/"+productData._id,
+              //                 data: esData,
+              //                 headers: {'vid':websiteDetails.vid}
+              //             }).then(res3 => {
+              //                 this.$Spin.hide();
+              //                 this.$Notice.success({title: 'Success!!', desc: 'Tag mapped to ES.', duration: 2})
+              //             }).catch(err => {
+              //                 this.$Spin.hide();
+              //                 this.$Notice.error({title: 'Error!!', desc: 'Not mapped to ES.', duration: 2})
+              //             })
+              //         }
+              //     })
+              // })
+              //end elasticsearch
+
               axios.post(productmappingUrl, pmData).then(res => {
                 this.$Spin.hide();
                 this.$Notice.success({title: 'Success!!', desc: '', duration: 2})
-                //this.$emit('updateTag', {type: 'productmapping', id: this.tdata.id, website: this.tdata.website})
               }).catch(err => {
                 this.$Spin.hide();
                 this.$Notice.error({title: 'Error!!', desc: 'Not saved.', duration: 2})
@@ -228,7 +277,7 @@ export default {
     async init (item) {
       this.loading = true
       let userId = Cookies.get('userDetailId')
-      if (userId !== '' && userId !== undefined) {
+      if (userId !== undefined && userId !== '') {
         let query = ''
         if (item === undefined) {
           query = '?$skip=' + this.skip + '&$limit=' + this.limit
@@ -239,13 +288,12 @@ export default {
           query += '&product_name=' + this.filterobj.product_name
         }
         if (this.filterobj.sku !== '') {
-          query += '&sku=' + JSON.parse(this.filterobj.sku)
+          query += '&sku=' + this.filterobj.sku
         }
-        
         let websiteDetails = _.find(this.webOptions, {value: this.tdata.website})
         this.pdata = await axios
             .get(
-              productApiUrl + query, 
+              productApiUrl + query,
               { headers: { 'vid': websiteDetails.vid } }
             )
             .then(res => {
@@ -254,7 +302,7 @@ export default {
                 result.total = res.data.hits.total;
                 return result;
             })
-        
+
         this.loading = false
       }
       this.loading = false
@@ -268,6 +316,7 @@ export default {
       }
       this.$Spin.hide();
     }).catch(err => {
+    console.log("error",err)
       this.$Spin.hide();
     })
 
