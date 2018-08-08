@@ -1464,7 +1464,7 @@ export default {
       });
 
       app.service("jobqueue").on("patched", async (response) => {
-        // console.log('patch response:',response)
+        console.log('patch response:',response)
        if(this.repoName==response.websiteid){
 
           // console.log('===========================================');
