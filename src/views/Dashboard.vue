@@ -27,14 +27,14 @@
     <div class="start-content">
       <div class="container">
         <div class="row">
-          <div class="col-md-4">
+          <!-- <div class="col-md-4">
             <a href="#" class="website-add">
               <div class="website-card" style="text-align: center; padding-top: 70px;">
                   <i class="fa fa-plus fa-2x"></i>
                   <h3>Add New</h3>
               </div>
             </a>
-          </div>
+          </div> -->
 
 
           <div class="col-md-4" v-for="items in websites">

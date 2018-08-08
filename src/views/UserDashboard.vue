@@ -179,11 +179,11 @@
                     <div class="buttons">
                       <ul>
                         <li>
-                          <a href="javascript:void(0)" @click='goToUserSettings()'><i class="ti-panel"></i><span> Settings</span></a>
+                          <a href="javascript:void(0)" @click='goToDashboard()'><i class="fa fa-dashboard"></i><span> Dashboard</span></a>
                         </li>
-                        <li>
+                        <!-- <li>
                           <a href="javascript:void(0)"><i class="ti-user"></i><span> Profile</span></a>
-                        </li>
+                        </li> -->
                         <li>
                           <a href="javascript:void(0)" @click="doLogout"><i class="ti-power-off"></i><span> Logout</span></a>
                         </li>
@@ -194,14 +194,14 @@
                   
                 </div>
                 <ul class="main-links">
-                    <li>
+                    <!-- <li>
                         <a href="#" class="inbox" @click='goToDashboard()'>
                             <i class="fa fa-dashboard">
                                 <span class="icon-bg hh-bg-success"></span>
                             </i>
                             <span class="hh-sidebar-item">Dashboard</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="#" @click='goToEditor()'>
                             <i class="fa fa-globe">
@@ -243,10 +243,10 @@
                             <span class="hh-sidebar-item">Settings</span>
                         </a>
                     </li> -->
-		            <li>
+		    <li>
                         <a href="#" @click='goToWebsiteSetting()'>
                             <i class="fa fa-cog">
-                                <span class="icon-bg hh-bg-success"></span>
+                                <span class="icon-bg hh-bg-warning"></span>
                             </i>
                             <span class="hh-sidebar-item">Website Configuration</span>
                         </a>
@@ -254,7 +254,7 @@
                     <li>
                         <a href="#" class="done" @click="bExpand = !bExpand">
                             <i class="fa fa-file-image-o">
-                                <span class="icon-bg hh-bg-warning"></span>
+                                <span class="icon-bg hh-bg-success"></span>
                             </i>
                             <span class="hh-sidebar-item">Banner Management</span>
                         </a>
@@ -294,13 +294,37 @@
                     <li>
                         <a href="#" @click='goToColors()'>
                             <i class="fa fa-list">
-                                <span class="icon-bg hh-bg-success"></span>
+                                <span class="icon-bg hh-bg-danger"></span>
                             </i>
                             <span class="hh-sidebar-item">Product & Imprint Color</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="done" @click="tExpand = !tExpand">
+                        <a href="javascript:;" class="done" @click="cExpand = !cExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Category Management</span>
+                        </a>
+                    </li>
+                    <li v-if="cExpand">
+                        <a href="javascript:;" class="inside-items" @click='goToCategory("c_add")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Category</span>
+                        </a>
+                    </li>
+                    <li v-if="cExpand"  @click='goToCategory("c_list")'>
+                        <a href="javascript:;" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Categories</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="done" @click="tExpand = !tExpand">
                             <i class="fa fa-file-image-o">
                                 <span class="icon-bg hh-bg-warning"></span>
                             </i>
@@ -308,7 +332,7 @@
                         </a>
                     </li>
                     <li v-if="tExpand">
-                        <a href="#" class="inside-items" @click='goToTag("tc_add")'>
+                        <a href="javascript:;" class="inside-items" @click='goToTag("tc_add")'>
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -316,7 +340,7 @@
                         </a>
                     </li>
                     <li v-if="tExpand"  @click='goToTag("tc_list")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -324,7 +348,7 @@
                         </a>
                     </li>
                     <li  v-if="tExpand"  @click='goToTag("t_add")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
@@ -332,61 +356,109 @@
                         </a>
                     </li>
                     <li  v-if="tExpand"  @click='goToTag("t_list")'>
-                        <a href="#" class="inside-items">
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
                             <span class="hh-sidebar-item">List Tags</span>
                         </a>
                     </li>
-                    <!-- <li>
-                        <a href="#" class="done" @click="bExpand = !bExpand">
+                    <li>
+                        <a href="javascript:;" class="done" @click="mExpand = !mExpand">
                             <i class="fa fa-file-image-o">
-                                <span class="icon-bg hh-bg-warning"></span>
+                                <span class="icon-bg hh-bg-primary"></span>
                             </i>
-                            <span class="hh-sidebar-item">Banner Management</span>
+                            <span class="hh-sidebar-item">Marketing Tools</span>
                         </a>
                     </li>
-                    <li v-if="bExpand">
-                        <a href="#" class="inside-items" @click='goToBanner("bt_add")'>
+                    <li v-if="mExpand">
+                        <a href="javascript:;" class="inside-items" @click='goToTools("fc_add")'>
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
-                            <span class="hh-sidebar-item">Add Banner Type</span>
+                            <span class="hh-sidebar-item">Add Flyer Category</span>
                         </a>
                     </li>
-                    <li  v-if="bExpand"  @click='goToBanner("bt_list")'>
-                        <a href="#" class="inside-items">
+                    <li v-if="mExpand"  @click='goToTools("fc_list")'>
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
-                            <span class="hh-sidebar-item">List BannerType</span>
+                            <span class="hh-sidebar-item">List Flyer Categories</span>
                         </a>
                     </li>
-                    <li  v-if="bExpand"  @click='goToBanner("b_add")'>
-                        <a href="#" class="inside-items">
+                    <li  v-if="mExpand"  @click='goToTools("f_add")'>
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
-                            <span class="hh-sidebar-item">Add Banner</span>
+                            <span class="hh-sidebar-item">Add Flyer</span>
                         </a>
                     </li>
-                    <li  v-if="bExpand"  @click='goToBanner("b_list")'>
-                        <a href="#" class="inside-items">
+                    <li  v-if="mExpand"  @click='goToTools("f_list")'>
+                        <a href="javascript:;" class="inside-items">
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
-                            <span class="hh-sidebar-item">List Banners</span>
+                            <span class="hh-sidebar-item">List Flyers</span>
+                        </a>
+                    </li>
+                    <li v-if="mExpand">
+                        <a href="javascript:;" class="inside-items" @click='goToTools("ec_add")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Ecatalog Category</span>
+                        </a>
+                    </li>
+                    <li v-if="mExpand"  @click='goToTools("ec_list")'>
+                        <a href="javascript:;" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Ecatalog Categories</span>
+                        </a>
+                    </li>
+                    <li  v-if="mExpand"  @click='goToTools("e_add")'>
+                        <a href="javascript:;" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add Ecatalog</span>
+                        </a>
+                    </li>
+                    <li  v-if="mExpand"  @click='goToTools("e_list")'>
+                        <a href="javascript:;" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List Ecatalogs</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" @click='goToColors()'>
-                            <i class="fa fa-list">
-                                <span class="icon-bg hh-bg-success"></span>
+                        <a href="javascript:;" class="done" @click="wExpand = !wExpand">
+                            <i class="fa fa-file-image-o">
+                                <span class="icon-bg hh-bg-warning"></span>
                             </i>
-                            <span class="hh-sidebar-item">Product & Imprint Color</span>
+                            <span class="hh-sidebar-item">WebTools</span>
                         </a>
-                    </li> -->
+                    </li>
+                    <li v-if="wExpand">
+                        <a href="javascript:;" class="inside-items" @click='goToWebtools("w_add")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">Add WebTool</span>
+                        </a>
+                    </li>
+                    <li v-if="wExpand"  @click='goToWebtools("w_list")'>
+                        <a href="javascript:;" class="inside-items">
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List WebTools</span>
+                        </a>
+                    </li>
                     <!-- <li>
                         <a href="javascript:void(0)" @click="doLogout">
                             <i class="fa fa-sign-out">
@@ -405,7 +477,7 @@
                     <!-- 
                     <div class="row">
                         <div class="col-md-12"> -->
-                            <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner" :tdata="rdata" v-on:updateTag="EditTag"></component>
+                            <component :is="componentId" ref="contentComponent" :bdata="rowdata" v-on:updateBanner="EditBanner" :tdata="rdata" v-on:updateTag="EditTag" :fdata="mtdata" v-on:updateDocument="EditDocument"></component>
                         <!-- </div>
                         
                     </div>
@@ -449,6 +521,24 @@ import TagList from './Tag/tagsList';
 import productTags from './Tag/productTags';
 import productMapping from './Tag/productMapping';
 
+// MarketingTools Templates
+import AddFlyerCategory from './MarketingTools/addFlyerCategory';
+import FlyerCategoryList from './MarketingTools/flyerCategoryList';
+import AddFlyer from './MarketingTools/addFlyer';
+import FlyerList from './MarketingTools/flyersList';
+import AddEcatalogCategory from './MarketingTools/addEcatalogCategory';
+import EcatalogCategoryList from './MarketingTools/ecatalogCategoryList';
+import AddEcatalog from './MarketingTools/addEcatalog';
+import EcatalogList from './MarketingTools/ecatalogsList';
+
+// Category Templates
+import AddCategory from './Category/addCategory';
+import CategoryList from './Category/categoriesList';
+
+// Webtools Templates
+import AddWebtool from './Webtools/addWebtool';
+import WebtoolsList from './Webtools/webtoolsList';
+
 export default {
   name: 'UserDashboard',
   props: {
@@ -460,11 +550,15 @@ export default {
     return {
       data: 'data',
       bExpand: false,
+      cExpand: false,
       tExpand: false,
+      mExpand: false,
+      wExpand: false,
       componentId: '',
       userEmailId: '',
       rowdata: {},
       rdata: {},
+      mtdata: {},
       userName: null
     }
   },
@@ -505,6 +599,36 @@ export default {
           this.rdata = {}
         }
     },
+    EditDocument (item) {
+        this.mtdata = item
+        if (item.type === 'flyercategory') {
+          this.componentId = AddFlyerCategory
+        } else if (item.type == 'flyer') {
+          this.componentId = AddFlyer
+        } else if (item.type == 'flyercategorylist') {
+          this.componentId = FlyerCategoryList
+        } else if (item.type == 'flyerlist') {
+          this.componentId = FlyerList
+        } else if (item.type === 'ecatalogcategory') {
+          this.componentId = AddEcatalogCategory
+        } else if (item.type == 'ecatalog') {
+          this.componentId = AddEcatalog
+        } else if (item.type == 'ecatalogcategorylist') {
+          this.componentId = EcatalogCategoryList
+        } else if (item.type == 'ecataloglist') {
+          this.componentId = EcatalogList
+        } else if (item.type == 'editCategory') {
+          this.componentId = AddCategory
+        } else if (item.type == 'categoryList') {
+          this.componentId = CategoryList
+        } else if (item.type == 'editWebtool') {
+          this.componentId = AddWebtool
+        } else if (item.type == 'webtoolsList') {
+          this.componentId = WebtoolsList
+        } else {
+          this.mtdata = {}
+        }
+    },
     goToBanner (name) {
       this.rowdata = {}
         if (name === 'bt_add') {
@@ -517,10 +641,25 @@ export default {
             this.componentId = BannerList;
         } else {}
     },
+    goToCategory (name) {
+        this.mtdata = {}
+        if (name === 'c_add') {
+            this.componentId = AddCategory;
+        } else if (name === 'c_list') {
+            this.componentId = CategoryList;
+        } else {}
+    },
+    goToWebtools (name) {
+        this.mtdata = {}
+        if (name === 'w_add') {
+            this.componentId = AddWebtool;
+        } else if (name === 'w_list') {
+            this.componentId = WebtoolsList;
+        } else {}
+    },
     goToTag (name) {
         this.rdata = {}
         if (name === 'tc_add') {
-            console.log('nnn')
             this.componentId = AddTagCategory;
         } else if (name === 't_add') {
             this.componentId = AddTag;
@@ -528,6 +667,26 @@ export default {
             this.componentId = TagCategoryList;
         } else if (name === 't_list') {
             this.componentId = TagList;
+        } else {}
+    },
+    goToTools (name) {
+        this.mtdata = {}
+        if (name === 'fc_add') {
+            this.componentId = AddFlyerCategory;
+        } else if (name === 'f_add') {
+            this.componentId = AddFlyer;
+        } else if (name === 'fc_list') {
+            this.componentId = FlyerCategoryList;
+        } else if (name === 'f_list') {
+            this.componentId = FlyerList;
+        } else if (name === 'ec_add') {
+          this.componentId = AddEcatalogCategory
+        } else if (name === 'e_add') {
+          this.componentId = AddEcatalog
+        } else if (name === 'ec_list') {
+          this.componentId = EcatalogCategoryList
+        } else if (name === 'e_list') {
+          this.componentId = EcatalogList
         } else {}
     },
     goToWebsiteSetting(){

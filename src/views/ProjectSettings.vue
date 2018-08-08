@@ -404,7 +404,7 @@
                     </div>
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" />
+                        <img src="https://placehold.it/403x190?text=Template5" alt="template 5" class="img-responsive template-image" @click="revertToTemplate(template = 'innovation-line')" />
                       <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       </div>
                     </div>
@@ -1445,13 +1445,13 @@ export default {
   async created() {
 
 
-        app.service("jobqueue").on("created", async (response) => {
-        if(this.repoName==response.websiteid) {
-          this.percent=0
-          this.isdisabled = true;
-          this.textdata='Your request to Publish website is received. Please wait while you are in a Queue.'
-          // this.$emit('updateProjectName')
-        }
+      app.service("jobqueue").on("created", async (response) => {
+      if(this.repoName==response.websiteid) {
+        this.percent=0
+        this.isdisabled = true;
+        this.textdata='Your request to Publish website is received. Please wait while you are in a Queue.'
+        // this.$emit('updateProjectName')
+      }
       });
 
       app.service("jobqueue").on("removed", async (response) => {
@@ -1464,18 +1464,18 @@ export default {
       });
 
       app.service("jobqueue").on("patched", async (response) => {
-        // console.log('response:',response)
+        // console.log('patch response:',response)
        if(this.repoName==response.websiteid){
 
-          console.log('===========================================');
-          console.log("**"+this.repoName+"--"+response.websiteid);
-          console.log(response);
-          console.log(1111111 + '===' + this.isdisabled);
+          // console.log('===========================================');
+          // console.log("**"+this.repoName+"--"+response.websiteid);
+          // console.log(response);
+          // console.log(1111111 + '===' + this.isdisabled);
           // console.log('same id.. set disabled to true..')
          // this.isdisabled = true;
           // this.textdata='Job added Successfully. Please wait you are in Queue.'
          if(response.Status!=undefined && response.Status=='completed'){
-            // console.log('completed..', response)
+            console.log('completed..', response)
             let dt = new Date();
             let utcDate = dt.toUTCString();
             let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
@@ -1493,7 +1493,7 @@ export default {
           // console.log('job failed')
          }
         if(response.Percentage!=undefined && response.Percentage!=''){
-          console.log(1111111 + '===' + this.isdisabled);
+          // console.log(1111111 + '===' + this.isdisabled);
 
           this.percent=response.Percentage
           // console.log('this.percent :: ',this.percent)
@@ -3855,13 +3855,12 @@ export default {
               this.$store.state.currentIndex = 0;
 
               // Push repository changes
-              axios.post(config.baseURL + '/gitlab-add-repo', {
+              await axios.post(config.baseURL + '/gitlab-add-repo', {
                 branchName: branchName,
                 commitMessage: commitMessage,
                 repoName: this.repoName,
                 userDetailId: Cookies.get('userDetailId')
               }).then(async response => {
-                // console.log(response);
                 if(response.data[0].code == 444){
                   this.$notify({
                     message: response.data[0].message,
@@ -5576,7 +5575,7 @@ export default {
                 await this.saveProjectSettings();
                 await this.init();
                 // location.reload();
-                this.$emit('updateProjectName');
+                this.$emit('updateProjectName'); /*it is to be noted that emit event with updateProjectName is for calling get dataof index.vue and is different from function in this components.*/
               }
               else{
                 this.$swal({
