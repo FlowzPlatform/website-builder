@@ -357,47 +357,46 @@ export default {
       this.fetchImagesLoader = true;
     },
     async onChangeWebsite (value) {
-      this.$Spin.show()
-      
+      this.$Spin.show();
 
-      if(this.formItem.id !== '') {
-          let userId = Cookies.get('userDetailId')
-          if (userId !== '' && userId !== undefined) {
-              await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
-                for (let item of res.data.data) {
-                  this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
-                }
-              }).catch(err => {
-              })
-          }
-      }
-      else {
-        this.formItem.sku = "";
+      if(this.formItem.id == undefined) {
+          this.formItem.sku = '';
+          this.skuOptions = [];
       }
 
       // get sku's of website
       let websiteDetails = _.find(this.webOptions, {value: this.formItem.website})
-      await axios.get(
+      let skuTotal = await axios.get(
         productApiUrl + "?$limit=0&source=sku,product_id", 
         { headers: { 'vid': websiteDetails.vid } }
       )
       .then(res => {
           if(res.data.hits.total !== undefined && res.data.hits.total > 0) {
-              axios.get(
-                productApiUrl + "?$limit="+res.data.hits.total, 
-                { headers: { 'vid': websiteDetails.vid } }
-              )
-              .then(res => {
-                  for (let item of res.data.hits.hits) {
-                      this.skuOptions.push({sku: item._source.sku, product_id: item._source.product_id})
-                  }
-                  this.$Spin.hide()
-              })
+              return res.data.hits.total;
           }
           else {
               this.$Message.error('Records not found.')
           }
       })
+      .catch(res => {
+          this.$Spin.hide()
+      })
+
+      if(skuTotal > 0) {
+        await axios.get(
+          productApiUrl + "?$limit="+skuTotal, 
+          { headers: { 'vid': websiteDetails.vid } }
+        )
+        .then(res => {
+            for (let item of res.data.hits.hits) {
+                this.skuOptions.push({sku: item._source.sku, product_id: item._source.product_id})
+            }
+            this.$Spin.hide()
+        })
+        .catch(res => {
+            this.$Spin.hide()
+        })
+      }
 
       // get cloudinary details
       let result = await axios(baseUrl + '/project-configuration/' + this.formItem.website).then(res => {
@@ -433,11 +432,11 @@ export default {
       }
     }
   },
-  mounted () {
+  async mounted () {
     let userId = Cookies.get('userDetailId')
     
     if (userId !== '' && userId !== undefined) {
-        axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
+        await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
           for (let item of res.data.data) {
             this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
           }
