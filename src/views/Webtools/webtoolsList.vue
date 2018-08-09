@@ -79,84 +79,102 @@ export default {
           title: 'Product PDF',
           align: 'center',
           render: (h, params) => {
-            return h('div', [
-              h('a', {
-                attrs: {
-                  href: params.row.product_pdf,
-                  target: '_blank'
-                }
-              }, [
-                h('img', {
+            if (params.row.product_pdf === '') {
+              return params.row.product_pdf
+            }
+            else
+            {
+              return h('div', [
+                h('a', {
                   attrs: {
-                    src: '../../static/img/pdf.png',
-                    height: 65
-                  },
-                  class: {
-                    'responsive': true,
-                    'thumbnail': true
-                  },
-                  style: {
-                    margin: "5px auto"
+                    href: params.row.product_pdf,
+                    target: '_blank'
                   }
-                })
+                }, [
+                  h('img', {
+                    attrs: {
+                      src: '../../static/img/pdf.png',
+                      height: 65
+                    },
+                    class: {
+                      'responsive': true,
+                      'thumbnail': true
+                    },
+                    style: {
+                      margin: "5px auto"
+                    }
+                  })
+                ])
               ])
-            ])
+            }
           }
         },
         {
           title: 'Art PDF',
           align: 'center',
           render: (h, params) => {
-            return h('div', [
-              h('a', {
-                attrs: {
-                  href: params.row.art_pdf,
-                  target: '_blank'
-                }
-              }, [
-                h('img', {
+            if (params.row.art_pdf === '') {
+              return params.row.art_pdf
+            }
+            else
+            {
+              return h('div', [
+                h('a', {
                   attrs: {
-                    src: '../../static/img/pdf.png',
-                    height: 65
-                  },
-                  class: {
-                    'responsive': true,
-                    'thumbnail': true
-                  },
-                  style: {
-                    margin: "5px auto"
+                    href: params.row.art_pdf,
+                    target: '_blank'
                   }
-                })
+                }, [
+                  h('img', {
+                    attrs: {
+                      src: '../../static/img/pdf.png',
+                      height: 65
+                    },
+                    class: {
+                      'responsive': true,
+                      'thumbnail': true
+                    },
+                    style: {
+                      margin: "5px auto"
+                    }
+                  })
+                ])
               ])
-            ])
+            }
           }
         },
         {
           title: 'GCC PDF',
           align: 'center',
           render: (h, params) => {
-            return h('div', [
-              h('a', {
-                attrs: {
-                  href: params.row.gcc_pdf,
-                  target: '_blank'
-                }
-              }, [
-                h('img', {
+            if (params.row.gcc_pdf === '') {
+              return params.row.gcc_pdf
+            }
+            else
+            {
+              return h('div', [
+                h('a', {
                   attrs: {
-                    src: '../../static/img/pdf.png',
-                    height: 65
-                  },
-                  class: {
-                    'responsive': true,
-                    'thumbnail': true
-                  },
-                  style: {
-                    margin: "5px auto"
+                    href: params.row.gcc_pdf,
+                    target: '_blank'
                   }
-                })
+                }, [
+                  h('img', {
+                    attrs: {
+                      src: '../../static/img/pdf.png',
+                      height: 65
+                    },
+                    class: {
+                      'responsive': true,
+                      'thumbnail': true
+                    },
+                    style: {
+                      margin: "5px auto"
+                    }
+                  })
+                ])
               ])
-            ])
+            }
           }
         },
         {
