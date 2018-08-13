@@ -138,7 +138,7 @@ export default {
         }
       }
     };
-    const validatelinkURL = async(rule, value, callback) => {
+    const validateLinkURL = async(rule, value, callback) => {
       if (value !== '') {
         var patt = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
         var _res = patt.test(value)
@@ -149,14 +149,10 @@ export default {
         }
       }
     };
-    const validateUrlCheck = (rule, value, callback) => {
-        if (this.formItem.nonbrand_video_url == '' && value == '') {
-            callback(new Error('Please enter video URL.'));
-        } else if(!validatelinkURL(rule, value, callback) && value !== '') {
-            callback(new Error('Please enter valid brand video url.'));
-        } else if(!validatelinkURL(rule, this.formItem.nonbrand_video_url, callback) && this.formItem.nonbrand_video_url !== '') {
-            callback(new Error('Please enter valid nonbrand video url.'));
-        } else {
+    const validateVideoCheck = (rule, value, callback) => {
+        if ((this.formItem.nonbrand_video_url != '' && value == '') || (this.formItem.nonbrand_video_url == '' && value != '')) {
+            callback(new Error('Please enter both video URLs or keep both empty.'));
+        } else if(validateLinkURL(rule, value, callback)) {
             callback();
         }
     };
@@ -202,10 +198,13 @@ export default {
           sku: [
             { required: true, message: 'Please select sku', trigger: 'change' },
             { validator: validateSku, trigger: 'change' }
+          ],
+          brand_video_url: [
+            { required: true, validator: validateVideoCheck, trigger: 'blur' }
+          ],
+          nonbrand_video_url: [
+            { required: false, validator: validateLinkURL, trigger: 'blur' }
           ]
-          // brand_video_url: [
-          //   { required: true, validator: validateUrlCheck, trigger: 'blur' }
-          // ]
       },
       updateRules: {
           website: [
@@ -214,10 +213,13 @@ export default {
           sku: [
             { required: true, message: 'Please select sku', trigger: 'change' },
             { validator: validateSku, trigger: 'change' }
+          ],
+          brand_video_url: [
+            { required: true, validator: validateVideoCheck, trigger: 'blur' }
+          ],
+          nonbrand_video_url: [
+            { required: false, validator: validateLinkURL, trigger: 'blur' }
           ]
-          // brand_video_url: [
-          //   { required: true, validator: validateUrlCheck, trigger: 'blur' }
-          // ]
       },
       uploadFile: {},
       targetOpts: [
