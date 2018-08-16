@@ -481,6 +481,15 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://res.cloudinary.com/flowz/image/upload/v1534426499/builder/sparo.png" alt="flowz-template" class="img-responsive template-image" @click="revertToCMSTemplate(template = 'sparo')"/>
+                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
