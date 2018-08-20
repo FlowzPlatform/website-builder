@@ -2295,7 +2295,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create main.js file
@@ -2307,7 +2307,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create main.css file
@@ -2319,7 +2319,19 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
+                    });
+
+                // Create webpack.config.js file
+                let webpackconfig = newFolderName + '/public/assets/webpackconfig.js'
+                await axios.post(config.baseURL + '/flows-dir-listing', {
+                        filename: webpackconfig,
+                        text: "var HtmlWebpackPlugin = require('html-webpack-plugin'); const path = require('path'); var glob = require('glob'); module.exports = { entry: glob.sync('./webpackjssrc/*.js'), output: { filename: '[name].[contenthash].js', path: path.resolve(__dirname, 'dist') }, plugins: [new HtmlWebpackPlugin({ filename: '#name#', template: '#name#'})] };",
+                        type: 'file'
+                    })
+                    .then((res) => {})
+                    .catch((e) => {
+                        console.log(e)
                     });
 
                 // Create main.js file
@@ -2331,7 +2343,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create default.json for menu file
@@ -2343,7 +2355,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Brand Logo
@@ -2356,7 +2368,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     })
 
                 // Create index.html file
@@ -2369,7 +2381,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create log file
@@ -2382,10 +2394,10 @@
                 .then((res) => {
                 })
                 .catch((e) => {
-                    //console.log(e)
+                    console.log(e)
                 });
 
-                // Create metalsmith file
+                // Create metalsmith for publish file
                 let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
 
                 let projectName = newFolderName.split('/');
@@ -2393,7 +2405,7 @@
 
                 // let projectUrl = config.ipAddress + '/websites/' + projectName;
 
-                var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: mainMetal,
@@ -2413,7 +2425,7 @@
 
                 // let projectUrl = config.ipAddress + '/websites/' + projectName;
 
-                var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.source('')\n.destination('" + newFolderName + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                     filename: mainMetal,
@@ -2437,7 +2449,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
 
@@ -2454,7 +2466,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create demo header file
@@ -2469,7 +2481,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create demo footer file
@@ -2484,7 +2496,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create default sidebar file file
@@ -2496,7 +2508,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
 
@@ -2509,7 +2521,7 @@
                     })
                     .then((res) => {})
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 
@@ -2528,11 +2540,11 @@
                             })
                             .then((res) => {})
                             .catch((e) => {
-                                //console.log(e)
+                                console.log(e)
                             })
                     })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Slider Plugin
@@ -2549,11 +2561,11 @@
                             })
                             .then((res) => {})
                             .catch((e) => {
-                                //console.log(e)
+                                console.log(e)
                             })
                     })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Shopping cart js
@@ -2570,11 +2582,11 @@
                             })
                             .then((res) => {})
                             .catch((e) => {
-                                //console.log(e)
+                                console.log(e)
                             })
                     })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                     // Shopping cart js
@@ -2591,11 +2603,11 @@
                             })
                             .then((res) => {})
                             .catch((e) => {
-                                //console.log(e)
+                                console.log(e)
                             })
                     })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Client Global variables Plugin
@@ -2811,7 +2823,7 @@
                                                     type: 'error'
                                                 });
                                                 return;
-                                                //console.log(e)
+                                                console.log(e)
                                             })
 
                                         // Create entry in configdata-history table
@@ -2846,17 +2858,17 @@
                                         }, 1000);
                                     }
                                 }).catch(error => {
-                                    //console.log("Some error occured: ", error);
+                                    console.log("Some error occured: ", error);
                                 })
 
 
                             })
                             .catch((e) => {
-                                //console.log(e)
+                                console.log(e)
                             })
                     })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
             },
 
@@ -4416,7 +4428,7 @@
                                                     .then(async (res) => {
                                                         self.saveFileLoading = false;
                                                         // console.log('Metalsmith call FolderUrl: ', folderUrl);
-                                                        let previewbackupmetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + folderUrl + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                                                        let previewbackupmetal = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.source('')\n.destination('" + folderUrl + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + folderUrl + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                                                         await axios.get(config.baseURL + '/metalsmith?path=' + folderUrl, {}).then((response) => {
                                                                 axios.post(config.baseURL + '/save-menu', {
