@@ -243,7 +243,7 @@
                             <span class="hh-sidebar-item">Settings</span>
                         </a>
                     </li> -->
-		    <li>
+		            <li>
                         <a href="#" @click='goToWebsiteSetting()'>
                             <i class="fa fa-cog">
                                 <span class="icon-bg hh-bg-warning"></span>
@@ -302,7 +302,7 @@
                     <li>
                         <a href="javascript:;" class="done" @click="cExpand = !cExpand">
                             <i class="fa fa-file-image-o">
-                                <span class="icon-bg hh-bg-warning"></span>
+                                <span class="icon-bg hh-bg-primary"></span>
                             </i>
                             <span class="hh-sidebar-item">Category Management</span>
                         </a>
@@ -366,7 +366,7 @@
                     <li>
                         <a href="javascript:;" class="done" @click="mExpand = !mExpand">
                             <i class="fa fa-file-image-o">
-                                <span class="icon-bg hh-bg-primary"></span>
+                                <span class="icon-bg hh-bg-success"></span>
                             </i>
                             <span class="hh-sidebar-item">Marketing Tools</span>
                         </a>
@@ -438,7 +438,7 @@
                     <li>
                         <a href="javascript:;" class="done" @click="wExpand = !wExpand">
                             <i class="fa fa-file-image-o">
-                                <span class="icon-bg hh-bg-warning"></span>
+                                <span class="icon-bg hh-bg-danger"></span>
                             </i>
                             <span class="hh-sidebar-item">WebTools</span>
                         </a>
@@ -457,6 +457,22 @@
                                 <span class="icon-bg"></span>
                             </i>
                             <span class="hh-sidebar-item">List WebTools</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="done" @click="userExpand = !userExpand">
+                            <i class="fa fa-user-o">
+                                <span class="icon-bg hh-bg-primary"></span>
+                            </i>
+                            <span class="hh-sidebar-item">User Management</span>
+                        </a>
+                    </li>
+                    <li v-if="userExpand">
+                        <a href="javascript:;" class="inside-items" @click='goToUserList("user_list")'>
+                            <i class="">
+                                <span class="icon-bg"></span>
+                            </i>
+                            <span class="hh-sidebar-item">List User</span>
                         </a>
                     </li>
                     <!-- <li>
@@ -539,6 +555,9 @@ import CategoryList from './Category/categoriesList';
 import AddWebtool from './Webtools/addWebtool';
 import WebtoolsList from './Webtools/webtoolsList';
 
+// User Management
+import UserList from './User/userList'
+
 export default {
   name: 'UserDashboard',
   props: {
@@ -554,6 +573,7 @@ export default {
       tExpand: false,
       mExpand: false,
       wExpand: false,
+      userExpand: false,
       componentId: '',
       userEmailId: '',
       rowdata: {},
@@ -688,6 +708,11 @@ export default {
         } else if (name === 'e_list') {
           this.componentId = EcatalogList
         } else {}
+    },
+    goToUserList(name) {
+        if (name === 'user_list') {
+            this.componentId = UserList;
+        }
     },
     goToWebsiteSetting(){
        this.componentId = WebsiteConfig;
