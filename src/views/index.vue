@@ -2326,7 +2326,7 @@
                 let webpackconfig = newFolderName + '/public/assets/webpackconfig.js'
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: webpackconfig,
-                        text: "var HtmlWebpackPlugin = require('html-webpack-plugin'); const path = require('path'); var glob = require('glob'); module.exports = { entry: glob.sync('./webpackjssrc/*.js'), output: { filename: '[name].[contenthash].js', path: path.resolve(__dirname, 'dist') }, plugins: [new HtmlWebpackPlugin({ filename: '#name#', template: '#name#'})] };",
+                        text: "var HtmlWebpackPlugin = require('/var/www/html/node_modules/html-webpack-plugin');\nconst path = require('path');\nvar glob = require('/var/www/html/node_modules/glob');\nmodule.exports = { entry: glob.sync('"+newFolderName + '/public/assets/client-plugins'+"/*.js'),\noutput: { filename: '[name].[contenthash].js',\npath: path.resolve('"+newFolderName + '/public/'+"', 'dist') },\nplugins: [@new HtmlWebpackPlugin({ filename: '#name#', template: '#name#'})&] };",
                         type: 'file'
                     })
                     .then((res) => {})
