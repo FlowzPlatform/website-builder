@@ -4364,7 +4364,7 @@
                                                 "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>" +
                                                 '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' +
                                                 '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' +
-                                                "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/v1533551691/builder/js/vuecomponent.js'><\/script>"
+                                                "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/builder/js/vuecomponent.js'><\/script>"
                                         }
                                         let cdnhandlebar;
                                         if (contentpartials.search('<handlebarcomponent') != -1) {
@@ -5232,7 +5232,7 @@
                                                 "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>" +
                                                 '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' +
                                                 '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' +
-                                                "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/v1533551691/builder/js/vuecomponent.js'><\/script>"
+                                                "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/builder/js/vuecomponent.js'><\/script>"
                                         }
                                         let cdnhandlebar;
                                         if (contentpartials.search('<handlebarcomponent') != -1) {
