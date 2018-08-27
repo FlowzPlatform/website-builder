@@ -509,15 +509,15 @@ grapesjs.plugins.add('product-plugin', function(editor, options) {
         category: 'Ecommerce Blocks'
     });
 
-    bm.add('PaymentGateway', {
-        label: 'PaymentGateway',
-        content: '<paymentgateway style="display: block; padding: 10px; min-height: 20px;">PaymentGateways</paymentgateway>',
-        attributes: {
-            class: 'fa fa-shopping-cart',
-            title: 'Shopping cart',
-        },
-        category: 'Ecommerce Blocks'
-    });
+    // bm.add('PaymentGateway', {
+    //     label: 'PaymentGateway',
+    //     content: '<paymentgateway style="display: block; padding: 10px; min-height: 20px;">PaymentGateways</paymentgateway>',
+    //     attributes: {
+    //         class: 'fa fa-shopping-cart',
+    //         title: 'Shopping cart',
+    //     },
+    //     category: 'Ecommerce Blocks'
+    // });
 
     // Lisiting Page sidebar filters
     // bm.add('filters', {
