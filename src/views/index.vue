@@ -4364,7 +4364,7 @@
                                                 "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>" +
                                                 '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' +
                                                 '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' +
-                                                "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/v1533551691/builder/js/vuecomponent.js'><\/script>"
+                                                "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/builder/js/vuecomponent.js'><\/script>"
                                         }
                                         let cdnhandlebar;
                                         if (contentpartials.search('<handlebarcomponent') != -1) {
@@ -4376,7 +4376,7 @@
                                             "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                                             '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                                             "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                                            '<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">\n' +
+                                            '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">\n' +
                                             "<link rel='stylesheet' href='./../main-files/main.css'/>\n" + cdnhandlebar +
                                             endhead + "\n</head>\n<body>\n" + divappstart + topbody +
                                             layoutdata.data +
@@ -4385,8 +4385,8 @@
                                             "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                                             "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                                             '<script src="./../assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                                            '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                                            '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                                            '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.min.js"><\/script>\n' +
+                                            // '\n<script src="./../assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                                             endbody + dfscript +
                                             '\n</body>\n</html>';
 
@@ -5232,7 +5232,7 @@
                                                 "<script type='text/javascript' src='https://unpkg.com/vue/dist/vue.js'><\/script>" +
                                                 '<script src="https://unpkg.com/iview/dist/iview.min.js"><\/script>' +
                                                 '<link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">' +
-                                                "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/v1533551691/builder/js/vuecomponent.js'><\/script>"
+                                                "<script type='text/javascript' src='https://res.cloudinary.com/flowz/raw/upload/builder/js/vuecomponent.js'><\/script>"
                                         }
                                         let cdnhandlebar;
                                         if (contentpartials.search('<handlebarcomponent') != -1) {
@@ -5245,7 +5245,7 @@
                                             "<title>" + SeoTitle + "</title>\n" + favicon + '\n' +
                                             '<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>\n' +
                                             "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/theme.min.css' />\n" +
-                                            '<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">\n' +
+                                            '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">\n' +
                                             "<link rel='stylesheet' href='./main-files/main.css'/>\n" + cdnhandlebar +
                                             endhead + "\n</head>\n<body>\n" + divappstart + topbody +
                                             layoutdata.data +
@@ -5254,8 +5254,8 @@
                                             "<script src='https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js'><\/script>\n" +
                                             "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' crossorigin='anonymous'><\/script>\n" +
                                             '<script src="./assets/client-plugins/flowz-builder-engine.js"><\/script>\n' +
-                                            '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"><\/script>\n' +
-                                            '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
+                                            '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.min.js"><\/script>\n' +
+                                            // '\n<script src="./assets/client-plugins/global-variables-plugin.js"><\/script>\n' +
                                             endbody + dfscript +
                                             '\n</body>\n</html>';
 
