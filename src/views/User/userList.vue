@@ -36,6 +36,14 @@ export default {
             },
             webOptions: [],
             columns: [
+                // {
+                //     title: 'Name',
+                //     render : (h,{row}) => {
+                //         return h('div', [
+                //             h('span', row.firstName + ' ' + row.lastName)
+                //         ]);
+                //     }
+                // },
                 {
                     title: 'Email',
                     key: 'userEmail'
@@ -43,6 +51,131 @@ export default {
                 {
                     title: 'Role',
                     key: 'userRole'
+                },
+                {
+                    title: 'Action',
+                    render: (h, params) => {
+                        if (params.row.isDeleted) {
+                            return h('div', [
+                                h('Tooltip', {
+                                    props: {
+                                        placement: 'top',
+                                        content: 'Active/Inactive'
+                                    },
+                                    style:{
+                                        cursor:'pointer'
+                                    }
+                                },[
+                                    h('i-switch', {
+                                        props: {
+                                            value: params.row.isActive,
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '3px',
+                                            padding: '0px',
+                                            fontSize: '20px',
+                                            color: '#2d8cf0'
+                                        },
+                                        on: {
+                                            'on-change': (status) => {
+                                                this.statusChange(params.row, status)
+                                            }
+                                        }
+                                    }, '')
+                                ]),
+                                h('Tooltip', {
+                                    props: {
+                                        placement: 'top',
+                                        content: 'Retrieve'
+                                    },
+                                    style:{
+                                        cursor:'pointer'
+                                    }
+                                },[
+                                    h('Button', {
+                                        props: {
+                                            type: 'text',
+                                            size: 'large',
+                                            icon: 'ios-undo-outline'
+                                        },
+                                        style: {
+                                            color: 'red',
+                                            marginLeft: '3px',
+                                            padding: '0px',
+                                            fontSize: '20px',
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.retrieveUser(params.row, params.index)
+                                            }
+                                        }
+                                    })
+                                ])
+                                
+                            ]);
+                        }
+                        else {
+                            return h('div', [
+                                h('Tooltip', {
+                                    props: {
+                                        placement: 'top',
+                                        content: 'Active/Inactive'
+                                    },
+                                    style:{
+                                        cursor:'pointer'
+                                    }
+                                },[
+                                    h('i-switch', {
+                                        props: {
+                                            value: params.row.isActive,
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '3px',
+                                            padding: '0px',
+                                            fontSize: '20px',
+                                            color: '#2d8cf0'
+                                        },
+                                        on: {
+                                            'on-change': (status) => {
+                                                this.statusChange(params.row, status)
+                                            }
+                                        }
+                                    }, '')
+                                ]),
+                                h('Tooltip', {
+                                    props: {
+                                        placement: 'top',
+                                        content: 'Delete'
+                                    },
+                                    style:{
+                                        cursor:'pointer'
+                                    }
+                                },[
+                                    h('Button', {
+                                        props: {
+                                            type: 'text',
+                                            size: 'large',
+                                            icon: 'ios-trash-outline'
+                                        },
+                                        style: {
+                                            color: 'red',
+                                            marginLeft: '3px',
+                                            padding: '0px',
+                                            fontSize: '20px',
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.deleteUser(params.row, params.index)
+                                            }
+                                        }
+                                    })
+                                ])
+                                
+                            ]);
+                        }
+                    }
                 }
             ],
             configList: [],
@@ -68,6 +201,56 @@ export default {
             });
             
             self.$Loading.finish();
+        },
+        statusChange(data,status) {
+            let statusText;
+            if (status) {
+                statusText = 'Activated'
+            }
+            else {
+                statusText = 'Deactivated'
+            }
+            axios({
+                method: "patch",
+                url: baseUrl + '/website-users/' + data.id,
+                data: {'isActive' : status}
+            }).then((response) => {
+                console.log("------------------------web user response", response.data);
+                this.$Notice.success({
+                    duration:4.5,
+                    desc: "User " +statusText+ " successfully"
+                });
+                // this.userData = response.data;
+            });
+        },
+        deleteUser(data,index) {
+            axios({
+                method: "patch",
+                url: baseUrl + '/website-users/' + data.id,
+                data: {'isDeleted' : true}
+            }).then((response) => {
+                // console.log("------------------------web user response", response.data);
+                this.userData[index]['isDeleted'] = true;
+                this.$Notice.success({
+                    duration:4.5,
+                    desc: "User Deleted successfully"
+                });
+            });
+        },
+        retrieveUser(data, index) {
+            axios({
+                method: "patch",
+                url: baseUrl + '/website-users/' + data.id,
+                data: {'isDeleted' : false}
+            }).then((response) => {
+                // console.log("------------------------web user response", response.data);
+                this.userData[index]['isDeleted'] = false;
+                this.$Notice.success({
+                    duration:4.5,
+                    desc: "User Retrieved successfully"
+                });
+                
+            });
         }
     },
     mounted() {
