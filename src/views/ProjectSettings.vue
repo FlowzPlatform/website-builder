@@ -410,7 +410,7 @@
                     </div>
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=Comming%20Soon" alt="template 6" class="img-responsive template-image" />
+                        <img src="https://placehold.it/403x190?text=Template6" alt="template 6" class="img-responsive template-image" @click="revertToTemplate(template = 'optimisation')" />
                       <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       </div>
                     </div>
