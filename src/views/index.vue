@@ -1925,6 +1925,7 @@
                             .then(async(resp) => {
                               this.newProjectFolderDialog = false
                               this.addNewProjectFolderLoading = false;
+                              console.log('res.data.id:',res.data.id)
                               let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
                                 console.log('Error:', err);
                               });
@@ -1973,6 +1974,11 @@
                                   })
                                 this.formAddProjectFolder.projectName = null;
                               }
+                              // let gitlabResponse = await axios.get(config.baseURL + '/gitlabservice?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {})
+                              //   .catch((err) => {
+                              //   console.log('Error:', err);
+                              //   });
+                              //   console.log('gitlabResponse:',gitlabResponse)
                             })
                             .catch((e) => {
                               this.newProjectFolderDialog = false;
@@ -2146,6 +2152,7 @@
                 .catch((e) => {
                   //console.log("Error from Assests"+res)
                 });
+
               //Create Preview Folder
               await axios.post(config.baseURL + '/flows-dir-listing', {
                   foldername: newFolderName + '/public/Preview',
@@ -2232,10 +2239,36 @@
                   //console.log("Error From Layout"+res)
                 });
                 
+                //.temppublish used in publishing
                await axios.post(config.baseURL+'/flows-dir-listing' , {
                   foldername : newFolderName+'/.temppublish',
                   type : 'folder'
                 }).catch((e)=>{
+                  console.log(e);
+                })
+
+                //websiteid_publish used after publish
+                await axios.post(config.baseURL+'/flows-dir-listing' , {
+                  foldername : newFolderName+'_publish',
+                  type : 'folder'
+                }).then(async (res)=>{
+                   let packagejson = newFolderName+'_publish' + '/package.json'
+                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                        filename: packagejson,
+                        text: '{ "name": "parcelpublish_site", "version": "1.0.0", "license": "ISC", "dependencies": { "parcel-bundler": "^1.9.7" } }',
+                        type: 'file'
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                    });
+                  // console.log('_publish',res.data.name)
+                  let gitlabResponse = await axios.get(config.baseURL + '/gitlabservice?nameOfRepo=' + res.data.name + '&userDetailId=' + Cookies.get('userDetailId'), {})
+                  .catch((err) => {
+                  console.log('Error:', err);
+                  });
+                  // console.log('gitlabResponse:',gitlabResponse)
+                })  
+                .catch((e)=>{
                   console.log(e);
                 })
 
