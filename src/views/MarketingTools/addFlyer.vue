@@ -61,6 +61,16 @@
                 </FormItem>
             </Col>
           </Row>
+          <Row :gutter="16">
+            <Col span="12">
+                <FormItem label="Client Friendly PDF" prop="client_friendly_pdf">
+                    <el-button icon="client_friendly_pdf" @click="uploadClientFriendlyPdf()" :loading="uploadClientFriendlyPdfLoader">Upload PDF</el-button>
+                    <a :href="formItem.client_friendly_pdf" target="_blank" class="upload_image">
+                      <img v-if="formItem.client_friendly_pdf" :src="pdf_download" height="100"/>
+                    </a>
+                </FormItem>
+            </Col>
+          </Row>
         </Form>
       </div>
 
@@ -121,6 +131,8 @@ export default {
         flyer_image_name: '',
         flyer_pdf: '',
         flyer_pdf_name: '',
+        client_friendly_pdf: '',
+        client_friendly_pdf_name: '',
         flyer_end_date: '',
         flyer_status: true,
         createdAt: '',
@@ -128,6 +140,7 @@ export default {
       },
       uploadFlyerImageLoader: false,
       uploadFlyerPdfLoader: false,
+      uploadClientFriendlyPdfLoader: false,
       flyercategories: [],
       rulesformItem: {
         flyer_name: [
@@ -280,6 +293,41 @@ export default {
               }
               else {
                   this.$Notice.error({ title: 'Error', desc: 'Please upload pdf file.', duration: 2})
+              }
+            }
+          });
+      }
+      else {
+          this.$Notice.error({ title: 'Error', desc: 'Please select flyer category first.', duration: 2})
+      }
+    },
+    uploadClientFriendlyPdf() {
+      if(this.formItem.flyer_category != '') {
+          this.uploadClientFriendlyPdfLoader = true;
+          cloudinary.openUploadWidget({ 
+            cloud_name: this.cloudDetails.cloudName, 
+            api_key: this.cloudDetails.apiKey,
+            upload_preset: this.cloudDetails.uploadPreset, 
+            sources: ['local', 'camera', 'url']
+          }, (error, result) => { 
+            if(error != null){
+              if(error.message != 'User closed widget'){
+                this.$message({
+                  message: 'Upload PDF failed. Please try again.',
+                  type: 'error'
+                }); 
+              }
+              this.uploadClientFriendlyPdfLoader = false;  
+            } 
+            else {
+              if(result[0].format == 'pdf') {
+                  this.formItem.client_friendly_pdf = result[0].url
+                  this.formItem.client_friendly_pdf_name = result[0].original_filename
+                  this.uploadClientFriendlyPdfLoader = false;
+              }
+              else {
+                  this.$Notice.error({ title: 'Error', desc: 'Please upload pdf file.', duration: 2})
+                  this.uploadClientFriendlyPdfLoader = false;
               }
             }
           });
