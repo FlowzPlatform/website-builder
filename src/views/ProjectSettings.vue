@@ -5447,7 +5447,7 @@ export default {
         // this.fullscreenLoading = false;
       });
 
-       await axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
+       await axios.get(config.vshopApi, {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }
