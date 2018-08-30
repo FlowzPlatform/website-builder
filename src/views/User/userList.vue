@@ -191,12 +191,12 @@ export default {
             let self = this;
             this.$Loading.start();
             this.websiteid = this.filterobj.website;
-            console.log('this.websiteid',this.websiteid)
+            // console.log('this.websiteid',this.websiteid)
             axios({
                 method: "get",
                 url: baseUrl + '/website-users?websiteId='+ this.websiteid
             }).then((response) => {
-                console.log("------------------------web user response", response.data.data);
+                // console.log("------------------------web user response", response.data.data);
                 this.userData = response.data.data;
             });
             
@@ -215,7 +215,7 @@ export default {
                 url: baseUrl + '/website-users/' + data.id,
                 data: {'isActive' : status}
             }).then((response) => {
-                console.log("------------------------web user response", response.data);
+                // console.log("------------------------web user response", response.data);
                 this.$Notice.success({
                     duration:4.5,
                     desc: "User " +statusText+ " successfully"
