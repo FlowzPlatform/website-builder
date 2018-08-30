@@ -1942,7 +1942,7 @@ export default {
     refreshvshop(){
 
       // this.init();
-       axios.get(config.vshopApi+'/'+Cookies.get('userDetailId'), {
+       axios.get(config.vshopApi, {
         headers: {
           'Authorization': Cookies.get('auth_token')
         }
