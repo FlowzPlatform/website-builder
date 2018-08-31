@@ -2252,21 +2252,58 @@
                   foldername : newFolderName+'_publish',
                   type : 'folder'
                 }).then(async (res)=>{
-                   let packagejson = newFolderName+'_publish' + '/package.json'
-                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                   await axios.post('https://gitlab.com/api/v4/projects?name='+res.data.name+'&visibility=public&private_token='+config.gitlabtoken, {})
+                   .then(async(res)=>{
+                    let gitlabconfig={
+                      'http_url':res.data.http_url_to_repo,
+                      'name':res.data.name,
+                      'path':res.data.path_with_namespace,
+                      'projectid':res.data.id
+                    }
+                    // Create package json file
+                    let packagejson = newFolderName+'_publish' + '/package.json'
+                    await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: packagejson,
-                        text: '{ "name": "parcelpublish_site", "version": "1.0.0", "license": "ISC", "dependencies": { "parcel-bundler": "^1.9.7" } }',
+                        text: '{ "name": "parceljson", "dependencies": { "parcel-bundler": "^1.9.7", "parceljs": "0.0.1" } }',
                         type: 'file'
                     })
+                    .then(async(res) => {
+                      let axiosoptioncommit={
+                        method:'post',
+                        url:'https://gitlab.com/api/v4/projects/'+gitlabconfig.projectid+'/repository/commits',
+                        data:'{ "branch": "master", "commit_message": "intial commit", "actions": [ { "action": "create", "file_path": "package.json", "content": "{ \\"name\\": \\"parceljson\\", \\"dependencies\\": { \\"parcel-bundler\\": \\"^1.9.7\\", \\"parceljs\\": \\"0.0.1\\" } }" } ] }',
+                        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                      }
+                      await axios(axiosoptioncommit)
+                      .then(async (res)=>{console.log(res)
+
+                        let options={
+                          method:'post',
+                          url:'https://api.netlify.com/api/v1/sites',
+                          data:'{ "force_ssl": true, "notification_email": "'+Cookies.get('email')+'", "processing_settings": { "css": { "bundle": true, "minify": true }, "html": { "pretty_urls": true }, "images": { "optimize": true }, "js": { "bundle": true, "minify": true }, "skip": true }, "ssl": true, "repo": { "allowed_branches": [ "master" ], "cmd": "parcel build -d builddir --no-minify *.html", "dir": "builddir", "env": {}, "private_logs": true, "provider": "gitlab", "public_repo": true, "repo_branch": "master", "repo_path": "'+gitlabconfig.path+'", "repo_url": "'+gitlabconfig.http_url+'" } }',
+                          headers:{ 'Authorization':'Bearer '+config.netlifytoken, 'content-type': 'application/json'}
+                        }
+                        await axios(options)
+                        .then((response)=>{
+                          console.log('netlify response:',response.data)
+                        })
+                        .catch((e)=>{
+                          console.log(e)
+                        })
+
+                      })
+                      .catch((e)=>{console.log(e)})
+                      })
                     .catch((e) => {
                         console.log(e)
                     });
-                  // console.log('_publish',res.data.name)
-                  let gitlabResponse = await axios.get(config.baseURL + '/gitlabservice?nameOfRepo=' + res.data.name + '&userDetailId=' + Cookies.get('userDetailId'), {})
-                  .catch((err) => {
-                  console.log('Error:', err);
-                  });
-                  // console.log('gitlabResponse:',gitlabResponse)
+                    
+                    
+
+                   })
+                    .catch((e) => {
+                        console.log(e)
+                    });
                 })  
                 .catch((e)=>{
                   console.log(e);

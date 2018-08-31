@@ -116,7 +116,8 @@ module.exports = {
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     webpackPath: '/var/www/html/node_modules/',
-
+    gitlabtoken: 'WCr4ehyTqQGLMp11Jaby',
+    netlifytoken:'d7a04b8d4ad0d45e458b40a924bbf4fdc26d9f9deee273f1f7a2bbcd107f21b1',
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
