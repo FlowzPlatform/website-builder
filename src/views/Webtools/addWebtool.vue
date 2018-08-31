@@ -359,11 +359,9 @@ export default {
       this.fetchImagesLoader = true;
     },
     async onChangeWebsite (value) {
-      console.log('in');
       this.$Spin.show();
 
       if(this.formItem.id == undefined) {
-          console.log('id undefined');
           this.formItem.sku = '';
           this.skuOptions = [];
       }
@@ -375,7 +373,6 @@ export default {
         { headers: { 'vid': websiteDetails.vid } }
       )
       .then(res => {
-          console.log('ajax 1');
           if(res.data.hits.total !== undefined && res.data.hits.total > 0) {
               return res.data.hits.total;
           }
@@ -384,25 +381,21 @@ export default {
           }
       })
       .catch(res => {
-          console.log('error 1');
           this.$Spin.hide()
       })
 
       if(skuTotal > 0) {
-        console.log('three');
         await axios.get(
           productApiUrl + "?$limit="+skuTotal, 
           { headers: { 'vid': websiteDetails.vid } }
         )
         .then(res => {
-            console.log('ajax 2');
             for (let item of res.data.hits.hits) {
                 this.skuOptions.push({sku: item._source.sku, product_id: item._source.product_id})
             }
             this.$Spin.hide()
         })
         .catch(res => {
-            console.log('error 1');
             this.$Spin.hide()
         })
       }
@@ -458,6 +451,7 @@ export default {
           this.formItem = res.data
           this.skuIgnore = res.data.sku
           this.isdisable = true
+          this.onChangeWebsite(this.formItem.website);
         })
     }
   }
