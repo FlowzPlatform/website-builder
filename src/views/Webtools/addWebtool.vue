@@ -451,6 +451,7 @@ export default {
           this.formItem = res.data
           this.skuIgnore = res.data.sku
           this.isdisable = true
+          this.onChangeWebsite(this.formItem.website);
         })
     }
   }
