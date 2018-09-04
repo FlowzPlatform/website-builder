@@ -253,7 +253,8 @@ export default {
             else {
               this.formItem.name = this.fdata.categorySlug;
               this.formItem.website = this.fdata.website;
-            }             
+            } 
+            this.onChangeWebsite(this.formItem.website);            
         }).catch(err => {
             console.log(err);
         })

@@ -260,6 +260,7 @@ export default {
         return str;
     },
     async handleHomeClick(id, homepage) {
+      this.loading = true
     	let userId = Cookies.get('userDetailId')
     	let resp = await axios.get(categoryUrl + '?id=' + id).then(res => {
     		if (res.data.data.length > 0) {
