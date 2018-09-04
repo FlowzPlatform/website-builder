@@ -1,10 +1,11 @@
 <template>
-  <div class="tags">
+  <div class="categories">
     <Row>
       <div  style="padding-bottom: 10px;">
         <h2>Category List</h2>
       </div>
     </Row>
+
     <Row style="border: 1px solid #dddee1; background: #f8f8f9; padding: 10px;margin-bottom: 20px;" :gutter="4">
       <Col :span="8">
         <Select v-model="filterobj.website" placeholder="Search by Website" filterable @on-change="handleSearch">
@@ -22,8 +23,17 @@
         </Row>
       </Col>
     </Row>
+
     <Row>
-      <Table :loading="loading" :columns="tcolumns" :data="tdata.categoriesList" stripe  @on-sort-change="handleSorting"></Table>
+      <Table :loading="loading" :columns="tcolumns" :data="tdata.data" stripe  @on-sort-change="handleSorting"></Table>
+    </Row>
+
+    <Row >
+      <div style="float: right;padding-top: 10px;">
+        <Page v-if="tdata.total > 10" :total="tdata.total" :current="cpage" show-sizer show-total :page-size="limit" @on-change="pageChange" @on-page-size-change="psizeChange"></Page>
+        <div v-else-if="tdata.total === 1">Total {{tdata.total}} item</div>
+        <div v-else>Total {{tdata.total}} items</div>
+      </div>
     </Row>
   </div>
 </template>
@@ -35,7 +45,7 @@ import _ from 'lodash'
 import Cookies from 'js-cookie';
 
 let baseUrl = config.baseURL
-// let tagsUrl = config.baseURL + '/tags'
+let categoryUrl = baseUrl + '/category'
 
 export default {
   name: 'categories',
@@ -44,6 +54,16 @@ export default {
   },
   data () {
     return {
+      formItem: {
+          website: '',
+          name: '',
+          slug:'',
+          count: '',
+          status: true,
+          homepage: false,
+          createdAt: '',
+          userId: Cookies.get('userDetailId')
+      },
       filterobj: {
         website: ''
       },
@@ -52,7 +72,7 @@ export default {
           title: 'Category Name',
           align: 'center',
           render: (h, params) => {
-            let resp = params.row.categoryName
+            let resp = params.row.name
             if (resp === '') {
               resp = '-'
             }
@@ -60,32 +80,84 @@ export default {
           }
         },
         {
-          title: 'Category Icon',
+          title: 'Category Count',
           align: 'center',
           render: (h, params) => {
-            return h('div', [
-              h('a', {
-                attrs: {
-                  href: params.row.tag_icon,
-                  target: '_blank'
+            let resp = params.row.count
+            if (resp === '') {
+              resp = '-'
+            }
+            return h('div', resp)
+          }
+        },
+        {
+          title: 'Home Category',
+          key: 'homepage',
+          align: 'center',
+          width: 300,
+          render: (h, params) => {
+            const row = params.row;
+            const color = row.homepage ? 'green' : 'red';
+            const text = row.homepage ? 'Yes' : 'No';
+
+            return h('Tag', {
+                props: {
+                    type: 'dot',
+                    color: color
+                },
+                nativeOn: { 
+                  click: async() => {
+                    let res = await this.handleHomeClick(params.row.id, params.row.homepage)
+                    if (res.status === 'success') {
+                    		axios.patch(categoryUrl + '/' + params.row.id, {homepage: !params.row.homepage}).then(res => {
+									        this.formItem.homepage = !params.row.homepage
+									        this.updateFlag(params.row.id,this.formItem.homepage)
+									      }).catch(err => {
+									        console.log('Error', err)
+									        this.$Notice.error({ title: 'Error', desc: '', duration: 2})
+									      })
+                    } 
+                    else {
+                    	  this.$Notice.error({ title: 'Error', desc: '', duration: 2})
+                    }
+                  } 
                 }
-              }, [
-                h('img', {
-                  attrs: {
-                    src: params.row.tag_icon,
-                    width: 130,
-                    height: 65
-                  },
-                  class: {
-                    'responsive': true,
-                    'thumbnail': true
-                  },
-                  style: {
-                    margin: "5px auto"
-                  }
-                })
-              ])
-            ])
+            }, text)
+          }
+        },
+        {
+          title: 'Status',
+          key: 'status',
+          align: 'center',
+          width: 300,
+          render: (h, params) => {
+            const row = params.row;
+            const color = row.status ? 'green' : 'red';
+            const text = row.status ? 'ACTIVE' : 'INACTIVE';
+
+            return h('Tag', {
+                props: {
+                    type: 'dot',
+                    color: color
+                },
+                nativeOn: { 
+                  click: async() => {
+                    let res = await this.handleHomeClick(params.row.id, params.row.status)
+                    if (res.status === 'success') {
+                    		axios.patch(categoryUrl + '/' + params.row.id, {status: !params.row.status}).then(res => {
+									        this.formItem.status = !params.row.status
+									        this.updateFlag(params.row.id,this.formItem.status)
+									      }).catch(err => {
+									        console.log('Error', err)
+									        this.$Notice.error({ title: 'Error', desc: '', duration: 2})
+									      })
+                    } 
+                    else {
+                    	  this.$Notice.error({ title: 'Error', desc: '', duration: 2})
+                    }
+                  } 
+                }
+            }, text)
           }
         },
         {
@@ -101,7 +173,7 @@ export default {
 	            		},
 	            		on: {
 	            			click: () => {
-	            				this.$emit('updateDocument', {type: 'editCategory', categoryName: params.row.categoryName, website: this.filterobj.website})
+	            				this.$emit('updateDocument', {type: 'editCategory', categorySlug: params.row.slug, website: this.filterobj.website})
 	            			}
 	            		}
 	            	},[
@@ -121,8 +193,8 @@ export default {
       ],
       tdata: {
         total: 0,
-        data: [],
-        categoriesList: []
+        categoriesList: [],
+        data: []
       },
       loading: false,
       cpage: 1,
@@ -158,42 +230,127 @@ export default {
       this.filterobj.website = ''
       this.init()
     },
+    pageChange (page) {
+      this.cpage = page
+      this.skip = page * this.limit - this.limit
+      this.init()
+    },
+    psizeChange (size) {
+      this.cpage = 1
+      this.limit = size
+      this.init()
+    },
+    stringToSlug (str) {
+        str = str.replace(/^\s+|\s+$/g, ''); // trim
+        str = str.toLowerCase();
+      
+        var from = "àáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
+        var to   = "aaaaaeeeeiiiioooouuuunc------";
+
+        for (var i=0, l=from.length ; i<l ; i++) {
+            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+            .replace(/\s+/g, '-') // collapse whitespace and replace by -
+            .replace(/-+/g, '-') // collapse dashes
+            .replace(/^-+/, "") // trim - from start of text
+            .replace(/-+$/, ""); // trim - from end of text
+
+        return str;
+    },
+    async handleHomeClick(id, homepage) {
+    	let userId = Cookies.get('userDetailId')
+    	let resp = await axios.get(categoryUrl + '?id=' + id).then(res => {
+    		if (res.data.data.length > 0) {
+    			return {status: 'success', msg: 'found', data: res.data.data}
+    		} else {
+    			return {status: 'success', msg: 'notfound'}
+    		}
+    	}).catch(err => {
+    		return {status: 'error'}
+      })
+
+    	return resp
+    },
+    async updateFlag(id, homepage) {
+      axios.patch(categoryUrl + '/' + id, {'homepage':homepage})
+      .then(res => {
+        this.$Notice.success({ title: 'Success!', desc: '', duration: 2})
+        this.init()
+      })
+      .catch(err => {
+        console.log('Error', err)
+      })
+    },
     async init (item) {
       this.loading = true
       let userId = Cookies.get('userDetailId')
       if (userId !== '' && userId !== undefined) {
         let vid = false;
+
         if (this.filterobj.website != undefined && this.filterobj.website !== '') {
           let websiteDetails = _.find(this.webOptions, {value: this.filterobj.website});
           vid = websiteDetails.vid;
         }
-        // else {
-        //   this.$Notice.error({title: 'Error', desc: 'Please select website.', duration: 2})
-        // }
+        else {
+          this.tdata.data = []
+          this.tdata.total = 0
+        }
 
         if(vid) {
-          await axios.get(config.menuCategoriesUrl, {
-              headers: {
-                  Authorization: Cookies.get('auth_token'),
-                  vid: vid
-              }
-          })
-          .then((res) => {
-              let menuJson = [];
-              let categories = res.data.aggregations.group_by_category.buckets;
+            let query = '?userId=' + userId + '&$sort[createdAt]=-1&$skip=' + this.skip + '&$limit=' + this.limit + '&website=' + this.filterobj.website;
 
-              for(let i = 0; i < categories.length; i++){
-                let urlName = categories[i].key.toLowerCase().replace(/ /g, '-');
+            this.tdata.categoriesList = await axios.get(config.menuCategoriesUrl + query, {
+                headers: {
+                    Authorization: Cookies.get('auth_token'),
+                    vid: vid
+                }
+            })
+            .then((res) => {
+                return res.data.aggregations.group_by_category.buckets;
+            })
+            .catch((e) => {
+                console.log(e);
+            })
 
-                this.tdata.categoriesList.push({
-                  categoryName: categories[i].key.toUpperCase(),
-                });								
+            if (!_.isEmpty(this.tdata.categoriesList)) {
+              for(let i = 0; i < this.tdata.categoriesList.length; i++) {
+                  let slug = this.stringToSlug(this.tdata.categoriesList[i].key);
+                  let catDetails = await axios.get(categoryUrl + '?slug=' + slug + '&website=' + this.filterobj.website).then(res => {
+                      if(res.data.total == 1) {
+                          return res.data.data[0]  
+                      }
+                      else {
+                          return 0
+                      }             
+                  }).catch(err => {
+                      console.log(err);
+                  })
+
+                  this.formItem.createdAt = new Date()
+                  this.formItem.name = this.tdata.categoriesList[i].key
+                  this.formItem.slug = slug;
+                  this.formItem.count = this.tdata.categoriesList[i].doc_count
+                  this.formItem.website = this.filterobj.website
+                  if(catDetails == 0) {
+                      axios.post(categoryUrl, this.formItem).then(res => {
+                        //this.$Notice.success({title: 'Success', desc: 'Successfully saved.', duration: 2})
+                      }).catch(err => {
+                        console.log('error', err)
+                      })
+                  }
               }
-          })
-          .catch((e) => {
-              this.$Notice.error({ title: 'Error', desc: 'Failed! Please try again.', duration: 2})
-              console.log(e);
-          })
+            }
+
+            this.tdata = await axios.get(categoryUrl + query)
+              .then((res) => {
+                  this.tdata.total = res.data.total;
+                  return res.data;
+              })
+              .catch((e) => {
+                  console.log(e);
+              })
         } 
         else if (this.filterobj.website != undefined && this.filterobj.website !== '') {
             this.$message({
@@ -201,23 +358,6 @@ export default {
               message: 'Please set "VID" in Project settings to get all of your category list.',
               type: 'info'
             });
-        }
-
-        this.loading = false
-        for (let [inx, mitem] of this.tdata.data.entries()) {
-          axios.get(tagcategoryUrl + '/' + mitem.tag_category).then(res => {
-            let finx = _.findIndex(this.webOptions, {value: res.data.website})
-            if (finx !== '' && finx !== -1) {
-              this.tdata.data[inx].website = this.webOptions[finx].label
-              this.tdata.data[inx].websiteId = this.webOptions[finx].value
-            } else {
-              this.tdata.data[inx].website = '-'
-              this.tdata.data[inx].websiteId = '-'
-            }
-          }).catch(err => {
-            this.tdata.data[inx].website = '-'
-            this.tdata.data[inx].websiteId = '-'
-          })
         }
       }
       this.loading = false
@@ -269,7 +409,7 @@ export default {
   }
 </style>
 <style scoped>
-.tags {
+.categories {
   padding: 40px;
 }
 </style>
