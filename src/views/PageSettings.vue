@@ -355,7 +355,7 @@ import draggable from 'vuedraggable'
 var daex = require('json-daex');
 import Cookies from 'js-cookie';
 const config = require('../config');
-
+import fs from 'fs'
 import axios from 'axios';
 
  const cssOptions = ['VueSearchJS', 'VueDataJS'];
