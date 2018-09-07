@@ -3339,7 +3339,7 @@ export default {
           //first client-plugin files
           let pathclientplugin=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/client-plugins'
 
-          await axios.get(config.baseURL+'/webpack-api?path='+pathclientplugin,{})
+          await axios.get(config.baseURL+'/filelisting?path='+pathclientplugin,{})
           .then(async (res)=>{
             let arrayfiles=[]
             console.log('res:',res.data.data)
@@ -3374,7 +3374,7 @@ export default {
           //now css files
           let pathcss=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/css'
 
-          await axios.get(config.baseURL+'/webpack-api?path='+pathcss,{})
+          await axios.get(config.baseURL+'/filelisting?path='+pathcss,{})
           .then(async (res)=>{
             let arrayfiles=[]
             console.log('res:',res.data.data)
@@ -3409,7 +3409,7 @@ export default {
           //now main files
           let pathmain=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/main-files'
 
-          await axios.get(config.baseURL+'/webpack-api?path='+pathmain,{})
+          await axios.get(config.baseURL+'/filelisting?path='+pathmain,{})
           .then(async (res)=>{
             let arrayfiles=[]
             console.log('res:',res.data.data)
