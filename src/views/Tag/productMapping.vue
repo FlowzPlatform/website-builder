@@ -312,7 +312,9 @@ export default {
     let userId = Cookies.get('userDetailId')
     await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
       for (let item of res.data.data) {
-        this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+        if(item.configData != 'undefined' && Array.isArray(item.configData)) {
+          this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+        }
       }
       this.$Spin.hide();
     }).catch(err => {
