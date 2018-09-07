@@ -1934,7 +1934,8 @@
                                       'name': res.data.name,
                                       'path': res.data.path_with_namespace,
                                       'projectid': res.data.id,
-                                      'webhook_url': ''
+                                      'webhook_url': '',
+                                      'netlify_deploy_url':''
                                   }
                                   let axiosoptioncommit = {
                                       method: 'post',
@@ -1959,6 +1960,7 @@
                                           await axios(options)
                                               .then(async (response) => {
                                                   console.log('netlify response:', response.data)
+                                                  this.gitlabconfig.netlify_deploy_url=response.data.url
                                                   let webhookoptions = {
                                                       method: 'post',
                                                       url: 'https://api.netlify.com/api/v1/sites/' + response.data.id + '/build_hooks',

@@ -50,7 +50,7 @@
                   <div class="col-md-12">
 
                     <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
-                    <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
+                    <el-radio class="radio" v-model="publishType" label="custom">Netlify Domain</el-radio>
 
                     <div class="row">
                       <div class="col-md-12" v-if="publishType === 'default'">
@@ -68,7 +68,9 @@
                       </div>
 
                       <div class="col-md-12" v-else>
-                        <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+                      Deploy URL: <a :href="netlifydeployurl" target="_blank">{{netlifydeployurl}}</a>
+                      <br>
+                        <!-- <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
                         <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
                           [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
                             <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
@@ -83,7 +85,7 @@
                         </p>
                         <div style="margin-top: 15px;">
                           <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -1317,7 +1319,7 @@ export default {
         value: 'custom',
         label: 'Custom'
       }],
-
+      netlifydeployurl:'',
       globalVariables: [],
       urlVariables: [],
       globalCssVariables: [],
@@ -3363,7 +3365,7 @@ export default {
                     method:'post',
                     url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
                     data:buildpayload,
-                    headers:{ 'PRIVATE-TOKEN':'WCr4ehyTqQGLMp11Jaby', 'Content-Type':'application/json'}
+                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
                   }
                   await axios(axiosoptioncommit)
             })
@@ -3398,7 +3400,7 @@ export default {
                     method:'post',
                     url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
                     data:buildpayload,
-                    headers:{ 'PRIVATE-TOKEN':'WCr4ehyTqQGLMp11Jaby', 'Content-Type':'application/json'}
+                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
                   }
                   await axios(axiosoptioncommit)
             })
@@ -3433,7 +3435,7 @@ export default {
                     method:'post',
                     url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
                     data:buildpayload,
-                    headers:{ 'PRIVATE-TOKEN':'WCr4ehyTqQGLMp11Jaby', 'Content-Type':'application/json'}
+                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
                   }
                   await axios(axiosoptioncommit)
             })
@@ -5398,6 +5400,7 @@ export default {
 
       if(this.configData.status == 200 || this.configData.status == 204){
         this.gitlabid=this.configData.data.gitlabconfig.projectid
+        this.netlifydeployurl=this.configData.data.gitlabconfig.netlify_deploy_url;
         this.settings = this.configData.data.configData;
         this.form.websitename = this.configData.data.websiteName;
         this.pluginsTreedata = this.configData.data.pluginsData;
