@@ -1927,7 +1927,6 @@
                             .then(async(resp) => {
                               this.newProjectFolderDialog = false
                               this.addNewProjectFolderLoading = false;
-                              console.log('res.data.id:',res.data.id)
                               let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
                                 console.log('Error:', err);
                               });
