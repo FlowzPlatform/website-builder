@@ -1197,6 +1197,7 @@ import VueSession from 'vue-session';
 Vue.use(VueSession);
 
 import vueJsonEditor from 'vue-json-editor';
+import { Base64 } from 'js-base64';
 
 // import extract from 'extract-zip'
 import axios from 'axios';
@@ -1353,6 +1354,7 @@ export default {
       externallinksJS:[],
       externallinksCSS:[],
       localscripts:[],
+      gitlabid:'',
       localstyles:[],
       externallinksMeta:[{
         name: 'Edit Me',
@@ -3332,6 +3334,114 @@ export default {
           this.fullscreenLoading = true;
 
           this.refreshPlugins();
+          
+          console.log('now gitlab work start')
+          //first client-plugin files
+          let pathclientplugin=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/client-plugins'
+
+          await axios.get(config.baseURL+'/webpack-api?path='+pathclientplugin,{})
+          .then(async (res)=>{
+            let arrayfiles=[]
+            console.log('res:',res.data.data)
+
+            new Promise(async (resolve, reject) => {
+
+              for(let i=0;i<res.data.data.length;i++){
+              // console.log('file:',res.data.data[i])
+
+              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathclientplugin+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+              let tempjson=''
+              tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+              arrayfiles.push(tempjson)
+            }
+
+            // console.log('arrayfiles:',arrayfiles)
+            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
+            let axiosoptioncommit={
+                    method:'post',
+                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                    data:buildpayload,
+                    headers:{ 'PRIVATE-TOKEN':'WCr4ehyTqQGLMp11Jaby', 'Content-Type':'application/json'}
+                  }
+                  await axios(axiosoptioncommit)
+            })
+            
+          })
+          .catch((e)=>{console.log(e)})
+
+          //now css files
+          let pathcss=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/css'
+
+          await axios.get(config.baseURL+'/webpack-api?path='+pathcss,{})
+          .then(async (res)=>{
+            let arrayfiles=[]
+            console.log('res:',res.data.data)
+
+            new Promise(async (resolve, reject) => {
+
+              for(let i=0;i<res.data.data.length;i++){
+              // console.log('file:',res.data.data[i])
+
+              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathcss+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+              let tempjson=''
+              tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+              arrayfiles.push(tempjson)
+            }
+
+            // console.log('arrayfiles:',arrayfiles)
+            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
+            let axiosoptioncommit={
+                    method:'post',
+                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                    data:buildpayload,
+                    headers:{ 'PRIVATE-TOKEN':'WCr4ehyTqQGLMp11Jaby', 'Content-Type':'application/json'}
+                  }
+                  await axios(axiosoptioncommit)
+            })
+            
+          })
+          .catch((e)=>{console.log(e)})
+
+          //now main files
+          let pathmain=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/main-files'
+
+          await axios.get(config.baseURL+'/webpack-api?path='+pathmain,{})
+          .then(async (res)=>{
+            let arrayfiles=[]
+            console.log('res:',res.data.data)
+
+            new Promise(async (resolve, reject) => {
+
+              for(let i=0;i<res.data.data.length;i++){
+              // console.log('file:',res.data.data[i])
+
+              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathmain+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+              let tempjson=''
+              tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+              arrayfiles.push(tempjson)
+            }
+
+            // console.log('arrayfiles:',arrayfiles)
+            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
+            let axiosoptioncommit={
+                    method:'post',
+                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                    data:buildpayload,
+                    headers:{ 'PRIVATE-TOKEN':'WCr4ehyTqQGLMp11Jaby', 'Content-Type':'application/json'}
+                  }
+                  await axios(axiosoptioncommit)
+            })
+            
+          })
+          .catch((e)=>{console.log(e)})
+
+
           })
           .catch((e) => {
             let dataMessage = '';
@@ -5287,7 +5397,7 @@ export default {
       });
 
       if(this.configData.status == 200 || this.configData.status == 204){
-
+        this.gitlabid=this.configData.data.gitlabconfig.projectid
         this.settings = this.configData.data.configData;
         this.form.websitename = this.configData.data.websiteName;
         this.pluginsTreedata = this.configData.data.pluginsData;
