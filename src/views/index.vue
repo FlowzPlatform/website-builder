@@ -1927,6 +1927,71 @@
                             .then(async(resp) => {
                               this.newProjectFolderDialog = false
                               this.addNewProjectFolderLoading = false;
+                              await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '&visibility=public&private_token=' + config.gitlabtoken, {})
+                              .then(async (res) => {
+                                  this.gitlabconfig = {
+                                      'http_url': res.data.http_url_to_repo,
+                                      'name': res.data.name,
+                                      'path': res.data.path_with_namespace,
+                                      'projectid': res.data.id,
+                                      'webhook_url': ''
+                                  }
+                                  let axiosoptioncommit = {
+                                      method: 'post',
+                                      url: 'https://gitlab.com/api/v4/projects/' + this.gitlabconfig.projectid + '/repository/commits',
+                                      data: '{ "branch": "master", "commit_message": "intial commit", "actions": [ { "action": "create", "file_path": "package.json", "content": "{ \\"name\\": \\"parceljson\\", \\"dependencies\\": { \\"parcel-bundler\\": \\"^1.9.7\\", \\"parceljs\\": \\"0.0.1\\" } }" } ] }',
+                                      headers: {
+                                          'PRIVATE-TOKEN': config.gitlabtoken,
+                                          'Content-Type': 'application/json'
+                                      }
+                                  }
+                                  await axios(axiosoptioncommit)
+                                      .then(async (res) => {
+                                          let options = {
+                                              method: 'post',
+                                              url: 'https://api.netlify.com/api/v1/sites',
+                                              data: '{ "force_ssl": true, "notification_email": "' + Cookies.get('email') + '", "processing_settings": { "css": { "bundle": true, "minify": true }, "html": { "pretty_urls": true }, "images": { "optimize": true }, "js": { "bundle": true, "minify": true }, "skip": true }, "ssl": true, "repo": { "allowed_branches": [ "master" ], "cmd": "parcel build -d builddir --no-minify *.html", "dir": "builddir", "env": {}, "private_logs": true, "provider": "gitlab", "public_repo": true, "repo_branch": "master", "repo_path": "' + this.gitlabconfig.path + '", "repo_url": "' + this.gitlabconfig.http_url + '" } }',
+                                              headers: {
+                                                  'Authorization': 'Bearer ' + config.netlifytoken,
+                                                  'content-type': 'application/json'
+                                              }
+                                          }
+                                          await axios(options)
+                                              .then(async (response) => {
+                                                  console.log('netlify response:', response.data)
+                                                  let webhookoptions = {
+                                                      method: 'post',
+                                                      url: 'https://api.netlify.com/api/v1/sites/' + response.data.id + '/build_hooks',
+                                                      data: '{"title":"trigger_webhook","branch":"master"}',
+                                                      headers: {
+                                                          'Authorization': 'Bearer ' + config.netlifytoken,
+                                                          'content-type': 'application/json'
+                                                      }
+                                                  }
+                                                  await axios(webhookoptions)
+                                                      .then((res) => {
+                                                          console.log('webhook', res)
+                                                          this.gitlabconfig.webhook_url = res.data.url
+                                                      })
+                                                      .catch((e) => {
+                                                          console.log(e)
+                                                      })
+                                              })
+
+                                      })
+                                      .catch((e) => {
+                                          console.log(e)
+                                      })
+
+
+                                      .catch((e) => {
+                                          console.log(e)
+                                      })
+                              })
+
+                              .catch((e) => {
+                                  console.log(e)
+                              });
                               let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
                                 console.log('Error:', err);
                               });
@@ -1975,11 +2040,6 @@
                                   })
                                 this.formAddProjectFolder.projectName = null;
                               }
-                              // let gitlabResponse = await axios.get(config.baseURL + '/gitlabservice?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {})
-                              //   .catch((err) => {
-                              //   console.log('Error:', err);
-                              //   });
-                              //   console.log('gitlabResponse:',gitlabResponse)
                             })
                             .catch((e) => {
                               this.newProjectFolderDialog = false;
@@ -2247,83 +2307,83 @@
                 }).catch((e)=>{
                   console.log(e);
                 })
-
-                //websiteid_publish used after publish
-                await axios.post(config.baseURL+'/flows-dir-listing' , {
-                  foldername : newFolderName+'_publish',
-                  type : 'folder'
-                }).then(async (res)=>{
-                   await axios.post('https://gitlab.com/api/v4/projects?name='+res.data.name+'&visibility=public&private_token='+config.gitlabtoken, {})
-                   .then(async(res)=>{
-                    this.gitlabconfig={
-                      'http_url':res.data.http_url_to_repo,
-                      'name':res.data.name,
-                      'path':res.data.path_with_namespace,
-                      'projectid':res.data.id,
-                      'webhook_url':''
-                    }
-                    // Create package json file
-                    let packagejson = newFolderName+'_publish' + '/package.json'
-                    await axios.post(config.baseURL + '/flows-dir-listing', {
-                        filename: packagejson,
-                        text: '{ "name": "parceljson", "dependencies": { "parcel-bundler": "^1.9.7", "parceljs": "0.0.1" } }',
-                        type: 'file'
-                    })
-                    .then(async(res) => {
-                      let axiosoptioncommit={
-                        method:'post',
-                        url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/repository/commits',
-                        data:'{ "branch": "master", "commit_message": "intial commit", "actions": [ { "action": "create", "file_path": "package.json", "content": "{ \\"name\\": \\"parceljson\\", \\"dependencies\\": { \\"parcel-bundler\\": \\"^1.9.7\\", \\"parceljs\\": \\"0.0.1\\" } }" } ] }',
-                        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
-                      }
-                      await axios(axiosoptioncommit)
-                      .then(async (res)=>{
-                        let options={
-                          method:'post',
-                          url:'https://api.netlify.com/api/v1/sites',
-                          data:'{ "force_ssl": true, "notification_email": "'+Cookies.get('email')+'", "processing_settings": { "css": { "bundle": true, "minify": true }, "html": { "pretty_urls": true }, "images": { "optimize": true }, "js": { "bundle": true, "minify": true }, "skip": true }, "ssl": true, "repo": { "allowed_branches": [ "master" ], "cmd": "parcel build -d builddir --no-minify *.html", "dir": "builddir", "env": {}, "private_logs": true, "provider": "gitlab", "public_repo": true, "repo_branch": "master", "repo_path": "'+this.gitlabconfig.path+'", "repo_url": "'+this.gitlabconfig.http_url+'" } }',
-                          headers:{ 'Authorization':'Bearer '+config.netlifytoken, 'content-type': 'application/json'}
-                        }
-                        await axios(options)
-                        .then(async (response)=>{
-                          console.log('netlify response:',response.data)
-                          let webhookoptions={
-                            method:'post',
-                            url:'https://api.netlify.com/api/v1/sites/'+response.data.id+'/build_hooks',
-                            data:'{"title":"trigger_webhook","branch":"master"}',
-                            headers:{ 'Authorization':'Bearer '+config.netlifytoken, 'content-type': 'application/json'}
-                            }
-                            await axios(webhookoptions)
-                            .then((res)=>{
-                              console.log('webhook',res)
-                              this.gitlabconfig.webhook_url=res.data.url
-                            })
-                            .catch((e)=>{console.log(e)
-                            })
-                            })
+                // console.log(newFolderName+'_publish')
+                // await axios.post(config.baseURL+'/flows-dir-listing' , {
+                //   foldername : newFolderName+'_publish',
+                //   type : 'folder'
+                // }).then(async (res)=>{
+                //   console.log('res:',res.data)
+                //    await axios.post('https://gitlab.com/api/v4/projects?name='+res.data.name+'&visibility=public&private_token='+config.gitlabtoken, {})
+                //    .then(async(res)=>{
+                //     this.gitlabconfig={
+                //       'http_url':res.data.http_url_to_repo,
+                //       'name':res.data.name,
+                //       'path':res.data.path_with_namespace,
+                //       'projectid':res.data.id,
+                //       'webhook_url':''
+                //     }
+                //     // Create package json file
+                //     // let packagejson = newFolderName+'_publish' + '/package.json'
+                //     // await axios.post(config.baseURL + '/flows-dir-listing', {
+                //     //     filename: packagejson,
+                //     //     text: '{ "name": "parceljson", "dependencies": { "parcel-bundler": "^1.9.7", "parceljs": "0.0.1" } }',
+                //     //     type: 'file'
+                //     // })
+                //     // .then(async(res) => {
+                //       let axiosoptioncommit={
+                //         method:'post',
+                //         url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/repository/commits',
+                //         data:'{ "branch": "master", "commit_message": "intial commit", "actions": [ { "action": "create", "file_path": "package.json", "content": "{ \\"name\\": \\"parceljson\\", \\"dependencies\\": { \\"parcel-bundler\\": \\"^1.9.7\\", \\"parceljs\\": \\"0.0.1\\" } }" } ] }',
+                //         headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                //       }
+                //       await axios(axiosoptioncommit)
+                //       .then(async (res)=>{
+                //         let options={
+                //           method:'post',
+                //           url:'https://api.netlify.com/api/v1/sites',
+                //           data:'{ "force_ssl": true, "notification_email": "'+Cookies.get('email')+'", "processing_settings": { "css": { "bundle": true, "minify": true }, "html": { "pretty_urls": true }, "images": { "optimize": true }, "js": { "bundle": true, "minify": true }, "skip": true }, "ssl": true, "repo": { "allowed_branches": [ "master" ], "cmd": "parcel build -d builddir --no-minify *.html", "dir": "builddir", "env": {}, "private_logs": true, "provider": "gitlab", "public_repo": true, "repo_branch": "master", "repo_path": "'+this.gitlabconfig.path+'", "repo_url": "'+this.gitlabconfig.http_url+'" } }',
+                //           headers:{ 'Authorization':'Bearer '+config.netlifytoken, 'content-type': 'application/json'}
+                //         }
+                //         await axios(options)
+                //         .then(async (response)=>{
+                //           console.log('netlify response:',response.data)
+                //           let webhookoptions={
+                //             method:'post',
+                //             url:'https://api.netlify.com/api/v1/sites/'+response.data.id+'/build_hooks',
+                //             data:'{"title":"trigger_webhook","branch":"master"}',
+                //             headers:{ 'Authorization':'Bearer '+config.netlifytoken, 'content-type': 'application/json'}
+                //             }
+                //             await axios(webhookoptions)
+                //             .then((res)=>{
+                //               console.log('webhook',res)
+                //               this.gitlabconfig.webhook_url=res.data.url
+                //             })
+                //             .catch((e)=>{console.log(e)
+                //             })
+                //             })
                           
-                        })
-                        .catch((e)=>{
-                          console.log(e)
-                        })
+                //         })
+                //         .catch((e)=>{
+                //           console.log(e)
+                //         })
 
                      
-                      .catch((e)=>{console.log(e)})
-                      })
-                    .catch((e) => {
-                        console.log(e)
-                    });
+                //       .catch((e)=>{console.log(e)})
+                //       })
+                //     // .catch((e) => {
+                //     //     console.log(e)
+                //    //  });
                     
                     
 
-                   })
-                    .catch((e) => {
-                        console.log(e)
-                    });
-                })  
-                .catch((e)=>{
-                  console.log(e);
-                })
+                //    // })
+                //     .catch((e) => {
+                //         console.log(e)
+                //     });
+                // })  
+                // .catch((e)=>{
+                //   console.log(e);
+                // })
 
               // Create Pages Folder
               await axios.post(config.baseURL + '/flows-dir-listing', {
