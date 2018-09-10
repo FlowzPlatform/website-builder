@@ -139,6 +139,11 @@ export default {
       name: ''
     }
   },
+  watch: {
+    'formItem.website': function(val, oldVal){
+      onChangeWebsite(val);
+    }
+  },
   methods: {
     getRules () {
       if (this.formItem.id) {
