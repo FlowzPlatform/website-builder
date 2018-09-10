@@ -111,7 +111,7 @@ export default {
                     if (res.status === 'success') {
                     		axios.patch(categoryUrl + '/' + params.row.id, {homepage: !params.row.homepage}).then(res => {
 									        this.formItem.homepage = !params.row.homepage
-									        this.updateFlag(params.row.id,this.formItem.homepage)
+									        this.updateFlag(params.row.id,this.formItem.homepage, params.index, 'homepage')
 									      }).catch(err => {
 									        console.log('Error', err)
 									        this.$Notice.error({ title: 'Error', desc: '', duration: 2})
@@ -146,7 +146,7 @@ export default {
                     if (res.status === 'success') {
                     		axios.patch(categoryUrl + '/' + params.row.id, {status: !params.row.status}).then(res => {
 									        this.formItem.status = !params.row.status
-									        this.updateFlag(params.row.id,this.formItem.status)
+									        this.updateFlag(params.row.id,this.formItem.status, params.index, 'status')
 									      }).catch(err => {
 									        console.log('Error', err)
 									        this.$Notice.error({ title: 'Error', desc: '', duration: 2})
@@ -260,7 +260,7 @@ export default {
         return str;
     },
     async handleHomeClick(id, homepage) {
-      this.loading = true
+      // this.loading = true
     	let userId = Cookies.get('userDetailId')
     	let resp = await axios.get(categoryUrl + '?id=' + id).then(res => {
     		if (res.data.data.length > 0) {
@@ -274,11 +274,12 @@ export default {
 
     	return resp
     },
-    async updateFlag(id, homepage) {
+    async updateFlag(id, homepage, index, field) {
       axios.patch(categoryUrl + '/' + id, {'homepage':homepage})
       .then(res => {
         this.$Notice.success({ title: 'Success!', desc: '', duration: 2})
-        this.init()
+        this.tdata.data[index][field] = homepage
+        //this.init()
       })
       .catch(err => {
         console.log('Error', err)
