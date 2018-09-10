@@ -111,7 +111,7 @@ export default {
                     if (res.status === 'success') {
                     		axios.patch(categoryUrl + '/' + params.row.id, {homepage: !params.row.homepage}).then(res => {
 									        this.formItem.homepage = !params.row.homepage
-									        this.updateFlag(params.row.id,this.formItem.homepage)
+									        this.updateFlag(params.row.id,this.formItem.homepage, params.index, 'homepage')
 									      }).catch(err => {
 									        console.log('Error', err)
 									        this.$Notice.error({ title: 'Error', desc: '', duration: 2})
@@ -146,7 +146,7 @@ export default {
                     if (res.status === 'success') {
                     		axios.patch(categoryUrl + '/' + params.row.id, {status: !params.row.status}).then(res => {
 									        this.formItem.status = !params.row.status
-									        this.updateFlag(params.row.id,this.formItem.status)
+									        this.updateFlag(params.row.id,this.formItem.status, params.index, 'status')
 									      }).catch(err => {
 									        console.log('Error', err)
 									        this.$Notice.error({ title: 'Error', desc: '', duration: 2})
@@ -260,7 +260,7 @@ export default {
         return str;
     },
     async handleHomeClick(id, homepage) {
-      this.loading = true
+      // this.loading = true
     	let userId = Cookies.get('userDetailId')
     	let resp = await axios.get(categoryUrl + '?id=' + id).then(res => {
     		if (res.data.data.length > 0) {
@@ -274,11 +274,12 @@ export default {
 
     	return resp
     },
-    async updateFlag(id, homepage) {
+    async updateFlag(id, homepage, index, field) {
       axios.patch(categoryUrl + '/' + id, {'homepage':homepage})
       .then(res => {
         this.$Notice.success({ title: 'Success!', desc: '', duration: 2})
-        this.init()
+        this.tdata.data[index][field] = homepage
+        //this.init()
       })
       .catch(err => {
         console.log('Error', err)
@@ -314,7 +315,7 @@ export default {
             .catch((e) => {
                 console.log(e);
             })
-
+            
             if (!_.isEmpty(this.tdata.categoriesList)) {
               for(let i = 0; i < this.tdata.categoriesList.length; i++) {
                   let slug = this.stringToSlug(this.tdata.categoriesList[i].key);
@@ -330,11 +331,12 @@ export default {
                   })
 
                   this.formItem.createdAt = new Date()
-                  this.formItem.name = this.tdata.categoriesList[i].key
-                  this.formItem.slug = slug;
-                  this.formItem.count = this.tdata.categoriesList[i].doc_count
                   this.formItem.website = this.filterobj.website
                   if(catDetails == 0) {
+                      this.formItem.name = this.tdata.categoriesList[i].key
+                      this.formItem.slug = slug;
+                      this.formItem.count = this.tdata.categoriesList[i].doc_count
+
                       axios.post(categoryUrl, this.formItem).then(res => {
                         //this.$Notice.success({title: 'Success', desc: 'Successfully saved.', duration: 2})
                       }).catch(err => {
@@ -368,8 +370,11 @@ export default {
     let userId = Cookies.get('userDetailId')
 
     await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
+      
       for (let item of res.data.data) {
-        this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+        if(item.configData != 'undefined' && Array.isArray(item.configData)) {
+          this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+        }
       }
       this.$Spin.hide();
     }).catch(err => {
@@ -379,8 +384,9 @@ export default {
     if (this.fdata != undefined && this.fdata.website !== '') {
         this.filterobj.website = this.fdata.website;
     }
-
-    this.init()
+    else {
+      this.init()
+    }
   }
 }
 </script>

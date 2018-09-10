@@ -13,7 +13,7 @@
           <Row :gutter="16">
             <Col span="12">
                 <FormItem label="Website" prop="website">
-                    <Select v-model="formItem.website" placeholder="Select Website" @on-change="onChangeWebsite" disabled>
+                    <Select v-model="formItem.website" placeholder="Select Website" disabled>
                         <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
@@ -139,6 +139,11 @@ export default {
       name: ''
     }
   },
+  watch: {
+    'formItem.website': function(val, oldVal){
+      this.onChangeWebsite(val);
+    }
+  },
   methods: {
     getRules () {
       if (this.formItem.id) {
@@ -239,7 +244,9 @@ export default {
     if (userId !== '' && userId !== undefined) {
       await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
         for (let item of res.data.data) {
-          this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+          if(item.configData != 'undefined' && Array.isArray(item.configData)) {
+            this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+          }
         }
       }).catch(err => {
       })
