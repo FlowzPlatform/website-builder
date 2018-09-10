@@ -13,7 +13,7 @@
           <Row :gutter="16">
             <Col span="12">
                 <FormItem label="Website" prop="website">
-                    <Select v-model="formItem.website" placeholder="Select Website" @on-change="onChangeWebsite" disabled>
+                    <Select v-model="formItem.website" placeholder="Select Website" disabled>
                         <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
@@ -141,7 +141,7 @@ export default {
   },
   watch: {
     'formItem.website': function(val, oldVal){
-      onChangeWebsite(val);
+      this.onChangeWebsite(val);
     }
   },
   methods: {

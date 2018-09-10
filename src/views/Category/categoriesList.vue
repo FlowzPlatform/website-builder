@@ -314,7 +314,7 @@ export default {
             .catch((e) => {
                 console.log(e);
             })
-
+            
             if (!_.isEmpty(this.tdata.categoriesList)) {
               for(let i = 0; i < this.tdata.categoriesList.length; i++) {
                   let slug = this.stringToSlug(this.tdata.categoriesList[i].key);
@@ -330,11 +330,12 @@ export default {
                   })
 
                   this.formItem.createdAt = new Date()
-                  this.formItem.name = this.tdata.categoriesList[i].key
-                  this.formItem.slug = slug;
-                  this.formItem.count = this.tdata.categoriesList[i].doc_count
                   this.formItem.website = this.filterobj.website
                   if(catDetails == 0) {
+                      this.formItem.name = this.tdata.categoriesList[i].key
+                      this.formItem.slug = slug;
+                      this.formItem.count = this.tdata.categoriesList[i].doc_count
+
                       axios.post(categoryUrl, this.formItem).then(res => {
                         //this.$Notice.success({title: 'Success', desc: 'Successfully saved.', duration: 2})
                       }).catch(err => {
@@ -382,8 +383,9 @@ export default {
     if (this.fdata != undefined && this.fdata.website !== '') {
         this.filterobj.website = this.fdata.website;
     }
-
-    this.init()
+    else {
+      this.init()
+    }
   }
 }
 </script>
