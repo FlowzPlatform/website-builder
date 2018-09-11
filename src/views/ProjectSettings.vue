@@ -400,7 +400,7 @@
                     <div class="col-md-4">
                       <div class="thumbnail">
                         <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
-                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                      <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
                     </div>
@@ -414,6 +414,15 @@
                       <div class="thumbnail">
                         <img src="https://placehold.it/403x190?text=Template6" alt="template 6" class="img-responsive template-image" @click="revertToTemplate(template = 'optimisation')" />
                       <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="thumbnail">
+                        <img src="https://placehold.it/403x190?text=Posh" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'posh')"/>
+                      <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
+                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
                     </div>
                   </div>
