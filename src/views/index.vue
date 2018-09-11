@@ -211,6 +211,7 @@
     var daex = require('json-daex');
 
     import Cookies from 'js-cookie';
+    import { Base64 } from 'js-base64';
 
     const config = require('../config');
     import Emitter from '../mixins/emitter';
@@ -320,6 +321,7 @@
               websitename: 'websitename'
             },
             rootpath: '',
+            gitlabconfig:{},
             backuplayout: '',
             componentId: Dashboard,
             addNewFileLoading: false,
@@ -1925,6 +1927,73 @@
                             .then(async(resp) => {
                               this.newProjectFolderDialog = false
                               this.addNewProjectFolderLoading = false;
+                              //creating gitlab repo in secondary gitlab account(for netlify)
+                              await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '&visibility=public&private_token=' + config.gitlabtoken, {})
+                              .then(async (res) => {
+                                  this.gitlabconfig = {
+                                      'http_url': res.data.http_url_to_repo,
+                                      'name': res.data.name,
+                                      'path': res.data.path_with_namespace,
+                                      'projectid': res.data.id,
+                                      'webhook_url': '',
+                                      'netlify_deploy_url':''
+                                  }
+                                  let axiosoptioncommit = {
+                                      method: 'post',
+                                      url: 'https://gitlab.com/api/v4/projects/' + this.gitlabconfig.projectid + '/repository/commits',
+                                      data: '{ "branch": "master", "commit_message": "intial commit", "actions": [ { "action": "create", "file_path": "package.json", "content": "{ \\"name\\": \\"parceljson\\", \\"dependencies\\": { \\"parcel-bundler\\": \\"^1.9.7\\", \\"parceljs\\": \\"0.0.1\\" } }" } ] }',
+                                      headers: {
+                                          'PRIVATE-TOKEN': config.gitlabtoken,
+                                          'Content-Type': 'application/json'
+                                      }
+                                  }
+                                  await axios(axiosoptioncommit)
+                                      .then(async (res) => {
+                                          let options = {
+                                              method: 'post',
+                                              url: 'https://api.netlify.com/api/v1/sites',
+                                              data: '{ "force_ssl": true, "notification_email": "' + Cookies.get('email') + '", "processing_settings": { "css": { "bundle": true, "minify": true }, "html": { "pretty_urls": true }, "images": { "optimize": true }, "js": { "bundle": true, "minify": true }, "skip": true }, "ssl": true, "repo": { "allowed_branches": [ "master" ], "cmd": "parcel build -d builddir --no-minify *.html", "dir": "builddir", "env": {}, "private_logs": true, "provider": "gitlab", "public_repo": true, "repo_branch": "master", "repo_path": "' + this.gitlabconfig.path + '", "repo_url": "' + this.gitlabconfig.http_url + '" } }',
+                                              headers: {
+                                                  'Authorization': 'Bearer ' + config.netlifytoken,
+                                                  'content-type': 'application/json'
+                                              }
+                                          }
+                                          await axios(options)
+                                              .then(async (response) => {
+                                                  this.gitlabconfig.netlify_deploy_url=response.data.url
+                                                  let webhookoptions = {
+                                                      method: 'post',
+                                                      url: 'https://api.netlify.com/api/v1/sites/' + response.data.id + '/build_hooks',
+                                                      data: '{"title":"trigger_webhook","branch":"master"}',
+                                                      headers: {
+                                                          'Authorization': 'Bearer ' + config.netlifytoken,
+                                                          'content-type': 'application/json'
+                                                      }
+                                                  }
+                                                  await axios(webhookoptions)
+                                                      .then((res) => {
+                                                          this.gitlabconfig.webhook_url = res.data.url
+                                                      })
+                                                      .catch((e) => {
+                                                          console.log(e)
+                                                      })
+                                              })
+
+                                      })
+                                      .catch((e) => {
+                                          console.log(e)
+                                      })
+
+
+                                      .catch((e) => {
+                                          console.log(e)
+                                      })
+                              })
+
+                              .catch((e) => {
+                                  console.log(e)
+                              });
+
                               let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
                                 console.log('Error:', err);
                               });
@@ -1973,6 +2042,38 @@
                                   })
                                 this.formAddProjectFolder.projectName = null;
                               }
+                              //Now creating repo in primary gitlab account (overall files)
+                              // await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '&visibility=public&private_token=' + config.primarygitlabaccesstoken, {})
+                              // .then(async (res)=>{
+                              //   console.log('git res:',res)
+                              //   localStorage.setItem("folderUrl", newFolderName);
+                              //   var folder = localStorage.getItem("folderUrl");
+                              //   this.newRepoId = res.data.id;
+                              //   this.repoName = res.data.name;
+                              //   this.projectLimitCount = 0;
+                              //   this.addOtherFolder(newFolderName);
+                              //   // axios.post(config.initLdap, {
+                              //   //     "app": "aaa"
+                              //   //   })
+                              //   //   .then((res) => {})
+                              //   //   .catch((e) => {
+                              //   //     console.log(e)
+                              //   //   });
+                              //   await axios.post(config.baseURL + '/register-website-subscriptions', {
+                              //       websiteId: this.repoName
+                              //     })
+                              //     .then((res) => {})
+                              //     .catch((e) => {
+                              //       console.log(e)
+                              //     });
+                              //   this.currentProjectName = this.formAddProjectFolder.projectName;
+                              //   this.formAddProjectFolder.projectName = null;
+                              
+                              // })
+                              // .catch(async (e)=>{
+                              //   console.log(e)
+                              //   })
+                              
                             })
                             .catch((e) => {
                               this.newProjectFolderDialog = false;
@@ -2146,6 +2247,7 @@
                 .catch((e) => {
                   //console.log("Error from Assests"+res)
                 });
+
               //Create Preview Folder
               await axios.post(config.baseURL + '/flows-dir-listing', {
                   foldername: newFolderName + '/public/Preview',
@@ -2232,12 +2334,14 @@
                   //console.log("Error From Layout"+res)
                 });
                 
+                //.temppublish used in publishing
                await axios.post(config.baseURL+'/flows-dir-listing' , {
                   foldername : newFolderName+'/.temppublish',
                   type : 'folder'
                 }).catch((e)=>{
                   console.log(e);
                 })
+                
 
               // Create Pages Folder
               await axios.post(config.baseURL + '/flows-dir-listing', {
@@ -2312,14 +2416,27 @@
 
                 // Create main.css file
                 let maincss = newFolderName + '/public/main-files/main.css'
+                let maincsstext='/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;}.grid{position: relative;}.item{display: block; position: absolute; width: 100%; max-width: 250px; height: auto; margin: 5px; z-index: 1; background: white; color: black; border: 1px solid black}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}'
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: maincss,
-                        text: '/* Add your custom CSS styles here. It will be automatically included in every page. */\np{margin: 0 !important; padding: 0 !important;}.row{padding: 0 !important; margin: 0 !important;}.column{padding: 0 !important; margin: 0 !important;}body{font-size:14px !important;}.navbar-nav>li>a{color: #fff;}.navbar-nav>li>a:hover{color: #000;}.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {color: #000;}.rbc.rbc-multilist .rbc-list-container .rbc-list-item{display: block; width: 100%;}.grid{position: relative;}.item{display: block; position: absolute; width: 100%; max-width: 250px; height: auto; margin: 5px; z-index: 1; background: white; color: black; border: 1px solid black}.item.muuri-item-dragging{z-index: 3;}.item.muuri-item-releasing{z-index: 2;}.item.muuri-item-hidden{z-index: 0;}.item-content{position: relative; width: 100%; height: 100%;}',
+                        text: maincsstext,
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then(async (res) => {
+                      // console.log('res',res)
+                      let tempjson='{"action": "create","encoding":"base64","file_path": "main-files/main.css","content": "'+Base64.btoa(maincsstext)+'" }'
+                      let buildpayload='{ "branch": "master","commit_message": "adding main.css", "actions": ['+tempjson+'] }'
+                      let axiosoption={
+                        method:'post',
+                        url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/repository/commits',
+                        data:buildpayload,
+                        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                      }
+                      await axios(axiosoption)
+                      .catch((e)=>{console.log(e)})
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create main.js file
@@ -2329,9 +2446,21 @@
                         text: '/* Add your custom JavaScript/jQuery functions here. It will be automatically included in every page. */',
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then(async (res) => {
+                      console.log('res:',JSON.parse(res.config.data).text)
+                      let tempjson='{"action": "create","encoding":"base64","file_path": "main-files/main.js","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                      let buildpayload='{ "branch": "master","commit_message": "adding main.js", "actions": ['+tempjson+'] }'
+                      let axiosoption={
+                        method:'post',
+                        url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/repository/commits',
+                        data:buildpayload,
+                        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                      }
+                      await axios(axiosoption)
+                      .catch((e)=>{console.log(e)})
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create default.json for menu file
@@ -2526,7 +2655,18 @@
                                 text: flowzEngineData,
                                 type: 'file'
                             })
-                            .then((res) => {})
+                            .then(async (res) => {
+                              let tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/flowz-builder-engine.js","content": "'+Base64.btoa(flowzEngineData)+'" }'
+                              let buildpayload='{ "branch": "master","commit_message": "adding flowz-builder-engine.js", "actions": ['+tempjson+'] }'
+                              let axiosoption={
+                                method:'post',
+                                url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/repository/commits',
+                                data:buildpayload,
+                                headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                              }
+                              await axios(axiosoption)
+                              .catch((e)=>{console.log(e)})
+                            })
                             .catch((e) => {
                                 //console.log(e)
                             })
@@ -2611,7 +2751,10 @@
                                 type: 'file'
                             })
                             .then(async (res) => {
-                                // Push repository changes
+                                // Push repository changes via API
+                                // console.log('about to call commitrepo')
+                                // await commitrepo(newFolderName,'')
+
                                 await axios.post(config.baseURL + '/gitlab-add-repo', {
                                     branchName: 'master',
                                     commitMessage: 'Initial Push',
@@ -2801,7 +2944,8 @@
 
                                         await axios.patch(config.baseURL + '/project-configuration/' + projectRepoName, {
                                                 configData: repoSettings,
-                                                pluginsData: pluginSettingsData
+                                                pluginsData: pluginSettingsData,
+                                                gitlabconfig:this.gitlabconfig
                                             })
                                             .then((res) => {})
                                             .catch((e) => {
@@ -2846,7 +2990,7 @@
                                         }, 1000);
                                     }
                                 }).catch(error => {
-                                    //console.log("Some error occured: ", error);
+                                    console.log("error occured: ", error);
                                 })
 
 
@@ -2859,6 +3003,29 @@
                         //console.log(e)
                     });
             },
+            // async commitrepo(newFolderName,repo){
+            //   console.log('inside commitrepo')
+            //   await axios.get(config.baseURL+'/filelisting?path='+newFolderName+'/'+repo)
+            //   .then(async (res)=>{
+            //     console.log('res file path:',res)
+            //     let arrayfiles=[]
+            //     for(let i=0;i<res.data.data.length;i++){
+            //       if(res.data.data[i]!='.temppublish'&&res.data.data[i].indexOf('.')!=-1){
+            //         console.log('its a file\n')
+            //           let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + newFolderName+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+            //           let tempjson=''
+            //           tempjson='{"action": "create","encoding":"base64","file_path": "'+repo+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+            //           arrayfiles.push(tempjson)
+            //       }else{
+            //         console.log('its directory\n')
+            //         commitrepo(newFolderName,res.data.data[i])
+            //       }
+            //       console.log('arrayfiles:',arrayfiles)
+            //     }
+            //   })
+            // },
 
             // Save File
             async saveFile(arg) {

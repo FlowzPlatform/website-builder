@@ -50,7 +50,7 @@
                   <div class="col-md-12">
 
                     <el-radio class="radio" v-model="publishType" label="default">Default Publish</el-radio>
-                    <el-radio class="radio" v-model="publishType" label="custom">Custom Domain</el-radio>
+                    <el-radio class="radio" v-model="publishType" label="custom">Netlify Domain</el-radio>
 
                     <div class="row">
                       <div class="col-md-12" v-if="publishType === 'default'">
@@ -68,7 +68,9 @@
                       </div>
 
                       <div class="col-md-12" v-else>
-                        <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
+                      Deploy URL: <a :href="netlifydeployurl" target="_blank">{{netlifydeployurl}}</a>
+                      <br>
+                        <!-- <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
                         <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
                           [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
                             <el-tooltip class="item" effect="dark" content="Copy to clipboard" placement="top">
@@ -83,7 +85,7 @@
                         </p>
                         <div style="margin-top: 15px;">
                           <el-button type="primary" @click="publishMetalsmith(publishType = 'custom')" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="loadingText">Custom Publish</el-button>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -1197,6 +1199,7 @@ import VueSession from 'vue-session';
 Vue.use(VueSession);
 
 import vueJsonEditor from 'vue-json-editor';
+import { Base64 } from 'js-base64';
 
 // import extract from 'extract-zip'
 import axios from 'axios';
@@ -1316,7 +1319,7 @@ export default {
         value: 'custom',
         label: 'Custom'
       }],
-
+      netlifydeployurl:'',
       globalVariables: [],
       urlVariables: [],
       globalCssVariables: [],
@@ -1353,6 +1356,7 @@ export default {
       externallinksJS:[],
       externallinksCSS:[],
       localscripts:[],
+      gitlabid:'',
       localstyles:[],
       externallinksMeta:[{
         name: 'Edit Me',
@@ -1473,7 +1477,6 @@ export default {
       });
 
       app.service("jobqueue").on("patched", async (response) => {
-        console.log('patch response:',response)
        if(this.repoName==response.websiteid){
 
           // console.log('===========================================');
@@ -1484,7 +1487,6 @@ export default {
          // this.isdisabled = true;
           // this.textdata='Job added Successfully. Please wait you are in Queue.'
          if(response.Status!=undefined && response.Status=='completed'){
-            console.log('completed..', response)
             let dt = new Date();
             let utcDate = dt.toUTCString();
             let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
@@ -3332,6 +3334,110 @@ export default {
           this.fullscreenLoading = true;
 
           this.refreshPlugins();
+          
+          //first client-plugin files
+          let pathclientplugin=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/client-plugins'
+
+          await axios.get(config.baseURL+'/filelisting?path='+pathclientplugin,{})
+          .then(async (res)=>{
+            let arrayfiles=[]
+
+            new Promise(async (resolve, reject) => {
+
+              for(let i=0;i<res.data.data.length;i++){
+              // console.log('file:',res.data.data[i])
+
+              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathclientplugin+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+              let tempjson=''
+              tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+              arrayfiles.push(tempjson)
+            }
+
+            // console.log('arrayfiles:',arrayfiles)
+            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
+            let axiosoptioncommit={
+                    method:'post',
+                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                    data:buildpayload,
+                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                  }
+            await axios(axiosoptioncommit)
+            })
+            
+          })
+          .catch((e)=>{console.log(e)})
+
+          //now css files
+          let pathcss=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/css'
+
+          await axios.get(config.baseURL+'/filelisting?path='+pathcss,{})
+          .then(async (res)=>{
+            let arrayfiles=[]
+
+            new Promise(async (resolve, reject) => {
+
+              for(let i=0;i<res.data.data.length;i++){
+              // console.log('file:',res.data.data[i])
+
+              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathcss+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+              let tempjson=''
+              tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+              arrayfiles.push(tempjson)
+            }
+
+            // console.log('arrayfiles:',arrayfiles)
+            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
+            let axiosoptioncommit={
+                    method:'post',
+                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                    data:buildpayload,
+                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                  }
+                  await axios(axiosoptioncommit)
+            })
+            
+          })
+          .catch((e)=>{console.log(e)})
+
+          //now main files
+          let pathmain=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/main-files'
+
+          await axios.get(config.baseURL+'/filelisting?path='+pathmain,{})
+          .then(async (res)=>{
+            let arrayfiles=[]
+
+            new Promise(async (resolve, reject) => {
+
+              for(let i=0;i<res.data.data.length;i++){
+              // console.log('file:',res.data.data[i])
+
+              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathmain+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+              let tempjson=''
+              tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+              arrayfiles.push(tempjson)
+            }
+
+            // console.log('arrayfiles:',arrayfiles)
+            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
+            let axiosoptioncommit={
+                    method:'post',
+                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                    data:buildpayload,
+                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                  }
+                  await axios(axiosoptioncommit)
+            })
+            
+          })
+          .catch((e)=>{console.log(e)})
+
+
           })
           .catch((e) => {
             let dataMessage = '';
@@ -5287,7 +5393,8 @@ export default {
       });
 
       if(this.configData.status == 200 || this.configData.status == 204){
-
+        this.gitlabid=this.configData.data.gitlabconfig.projectid
+        this.netlifydeployurl=this.configData.data.gitlabconfig.netlify_deploy_url;
         this.settings = this.configData.data.configData;
         this.form.websitename = this.configData.data.websiteName;
         this.pluginsTreedata = this.configData.data.pluginsData;
