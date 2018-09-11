@@ -294,7 +294,6 @@ export default {
         upload_preset: this.cloudDetails.uploadPreset, 
         sources: ['local', 'url']
       }, (error, result) => { 
-        console.log('result == ',result)
         if(error != null){
             if(error.message != 'User closed widget'){
                 this.$message({
@@ -369,7 +368,7 @@ export default {
       // get sku's of website
       let websiteDetails = _.find(this.webOptions, {value: this.formItem.website})
       let skuTotal = await axios.get(
-        productApiUrl + "?$limit=0&source=sku,product_id", 
+        productApiUrl + "?$limit=0&source=sku", 
         { headers: { 'vid': websiteDetails.vid } }
       )
       .then(res => {
@@ -386,7 +385,7 @@ export default {
 
       if(skuTotal > 0) {
         await axios.get(
-          productApiUrl + "?$limit="+skuTotal, 
+          productApiUrl + "?$limit="+skuTotal+"&source=sku,product_id",
           { headers: { 'vid': websiteDetails.vid } }
         )
         .then(res => {
@@ -440,7 +439,9 @@ export default {
     if (userId !== '' && userId !== undefined) {
         await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
           for (let item of res.data.data) {
-            this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+            if(item.configData != 'undefined' && Array.isArray(item.configData)) {
+              this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+            }
           }
         }).catch(err => {
         })
