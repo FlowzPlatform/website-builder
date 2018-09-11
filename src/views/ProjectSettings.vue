@@ -3373,6 +3373,7 @@ export default {
                     headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
                   }
             await axios(axiosoptioncommit)
+            .catch((e)=>{console.log(e)})
             })
             
           })
@@ -3406,7 +3407,8 @@ export default {
                     data:buildpayload,
                     headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
                   }
-                  await axios(axiosoptioncommit)
+              await axios(axiosoptioncommit)     
+              .catch((e)=>{console.log(e)})
             })
             
           })
@@ -3440,7 +3442,8 @@ export default {
                     data:buildpayload,
                     headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
                   }
-                  await axios(axiosoptioncommit)
+            await axios(axiosoptioncommit)
+            .catch((e)=>{console.log(e)})
             })
             
           })
