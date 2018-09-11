@@ -235,6 +235,7 @@ export default {
               return res.data;
           })
 
+        let romoveData = [];
         for(let item of tempPtdata.data) {
           await axios.get(
             productApiUrl + '?_id=' + item.product_id,
@@ -242,18 +243,35 @@ export default {
           )
           .then(
             result=> {
-              let productData = result.data.hits.hits[0];
-              this.productOptions.push({
-                label: productData._source.product_name,
-                id: productData._id,
-                //image: productData._source.default_image,
-                sku: productData._source.sku
-              })
+              if(result.data.hits.hits.length > 0) {
+                let productData = result.data.hits.hits[0];
+                this.productOptions.push({
+                  label: productData._source.product_name,
+                  id: productData._id,
+                  sku: productData._source.sku
+                })
+              }
+              else {
+                romoveData.push(item);
+              } 
             }
           )
         }
+
+        tempPtdata.data = _.difference(tempPtdata.data, romoveData);
+        tempPtdata.total = tempPtdata.data.length;
         this.ptdata = tempPtdata;
-     
+
+        if(Array.isArray(romoveData) && romoveData.length >0) {
+            for(let item of romoveData) {
+                axios.delete(productMappingUrl + '/' + item.id).then(res => {
+                  return true;
+                }).catch(err => {
+                  this.$Notice.error({ title: 'Error!', desc: 'Old products can not be deleted.', duration: 3})
+                })
+            }
+        }
+
         this.loading = false
       }
       this.loading = false
