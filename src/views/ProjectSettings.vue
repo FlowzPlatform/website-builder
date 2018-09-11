@@ -1477,7 +1477,6 @@ export default {
       });
 
       app.service("jobqueue").on("patched", async (response) => {
-        console.log('patch response:',response)
        if(this.repoName==response.websiteid){
 
           // console.log('===========================================');
@@ -1488,7 +1487,6 @@ export default {
          // this.isdisabled = true;
           // this.textdata='Job added Successfully. Please wait you are in Queue.'
          if(response.Status!=undefined && response.Status=='completed'){
-            console.log('completed..', response)
             let dt = new Date();
             let utcDate = dt.toUTCString();
             let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
@@ -3337,14 +3335,12 @@ export default {
 
           this.refreshPlugins();
           
-          console.log('now gitlab work start')
           //first client-plugin files
           let pathclientplugin=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/client-plugins'
 
           await axios.get(config.baseURL+'/filelisting?path='+pathclientplugin,{})
           .then(async (res)=>{
             let arrayfiles=[]
-            console.log('res:',res.data.data)
 
             new Promise(async (resolve, reject) => {
 
@@ -3367,7 +3363,7 @@ export default {
                     data:buildpayload,
                     headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
                   }
-                  await axios(axiosoptioncommit)
+            await axios(axiosoptioncommit)
             })
             
           })
@@ -3379,7 +3375,6 @@ export default {
           await axios.get(config.baseURL+'/filelisting?path='+pathcss,{})
           .then(async (res)=>{
             let arrayfiles=[]
-            console.log('res:',res.data.data)
 
             new Promise(async (resolve, reject) => {
 
@@ -3414,7 +3409,6 @@ export default {
           await axios.get(config.baseURL+'/filelisting?path='+pathmain,{})
           .then(async (res)=>{
             let arrayfiles=[]
-            console.log('res:',res.data.data)
 
             new Promise(async (resolve, reject) => {
 
