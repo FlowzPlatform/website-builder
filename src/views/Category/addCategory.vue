@@ -13,14 +13,14 @@
           <Row :gutter="16">
             <Col span="12">
                 <FormItem label="Website" prop="website">
-                    <Select v-model="formItem.website" placeholder="Select Website" @on-change="onChangeWebsite">
+                    <Select v-model="formItem.website" placeholder="Select Website" disabled>
                         <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
             </Col>
             <Col span="12">
                 <FormItem label="Name" prop="name">
-                    <Input v-model.trim="formItem.name"></Input>
+                    <Input v-model.trim="formItem.name" disabled></Input>
                 </FormItem>
             </Col>
           </Row>
@@ -39,6 +39,15 @@
                 </FormItem>
             </Col>
           </Row>
+          <!-- <Row :gutter="16">
+            <Col span="12">
+                <FormItem label="Parent Category" prop="parent">
+                    <Select v-model="formItem.parent" placeholder="Select Category">
+                        <Option v-for="item in catOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem>
+            </Col>
+          </Row> -->
           <Row :gutter="16">
             <Col span="12">
                 <FormItem>
@@ -95,10 +104,14 @@ export default {
       formItem: {
           website: '',
           name: '',
+          slug: '',
+          parent: '',
           icon: '',
           icon_name: '',
+          count: '',
           description: '',
           status: true,
+          homepage: false,
           createdAt: '',
           userId: Cookies.get('userDetailId')
       },
@@ -121,8 +134,14 @@ export default {
           ]
       },
       webOptions: [],
+      catOptions: [],
       cloudDetails: {},
       name: ''
+    }
+  },
+  watch: {
+    'formItem.website': function(val, oldVal){
+      this.onChangeWebsite(val);
     }
   },
   methods: {
@@ -223,26 +242,64 @@ export default {
   async mounted () {
     let userId = Cookies.get('userDetailId')
     if (userId !== '' && userId !== undefined) {
-      axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
+      await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
         for (let item of res.data.data) {
-          this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+          if(item.configData != 'undefined' && Array.isArray(item.configData)) {
+            this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+          }
         }
       }).catch(err => {
       })
     }
-    
-    if (this.fdata != undefined && this.fdata.type === 'editCategory' && this.fdata.categoryName !== '') {
-        axios.get(categoryUrl + '?name=' + this.fdata.categoryName + '&website=' + this.fdata.website).then(res => {
+
+    if (this.fdata != undefined && this.fdata.type === 'editCategory' && this.fdata.categorySlug !== '') {
+        await axios.get(categoryUrl + '?slug=' + this.fdata.categorySlug + '&website=' + this.fdata.website).then(res => {
             if(res.data.total == 1) {
                 this.formItem = res.data.data[0]  
             }
             else {
-              this.formItem.name = this.fdata.categoryName;
+              this.formItem.name = this.fdata.categorySlug;
               this.formItem.website = this.fdata.website;
             }             
         }).catch(err => {
             console.log(err);
         })
+
+        // let websiteDetails = _.find(this.webOptions, {value: this.fdata.website});
+        // let vid = websiteDetails.vid;
+        // if(vid != undefined && vid != '') {
+        //   this.$Spin.show()
+        //   await axios.get(config.menuCategoriesUrl, {
+        //       headers: {
+        //           Authorization: Cookies.get('auth_token'),
+        //           vid: vid
+        //       }
+        //   })
+        //   .then((res) => {
+        //       let categories = res.data.aggregations.group_by_category.buckets;
+              
+        //       for(let i = 0; i < categories.length; i++) {
+        //           let categorySlug = categories[i].key.toLowerCase().replace(/ /g, '-');
+
+        //           this.catOptions.push({
+        //             label: categories[i].key.toUpperCase(),
+        //             value: categorySlug
+        //           });								
+        //       }
+        //       this.$Spin.hide()
+        //   })
+        //   .catch((e) => {
+        //       this.$Notice.error({ title: 'Error', desc: 'Failed! Please try again.', duration: 2})
+        //       console.log(e);
+        //   })
+        // } 
+        // else if (this.fdata.website != undefined && this.fdata.website !== '') {
+        //     this.$message({
+        //       showClose: true,
+        //       message: 'Please set "VID" in Project settings to get all of your category list.',
+        //       type: 'info'
+        //     });
+        // }
     }
   }
 }

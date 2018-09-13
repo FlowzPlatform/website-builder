@@ -307,14 +307,14 @@
                             <span class="hh-sidebar-item">Category Management</span>
                         </a>
                     </li>
-                    <li v-if="cExpand">
+                    <!-- <li v-if="cExpand">
                         <a href="javascript:;" class="inside-items" @click='goToCategory("c_add")'>
                             <i class="">
                                 <span class="icon-bg"></span>
                             </i>
                             <span class="hh-sidebar-item">Add Category</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li v-if="cExpand"  @click='goToCategory("c_list")'>
                         <a href="javascript:;" class="inside-items">
                             <i class="">
