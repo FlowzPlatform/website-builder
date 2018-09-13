@@ -1901,7 +1901,7 @@
                         'Authorization': Cookies.get('auth_token')
                       }
                     })
-                    .then(async(res) => {
+                    .then(async (res) => {
                       axios.post(config.baseURL + '/project-configuration', {
                           id: uuidv4().replace(/\-/g, ''),
                           userEmail: Cookies.get('email'),
@@ -1924,7 +1924,7 @@
                                 'authorization': token
                               }
                             })
-                            .then(async(resp) => {
+                            .then(async (resp) => {
                               this.newProjectFolderDialog = false
                               this.addNewProjectFolderLoading = false;
                               //creating gitlab repo in secondary gitlab account(for netlify)
@@ -1989,12 +1989,11 @@
                                           console.log(e)
                                       })
                               })
-
                               .catch((e) => {
                                   console.log(e)
                               });
 
-                              let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
+                             let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
                                 console.log('Error:', err);
                               });
                               if (!(gitResponse.data.statusCode)) {
@@ -2042,38 +2041,6 @@
                                   })
                                 this.formAddProjectFolder.projectName = null;
                               }
-                              //Now creating repo in primary gitlab account (overall files)
-                              // await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '&visibility=public&private_token=' + config.primarygitlabaccesstoken, {})
-                              // .then(async (res)=>{
-                              //   console.log('git res:',res)
-                              //   localStorage.setItem("folderUrl", newFolderName);
-                              //   var folder = localStorage.getItem("folderUrl");
-                              //   this.newRepoId = res.data.id;
-                              //   this.repoName = res.data.name;
-                              //   this.projectLimitCount = 0;
-                              //   this.addOtherFolder(newFolderName);
-                              //   // axios.post(config.initLdap, {
-                              //   //     "app": "aaa"
-                              //   //   })
-                              //   //   .then((res) => {})
-                              //   //   .catch((e) => {
-                              //   //     console.log(e)
-                              //   //   });
-                              //   await axios.post(config.baseURL + '/register-website-subscriptions', {
-                              //       websiteId: this.repoName
-                              //     })
-                              //     .then((res) => {})
-                              //     .catch((e) => {
-                              //       console.log(e)
-                              //     });
-                              //   this.currentProjectName = this.formAddProjectFolder.projectName;
-                              //   this.formAddProjectFolder.projectName = null;
-                              
-                              // })
-                              // .catch(async (e)=>{
-                              //   console.log(e)
-                              //   })
-                              
                             })
                             .catch((e) => {
                               this.newProjectFolderDialog = false;
@@ -2397,7 +2364,18 @@
                         filename: projectDetails,
                         text: JSON.stringify(projectDetailsData)
                     })
-                    .then((res) => {})
+                    .then(async(res) => {
+                      let tempjson='{"action": "create","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa(JSON.stringify(projectDetailsData))+'" }'
+                      let buildpayload='{ "branch": "master","commit_message": "adding project-details.json", "actions": ['+tempjson+'] }'
+                      let axiosoption={
+                        method:'post',
+                        url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/repository/commits',
+                        data:buildpayload,
+                        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                      }
+                      await axios(axiosoption)
+                      .catch((e)=>{console.log(e)})
+                    })
                     .catch((e) => {
                         //console.log(e)
                     });
@@ -2447,7 +2425,6 @@
                         type: 'file'
                     })
                     .then(async (res) => {
-                      console.log('res:',JSON.parse(res.config.data).text)
                       let tempjson='{"action": "create","encoding":"base64","file_path": "main-files/main.js","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
                       let buildpayload='{ "branch": "master","commit_message": "adding main.js", "actions": ['+tempjson+'] }'
                       let axiosoption={
@@ -2465,14 +2442,26 @@
 
                 // Create default.json for menu file
                 let defaultMenuJson = newFolderName + '/public/assets/default.json'
+                let defaultmenutext='[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]'
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: defaultMenuJson,
-                        text: '[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]',
+                        text: defaultmenutext,
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then(async (res) => {
+                      let tempjson='{"action": "create","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(defaultmenutext)+'" }'
+                      let buildpayload='{ "branch": "master","commit_message": "adding default.json", "actions": ['+tempjson+'] }'
+                      let axiosoption={
+                        method:'post',
+                        url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/repository/commits',
+                        data:buildpayload,
+                        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                      }
+                      await axios(axiosoption)
+                      .catch((e)=>{console.log(e)})
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Brand Logo

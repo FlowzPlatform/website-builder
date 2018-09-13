@@ -3343,111 +3343,240 @@ export default {
           this.fullscreenLoading = true;
 
           this.refreshPlugins();
+          if(this.gitlabid!=undefined){
+
+            let pathclientplugin=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/client-plugins'
+
+            await axios.get(config.baseURL+'/filelisting?path='+pathclientplugin,{})
+            .then(async (res)=>{
+              let arrayfiles=[]
+              console.log('client-plugins')
+              new Promise(async (resolve, reject) => {
+
+                for(let i=0;i<res.data.data.length;i++){
+                // console.log('file:',res.data.data[i])
+
+                let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathclientplugin+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+                let tempjson=''
+                // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/assets%2Fclient-plugins%2F'+res.data.data[i]+'?ref=master')
+                //   // .catch((e)=>{})
+                //   // console.log('gitlabfileresponse',gitlabfileresponse)
+                //   if(gitlabfileresponse!=undefined && gitlabfileresponse.data){
+                //   // console.log('found')
+                //   tempjson='{"action": "update","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+                //   }else{
+                //    // console.log('not found ')
+                //   tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+                //   }
+
+                  tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+                arrayfiles.push(tempjson)
+              }
+
+              // console.log('arrayfiles:',arrayfiles)
+              let buildpayload='{ "branch": "master","commit_message": "adding client-plugin js files", "actions": ['+arrayfiles+'] }'
+              let axiosoptioncommitclient={
+                      method:'post',
+                      url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                      data:buildpayload,
+                      headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                    }
+              await axios(axiosoptioncommitclient)
+              .then(async (res)=>{console.log('res =>client-plugins',res)
+                let pathcss=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/css'
+
+            await axios.get(config.baseURL+'/filelisting?path='+pathcss,{})
+            .then(async (res)=>{
+              let arrayfiles=[]
+               console.log('css')
+              new Promise(async (resolve, reject) => {
+
+                for(let i=0;i<res.data.data.length;i++){
+                // console.log('file:',res.data.data[i])
+
+                let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathcss+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+                let tempjson=''
+                // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/assets%2Fcss%2F'+res.data.data[i]+'?ref=master')
+                //   // .catch((e)=>{})
+                //   // console.log('gitlabfileresponse',gitlabfileresponse)
+                //   if(gitlabfileresponse!=undefined && gitlabfileresponse.data){
+                //   // console.log('found')
+                //   tempjson='{"action": "update","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+                //   }else{
+                //    // console.log('not found ')
+                //   tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+                //   }
+                tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+                arrayfiles.push(tempjson)
+              }
+
+              // console.log('arrayfiles:',arrayfiles)
+              let buildpayload='{ "branch": "master","commit_message": "adding css files", "actions": ['+arrayfiles+'] }'
+              let axiosoptioncommitcss={
+                      method:'post',
+                      url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                      data:buildpayload,
+                      headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                    }
+                await axios(axiosoptioncommitcss)
+                .then(async (res)=>{console.log('res =>css',res)
+                  let pathmain=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/main-files'
+
+            await axios.get(config.baseURL+'/filelisting?path='+pathmain,{})
+            .then(async (res)=>{
+              let arrayfiles=[]
+               console.log('main-files')
+              new Promise(async (resolve, reject) => {
+
+                for(let i=0;i<res.data.data.length;i++){
+                // console.log('file:',res.data.data[i])
+
+                let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathmain+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+                let tempjson=''
+                // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/main-files%2F'+res.data.data[i]+'?ref=master')
+                //   // .catch((e)=>{})
+                //   // console.log('gitlabfileresponse',gitlabfileresponse)
+                //   if(gitlabfileresponse!=undefined && gitlabfileresponse.data){
+                //   // console.log('found')
+                //   tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+                //   }else{
+                //    // console.log('not found ')
+                //   tempjson='{"action": "create","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+                //   }
+                tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+                arrayfiles.push(tempjson)
+              }
+
+              // console.log('arrayfiles:',arrayfiles)
+              let buildpayload='{ "branch": "master","commit_message": "adding main-files", "actions": ['+arrayfiles+'] }'
+              let axiosoptioncommitmain={
+                      method:'post',
+                      url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                      data:buildpayload,
+                      headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                    }
+              await axios(axiosoptioncommitmain)
+              .then((res)=>{console.log('res =>main-files',res)})    
+              .catch((e)=>{console.log(e)})
+              })
+              
+            })
+            .catch((e)=>{console.log(e)})
+                })    
+                .catch((e)=>{console.log(e)})
+              })
+              
+            })
+            .catch((e)=>{console.log(e)})
+              })    
+              .catch((e)=>{console.log(e)})
+              })
+              
+            })
+            .catch((e)=>{console.log(e)})
+
+            //now css files
+            // let pathcss=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/css'
+
+            // await axios.get(config.baseURL+'/filelisting?path='+pathcss,{})
+            // .then(async (res)=>{
+            //   let arrayfiles=[]
+            //    console.log('css')
+            //   new Promise(async (resolve, reject) => {
+
+            //     for(let i=0;i<res.data.data.length;i++){
+            //     // console.log('file:',res.data.data[i])
+
+            //     let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathcss+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+            //     let tempjson=''
+            //     // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/assets%2Fcss%2F'+res.data.data[i]+'?ref=master')
+            //     //   // .catch((e)=>{})
+            //     //   // console.log('gitlabfileresponse',gitlabfileresponse)
+            //     //   if(gitlabfileresponse!=undefined && gitlabfileresponse.data){
+            //     //   // console.log('found')
+            //     //   tempjson='{"action": "update","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+            //     //   }else{
+            //     //    // console.log('not found ')
+            //     //   tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+            //     //   }
+            //     tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+            //     arrayfiles.push(tempjson)
+            //   }
+
+            //   // console.log('arrayfiles:',arrayfiles)
+            //   let buildpayload='{ "branch": "master","commit_message": "adding css files", "actions": ['+arrayfiles+'] }'
+            //   let axiosoptioncommitcss={
+            //           method:'post',
+            //           url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+            //           data:buildpayload,
+            //           headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+            //         }
+            //     await axios(axiosoptioncommitcss)
+            //     .then((res)=>{console.log('res =>css',res)})    
+            //     .catch((e)=>{console.log(e)})
+            //   })
+              
+            // })
+            // .catch((e)=>{console.log(e)})
+
+            //now main files
+            // let pathmain=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/main-files'
+
+            // await axios.get(config.baseURL+'/filelisting?path='+pathmain,{})
+            // .then(async (res)=>{
+            //   let arrayfiles=[]
+            //    console.log('main-files')
+            //   new Promise(async (resolve, reject) => {
+
+            //     for(let i=0;i<res.data.data.length;i++){
+            //     // console.log('file:',res.data.data[i])
+
+            //     let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathmain+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
+
+            //     let tempjson=''
+            //     // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/main-files%2F'+res.data.data[i]+'?ref=master')
+            //     //   // .catch((e)=>{})
+            //     //   // console.log('gitlabfileresponse',gitlabfileresponse)
+            //     //   if(gitlabfileresponse!=undefined && gitlabfileresponse.data){
+            //     //   // console.log('found')
+            //     //   tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+            //     //   }else{
+            //     //    // console.log('not found ')
+            //     //   tempjson='{"action": "create","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+            //     //   }
+            //     tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+
+            //     arrayfiles.push(tempjson)
+            //   }
+
+            //   // console.log('arrayfiles:',arrayfiles)
+            //   let buildpayload='{ "branch": "master","commit_message": "adding main-files", "actions": ['+arrayfiles+'] }'
+            //   let axiosoptioncommitmain={
+            //           method:'post',
+            //           url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+            //           data:buildpayload,
+            //           headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+            //         }
+            //   await axios(axiosoptioncommitmain)
+            //   .then((res)=>{console.log('res =>main-files',res)})    
+            //   .catch((e)=>{console.log(e)})
+            //   })
+              
+            // })
+            // .catch((e)=>{console.log(e)})
+
+          }
           
           //first client-plugin files
-          let pathclientplugin=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/client-plugins'
-
-          await axios.get(config.baseURL+'/filelisting?path='+pathclientplugin,{})
-          .then(async (res)=>{
-            let arrayfiles=[]
-
-            new Promise(async (resolve, reject) => {
-
-              for(let i=0;i<res.data.data.length;i++){
-              // console.log('file:',res.data.data[i])
-
-              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathclientplugin+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
-
-              let tempjson=''
-              tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
-
-              arrayfiles.push(tempjson)
-            }
-
-            // console.log('arrayfiles:',arrayfiles)
-            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
-            let axiosoptioncommit={
-                    method:'post',
-                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
-                    data:buildpayload,
-                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
-                  }
-            await axios(axiosoptioncommit)
-            .catch((e)=>{console.log(e)})
-            })
-            
-          })
-          .catch((e)=>{console.log(e)})
-
-          //now css files
-          let pathcss=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/assets/css'
-
-          await axios.get(config.baseURL+'/filelisting?path='+pathcss,{})
-          .then(async (res)=>{
-            let arrayfiles=[]
-
-            new Promise(async (resolve, reject) => {
-
-              for(let i=0;i<res.data.data.length;i++){
-              // console.log('file:',res.data.data[i])
-
-              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathcss+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
-
-              let tempjson=''
-              tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
-
-              arrayfiles.push(tempjson)
-            }
-
-            // console.log('arrayfiles:',arrayfiles)
-            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
-            let axiosoptioncommit={
-                    method:'post',
-                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
-                    data:buildpayload,
-                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
-                  }
-              await axios(axiosoptioncommit)     
-              .catch((e)=>{console.log(e)})
-            })
-            
-          })
-          .catch((e)=>{console.log(e)})
-
-          //now main files
-          let pathmain=config.pluginsPath+'/WebsiteTemplates/'+template+'/public/main-files'
-
-          await axios.get(config.baseURL+'/filelisting?path='+pathmain,{})
-          .then(async (res)=>{
-            let arrayfiles=[]
-
-            new Promise(async (resolve, reject) => {
-
-              for(let i=0;i<res.data.data.length;i++){
-              // console.log('file:',res.data.data[i])
-
-              let filecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathmain+'/'+res.data.data[i], {}).catch((e)=>{console.log(e)})
-
-              let tempjson=''
-              tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
-
-              arrayfiles.push(tempjson)
-            }
-
-            // console.log('arrayfiles:',arrayfiles)
-            let buildpayload='{ "branch": "master","commit_message": "newtemplatefiles", "actions": ['+arrayfiles+'] }'
-            let axiosoptioncommit={
-                    method:'post',
-                    url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
-                    data:buildpayload,
-                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
-                  }
-            await axios(axiosoptioncommit)
-            .catch((e)=>{console.log(e)})
-            })
-            
-          })
-          .catch((e)=>{console.log(e)})
+          
 
 
           })
@@ -4453,7 +4582,34 @@ export default {
             this.textdata=''
             //alert(this.isdisabled);
             // this.isdisabled=true;
+            let finalouputpagepd=await axios.get(config.baseURL + '/save-menu/0?path=' +folderUrl + '/public/assets/project-details.json',{}).catch((e)=>{console.log(e)})
 
+            let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa(JSON.stringify(finalouputpagepd.data))+'" }'
+            let buildpayloadpd='{ "branch": "master","commit_message": "updated project-details.json on publish", "actions": ['+tempjsonpd+'] }'
+
+            let axiosoptionpd={
+              method:'post',
+              url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+              data:buildpayloadpd,
+              headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+            }
+            await axios(axiosoptionpd)
+            .then(async (res)=>{
+              let finalouputpage=await axios.get(config.baseURL + '/save-menu/0?path=' +folderUrl + '/public/assets/default.json',{}).catch((e)=>{console.log(e)})
+
+            let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(JSON.stringify(finalouputpage.data))+'" }'
+            let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
+            
+            let axiosoption={
+              method:'post',
+              url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+              data:buildpayload,
+              headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+            }
+            await axios(axiosoption)
+            .catch((e)=>{console.log(e)})
+            })
+            .catch((e)=>{console.log(e)})
 
             //Now calling api to copy of all folder to a temporary location.
 
@@ -5405,8 +5561,11 @@ export default {
       });
 
       if(this.configData.status == 200 || this.configData.status == 204){
+        if(this.configData.data.gitlabconfig!=undefined){
+
         this.gitlabid=this.configData.data.gitlabconfig.projectid
         this.netlifydeployurl=this.configData.data.gitlabconfig.netlify_deploy_url;
+        }
         this.settings = this.configData.data.configData;
         this.form.websitename = this.configData.data.websiteName;
         this.pluginsTreedata = this.configData.data.pluginsData;
