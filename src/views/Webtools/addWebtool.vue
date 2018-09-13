@@ -82,6 +82,17 @@
                   </FormItem>
               </Col>
           </Row>
+
+          <Row :gutter="16">
+              <Col span="12">
+                  <FormItem label="Shell Sheet" prop="shell_sheet">
+                      <el-button icon="shell_sheet" @click="uploadWebtoolPdf('shell_sheet')" :loading="shell_sheet_loader">Upload PDF</el-button>
+                      <a :href="formItem.shell_sheet" target="_blank" class="upload_image">
+                        <img v-if="formItem.shell_sheet" :src="pdf_download" height="100"/>
+                      </a>
+                  </FormItem>
+              </Col>
+          </Row>
         </Form>
       </div>
 
@@ -182,6 +193,9 @@ export default {
         special_pricing: '',
         special_pricing_name: '',
         special_pricing_thumb: '',
+        shell_sheet: '',
+        shell_sheet_thumb: '',
+        shell_sheet_name: '',
         sku: '',
         status: true,
         createdAt: '',
@@ -191,6 +205,7 @@ export default {
       product_pdf_loader: false,
       art_pdf_loader: false,
       gcc_pdf_loader: false,
+      shell_sheet_loader: false,
       rulesformItem: {
           website: [
             { required: true, message: 'Please select website', trigger: 'change' }
@@ -294,7 +309,6 @@ export default {
         upload_preset: this.cloudDetails.uploadPreset, 
         sources: ['local', 'url']
       }, (error, result) => { 
-        console.log('result == ',result)
         if(error != null){
             if(error.message != 'User closed widget'){
                 this.$message({
@@ -369,7 +383,7 @@ export default {
       // get sku's of website
       let websiteDetails = _.find(this.webOptions, {value: this.formItem.website})
       let skuTotal = await axios.get(
-        productApiUrl + "?$limit=0&source=sku,product_id", 
+        productApiUrl + "?$limit=0&source=sku", 
         { headers: { 'vid': websiteDetails.vid } }
       )
       .then(res => {
@@ -386,7 +400,7 @@ export default {
 
       if(skuTotal > 0) {
         await axios.get(
-          productApiUrl + "?$limit="+skuTotal, 
+          productApiUrl + "?$limit="+skuTotal+"&source=sku,product_id",
           { headers: { 'vid': websiteDetails.vid } }
         )
         .then(res => {
@@ -440,7 +454,9 @@ export default {
     if (userId !== '' && userId !== undefined) {
         await axios.get(baseUrl + '/project-configuration?userId=' + userId).then(res => {
           for (let item of res.data.data) {
-            this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+            if(item.configData != 'undefined' && Array.isArray(item.configData)) {
+              this.webOptions.push({label: item.websiteName, value: item.id, vid: item.configData[1].projectSettings[0].ProjectVId.vid})
+            }
           }
         }).catch(err => {
         })
