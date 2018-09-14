@@ -399,7 +399,7 @@
                   <div class="row">
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
+                        <img src="https://placehold.it/403x190?text=POSH" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'posh')"/>
                       <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
@@ -414,15 +414,6 @@
                       <div class="thumbnail">
                         <img src="https://placehold.it/403x190?text=Template6" alt="template 6" class="img-responsive template-image" @click="revertToTemplate(template = 'optimisation')" />
                       <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=Posh" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'posh')"/>
-                      <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
-                      <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
                     </div>
                   </div>
@@ -3349,18 +3340,18 @@ export default {
 
             await axios.get(config.baseURL + '/filelisting?path=' + pathclientplugin, {})
                 .then(async (res) => {
-                    let arrayfiles = []
+                    let arrayfilesclient = []
                     console.log('client-plugins')
                     new Promise(async (resolve, reject) => {
 
                         for (let i = 0; i < res.data.data.length; i++) {
                             // console.log('file:',res.data.data[i])
 
-                            let filecontent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathclientplugin + '/' + res.data.data[i], {}).catch((e) => {
+                            let filecontentclient = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathclientplugin + '/' + res.data.data[i], {}).catch((e) => {
                                 console.log(e)
                             })
 
-                            let tempjson = ''
+                            let tempjsonclient = ''
                             // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/assets%2Fclient-plugins%2F'+res.data.data[i]+'?ref=master')
                             //   // .catch((e)=>{})
                             //   // console.log('gitlabfileresponse',gitlabfileresponse)
@@ -3372,16 +3363,16 @@ export default {
                             //   tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
                             //   }
 
-                            tempjson = '{"action": "create","encoding":"base64","file_path": "assets/client-plugins/' + res.data.data[i] + '","content": "' + Base64.btoa(unescape(encodeURIComponent(filecontent.data))) + '" }'
+                            tempjsonclient = '{"action": "create","encoding":"base64","file_path": "assets/client-plugins/' + res.data.data[i] + '","content": "' + Base64.btoa(unescape(encodeURIComponent(filecontentclient.data))) + '" }'
 
-                            arrayfiles.push(tempjson)
+                            arrayfilesclient.push(tempjsonclient)
                         }
 
-                        let buildpayload = '{ "branch": "master","commit_message": "adding client-plugin js files", "actions": [' + arrayfiles + '] }'
+                        let buildpayloadclient = '{ "branch": "master","commit_message": "adding client-plugin js files", "actions": [' + arrayfilesclient + '] }'
                         let axiosoptioncommitclient = {
                             method: 'post',
                             url: 'https://gitlab.com/api/v4/projects/' + this.gitlabid + '/repository/commits',
-                            data: buildpayload,
+                            data: buildpayloadclient,
                             headers: {
                                 'PRIVATE-TOKEN': config.gitlabtoken,
                                 'Content-Type': 'application/json'

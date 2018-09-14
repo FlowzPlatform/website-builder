@@ -82,6 +82,17 @@
                   </FormItem>
               </Col>
           </Row>
+
+          <Row :gutter="16">
+              <Col span="12">
+                  <FormItem label="Shell Sheet" prop="shell_sheet">
+                      <el-button icon="shell_sheet" @click="uploadWebtoolPdf('shell_sheet')" :loading="shell_sheet_loader">Upload PDF</el-button>
+                      <a :href="formItem.shell_sheet" target="_blank" class="upload_image">
+                        <img v-if="formItem.shell_sheet" :src="pdf_download" height="100"/>
+                      </a>
+                  </FormItem>
+              </Col>
+          </Row>
         </Form>
       </div>
 
@@ -182,6 +193,9 @@ export default {
         special_pricing: '',
         special_pricing_name: '',
         special_pricing_thumb: '',
+        shell_sheet: '',
+        shell_sheet_thumb: '',
+        shell_sheet_name: '',
         sku: '',
         status: true,
         createdAt: '',
@@ -191,6 +205,7 @@ export default {
       product_pdf_loader: false,
       art_pdf_loader: false,
       gcc_pdf_loader: false,
+      shell_sheet_loader: false,
       rulesformItem: {
           website: [
             { required: true, message: 'Please select website', trigger: 'change' }
