@@ -205,6 +205,12 @@ export default {
     tag_date_range: function(value) {
       this.formItem.tag_start_date = value[0]
       this.formItem.tag_end_date = value[1]
+    },
+    'formItem.tag_category': function(val, oldVal){
+      this.OnChangeTagCategory(val);
+    },
+    'formItem.website': function(val, oldVal){
+      this.onChangeWebsite(val);
     }
   },
   methods: {
