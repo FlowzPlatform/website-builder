@@ -30,7 +30,7 @@
           <Row :gutter="16">
             <Col span="12">
                 <FormItem label="Website" prop="website">
-                    <Select v-model="formItem.website" placeholder="Select Website"  @on-change="OnChangeWebsite" :disabled="isdisable">
+                    <Select v-model="formItem.website" placeholder="Select Website"  @on-change="OnChangeWebsite">
                         <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem> 
