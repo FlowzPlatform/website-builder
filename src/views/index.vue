@@ -1928,7 +1928,7 @@
                               this.newProjectFolderDialog = false
                               this.addNewProjectFolderLoading = false;
                               //creating gitlab repo in secondary gitlab account(for netlify)
-                              await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '&visibility=public&private_token=' + config.gitlabtoken, {})
+                              await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '_publish&visibility=public&private_token=' + config.gitlabtoken, {})
                               .then(async (res) => {
                                   this.gitlabconfig = {
                                       'http_url': res.data.http_url_to_repo,
@@ -2010,13 +2010,13 @@
                                   .catch((e) => {
                                     console.log(e)
                                   });
-                                await axios.post(config.baseURL + '/register-website-subscriptions', {
-                                    websiteId: this.repoName
-                                  })
-                                  .then((res) => {})
-                                  .catch((e) => {
-                                    console.log(e)
-                                  });
+                                // await axios.post(config.baseURL + '/register-website-subscriptions', {
+                                //     websiteId: this.repoName
+                                //   })
+                                //   .then((res) => {})
+                                //   .catch((e) => {
+                                //     console.log(e)
+                                //   });
                                 this.currentProjectName = this.formAddProjectFolder.projectName;
                                 this.formAddProjectFolder.projectName = null;
                               } else {
@@ -2032,13 +2032,13 @@
                                   .catch((e) => {
                                     console.log(e)
                                   });
-                                await axios.post(config.baseURL + '/register-website-subscription', {
-                                    websiteId: this.repoName
-                                  })
-                                  .then((res) => {})
-                                  .catch((e) => {
-                                    console.log(e)
-                                  })
+                                // await axios.post(config.baseURL + '/register-website-subscription', {
+                                //     websiteId: this.repoName
+                                //   })
+                                //   .then((res) => {})
+                                //   .catch((e) => {
+                                //     console.log(e)
+                                //   })
                                 this.formAddProjectFolder.projectName = null;
                               }
                             })
