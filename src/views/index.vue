@@ -1993,54 +1993,85 @@
                                   console.log(e)
                               });
 
-                             let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
-                                console.log('Error:', err);
-                              });
-                              if (!(gitResponse.data.statusCode)) {
-                                localStorage.setItem("folderUrl", newFolderName);
-                                var folder = localStorage.getItem("folderUrl");
-                                this.newRepoId = gitResponse.data.id;
-                                this.repoName = gitResponse.data.name;
-                                this.projectLimitCount = 0;
-                                this.addOtherFolder(newFolderName);
-                                axios.post(config.initLdap, {
-                                    "app": "aaa"
-                                  })
-                                  .then((res) => {})
-                                  .catch((e) => {
-                                    console.log(e)
-                                  });
-                                // await axios.post(config.baseURL + '/register-website-subscriptions', {
-                                //     websiteId: this.repoName
-                                //   })
-                                //   .then((res) => {})
-                                //   .catch((e) => {
-                                //     console.log(e)
-                                //   });
-                                this.currentProjectName = this.formAddProjectFolder.projectName;
-                                this.formAddProjectFolder.projectName = null;
-                              } else {
-                                localStorage.setItem("folderUrl", newFolderName);
-                                var folder = localStorage.getItem("folderUrl");
-                                this.newRepoId = undefined;
-                                this.repoName = res.data.id;
-                                this.addOtherFolder(newFolderName);
-                                axios.post(config.initLdap, {
-                                    "app": "aaa"
-                                  })
-                                  .then((res) => {})
-                                  .catch((e) => {
-                                    console.log(e)
-                                  });
-                                // await axios.post(config.baseURL + '/register-website-subscription', {
-                                //     websiteId: this.repoName
-                                //   })
-                                //   .then((res) => {})
-                                //   .catch((e) => {
-                                //     console.log(e)
-                                //   })
-                                this.formAddProjectFolder.projectName = null;
-                              }
+
+
+                              // now api-ing the cmd git
+                               await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '&visibility=public&private_token=' + config.gitlabtoken, {})
+                               .then((res)=>{
+                                console.log('res from git:',res)
+                                  localStorage.setItem("folderUrl", newFolderName);
+                                  var folder = localStorage.getItem("folderUrl");
+                                  this.newRepoId = res.data.id;
+                                  this.repoName = res.data.name;
+                                  this.projectLimitCount = 0;
+                                  this.addOtherFolder(newFolderName);
+                                  axios.post(config.initLdap, {
+                                      "app": "aaa"
+                                    })
+                                    .then((res) => {})
+                                    .catch((e) => {
+                                      console.log(e)
+                                    });
+                                  // await axios.post(config.baseURL + '/register-website-subscriptions', {
+                                  //     websiteId: this.repoName
+                                  //   })
+                                  //   .then((res) => {})
+                                  //   .catch((e) => {
+                                  //     console.log(e)
+                                  //   });
+                                  this.currentProjectName = this.formAddProjectFolder.projectName;
+                                  this.formAddProjectFolder.projectName = null;
+                               })
+
+                             // let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
+                             //    console.log('Error:', err);
+                             //  });
+
+                              // if (!(gitResponse.data.statusCode)) {
+                              //   localStorage.setItem("folderUrl", newFolderName);
+                              //   var folder = localStorage.getItem("folderUrl");
+                              //   this.newRepoId = gitResponse.data.id;
+                              //   this.repoName = gitResponse.data.name;
+                              //   this.projectLimitCount = 0;
+                              //   this.addOtherFolder(newFolderName);
+                              //   axios.post(config.initLdap, {
+                              //       "app": "aaa"
+                              //     })
+                              //     .then((res) => {})
+                              //     .catch((e) => {
+                              //       console.log(e)
+                              //     });
+                              //   // await axios.post(config.baseURL + '/register-website-subscriptions', {
+                              //   //     websiteId: this.repoName
+                              //   //   })
+                              //   //   .then((res) => {})
+                              //   //   .catch((e) => {
+                              //   //     console.log(e)
+                              //   //   });
+                              //   this.currentProjectName = this.formAddProjectFolder.projectName;
+                              //   this.formAddProjectFolder.projectName = null;
+                              // } else {
+                              //   localStorage.setItem("folderUrl", newFolderName);
+                              //   var folder = localStorage.getItem("folderUrl");
+                              //   this.newRepoId = undefined;
+                              //   this.repoName = res.data.id;
+                              //   this.addOtherFolder(newFolderName);
+                              //   axios.post(config.initLdap, {
+                              //       "app": "aaa"
+                              //     })
+                              //     .then((res) => {})
+                              //     .catch((e) => {
+                              //       console.log(e)
+                              //     });
+                              //   // await axios.post(config.baseURL + '/register-website-subscription', {
+                              //   //     websiteId: this.repoName
+                              //   //   })
+                              //   //   .then((res) => {})
+                              //   //   .catch((e) => {
+                              //   //     console.log(e)
+                              //   //   })
+                              //   this.formAddProjectFolder.projectName = null;
+                              // }
                             })
                             .catch((e) => {
                               this.newProjectFolderDialog = false;
@@ -2329,6 +2360,7 @@
 
                 // Create Config.json file
                 // let newfilename = newFolderName + '/assets/config.json';
+                let arrayofrepo=[];
 
                 let projectRepoName = newFolderName.split('/');
                 projectRepoName = projectRepoName[(projectRepoName.length) - 1];
@@ -2366,6 +2398,8 @@
                     })
                     .then(async(res) => {
                       let tempjson='{"action": "create","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa(JSON.stringify(projectDetailsData))+'" }'
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/project-details.json","content": "'+Base64.btoa(JSON.stringify(projectDetailsData))+'" }'
+                      arrayofrepo.push(temprepo);
                       let buildpayload='{ "branch": "master","commit_message": "adding project-details.json", "actions": ['+tempjson+'] }'
                       let axiosoption={
                         method:'post',
@@ -2387,7 +2421,10 @@
                         text: '<!DOCTYPE html><html><head><title>Site Unpublished</title><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><style type="text/css">@charset "UTF-8";html, body{width: 100%; height: 100%; margin: 0; padding: 0; background: #f9f9f9; overflow: hidden;}.crazy-cat{display: flex; position: relative; width: 100%; height: 100%; z-index: 1;}.wrapper{display: flex; justify-content: center; align-items: center;}.message{width: 50%; padding: 25px;}.message h1{font-size: 56px; color: #5f5f5f; font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif; font-weight: 100; margin: 40px 0;}.message p{font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 20px; color: #808080; margin: 40px 0; line-height: 28px;}.message a{font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; display: inline-block; background: #c7c7c7; color: #696969; text-align: center; padding: 20px 40px; font-size: 20px; text-decoration: none; border-radius: 6px; transition: 0.3s;}.message a:hover{background: #333; color: #ccc;}.gear{content: ""; font-family: "FontAwesome"; position: absolute; animation: gear 50s infinite linear; transform-origin: center; top: -250px; right: -250px; font-size: 600px; z-index: 0; color: #eaeaea;}@keyframes gear{0%{transform: rotate(0deg);}100%{transform: rotate(360deg);}}@media (max-width: 760px){.message h1{font-size: 36px;}}</style></head><body><div class="crazy-cat"> <div class="wrapper"> <div class="message"> <h1>Site not published yet</h1> <p>We sincerely apologize for the inconvenience. Our site is currently not published, but will return shortly. Thank you for your patience.</p><a href="mailto:' + Cookies.get('email') + '">Contact us</a> </div></div></div><div class="gear"> <i class="fa fa-cog" aria-hidden="true"></i></div></body></html>',
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "public/index.html","content": "'+Base64.btoa(unescape(encodeURIComponent(JSON.parse(res.config.data).text)))+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
                         //console.log(e)
                     });
@@ -2402,6 +2439,8 @@
                     })
                     .then(async (res) => {
                       // console.log('res',res)
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "public/main-files/main.css","content": "'+Base64.btoa(maincsstext)+'" }'
+                      arrayofrepo.push(temprepo);
                       let tempjson='{"action": "create","encoding":"base64","file_path": "main-files/main.css","content": "'+Base64.btoa(maincsstext)+'" }'
                       let buildpayload='{ "branch": "master","commit_message": "adding main.css", "actions": ['+tempjson+'] }'
                       let axiosoption={
@@ -2426,6 +2465,8 @@
                     })
                     .then(async (res) => {
                       let tempjson='{"action": "create","encoding":"base64","file_path": "main-files/main.js","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "public/main-files/main.js","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                      arrayofrepo.push(temprepo);
                       let buildpayload='{ "branch": "master","commit_message": "adding main.js", "actions": ['+tempjson+'] }'
                       let axiosoption={
                         method:'post',
@@ -2449,6 +2490,8 @@
                         type: 'file'
                     })
                     .then(async (res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/default.json","content": "'+Base64.btoa(defaultmenutext)+'" }'
+                      arrayofrepo.push(temprepo);
                       let tempjson='{"action": "create","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(defaultmenutext)+'" }'
                       let buildpayload='{ "branch": "master","commit_message": "adding default.json", "actions": ['+tempjson+'] }'
                       let axiosoption={
@@ -2472,9 +2515,12 @@
                         text: '',
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/brand-logo.png","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     })
 
                 // Create index.html file
@@ -2485,9 +2531,12 @@
                         text: this.templateContentsData,
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "Pages/index.html","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create log file
@@ -2498,9 +2547,11 @@
                     type : 'file'
                 })
                 .then((res) => {
+                  let temprepo='{"action": "create","encoding":"base64","file_path": "public/log.md","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                  arrayofrepo.push(temprepo);
                 })
                 .catch((e) => {
-                    //console.log(e)
+                    console.log(e)
                 });
 
                 // Create metalsmith file
@@ -2511,14 +2562,17 @@
 
                 // let projectUrl = config.ipAddress + '/websites/' + projectName;
 
-                var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                let metalsmithJSONpublish = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                         filename: mainMetal,
-                        text: metalsmithJSON,
+                        text: metalsmithJSONpublish,
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/metalsmithPublish.js","content": "'+Base64.btoa(metalsmithJSONpublish)+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
                         console.log(e)
                     });
@@ -2531,32 +2585,37 @@
 
                 // let projectUrl = config.ipAddress + '/websites/' + projectName;
 
-                var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                let metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
                 await axios.post(config.baseURL + '/flows-dir-listing', {
                     filename: mainMetal,
                     text: metalsmithJSON,
                     type: 'file'
                 })
-                .then((res) => {})
+                .then((res) => {
+                  let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/metalsmithPreview.js","content": "'+Base64.btoa(metalsmithJSON)+'" }'
+                  arrayofrepo.push(temprepo);
+                })
                 .catch((e) => {
                     console.log(e)
                 });
 
 
                 //create backup_mainVue file
-                var back_main_path = newFolderName + '/public/assets/back_main.js'
-                var back_main = "import vue from 'vue'\n import ElementUI from 'element-ui'\n import element from 'element-ui/src/locale/lang/en'\n import 'element-ui/lib/theme-chalk/index.css'\n vue.use(ElementUI, { element })\n import @@vuecomponent@@ from './@@vuecomponent@@.vue'\nvue.component('@@vuecomponent@@', @@vuecomponent@@)\n new vue({ el: '#@@vuecomponent@@',\n render: h => h(@@vuecomponent@@)\n })"
+                // var back_main_path = newFolderName + '/public/assets/back_main.js'
+                // var back_main = "import vue from 'vue'\n import ElementUI from 'element-ui'\n import element from 'element-ui/src/locale/lang/en'\n import 'element-ui/lib/theme-chalk/index.css'\n vue.use(ElementUI, { element })\n import @@vuecomponent@@ from './@@vuecomponent@@.vue'\nvue.component('@@vuecomponent@@', @@vuecomponent@@)\n new vue({ el: '#@@vuecomponent@@',\n render: h => h(@@vuecomponent@@)\n })"
 
-                await axios.post(config.baseURL + '/flows-dir-listing', {
-                        filename: back_main_path,
-                        text: back_main,
-                        type: 'file'
-                    })
-                    .then((res) => {})
-                    .catch((e) => {
-                        //console.log(e)
-                    });
+                // await axios.post(config.baseURL + '/flows-dir-listing', {
+                //         filename: back_main_path,
+                //         text: back_main,
+                //         type: 'file'
+                //     })
+                //     .then((res) => {
+                //     
+                //     })
+                //     .catch((e) => {
+                //         //console.log(e)
+                //     });
 
 
 
@@ -2570,9 +2629,12 @@
                         text: layoutFileData,
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "Layout/default.layout","content": "'+Base64.btoa(layoutFileData)+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create demo header file
@@ -2585,9 +2647,12 @@
                         text: headerFileData,
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "Partials/Header/default.partial","content": "'+Base64.btoa(headerFileData)+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create demo footer file
@@ -2600,9 +2665,12 @@
                         text: footerFileData,
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "Partials/Footer/default.partial","content": "'+Base64.btoa(footerFileData)+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create default sidebar file file
@@ -2612,9 +2680,12 @@
                         text: '<div id="sidebar" style="display: block; width: 100%; min-height: 20px"><style type="text/css">#wrapper{padding-left: 250px; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}#wrapper.toggled{padding-left: 250px;}#sidebar-wrapper{z-index: 1000; position: fixed; left: 250px; width: 250px; height: 100%; margin-left: -250px; overflow-y: auto; background: #000; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; transition: all 0.5s ease;}#wrapper.toggled #sidebar-wrapper{width: 250px;}#page-content-wrapper{width: 100%; position: absolute; padding: 15px;}#wrapper.toggled #page-content-wrapper{position: absolute; margin-right: -250px;}/* Sidebar Styles */.sidebar-nav{position: absolute; top: 0; width: 250px; margin: 0; padding: 0; list-style: none; width: 100%;}.sidebar-nav li{text-indent: 20px; line-height: 40px;}.sidebar-nav li a{display: block; text-decoration: none; color: #999999; width: 100%;}.sidebar-nav li a:hover{text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);}.sidebar-nav li a:active,.sidebar-nav li a:focus{text-decoration: none;}.sidebar-nav > .sidebar-brand{height: 65px; font-size: 18px; line-height: 60px;}.sidebar-nav > .sidebar-brand a{color: #999999;}.sidebar-nav > .sidebar-brand a:hover{color: #fff; background: none;}</style><div id="wrapper" class="wrapper"> <div id="sidebar-wrapper" class="sidebar-bg"> <ul class="sidebar-nav"> <li class="sidebar-brand"> <a href="#"> Company Name </a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Dashboard</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Shortcuts</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Overview</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Events</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">About</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Services</a> </li><li class="sidebar-link"> <a href="#" class="sidebar-anchor">Contact</a> </li></ul> </div></div></div>',
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                       let temprepo='{"action": "create","encoding":"base64","file_path": "Partials/Sidebar/default.partial","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
 
@@ -2625,9 +2696,12 @@
                         text: '',
                         type: 'file'
                     })
-                    .then((res) => {})
+                    .then((res) => {
+                      let temprepo='{"action": "create","encoding":"base64","file_path": "Partials/Menu/default.menu","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                      arrayofrepo.push(temprepo);
+                    })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 
@@ -2645,6 +2719,8 @@
                                 type: 'file'
                             })
                             .then(async (res) => {
+                              let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/client-plugins/flowz-builder-engine.js","content": "'+Base64.btoa(flowzEngineData)+'" }'
+                              arrayofrepo.push(temprepo);
                               let tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/flowz-builder-engine.js","content": "'+Base64.btoa(flowzEngineData)+'" }'
                               let buildpayload='{ "branch": "master","commit_message": "adding flowz-builder-engine.js", "actions": ['+tempjson+'] }'
                               let axiosoption={
@@ -2676,9 +2752,12 @@
                                 text: sliderData,
                                 type: 'file'
                             })
-                            .then((res) => {})
+                            .then((res) => {
+                              let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/client-plugins/slider-plugin.js","content": "'+Base64.btoa(sliderData)+'" }'
+                              arrayofrepo.push(temprepo);
+                            })
                             .catch((e) => {
-                                //console.log(e)
+                                console.log(e)
                             })
                     })
                     .catch((e) => {
@@ -2697,9 +2776,12 @@
                                 text: shoppingCartData,
                                 type: 'file'
                             })
-                            .then((res) => {})
+                            .then((res) => {
+                              let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/client-plugins/shopping-cart.js","content": "'+Base64.btoa(shoppingCartData)+'" }'
+                              arrayofrepo.push(temprepo);
+                            })
                             .catch((e) => {
-                                //console.log(e)
+                                console.log(e)
                             })
                     })
                     .catch((e) => {
@@ -2718,9 +2800,12 @@
                                 text: vuelasticData,
                                 type: 'file'
                             })
-                            .then((res) => {})
+                            .then((res) => {
+                              let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/client-plugins/vuelastic.js","content": "'+Base64.btoa(vuelasticData)+'" }'
+                              arrayofrepo.push(temprepo);
+                            })
                             .catch((e) => {
-                                //console.log(e)
+                                console.log(e)
                             })
                     })
                     .catch((e) => {
@@ -2743,13 +2828,23 @@
                                 // Push repository changes via API
                                 // console.log('about to call commitrepo')
                                 // await commitrepo(newFolderName,'')
-
-                                await axios.post(config.baseURL + '/gitlab-add-repo', {
-                                    branchName: 'master',
-                                    commitMessage: 'Initial Push',
-                                    repoName: projectRepoName,
-                                    userDetailId: Cookies.get('userDetailId')
-                                }).then(async response => {
+                                let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/client-plugins/global-variables-plugin.js","content": "'+Base64.btoa(globalVariablesPluginData)+'" }'
+                                arrayofrepo.push(temprepo);
+                                let buildpayload='{ "branch": "master","commit_message": "intial commit", "actions": ['+arrayofrepo+'] }'
+                                let axiosoptioncommit={
+                                  method:'post',
+                                  url:'https://gitlab.com/api/v4/projects/'+this.newRepoId+'/repository/commits',
+                                  data:buildpayload,
+                                  headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                                }
+                                await axios(axiosoptioncommit)
+                                // await axios.post(config.baseURL + '/gitlab-add-repo', {
+                                //     branchName: 'master',
+                                //     commitMessage: 'Initial Push',
+                                //     repoName: projectRepoName,
+                                //     userDetailId: Cookies.get('userDetailId')
+                                // })
+                                .then(async response => {
                                     if (response.status == 200 || response.status == 201) {
 
                                         // get Current SHA
