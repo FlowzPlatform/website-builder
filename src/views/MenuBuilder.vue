@@ -109,7 +109,7 @@ import domenu from 'domenu'
 		data: () => ({
       outputJson: [],
       MenuJSON: [],
-      menuBaseUrl: 'search.html?SearchSensor=',
+      menuBaseUrl: 'search.html?Category=',
       fetchDataLoader: false,
       pageList: [],
       categoriesList: []
