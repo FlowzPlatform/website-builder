@@ -207,9 +207,11 @@ export default {
       this.formItem.tag_end_date = value[1]
     },
     'formItem.website':function(val) {
+      console.log('web watch')
       this.OnChangeWebsite(val);
     },
     'formItem.tag_category':function(val) {
+      console.log('cat watch')
       this.OnChangeTagCategory(val);
     }
   },
@@ -323,6 +325,7 @@ export default {
           });
     },
     OnChangeWebsite (value) {
+      console.log('web')
       this.tagcategories = [];
       axios.get(tagCategoryUrl + '?userId=' + Cookies.get('userDetailId') + '&website='+value+'&status=true&$paginate=false').then(res=> {
         for(let item of res.data) {
@@ -334,6 +337,7 @@ export default {
       })
     },
     async OnChangeTagCategory (value) {
+      console.log('cat')
       this.isShowimgblock = false
       this.$Spin.show()
       if (value !== '') {
