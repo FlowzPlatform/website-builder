@@ -30,14 +30,14 @@
           <Row :gutter="16">
             <Col span="12">
                 <FormItem label="Website" prop="website">
-                    <Select v-model="formItem.website" placeholder="Select Website"  @on-change="OnChangeWebsite" :disabled="isdisable">
+                    <Select v-model="formItem.website" placeholder="Select Website" :disabled="isdisable">
                         <Option v-for="item in webOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem> 
             </Col>
             <Col span="12">
                 <FormItem label="Category" prop="tag_category">
-                    <Select v-model="formItem.tag_category" placeholder="Select Category" @on-change="OnChangeTagCategory" filterable>
+                    <Select v-model="formItem.tag_category" placeholder="Select Category" filterable>
                         <Option v-for="item in tagcategories" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
@@ -205,6 +205,12 @@ export default {
     tag_date_range: function(value) {
       this.formItem.tag_start_date = value[0]
       this.formItem.tag_end_date = value[1]
+    },
+    'formItem.website':function(val) {
+      this.OnChangeWebsite(val);
+    },
+    'formItem.tag_category':function(val) {
+      this.OnChangeTagCategory(val);
     }
   },
   methods: {
