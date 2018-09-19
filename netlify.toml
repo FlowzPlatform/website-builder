@@ -1,0 +1,28 @@
+[Settings]
+ID = "Staging-I"
+[build]
+  # This will be your default build command
+  command = "npm run build"
+  publish = "dist"
+
+#[[redirects]]
+#  from = "/"
+#  to = "/index.html"
+#  status = 200
+#  force = true
+
+#[[redirects]]
+#  from = "/*"
+#  to = "/index.html"
+#  status = 301
+#  force = true
+  
+[[redirects]]
+  from = "/:page"
+  to = "/index.html"
+  status = 200
+  force = true
+  
+  
+[build.environment]
+  domainkey = "flowzdigital.com"
