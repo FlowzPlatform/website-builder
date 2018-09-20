@@ -397,8 +397,8 @@
                   <div class="row">
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=Template4" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'web4')"/>
-                      <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a>
+                        <img src="https://placehold.it/403x190?text=POSH" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'posh')"/>
+                      <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
                     </div>
@@ -1473,7 +1473,6 @@ export default {
       });
 
       app.service("jobqueue").on("patched", async (response) => {
-        console.log('patch response:',response)
        if(this.repoName==response.websiteid){
 
           // console.log('===========================================');
