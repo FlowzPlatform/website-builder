@@ -1928,7 +1928,7 @@
                               this.newProjectFolderDialog = false
                               this.addNewProjectFolderLoading = false;
                               //creating gitlab repo in secondary gitlab account(for netlify)
-                              await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '_publish&visibility=public&private_token=' + config.gitlabtoken, {})
+                              await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '_publish&visibility=private&private_token=' + config.gitlabtoken, {})
                               .then(async (res) => {
                                   this.gitlabconfig = {
                                       'http_url': res.data.http_url_to_repo,
