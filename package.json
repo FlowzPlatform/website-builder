@@ -26,6 +26,7 @@
     "grapesjs-plugin-filestack": "^0.1.1",
     "iview": "^2.11.0",
     "jquery": "^3.2.1",
+    "js-base64": "^2.4.9",
     "js-cookie": "^2.2.0",
     "json-daex": "0.0.9",
     "lodash": "^4.17.4",
