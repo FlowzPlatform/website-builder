@@ -3341,29 +3341,30 @@ export default {
             await axios.get(config.baseURL + '/filelisting?path=' + pathclientplugin, {})
                 .then(async (res) => {
                     let arrayfilesclient = []
-                    console.log('client-plugins')
                     new Promise(async (resolve, reject) => {
-
+                      let allpagesjs=[]
+                      let getrepolisting;
+                      let count=1
+                      do{
+                         getrepolisting=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/client-plugins&page='+count,{})
+                         allpagesjs=allpagesjs.concat(getrepolisting.data)
+                         count=count+1
+                      }while(getrepolisting.data.length==20)
+                        
                         for (let i = 0; i < res.data.data.length; i++) {
-                            // console.log('file:',res.data.data[i])
 
                             let filecontentclient = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + pathclientplugin + '/' + res.data.data[i], {}).catch((e) => {
                                 console.log(e)
                             })
-
+                            let fileindex=_.findIndex(allpagesjs,function(o){
+                              return o.name==res.data.data[i]
+                            })
                             let tempjsonclient = ''
-                            // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/assets%2Fclient-plugins%2F'+res.data.data[i]+'?ref=master')
-                            //   // .catch((e)=>{})
-                            //   // console.log('gitlabfileresponse',gitlabfileresponse)
-                            //   if(gitlabfileresponse!=undefined && gitlabfileresponse.data){
-                            //   // console.log('found')
-                            //   tempjson='{"action": "update","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
-                            //   }else{
-                            //    // console.log('not found ')
-                            //   tempjson='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
-                            //   }
-
-                            tempjsonclient = '{"action": "create","encoding":"base64","file_path": "assets/client-plugins/' + res.data.data[i] + '","content": "' + Base64.btoa(unescape(encodeURIComponent(filecontentclient.data))) + '" }'
+                            if(fileindex!=-1){
+                              tempjsonclient='{"action": "update","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontentclient.data)))+'" }'  
+                            }else{
+                              tempjsonclient='{"action": "create","encoding":"base64","file_path": "assets/client-plugins/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontentclient.data)))+'" }'
+                            }
 
                             arrayfilesclient.push(tempjsonclient)
                         }
@@ -3383,14 +3384,20 @@ export default {
                                 console.log('error from client-plugins')
                             })
                             .then(async (res) => {
-                                console.log('res =>client-plugins', res)
                                 let pathcss = config.pluginsPath + '/WebsiteTemplates/' + template + '/public/assets/css'
 
                                 await axios.get(config.baseURL + '/filelisting?path=' + pathcss, {})
                                     .then(async (res) => {
                                         let arrayfiles = []
-                                        console.log('css')
                                         new Promise(async (resolve, reject) => {
+                                          let allpagescss=[]
+                                          let countcss=1
+                                          let getrepolistingcss;
+                                          do{
+                                            getrepolistingcss=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/css&page='+countcss,{})
+                                             allpagescss=allpagescss.concat(getrepolistingcss.data)
+                                            countcss=countcss+1
+                                          }while(getrepolistingcss.data.length==20)
 
                                             for (let i = 0; i < res.data.data.length; i++) {
 
@@ -3399,17 +3406,14 @@ export default {
                                                 })
 
                                                 let tempjson = ''
-                                                // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/assets%2Fcss%2F'+res.data.data[i]+'?ref=master')
-                                                //   // .catch((e)=>{})
-                                                //   // console.log('gitlabfileresponse',gitlabfileresponse)
-                                                //   if(gitlabfileresponse!=undefined && gitlabfileresponse.data){
-                                                //   // console.log('found')
-                                                //   tempjson='{"action": "update","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
-                                                //   }else{
-                                                //    // console.log('not found ')
-                                                //   tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
-                                                //   }
-                                                tempjson = '{"action": "create","encoding":"base64","file_path": "assets/css/' + res.data.data[i] + '","content": "' + Base64.btoa(unescape(encodeURIComponent(filecontent.data))) + '" }'
+                                                 let fileindexcss=_.findIndex(allpagescss,function(o){
+                                                    return o.name==res.data.data[i]
+                                                  })
+                                                  if(fileindexcss!=-1){
+                                                    tempjson='{"action": "update","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+                                                  }else{
+                                                    tempjson='{"action": "create","encoding":"base64","file_path": "assets/css/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+                                                  }
 
                                                 arrayfiles.push(tempjson)
                                             }
@@ -3426,14 +3430,20 @@ export default {
                                             }
                                             await axios(axiosoptioncommitcss)
                                                 .then(async (res) => {
-                                                    console.log('res =>css', res)
                                                     let pathmain = config.pluginsPath + '/WebsiteTemplates/' + template + '/public/main-files'
 
                                                     await axios.get(config.baseURL + '/filelisting?path=' + pathmain, {})
                                                         .then(async (res) => {
                                                             let arrayfiles = []
-                                                            console.log('main-files')
                                                             new Promise(async (resolve, reject) => {
+                                                              let allpagesmain=[]
+                                                              let countmain=1
+                                                              let getrepolistingmain;
+                                                              do{
+                                                                getrepolistingmain=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=main-files&page='+countmain,{})
+                                                                 allpagesmain=allpagesmain.concat(getrepolistingmain.data)
+                                                                countmain=countmain+1
+                                                              }while(getrepolistingmain.data.length==20)
 
                                                                 for (let i = 0; i < res.data.data.length; i++) {
 
@@ -3442,18 +3452,15 @@ export default {
                                                                     })
 
                                                                     let tempjson = ''
-                                                                    // let gitlabfileresponse=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/files/main-files%2F'+res.data.data[i]+'?ref=master')
-                                                                    //   // .catch((e)=>{})
-                                                                    //   // console.log('gitlabfileresponse',gitlabfileresponse)
-                                                                    //   if(gitlabfileresponse!=undefined && gitlabfileresponse.data){
-                                                                    //   // console.log('found')
-                                                                    //   tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
-                                                                    //   }else{
-                                                                    //    // console.log('not found ')
-                                                                    //   tempjson='{"action": "create","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
-                                                                    //   }
-                                                                    tempjson = '{"action": "update","encoding":"base64","file_path": "main-files/' + res.data.data[i] + '","content": "' + Base64.btoa(unescape(encodeURIComponent(filecontent.data))) + '" }'
-
+                                                                    let fileindexmain=_.findIndex(allpagesmain,function(o){
+                                                                      return o.name==res.data.data[i]
+                                                                    })
+                                                                    if(fileindexmain!=-1){
+                                                                      tempjson='{"action": "update","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'
+                                                                    }else{
+                                                                      tempjson='{"action": "create","encoding":"base64","file_path": "main-files/'+res.data.data[i]+'","content": "'+Base64.btoa(unescape(encodeURIComponent(filecontent.data)))+'" }'  
+                                                                    }
+                                                                    
                                                                     arrayfiles.push(tempjson)
                                                                 }
 
