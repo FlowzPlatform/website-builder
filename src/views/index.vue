@@ -1936,7 +1936,9 @@
                                       'path': res.data.path_with_namespace,
                                       'projectid': res.data.id,
                                       'webhook_url': '',
-                                      'netlify_deploy_url':''
+                                      'netlify_deploy_url':'',
+                                      'netlify_deploy_key_id':'',
+                                      'netlify_public_key':''
                                   }
                                   let axiosoptioncommit = {
                                       method: 'post',
@@ -1949,36 +1951,67 @@
                                   }
                                   await axios(axiosoptioncommit)
                                       .then(async (res) => {
-                                          let options = {
-                                              method: 'post',
-                                              url: 'https://api.netlify.com/api/v1/sites',
-                                              data: '{ "force_ssl": true, "notification_email": "' + Cookies.get('email') + '", "processing_settings": { "css": { "bundle": true, "minify": true }, "html": { "pretty_urls": true }, "images": { "optimize": true }, "js": { "bundle": true, "minify": true }, "skip": true }, "ssl": true, "repo": { "allowed_branches": [ "master" ], "cmd": "parcel build -d builddir --no-minify *.html", "dir": "builddir", "env": {}, "private_logs": true, "provider": "gitlab", "public_repo": true, "repo_branch": "master", "repo_path": "' + this.gitlabconfig.path + '", "repo_url": "' + this.gitlabconfig.http_url + '" } }',
-                                              headers: {
-                                                  'Authorization': 'Bearer ' + config.netlifytoken,
-                                                  'content-type': 'application/json'
-                                              }
-                                          }
-                                          await axios(options)
-                                              .then(async (response) => {
-                                                  this.gitlabconfig.netlify_deploy_url=response.data.url
-                                                  let webhookoptions = {
-                                                      method: 'post',
-                                                      url: 'https://api.netlify.com/api/v1/sites/' + response.data.id + '/build_hooks',
-                                                      data: '{"title":"trigger_webhook","branch":"master"}',
-                                                      headers: {
-                                                          'Authorization': 'Bearer ' + config.netlifytoken,
-                                                          'content-type': 'application/json'
-                                                      }
-                                                  }
-                                                  await axios(webhookoptions)
-                                                      .then((res) => {
-                                                          this.gitlabconfig.webhook_url = res.data.url
-                                                      })
-                                                      .catch((e) => {
-                                                          console.log(e)
-                                                      })
-                                              })
 
+                                          //creating deploy_key_id from netlify
+                                          let depolyheader={
+                                            method:'post',
+                                            url:'https://api.netlify.com/api/v1/deploy_keys',
+                                            headers: {
+                                              'Authorization':'Bearer '+config.netlifytoken
+                                            }
+                                          }
+                                          await axios(depolyheader)
+                                          .then(async (res)=>{
+                                            this.gitlabconfig.netlify_deploy_key_id=res.data.id
+                                            this.gitlabconfig.netlify_public_key=res.data.public_key
+
+                                            //adding deploy_keys in gilab repo
+                                            let gitdeploykeypayload={
+                                              method:'post',
+                                              url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/deploy_keys',
+                                              headers: {
+                                                  'PRIVATE-TOKEN': config.gitlabtoken,
+                                                  'Content-Type': 'application/json'
+                                              },
+                                              data:'{"can_push":"false","key":"'+this.gitlabconfig.netlify_public_key+'","title":"Netlify deploy"}'
+                                            }
+                                            await axios(gitdeploykeypayload)
+                                            .then(async (res)=>{
+                                              // Now creating site in netlify with gitlab repo
+                                               let options = {
+                                                    method: 'post',
+                                                    url: 'https://api.netlify.com/api/v1/sites',
+                                                    data: '{ "repo": { "branch":  "master" , "cmd": "parcel build -d builddir --no-minify *.html", "dir": "builddir", "provider": "gitlab", "repo": "' + this.gitlabconfig.path + '","id":'+this.gitlabconfig.projectid+',"deploy_key_id":"'+this.gitlabconfig.netlify_deploy_key_id+'" } }',
+                                                    headers: {
+                                                        'Authorization': 'Bearer ' + config.netlifytoken,
+                                                        'content-type': 'application/json'
+                                                    }
+                                                }
+                                                await axios(options)
+                                                    .then(async (response) => {
+                                                        this.gitlabconfig.netlify_deploy_url=response.data.url
+                                                        let webhookoptions = {
+                                                            method: 'post',
+                                                            url: 'https://api.netlify.com/api/v1/sites/' + response.data.id + '/build_hooks',
+                                                            data: '{"title":"trigger_webhook","branch":"master"}',
+                                                            headers: {
+                                                                'Authorization': 'Bearer ' + config.netlifytoken,
+                                                                'content-type': 'application/json'
+                                                            }
+                                                        }
+                                                        await axios(webhookoptions)
+                                                            .then((res) => {
+                                                                this.gitlabconfig.webhook_url = res.data.url
+                                                            })
+                                                            .catch((e) => {
+                                                                console.log(e)
+                                                            })
+                                                    })
+                                                    .catch((e)=>{console.log(e)})
+                                            })
+                                            .catch((e)=>{console.log(e)})
+                                          })
+                                          .catch((e)=>{console.log(e)})
                                       })
                                       .catch((e) => {
                                           console.log(e)
