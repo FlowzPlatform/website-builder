@@ -1,4 +1,7 @@
 domainkey = process.env.domainkey;
+gitlabtoken=process.env.gitlabtoken
+netlifytoken=process.env.netlifytoken
+console.log('gitlabtoken:',gitlabtoken)
 
 if(process.env.baseURL == undefined){
     url = 'https://api.'+domainkey+'/serverapi'
@@ -114,11 +117,13 @@ module.exports = {
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     webpackPath: '/var/www/html/node_modules/',
-
+    gitlabtoken: gitlabtoken,
+    netlifytoken:netlifytoken,
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
-    gitLabIpAddress: 'http://209.50.50.225/',
+    gitLabIpAddress: 'https://gitlab.com/cenacle-devops/',
+    // primarygitlabaccesstoken:'UbYWRfyi44mGR_PJr9nh',
     default:{
     flowzDashboardUrl: 'https://www.dashboard.' + process.env.domainkey,
     serviceUrl: 'https://api.' + process.env.domainkey + '/crm/',
