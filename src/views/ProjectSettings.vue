@@ -1457,16 +1457,19 @@ export default {
   },
 
   async created() {
-    console.log('created entered:')
-    if(localStorage.getItem("created-value")!==null&&localStorage.getItem("created-value")=='set'){
-      // let created_value=localStorage.getItem("created-value")
-      // localStorage.setItem("created-value",created_value+2)
-      console.log('created value- already set')
-    }else{
-      console.log('created value- not set')
-      localStorage.setItem("created-value",'set')
+    // console.log('created entered:')
+    // if(localStorage.getItem("created-value")!==null&&localStorage.getItem("created-value")=='set'){
+    //   // let created_value=localStorage.getItem("created-value")
+    //   // localStorage.setItem("created-value",created_value+2)
+    //   console.log('created value- already set')
+    // }else{
+    //   console.log('created value- not set')
+    //   localStorage.setItem("created-value",'set')
 
-       app.service("jobqueue").on("created", async (response) => {
+        
+    // }
+
+     app.service("jobqueue").on("created", async (response) => {
       if(this.repoName==response.websiteid) {
         this.percent=0
         this.isdisabled = true;
@@ -1519,10 +1522,7 @@ export default {
           console.log('this.percent :: ',this.percent)
          }
        }
-      });  
-    }
-
-     
+      }); 
     
   },
 
@@ -4150,78 +4150,151 @@ export default {
               url:'https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/branches?branch='+branchName+'&ref=master',
               headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
             }
-            // await axios(newbranchpayload)
-            // .then(async (res)=>{
-            //   self.isCommitLoading = true;
-            //   self.$store.state.currentIndex = 0;
-            //   let gitrepoLayout=await axios.get('https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/tree?path=Layout',{})
-            //   let repolisting=await axios.get(config.baseURL + '/filelisting?path=' + self.folderUrl, {})
-            //   let arrayoflayout=[]
-            //   //Firstly, committing Layout
-            //   for(let i=0;i<self.settings[2].layoutOptions[0].Layout.length;i++){
-            //     if(self.settings[2].layoutOptions[0].Layout[i].label!='Blank'){
-            //       let layoutindex=_.findIndex(gitrepoLayout.data,function(o){
-            //         return o.name==self.settings[2].layoutOptions[0].Layout[i].label+'.layout'
-            //       })
-            //       let layoutfilecontent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + self.folderUrl + '/Layout/' + self.settings[2].layoutOptions[0].Layout[i].label+'.layout', {}).catch((e) => {
-            //           console.log(e)
-            //       })
-            //       if(layoutindex!=-1){
-            //         let tempjson='{"action": "update","encoding":"base64","file_path": "Layout/'+self.settings[2].layoutOptions[0].Layout[i].label+'.layout'+'","content": "'+Base64.btoa(layoutfilecontent.data)+'" }'
-            //          arrayoflayout.push(tempjson);
+            await axios(newbranchpayload)
+            .then(async (res)=>{
+              self.isCommitLoading = true;
+              self.$store.state.currentIndex = 0;
+              let gitrepoLayout=await axios.get('https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/tree?path=Layout',{})
+              let repolisting=await axios.get(config.baseURL + '/filelisting?path=' + self.folderUrl, {})
+              let arrayoflayout=[]
+              //Firstly, committing Layout
+              for(let i=0;i<self.settings[2].layoutOptions[0].Layout.length;i++){
+                if(self.settings[2].layoutOptions[0].Layout[i].label!='Blank'){
+                  let layoutindex=_.findIndex(gitrepoLayout.data,function(o){
+                    return o.name==self.settings[2].layoutOptions[0].Layout[i].label+'.layout'
+                  })
+                  let layoutfilecontent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + self.folderUrl + '/Layout/' + self.settings[2].layoutOptions[0].Layout[i].label+'.layout', {}).catch((e) => {
+                      console.log(e)
+                  })
+                  if(layoutindex!=-1){
+                    let tempjson='{"action": "update","encoding":"base64","file_path": "Layout/'+self.settings[2].layoutOptions[0].Layout[i].label+'.layout'+'","content": "'+Base64.btoa(layoutfilecontent.data)+'" }'
+                     arrayoflayout.push(tempjson);
                       
-            //       }else{
-            //         let tempjson='{"action": "create","encoding":"base64","file_path": "Layout/'+self.settings[2].layoutOptions[0].Layout[i].label+'.layout'+'","content": "'+Base64.btoa(layoutfilecontent.data)+'" }'
-            //          arrayoflayout.push(tempjson);
-            //       }
-            //     }
-            //   }
-            //   let buildpayloadlayout='{ "branch": "'+branchName+'","commit_message": "'+commitMessage+'", "actions": ['+arrayoflayout+'] }'
-            //   let axiosoptionlayout={
-            //     method:'post',
-            //     url:'https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/commits',
-            //     data:buildpayloadlayout,
-            //     headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
-            //   }
-            //   await axios(axiosoptionlayout)
-            //   .catch((e)=>{console.log(e)
-            //   })
+                  }else{
+                    let tempjson='{"action": "create","encoding":"base64","file_path": "Layout/'+self.settings[2].layoutOptions[0].Layout[i].label+'.layout'+'","content": "'+Base64.btoa(layoutfilecontent.data)+'" }'
+                     arrayoflayout.push(tempjson);
+                  }
+                }
+              }
+              let buildpayloadlayout='{ "branch": "'+branchName+'","commit_message": "'+commitMessage+'", "actions": ['+arrayoflayout+'] }'
+              let axiosoptionlayout={
+                method:'post',
+                url:'https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/commits',
+                data:buildpayloadlayout,
+                headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+              }
+              await axios(axiosoptionlayout)
+              .catch((e)=>{console.log(e)
+              })
 
-            //   //Now, committing Pages
-            //   let gitrepoPages=await axios.get('https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/tree?path=Pages',{})
-            //   let arrayofpages=[]
-            //   for(let i=0;i<self.settings[1].pageSettings.length;i++){
-            //       let pageindex=_.findIndex(gitrepoPages.data,function(o){
-            //         return o.name==self.settings[1].pageSettings[i].PageName
-            //       })
-            //       let pagefilecontent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + self.folderUrl + '/Pages/' + self.settings[1].pageSettings[i].PageName, {}).catch((e) => {
-            //           console.log(e)
-            //       })
-            //       if(pageindex!=-1){
-            //         let tempjson='{"action": "update","encoding":"base64","file_path": "Pages/'+self.settings[1].pageSettings[i].PageName+'","content": "'+Base64.btoa(pagefilecontent.data)+'" }'
-            //          arrayofpages.push(tempjson);
+              //Now, committing Pages
+              let gitrepoPages=await axios.get('https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/tree?path=Pages',{})
+              let arrayofpages=[]
+              for(let i=0;i<self.settings[1].pageSettings.length;i++){
+                  let pageindex=_.findIndex(gitrepoPages.data,function(o){
+                    return o.name==self.settings[1].pageSettings[i].PageName
+                  })
+                  let pagefilecontent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + self.folderUrl + '/Pages/' + self.settings[1].pageSettings[i].PageName, {}).catch((e) => {
+                      console.log(e)
+                  })
+                  if(pageindex!=-1){
+                    let tempjson='{"action": "update","encoding":"base64","file_path": "Pages/'+self.settings[1].pageSettings[i].PageName+'","content": "'+Base64.btoa(pagefilecontent.data)+'" }'
+                     arrayofpages.push(tempjson);
                       
-            //       }else{
-            //         let tempjson='{"action": "create","encoding":"base64","file_path": "Pages/'+self.settings[1].pageSettings[i].PageName+'","content": "'+Base64.btoa(pagefilecontent.data)+'" }'
-            //          arrayofpages.push(tempjson);
-            //       }
-            //   }
-            //   let buildpayloadpages='{ "branch": "'+branchName+'","commit_message": "'+commitMessage+'", "actions": ['+arrayofpages+'] }'
-            //   let axiosoptionpages={
-            //     method:'post',
-            //     url:'https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/commits',
-            //     data:buildpayloadpages,
-            //     headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
-            //   }
-            //   await axios(axiosoptionpages)
-            //   .catch((e)=>{console.log(e)
-            //   })
+                  }else{
+                    let tempjson='{"action": "create","encoding":"base64","file_path": "Pages/'+self.settings[1].pageSettings[i].PageName+'","content": "'+Base64.btoa(pagefilecontent.data)+'" }'
+                     arrayofpages.push(tempjson);
+                  }
+              }
+              let buildpayloadpages='{ "branch": "'+branchName+'","commit_message": "'+commitMessage+'", "actions": ['+arrayofpages+'] }'
+              let axiosoptionpages={
+                method:'post',
+                url:'https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/commits',
+                data:buildpayloadpages,
+                headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+              }
+              await axios(axiosoptionpages)
+              .catch((e)=>{console.log(e)
+              })
 
-            //   //now partials
-            //   let gitrepoPartials=await axios.get('https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/tree?path=Partials',{})
+              //now partials
+              let gitrepoPartials=[]
+              let arrayofpartials=[]
+              let count=1
+              do{
+              gitrepoPartials=await axios.get('https://gitlab.com/api/v4/projects/'+self.newRepoId+'/repository/tree?path=Partials&page='+count,{})
+              arrayofpartials=arrayofpartials.concat(gitrepoPartials.data)
+              count=count+1                
+              }while(gitrepoPartials.data.length==20)
+              console.log('partials list',Object.keys(self.settings[2].layoutOptions[0]))
+              let actualpartials=Object.keys(self.settings[2].layoutOptions[0])
+              for(let i=0;i<actualpartials.length;i++){
+                console.log('actualpartials:',actualpartials[i])
+                if(actualpartials[i]!='Layout'){
+                  for(let j=0;j<self.settings[2].layoutOptions[0][actualpartials[i]].length;j++){
+                    console.log('page:',self.settings[2].layoutOptions[0][actualpartials[i]][j].label)
+                  }
+                }
+              }
+            })
+            .catch((e)=>{console.log(e)})
 
+            // if(response.status == 200 || response.status == 201){
 
+                    await axios.get( config.baseURL + '/commit-service?projectId=' + this.newRepoId, {
+                    }).then(async response => {
 
+                      
+
+                      this.commitsData = [];
+                      for(var i in response.data){
+                        this.commitsData.push({
+                          commitDate: response.data[i].created_at,
+                          commitSHA: response.data[i].id,
+                          commitsMessage: response.data[i].title,
+                        });
+                      }
+
+                      // let lastCommit = (response.data.length) - 1;
+
+                      // console.log('Last Commit SHA: ', response.data[lastCommit].id);
+
+                      // this.settings[0].repoSettings[0].CurrentHeadSHA = response.data[lastCommit].id;
+                      // this.currentSha = response.data[lastCommit].id;
+
+                      this.settings[0].repoSettings[0].CurrentBranch = branchName;
+
+                      // Create entry in configdata-history table
+                      await axios.post(config.baseURL + '/configdata-history', {
+                          configData: this.settings,
+                          currentBranch: branchName,
+                          commitSHA: this.currentSha,
+                          websiteName: this.repoName,
+                          userId: Cookies.get('userDetailId')
+                      })
+                      .then(function (resp) {
+                          console.log('Config revision saved in configdata-history. ', resp);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+
+                      this.saveProjectSettings();
+                    }).catch(error => {
+                      console.log("error : ", error);
+                      this.fullscreenLoading = false;
+                    });
+                     // this.$refs[commitForm].resetFields();
+                    // this.commitForm.commitMessage = '';
+                    // this.commitForm.branchName = '';
+                    //console.log(response.data);
+                   this.$notify({
+                      message: 'New revision commited. ',
+                      type: 'success'
+                    });
+                    this.isCommitLoading = false;
+                    await this.init();
+                  // }
 
             //   await axios.get( config.baseURL + '/commit-service?projectId=' + this.newRepoId, {
             //     }).then(async response => {
@@ -4352,9 +4425,9 @@ export default {
             //     console.log("error : ", error);
             //   })
             // } else {
-            //   // If first commit was unsuccessfull
+              // If first commit was unsuccessfull
 
-            //   // add new repo to git
+              // add new repo to git
             //   let gitResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + this.repoName + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => { console.log(err); this.fullscreenLoading = false });
 
             //   if(!(gitResponse.data.statusCode)){
@@ -5670,14 +5743,14 @@ export default {
 
       let branchName = this.branchesData[index].branchName;
       // console.log(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
-      window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=' + branchName);
+      window.open(config.gitLabIpAddress  + this.repoName + '/repository/archive.zip?ref=' + branchName);
     },
 
     logfile(index){
 
       let branchName = this.branchesData[index].branchName;
       // console.log(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
-      window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/raw/' + branchName+'/public/log.md');
+      window.open(config.gitLabIpAddress  + this.repoName + '/raw/' + branchName+'/public/log.md');
     },
 
     async init () { 
