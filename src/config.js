@@ -114,11 +114,13 @@ module.exports = {
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     webpackPath: '/var/www/html/node_modules/',
-
+    gitlabtoken: 'UbYWRfyi44mGR_PJr9nh',
+    netlifytoken:'c11e3841e522f1f6172434bbefc7263a43cbe6a8de91cd47c4fede1851c49ce6',
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
     gitLabIpAddress: 'http://209.50.50.225/',
+    // primarygitlabaccesstoken:'UbYWRfyi44mGR_PJr9nh',
     default:{
     flowzDashboardUrl: 'https://www.dashboard.' + process.env.domainkey,
     serviceUrl: 'https://api.' + process.env.domainkey + '/crm/',
