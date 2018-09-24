@@ -3341,12 +3341,16 @@ export default {
             await axios.get(config.baseURL + '/filelisting?path=' + pathclientplugin, {})
                 .then(async (res) => {
                     let arrayfilesclient = []
-                    new Promise(async (resolve, reject) => {
+                    // new Promise(async (resolve, reject) => {
                       let allpagesjs=[]
                       let getrepolisting;
                       let count=1
                       do{
-                         getrepolisting=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/client-plugins&page='+count,{})
+                         getrepolisting=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/client-plugins&page='+count,{
+                          headers:{
+                            'PRIVATE-TOKEN': config.gitlabtoken
+                          }
+                         })
                          allpagesjs=allpagesjs.concat(getrepolisting.data)
                          count=count+1
                       }while(getrepolisting.data.length==20)
@@ -3389,12 +3393,16 @@ export default {
                                 await axios.get(config.baseURL + '/filelisting?path=' + pathcss, {})
                                     .then(async (res) => {
                                         let arrayfiles = []
-                                        new Promise(async (resolve, reject) => {
+                                        // new Promise(async (resolve, reject) => {
                                           let allpagescss=[]
                                           let countcss=1
                                           let getrepolistingcss;
                                           do{
-                                            getrepolistingcss=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/css&page='+countcss,{})
+                                            getrepolistingcss=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/css&page='+countcss,{
+                                              headers:{
+                                                'PRIVATE-TOKEN': config.gitlabtoken
+                                              }
+                                            })
                                              allpagescss=allpagescss.concat(getrepolistingcss.data)
                                             countcss=countcss+1
                                           }while(getrepolistingcss.data.length==20)
@@ -3435,12 +3443,16 @@ export default {
                                                     await axios.get(config.baseURL + '/filelisting?path=' + pathmain, {})
                                                         .then(async (res) => {
                                                             let arrayfiles = []
-                                                            new Promise(async (resolve, reject) => {
+                                                            // new Promise(async (resolve, reject) => {
                                                               let allpagesmain=[]
                                                               let countmain=1
                                                               let getrepolistingmain;
                                                               do{
-                                                                getrepolistingmain=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=main-files&page='+countmain,{})
+                                                                getrepolistingmain=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=main-files&page='+countmain,{
+                                                                  headers:{
+                                                                    'PRIVATE-TOKEN': config.gitlabtoken
+                                                                  }
+                                                                })
                                                                  allpagesmain=allpagesmain.concat(getrepolistingmain.data)
                                                                 countmain=countmain+1
                                                               }while(getrepolistingmain.data.length==20)
@@ -3481,7 +3493,7 @@ export default {
                                                                     .catch((e) => {
                                                                         console.log(e)
                                                                     })
-                                                            })
+                                                            // })
 
                                                         })
                                                         .catch((e) => {
@@ -3491,7 +3503,7 @@ export default {
                                                 .catch((e) => {
                                                     console.log(e)
                                                 })
-                                        })
+                                        // })
 
                                     })
                                     .catch((e) => {
@@ -3501,7 +3513,7 @@ export default {
                             .catch((e) => {
                                 console.log(e)
                             })
-                    })
+                    // })
 
                 })
                 .catch((e) => {
