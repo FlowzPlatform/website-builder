@@ -69,8 +69,7 @@ if (process.env.NODE_ENV !== 'development') {
     buildersettings='https://api.flowzcluster.tk/crm/buildersettings/'
     menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories',
     colorSwatchUrl='https://api.flowzcluster.tk/pdmnew/filters/'
-    productApiUrl = 'https://api.flowzcluster.tk/pdmnew/pdm/US'
-    //productLocalApiUrl = 'http://localhost:9200/pdm1/product'  //temperary
+    productApiUrl = 'https://api.flowzcluster.tk/pdmnew/pdm'
 }
 
 module.exports = {
@@ -111,7 +110,6 @@ module.exports = {
     menuCategoriesUrl : menuCategoriesUrl,
     colorSwatchUrl : colorSwatchUrl,
     productApiUrl : productApiUrl,
-    // productLocalApiUrl : productLocalApiUrl,  //temperary
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
