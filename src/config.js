@@ -1,7 +1,6 @@
 domainkey = process.env.domainkey;
 gitlabtoken=process.env.gitlabtoken
 netlifytoken=process.env.netlifytoken
-console.log('gitlabtoken:',gitlabtoken)
 
 if(process.env.baseURL == undefined){
     url = 'https://api.'+domainkey+'/serverapi'
