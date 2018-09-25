@@ -246,7 +246,7 @@ export default {
                               headers: {'vid':websiteDetails.vid}
                           }).then(res3 => {
                               this.$Spin.hide();
-                              this.$Notice.success({title: 'Success!!', desc: 'Product Mapping.', duration: 2})
+                              this.$Notice.success({title: 'Success!!', desc: 'Product mapped to ES.', duration: 2})
                           }).catch(err => {
                               this.$Spin.hide();
                               this.$Notice.error({title: 'Error!!', desc: 'Not mapped to ES.', duration: 2})
@@ -258,10 +258,10 @@ export default {
 
               axios.post(productmappingUrl, pmData).then(res => {
                 this.$Spin.hide();
-                //this.$Notice.success({title: 'Success!!', desc: 'Product Mapping.', duration: 2})
+                this.$Notice.success({title: 'Success!!', desc: 'Product mapped.', duration: 2})
               }).catch(err => {
                 this.$Spin.hide();
-                this.$Notice.error({title: 'Error!!', desc: 'Not saved.', duration: 2})
+                this.$Notice.error({title: 'Error!!', desc: 'Not mapped to Rethink.', duration: 2})
               })
           }
       }
