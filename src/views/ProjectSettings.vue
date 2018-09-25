@@ -1866,11 +1866,10 @@ export default {
 
   methods: {
     async triggerbuild(){
-      console.log('triggerring buildon netlify. but first saving saving settings');
       if(this.gitlabid!=''){
         let finalouputpagepd=await axios.get(config.baseURL + '/save-menu/0?path=' +this.folderUrl + '/public/assets/project-details.json',{}).catch((e)=>{console.log(e)})
 
-      let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa(JSON.stringify(finalouputpagepd.data))+'" }'
+      let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa((finalouputpagepd.data))+'" }'
       let buildpayloadpd='{ "branch": "master","commit_message": "updated project-details.json on publish", "actions": ['+tempjsonpd+'] }'
 
       let axiosoptionpd={
@@ -1883,7 +1882,7 @@ export default {
       .then(async (res)=>{
         let finalouputpage=await axios.get(config.baseURL + '/save-menu/0?path=' +this.folderUrl + '/public/assets/default.json',{}).catch((e)=>{console.log(e)})
 
-      let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(JSON.stringify(finalouputpage.data))+'" }'
+      let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa((finalouputpage.data))+'" }'
       let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
       
       let axiosoption={
@@ -1894,9 +1893,13 @@ export default {
       }
       await axios(axiosoption).
       then(async (res)=>{
-        console.log('calling webhook')
         await axios.post(this.netlifywebhookurl,{})
-        .then((res)=>{console.log('webhook called')})
+        .then((res)=>{
+          this.$notify({
+            message: 'Netlify Triggered ',
+            type: 'success'
+          });
+        })
       })
       .catch((e)=>{console.log(e)})
       })
@@ -2656,8 +2659,8 @@ export default {
         };
         // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
-        // Call Listings API and get Tree
-        console.log(config.userDetail)
+        // // Call Listings API and get Tree
+        // console.log(config.userDetail)
         await axios.get(config.userDetail, {
                 headers: {
                     'Authorization': Cookies.get('auth_token')
@@ -4145,7 +4148,7 @@ export default {
           await axios.get(config.baseURL + '/configdata-history?currentBranch=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName, {
           })
           .then(async (resp) => {
-            console.log('Config data resp: ', resp);
+            // console.log('Config data resp: ', resp);
             let configData = resp.data.data[0].configData;
               this.settings = null;
               this.settings = configData;
@@ -4248,7 +4251,7 @@ export default {
                           userId: Cookies.get('userDetailId')
                       })
                       .then(function (resp) {
-                          console.log('Config revision saved in configdata-history. ', resp);
+                          // console.log('Config revision saved in configdata-history. ', resp);
                       })
                       .catch(function (error) {
                           console.log(error);
@@ -4672,7 +4675,7 @@ export default {
             if(this.gitlabid!=''){
               let finalouputpagepd=await axios.get(config.baseURL + '/save-menu/0?path=' +folderUrl + '/public/assets/project-details.json',{}).catch((e)=>{console.log(e)})
 
-            let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa(JSON.stringify(finalouputpagepd.data))+'" }'
+            let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa((finalouputpagepd.data))+'" }'
             let buildpayloadpd='{ "branch": "master","commit_message": "updated project-details.json on publish", "actions": ['+tempjsonpd+'] }'
 
             let axiosoptionpd={
@@ -4686,7 +4689,7 @@ export default {
             .then(async (res)=>{
               let finalouputpage=await axios.get(config.baseURL + '/save-menu/0?path=' +folderUrl + '/public/assets/default.json',{}).catch((e)=>{console.log(e)})
 
-              let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(JSON.stringify(finalouputpage.data))+'" }'
+              let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa((finalouputpage.data))+'" }'
               let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
               
               let axiosoption={

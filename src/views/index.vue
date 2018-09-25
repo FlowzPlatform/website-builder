@@ -2377,7 +2377,7 @@
                     "UserID": userid,
                     "BasePath": newFolderName,
                     "websiteName": this.currentProjectName,
-                    "BaseURL": 'http://' + userid + '.' + projectRepoName + '.' + config.domainkey + '/',
+                    "BaseURL": this.gitlabconfig.netlify_deploy_url,
                     "builder_service_api": config.baseURL,
                     "login_api": config.loginUrl,
                     "register_api": config.registerUrl,
@@ -2410,7 +2410,7 @@
                       .catch((e)=>{console.log(e)})
                     })
                     .catch((e) => {
-                        //console.log(e)
+                        console.log(e)
                     });
 
                 // Create main.js file
