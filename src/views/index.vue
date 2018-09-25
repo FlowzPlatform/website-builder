@@ -2377,7 +2377,7 @@
                     "UserID": userid,
                     "BasePath": newFolderName,
                     "websiteName": this.currentProjectName,
-                    "BaseURL": this.gitlabconfig.netlify_deploy_url,
+                    "BaseURL": this.gitlabconfig.netlify_deploy_url+'/',
                     "builder_service_api": config.baseURL,
                     "login_api": config.loginUrl,
                     "register_api": config.registerUrl,
