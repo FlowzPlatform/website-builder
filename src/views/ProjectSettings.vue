@@ -70,6 +70,9 @@
                       <div class="col-md-12" v-else>
                       Deploy URL: <a :href="netlifydeployurl" target="_blank">{{netlifydeployurl}}</a>
                       <br>
+                      <div style="margin-top:15px;">
+                        <el-button type="primary"  @click="triggerbuild()" >Trigger build</el-button>
+                      </div>
                         <!-- <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
                         <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
                           [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
@@ -1390,6 +1393,7 @@ export default {
       uploadAssetImageLoader: false,
       refreshDisabled: false,
       loadingText: '',
+      netlifywebhookurl:'',
 
       branchesData: [],
 
@@ -1861,6 +1865,50 @@ export default {
   },
 
   methods: {
+    async triggerbuild(){
+      console.log('triggerring buildon netlify. but first saving saving settings');
+      if(this.gitlabid!=''){
+        let finalouputpagepd=await axios.get(config.baseURL + '/save-menu/0?path=' +this.folderUrl + '/public/assets/project-details.json',{}).catch((e)=>{console.log(e)})
+
+      let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa(JSON.stringify(finalouputpagepd.data))+'" }'
+      let buildpayloadpd='{ "branch": "master","commit_message": "updated project-details.json on publish", "actions": ['+tempjsonpd+'] }'
+
+      let axiosoptionpd={
+        method:'post',
+        url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+        data:buildpayloadpd,
+        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+      }
+      await axios(axiosoptionpd)
+      .then(async (res)=>{
+        let finalouputpage=await axios.get(config.baseURL + '/save-menu/0?path=' +this.folderUrl + '/public/assets/default.json',{}).catch((e)=>{console.log(e)})
+
+      let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(JSON.stringify(finalouputpage.data))+'" }'
+      let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
+      
+      let axiosoption={
+        method:'post',
+        url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+        data:buildpayload,
+        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+      }
+      await axios(axiosoption).
+      then(async (res)=>{
+        console.log('calling webhook')
+        await axios.post(this.netlifywebhookurl,{})
+        .then((res)=>{console.log('webhook called')})
+      })
+      .catch((e)=>{console.log(e)})
+      })
+      .catch((e)=>{console.log(e)})
+      }
+      else{
+        console.log('netlify not enable in this site')
+      }
+
+    },
+
+
     addNewConfig(value){
       // console.log('hi');
       this.componentsID = value;
@@ -4633,22 +4681,24 @@ export default {
               data:buildpayloadpd,
               headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
             }
+
             await axios(axiosoptionpd)
             .then(async (res)=>{
               let finalouputpage=await axios.get(config.baseURL + '/save-menu/0?path=' +folderUrl + '/public/assets/default.json',{}).catch((e)=>{console.log(e)})
 
-            let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(JSON.stringify(finalouputpage.data))+'" }'
-            let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
-            
-            let axiosoption={
-              method:'post',
-              url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
-              data:buildpayload,
-              headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
-            }
-            await axios(axiosoption)
-            .catch((e)=>{console.log(e)})
+              let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(JSON.stringify(finalouputpage.data))+'" }'
+              let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
+              
+              let axiosoption={
+                method:'post',
+                url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                data:buildpayload,
+                headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+              }
+              await axios(axiosoption)
+              .catch((e)=>{console.log(e)})
             })
+            .catch((e)=>{console.log(e)})
             .catch((e)=>{console.log(e)})
             }
             
@@ -5607,6 +5657,7 @@ export default {
 
         this.gitlabid=this.configData.data.gitlabconfig.projectid
         this.netlifydeployurl=this.configData.data.gitlabconfig.netlify_deploy_url;
+        this.netlifywebhookurl=this.configData.data.gitlabconfig.webhook_url;
         }
         this.settings = this.configData.data.configData;
         this.form.websitename = this.configData.data.websiteName;

@@ -1981,7 +1981,7 @@
                                                let options = {
                                                     method: 'post',
                                                     url: 'https://api.netlify.com/api/v1/sites',
-                                                    data: '{ "repo": { "branch":  "master" , "cmd": "parcel build -d builddir --no-minify *.html", "dir": "builddir", "provider": "gitlab", "repo": "' + this.gitlabconfig.path + '","id":'+this.gitlabconfig.projectid+',"deploy_key_id":"'+this.gitlabconfig.netlify_deploy_key_id+'" } }',
+                                                    data: '{ "repo": { "branch":  "master" , "provider": "gitlab", "repo": "' + this.gitlabconfig.path + '","id":'+this.gitlabconfig.projectid+',"deploy_key_id":"'+this.gitlabconfig.netlify_deploy_key_id+'" } }',
                                                     headers: {
                                                         'Authorization': 'Bearer ' + config.netlifytoken,
                                                         'content-type': 'application/json'
