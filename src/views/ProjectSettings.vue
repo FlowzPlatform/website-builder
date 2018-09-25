@@ -402,7 +402,7 @@
                   <div class="row">
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=POSH" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'posh')"/>
+                        <img src="https://res.cloudinary.com/dghextof4/image/upload/v1537885097/Screenshot_from_2018-09-25_19-38-57.png" alt="POSH" class="img-responsive template-image" @click="revertToTemplate(template = 'posh')"/>
                       <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
