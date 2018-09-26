@@ -3,44 +3,48 @@
 		<section class="container" style="margin-top: 2%;">
 		  <h3 id="user-menu">Customize Menu:</h3>
 
-		  	<div class="well">
+		  	<!-- <div class="well">
 		  		<div class="row">
 		  			<div class="col-md-12">
                 	<div class="row">
-                		<div class="col-md-5">
+                		<!-- <div class="col-md-5">
                 			<input type="text" class="form-control" placeholder="Enter API URL" name="apiUrl" v-model="apiUrl">		
-                		</div>
-                		<div class="col-md-5">
-                			<input type="text" class="form-control" placeholder="Enter Base URL" name="apiUrl" v-model="menuBaseUrl">		
+                		</div> --
+                		<div class="col-md-10">
+                			<input type="text" class="form-control" placeholder="Enter Base URL" name="menuBaseUrl" v-model="menuBaseUrl">		
                 		</div>
                 		<div class="col-md-2">
-                			<button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button>
+                			<el-button type="primary" @click="updateMenuData()" :loading="fetchDataLoader">Fetch Data</el-button>
+                			<!-- <button class="btn btn-primary" @click="updateMenuData()">Fetch Data</button> --
                 		</div>
                 	</div>
                 	
 		  			</div>
 		  		</div>
-		  	</div>
+		  	</div> -->
 		  	
 		  	<div class="row" style="margin-bottom: 70px;">
 		  		<div class="col-md-12">
 		  			<div class="dd" id="domenu-1">
 					    <button id="domenu-add-item-btn" class="dd-new-item">+</button>
 					    <!-- .dd-item-blueprint is a template for all .dd-item's -->
+
 					    <li class="dd-item-blueprint">
+
 					      <!-- @migrating-from 0.48.59 button container -->
 					      <button class="collapse" data-action="collapse" type="button" style="display: none;">–</button>
 					      <button class="expand" data-action="expand" type="button" style="display: none;">+</button>
 					      <div class="dd-handle dd3-handle">Drag</div>
 					      <div class="dd3-content">
 					        <span class="item-name">[item_name]</span>
+					      	<!-- <span><input type="checkbox" name="" /></span> -->
 					        <!-- @migrating-from 0.13.29 button container-->
 					        <!-- .dd-button-container will hide once an item enters the edit mode -->
 					        <div class="dd-button-container">
 					          <!-- @migrating-from 0.13.29 add button-->
-					          <button class="custom-button-example">&#x270E;</button>
-					          <button class="item-add">+</button>
-					          <button class="item-remove" data-confirm-class="item-remove-confirm">&times;</button>
+					          <button class="menu-btn custom-button-example">&#x270E;</button>
+					          <button class="menu-btn item-add">+</button>
+					          <button class="menu-btn item-remove" data-confirm-class="item-remove-confirm">&times;</button>
 					        </div>
 					        <!-- Inside of .dd-edit-box you can add your custom input fields -->
 					        <div class="dd-edit-box" style="display: none;">
@@ -50,21 +54,13 @@
 					          <input type="text" name="title" autocomplete="off" placeholder="Item"
 					                 data-placeholder="Any nice idea for the title?"
 					                 data-default-value="doMenu List Item. {?numeric.increment}">
-					          <select name="custom-select">
+					          <select name="custom-select" id="customSelect">
 					            <!-- <option>select something...</option> -->
 					            <optgroup label="Pages">
-					              <option value="index.html">Home</option>
-					              <option value="product-listing.html">Product Listing</option>
+					              <option v-bind:value="item.pageLink" v-for="item in pageList">{{item.pageName}}</option>
 					            </optgroup>
 					            <optgroup label="Categories">
-					              <option value="./listing.html?category=bags">Bags</option>
-					              <option value="./listing.html?category=pencils">Pencils</option>
-					              <option value="./listing.html?category=Handkerchief">Handkerchief</option>
-					              <option value="./listing.html?category=pens">pens</option>
-					              <option value="./listing.html?category=Mugs">Mugs</option>
-					              <option value="./listing.html?category=Notebooks">Notebooks</option>
-					              <option value="./listing.html?category=Bottles">Bottles</option>
-					              <option value="./listing.html?category=Keychains">Keychains</option>
+					              <option v-bind:value="item.categoryLink" v-for="item in categoriesList">{{item.categoryName}}</option>
 					            </optgroup>
 					          </select>
 					          <!-- @migrating-from 0.13.29 an element ".end-edit" within ".dd-edit-box" exists the edit mode on click -->
@@ -104,20 +100,23 @@
 import axios from 'axios'
 
 const config = require('../config');
+import Cookies from 'js-cookie';
 
 import domenu from 'domenu'
 
 	export default {
 		name: 'menuBuilder',
 		data: () => ({
-        outputJson: [],
-        MenuJSON: [],
-        apiUrl: '',
-        menuBaseUrl: ''
-	    }),
-	    components: {
-	    },
-		async mounted () {
+      outputJson: [],
+      MenuJSON: [],
+      menuBaseUrl: 'search.html?Category=',
+      fetchDataLoader: false,
+      pageList: [],
+      categoriesList: []
+    }),
+    components: {
+    },
+		async created () {
 			let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
 			let urlparts = configFileUrl.split("/");
 			let fileNameOrginal = urlparts[urlparts.length - 1];
@@ -126,192 +125,180 @@ import domenu from 'domenu'
 			let actualFileNameOnly = fileNameParts[0];
 			var folderUrl = configFileUrl.replace(fileName, '');
 
+			let configData = await axios.get( config.baseURL + '/project-configuration/' + urlparts[6], )
+			.catch(function (error) {
+			    console.log(error);
+			});
+
+			let allPages = configData.data.configData[1].pageSettings;
+			for(let i = 0; i < allPages.length; i++){
+				this.pageList.push({
+					pageName: allPages[i].PageName,
+					pageLink: allPages[i].PageName
+				})
+			}
+
+			await this.fetchMenuData();
+
+			let menuData;
+
 			try {
-			    let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json');
-				// console.log('Menu File name:' + actualFileNameOnly + ' and data:', responseConfig.data);
+		    	let responseConfig = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/assets/' + actualFileNameOnly + '.json').catch((err)=>{ console.log('Error:', err); });
+		    	console.log(responseConfig.data)
 				if(responseConfig.data){
-					window.localStorage.setItem('domenu-1Json', responseConfig.data);
+					menuData = responseConfig.data;
+					this.initMenu(menuData);
+				} else {
+					menuData = [{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}];
+					this.initMenu(menuData);	
 				}
 			}
 			catch(err) {
-			    localStorage.removeItem('domenu-1Json');
-			    // window.localStorage.clear();
+				menuData = '[{"id":1,"title":"Home","customSelect":"index.html","__domenu_params":{},"select2ScrollPosition":{"x":0,"y":0}}]';
+				this.initMenu(menuData);
 			}
 
-			this.initMenu();
+			
 		},
 
 		methods: {
-			initMenu(){
-				// this.MenuJSON = responseConfig.data;
+			initMenu(menuData){
 
-			let montedself = this;
-			$(document).ready(function() {
-		    var $domenu            = $('#domenu-1'),
+				let montedself = this;
+
+				var $domenu        = $('#domenu-1'),
 		        domenu             = $('#domenu-1').domenu(),
 		        $outputContainer   = $('#domenu-1-output'),
 		        $jsonOutput        = $outputContainer.find('.jsonOutput'),
 		        $keepChanges       = $outputContainer.find('.keepChanges'),
 		        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
 
-		    $domenu.domenu({
-		        slideAnimationDuration: 0,
-		        allowListMerging: ['domenu-2'],
-		        select2:                {
-		          support: true,
-		          params:  {
-		            tags: true
-		          }
-		        },
-		        data: window.localStorage.getItem('domenu-1Json')
-		        // data: montedself.MenuJSON
-		      })
-		      // Example: initializing functionality of a custom button #21
-		      .onCreateItem(function(blueprint) {
-		        // We look with jQuery for our custom button we denoted with class "custom-button-example"
-		        // Note 1: blueprint holds a reference of the element which is about to be added the list
-		        var customButton = $(blueprint).find('.custom-button-example');
+				    $domenu.domenu({
+			        slideAnimationDuration: 0,
+			        allowListMerging: ['domenu-2'],
+			        select2:                {
+			          support: true,
+			          params:  {
+			            tags: true
+			          }
+			        },
+			        data: menuData
+			      })
+			      // Example: initializing functionality of a custom button #21
+			      .onCreateItem(function(blueprint) {
+			        // We look with jQuery for our custom button we denoted with class "custom-button-example"
+			        // Note 1: blueprint holds a reference of the element which is about to be added the list
+			        var customButton = $(blueprint).find('.custom-button-example');
 
-		        // Here we define our custom functionality for the button,
-		        // we will forward the click to .dd3-content span and let
-		        // doMenu handle the rest
-		        customButton.click(function() {
-		          blueprint.find('.dd3-content span').first().click();
-		        });
-		      })
-		      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
-		      // initialize the functionality our custom button
-		      .parseJson()
-		      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
-		        $jsonOutput.val(domenu.toJson());
-		        montedself.outputJson = JSON.parse(domenu.toJson());
-		        if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1Json', domenu.toJson());
-		      })
-		      .onToJson(function() {
-		        if(window.localStorage.length) $clearLocalStorage.show();
-		      });
+			        // Here we define our custom functionality for the button,
+			        // we will forward the click to .dd3-content span and let
+			        // doMenu handle the rest
+			        customButton.click(function() {
+			          blueprint.find('.dd3-content span').first().click();
+			        });
+			      })
+			      // Now every element which will be parsed will go through our onCreateItem event listener, and therefore
+			      // initialize the functionality our custom button
+			      .parseJson()
+			      .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
+			        $jsonOutput.val(domenu.toJson());
+			        montedself.outputJson = JSON.parse(domenu.toJson());
+			      })
+			      .onToJson(function() {
+			      });
 
-		    // // Console event examples
-		    // domenu.on('*', function(a, b, c) {
-		    //     console.log('event:', '*', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onParseJson(function() {
-		    //     console.log('event: onFromJson', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onToJson(function() {
-		    //     console.log('event: onToJson', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onSaveEditBoxInput(function() {
-		    //     console.log('event: onSaveEditBoxInput', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemDrag(function() {
-		    //     console.log('event: onItemDrag', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemDrop(function() {
-		    //     console.log('event: onItemDrop', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAdded(function() {
-		    //     console.log('event: onItemAdded', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemCollapsed(function() {
-		    //     console.log('event: onItemCollapsed', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemExpanded(function() {
-		    //     console.log('event: onItemExpanded', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemRemoved(function() {
-		    //     console.log('event: onItemRemoved', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemStartEdit(function() {
-		    //     console.log('event: onItemStartEdit', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemEndEdit(function() {
-		    //     console.log('event: onItemEndEdit', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAddChildItem(function() {
-		    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAddChildItem(function() {
-		    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAddChildItem(function() {
-		    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-		    //   })
-		    //   .onItemAddChildItem(function() {
-		    //     console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
-		    //   });
+			    // Init textarea
+			    $jsonOutput.val(domenu.toJson());
 
-		    if(window.localStorage.length) $clearLocalStorage.show();
+			    // var $optionGroup = $("#customSelect").find('optgroup[label="Categories"]');
 
-
-		    $clearLocalStorage.click(function() {
-		      if(true) window.localStorage.clear();
-		      if(!window.localStorage.length) $clearLocalStorage.hide();
-		      // Part of the reset demo routine
-		      // window.location.reload();
-		      this.component.render();
-		    });
-
-		    // Init textarea
-		    $jsonOutput.val(domenu.toJson());
-		    // montedself.outputJson = JSON.parse(domenu.toJson());
-		    //montedself.outputJson = [{"abc":"test"}]
-		    //console.log(this.outputJson);
-		    $keepChanges.on('click', function() {
-		      if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
-		      if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
-		    });
-
-		    if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
-		  });
+			    // if(this.categoriesList.length > 0){
+			    // 	for(var i = 0; i < this.categoriesList.length; i++){
+			    // 		console.log(this.categoriesList[i].categoryLink)
+					  //   $optionGroup.append('<option value="' + this.categoriesList[i].categoryLink + '">' + this.categoriesList[i].categoryName + '</option>');
+				   //  }
+			    // }
+			  
 			},
+			
 			getMenuJson: function () {
 				this.$store.state.content = $('.jsonOutput').val();
 			},
 
-			updateMenuData () {
+			async fetchMenuData () {
 
-				window.localStorage.removeItem('domenu-1Json');
+				// this.fetchDataLoader = true;
 
-				console.log('data: search.html?SearchSensor=', window.localStorage.removeItem('domenu-1Json'))
+				let menuData;
+				let vid = '';
 
-				axios.get(this.apiUrl, {
-			    headers: {
-			    	Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OTkxNDA1NTZjNzFkMTAwMWMwMjA3MjkiLCJpYXQiOjE1MTU1NjE1OTEsImV4cCI6MTUxNTU2NTIyMSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIn0.RCBX0KPhL6bP_84nIEWA8hIoOceaJTOR2F19v6ypLY0'
-			    }
+				let folderPath = this.$store.state.fileUrl.replace(/\\/g, "\/");
+				let folderName = folderPath.split('/')[6];
+
+				await axios.get(config.baseURL + '/project-configuration/' + folderName , {
 				})
-				.then((res) => {
-					let menuJson = [];
-			    let categories = res.data.aggregations.group_by_category.buckets;
-
-			    for(let i = 0; i < categories.length; i++){
-			    	let urlName = categories[i].key.toLowerCase().replace(' ', '-')
-			    	let menuItem = {
-														    "id": i,
-														    "title": categories[i].key,
-														    "customSelect": this.menuBaseUrl + urlName,
-														    "__domenu_params": {}
-														    ,
-														    "select2ScrollPosition": {
-														        "x": 0, "y": 0
-														    }
-														};
-
-						menuJson.push(menuItem);								
-			    }
-
-			    window.localStorage.setItem('domenu-1Json', JSON.stringify(menuJson));
-
-			    this.initMenu();
+				.then(function (response) {
+				    let configs = response.data.configData;
+				    vid = configs[1].projectSettings[0].ProjectVId.vid;
 				})
-				.catch((e) => {
+				.catch(function (error) {
+				    console.log(error);
+				    // this.fetchDataLoader = false;
+				});
+
+				if(vid){
+					await axios.get(config.menuCategoriesUrl, {
+				    headers: {
+				    	Authorization: Cookies.get('auth_token'),
+				    	vid: vid
+				    }
+					})
+					.then((res) => {
+						let menuJson = [];
+				    let categories = res.data.aggregations.group_by_category.buckets;
+
+				    for(let i = 0; i < categories.length; i++){
+				    	let urlName = categories[i].key.toLowerCase().replace(/ /g, '-');
+
+				    	this.categoriesList.push({
+				    		categoryName: categories[i].key.toUpperCase(),
+				    		categoryLink: this.menuBaseUrl + urlName
+				    	});
+
+				      //let menuItem = {
+							// 			    "id": i,
+							// 			    "title": categories[i].key.toUpperCase(),
+							// 			    "customSelect": this.menuBaseUrl + urlName,
+							// 			    "__domenu_params": {}
+							// 			    ,
+							// 			    "select2ScrollPosition": {
+							// 			        "x": 0, "y": 0
+							// 			    }
+							// 			};
+
+							// menuJson.push(menuItem);								
+			    	}
+
+			    	// menuData = JSON.stringify(menuJson);
+			    	// this.fetchDataLoader = false;
+			    	// this.initMenu(menuData);
+					})
+					.catch((e) => {
 				    this.$message({
 				        showClose: true,
 				        message: 'Failed! Please try again.',
 				        type: 'error'
 				    });
-				    console.log(e)
-				})
+				    console.log(e);
+				    // this.fetchDataLoader = false;
+					})
+				} else {
+					this.$message({
+				        showClose: true,
+				        message: 'Please set "VID" in Project settings to get all of your category list.',
+				        type: 'info'
+				    });
+				}
 			}
 		}
 	}
@@ -723,5 +710,11 @@ import domenu from 'domenu'
 		text-shadow: none;
 		border-radius: 3px;
 		border: 1px solid #999;
+	}
+
+	.menu-btn{
+		width: 20px;
+		height: 20px;
+		font-weight: bolder;
 	}
 </style>

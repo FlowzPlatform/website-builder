@@ -6,27 +6,29 @@
 	        <div class="creative-table">
 	          <div class="table-title title-style-2">
 	            <h4>Page List</h4>
-	            <p>Project Name: {{repoName}}</p>
+	            <p>Website Name: {{repoName}}</p>
 	          </div>
 	          <div class="table-body">
-	            <table class="table table-hover">
-	              <thead>
-	                <tr>
-	                  <td width="100px">Sr. No.</td>
-	                  <td>Page Name</td>
-	                  <td>Layout Used</td>
-                    <td width="40%">Partials Used</td>
-	                </tr>
-	              </thead>
-	              <tbody>
-	                <tr v-for="item in tablePagesData">
-	                  <td>{{item.number}}</td>
-	                  <td>{{item.pageName}}</td>
-	                  <td>{{item.layoutName}}.layout</td>
-                    <td v-html="item.partialsList"></td>
-	                </tr>
-	              </tbody>
-	            </table>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <td width="100px">Sr. No.</td>
+                      <td>Page Name</td>
+                      <td>Layout Used</td>
+                      <td width="40%">Partials Used</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in tablePagesData">
+                      <td>{{item.number}}</td>
+                      <td>{{item.pageName}}</td>
+                      <td>{{item.layoutName}}.layout</td>
+                      <td v-html="item.partialsList"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 	          </div>
 	        </div>
 	      </div>
@@ -41,7 +43,8 @@ import Vue from 'vue'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
 
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const config = require('../config');
 
@@ -71,15 +74,44 @@ export default {
       let folderUrl = configFileUrl.replace(fileName, '');
 
       let foldername = folderUrl.split('/');
-      foldername = foldername[(foldername.length-1)];
+      foldername = foldername[6];
 
-      this.configData = await axios.get(config.baseURL + '/project-configuration?userEmail=' + this.$session.get('email') + '&websiteName=' + foldername );
+      this.configData = await axios.get(config.baseURL + '/project-configuration/' + foldername ).catch((e)=>{ 
+        let dataMessage = '';
+            if (e.message != undefined) {
+                dataMessage = e.message              
+            } else if (e.response.data.message != undefined) {
+              dataMessage = e.response.data.message
+            } else{
+              dataMessage = "Please try again! Some error occured."
+            }
+            this.$confirm(dataMessage, 'Error', {
+          confirmButtonText: 'logout',
+          cancelButtonText: 'reload',
+          type: 'error',
+          center: true
+        }).then(() => {
+          localStorage.removeItem('current_sub_id');
+          this.$session.remove('username');
+          let location = psl.parse(window.location.hostname)
+          location = location.domain === null ? location.input : location.domain
+          Cookies.remove('auth_token' ,{domain: location});
+          Cookies.remove('email' ,{domain: location});
+          Cookies.remove('userDetailId' ,{domain: location}); 
+          Cookies.remove('subscriptionId' ,{domain: location}); 
+          this.isLoggedIn = false;
+          // this.$router.push('/login');
+          window.location = '/login';
+        }).catch(() => {
+          location.reload()
+        });
+       });
       if(this.configData.status == 200 || this.configData.status == 204){
-        console.log('Config file found! Updating fields..');
+        //console.log('Config file found! Updating fields..');
 
-        this.settings = this.configData.data.data[0].configData;
+        this.settings = this.configData.data.configData;
 
-        this.repoName = this.settings[0].repoSettings[0].RepositoryName;
+        this.repoName = this.configData.data.websiteName;
 
         this.tablePagesData = [];
 
@@ -98,7 +130,7 @@ export default {
         }
 
       } else {
-        console.log('Cannot get config file!');
+        //console.log('Cannot get config file!');
       } 
   	}
   },
@@ -108,7 +140,14 @@ export default {
   watch: {
   	'$store.state.fileUrl': function(newvalue) {
   		this.init();
-  	}
+  	},
+    '$store.state.updateStats': function(newvalue) {
+      let self = this;
+      setTimeout(function(){
+        self.init();
+      },1500)
+      
+    }
   }
 }
 </script>
@@ -117,6 +156,7 @@ export default {
 <style scoped>
 .PartialStats {
   font-family: 'Lato', sans-serif;
+  background-color: #eee;
 }
 
 .card{
@@ -349,6 +389,7 @@ h3.subtitle{
   border-radius: 10px;
   padding-top: 75px;
   margin-top: 0px;
+  margin-bottom: 100px;
   position: relative;
   width: 100%;
   z-index: 5;

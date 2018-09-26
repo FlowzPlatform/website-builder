@@ -24,7 +24,8 @@
             readOnly: false,
             cursorStyle: 'line',
             automaticLayout: false,
-            glyphMargin: true
+            glyphMargin: true,
+            language: 'html'
           }
         }
       },

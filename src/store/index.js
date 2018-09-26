@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createPersistedState from 'vuex-persistedstate';
 import axios from 'axios';
 import config from '@/config'
 
@@ -9,8 +8,8 @@ export const store = new Vuex.Store({
     state: {
         content: null,
         fileUrl: null,
-        tabChange: null,
         currentIndex: null,
+        updateStats: null,
         LayoutOptions: [{
           value: 'Blank',
           label: 'Blank'
@@ -57,7 +56,7 @@ export const store = new Vuex.Store({
           })
         }
     },
-    plugins: [createPersistedState()]
+    plugins: []
     // getters: {},
     // modules: {}
 })
