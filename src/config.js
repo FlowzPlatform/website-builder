@@ -1,4 +1,6 @@
 domainkey = process.env.domainkey;
+gitlabtoken=process.env.gitlabtoken
+netlifytoken=process.env.netlifytoken
 
 if(process.env.baseURL == undefined){
     url = 'https://api.'+domainkey+'/serverapi'
@@ -69,8 +71,7 @@ if (process.env.NODE_ENV !== 'development') {
     buildersettings='https://api.flowzcluster.tk/crm/buildersettings/'
     menuCategoriesUrl='https://api.flowzcluster.tk/pdmnew/categories',
     colorSwatchUrl='https://api.flowzcluster.tk/pdmnew/filters/'
-    productApiUrl = 'https://api.flowzcluster.tk/pdmnew/pdm/US'
-    //productLocalApiUrl = 'http://localhost:9200/pdm1/product'  //temperary
+    productApiUrl = 'https://api.flowzcluster.tk/pdmnew/pdm'
 }
 
 module.exports = {
@@ -111,17 +112,16 @@ module.exports = {
     menuCategoriesUrl : menuCategoriesUrl,
     colorSwatchUrl : colorSwatchUrl,
     productApiUrl : productApiUrl,
-    // productLocalApiUrl : productLocalApiUrl,  //temperary
     pluginsPath : '/var/www/html/plugins',
     websitesPath : '/var/www/html/websites',
     metalpath: '/var/www/html/node_modules/',
     webpackPath: '/var/www/html/node_modules/',
-    gitlabtoken: 'UbYWRfyi44mGR_PJr9nh',
-    netlifytoken:'c11e3841e522f1f6172434bbefc7263a43cbe6a8de91cd47c4fede1851c49ce6',
+    gitlabtoken: gitlabtoken,
+    netlifytoken:netlifytoken,
     baseURL : url,
     ipAddress: ipAdd,
     socketURL: socketURL,
-    gitLabIpAddress: 'http://209.50.50.225/',
+    gitLabIpAddress: 'https://gitlab.com/cenacle-devops/',
     // primarygitlabaccesstoken:'UbYWRfyi44mGR_PJr9nh',
     default:{
     flowzDashboardUrl: 'https://www.dashboard.' + process.env.domainkey,

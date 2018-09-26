@@ -70,6 +70,9 @@
                       <div class="col-md-12" v-else>
                       Deploy URL: <a :href="netlifydeployurl" target="_blank">{{netlifydeployurl}}</a>
                       <br>
+                      <div style="margin-top:15px;">
+                        <el-button type="primary"  @click="triggerbuild()" >Trigger build</el-button>
+                      </div>
                         <!-- <el-input v-model="customDomainName" placeholder="http://www.domain.com"></el-input>
                         <p class="custom-note">Before publishing to your custom domain, point your domain to our nameservers: 
                           [1] <strong><span id="ns1-copy">ns1.flowzdigital.com</span>
@@ -399,7 +402,7 @@
                   <div class="row">
                     <div class="col-md-4">
                       <div class="thumbnail">
-                        <img src="https://placehold.it/403x190?text=POSH" alt="template 4" class="img-responsive template-image" @click="revertToTemplate(template = 'posh')"/>
+                        <img src="https://res.cloudinary.com/dghextof4/image/upload/v1537885097/Screenshot_from_2018-09-25_19-38-57.png" alt="POSH" class="img-responsive template-image" @click="revertToTemplate(template = 'posh')"/>
                       <!-- <a href="#" target="_blank" class="view-template"><i class="fa fa-search"></i></a> -->
                       <!-- <button class="btn btn-primary btn-lg btn-block" @click="revertToTemplate(template = 'web1')">Template 1</button> -->
                       </div>
@@ -1391,6 +1394,7 @@ export default {
       uploadAssetImageLoader: false,
       refreshDisabled: false,
       loadingText: '',
+      netlifywebhookurl:'',
 
       branchesData: [],
 
@@ -1873,6 +1877,53 @@ export default {
   },
 
   methods: {
+    async triggerbuild(){
+      if(this.gitlabid!=''){
+        let finalouputpagepd=await axios.get(config.baseURL + '/save-menu/0?path=' +this.folderUrl + '/public/assets/project-details.json',{}).catch((e)=>{console.log(e)})
+
+      let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa((finalouputpagepd.data))+'" }'
+      let buildpayloadpd='{ "branch": "master","commit_message": "updated project-details.json on publish", "actions": ['+tempjsonpd+'] }'
+
+      let axiosoptionpd={
+        method:'post',
+        url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+        data:buildpayloadpd,
+        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+      }
+      await axios(axiosoptionpd)
+      .then(async (res)=>{
+        let finalouputpage=await axios.get(config.baseURL + '/save-menu/0?path=' +this.folderUrl + '/public/assets/default.json',{}).catch((e)=>{console.log(e)})
+
+      let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa((finalouputpage.data))+'" }'
+      let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
+      
+      let axiosoption={
+        method:'post',
+        url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+        data:buildpayload,
+        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+      }
+      await axios(axiosoption).
+      then(async (res)=>{
+        await axios.post(this.netlifywebhookurl,{})
+        .then((res)=>{
+          this.$notify({
+            message: 'Netlify Triggered ',
+            type: 'success'
+          });
+        })
+      })
+      .catch((e)=>{console.log(e)})
+      })
+      .catch((e)=>{console.log(e)})
+      }
+      else{
+        console.log('netlify not enable in this site')
+      }
+
+    },
+
+
     addNewConfig(value){
       // console.log('hi');
       this.componentsID = value;
@@ -2620,8 +2671,8 @@ export default {
         };
         // console.log('Url', config.baseURL + '/flows-dir-listing?website=' + this.repoName);
 
-        // Call Listings API and get Tree
-        console.log(config.userDetail)
+        // // Call Listings API and get Tree
+        // console.log(config.userDetail)
         await axios.get(config.userDetail, {
                 headers: {
                     'Authorization': Cookies.get('auth_token')
@@ -3353,12 +3404,16 @@ export default {
             await axios.get(config.baseURL + '/filelisting?path=' + pathclientplugin, {})
                 .then(async (res) => {
                     let arrayfilesclient = []
-                    new Promise(async (resolve, reject) => {
+                    // new Promise(async (resolve, reject) => {
                       let allpagesjs=[]
                       let getrepolisting;
                       let count=1
                       do{
-                         getrepolisting=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/client-plugins&page='+count,{})
+                         getrepolisting=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/client-plugins&page='+count,{
+                          headers:{
+                            'PRIVATE-TOKEN': config.gitlabtoken
+                          }
+                         })
                          allpagesjs=allpagesjs.concat(getrepolisting.data)
                          count=count+1
                       }while(getrepolisting.data.length==20)
@@ -3401,12 +3456,16 @@ export default {
                                 await axios.get(config.baseURL + '/filelisting?path=' + pathcss, {})
                                     .then(async (res) => {
                                         let arrayfiles = []
-                                        new Promise(async (resolve, reject) => {
+                                        // new Promise(async (resolve, reject) => {
                                           let allpagescss=[]
                                           let countcss=1
                                           let getrepolistingcss;
                                           do{
-                                            getrepolistingcss=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/css&page='+countcss,{})
+                                            getrepolistingcss=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=assets/css&page='+countcss,{
+                                              headers:{
+                                                'PRIVATE-TOKEN': config.gitlabtoken
+                                              }
+                                            })
                                              allpagescss=allpagescss.concat(getrepolistingcss.data)
                                             countcss=countcss+1
                                           }while(getrepolistingcss.data.length==20)
@@ -3447,12 +3506,16 @@ export default {
                                                     await axios.get(config.baseURL + '/filelisting?path=' + pathmain, {})
                                                         .then(async (res) => {
                                                             let arrayfiles = []
-                                                            new Promise(async (resolve, reject) => {
+                                                            // new Promise(async (resolve, reject) => {
                                                               let allpagesmain=[]
                                                               let countmain=1
                                                               let getrepolistingmain;
                                                               do{
-                                                                getrepolistingmain=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=main-files&page='+countmain,{})
+                                                                getrepolistingmain=await axios.get('https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/tree?path=main-files&page='+countmain,{
+                                                                  headers:{
+                                                                    'PRIVATE-TOKEN': config.gitlabtoken
+                                                                  }
+                                                                })
                                                                  allpagesmain=allpagesmain.concat(getrepolistingmain.data)
                                                                 countmain=countmain+1
                                                               }while(getrepolistingmain.data.length==20)
@@ -3493,7 +3556,7 @@ export default {
                                                                     .catch((e) => {
                                                                         console.log(e)
                                                                     })
-                                                            })
+                                                            // })
 
                                                         })
                                                         .catch((e) => {
@@ -3503,7 +3566,7 @@ export default {
                                                 .catch((e) => {
                                                     console.log(e)
                                                 })
-                                        })
+                                        // })
 
                                     })
                                     .catch((e) => {
@@ -3513,7 +3576,7 @@ export default {
                             .catch((e) => {
                                 console.log(e)
                             })
-                    })
+                    // })
 
                 })
                 .catch((e) => {
@@ -4097,7 +4160,7 @@ export default {
           await axios.get(config.baseURL + '/configdata-history?currentBranch=' + this.branchesData[index].branchName + '&websiteName=' + this.repoName, {
           })
           .then(async (resp) => {
-            console.log('Config data resp: ', resp);
+            // console.log('Config data resp: ', resp);
             let configData = resp.data.data[0].configData;
               this.settings = null;
               this.settings = configData;
@@ -4273,7 +4336,7 @@ export default {
                           userId: Cookies.get('userDetailId')
                       })
                       .then(function (resp) {
-                          console.log('Config revision saved in configdata-history. ', resp);
+                          // console.log('Config revision saved in configdata-history. ', resp);
                       })
                       .catch(function (error) {
                           console.log(error);
@@ -4821,7 +4884,7 @@ export default {
             if(this.gitlabid!=''){
               let finalouputpagepd=await axios.get(config.baseURL + '/save-menu/0?path=' +folderUrl + '/public/assets/project-details.json',{}).catch((e)=>{console.log(e)})
 
-            let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa(JSON.stringify(finalouputpagepd.data))+'" }'
+            let tempjsonpd='{"action": "update","encoding":"base64","file_path": "assets/project-details.json","content": "'+Base64.btoa((finalouputpagepd.data))+'" }'
             let buildpayloadpd='{ "branch": "master","commit_message": "updated project-details.json on publish", "actions": ['+tempjsonpd+'] }'
 
             let axiosoptionpd={
@@ -4830,22 +4893,24 @@ export default {
               data:buildpayloadpd,
               headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
             }
+
             await axios(axiosoptionpd)
             .then(async (res)=>{
               let finalouputpage=await axios.get(config.baseURL + '/save-menu/0?path=' +folderUrl + '/public/assets/default.json',{}).catch((e)=>{console.log(e)})
 
-            let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa(JSON.stringify(finalouputpage.data))+'" }'
-            let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
-            
-            let axiosoption={
-              method:'post',
-              url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
-              data:buildpayload,
-              headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
-            }
-            await axios(axiosoption)
-            .catch((e)=>{console.log(e)})
+              let tempjson='{"action": "update","encoding":"base64","file_path": "assets/default.json","content": "'+Base64.btoa((finalouputpage.data))+'" }'
+              let buildpayload='{ "branch": "master","commit_message": "updated default.json on publish", "actions": ['+tempjson+'] }'
+              
+              let axiosoption={
+                method:'post',
+                url:'https://gitlab.com/api/v4/projects/'+this.gitlabid+'/repository/commits',
+                data:buildpayload,
+                headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+              }
+              await axios(axiosoption)
+              .catch((e)=>{console.log(e)})
             })
+            .catch((e)=>{console.log(e)})
             .catch((e)=>{console.log(e)})
             }
             
@@ -5804,6 +5869,7 @@ export default {
 
         this.gitlabid=this.configData.data.gitlabconfig.projectid
         this.netlifydeployurl=this.configData.data.gitlabconfig.netlify_deploy_url;
+        this.netlifywebhookurl=this.configData.data.gitlabconfig.webhook_url;
         }
         this.settings = this.configData.data.configData;
         this.form.websitename = this.configData.data.websiteName;

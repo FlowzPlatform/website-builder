@@ -55,7 +55,6 @@ let baseUrl = config.baseURL
 let tagsUrl = config.baseURL + '/tags'
 let productmappingUrl = config.baseURL + '/productTags'
 let productApiUrl = config.productApiUrl
-//let productLocalApiUrl = config.productLocalApiUrl
 let productImageUrl = "https://res.cloudinary.com/flowz/image/upload/v1531481668/websites/images/no-image.png"
 
 export default {
@@ -220,53 +219,49 @@ export default {
               pmData.createdAt = new Date()
 
               //change in elasticsearch product
-              // axios.get(tagsUrl + '/' + this.tdata.id).then(res => {
-              //     axios.get(productApiUrl + '/' + productData._id).then(res2 => {
-              //         let tag_list = res2.data._source.tags;
+              let websiteDetails = _.find(this.webOptions, {value: this.tdata.website});
+              axios.get(tagsUrl + '/' + this.tdata.id).then(res => {
+                  axios.get(productApiUrl + '?_id=' + productData._id,{ headers: { 'vid': websiteDetails.vid } })
+                      .then(res2 => {
+                      let tag_list = res2.data.hits.hits[0]._source.tags;
 
-              //         if(tag_list.includes(res.data.tag_name)) {
-              //             this.$Spin.hide();
-              //             this.$Notice.error({title: 'Error!!', desc: 'Tag already mapped.', duration: 2})
-              //         }
-              //         else {
-              //             let websiteDetails = _.find(this.webOptions, {value: this.tdata.website});
-              //             let esData;
-              //             if(tag_list !== undefined && tag_list != '') {
-              //               //esData =  { "doc":{ "tags":tag_list+"|"+res.data.tag_name } };
-              //               esData =  { "supplier_id":productData._source.supplier_id, "tags":tag_list+"|"+res.data.tag_name };
-              //             }
-              //             else {
-              //               //esData =  { "doc":{ "tags":res.data.tag_name } };
-              //               esData =  { "supplier_id":productData._source.supplier_id, "tags":res.data.tag_name };
-              //             }
+                      if(tag_list.includes(res.data.tag_name)) {
+                          this.$Spin.hide();
+                          this.$Notice.error({title: 'Error!!', desc: 'Tag already mapped.', duration: 2})
+                      }
+                      else {
+                          if(Array.isArray(tag_list)) {
+                              tag_list.push(res.data.tag_name);
+                          }
+                          else {
+                            tag_list = [];
+                            tag_list.push(res.data.tag_name);
+                          }
 
-              //             // axios({
-              //             //     method: 'POST',
-              //             //     url: productLocalApiUrl+"/"+productData._id+"/_update?pretty",
-              //             //     data: esData
-              //             axios({
-              //                 method: 'PATCH',
-              //                 url: productApiUrl+"/"+productData._id,
-              //                 data: esData,
-              //                 headers: {'vid':websiteDetails.vid}
-              //             }).then(res3 => {
-              //                 this.$Spin.hide();
-              //                 this.$Notice.success({title: 'Success!!', desc: 'Tag mapped to ES.', duration: 2})
-              //             }).catch(err => {
-              //                 this.$Spin.hide();
-              //                 this.$Notice.error({title: 'Error!!', desc: 'Not mapped to ES.', duration: 2})
-              //             })
-              //         }
-              //     })
-              // })
+                          let esData =  { "supplier_id":productData._source.supplier_id, "tags":tag_list };
+                          axios({
+                              method: 'PATCH',
+                              url: productApiUrl+"/"+productData._id,
+                              data: esData,
+                              headers: {'vid':websiteDetails.vid}
+                          }).then(res3 => {
+                              this.$Spin.hide();
+                              this.$Notice.success({title: 'Success!!', desc: 'Product mapped to ES.', duration: 2})
+                          }).catch(err => {
+                              this.$Spin.hide();
+                              this.$Notice.error({title: 'Error!!', desc: 'Not mapped to ES.', duration: 2})
+                          })
+                      }
+                  })
+              })
               //end elasticsearch
 
               axios.post(productmappingUrl, pmData).then(res => {
                 this.$Spin.hide();
-                this.$Notice.success({title: 'Success!!', desc: '', duration: 2})
+                this.$Notice.success({title: 'Success!!', desc: 'Product mapped.', duration: 2})
               }).catch(err => {
                 this.$Spin.hide();
-                this.$Notice.error({title: 'Error!!', desc: 'Not saved.', duration: 2})
+                this.$Notice.error({title: 'Error!!', desc: 'Not mapped to Rethink.', duration: 2})
               })
           }
       }
