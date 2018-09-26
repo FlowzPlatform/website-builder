@@ -24,5 +24,4 @@ ID = "Staging-I"
   force = true
   
   
-[build.environment]
-  domainkey = "flowzdigital.com"
+
