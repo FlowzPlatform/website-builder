@@ -1530,9 +1530,9 @@ export default {
     
   },
   beforeDestroy(){
-    console.log(socket)
-    console.log('app',app)
-    app.removeListener()
+    // console.log(socket)
+    // console.log('app',app)
+    // app.removeListener()
      // socket.removeListener('jobqueue')
   },
 
@@ -4309,13 +4309,18 @@ export default {
                         arrayofpartials = arrayofpartials.concat(gitrepoPartials.data)
                         count = count + 1
                     } while (gitrepoPartials.data.length == 20)
+                    console.log('all partials from git:',arrayofpartials)
                     let actualpartials = Object.keys(self.settings[2].layoutOptions[0])
                     for (let i = 0; i < actualpartials.length; i++) {
-                        if (actualpartials[i] != 'Layout') {
-                            let partialindex = _.findIndex(gitrepoPartials.data, function(o) {
+                        console.log('partial:',actualpartials[i])
+                        if (actualpartials[i] != 'Layout'&& actualpartials[i]!='Menu') {
+                            let partialindex = _.findIndex(arrayofpartials, function(o) {
+                              // console.log('git name:',name)
                                 return o.name == actualpartials[i]
                             })
-                            if (partialindex != -1) {
+                            // console.log('partialindex:',partialindex)
+                            if (partialindex == -1) {
+                                console.log('partials not found')
                                 for (let j = 0; j < self.settings[2].layoutOptions[0][actualpartials[i]].length; j++) {
                                     let partialpagefilecontent = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + self.folderUrl + '/Partials/' + actualpartials[i] + '/' + self.settings[2].layoutOptions[0][actualpartials[i]][j].label + '.partial', {}).catch((e) => {
                                         console.log(e)
@@ -4325,18 +4330,52 @@ export default {
 
                                 }
                             } else {
+                                console.log('partials found')
                                 let gitrepoPartialspages = []
                                 let arrayofpartialspages = []
                                 let countpartial = 1
                                 do {
-                                    gitrepoPartialspages = await axios.get('https://gitlab.com/api/v4/projects/' + self.newRepoId + '/repository/tree?path=Partials/' + arrayofpartials[i] + '&page=' + countpartial, {})
+                                    gitrepoPartialspages = await axios.get('https://gitlab.com/api/v4/projects/' + self.newRepoId + '/repository/tree?path=Partials/' + actualpartials[i] + '&page=' + countpartial, {})
                                     arrayofpartialspages = arrayofpartialspages.concat(gitrepoPartialspages.data)
                                     count = count + 1
                                 } while (gitrepoPartialspages.data.length == 20)
+                                // console.log('arrayofpartialspages:',arrayofpartialspages)
+                                let actualpartialpages=self.settings[2].layoutOptions[0][actualpartials[i]]
+                                // for(let j=0;j<actualpartialpages.length;j++){
+                                  for(let j in actualpartialpages){
+                                    console.log(j)
+                                    let partialpageindex=_.findIndex(arrayofpartialspages,function(o){
+                                      o.name=j.label+'.partial'
+                                    })
+                                      let partialpagefilecontent=await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + self.folderUrl + '/Partials/' + actualpartials[i] + '/' + j.label + '.partial', {}).catch((e) => {
+                                        console.log(e)
+                                    })
+                                    if(partialpageindex==-1){
+                                      let tempjson = '{"action": "create","encoding":"base64","file_path": "Partials/' + actualpartials[i] + '/' + j.label + '.partial' + '","content": "' + Base64.btoa(unescape(encodeURIComponent(partialpagefilecontent.data))) + '" }'
+                                    totalarray.push(tempjson)
+                                    }
+                                    else{
+                                      let tempjson = '{"action": "update","encoding":"base64","file_path": "Partials/' + actualpartials[i] + '/' + j.label + '.partial' + '","content": "' + Base64.btoa(unescape(encodeURIComponent(partialpagefilecontent.data))) + '" }'
+                                    totalarray.push(tempjson)
+                                    }
+
+
+                                }
+
                             }
 
                         }
                     }
+                    let buildpayload='{ "branch": "'+branchName+'","commit_message": "'+commitMessage+'", "actions": ['+totalarray+'] }'
+                  let axiosoptioncommit={
+                    method:'post',
+                    url:'https://gitlab.com/api/v4/projects/'+this.newRepoId+'/repository/commits',
+                    data:buildpayload,
+                    headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
+                  }
+                  await axios(axiosoptioncommit)
+                  .catch((e)=>{console.log(e)})
+
                 })
                 .catch((e) => {
                     console.log(e)
