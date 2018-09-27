@@ -10,7 +10,7 @@
       <div class='login_title'>
         <span>Login to Flowz Builder</span>
       </div>
-      <form id="form-facebook" name="form-facebook" :action="loginWithFacebookUrl" method="get">
+     <!--  <form id="form-facebook" name="form-facebook" :action="loginWithFacebookUrl" method="get">
         <input type="hidden" name="success_url" :value="facebookSuccessCallbackUrl">
       </form>
       <form id="form-google" name="form-google" :action ="loginWithGoogleUrl" method="get">
@@ -46,7 +46,6 @@
           <el-tooltip class="item" effect="light" content="Login with LinkedIn" placement="top-start">
             <a href="javascript:void(0)" class="social-button-linked-in" v-on:click="doLinkedInLogin()"><i class="fa fa-linkedin"></i></a>
           </el-tooltip>
-          <!-- <a href="javascript:void(0)" class="social-button-linked-in"><i class="fa fa-lock-alt"></i></a> -->
           <el-tooltip content="LDAP Login" effect="light" placement="top">
             <div class="ldap">
               <input type="checkbox" name="ldapCheckbox" @change="checkLdapLogin" id="ldapCheckbox"><label for="ldapCheckbox" class="login-button-ldap"><i class="fa fa-lock"></i></label> 
@@ -56,7 +55,7 @@
       </div>
       <div>
         <p style="text-align: center">OR</p>
-      </div>
+      </div> -->
       <div class='login_fields'>
           <div class='login_fields__user'>
               <div class='icon'>
@@ -83,11 +82,11 @@
                   <a href='/forgot_password'>Forgotten password?</a>
               </div>
           </div>
-          <div class="signup">
+          <!-- <div class="signup">
             <el-tooltip class="item" effect="dark" content="Signup Now" placement="bottom">
               <a href="/register" class="signup-link">New Here?</a>
             </el-tooltip>
-          </div>
+          </div> -->
       </div>
       <div class='success'>
           <h2 v-if="authen.status === true">{{authen.success}}</h2>
@@ -129,7 +128,7 @@ export default {
       },
       authen: {
         status: false,
-        success: 'Authentication Success',
+        success: ' Success',
         error: 'Authentication Failed'
       },
       facebookSuccessCallbackUrl : config.facebookSuccessCallbackUrl,
@@ -564,7 +563,7 @@ export default {
   p {
     color: #606479;
     text-align: left;
-    font-size: 10px;
+    font-size: 12px;
   }
   .Login {
     -webkit-perspective: 800px;
@@ -660,16 +659,16 @@ export default {
     -webkit-transform: rotateX(0deg);
             transform: rotateX(0deg);
     position: relative;
-    width: 300px;
+    width: 330px;
     border-top: 2px solid #4BEBE3;
-    height: 480px;
+    height: 460px;
     position: absolute;
     left: 0;
     right: 0;
     margin: auto;
     top: 0;
     bottom: 0;
-    padding: 100px 40px 40px 40px;
+    padding: 60px 40px 40px 40px;
     background: #35394a;
     /* Old browsers */
     /* FF3.6+ */
@@ -704,13 +703,14 @@ export default {
   .login_title {
     color: #afb1be;
     text-align: left;
-    font-size: 16px;
+    font-size: 20px;
   }
   .login_fields {
     height: 208px;
     width: 100%;
     position: absolute;
     left: 0;
+    margin-top: 35px;
   }
   .login_fields .icon {
     position: absolute;
@@ -737,7 +737,7 @@ export default {
     outline: none;
     font-family: 'Gudea', sans-serif;
     box-shadow: none;
-    font-size: 12px;
+    font-size: 15px;
   }
   .login_fields__user, .login_fields__password {
     position: relative;
@@ -752,7 +752,7 @@ export default {
   }
   .login_fields__submit .forgot {
     float: right;
-    font-size: 10px;
+    font-size: 12px;
     margin-top: 11px;
     /*text-decoration: underline;*/
   }
