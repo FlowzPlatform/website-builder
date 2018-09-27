@@ -1990,7 +1990,7 @@ export default {
       $('.valid').removeClass('correct');
     },
     linktovshop(){
-      window.open('https://vshopdata.'+config.domainkey);
+      window.open('https://vshopdata.'+config.domainkey,'_blank');
     },
     refreshvshop(){
 
@@ -2016,7 +2016,7 @@ export default {
       }).catch(err => { console.log(err); });
     },
     linktocrm(){
-      window.open('https://crm.'+config.domainkey);
+      window.open('https://crm.'+config.domainkey,'_blank');
     },
     refreshaccounts(){
       console.log('refreshaccounts')
@@ -5606,7 +5606,7 @@ export default {
 
       let branchName = this.branchesData[index].branchName;
       // console.log(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/repository/archive.zip?ref=master');
-      window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/raw/' + branchName+'/public/log.md');
+      window.open(config.gitLabIpAddress + 'fsaiyed/' + this.repoName + '/raw/' + branchName+'/public/log.md','_blank');
     },
 
     async init () { 
