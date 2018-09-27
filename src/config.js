@@ -41,7 +41,7 @@ if (process.env.NODE_ENV !== 'development') {
     buildersettings='https://api.'+domainkey+'/crm/buildersettings/',
     menuCategoriesUrl='https://api.'+domainkey+'/pdmnew/categories',
     colorSwatchUrl='https://api.'+domainkey+'/pdmnew/filters/'
-    productApiUrl='https://api.'+domainkey+'/pdmnew/pdm/US'
+    productApiUrl='https://api.'+domainkey+'/pdmnew/pdm'
 } else {
     ipAdd = 'http://localhost';
     // socketURL = 'ws://devws.flowz.com:4032';
