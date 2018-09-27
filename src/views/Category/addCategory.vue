@@ -203,7 +203,7 @@ export default {
                 this.uploadIconLoader = false;  
               } 
               else {
-                this.formItem.icon = result[0].url
+                this.formItem.icon = result[0].secure_url
                 this.formItem.icon_name = result[0].original_filename
                 this.uploadIconLoader = false;  
               }

@@ -327,7 +327,7 @@ export default {
             if(result[0].format == 'pdf') {
                 let pdf_name = template+"_name";
                 let pdf_thumb = template+"_thumb";
-                this.formItem[template] = result[0].url
+                this.formItem[template] = result[0].secure_url
                 this.formItem[pdf_name] = result[0].original_filename
                 this.formItem[pdf_thumb] = result[0].thumbnail_url
                 this[loader] = false;
@@ -360,7 +360,7 @@ export default {
           else {
               let imageFromates = ['jpeg','jpg','gif','png','bmp','tiff'];
               if(imageFromates.includes(result[0].format)) {
-                  this.formItem.special_pricing = result[0].url
+                  this.formItem.special_pricing = result[0].secure_url
                   this.formItem.special_pricing_name = result[0].original_filename
                   this.formItem.special_pricing_thumb = result[0].thumbnail_url
                   this.special_pricing_loader = false;
