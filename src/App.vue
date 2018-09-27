@@ -241,7 +241,9 @@ export default {
     },
     goToDashboard(){
       // this.$router.push('/user-dashboard');
-      window.location = "/user-dashboard";
+      // console.log('location:',location)
+      window.open(location.origin+'/user-dashboard','_blank')
+      // window.location = "/user-dashboard";
     },
     checkDashboard(){
 
