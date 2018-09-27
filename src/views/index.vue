@@ -4655,10 +4655,10 @@
                                                                         projName = projName.split('/')[2];
                                                                         // console.log("process.env.NODE_ENV",process.env.NODE_ENV)
                                                                         if (process.env.NODE_ENV !== 'development') {
-                                                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html');
+                                                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/Preview/' + nameF + '.html','_blank');
                                                                             redirectWindow.location;
                                                                         } else {
-                                                                            let redirectWindow = window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html');
+                                                                            let redirectWindow = window.open(config.ipAddress + previewFile + '/public/Preview/' + nameF + '.html','_blank');
                                                                             redirectWindow.location;
                                                                         }
                                                                         await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
@@ -5569,10 +5569,10 @@
                                                                         projName = projName.split('/')[2];
                                                                         // console.log("process.env.NODE_ENV",process.env.NODE_ENV)
                                                                         if (process.env.NODE_ENV !== 'development') {
-                                                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/' + nameF + '.html');
+                                                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/' + nameF + '.html','_blank');
                                                                             redirectWindow.location;
                                                                         } else {
-                                                                            let redirectWindow = window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html');
+                                                                            let redirectWindow = window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html','_blank');
                                                                             redirectWindow.location;
                                                                         }
                                                                         await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
@@ -6533,17 +6533,25 @@
               },0);
             },
 
-            previewWebsite(node, data) {
+            async previewWebsite(node, data) {
 
                 let projectName = this.$store.state.fileUrl;
+                if(projectName!=undefined){
+                  projectName = projectName.split('/');
+                  projectName = projectName[6];
+                  let configsetting= await axios.get(config.baseURL + '/project-configuration/' + projectName)
+                  // console.log('url',configsetting.data.gitlabconfig.netlify_deploy_url)
+                  if(configsetting.data.gitlabconfig!=undefined){
 
-                projectName = projectName.split('/');
-                projectName = projectName[6];
-
-                if (process.env.NODE_ENV !== 'development') {
-                    window.open('http://' + Cookies.get('userDetailId') + '.' + projectName + '.' + config.ipAddress);
-                } else {
-                    window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + projectName + '/public/');
+                  window.open(configsetting.data.gitlabconfig.netlify_deploy_url,'_blank');
+                  }else{
+                  if (process.env.NODE_ENV !== 'development') {
+                    window.open('http://' + Cookies.get('userDetailId') + '.' + projectName + '.' + config.ipAddress,'_blank');
+                  } else {
+                    window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + projectName + '/public/','_blank');
+                  }
+                  
+                  }  
                 }
 
             },

@@ -277,7 +277,7 @@ export default {
               
               this.uploadTagIconLoader = false;  
             } else {
-              this.formItem.tag_icon = result[0].url
+              this.formItem.tag_icon = result[0].secure_url
               this.formItem.tag_image_name = result[0].original_filename
               this.uploadTagIconLoader = false;  
             }
