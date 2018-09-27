@@ -266,7 +266,7 @@ export default {
                 this.uploadEcatalogImageLoader = false;  
               } 
               else {
-                this.formItem.ecatalog_image = result[0].url
+                this.formItem.ecatalog_image = result[0].secure_url
                 this.formItem.ecatalog_image_name = result[0].original_filename
                 this.uploadEcatalogImageLoader = false;  
               }
@@ -296,7 +296,7 @@ export default {
             } 
             else {
               if(result[0].format == 'pdf') {
-                  this.formItem.ecatalog_pdf = result[0].url
+                  this.formItem.ecatalog_pdf = result[0].secure_url
                   this.formItem.ecatalog_pdf_name = result[0].original_filename
                   this.uploadEcatalogPdfLoader = false;
               }

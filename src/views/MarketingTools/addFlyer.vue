@@ -257,7 +257,7 @@ export default {
                 this.uploadFlyerImageLoader = false;  
               } 
               else {
-                this.formItem.flyer_image = result[0].url
+                this.formItem.flyer_image = result[0].secure_url
                 this.formItem.flyer_image_name = result[0].original_filename
                 this.uploadFlyerImageLoader = false;  
               }
@@ -287,7 +287,7 @@ export default {
             } 
             else {
               if(result[0].format == 'pdf') {
-                  this.formItem.flyer_pdf = result[0].url
+                  this.formItem.flyer_pdf = result[0].secure_url
                   this.formItem.flyer_pdf_name = result[0].original_filename
                   this.uploadFlyerPdfLoader = false;
               }
@@ -321,7 +321,7 @@ export default {
             } 
             else {
               if(result[0].format == 'pdf') {
-                  this.formItem.client_friendly_pdf = result[0].url
+                  this.formItem.client_friendly_pdf = result[0].secure_url
                   this.formItem.client_friendly_pdf_name = result[0].original_filename
                   this.uploadClientFriendlyPdfLoader = false;
               }
