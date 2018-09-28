@@ -6646,9 +6646,10 @@
                   window.open(configsetting.data.gitlabconfig.netlify_deploy_url,'_blank');
                   }else{
                   if (process.env.NODE_ENV !== 'development') {
-                    window.open('http://' + Cookies.get('userDetailId') + '.' + projectName + '.' + config.ipAddress);
+                    window.open('http://' + Cookies.get('userDetailId') + '.' + projectName + '.' + config.ipAddress,'_blank');
                   } else {
-                    window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + projectName + '/public/');
+                    window.open(config.ipAddress + '/websites/' + Cookies.get('userDetailId') + '/' + projectName + '/public/','_blank');
+
                   }
                   
                   }  
