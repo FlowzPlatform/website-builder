@@ -1531,7 +1531,7 @@ export default {
   },
   beforeDestroy(){
     // console.log(socket)
-    // console.log('app',app)
+    console.log('app',app)
     // app.removeListener()
      // socket.removeListener('jobqueue')
   },

@@ -5931,8 +5931,11 @@
             async remove(store, data) {
                 // console.log('remove called:')
                 // Get Config.json file data
-                let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                let urlparts = configFileUrl.split("/");
+                let configFileUrl = this.$store.state.fileUrl;
+
+                if(configFileUrl!=undefined){
+                  configFileUrl.replace(/\\/g, "\/")
+                  let urlparts = configFileUrl.split("/");
                 let fileNameOrginal = urlparts[urlparts.length - 1];
                 let foldername = urlparts[urlparts.length - 2];
                 // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
@@ -6266,6 +6269,8 @@
                 // }).catch((dismiss) => {
                 //   console.log('error', dismiss)
                 // })
+                }
+                
             },
 
             // Remove Folder manipulating config.json
