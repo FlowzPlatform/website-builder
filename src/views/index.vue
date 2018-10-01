@@ -4710,38 +4710,38 @@
                                                                         type: 'file'
                                                                     })
                                                                     .then(async (res) => {
-                                                                        let checkhandlbar = true;
-                                                                        while (checkhandlbar) {
-                                                                            let filedata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/Preview/' + nameF + '.html', {})
-                                                                                .then(async (response) => {
-                                                                                    //checking for handlebar component
-                                                                                    if (response.data.search('<handlebarcomponent') != -1) {
-                                                                                        let handlebar = response.data.substring(response.data.indexOf('<handlebarcomponent'), response.data.indexOf('</handlebarcomponent>') + 21)
-                                                                                        let newhanadlebar = ('<script id="handlebarcomponent-template" type="text/x-handlebars-template">{{' + handlebar.replace(/<(.|\n)*?>/g, '') + '}}<\/script>').trim()
-                                                                                        newhanadlebar = response.data.replace(handlebar, newhanadlebar).trim()
-                                                                                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                                            filename: folderUrl + '/public/Preview/' + nameF + '.html',
-                                                                                            text: newhanadlebar,
-                                                                                            type: 'file'
-                                                                                        }).then((res) => {
-                                                                                            console.log('newhanadlebar::::', newhanadlebar.search('<handlebarcomponent'))
-                                                                                            if (newhanadlebar.search('<handlebarcomponent') != -1) {
-                                                                                                //do nothing
-                                                                                            } else {
-                                                                                                checkhandlbar = false
-                                                                                            }
-                                                                                        }).catch((e) => {
-                                                                                            console.log(e)
-                                                                                        })
-                                                                                    } else {
-                                                                                        checkhandlbar = false
-                                                                                    }
+                                                                        // let checkhandlbar = true;
+                                                                        // while (checkhandlbar) {
+                                                                        //     let filedata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/Preview/' + nameF + '.html', {})
+                                                                        //         .then(async (response) => {
+                                                                        //             //checking for handlebar component
+                                                                        //             if (response.data.search('<handlebarcomponent') != -1) {
+                                                                        //                 let handlebar = response.data.substring(response.data.indexOf('<handlebarcomponent'), response.data.indexOf('</handlebarcomponent>') + 21)
+                                                                        //                 let newhanadlebar = ('<script id="handlebarcomponent-template" type="text/x-handlebars-template">{{' + handlebar.replace(/<(.|\n)*?>/g, '') + '}}<\/script>').trim()
+                                                                        //                 newhanadlebar = response.data.replace(handlebar, newhanadlebar).trim()
+                                                                        //                 await axios.post(config.baseURL + '/flows-dir-listing', {
+                                                                        //                     filename: folderUrl + '/public/Preview/' + nameF + '.html',
+                                                                        //                     text: newhanadlebar,
+                                                                        //                     type: 'file'
+                                                                        //                 }).then((res) => {
+                                                                        //                     console.log('newhanadlebar::::', newhanadlebar.search('<handlebarcomponent'))
+                                                                        //                     if (newhanadlebar.search('<handlebarcomponent') != -1) {
+                                                                        //                         //do nothing
+                                                                        //                     } else {
+                                                                        //                         checkhandlbar = false
+                                                                        //                     }
+                                                                        //                 }).catch((e) => {
+                                                                        //                     console.log(e)
+                                                                        //                 })
+                                                                        //             } else {
+                                                                        //                 checkhandlbar = false
+                                                                        //             }
 
 
-                                                                                }).catch((e) => {
-                                                                                    console.log(e)
-                                                                                })
-                                                                        }
+                                                                        //         }).catch((e) => {
+                                                                        //             console.log(e)
+                                                                        //         })
+                                                                        // }
                                                                         self.fullscreenLoading = false;
                                                                         self.previewLoading = false;
                                                                         let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
@@ -4764,14 +4764,14 @@
                                                                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
                                                                                     //console.log(e)
                                                                                 })
-                                                                                if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
-                                                                                    for (let x = 0; x < self.form.vuepartials.length; x++) {
-                                                                                        await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {})
-                                                                                            .catch((e) => {
-                                                                                                //console.log(e)
-                                                                                            })
-                                                                                    }
-                                                                                }
+                                                                                // if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
+                                                                                //     for (let x = 0; x < self.form.vuepartials.length; x++) {
+                                                                                //         await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + config.pluginsPath + '/public/' + self.form.vuepartials[x].value.split('.')[0] + '.js').then((res) => {})
+                                                                                //             .catch((e) => {
+                                                                                //                 //console.log(e)
+                                                                                //             })
+                                                                                //     }
+                                                                                // }
                                                                                 if (self.form.Layout == 'Blank') {
                                                                                     await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/Blank.layout')
                                                                                         .catch((e) => {
@@ -5575,109 +5575,54 @@
 
                                                         await axios.get(config.baseURL + '/metalsmith-publish?path=' + folderUrl, {}).then(async(response) => {
                                                                 //calling commit functions of projectsetting
-                                                                 let dt = new Date();
-                                                                 let utcDate = dt.toUTCString();
-                                                                 let branchName = 'Publish_' + Math.round(new Date().getTime() / 1000);
-                                                                 let commitMessage = nameF+'-PagePublish - ' + utcDate;
-                                                                 
-                                                                  await axios.post(config.baseURL + '/gitlab-add-repo', {
-                                                                   branchName: branchName,
-                                                                   commitMessage: commitMessage,
-                                                                   repoName: self.globalConfigData[0].repoSettings[0].RepositoryName,
-                                                                   userDetailId: Cookies.get('userDetailId')
-                                                                 }).then(async response => {
-                                                                  if(response.data[0].code == 444){
-                                                                     self.$notify({
-                                                                       message: response.data[0].message,
-                                                                       type: 'warning'
-                                                                     });
-                                                                    
-                                                                   } else {
-                                                                      if(response.status == 200 || response.status == 201){
 
-                                                                        await axios.get( config.baseURL + '/commit-service?projectId=' + self.globalConfigData[0].repoSettings[0].RepositoryId, {
-                                                                        }).then(async response => {
-                                                                           await axios.post(config.baseURL + '/configdata-history', {
-                                                                               configData: self.globalConfigData,
-                                                                               currentBranch: branchName,
-                                                                               commitSHA: self.globalConfigData[0].repoSettings[0].CurrentHeadSHA,
-                                                                               websiteName: self.globalConfigData[0].repoSettings[0].RepositoryName,
-                                                                               userId: Cookies.get('userDetailId')
-                                                                           })
-                                                                           .then(function (resp) {
-                                                                               // console.log('Config revision saved in configdata-history. ', resp);
-                                                                           })
-                                                                           .catch(function (error) {
-                                                                               console.log(error);
-                                                                           });
-                                                                        })
+                                                                    let gitlabconfig=await axios.get(config.baseURL+'/project-configuration/'+self.globalConfigData[0].repoSettings[0].RepositoryName)
+                                                                    let finalouputpage=await axios.get(config.baseURL + '/save-menu/0?path=' +  folderUrl + '/public/' +nameF+'.html',{}).catch((e)=>{console.log(e)})
+
+                                                                    let tempjson='{"action": "update","encoding":"base64","file_path": "'+nameF+'.html","content": "'+Base64.btoa(unescape(encodeURIComponent(finalouputpage.data)))+'" }'
+                                                                      let buildpayload='{ "branch": "master","commit_message": "Single Page publishing", "actions": ['+tempjson+'] }'
+                                                                      let axiosoptioncommit={
+                                                                        method:'post',
+                                                                        url:'https://gitlab.com/api/v4/projects/'+gitlabconfig.data.gitlabconfig.projectid+'/repository/commits',
+                                                                        data:buildpayload,
+                                                                        headers:{ 'PRIVATE-TOKEN':config.gitlabtoken, 'Content-Type':'application/json'}
                                                                       }
-
-                                                                   }
-                                                                 }).catch((e)=>{
-                                                                  console.log('error:',e)
-                                                                 })
-                                                                 self.globalConfigData[0].repoSettings[0].CurrentBranch=branchName
-                                                                 self.saveConfigFile(folderUrl)
+                                                                      await axios(axiosoptioncommit).then(async (res)=>{
+                                                                        await axios.post(gitlabconfig.data.gitlabconfig.webhook_url,{}).then((res)=>{console.log('webhook called')})
+                                                                      })
+                                                                      .catch((e)=>{console.log(e)})
+                                                                  
                                                                 axios.post(config.baseURL + '/save-menu', {
                                                                         filename: folderUrl + '/public/assets/metalsmithPublish.js',
                                                                         text: previewbackupmetal,
                                                                         type: 'file'
                                                                     })
                                                                     .then(async (res) => {
-                                                                        let checkhandlbar = true;
-                                                                        while (checkhandlbar) {
-                                                                            let filedata = await axios.get(config.baseURL + '/flows-dir-listing/0?path=' + folderUrl + '/public/' + nameF + '.html', {})
-                                                                                .then(async (response) => {
-                                                                                    //checking for handlebar component
-                                                                                    if (response.data.search('<handlebarcomponent') != -1) {
-                                                                                        let handlebar = response.data.substring(response.data.indexOf('<handlebarcomponent'), response.data.indexOf('</handlebarcomponent>') + 21)
-                                                                                        let newhanadlebar = ('<script id="handlebarcomponent-template" type="text/x-handlebars-template">{{' + handlebar.replace(/<(.|\n)*?>/g, '') + '}}<\/script>').trim()
-                                                                                        newhanadlebar = response.data.replace(handlebar, newhanadlebar).trim()
-                                                                                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                                            filename: folderUrl + '/public/' + nameF + '.html',
-                                                                                            text: newhanadlebar,
-                                                                                            type: 'file'
-                                                                                        }).then((res) => {
-                                                                                            console.log('newhanadlebar::::', newhanadlebar.search('<handlebarcomponent'))
-                                                                                            if (newhanadlebar.search('<handlebarcomponent') != -1) {
-                                                                                                //do nothing
-                                                                                            } else {
-                                                                                                checkhandlbar = false
-                                                                                            }
-                                                                                        }).catch((e) => {
-                                                                                            console.log(e)
-                                                                                        })
-                                                                                    } else {
-                                                                                        checkhandlbar = false
-                                                                                    }
-
-
-                                                                                }).catch((e) => {
-                                                                                    console.log(e)
-                                                                                })
-                                                                        }
+                                                                        
                                                                         self.fullscreenLoading = false;
                                                                         self.previewLoading = false;
-                                                                        let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
-                                                                        previewFile = folderUrl.replace('/var/www/html', '');
-                                                                        let projName = previewFile.replace('websites/', '');
-                                                                        projName = projName.split('/')[2];
+                                                                        // let previewFile = self.$store.state.fileUrl.replace(/\\/g, "\/");
+                                                                        // previewFile = folderUrl.replace('/var/www/html', '');
+                                                                        // let projName = previewFile.replace('websites/', '');
+                                                                        // projName = projName.split('/')[2];
                                                                         // console.log("process.env.NODE_ENV",process.env.NODE_ENV)
-                                                                        if (process.env.NODE_ENV !== 'development') {
-                                                                            let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/' + nameF + '.html','_blank');
+                                                                        // if (process.env.NODE_ENV !== 'development') {
+                                                                        //     let redirectWindow = window.open('http://' + Cookies.get('userDetailId') + '.' + projName + '.' + config.ipAddress + '/' + nameF + '.html','_blank');
+                                                                        //     redirectWindow.location;
+                                                                        // } else {
+                                                                        //     let redirectWindow = window.open(gitlabconfig.data.gitlabconfig.netlify_deploy_url+'/' + nameF + '.html','_blank');
+                                                                        //     redirectWindow.location;
+                                                                        // }
+                                                                        let redirectWindow = window.open(gitlabconfig.data.gitlabconfig.netlify_deploy_url+'/' + nameF + '.html','_blank');
                                                                             redirectWindow.location;
-                                                                        } else {
-                                                                            let redirectWindow = window.open(config.ipAddress + previewFile + '/public/' + nameF + '.html','_blank');
-                                                                            redirectWindow.location;
-                                                                        }
+                                                                            
                                                                         await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Preview')
                                                                             .then(async (res) => {
                                                                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/temp').catch((err) => {
                                                                                     console.log('Error:', err);
                                                                                 })
                                                                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
-                                                                                    //console.log(e)
+                                                                                    console.log(e)
                                                                                 })
                                                                                 // if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                                                                 //     for (let x = 0; x < self.form.vuepartials.length; x++) {

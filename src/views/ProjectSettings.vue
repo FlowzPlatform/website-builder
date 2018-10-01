@@ -110,7 +110,7 @@
                         <el-form-item label="Website name" prop="websitename">
                           <!-- <el-input v-model="websitename"></el-input> -->
                           <el-input placeholder="Please input" v-model="form.websitename" prop="websitename">
-                            <el-button slot="append" @click="updateProjectName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
+                            <el-button slot="append" @click="updateName('form1')" class="save-project-name-btn"><i class="fa fa-save fa-fw"></i>Save</el-button>
                           </el-input>
                           <!-- {{websitename}} -->
                           <!-- <a id="websiteName" data-title="Website Name">{{websitename}}</a> -->
@@ -1487,7 +1487,7 @@ export default {
           this.percent=0
           this.isdisabled = false;
           this.textdata=''
-          this.$emit('updateProjectName')
+          // this.$emit('updateProjectName')
         }
       });
 
@@ -1510,18 +1510,20 @@ export default {
             await this.publishcommitProject(commitMessage,branchName);
             // await this.saveProjectSettings()
             await this.init()
-            this.$emit('updateProjectName')
+            // this.$emit('updateProjectName')
             this.isdisabled=false
          }
         if(res.Status!=undefined && (res.Status=='failed'||res.Status=='cancelled')){
           this.isdisabled=false
-          this.$emit('updateProjectName')
+          // this.$emit('updateProjectName')
           this.percent=0
           // console.log('job failed')
          }
         if(res.Status=='progress'&& res.Percentage!=undefined){
           // console.log(1111111 + '===' + this.isdisabled);
-
+          if(res.Percentage=='100'){
+            console.log('100')
+          }
           this.percent=res.Percentage
           // console.log('this.percent :: ',this.percent)
          }
@@ -4132,7 +4134,7 @@ export default {
               console.log(e)
             })
            await this.init();
-          this.$emit('updateProjectName');
+          // this.$emit('updateProjectName');
       } else {
         this.$notify({
           showClose: true,
@@ -6229,7 +6231,7 @@ export default {
       }
     },
 
-    updateProjectName(form) {
+    updateName(form) {
      this.$refs[form].validate(async (valid) => {
           if (valid) {
             if(this.form.websitename==this.configData.data.websiteName){
