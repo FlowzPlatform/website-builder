@@ -5622,7 +5622,7 @@
                                                                                     console.log('Error:', err);
                                                                                 })
                                                                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
-                                                                                    console.log(e)
+                                                                                    //console.log(e)
                                                                                 })
                                                                                 // if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                                                                 //     for (let x = 0; x < self.form.vuepartials.length; x++) {
