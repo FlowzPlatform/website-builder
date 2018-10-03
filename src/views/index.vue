@@ -642,7 +642,7 @@
 
               this.$confirm('No subscriptions found for your user. Subscribe to some package?', 'No Subscriptions found.', {
                 confirmButtonText: 'Yes',
-                cancelButtonText: 'No. I\'m just wandering here',
+                cancelButtonText: 'Logout',
                 type: 'warning'
               }).then(() => {
                 window.open('https://www.dashboard.' + domainkey + '/','_blank');
@@ -2541,20 +2541,20 @@
                     });
 
                 // Brand Logo
-                let brandLogo = newFolderName + '/public/assets/brand-logo.png';
+                // let brandLogo = newFolderName + '/public/assets/brand-logo.png';
 
-                await axios.post(config.baseURL + '/flows-dir-listing', {
-                        filename: brandLogo,
-                        text: '',
-                        type: 'file'
-                    })
-                    .then((res) => {
-                      let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/brand-logo.png","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
-                      arrayofrepo.push(temprepo);
-                    })
-                    .catch((e) => {
-                        console.log(e)
-                    })
+                // await axios.post(config.baseURL + '/flows-dir-listing', {
+                //         filename: brandLogo,
+                //         text: '',
+                //         type: 'file'
+                //     })
+                //     .then((res) => {
+                //       let temprepo='{"action": "create","encoding":"base64","file_path": "public/assets/brand-logo.png","content": "'+Base64.btoa(JSON.parse(res.config.data).text)+'" }'
+                //       arrayofrepo.push(temprepo);
+                //     })
+                //     .catch((e) => {
+                //         console.log(e)
+                //     })
 
                 // Create index.html file
                 let indexLayout = newFolderName + '/Pages/index.html';
@@ -5622,7 +5622,7 @@
                                                                                     console.log('Error:', err);
                                                                                 })
                                                                                 await axios.delete(config.baseURL + '/flows-dir-listing/0?filename=' + folderUrl + '/Layout/' + self.form.Layout + '_temp.layout').then((res) => {}).catch((e) => {
-                                                                                    //console.log(e)
+                                                                                    console.log(e)
                                                                                 })
                                                                                 // if (self.form.vuepartials != undefined && self.form.vuepartials.length > 0) {
                                                                                 //     for (let x = 0; x < self.form.vuepartials.length; x++) {
