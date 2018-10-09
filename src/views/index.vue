@@ -6708,357 +6708,626 @@
                                 .then(async (resp) => {
 
                                     // var response = resp
-                                    let gitlabResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
-                                        console.log('Error:', err);
-                                    });
+                                    // let gitlabResponse = await axios.get(config.baseURL + '/gitlab-add-repo?nameOfRepo=' + res.data.id + '&userDetailId=' + Cookies.get('userDetailId'), {}).catch((err) => {
+                                    //     console.log('Error:', err);
+                                    // });
+                                    await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '_publish&visibility=private&private_token=' + config.gitlabtoken, {})
+                                        .then(async (res) => {
+                                            this.gitlabconfig = {
+                                                'http_url': res.data.http_url_to_repo,
+                                                'name': res.data.name,
+                                                'path': res.data.path_with_namespace,
+                                                'projectid': res.data.id,
+                                                'webhook_url': '',
+                                                'netlify_deploy_url':'',
+                                                'netlify_deploy_key_id':'',
+                                                'netlify_public_key':''
+                                            }
+                                            let axiosoptioncommit = {
+                                                method: 'post',
+                                                url: 'https://gitlab.com/api/v4/projects/' + this.gitlabconfig.projectid + '/repository/commits',
+                                                data: '{ "branch": "master", "commit_message": "intial commit", "actions": [ { "action": "create", "file_path": "package.json", "content": "{ \\"name\\": \\"parceljson\\", \\"dependencies\\": { \\"parcel-bundler\\": \\"^1.9.7\\", \\"parceljs\\": \\"0.0.1\\" } }" } ] }',
+                                                headers: {
+                                                    'PRIVATE-TOKEN': config.gitlabtoken,
+                                                    'Content-Type': 'application/json'
+                                                }
+                                            }
+                                            await axios(axiosoptioncommit)
+                                                .then(async (res) => {
 
-                                    if (!(gitlabResponse.data.statusCode)) {
+                                                    //creating deploy_key_id from netlify
+                                                    let depolyheader={
+                                                      method:'post',
+                                                      url:'https://api.netlify.com/api/v1/deploy_keys',
+                                                      headers: {
+                                                        'Authorization':'Bearer '+config.netlifytoken
+                                                      }
+                                                    }
+                                                    await axios(depolyheader)
+                                                    .then(async (res)=>{
+                                                      this.gitlabconfig.netlify_deploy_key_id=res.data.id
+                                                      this.gitlabconfig.netlify_public_key=res.data.public_key
 
-                                        localStorage.setItem("folderUrl", newFolderName);
-                                        var folder = localStorage.getItem("folderUrl");
+                                                      //adding deploy_keys in gilab repo
+                                                      let gitdeploykeypayload={
+                                                        method:'post',
+                                                        url:'https://gitlab.com/api/v4/projects/'+this.gitlabconfig.projectid+'/deploy_keys',
+                                                        headers: {
+                                                            'PRIVATE-TOKEN': config.gitlabtoken,
+                                                            'Content-Type': 'application/json'
+                                                        },
+                                                        data:'{"can_push":"false","key":"'+this.gitlabconfig.netlify_public_key+'","title":"Netlify deploy"}'
+                                                      }
+                                                      await axios(gitdeploykeypayload)
+                                                      .then(async (res)=>{
+                                                        // Now creating site in netlify with gitlab repo
+                                                         let options = {
+                                                              method: 'post',
+                                                              url: 'https://api.netlify.com/api/v1/sites',
+                                                              data: '{ "repo": { "branch":  "master" , "provider": "gitlab", "repo": "' + this.gitlabconfig.path + '","id":'+this.gitlabconfig.projectid+',"deploy_key_id":"'+this.gitlabconfig.netlify_deploy_key_id+'" } }',
+                                                              headers: {
+                                                                  'Authorization': 'Bearer ' + config.netlifytoken,
+                                                                  'content-type': 'application/json'
+                                                              }
+                                                          }
+                                                          await axios(options)
+                                                              .then(async (response) => {
+                                                                  this.gitlabconfig.netlify_deploy_url=response.data.url
+                                                                  let webhookoptions = {
+                                                                      method: 'post',
+                                                                      url: 'https://api.netlify.com/api/v1/sites/' + response.data.id + '/build_hooks',
+                                                                      data: '{"title":"trigger_webhook","branch":"master"}',
+                                                                      headers: {
+                                                                          'Authorization': 'Bearer ' + config.netlifytoken,
+                                                                          'content-type': 'application/json'
+                                                                      }
+                                                                  }
+                                                                  await axios(webhookoptions)
+                                                                      .then((res) => {
+                                                                          this.gitlabconfig.webhook_url = res.data.url
+                                                                      })
+                                                                      .catch((e) => {
+                                                                          console.log(e)
+                                                                      })
+                                                              })
+                                                              .catch((e)=>{console.log(e)})
+                                                      })
+                                                      .catch((e)=>{console.log(e)})
+                                                    })
+                                                    .catch((e)=>{console.log(e)})
+                                                })
+                                                .catch((e) => {
+                                                    console.log(e)
+                                                })
 
-                                        this.newRepoId = gitlabResponse.data.id;
-                                        this.repoName = gitlabResponse.data.name;
 
-                                        // Create essential folders
-                                        // this.addOtherFolder(newFolderName);
-
-                                        // get Current SHA
-                                        let clonedSHA;
-                                        await axios.get(config.baseURL + '/commit-service?projectId=' + this.newRepoId + '&privateToken=' + Cookies.get('auth_token'), {}).then(response => {
-                                            clonedSHA = response.data[0].id;
-                                        }).catch(error => {
-                                            //console.log("Some error occured: ", error);
+                                                .catch((e) => {
+                                                    console.log(e)
+                                                })
+                                        })
+                                        .catch((e) => {
+                                            console.log(e)
                                         });
 
-                                        // console.log('Old Website Name:', node.data.name);
-
-                                        // call API to clone website folder
-                                        await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {})
+                                    await axios.post('https://gitlab.com/api/v4/projects?name=' + res.data.id + '&visibility=public&private_token=' + config.gitlabtoken, {})
+                                       .then(async (res)=>{
+                                          // console.log('res from git:',res)
+                                          localStorage.setItem("folderUrl", newFolderName);
+                                          var folder = localStorage.getItem("folderUrl");
+                                          this.newRepoId = res.data.id;
+                                          this.repoName = res.data.name;
+                                          let clonedSHA;
+                                          await axios.get(config.baseURL + '/commit-service?projectId=' + this.newRepoId + '&privateToken=' + Cookies.get('auth_token'), {}).then(response => {
+                                              clonedSHA = response.data[0].id;
+                                          }).catch(error => {
+                                              console.log("Some error commit-service occured: ", error);
+                                          });
+                                          await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {})
                                             .then(async (cloneRes) => {
-                                                // console.log(res);
+                                                  console.log(res);
 
-                                                await axios.post(config.baseURL + '/gitlab-add-repo', {
-                                                    commitMessage: 'Initial Push',
-                                                    repoName: this.repoName,
-                                                    userDetailId: Cookies.get('userDetailId')
-                                                }).then(async response => {
+                                                  await axios.post(config.baseURL + '/gitlab-add-repo', {
+                                                      commitMessage: 'Initial Push',
+                                                      repoName: this.repoName,
+                                                      userDetailId: Cookies.get('userDetailId')
+                                                  }).then(async response => {
 
-                                                }).catch(error => {
-                                                    //console.log("Some error occured: ", error);
-                                                    this.fullscreenLoading = false;
-                                                });
+                                                  }).catch(error => {
+                                                      console.log("Some error gitlab-add occured: ", error);
+                                                      this.fullscreenLoading = false;
+                                                  });
 
-                                                let clonedWebsiteData = await this.getConfigFileData(newFolderName);
+                                                  let clonedWebsiteData = await this.getConfigFileData(newFolderName);
 
-                                                // Update Repo Settings
-                                                clonedWebsiteData[0].repoSettings[0].BaseURL = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id;
-                                                clonedWebsiteData[0].repoSettings[0].CurrentHeadSHA = clonedSHA;
-                                                clonedWebsiteData[0].repoSettings[0].RepositoryId = this.newRepoId;
-                                                clonedWebsiteData[0].repoSettings[0].RepositoryName = this.repoName;
+                                                  // Update Repo Settings
+                                                  clonedWebsiteData[0].repoSettings[0].BaseURL = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id;
+                                                  clonedWebsiteData[0].repoSettings[0].CurrentHeadSHA = clonedSHA;
+                                                  clonedWebsiteData[0].repoSettings[0].RepositoryId = this.newRepoId;
+                                                  clonedWebsiteData[0].repoSettings[0].RepositoryName = this.repoName;
 
-                                                // Update Project Settings
-                                                clonedWebsiteData[1].projectSettings[0].ProjectName = this.repoName;
-                                                clonedWebsiteData[1].projectSettings[0].RepositoryId = this.newRepoId;
-
-
-                                                // Save Updated Config
-                                                await axios.patch(config.baseURL + '/project-configuration/' + this.repoName, {
-                                                        configData: clonedWebsiteData
-                                                    })
-                                                    .then(async (configRes) => {
-                                                        // Update Assets files
-
-                                                        // Create project-details.json file
-                                                        let projectDetails = newFolderName + '/public/assets/project-details.json';
-                                                        let projectDetailsData = [{
-                                                            "projectOwner": Cookies.get('email'),
-                                                            "projectID": this.repoName,
-                                                            "UserID": Cookies.get('userDetailId'),
-                                                            "BasePath": newFolderName,
-                                                            "websiteName": node.data.name + '_copy',
-                                                            "BaseURL": 'http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.domainkey + '/',
-                                                            "builder_service_api": config.baseURL,
-                                                            "login_api": config.loginUrl,
-                                                            "register_api": config.registerUrl,
-                                                            "user_details_api": config.userDetail,
-                                                            "social_login_api": 'https://auth.' + config.domainkey + '/auth/',
-                                                            "domainkey": config.domainkey,
-                                                            "CrmSettingId": '',
-                                                            "Projectvid": {
-                                                                "vid": '',
-                                                                "userId": '',
-                                                                "password": '',
-                                                                "esUser": '',
-                                                                "virtualShopName": ''
-                                                            }
-                                                        }];
-
-                                                        // Save Project Details.json
-                                                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                filename: projectDetails,
-                                                                text: JSON.stringify(projectDetailsData)
-                                                            })
-                                                            .then(async (res) => {
-
-                                                                // Create metalsmithPublish file
-                                                                let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
-
-                                                                let projectName = newFolderName.split('/');
-
-                                                                var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
-                                                                // Save Metalsmith
-                                                                await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                        filename: mainMetal,
-                                                                        text: metalsmithJSON,
-                                                                        type: 'file'
-                                                                    })
-                                                                    .then((res) => {
-                                                                        // this.fullscreenLoading = false;
-                                                                        // location.reload();
-                                                                        // this.getData();
-                                                                    })
-                                                                    .catch((e) => {
-                                                                        console.log(e);
-                                                                        this.fullscreenLoading = false;
-                                                                    });
+                                                  // Update Project Settings
+                                                  clonedWebsiteData[1].projectSettings[0].ProjectName = this.repoName;
+                                                  clonedWebsiteData[1].projectSettings[0].RepositoryId = this.newRepoId;
 
 
-                                                                // Create metalsmithPreview file
-                                                                mainMetal = newFolderName + '/public/assets/metalsmithPreview.js';
+                                                  // Save Updated Config
+                                                  await axios.patch(config.baseURL + '/project-configuration/' + this.repoName, {
+                                                          configData: clonedWebsiteData
+                                                      })
+                                                      .then(async (configRes) => {
+                                                          // Update Assets files
 
-                                                                projectName = newFolderName.split('/');
+                                                          // Create project-details.json file
+                                                          let projectDetails = newFolderName + '/public/assets/project-details.json';
+                                                          let projectDetailsData = [{
+                                                              "projectOwner": Cookies.get('email'),
+                                                              "projectID": this.repoName,
+                                                              "UserID": Cookies.get('userDetailId'),
+                                                              "BasePath": newFolderName,
+                                                              "websiteName": node.data.name + '_copy',
+                                                              "BaseURL": 'http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.domainkey + '/',
+                                                              "builder_service_api": config.baseURL,
+                                                              "login_api": config.loginUrl,
+                                                              "register_api": config.registerUrl,
+                                                              "user_details_api": config.userDetail,
+                                                              "social_login_api": 'https://auth.' + config.domainkey + '/auth/',
+                                                              "domainkey": config.domainkey,
+                                                              "CrmSettingId": '',
+                                                              "Projectvid": {
+                                                                  "vid": '',
+                                                                  "userId": '',
+                                                                  "password": '',
+                                                                  "esUser": '',
+                                                                  "virtualShopName": ''
+                                                              }
+                                                          }];
 
-                                                                var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+                                                          // Save Project Details.json
+                                                          await axios.post(config.baseURL + '/flows-dir-listing', {
+                                                                  filename: projectDetails,
+                                                                  text: JSON.stringify(projectDetailsData)
+                                                              })
+                                                              .then(async (res) => {
 
-                                                                // Save Metalsmith
-                                                                await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                        filename: mainMetal,
-                                                                        text: metalsmithJSON,
-                                                                        type: 'file'
-                                                                    })
-                                                                    .then((res) => {
-                                                                        this.fullscreenLoading = false;
-                                                                        // location.reload();
-                                                                        this.getData();
-                                                                    })
-                                                                    .catch((e) => {
-                                                                        console.log(e);
-                                                                        this.fullscreenLoading = false;
-                                                                    });
-                                                            })
-                                                            .catch((e) => {
-                                                                console.log(e);
-                                                                this.fullscreenLoading = false;
-                                                            });
+                                                                  // Create metalsmithPublish file
+                                                                  let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
 
+                                                                  let projectName = newFolderName.split('/');
 
-                                                    })
-                                                    .catch((esourceConfig) => {
-                                                        console.log(e);
-                                                        this.fullscreenLoading = false;
-                                                    });
+                                                                  var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                                            })
-                                            .catch((e) => {
-                                                this.$message({
-                                                    showClose: true,
-                                                    message: 'Server error',
-                                                    type: 'error'
-                                                });
-                                                this.fullscreenLoading = false;
-                                                console.log(e)
-                                            })
-
-                                        this.formAddProjectFolder.projectName = null;
-                                    } else {
-                                        // Do same login but keep gitlab details undefined
-                                        localStorage.setItem("folderUrl", newFolderName);
-                                        var folder = localStorage.getItem("folderUrl");
-
-                                        this.newRepoId = undefined;
-                                        this.repoName = res.data.id;
-
-                                        // Create essential folders
-                                        // this.addOtherFolder(newFolderName);
-
-                                        // call API to clone website folder
-                                        await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {})
-                                            .then(async (cloneRes) => {
-                                                // console.log(res);
-
-                                                await axios.post(config.baseURL + '/gitlab-add-repo', {
-                                                    commitMessage: 'Initial Push',
-                                                    branchName: 'master',
-                                                    repoName: this.repoName,
-                                                    userDetailId: Cookies.get('userDetailId')
-                                                }).then(async response => {
-
-                                                }).catch(error => {
-                                                    //console.log("Some error occured: ", error);
-                                                });
-
-                                                let clonedWebsiteData = await this.getConfigFileData(newFolderName);
-
-                                                // Update Repo Settings
-                                                clonedWebsiteData[0].repoSettings[0].BaseURL = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id;
-                                                clonedWebsiteData[0].repoSettings[0].CurrentHeadSHA = undefined;
-                                                clonedWebsiteData[0].repoSettings[0].RepositoryId = undefined;
-                                                clonedWebsiteData[0].repoSettings[0].RepositoryName = this.repoName;
-
-                                                // Update Project Settings
-                                                clonedWebsiteData[1].projectSettings[0].ProjectName = this.repoName;
-                                                clonedWebsiteData[1].projectSettings[0].RepositoryId = undefined;
+                                                                  // Save Metalsmith
+                                                                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                                                                          filename: mainMetal,
+                                                                          text: metalsmithJSON,
+                                                                          type: 'file'
+                                                                      })
+                                                                      .then((res) => {
+                                                                          // this.fullscreenLoading = false;
+                                                                          // location.reload();
+                                                                          // this.getData();
+                                                                      })
+                                                                      .catch((e) => {
+                                                                          console.log(e);
+                                                                          this.fullscreenLoading = false;
+                                                                      });
 
 
-                                                // Save Updated Config
+                                                                  // Create metalsmithPreview file
+                                                                  mainMetal = newFolderName + '/public/assets/metalsmithPreview.js';
 
-                                                axios.get(config.userDetail, {
-                                                        headers: {
-                                                            'Authorization': Cookies.get('auth_token')
-                                                        }
-                                                    })
-                                                    .then(async (res) => {
-                                                        await axios.patch(config.baseURL + '/project-configuration/' + this.repoName, {
-                                                                configData: clonedWebsiteData
-                                                            })
-                                                            .then(async (configRes) => {
-                                                                // Update Assets files
+                                                                  projectName = newFolderName.split('/');
 
-                                                                // Create project-details.json file
-                                                                let projectDetails = newFolderName + '/public/assets/project-details.json';
-                                                                let projectDetailsData = [{
-                                                                    "projectOwner": Cookies.get('email'),
-                                                                    "projectName": this.repoName
-                                                                }];
+                                                                  var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
 
-                                                                // Save Project Details.json
-                                                                await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                        filename: projectDetails,
-                                                                        text: JSON.stringify(projectDetailsData)
-                                                                    })
-                                                                    .then(async (res) => {
-
-                                                                        // Create metalsmith file
-                                                                        let mainMetal = newFolderName + '/public/assets/metalsmith.js';
-
-                                                                        let projectName = newFolderName.split('/');
-
-                                                                        var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
-
-                                                                        // Save Metalsmith
-                                                                        await axios.post(config.baseURL + '/flows-dir-listing', {
-                                                                                filename: mainMetal,
-                                                                                text: metalsmithJSON,
-                                                                                type: 'file'
-                                                                            })
-                                                                            .then((res) => {
-                                                                                this.fullscreenLoading = false;
-                                                                                // location.reload();
-                                                                                this.getData();
-                                                                            })
-                                                                            .catch((e) => {
-                                                                                //console.log(e)
-                                                                            });
-
-                                                                    })
-                                                                    .catch((e) => {
-                                                                        //console.log(e)
-                                                                    });
+                                                                  // Save Metalsmith
+                                                                  await axios.post(config.baseURL + '/flows-dir-listing', {
+                                                                          filename: mainMetal,
+                                                                          text: metalsmithJSON,
+                                                                          type: 'file'
+                                                                      })
+                                                                      .then((res) => {
+                                                                          this.fullscreenLoading = false;
+                                                                          // location.reload();
+                                                                          this.getData();
+                                                                      })
+                                                                      .catch((e) => {
+                                                                          console.log(e);
+                                                                          this.fullscreenLoading = false;
+                                                                      });
+                                                              })
+                                                              .catch((e) => {
+                                                                  console.log(e);
+                                                                  this.fullscreenLoading = false;
+                                                              });
 
 
-                                                            })
-                                                            .catch((esourceConfig) => {
-                                                                let dataMessage = ''
-                                                                if (e.message != undefined) {
-                                                                    dataMessage = e.message              
-                                                                } else if (e.response.data.message != undefined) {
-                                                                dataMessage = e.response.data.message
-                                                                } else{
-                                                                dataMessage = "Please try again! Some error occured."
-                                                                }
-                                                                this.$confirm(dataMessage, 'Error', {
-                                                                    confirmButtonText: 'logout',
-                                                                    cancelButtonText: 'reload',
-                                                                    type: 'error',
-                                                                    center: true
-                                                                }).then(() => {
-                                                                    localStorage.removeItem('current_sub_id');
-                                                                    this.$session.remove('username');
-                                                                    let location = psl.parse(window.location.hostname)
-                                                                    location = location.domain === null ? location.input : location.domain
-                                                                    Cookies.remove('auth_token', {
-                                                                        domain: location
-                                                                    });
-                                                                    Cookies.remove('email', {
-                                                                        domain: location
-                                                                    });
-                                                                    Cookies.remove('userDetailId', {
-                                                                        domain: location
-                                                                    });
-                                                                    Cookies.remove('subscriptionId', {
-                                                                        domain: location
-                                                                    });
-                                                                    this.isLoggedIn = false;
-                                                                    // this.$router.push('/login');
-                                                                    window.location = '/login';
-                                                                }).catch(() => {
-                                                                    location.reload()
-                                                                });
-                                                            });
-                                                    })
-                                                    .catch((e) => {
-                                                        let dataMessage = ''
-                                                        if (e.message != undefined) {
-                                                            dataMessage = e.message              
-                                                        } else if (e.response.data.message != undefined) {
-                                                        dataMessage = e.response.data.message
-                                                        } else{
-                                                        dataMessage = "Please try again! Some error occured."
-                                                        }
-                                                        this.$confirm(dataMessage, 'Error', {
-                                                            confirmButtonText: 'logout',
-                                                            cancelButtonText: 'reload',
-                                                            type: 'error',
-                                                            center: true
-                                                        }).then(() => {
-                                                            localStorage.removeItem('current_sub_id');
-                                                            this.$session.remove('username');
-                                                            let location = psl.parse(window.location.hostname)
-                                                            location = location.domain === null ? location.input : location.domain
-                                                            Cookies.remove('auth_token', {
-                                                                domain: location
-                                                            });
-                                                            Cookies.remove('email', {
-                                                                domain: location
-                                                            });
-                                                            Cookies.remove('userDetailId', {
-                                                                domain: location
-                                                            });
-                                                            Cookies.remove('subscriptionId', {
-                                                                domain: location
-                                                            });
-                                                            this.isLoggedIn = false;
-                                                            // this.$router.push('/login');
-                                                            window.location = '/login';
-                                                        }).catch(() => {
-                                                            location.reload()
-                                                        });
-                                                    })
+                                                      })
+                                                      .catch((esourceConfig) => {
+                                                          console.log(e);
+                                                          this.fullscreenLoading = false;
+                                                      });
 
-                                            })
-                                            .catch((e) => {
-                                                this.$message({
-                                                    showClose: true,
-                                                    message: 'Server error',
-                                                    type: 'error'
-                                                });
-                                                console.log(e)
-                                            })
+                                              })
+                                              .catch((e) => {
+                                                  this.$message({
+                                                      showClose: true,
+                                                      message: 'Server error',
+                                                      type: 'error'
+                                                  });
+                                                  this.fullscreenLoading = false;
+                                                  console.log(e)
+                                              })
 
-                                        this.formAddProjectFolder.projectName = null;
-                                    }
+                                          this.formAddProjectFolder.projectName = null;
+                                          // this.projectLimitCount = 0;
+                                          // this.addOtherFolder(newFolderName);
+                                          // axios.post(config.initLdap, {
+                                          //     "app": "aaa"
+                                          //   })
+                                          //   .then((res) => {})
+                                          //   .catch((e) => {
+                                          //     console.log(e)
+                                          //   });
+                                          // // await axios.post(config.baseURL + '/register-website-subscriptions', {
+                                          // //     websiteId: this.repoName
+                                          // //   })
+                                          // //   .then((res) => {})
+                                          // //   .catch((e) => {
+                                          // //     console.log(e)
+                                          // //   });
+                                          // this.currentProjectName = this.formAddProjectFolder.projectName;
+                                          // this.formAddProjectFolder.projectName = null;
+                                       })
+
+
+                                    // if (!(gitlabResponse.data.statusCode)) {
+
+                                    //     localStorage.setItem("folderUrl", newFolderName);
+                                    //     var folder = localStorage.getItem("folderUrl");
+
+                                    //     this.newRepoId = gitlabResponse.data.id;
+                                    //     this.repoName = gitlabResponse.data.name;
+
+                                    //     // Create essential folders
+                                    //     // this.addOtherFolder(newFolderName);
+
+                                    //     // get Current SHA
+                                    //     let clonedSHA;
+                                    //     await axios.get(config.baseURL + '/commit-service?projectId=' + this.newRepoId + '&privateToken=' + Cookies.get('auth_token'), {}).then(response => {
+                                    //         clonedSHA = response.data[0].id;
+                                    //     }).catch(error => {
+                                    //         //console.log("Some error occured: ", error);
+                                    //     });
+
+                                    //     // console.log('Old Website Name:', node.data.name);
+
+                                    //     // call API to clone website folder
+                                    //     await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {})
+                                    //         .then(async (cloneRes) => {
+                                    //             // console.log(res);
+
+                                    //             await axios.post(config.baseURL + '/gitlab-add-repo', {
+                                    //                 commitMessage: 'Initial Push',
+                                    //                 repoName: this.repoName,
+                                    //                 userDetailId: Cookies.get('userDetailId')
+                                    //             }).then(async response => {
+
+                                    //             }).catch(error => {
+                                    //                 //console.log("Some error occured: ", error);
+                                    //                 this.fullscreenLoading = false;
+                                    //             });
+
+                                    //             let clonedWebsiteData = await this.getConfigFileData(newFolderName);
+
+                                    //             // Update Repo Settings
+                                    //             clonedWebsiteData[0].repoSettings[0].BaseURL = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id;
+                                    //             clonedWebsiteData[0].repoSettings[0].CurrentHeadSHA = clonedSHA;
+                                    //             clonedWebsiteData[0].repoSettings[0].RepositoryId = this.newRepoId;
+                                    //             clonedWebsiteData[0].repoSettings[0].RepositoryName = this.repoName;
+
+                                    //             // Update Project Settings
+                                    //             clonedWebsiteData[1].projectSettings[0].ProjectName = this.repoName;
+                                    //             clonedWebsiteData[1].projectSettings[0].RepositoryId = this.newRepoId;
+
+
+                                    //             // Save Updated Config
+                                    //             await axios.patch(config.baseURL + '/project-configuration/' + this.repoName, {
+                                    //                     configData: clonedWebsiteData
+                                    //                 })
+                                    //                 .then(async (configRes) => {
+                                    //                     // Update Assets files
+
+                                    //                     // Create project-details.json file
+                                    //                     let projectDetails = newFolderName + '/public/assets/project-details.json';
+                                    //                     let projectDetailsData = [{
+                                    //                         "projectOwner": Cookies.get('email'),
+                                    //                         "projectID": this.repoName,
+                                    //                         "UserID": Cookies.get('userDetailId'),
+                                    //                         "BasePath": newFolderName,
+                                    //                         "websiteName": node.data.name + '_copy',
+                                    //                         "BaseURL": 'http://' + Cookies.get('userDetailId') + '.' + this.repoName + '.' + config.domainkey + '/',
+                                    //                         "builder_service_api": config.baseURL,
+                                    //                         "login_api": config.loginUrl,
+                                    //                         "register_api": config.registerUrl,
+                                    //                         "user_details_api": config.userDetail,
+                                    //                         "social_login_api": 'https://auth.' + config.domainkey + '/auth/',
+                                    //                         "domainkey": config.domainkey,
+                                    //                         "CrmSettingId": '',
+                                    //                         "Projectvid": {
+                                    //                             "vid": '',
+                                    //                             "userId": '',
+                                    //                             "password": '',
+                                    //                             "esUser": '',
+                                    //                             "virtualShopName": ''
+                                    //                         }
+                                    //                     }];
+
+                                    //                     // Save Project Details.json
+                                    //                     await axios.post(config.baseURL + '/flows-dir-listing', {
+                                    //                             filename: projectDetails,
+                                    //                             text: JSON.stringify(projectDetailsData)
+                                    //                         })
+                                    //                         .then(async (res) => {
+
+                                    //                             // Create metalsmithPublish file
+                                    //                             let mainMetal = newFolderName + '/public/assets/metalsmithPublish.js';
+
+                                    //                             let projectName = newFolderName.split('/');
+
+                                    //                             var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                                    //                             // Save Metalsmith
+                                    //                             await axios.post(config.baseURL + '/flows-dir-listing', {
+                                    //                                     filename: mainMetal,
+                                    //                                     text: metalsmithJSON,
+                                    //                                     type: 'file'
+                                    //                                 })
+                                    //                                 .then((res) => {
+                                    //                                     // this.fullscreenLoading = false;
+                                    //                                     // location.reload();
+                                    //                                     // this.getData();
+                                    //                                 })
+                                    //                                 .catch((e) => {
+                                    //                                     console.log(e);
+                                    //                                     this.fullscreenLoading = false;
+                                    //                                 });
+
+
+                                    //                             // Create metalsmithPreview file
+                                    //                             mainMetal = newFolderName + '/public/assets/metalsmithPreview.js';
+
+                                    //                             projectName = newFolderName.split('/');
+
+                                    //                             var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public/Preview')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                                    //                             // Save Metalsmith
+                                    //                             await axios.post(config.baseURL + '/flows-dir-listing', {
+                                    //                                     filename: mainMetal,
+                                    //                                     text: metalsmithJSON,
+                                    //                                     type: 'file'
+                                    //                                 })
+                                    //                                 .then((res) => {
+                                    //                                     this.fullscreenLoading = false;
+                                    //                                     // location.reload();
+                                    //                                     this.getData();
+                                    //                                 })
+                                    //                                 .catch((e) => {
+                                    //                                     console.log(e);
+                                    //                                     this.fullscreenLoading = false;
+                                    //                                 });
+                                    //                         })
+                                    //                         .catch((e) => {
+                                    //                             console.log(e);
+                                    //                             this.fullscreenLoading = false;
+                                    //                         });
+
+
+                                    //                 })
+                                    //                 .catch((esourceConfig) => {
+                                    //                     console.log(e);
+                                    //                     this.fullscreenLoading = false;
+                                    //                 });
+
+                                    //         })
+                                    //         .catch((e) => {
+                                    //             this.$message({
+                                    //                 showClose: true,
+                                    //                 message: 'Server error',
+                                    //                 type: 'error'
+                                    //             });
+                                    //             this.fullscreenLoading = false;
+                                    //             console.log(e)
+                                    //         })
+
+                                    //     this.formAddProjectFolder.projectName = null;
+                                    // } else {
+                                    //     // Do same login but keep gitlab details undefined
+                                    //     localStorage.setItem("folderUrl", newFolderName);
+                                    //     var folder = localStorage.getItem("folderUrl");
+
+                                    //     this.newRepoId = undefined;
+                                    //     this.repoName = res.data.id;
+
+                                    //     // Create essential folders
+                                    //     // this.addOtherFolder(newFolderName);
+
+                                    //     // call API to clone website folder
+                                    //     await axios.get(config.baseURL + '/clone-website?sourceProjectName=' + sourceConfig[0].repoSettings[0].RepositoryName + '&userDetailId=' + Cookies.get('userDetailId') + '&destinationFolderName=' + this.repoName, {})
+                                    //         .then(async (cloneRes) => {
+                                    //             // console.log(res);
+
+                                    //             await axios.post(config.baseURL + '/gitlab-add-repo', {
+                                    //                 commitMessage: 'Initial Push',
+                                    //                 branchName: 'master',
+                                    //                 repoName: this.repoName,
+                                    //                 userDetailId: Cookies.get('userDetailId')
+                                    //             }).then(async response => {
+
+                                    //             }).catch(error => {
+                                    //                 //console.log("Some error occured: ", error);
+                                    //             });
+
+                                    //             let clonedWebsiteData = await this.getConfigFileData(newFolderName);
+
+                                    //             // Update Repo Settings
+                                    //             clonedWebsiteData[0].repoSettings[0].BaseURL = config.websitesPath + '/' + Cookies.get('userDetailId') + '/' + res.data.id;
+                                    //             clonedWebsiteData[0].repoSettings[0].CurrentHeadSHA = undefined;
+                                    //             clonedWebsiteData[0].repoSettings[0].RepositoryId = undefined;
+                                    //             clonedWebsiteData[0].repoSettings[0].RepositoryName = this.repoName;
+
+                                    //             // Update Project Settings
+                                    //             clonedWebsiteData[1].projectSettings[0].ProjectName = this.repoName;
+                                    //             clonedWebsiteData[1].projectSettings[0].RepositoryId = undefined;
+
+
+                                    //             // Save Updated Config
+
+                                    //             axios.get(config.userDetail, {
+                                    //                     headers: {
+                                    //                         'Authorization': Cookies.get('auth_token')
+                                    //                     }
+                                    //                 })
+                                    //                 .then(async (res) => {
+                                    //                     await axios.patch(config.baseURL + '/project-configuration/' + this.repoName, {
+                                    //                             configData: clonedWebsiteData
+                                    //                         })
+                                    //                         .then(async (configRes) => {
+                                    //                             // Update Assets files
+
+                                    //                             // Create project-details.json file
+                                    //                             let projectDetails = newFolderName + '/public/assets/project-details.json';
+                                    //                             let projectDetailsData = [{
+                                    //                                 "projectOwner": Cookies.get('email'),
+                                    //                                 "projectName": this.repoName
+                                    //                             }];
+
+                                    //                             // Save Project Details.json
+                                    //                             await axios.post(config.baseURL + '/flows-dir-listing', {
+                                    //                                     filename: projectDetails,
+                                    //                                     text: JSON.stringify(projectDetailsData)
+                                    //                                 })
+                                    //                                 .then(async (res) => {
+
+                                    //                                     // Create metalsmith file
+                                    //                                     let mainMetal = newFolderName + '/public/assets/metalsmith.js';
+
+                                    //                                     let projectName = newFolderName.split('/');
+
+                                    //                                     var metalsmithJSON = "var Metalsmith=require('" + config.metalpath + "metalsmith');\nvar markdown=require('" + config.metalpath + "metalsmith-markdown');\nvar layouts=require('" + config.metalpath + "metalsmith-layouts');\nvar permalinks=require('" + config.metalpath + "metalsmith-permalinks');\nvar inPlace = require('" + config.metalpath + "metalsmith-in-place')\nvar fs=require('" + config.metalpath + "file-system');\nvar Handlebars=require('" + config.metalpath + "handlebars');\n Metalsmith(__dirname)\n.metadata({\ntitle: \"Demo Title\",\ndescription: \"Some Description\",\ngenerator: \"Metalsmith\",\nurl: \"http://www.metalsmith.io/\"})\n.source('')\n.destination('" + newFolderName + "/public')\n.clean(false)\n.use(markdown())\n.use(inPlace(true))\n.use(layouts({engine:'handlebars',directory:'" + newFolderName + "/Layout'}))\n.build(function(err,files)\n{if(err){\nconsole.log(err)\n}});"
+
+                                    //                                     // Save Metalsmith
+                                    //                                     await axios.post(config.baseURL + '/flows-dir-listing', {
+                                    //                                             filename: mainMetal,
+                                    //                                             text: metalsmithJSON,
+                                    //                                             type: 'file'
+                                    //                                         })
+                                    //                                         .then((res) => {
+                                    //                                             this.fullscreenLoading = false;
+                                    //                                             // location.reload();
+                                    //                                             this.getData();
+                                    //                                         })
+                                    //                                         .catch((e) => {
+                                    //                                             //console.log(e)
+                                    //                                         });
+
+                                    //                                 })
+                                    //                                 .catch((e) => {
+                                    //                                     //console.log(e)
+                                    //                                 });
+
+
+                                    //                         })
+                                    //                         .catch((esourceConfig) => {
+                                    //                             let dataMessage = ''
+                                    //                             if (e.message != undefined) {
+                                    //                                 dataMessage = e.message              
+                                    //                             } else if (e.response.data.message != undefined) {
+                                    //                             dataMessage = e.response.data.message
+                                    //                             } else{
+                                    //                             dataMessage = "Please try again! Some error occured."
+                                    //                             }
+                                    //                             this.$confirm(dataMessage, 'Error', {
+                                    //                                 confirmButtonText: 'logout',
+                                    //                                 cancelButtonText: 'reload',
+                                    //                                 type: 'error',
+                                    //                                 center: true
+                                    //                             }).then(() => {
+                                    //                                 localStorage.removeItem('current_sub_id');
+                                    //                                 this.$session.remove('username');
+                                    //                                 let location = psl.parse(window.location.hostname)
+                                    //                                 location = location.domain === null ? location.input : location.domain
+                                    //                                 Cookies.remove('auth_token', {
+                                    //                                     domain: location
+                                    //                                 });
+                                    //                                 Cookies.remove('email', {
+                                    //                                     domain: location
+                                    //                                 });
+                                    //                                 Cookies.remove('userDetailId', {
+                                    //                                     domain: location
+                                    //                                 });
+                                    //                                 Cookies.remove('subscriptionId', {
+                                    //                                     domain: location
+                                    //                                 });
+                                    //                                 this.isLoggedIn = false;
+                                    //                                 // this.$router.push('/login');
+                                    //                                 window.location = '/login';
+                                    //                             }).catch(() => {
+                                    //                                 location.reload()
+                                    //                             });
+                                    //                         });
+                                    //                 })
+                                    //                 .catch((e) => {
+                                    //                     let dataMessage = ''
+                                    //                     if (e.message != undefined) {
+                                    //                         dataMessage = e.message              
+                                    //                     } else if (e.response.data.message != undefined) {
+                                    //                     dataMessage = e.response.data.message
+                                    //                     } else{
+                                    //                     dataMessage = "Please try again! Some error occured."
+                                    //                     }
+                                    //                     this.$confirm(dataMessage, 'Error', {
+                                    //                         confirmButtonText: 'logout',
+                                    //                         cancelButtonText: 'reload',
+                                    //                         type: 'error',
+                                    //                         center: true
+                                    //                     }).then(() => {
+                                    //                         localStorage.removeItem('current_sub_id');
+                                    //                         this.$session.remove('username');
+                                    //                         let location = psl.parse(window.location.hostname)
+                                    //                         location = location.domain === null ? location.input : location.domain
+                                    //                         Cookies.remove('auth_token', {
+                                    //                             domain: location
+                                    //                         });
+                                    //                         Cookies.remove('email', {
+                                    //                             domain: location
+                                    //                         });
+                                    //                         Cookies.remove('userDetailId', {
+                                    //                             domain: location
+                                    //                         });
+                                    //                         Cookies.remove('subscriptionId', {
+                                    //                             domain: location
+                                    //                         });
+                                    //                         this.isLoggedIn = false;
+                                    //                         // this.$router.push('/login');
+                                    //                         window.location = '/login';
+                                    //                     }).catch(() => {
+                                    //                         location.reload()
+                                    //                     });
+                                    //                 })
+
+                                    //         })
+                                    //         .catch((e) => {
+                                    //             this.$message({
+                                    //                 showClose: true,
+                                    //                 message: 'Server error',
+                                    //                 type: 'error'
+                                    //             });
+                                    //             console.log(e)
+                                    //         })
+
+                                    //     this.formAddProjectFolder.projectName = null;
+                                    // }
 
                                 })
                                 .catch((e) => {
