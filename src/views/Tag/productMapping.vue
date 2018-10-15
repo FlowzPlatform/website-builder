@@ -230,7 +230,7 @@ export default {
                           this.$Notice.error({title: 'Error!!', desc: 'Tag already mapped.', duration: 2})
                       }
                       else {
-                          if(Array.isArray(tag_list)) {
+                          if(Array.isArray(tag_list) && tag_list.length > 0) {
                               tag_list.push(res.data.tag_name);
                           }
                           else {

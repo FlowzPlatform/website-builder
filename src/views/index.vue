@@ -5836,8 +5836,11 @@
             async remove(store, data) {
                 // console.log('remove called:')
                 // Get Config.json file data
-                let configFileUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
-                let urlparts = configFileUrl.split("/");
+                let configFileUrl = this.$store.state.fileUrl;
+
+                if(configFileUrl!=undefined){
+                  configFileUrl.replace(/\\/g, "\/")
+                  let urlparts = configFileUrl.split("/");
                 let fileNameOrginal = urlparts[urlparts.length - 1];
                 let foldername = urlparts[urlparts.length - 2];
                 // let fileName = '/' + urlparts[urlparts.length - 2] + '/' + urlparts[urlparts.length - 1];
@@ -6171,6 +6174,8 @@
                 // }).catch((dismiss) => {
                 //   console.log('error', dismiss)
                 // })
+                }
+                
             },
 
             // Remove Folder manipulating config.json
@@ -6345,6 +6350,7 @@
             async removeProject(store, data) {
                 // Get Config File
                 let folderUrl = this.$store.state.fileUrl.replace(/\\/g, "\/");
+                if(folderUrl!=undefined){
                 let foldername = folderUrl.split('/');
                 foldername = foldername[(foldername.length - 1)];
 
@@ -6432,7 +6438,7 @@
                                         })
 
                                     // delete project configuration from RethinkDB
-                                    axios.delete(config.baseURL + '/project-configuration/' + foldername, {})
+                                    await axios.delete(config.baseURL + '/project-configuration/' + foldername, {})
                                         .then((res) => {
                                             this.$message({
                                                 showClose: true,
@@ -6519,6 +6525,8 @@
                             location.reload()
                         });
                     })
+                }
+                
             },
 
             quickPreview(filePath) {
