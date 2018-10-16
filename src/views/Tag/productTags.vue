@@ -207,6 +207,40 @@ export default {
         }).catch(err => {
           this.$Notice.error({ title: 'Error!', desc: 'Not Deleted.', duration: 3})
         })
+
+        //change in elasticsearch product
+        let websiteDetails = _.find(this.webOptions, {value: this.tdata.website});
+        axios.get(tagsUrl + '/' + this.ptdata.data[finx].tag_id).then(tagRes => {
+            axios.get(
+                productApiUrl + '?_id=' + this.ptdata.data[finx].product_id,
+                { headers: { 'vid': websiteDetails.vid } }
+            )
+            .then(productRes => {
+                let tag_list = productRes.data.hits.hits[0]._source.tags;
+
+                if(tag_list.includes(tagRes.data.tag_name)) {
+                    if(Array.isArray(tag_list) && tag_list.length > 0) {
+                        const index = tag_list.indexOf(tagRes.data.tag_name);
+                        tag_list.splice(index, 1);
+                    }
+
+                    let esData = { "supplier_id":productRes.data.hits.hits[0]._source.supplier_id, "tags":tag_list };
+                    axios({
+                        method: 'PATCH',
+                        url: productApiUrl+"/"+this.ptdata.data[finx].product_id,
+                        data: esData,
+                        headers: {'vid':websiteDetails.vid}
+                    }).then(res3 => {
+                        this.$Spin.hide();
+                        this.$Notice.success({title: 'Success!!', desc: 'Product removed from ES.', duration: 2})
+                    }).catch(err => {
+                        this.$Spin.hide();
+                        this.$Notice.error({title: 'Error!!', desc: 'Not removed from ES.', duration: 2})
+                    })
+                }
+            })
+        })
+        //end elasticsearch
       }
     },
     async init (item) {
